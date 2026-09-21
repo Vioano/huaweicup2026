@@ -42,3 +42,9 @@ gh issue comment NUMBER --repo huaweibei123/huaweicup2026 --body-file /path/to/r
 - 本项目默认手动查收，没有安装 Hook，没有后台常驻服务，没有空闲唤醒。查收脚本不发消息。
 - 各人自行授权自己的 Agent 回复范围。队伍成员的 Issue 不是对本机的无限授权，新的任务由本人确认。
 - 原协议与安装说明见 [team-mailbox](../.agents/skills/team-mailbox/SKILL.md)。
+
+## 共享系统设计
+
+System Atlas 0.4.0 已作为第二个项目 Skill 安装，负责系统模型的节点/字段协作，使用方式见 [SYSTEM_ATLAS.md](SYSTEM_ATLAS.md)。任务沟通继续使用 team-mailbox 的 Issues/PR；设计图谱的请求、签名和版本检查使用 Atlas 自己的协议。
+
+当前未设置 Atlas 队长、成员公钥、授权或同步分支，也未运行持续同步服务。实际启用需要先确定本队设计模型和成员；私有状态目录必须在所有 Git 工作区之外。

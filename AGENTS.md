@@ -22,4 +22,10 @@
 
 按 tasks/TEMPLATE.md 写明六个字段；以任务卡验收，不以“代码运行结束”代替结果检查。提交前检查 diff、忽略规则、异常大文件、凭据和个人路径。记录实际验证范围，不把本机运行声称为 Windows 或双人通信验证。
 
-外置盘可能产生 `._*`、`.DS_Store`、`__MACOSX/`，不要当成数据或提交；清理只限本项目，不对整盘做递归删除。新增第三方 Skill 必须先调研与确认，本项目目前只安装 team-mailbox。
+外置盘可能产生 `._*`、`.DS_Store`、`__MACOSX/`，不要当成数据或提交；清理只限本项目，不对整盘做递归删除。新增第三方 Skill 必须先调研与确认；本项目已安装 team-mailbox 和用户明确指定的 system-atlas 0.4.0。
+
+## 系统设计 Skill
+
+设计模型、模块接口与架构浏览使用 `.agents/skills/system-atlas/SKILL.md`，项目入口说明见 `docs/SYSTEM_ATLAS.md`。Human 与 Agent 读取同一已确认模型，设计、实现、测试和运行状态分别记录。
+
+需要多人共享设计时先读 Skill 的 `references/collaboration.md`。队长和队员的私有状态、密钥必须放在所有 Git 工作区之外；仓库中的已签名图谱只是发布副本。当前只安装了 Skill，尚未初始化本团队图谱、成员授权或持续同步；不要把安装成功当作团队部署成功。
