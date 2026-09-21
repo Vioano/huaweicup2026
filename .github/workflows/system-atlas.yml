@@ -1,0 +1,33 @@
+name: System Atlas skill
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.agents/skills/system-atlas/**'
+      - '.github/workflows/system-atlas.yml'
+  pull_request:
+    paths:
+      - '.agents/skills/system-atlas/**'
+      - '.github/workflows/system-atlas.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  atlas:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .agents/skills/system-atlas
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: .agents/skills/system-atlas/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npm test
+      - run: node bin/system-atlas.mjs validate examples/service.system.json --repo-root . --json

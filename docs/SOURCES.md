@@ -22,6 +22,16 @@
 - 完整保留 SKILL.md、references、脚本、tests、agents 和 MIT LICENSE。
 - 更新应先核对上游变更，备份旧版，再明确替换；不在后台自动追随 main。
 
+## System Atlas
+
+- 引入日期：2026-09-21；用户指定本地项目与上游当前主分支均为 0.4.0。
+- 上游：<https://github.com/NikolaStarx/system-atlas>
+- 固定提交：`f70784c1250679b57e4de516b07d9c00677acc69`（包含 0.4.0 团队协作及恢复时保留并发编辑的修复）。
+- 上游仓库根目录就是 Skill；完整安装至 `.agents/skills/system-atlas/`，没有嵌套 `.git`。
+- 230 个上游文件逐一核对，内容保持一致；文件 SHA-256 清单在 [system-atlas-install.json](system-atlas-install.json)。
+- 保留 MIT LICENSE 及 Archify 2.16 归属说明。没有复制开发机的 node_modules、私钥或私有运行状态。
+- 本次核对时上游尚未创建 GitHub Release；0.4.0 来自该固定提交的 SKILL.md、package.json 和 skill-release.json。
+
 ## LaTeX 训练模板
 
 - 来源：教学演示的 `materials/2025LaTeX模板_课堂副本.zip`。

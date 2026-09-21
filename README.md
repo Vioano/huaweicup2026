@@ -32,7 +32,9 @@ macOS 的 ExFAT 外置盘可能产生 `._*` 元数据文件，导致依赖安装
 
 ```text
 .
-├── .agents/skills/team-mailbox/  # 完整团队通信 Skill
+├── .agents/skills/
+│   ├── team-mailbox/            # GitHub Issues 团队通信
+│   └── system-atlas/            # 0.4.0 系统设计与图谱协作
 ├── .github/                    # PR / 任务卡模板、跨平台示例检查
 ├── AGENTS.md                   # Agent 协作和实验约定
 ├── pyproject.toml / uv.lock     # Python 依赖及固定版本
@@ -77,8 +79,20 @@ uv run python .agents/skills/team-mailbox/scripts/mailbox.py check --full
 
 完整查收后，Agent 还需逐个读取返回索引中的话题全文。任务通过 Issue 留言和 `@GitHub账号` 寻址，成果通过 PR 交付。默认无 Hook、无自动回信、无空闲唤醒。详见 [团队通信](docs/TEAM.md) 和 [Skill](.agents/skills/team-mailbox/SKILL.md)。
 
+## 系统设计与图谱协作
+
+已安装 [System Atlas 0.4.0](.agents/skills/system-atlas/SKILL.md)，完整保留渲染器、团队协作代码、文档与测试。它让 Human 和 Agent 查看同一份已确认模型，支持队长发布、节点/字段授权、签名变更请求和冲突回执。需要 Node.js 18+，本项目使用 Node.js 22 验证。
+
+从项目根目录体验随附示例：
+
+```sh
+node .agents/skills/system-atlas/bin/system-atlas.mjs preview .agents/skills/system-atlas/examples/service.system.json --repo-root .agents/skills/system-atlas
+```
+
+打开终端打印的本机地址，结束时按 Ctrl-C。示例为上游演示模型，不代表本队建模方案。项目接入、测试和多人协作边界见 [System Atlas 使用说明](docs/SYSTEM_ATLAS.md)。实际成员授权与团队同步尚未初始化。
+
 ## 论文和资料
 
 先看 [论文说明](paper/README.md)：2025 模板是课件的训练参考，不能声称符合 2026 正式格式。来源见 [SOURCES](docs/SOURCES.md)。不把模板示例正文、参考文献或旧 PDF 当成团队成果。
 
-数学建模相关 Skill 的选型见 [调研报告](docs/SKILLS_RESEARCH.md)；除 `team-mailbox` 外，本次没有安装其他 Skill。
+数学建模相关 Skill 的选型见 [调研报告](docs/SKILLS_RESEARCH.md)；报告中的候选尚未安装。当前安装的是 `team-mailbox` 和另行确认的 `system-atlas`。
