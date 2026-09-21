@@ -34,7 +34,8 @@ macOS 的 ExFAT 外置盘可能产生 `._*` 元数据文件，导致依赖安装
 .
 ├── .agents/skills/
 │   ├── team-mailbox/            # GitHub Issues 团队通信
-│   └── system-atlas/            # 0.4.0 系统设计与图谱协作
+│   ├── system-atlas/            # 0.4.0 系统设计与图谱协作
+│   └── scientific-figures/      # 科研绘图约定与 ELK → Draw.io 排版
 ├── .github/                    # PR / 任务卡模板、跨平台示例检查
 ├── AGENTS.md                   # Agent 协作和实验约定
 ├── pyproject.toml / uv.lock     # Python 依赖及固定版本
@@ -93,6 +94,12 @@ node .agents/skills/system-atlas/bin/system-atlas.mjs preview .agents/skills/sys
 
 ## 论文和资料
 
+科研绘图使用 [scientific-figures](.agents/skills/scientific-figures/SKILL.md)。从“精算云画图”原型抽取的排版工具已接入；见 [Draw.io 使用方法](.agents/skills/scientific-figures/references/drawio.md) 和 [可编辑示例](figures/workflow/modeling-workflow.drawio)。
+
+![建模工作流程示例，不代表真实赛题结果](figures/workflow/modeling-workflow.png)
+
+排版工具需 Node.js 22+；`npm ci --ignore-scripts --prefix .agents/skills/scientific-figures` 安装固定依赖。PNG / PDF 导出另需 Draw.io Desktop；数据图继续使用现有 Python 环境。
+
 先看 [论文说明](paper/README.md)：2025 模板是课件的训练参考，不能声称符合 2026 正式格式。来源见 [SOURCES](docs/SOURCES.md)。不把模板示例正文、参考文献或旧 PDF 当成团队成果。
 
-数学建模相关 Skill 的选型见 [调研报告](docs/SKILLS_RESEARCH.md)；报告中的候选尚未安装。当前安装的是 `team-mailbox` 和另行确认的 `system-atlas`。
+数学建模相关 Skill 的选型见 [原调研报告](docs/SKILLS_RESEARCH.md)；科研绘图、Python / MATLAB / Wolfram / Julia 与 Astra 适配见 [绘图专项报告](docs/FIGURE_SKILLS_RESEARCH.md)。第三方候选尚未安装。当前项目 Skill 是 `team-mailbox`、`system-atlas` 与 `scientific-figures`。
