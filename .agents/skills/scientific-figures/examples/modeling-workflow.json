@@ -1,0 +1,20 @@
+{
+  "title": "建模工作流示例（不代表实验结果）",
+  "direction": "DOWN",
+  "nodes": [
+    { "id": "data", "label": "输入数据\n记录来源、单位与哈希", "role": "data" },
+    { "id": "prepare", "label": "清洗与数据切分\n保留处理映射", "role": "data" },
+    { "id": "baseline", "label": "基线模型\n固定参数与随机种子", "role": "model" },
+    { "id": "candidate", "label": "改进模型\n相同评价条件", "role": "model" },
+    { "id": "validate", "label": "验证与比较\n残差、失败案例、敏感性", "role": "check" },
+    { "id": "paper", "label": "论文图表\n对应结果表与复现命令", "role": "output" }
+  ],
+  "edges": [
+    { "id": "e1", "source": "data", "target": "prepare" },
+    { "id": "e2", "source": "prepare", "target": "baseline" },
+    { "id": "e3", "source": "prepare", "target": "candidate" },
+    { "id": "e4", "source": "baseline", "target": "validate" },
+    { "id": "e5", "source": "candidate", "target": "validate" },
+    { "id": "e6", "source": "validate", "target": "paper" }
+  ]
+}

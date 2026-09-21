@@ -40,3 +40,11 @@
 - 含 `MathModel.tex`、`gmcmthesis.cls`、`figures/`、`test.jpg`、`MathModel.pdf`、`READ_ME_FIRST.txt`。
 - `MathModel.pdf` 是上游附带的旧示例，并非本项目编译成果；来源清单与归档哈希见 `paper/template-source.json`。
 - 这是 2025 社区训练材料，非 2026 官方格式认证；正式使用时需核对当届要求与上游授权。
+
+## Scientific Figures
+
+- 引入日期：2026-09-22；用户要求迁入“精算云画图”中的排版原型并对齐 Astra 和本项目。
+- 本地原型、用户级 QA 与项目级 QA 的位置和适配取舍见 [绘图调研](FIGURE_SKILLS_RESEARCH.md)；逐文件读取哈希见 [来源快照](scientific-figures-source.json)。原型没有已提交版本，未以源仓库 HEAD 冒充它的版本。
+- 项目实现位于 `.agents/skills/scientific-figures/`，独立锁定 [elkjs](https://github.com/kieler/elkjs) 0.10.0（EPL-2.0），通过 npm 获取；未把第三方库源码复制进仓库。
+- 只迁移可复用逻辑和检查方式，不带入客户图件。示例是本项目工作流程示意，不是原图复刻或赛题实验结果。
+- 其他 GitHub 科研绘图 Skill 仅做调研，没有安装。
