@@ -4,6 +4,7 @@
 分支：`codex/rehearsal-r20260923-0011-35c5-yuanzhifang30-sudo`。
 控制帖：https://github.com/huaweibei123/huaweicup2026/issues/5
 计算分配：https://github.com/huaweibei123/huaweicup2026/issues/5#issuecomment-5780065751
+交付 PR：https://github.com/huaweibei123/huaweicup2026/pull/7 （不合并）。逐阶段证据与未测项见本目录 [member-report.md](member-report.md)。
 
 1. **任务目标**：以带截距普通最小二乘基线拟合 `distance_m = slope * time_s + intercept`，验证无噪声参数恢复。
 2. **输入文件**：`tests/rehearsal/observations.csv`，仓库人为构造的五行合成数据；时间单位 s、距离单位 m。输入 SHA-256 见 `result.json`。全部样本用于拟合，仅检查样本内恢复，无训练/测试性能比较。
