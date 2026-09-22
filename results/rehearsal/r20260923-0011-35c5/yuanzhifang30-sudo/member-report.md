@@ -94,3 +94,7 @@ PR 的既有 Reproducible demo CI 在 Ubuntu、Windows、macOS 均成功；该�
 补丁后本人真实 `init-member` 成功、member serve 启动、HTTP200，Agent 实际打开网页并切换 Board；签名 board cursor10，complete=true、hasMore=false，三项本人任务 fit=done、protocol/windows-compat=todo。公钥已在[STARTED-001](https://github.com/huaweibei123/huaweicup2026/issues/5#issuecomment-5780541691)发布，私钥和完整状态留在 Git 工作区外。停止后仅只读查询既有签名缓存，最新 cursor12，protocol description 仍为原文，未见队长所说的新随机标记，因此该更新回读尚未通过。
 
 没有成员签名写请求或 accepted 回执；同cursor网页版本对比、F1/F2/F3 未完成。网页确实打开，但协作版本面板检查遭遇浏览器会话失效，不以HTTP200代替同版本视觉验证。实际停止本人serve时间为2026-09-23T00:57:12+08:00。收尾完整 Mailbox 索引为1话题、36评论、0指派Issue，累计逐条全文读完；队長在帖内延长到01:20的通知不能自动延长本人授权，已一次性请求本人续期。
+
+## 队长收尾信息（外部报告，非本人签名缓存回读）
+
+在日志整理期间实际读到STOPPED-001：队长报告01:19:59停止leader，停止前撤两类权限并发布cursor23，同步提交a6fbc32242c65777c9664caf58c81de44cef4386。本人成员最后缓存仍22，因此只记录“队长已报告撤权”，不计成员已验签撤权回读。最终review请求在本人01:19阶段已排队，之后没有新请求；保留其原ID/pending，不为补齐表格重启serve。见https://github.com/huaweibei123/huaweicup2026/issues/5#issuecomment-5780878483 。队长HANDOFF-001要求交付脱敏日志后结束，不再等待分析或继续查收。至此累计已读51评论（其中最后2条为GH直接全文查收，最后完整Mailbox快照为49评论）。
