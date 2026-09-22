@@ -34,4 +34,3 @@ node .agents/skills/system-atlas/bin/system-atlas.mjs team query --state "PRIVAT
 - Q8：从首页到末页固定查询和 C，按类型+稳定 ID 检查无重复/遗漏，与 manifest 规模及任务数对应。`selectionComplete` 指后端选择完成，`complete` 指本响应是否包含整个选择，最后一页也可能 complete=false；需要 `page.hasMore=false` **且已收齐前页**。更改查询后复用旧分页 token 应明确拒绝，不能悄悄得到混合结果。
 
 按每题“策略选择 / 事实准确 / 范围与版本 / 局限说明”各记 PASS、FAIL 或未测，保存一句实际回答。关键误解（把包含当数据流、环当真机闭合、pending 当生效、漏页当全量）必须纠正后用具体重读结果复验；不要用 Agent 自报“我理解了”验收。
-
