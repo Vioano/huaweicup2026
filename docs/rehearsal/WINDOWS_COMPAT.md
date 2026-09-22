@@ -37,3 +37,9 @@ npm test
 - Agent 实际打开本机浏览器并切换 Board，看到全部 7 个任务及本人 3 项。后续协作版本面板检查遇到浏览器会话失效，未完成同 cursor UI/CLI 版本核对；HTTP 不代替视觉验收。未完成队长新标记回读、成员签名写入、F1/F2/F3 真机测试。
 - [公开启动证据及身份](https://github.com/huaweibei123/huaweicup2026/issues/5#issuecomment-5780541691)。未公开私钥、session URL 或完整私有状态。
 - 本轮原截止 2026-09-23T00:56:45+08:00；实际核对命令行后停止本人 serve 的时间为 **00:57:12+08:00**，晚约 27 秒。保留私有身份和证据，不重建身份或清空状态；未安装永久服务。后续联机必须由本人恢复并重新约定时限。
+
+## 本人明确续期后的最终补充
+
+本人续期至2026-09-23T01:20+08:00，01:02:28沿用原身份重启，执行代码仍为8992d303；队长审查并另报macOS目标30/30通过（非本人运行macOS）。网页与Agent在cursor15相同revision读取到LIVE-SYNC-adadf7789e，实际Canvas看到accepted17的输入/批注；doing accepted16、F1 forbidden18整批无改、F2 conflict20及保留双方意图修订accepted21均已回读。cursor22真人拖动fit done→doing，本机网页Task data与Agent API相同revision，完整diff仅该任务状态变更。
+
+F3被队长明确暂停以优先真人拖动，未测。最终protocol review+deliverables请求已上传，但截止本机缓存22 receipt=null，不能算accepted；最后缓存亦未包含撤权。本人serve实际01:20:15停止（晚约15秒），没有继续运行联测服务，私有身份保留。完整脱敏时间线与公开回执摘录在[PR7本人结果目录](https://github.com/huaweibei123/huaweicup2026/pull/7)的session-log.md、member-report.md、protocol-evidence.json；本节更新前文首轮停止时的未完成状态，不改原版与完整Windows回归的失败结论。
