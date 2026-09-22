@@ -31,6 +31,9 @@ def main() -> int:
     node = run("node", ["node", "--version"])
     if node and int(node.removeprefix("v").split(".")[0]) < 22:
         errors.append("Use Node.js 22+ for the project rehearsal")
+    node_platform = run("node_platform", ["node", "-p", "process.platform"])
+    if node_platform == "win32":
+        errors.append("Atlas 0.5.0 native Windows is blocked by directory fsync EPERM; use Linux/WSL2 (see rehearsal docs)")
     run("gh", ["gh", "--version"])
     run("commit", ["git", "rev-parse", "HEAD"])
     origin = run("origin", ["git", "remote", "get-url", "origin"])

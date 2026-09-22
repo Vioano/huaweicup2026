@@ -87,7 +87,7 @@ uv run python .agents/skills/team-mailbox/scripts/mailbox.py check --full
 
 ## 系统设计与图谱协作
 
-已安装 [System Atlas 0.5.0](.agents/skills/system-atlas/SKILL.md)，完整保留渲染器、团队协作代码、文档与测试。它让 Human 和 Agent 查看同一份已确认模型，支持队长发布、节点/字段授权、签名变更请求和冲突回执；0.5.0 新增共享任务看板、任务分配标签与明确的任务字段授权。需要 Node.js 18+，本项目使用 Node.js 22 验证。
+已安装 [System Atlas 0.5.0](.agents/skills/system-atlas/SKILL.md)，完整保留渲染器、团队协作代码、文档与测试。它让 Human 和 Agent 查看同一份已确认模型，支持队长发布、节点/字段授权、签名变更请求和冲突回执；0.5.0 新增共享任务看板、任务分配标签与明确的任务字段授权。需要 Node.js 18+，本项目使用 Node.js 22 验证。Atlas 0.5.0 原生 Windows 状态写入存在已复现问题，Windows 队友使用 WSL2/Linux，详见联测入口。
 
 从项目根目录体验随附示例：
 

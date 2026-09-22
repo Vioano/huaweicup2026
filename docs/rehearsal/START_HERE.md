@@ -13,9 +13,9 @@
 
 ## 每台机器的准备
 
-使用 Git、GitHub CLI、uv、Node.js 22+。支持有文件和终端工具的 Codex、Claude Code、其他 CLI/IDE Agent；无需同一模型。纯聊天客户端若不能运行命令、登录 GitHub 或保持进程，由本人执行相应命令，并在结果中标为“人工辅助”，不能冒充 Agent 自主完成。
+使用 Git、GitHub CLI、uv、Node.js 22+。**Atlas 0.5.0 本轮使用 macOS/Linux；原生 Windows 的状态写入在 CI 实测出现 `EPERM: fsync`，不能直接参加 Atlas 阶段。Windows 队友应在已有 WSL2 的 Linux 发行版中克隆仓库到 Linux 主目录，在其中安装/运行 Node、Python、Git、gh 并单独登录；不要混用 Windows Node 或把 Atlas 私有状态放 `/mnt/c`。若尚无 Linux/WSL 环境，先标记 Atlas 阶段阻塞，Mailbox 可单独测；安装 WSL 属于本人后续环境准备。** Linux CI 通过不等于具体队友的 WSL 真机已验收，仍须跑预检和联测。支持有文件和终端工具的 Codex、Claude Code、其他 CLI/IDE Agent；无需同一模型。纯聊天客户端若不能运行命令、登录 GitHub 或保持进程，由本人执行相应命令，并在结果中标为“人工辅助”，不能冒充 Agent 自主完成。
 
-从项目根目录逐行运行（macOS/Linux/Windows PowerShell 通用）：
+从项目根目录逐行运行（macOS/Linux/WSL 终端）：
 
 ```sh
 git status --short --branch

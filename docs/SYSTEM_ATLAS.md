@@ -10,7 +10,7 @@
 
 ## 使用
 
-Node.js 18+ 为上游要求，本项目和联测统一 Node.js 22+。队友克隆后显式读取 [SKILL.md](../.agents/skills/system-atlas/SKILL.md)，其他 Agent 也可读取。需要依赖时：
+Node.js 18+ 为上游要求，本项目和联测统一 Node.js 22+。本次实测发现原生 Windows 写入状态时目录 fsync 报 EPERM；当前使用 macOS/Linux，Windows 队友按联测入口在 WSL2 的 Linux 环境运行。此处保留上游原样版本，不将忽略持久化错误作为适配。队友克隆后显式读取 [SKILL.md](../.agents/skills/system-atlas/SKILL.md)，其他 Agent 也可读取。需要依赖时：
 
 ```sh
 npm ci --ignore-scripts --prefix .agents/skills/system-atlas
