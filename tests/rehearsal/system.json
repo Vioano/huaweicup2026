@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "diagram_type": "system",
+  "meta": {
+    "id": "huaweicup-rehearsal",
+    "title": "团队真机预演（合成数据，非赛题结果）",
+    "locale": "zh-CN",
+    "rootView": "overview",
+    "demo": true
+  },
+  "entities": [
+    {
+      "id": "data",
+      "type": "backend",
+      "label": "合成输入",
+      "purpose": "核对预演数据与单位，绝非真实观测。",
+      "inputs": [],
+      "outputs": [],
+      "steps": [],
+      "openIssues": [
+        "待真机联测；任务状态不能改变模块成熟度。"
+      ],
+      "evidence": [],
+      "maturity": {
+        "design": {
+          "value": "proposed"
+        },
+        "implementation": {
+          "value": "not_started"
+        },
+        "verification": {
+          "value": "untested"
+        },
+        "integration": {
+          "value": "not_connected"
+        }
+      }
+    },
+    {
+      "id": "analysis",
+      "type": "backend",
+      "label": "预演计算",
+      "purpose": "每位 Agent 独立计算同一已知答案。",
+      "inputs": [],
+      "outputs": [],
+      "steps": [],
+      "openIssues": [
+        "待真机联测；任务状态不能改变模块成熟度。"
+      ],
+      "evidence": [],
+      "maturity": {
+        "design": {
+          "value": "proposed"
+        },
+        "implementation": {
+          "value": "not_started"
+        },
+        "verification": {
+          "value": "untested"
+        },
+        "integration": {
+          "value": "not_connected"
+        }
+      }
+    },
+    {
+      "id": "delivery",
+      "type": "backend",
+      "label": "交付核验",
+      "purpose": "检查代码、结果、消息与已确认状态。",
+      "inputs": [],
+      "outputs": [],
+      "steps": [],
+      "openIssues": [
+        "待真机联测；任务状态不能改变模块成熟度。"
+      ],
+      "evidence": [],
+      "maturity": {
+        "design": {
+          "value": "proposed"
+        },
+        "implementation": {
+          "value": "not_started"
+        },
+        "verification": {
+          "value": "untested"
+        },
+        "integration": {
+          "value": "not_connected"
+        }
+      }
+    }
+  ],
+  "relations": [
+    {
+      "id": "data-analysis",
+      "from": "data",
+      "to": "analysis",
+      "kind": "dataflow",
+      "label": "合成预演数据"
+    },
+    {
+      "id": "analysis-delivery",
+      "from": "analysis",
+      "to": "delivery",
+      "kind": "dataflow",
+      "label": "代码与结果"
+    }
+  ],
+  "views": [
+    {
+      "id": "overview",
+      "title": "预演范围",
+      "placements": [
+        {
+          "entity": "data",
+          "pos": [
+            40,
+            180
+          ]
+        },
+        {
+          "entity": "analysis",
+          "pos": [
+            380,
+            180
+          ]
+        },
+        {
+          "entity": "delivery",
+          "pos": [
+            720,
+            180
+          ]
+        }
+      ],
+      "relations": [
+        {
+          "relation": "data-analysis"
+        },
+        {
+          "relation": "analysis-delivery"
+        }
+      ]
+    }
+  ],
+  "evidence": [],
+  "tasks": []
+}

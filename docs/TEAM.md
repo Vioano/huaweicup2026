@@ -10,7 +10,7 @@
 | B · 数据与实验 | 待队伍确认 | 原始数据核对、预处理、基线与对应论文段落 |
 | C · 模型与实验 | 待队伍确认 | 模型设计、改进与验证、对应论文段落 |
 
-初始化操作账号为 `NikolaStarx`，这不代表已确定上述角色。队友须由组织负责人授予仓库权限；本次未新增成员或发出邀请。
+本次真机联测由用户担任队长，GitHub 账号 `NikolaStarx`；正式赛题的 A/B/C 分工仍待团队确定。队友须由组织负责人授予仓库权限；本次未新增成员或发出邀请。
 
 ## 开始使用
 
@@ -45,6 +45,6 @@ gh issue comment NUMBER --repo huaweibei123/huaweicup2026 --body-file /path/to/r
 
 ## 共享系统设计
 
-System Atlas 0.4.0 已作为第二个项目 Skill 安装，负责系统模型的节点/字段协作，使用方式见 [SYSTEM_ATLAS.md](SYSTEM_ATLAS.md)。任务沟通继续使用 team-mailbox 的 Issues/PR；设计图谱的请求、签名和版本检查使用 Atlas 自己的协议。
+System Atlas 0.5.0 已安装，负责系统模型的节点/字段协作与共享任务看板，使用方式见 [SYSTEM_ATLAS.md](SYSTEM_ATLAS.md)。任务沟通继续使用 team-mailbox 的 Issues/PR；设计图谱的请求、签名和版本检查使用 Atlas 自己的协议。
 
-当前未设置 Atlas 队长、成员公钥、授权或同步分支，也未运行持续同步服务。实际启用需要先确定本队设计模型和成员；私有状态目录必须在所有 Git 工作区之外。
+队长角色已确定，但尚未初始化真实 Atlas 身份、成员公钥、授权或同步分支，也未运行持续同步服务。按 [联测入口](rehearsal/START_HERE.md) 使用独立预演模型和同一 run ID；私有状态目录必须在所有 Git 工作区之外。任务指派标签不会自动授予权限或唤醒 Agent，每个人必须启动并授权自己的 Agent。

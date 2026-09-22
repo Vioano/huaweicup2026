@@ -9,7 +9,7 @@ description: 为华为杯项目制作可复现的科研数据图和可编辑技�
 
 ## 选择工具
 
-- **数值、统计、残差、敏感性图**：优先使用项目已有的 Python / Matplotlib 环境。绘图代码放 `src/`，读取 `results/<run>/` 的实际结果，图件放 `figures/<run>/`。沿用已有脚本和锁文件，勿为绘图单独制造一套实验数字。
+- **数值、统计、残差、敏感性图**：优先使用项目已有的 Python / Matplotlib 环境。绘图代码放 `src/`，读取 `results/<run>/` 的实际结果，图件放 `figures/<run>/`。沿用已有脚本和锁文件，勿为绘图单独制造一套实验数字。需要论文图设计配方时读取同级 `scientific-figure-making/SKILL.md`（figures4papers）；项目来源、单位和验收约定仍须满足。其文档示意函数不是已安装的 Python API，引用代码时保留 CC BY-NC 4.0 归属，见项目 `docs/FIGURES4PAPERS.md`。
 - **技术路线、算法流程、依赖关系**：使用随附的 ELK → Draw.io 脚本，见 [Draw.io 用法与边界](references/drawio.md)。小型图也可以直接写可编辑 XML；已有 `.drawio` 应按原结构修改。
 - **MATLAB / Wolfram / Julia**：用户已有这类求解代码时，保留该语言与环境，读取相同的结果表，保存绘图源文件及版本记录。不要仅为统一外观迁移求解器或安装大型运行时。
 - **System Atlas**：继续承担系统模型和协作视图；本 Skill 承担论文交付图，不能把图中节点自动当作已实现或已验证模块。

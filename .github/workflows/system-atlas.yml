@@ -5,10 +5,14 @@ on:
     branches: [main]
     paths:
       - '.agents/skills/system-atlas/**'
+      - 'scripts/rehearsal_*.py'
+      - 'tests/rehearsal/**'
       - '.github/workflows/system-atlas.yml'
   pull_request:
     paths:
       - '.agents/skills/system-atlas/**'
+      - 'scripts/rehearsal_*.py'
+      - 'tests/rehearsal/**'
       - '.github/workflows/system-atlas.yml'
   workflow_dispatch:
 
@@ -17,12 +21,19 @@ permissions:
 
 jobs:
   atlas:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         working-directory: .agents/skills/system-atlas
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -31,3 +42,6 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm test
       - run: node bin/system-atlas.mjs validate examples/service.system.json --repo-root . --json
+      - run: node bin/system-atlas.mjs validate ../../../tests/rehearsal/system.json --repo-root ../../.. --json
+      - run: python scripts/rehearsal_smoke.py
+        working-directory: .
