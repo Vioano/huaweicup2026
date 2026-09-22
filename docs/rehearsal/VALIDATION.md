@@ -23,3 +23,17 @@
 首次扩展 CI 到 Windows 时，上游完整 91 项测试结果为 **62 PASS / 29 FAIL**。主要失败为 `design/authority.mjs` 的 `atomicWrite` 对目录调用 `fsyncSync` 报 `EPERM`，涉及身份/权威状态写入，不能当作纯测试问题。另有测试使用文件 URL pathname 形成 `D:\\D:\\...`，报 MODULE_NOT_FOUND。[原始失败 job 与完整日志](https://github.com/huaweibei123/huaweicup2026/actions/runs/35709250687/job/106685553780)。
 
 未修改上游持久化代码或跳过错误声称支持 Windows。Atlas CI 的支持矩阵明确限定 macOS/Linux；原生 Windows 预检明确报错，联测手册要求 Windows 队友在 WSL2 的 Linux 环境内运行（本次未替队友安装或实测 WSL）。原生 Windows 的项目 demo/Mailbox 检查继续保留。测试失败证据保留在上述历史 run，不能用新矩阵的通过覆盖这个限制。
+
+
+## 2026-09-23：网页/读取策略验收扩展的准备验证
+
+本次把预演模型从三节点拓展为 6 模块、5 关系、2 视图，包含显式层级与结构反馈环；所有模块仍未声称实现、验证或接通。两个视图分别 9/9 校验通过（18/18，总错误/警告均 0）；这是几何/模型检查，实际网页仍待每个人 U1/U2 操作。
+
+实际重跑 `python3 scripts/rehearsal_smoke.py` 通过。leader 与 member 的已确认快照上分别完成八种查询策略、dataflow 过滤、空路径、完整全量分页、错 token 拒绝；leader 另测 loopback HTTP/CLI 同版本视图一致与任务级 diff。未修改上游 Skill，未启动真实 GitHub 团队或发送消息。原有 CI 继续在 macOS/Linux 运行此脚本。
+
+[本机测量摘要](reader-probe-local.json) 记录模型/探针哈希、命令与实际返回量。当前 6 模块 + 1 个本地测试任务的快照：
+- leader 探针 21 次 CLI/HTTP 调用、54,922 bytes；member 19 次 CLI 调用、48,779 bytes。这是为了验收全部策略的合计，不是一次日常提问的推荐用量。
+- 已有上下文时，一次 analysis 局部全文的返回量分别约为一次 full 基线的 27.85% / 26.61%。冷启动 manifest + overview + local-full 另计 7,564 / 7,069 bytes；不能只拿局部比值代表首次完整成本。
+- 计费 input/output/reasoning/cached tokens 和费用未获取，保留 null；字节数不等于 token。各人的真实 Agent 作答、理解、网页交互、WSL 环境、大图规模以及 SSE 订阅仍待真人联测。
+
+U/R 检查表与问题卡见 [READER_CHECKS.md](READER_CHECKS.md)。机制测试成功不会自动在真人结果模板中填 PASS。

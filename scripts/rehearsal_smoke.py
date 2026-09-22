@@ -9,6 +9,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import time
+from rehearsal_read_probe import probe
 
 ROOT = Path(__file__).resolve().parents[1]
 CLI = ROOT / ".agents/skills/system-atlas/bin/system-atlas.mjs"
@@ -86,6 +87,7 @@ def main():
                 request("local-doing", [change("status", "doing")], "accepted")
                 request("local-stale", [change("status", "review", version)], "team/conflict")
                 request("local-denied", [change("blocked", "MUST-NOT-APPLY"), change("assignees", ["leader"])], "team/forbidden")
+                before_review = state(leader)["cursor"]
                 request("local-review", [change("status", "review")], "accepted")
                 boards = [cli("team", "query", "--state", who, "--mode", "board", "--detail", "full") for who in (leader, member)]
                 assert boards[0]["cursor"] == boards[1]["cursor"]
@@ -93,9 +95,19 @@ def main():
                 assert boards[0]["complete"] and not boards[0]["page"]["hasMore"]
                 accepted_task = boards[0]["records"][0]["value"]
                 assert accepted_task["status"] == "review" and accepted_task["blocked"] == ""
+                url = next(json.loads(line)["url"] for line in (root / "serve.log").read_text().splitlines()
+                           if '"url"' in line)
+                reader_results = [
+                    probe(leader, root / "leader-reads", "member", url, before_review),
+                    probe(member, root / "member-reads", "member"),
+                ]
+                assert all(r["ok"] for r in reader_results), reader_results
+                assert reader_results[0]["cursor"] == reader_results[1]["cursor"]
                 print(json.dumps({"ok": True, "scope": "local CLI + disposable bare Git only",
                                   "checks": ["leader task creation", "grant", "signed accepted request", "stale conflict",
                                              "atomic permission rejection", "same-cursor board readback"],
+                                  "reader_probes": [{k: v for k, v in r.items() if k != "measurements"}
+                                                    for r in reader_results],
                                   "live_multi_machine": "NOT TESTED", "human_viewer": "NOT TESTED"}, indent=2))
             finally:
                 process.terminate()

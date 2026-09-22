@@ -83,7 +83,7 @@ uv run python .agents/skills/team-mailbox/scripts/mailbox.py check --full
 
 ## 真机联测
 
-队长和队友准备好了以后，从 [联测入口](docs/rehearsal/START_HERE.md) 开始，分别把 [队长提示词](docs/rehearsal/LEADER_PROMPT.md) 和 [队员提示词](docs/rehearsal/MEMBER_PROMPT.md) 发给自己的 Agent。支持显式读取 Skill 的其他 Agent；使用真实账号、独立机器和同一 run ID。预演包括通信、任务分配、实际执行、回执回读、冲突与离线恢复。当前仅完成材料和本机机制验证，**真机联测待你们进行**。
+队长和队友准备好了以后，从 [联测入口](docs/rehearsal/START_HERE.md) 开始，分别把 [队长提示词](docs/rehearsal/LEADER_PROMPT.md) 和 [队员提示词](docs/rehearsal/MEMBER_PROMPT.md) 发给自己的 Agent。支持显式读取 Skill 的其他 Agent；使用真实账号、独立机器和同一 run ID。预演包括通信、任务分配、实际执行、回执回读、冲突与离线恢复；另有 [每人网页、Agent 读取与成本验收](docs/rehearsal/READER_CHECKS.md)，检查八种查询策略、分页和增量，分别记录接口、理解与实际用量。当前仅完成材料和本机机制验证，**真机联测待你们进行**。
 
 ## 系统设计与图谱协作
 

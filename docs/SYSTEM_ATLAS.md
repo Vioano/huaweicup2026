@@ -24,7 +24,7 @@ node .agents/skills/system-atlas/bin/system-atlas.mjs preview .agents/skills/sys
 
 先读 [collaboration.md](../.agents/skills/system-atlas/references/collaboration.md) 与 **[task-board.md](../.agents/skills/system-atlas/references/task-board.md)**，后者包含 0.5 新增的 `task.set` 和 taskGrants。参与者都升级至 0.5，0.4 校验器会拒绝带 tasks 的模型。
 
-用户已指定由自己（NikolaStarx）当联测队长。当前只准备了材料，没有初始化真实身份/公钥、授权、同步分支或常驻服务。按 [联测入口](rehearsal/START_HERE.md) 启动，分别发送队长/队员提示词即可开展预演。
+用户已指定由自己（NikolaStarx）当联测队长。当前只准备了材料，没有初始化真实身份/公钥、授权、同步分支或常驻服务。按 [联测入口](rehearsal/START_HERE.md) 启动，分别发送队长/队员提示词即可开展预演。每人必须完成 [网页与 Agent 读取验收](rehearsal/READER_CHECKS.md)，检查同版本两种入口、八策略/分页/增量、理解正确性及实际读取量；接口通过不代表 Agent 理解或低计费成本。
 
 私有目录必须位于所有 Git 工作区之外。队长初始化时复制模型，此后权威源为 `LEADER_DIR/model.json`；仓库中的原始模型和 Git 同步分支都是不同的对象，不得把远端快照 pull 回权威源。只在 `serve` 活跃时持续同步；不同设备可能短暂持有不同 cursor，应在相同版本和范围比较。成员身份、邀请和密钥信任需要本人核对。
 
