@@ -1,3 +1,32 @@
+# 最终补充：2026-09-23 01:20 收尾
+
+**当前状态：部分通过，服务已停止。** 本节取代下方原截止时的未完成状态；下方保留为历史阶段记录，不能将其中“未连接/未提交”当作最终结论。完整时间线见 session-log.md，筛选的实际回执见 protocol-evidence.json。
+
+本人明确续期到01:20后，01:02:28用原身份重启。最终停止时间01:20:15+08:00，晚约15秒，已核对仅停止本人本轮进程；无永久服务。最后已验签缓存cursor22。停止后仅整理交付，未继续Atlas写入或重启服务。
+
+| 项目 | 最终本人证据 | 结论 |
+| --- | --- | --- |
+| A1签名同步 | 补丁8992d303执行代码；新标记LIVE-SYNC-adadf7789e真实回读 | PASS（补丁环境） |
+| A2权限/board | cursor15完整本人3任务，complete=true/hasMore=false；真实公钥及最小grants、字段版本已读 | PASS |
+| A2状态 | protocol doing accepted16并回读；review+deliverables请求已上传但停服前及之后缓存receipt=null | 部分完成，pending不是成功 |
+| A3字段/批注 | accepted17；原inputs=[]，追加合成说明及PR7批注；作者/context回读一致，成熟度未改 | PASS |
+| 网页/Agent | 内置浏览器真实打开；Task data与CLI同cursor15/revision；Canvas看到输入、本人批注与Applied #17；另同cursor22核对真人拖动 | Agent网页比对PASS；本人亲自视觉验收未确认 |
+| F1 | rejected/team/forbidden18；blocked及assignees均保持原值、字段版本4 | PASS |
+| F2 | expectedVersion4旧请求conflict20；值保持leader-newer；新ID/版本19合并为leader-newer; member-intent，accepted21后回读 | PASS |
+| F3 | 队长优先真人拖动并暂停F3，未发布OFFLINE；成员未提交F3请求 | 未测 |
+| END | 服务停止、身份保留；cursor22成员仍有两类grant，未收到撤权签名快照 | 停服完成；撤权回读未完成 |
+
+请求完整ID均见JSON；阶段分别为doing、a3、f1、f2-old、f2-merge、review。review请求为r20260923-0011-35c5-review-yuanzhifang30-sudo-001，status expectedVersion16、deliverables expectedVersion4；不得写成accepted。fit计算已被队长独立验收，其done并非成员签名生命周期；cursor22被队长真人拖为doing，本人没有修改fit权限或伪造历史。
+
+同cursor15网页/CLI revision=801d395d6c3ac5e89d976563127697b976b3fa44e8941e9a6ccd566f423ce20d。同cursor22网页/API revision=9d94aa33b1d0342c9efcfa61b4fd405deb904eb02da3f5b85034bb78a7a4c73a，fit-yuanzhifang30-sudo done→doing，entities仍[analysis]；完整diff21→22只有该任务更新，没有模块/关联增删。网页实际看到fit和protocol都在In progress。
+
+公开证据：[A1/A3/F1](https://github.com/huaweibei123/huaweicup2026/issues/5#issuecomment-5780769787)、[网址实际打开](https://github.com/huaweibei123/huaweicup2026/issues/5#issuecomment-5780778387)、[F2修订](https://github.com/huaweibei123/huaweicup2026/issues/5#issuecomment-5780828181)、[真人拖动同步](https://github.com/huaweibei123/huaweicup2026/issues/5#issuecomment-5780859619)。
+
+最终完整Mailbox于01:20:40返回1话题49评论0指派Issue，正文与所有新增评论全文衔接读完。专门结束回合/新挑战/本人恢复测试仍未测；持续查收不证明自动唤醒。Windows全套79PASS/12 symlink EPERM FAIL、新增原子写5PASS/1SKIP结论不变。不宣称完整Windows安全回归、正式赛题有效性或全队通过。
+
+---
+
+# 原截止及首轮补丁阶段历史记录（以下非最终状态）
 # 本人联测记录：r20260923-0011-35c5
 
 状态：部分通过（原版联测和后续经本人授权的 Windows 补丁验证分开记录）。按 `docs/rehearsal/RESULT_TEMPLATE.md` 记录本人证据，不代表全队结果。
