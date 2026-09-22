@@ -16,7 +16,7 @@ code_sha: 实际 git rev-parse HEAD
 deadline: 实际时间及 UTC 偏移
 sync_branch: atlas-rehearsal/实际run-id
 participants: 等待 READY 后由队长确认，不预填虚构账号
-phases: M1 -> A1 -> A2 -> A3 -> F1 -> F2 -> F3 -> END
+phases: M1 -> A1/U1 -> A2 -> A3/U2 -> R1 -> R2 -> F1 -> F2 -> F3 -> END
 public_invitation: 初始化后附完整公开 JSON 和 SHA-256 指纹
 ```
 
@@ -31,7 +31,7 @@ gh issue comment ISSUE_NUMBER --repo huaweibei123/huaweicup2026 --body-file "实
 
 队员可先用 `gh issue list --repo huaweibei123/huaweicup2026 --state open --author NikolaStarx --limit 100 --json number,title,url,body,author` 找唯一未到期的控制帖；达到列表上限则继续分页，不以截断列表声称唯一。优先使用队长给的确切链接。首次尚未被提及时直接 `gh issue view ISSUE_NUMBER --repo huaweibei123/huaweicup2026 --comments` 阅读并报到，之后纳入本人参与历史。
 
-每 20–30 秒主动查收本轮新增消息；每阶段入口、掉线恢复及结束时 `check --full` 并读完索引全文。普通 `check` 的最近 20 条不能证明无遗漏。一次等待最多 30 秒；阶段超过 3 分钟无进展就报具体阻塞，整轮 45 分钟到期收尾，可由本人明确续期。不要刷“收到”，没有新证据就不发评论。
+每 20–30 秒主动查收本轮新增消息；每阶段入口、掉线恢复及结束时 `check --full` 并读完索引全文。普通 `check` 的最近 20 条不能证明无遗漏。一次等待最多 30 秒；阶段超过 3 分钟无进展就报具体阻塞，整轮 60 分钟到期收尾，可由本人明确续期。不要刷“收到”，没有新证据就不发评论。
 
 ## M1. 报到、往返和补读
 
@@ -77,6 +77,8 @@ node .agents/skills/system-atlas/bin/system-atlas.mjs team query --state "PRIVAT
 ```
 
 预期连接相同 project/epoch/leaderKey，初始看板为空。提交 GitHub 同步分支确实成功、成员收到签名版本才算 A1 PASS。一次更新通常需要“成员上传→队长处理→成员下载”三个周期；必要时按这个顺序各人运行 `team sync --state "PRIVATE_DIR"`，不声称硬实时。
+
+连接建立后，队长和每位队员分别完成 [READER_CHECKS.md](READER_CHECKS.md) 的 U1：亲自打开自己的本地网页。有人只拿到 HTTP 成功或 CLI 输出，U1 仍是未测。
 
 ## A2. 分配、执行和交付
 
@@ -153,7 +155,7 @@ node .agents/skills/system-atlas/bin/system-atlas.mjs team request --state "MEMB
 
 PR 附实际结果与限制，不声称合成无噪声拟合证明真实赛题性能。`result.json` 的代码版本可以是已推送的脚本提交；结果另一个提交，避免把最终提交 SHA 写入自身造成循环。队员将 PR URL 写入 `deliverables`（数组），同一请求把任务设为 `review`，按字段各自带 expectedVersion；再通过 Mailbox 发 `A2/REVIEW` 及签名回执标识。
 
-队长在独立检出目录核对并重跑每个 PR 的代码和结果，记录数字是否一致。通过后用 leader `task ... action:update`、`patch:{"status":"done"}` 更新；本轮不自动合并 PR。测试报告既保留“Agent 确实执行”的 PR/日志证据，也保留 accepted 回执；不因卡片 done 自动提升三个模块的成熟度。服务端授权到字段，不能强制队员只写 review 而不能写 done，这一审批顺序是团队约定。
+队长在独立检出目录核对并重跑每个 PR 的代码和结果，记录数字是否一致。通过后用 leader `task ... action:update`、`patch:{"status":"done"}` 更新；本轮不自动合并 PR。测试报告既保留“Agent 确实执行”的 PR/日志证据，也保留 accepted 回执；不因卡片 done 自动提升六个模块的成熟度。服务端授权到字段，不能强制队员只写 review 而不能写 done，这一审批顺序是团队约定。
 
 ## A3. 设计字段、批注和 Human/Agent 同版本
 
@@ -168,7 +170,13 @@ PR 附实际结果与限制，不声称合成无噪声拟合证明真实赛题�
 
 替换版本/文本/真实链接。若已有其他内容，保留后再增加自己的有用说明，不用示例数组覆盖他人信息。`field.set` 替换整个字段。核对 accepted、字段回读与 `team state` 的 comments 作者/上下文，给出证据。这里更改设计文本，不更改数据、代码、拓扑或成熟度。
 
-随后所有人暂缓写入，等同步稳定，各自记录 cursor。本人打开 `team serve` 打印的本机网页，在 Board 按自己过滤、打开任务，核对状态/交付链接；进入 Canvas 核对 analysis 输入和批注。对照相同 cursor 的 CLI 记录。报告截图或本人具体观察（隐藏带 token 的 URL），不能以 API 返回代替人眼检查。cursor 不同先继续同步，不能立即认定数据不一致。
+随后所有人暂缓写入，等同步稳定，各自记录 cursor，并完成 [READER_CHECKS.md](READER_CHECKS.md) 的 U2：本人操作本机网页，Agent 对照同一版本、同一展开范围。未打开网页就写未测，不能以 API 返回代替人眼检查。
+
+## R1/R2. Agent 读取、理解与成本
+
+队长和每位队员按 [READER_CHECKS.md](READER_CHECKS.md) 完成问题卡，先自主选择策略并回答，再对照标准和运行探针。覆盖八种查询策略、完整分页、错误 token，以及一次受控任务变更后的增量读取。每人保留实际问答、工具调用量和字节/耗时，宿主无法提供 token 就记未知。
+
+R2 在本轮 protocol 任务上由队长执行一次已授权字段变更，协调 C0/C1，避免与 F 阶段同时写入。HTTP/SSE 只连本人的 loopback 服务；不要虚构 team diff/team watch 命令或把查询返回误当 Agent 已理解。正常操作不需重复全量读取，也不需每次把全部策略都跑一遍。
 
 ## F1. 越权与原子拒绝
 

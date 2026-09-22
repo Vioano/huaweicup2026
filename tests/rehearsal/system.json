@@ -89,6 +89,111 @@
           "value": "not_connected"
         }
       }
+    },
+    {
+      "id": "baseline",
+      "type": "backend",
+      "label": "基线计算",
+      "purpose": "演示拟合模块；这里只是设计，未声称真实运行。",
+      "inputs": [
+        "time_s [s]，distance_m [m]"
+      ],
+      "outputs": [
+        "拟合参数与逐行预测"
+      ],
+      "steps": [
+        "读取本轮已确认输入",
+        "保留结果来源与局限"
+      ],
+      "openIssues": [
+        "本节点用于读取策略预演，尚无运行证据。"
+      ],
+      "evidence": [],
+      "maturity": {
+        "design": {
+          "value": "proposed"
+        },
+        "implementation": {
+          "value": "not_started"
+        },
+        "verification": {
+          "value": "untested"
+        },
+        "integration": {
+          "value": "not_connected"
+        }
+      },
+      "parent": "analysis"
+    },
+    {
+      "id": "residuals",
+      "type": "backend",
+      "label": "残差核对",
+      "purpose": "演示残差检查；不能从有连线推断实际执行。",
+      "inputs": [
+        "预测与合成观测"
+      ],
+      "outputs": [
+        "残差表与诊断说明"
+      ],
+      "steps": [
+        "读取本轮已确认输入",
+        "保留结果来源与局限"
+      ],
+      "openIssues": [
+        "本节点用于读取策略预演，尚无运行证据。"
+      ],
+      "evidence": [],
+      "maturity": {
+        "design": {
+          "value": "proposed"
+        },
+        "implementation": {
+          "value": "not_started"
+        },
+        "verification": {
+          "value": "untested"
+        },
+        "integration": {
+          "value": "not_connected"
+        }
+      },
+      "parent": "analysis"
+    },
+    {
+      "id": "revision",
+      "type": "backend",
+      "label": "修订建议",
+      "purpose": "演示反馈边；结构成环不证明业务反馈已完成。",
+      "inputs": [
+        "残差诊断"
+      ],
+      "outputs": [
+        "待审修订建议"
+      ],
+      "steps": [
+        "读取本轮已确认输入",
+        "保留结果来源与局限"
+      ],
+      "openIssues": [
+        "本节点用于读取策略预演，尚无运行证据。"
+      ],
+      "evidence": [],
+      "maturity": {
+        "design": {
+          "value": "proposed"
+        },
+        "implementation": {
+          "value": "not_started"
+        },
+        "verification": {
+          "value": "untested"
+        },
+        "integration": {
+          "value": "not_connected"
+        }
+      },
+      "parent": "analysis"
     }
   ],
   "relations": [
@@ -105,6 +210,27 @@
       "to": "delivery",
       "kind": "dataflow",
       "label": "代码与结果"
+    },
+    {
+      "id": "baseline-residuals",
+      "from": "baseline",
+      "to": "residuals",
+      "kind": "dataflow",
+      "label": "预测结果"
+    },
+    {
+      "id": "residuals-revision",
+      "from": "residuals",
+      "to": "revision",
+      "kind": "feedback",
+      "label": "诊断建议"
+    },
+    {
+      "id": "revision-baseline",
+      "from": "revision",
+      "to": "baseline",
+      "kind": "feedback",
+      "label": "待审修订"
     }
   ],
   "views": [
@@ -140,6 +266,61 @@
         },
         {
           "relation": "analysis-delivery"
+        }
+      ]
+    },
+    {
+      "id": "analysis-inside",
+      "scope": "analysis",
+      "title": "分析内部（结构反馈示例）",
+      "placements": [
+        {
+          "entity": "baseline",
+          "pos": [
+            40,
+            180
+          ]
+        },
+        {
+          "entity": "residuals",
+          "pos": [
+            380,
+            180
+          ]
+        },
+        {
+          "entity": "revision",
+          "pos": [
+            720,
+            180
+          ]
+        }
+      ],
+      "relations": [
+        {
+          "relation": "baseline-residuals"
+        },
+        {
+          "relation": "residuals-revision"
+        },
+        {
+          "relation": "revision-baseline",
+          "fromSide": "bottom",
+          "toSide": "bottom",
+          "via": [
+            [
+              805,
+              340
+            ],
+            [
+              125,
+              340
+            ]
+          ],
+          "labelAt": [
+            465,
+            325
+          ]
         }
       ]
     }

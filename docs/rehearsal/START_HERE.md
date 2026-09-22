@@ -1,6 +1,6 @@
 # Team Mailbox + System Atlas 真机联测
 
-**状态：预演材料已准备；真人、多账号、多电脑联测尚未进行。** 本文面向队长 NikolaStarx 和队友，约 30–45 分钟。至少两个人、两个 GitHub 账号、两台电脑；三人参加更能验证广播和不同 Agent 的协作。不要用同一电脑上的两个模拟身份充当通过。
+**状态：预演材料已准备；真人、多账号、多电脑联测尚未进行。** 本文面向队长 NikolaStarx 和队友，约 45–60 分钟。至少两个人、两个 GitHub 账号、两台电脑；三人参加更能验证广播和不同 Agent 的协作。不要用同一电脑上的两个模拟身份充当通过。
 
 ## 到时候怎么开始
 
@@ -36,7 +36,7 @@ uv run python .agents/skills/team-mailbox/scripts/mailbox.py check --full
 
 - Atlas **0.5.0**，上游 `fc258c92d12d36bc9fbbabe0713056958b6cc7e2`；0.4 客户端不能参加任务看板测试。
 - Team Mailbox 固定提交 `77581d464fa8d1b0d2182c31bee4fb0a8e03c83a`。
-- 本轮模型为 [system.json](../../tests/rehearsal/system.json)，初始任务为空，三个模块成熟度均未验收。
+- 本轮模型为 [system.json](../../tests/rehearsal/system.json)，初始任务为空，模型有 6 个模块、5 条关系、2 个视图，所有模块的成熟度均未验收。analysis 包含三个子模块与一组结构反馈边，专用于检验读取语义；旧三节点预演应保留原状态，新建本轮而不覆盖。
 - 输入 [observations.csv](../../tests/rehearsal/observations.csv) 为人为构造的无噪声直线，单位为秒和米，不是赛题或真实观测。
 
 ## 要验收什么
@@ -48,9 +48,12 @@ uv run python .agents/skills/team-mailbox/scripts/mailbox.py check --full
 | Atlas 真连接 | 各自密钥、可信邀请、GitHub 独立同步分支；队员读到队长签名的已确认版本 |
 | 任务分配与执行 | 队长创建任务并授权；队员读到任务、实际运行脚本、交付 PR；队长重跑并验收 |
 | 状态/设计协作 | `task.set`、`field.set`、`comment.add` 的回执与回读，以及同 cursor 的网页/CLI 一致性 |
+| 每人本地网页 | U1/U2：亲自打开本人的 serve 地址，检查层级导航、详情、Board、刷新及同版本内容 |
+| Agent 读取与理解 | R1/R2：八种策略、分页、语义说明、增量回读；每人实际问答与测量分开记录 |
+| 读取成本 | 比较冷启动与已有上下文的窄查询/全量读取，记录调用数、字节、耗时；实际 token 不可得则记未知 |
 | 异常边界 | 越权整批拒绝、旧字段版本冲突、离线排队/恢复，没有误报“已完成” |
 
-详细执行看 [RUNBOOK.md](RUNBOOK.md)，结果填 [RESULT_TEMPLATE.md](RESULT_TEMPLATE.md)。一个阶段失败就记录具体命令、错误码、影响范围并诊断，不把后续阶段全判失败，也不强行宣布全通过。只有通过的项可以写 PASS。
+每个人都要完成 [网页、Agent 读取与成本检查](READER_CHECKS.md)，包含队长；脚本通过不替代人眼或 Agent 理解。详细执行看 [RUNBOOK.md](RUNBOOK.md)，结果填 [RESULT_TEMPLATE.md](RESULT_TEMPLATE.md)。一个阶段失败就记录具体命令、错误码、影响范围并诊断，不把后续阶段全判失败，也不强行宣布全通过。只有通过的项可以写 PASS。
 
 ## 本机预演
 
