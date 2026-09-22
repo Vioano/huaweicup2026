@@ -25,3 +25,15 @@ npm test
 新增用例验证实际替换和调用顺序、文件 fsync 的 EPERM/ENOSPC/EACCES 传播、rename EACCES 传播与旧文件保留；POSIX 目录错误用例在 Windows 明确跳过。现有测试另覆盖签名、权限、原子拒绝、冲突、崩溃恢复、真实本地 bare Git、CLI/HTTP 和任务看板。这些本地模拟身份不算多机联测。
 
 运行结果、真实 member 初始化/serve、HTTP/浏览器、GitHub 同步及队长发布新标记回读见后续验证记录；没有运行的项不得标 PASS。本轮截止仍以控制 Issue 为准。
+
+## 本机实际验证与收尾
+
+- 补丁提交：`8992d303412684e2e07b2202ccaecaeacd923280`；独立草稿 PR：https://github.com/huaweibei123/huaweicup2026/pull/11 。这是本人实现；没有将队长并行候选 `ff7025d` 的测试当成本提交测试。
+- 新增原子写测试：5 PASS，1 POSIX 专属项 SKIP。实际文件替换成功；文件 fsync 的 EPERM/ENOSPC/EACCES 和 rename EACCES 均传播，原文件保留。
+- 第一轮相关回归（原始测试路径）：39 项，36 PASS、2 FAIL、1 SKIP。两项失败是 CLI 路径被解析为 `C:\\C:\\...`；修正 `fileURLToPath` 后这两项在全量回归通过。
+- 最终 `npm test`：91 项，79 PASS、12 FAIL、0 SKIP，约 320 秒。12 项在创建测试符号链接时出现 `EPERM, syscall=symlink`（output-path 10 项、preview 1 项、system-design 1 项）；没有绕过系统权限或将失败改成通过。现有 team 的签名、授权/撤权、原子批次、ABA/冲突、请求幂等、Git 并发、断网及损坏恢复用例通过；任务看板相关回归通过。本机没有验证完整的符号链接安全测试，PR 保持草稿。
+- 本人实际 `team init-member` 在私有工作区外目录成功，退出 0；使用已由本人确认的本轮邀请。`team serve --interval 10` 启动成功，HTTP 200，HTML 标题 `System Atlas · 系统图谱`，真实 GitHub 同步后验签查询 cursor=10。
+- 本人完整 board 查询 `complete=true, page.hasMore=false`，3 个任务：fit 为 done，protocol/windows-compat 为 todo。没有成员 grant 或写请求，没有将队长的 done 当成本人 doing/review 闭环。
+- Agent 实际打开本机浏览器并切换 Board，看到全部 7 个任务及本人 3 项。后续协作版本面板检查遇到浏览器会话失效，未完成同 cursor UI/CLI 版本核对；HTTP 不代替视觉验收。未完成队长新标记回读、成员签名写入、F1/F2/F3 真机测试。
+- [公开启动证据及身份](https://github.com/huaweibei123/huaweicup2026/issues/5#issuecomment-5780541691)。未公开私钥、session URL 或完整私有状态。
+- 本轮原截止 2026-09-23T00:56:45+08:00；实际核对命令行后停止本人 serve 的时间为 **00:57:12+08:00**，晚约 27 秒。保留私有身份和证据，不重建身份或清空状态；未安装永久服务。后续联机必须由本人恢复并重新约定时限。
