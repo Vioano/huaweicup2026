@@ -34,6 +34,6 @@
 
 ## 系统设计 Skill
 
-设计模型、模块接口与架构浏览使用 `.agents/skills/system-atlas/SKILL.md`，项目入口说明见 `docs/SYSTEM_ATLAS.md`。Human 与 Agent 读取同一已确认模型，设计、实现、测试和运行状态分别记录。
+设计模型、模块接口与架构浏览使用 `.agents/skills/system-atlas/SKILL.md`，项目入口说明见 `docs/SYSTEM_ATLAS.md`。比赛期使用 Atlas 分工前读 `docs/ATLAS_AGENT_GUIDE.md`：按交接点更新任务、按需读取局部图，不能以维护看板代替求解。Human 与 Agent 读取同一已确认模型，设计、实现、测试和运行状态分别记录。
 
-需要多人共享设计时先读 Skill 的 `references/collaboration.md`。队长和队员的私有状态、密钥必须放在所有 Git 工作区之外；仓库中的已签名图谱只是发布副本。当前只安装了 Skill，尚未初始化本团队图谱、成员授权或持续同步；不要把安装成功当作团队部署成功。
+需要多人共享设计时先读 Skill 的 `references/collaboration.md`。队长和队员的私有状态、密钥必须放在所有 Git 工作区之外；仓库中的已签名图谱只是发布副本。预演已结束，成员写权限已撤销、队长服务已停止；证据保留于预演报告。正式协作须单独明确范围，不复用预演授权，不把本机缓存当作在线同步成功。
