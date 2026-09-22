@@ -1,6 +1,6 @@
 # 来源与版本
 
-核对日期：2026-09-19。
+初始核对日期：2026-09-19；Skill 更新核对：2026-09-22。
 
 ## 结构与工作方法
 
@@ -24,13 +24,13 @@
 
 ## System Atlas
 
-- 引入日期：2026-09-21；用户指定本地项目与上游当前主分支均为 0.4.0。
+- 引入日期：2026-09-21（0.4.0）；2026-09-22 按用户要求更新为 0.5.0，本地源码和 GitHub 主分支核对一致。
 - 上游：<https://github.com/NikolaStarx/system-atlas>
-- 固定提交：`f70784c1250679b57e4de516b07d9c00677acc69`（包含 0.4.0 团队协作及恢复时保留并发编辑的修复）。
+- 固定提交：`fc258c92d12d36bc9fbbabe0713056958b6cc7e2`（共享任务看板与 Agent 任务操作协议）。
 - 上游仓库根目录就是 Skill；完整安装至 `.agents/skills/system-atlas/`，没有嵌套 `.git`。
-- 230 个上游文件逐一核对，内容保持一致；文件 SHA-256 清单在 [system-atlas-install.json](system-atlas-install.json)。
+- 243 个上游文件逐一核对，内容保持一致；文件 SHA-256 清单在 [system-atlas-install.json](system-atlas-install.json)。
 - 保留 MIT LICENSE 及 Archify 2.16 归属说明。没有复制开发机的 node_modules、私钥或私有运行状态。
-- 本次核对时上游尚未创建 GitHub Release；0.4.0 来自该固定提交的 SKILL.md、package.json 和 skill-release.json。
+- 0.5.0 版本号来自该固定提交的 SKILL.md、package.json 和 skill-release.json；不以未核对的 Release 标签替代固定提交。
 
 ## LaTeX 训练模板
 
@@ -47,4 +47,12 @@
 - 本地原型、用户级 QA 与项目级 QA 的位置和适配取舍见 [绘图调研](FIGURE_SKILLS_RESEARCH.md)；逐文件读取哈希见 [来源快照](scientific-figures-source.json)。原型没有已提交版本，未以源仓库 HEAD 冒充它的版本。
 - 项目实现位于 `.agents/skills/scientific-figures/`，独立锁定 [elkjs](https://github.com/kieler/elkjs) 0.10.0（EPL-2.0），通过 npm 获取；未把第三方库源码复制进仓库。
 - 只迁移可复用逻辑和检查方式，不带入客户图件。示例是本项目工作流程示意，不是原图复刻或赛题实验结果。
-- 其他 GitHub 科研绘图 Skill 仅做调研，没有安装。
+- figures4papers 现已按用户指定安装，其他 GitHub 科研绘图候选仍仅做调研。
+
+## figures4papers / scientific-figure-making
+
+- 引入日期：2026-09-22；上游 [ChenLiu-1996/figures4papers](https://github.com/ChenLiu-1996/figures4papers)。
+- 固定提交：`3c181f85e82c6f24948fcaaf3be6696102b41d8d`；上游目录 `scientific-figure-making/` 的 6 个文件，加仓库根 LICENSE，原样保留在 `.agents/skills/scientific-figure-making/`。
+- 上游没有在 Skill 中声明语义版本，使用提交 SHA 标识；不是发布一个本项目自造版本。
+- 许可证 CC BY-NC 4.0，保留作者/来源；[接入约定](FIGURES4PAPERS.md)，[逐文件哈希](scientific-figure-making-install.json)。
+- 只安装 Skill 文档，没有安装新的 Python 包、下载论文示例数据或把演示数字当本项目结果。

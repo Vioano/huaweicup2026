@@ -1,53 +1,37 @@
-# System Atlas 0.4.0 项目接入
+# System Atlas 0.5.0 项目接入
 
-安装位置：`.agents/skills/system-atlas/`。当前版本固定于上游提交 `f70784c1250679b57e4de516b07d9c00677acc69`，文件清单见 [system-atlas-install.json](system-atlas-install.json)。用户指定的本地源码与该远端提交一致；不自动追随上游 main。
+安装位置：`.agents/skills/system-atlas/`。固定上游提交 `fc258c92d12d36bc9fbbabe0713056958b6cc7e2`，版本来自 SKILL.md、package.json、skill-release.json；完整 243 文件与固定上游一致，清单见 [system-atlas-install.json](system-atlas-install.json)。保留 MIT LICENSE 和 Archify 归属，不自动追随 main。
 
-## 用途
+## 本次更新
 
-它维护系统模块、接口、关系、设计说明和证据，让网页与 Agent 查询同一份已确认模型。设计完成、实现完成、测试通过和真实运行分别标记。
+0.4 的队长权威模型、成员签名请求、字段权限、冲突回执继续保留。0.5 增加共享任务看板：创建/修改/删除/恢复任务、分配成员标签、关联零个或多个模块、状态与交付物，以及成员的明确任务字段授权。Human Board 与 Agent board 查询来自同一已确认模型。
 
-0.4.0 新增团队协议：队长电脑保存权威模型；队员可以在授权节点和字段上提交签名请求或批注；队长按权限与读取时的字段版本处理，返回生效、拒绝或冲突回执。GitHub 传递请求和签名快照，远端快照不反向覆盖队长模型。
+任务是独立集合，任务不等于模块；`entities: []` 是合法独立任务。`assignees` 不是权限、在线状态或独占锁；`done` 不改变模块的设计/实现/验证/运行成熟度。该 Skill 不自动启动队员 Agent，不执行任务调度。队员按本人授权主动读任务、执行、交付，Mailbox 负责通知和代码交接。
 
-这些能力服务于设计协作，不会自动唤醒 Agent 或替团队调度建模任务。team-mailbox 仍负责 Issue 消息和成果交接。
+## 使用
 
-## 本机使用
-
-需要 Node.js 18+ 和 Git。本次安装验证及项目 CI 使用 Node.js 22。完整 Skill 已随仓库提交，队友克隆后可让 Agent 读取 [SKILL.md](../.agents/skills/system-atlas/SKILL.md)，Codex 下轮可以发现它。
-
-从项目根目录运行：
+Node.js 18+ 为上游要求，本项目和联测统一 Node.js 22+。本次实测发现原生 Windows 写入状态时目录 fsync 报 EPERM；当前使用 macOS/Linux，Windows 队友按联测入口在 WSL2 的 Linux 环境运行。此处保留上游原样版本，不将忽略持久化错误作为适配。队友克隆后显式读取 [SKILL.md](../.agents/skills/system-atlas/SKILL.md)，其他 Agent 也可读取。需要依赖时：
 
 ```sh
-# 检查随附演示模型
-node .agents/skills/system-atlas/bin/system-atlas.mjs validate .agents/skills/system-atlas/examples/service.system.json --repo-root .agents/skills/system-atlas --json
-
-# 启动本机预览，按终端提示打开 URL；Ctrl-C 停止
-node .agents/skills/system-atlas/bin/system-atlas.mjs preview .agents/skills/system-atlas/examples/service.system.json --repo-root .agents/skills/system-atlas
+npm ci --ignore-scripts --prefix .agents/skills/system-atlas
+node .agents/skills/system-atlas/bin/system-atlas.mjs validate tests/rehearsal/system.json --repo-root . --json
+node .agents/skills/system-atlas/bin/system-atlas.mjs preview .agents/skills/system-atlas/examples/math-modeling.system.json --repo-root .agents/skills/system-atlas
 ```
 
-内置示例是演示数据，不是华为杯项目的真实设计。项目模型由后续具体设计任务创建，不在安装时猜测赛题或团队架构。针对本项目模型使用 `--repo-root .`，不要沿用示例的根目录。
+打开终端打印的本机 URL，结束 Ctrl-C。上游数学建模示例中的人员/任务/完成进度均为演示，不能当本队结果；本项目预演模型另存于 `tests/rehearsal/system.json`，初始任务为空。
 
-开发依赖只在维护和运行测试时需要：
+## 团队启用与真机联测
 
-```sh
-cd .agents/skills/system-atlas
-npm ci --ignore-scripts
-npm test
-```
+先读 [collaboration.md](../.agents/skills/system-atlas/references/collaboration.md) 与 **[task-board.md](../.agents/skills/system-atlas/references/task-board.md)**，后者包含 0.5 新增的 `task.set` 和 taskGrants。参与者都升级至 0.5，0.4 校验器会拒绝带 tasks 的模型。
 
-`npm test` 是上游维护的 81 项回归测试，含 16 项团队协议测试。它们使用临时目录、本机 HTTP 和本地 bare Git 远端；不能代替真实队友电脑与 GitHub 网络互通测试。其他继承自 Archify 的测试不属于此命令选定的回归集合。
+用户已指定由自己（NikolaStarx）当联测队长。当前只准备了材料，没有初始化真实身份/公钥、授权、同步分支或常驻服务。按 [联测入口](rehearsal/START_HERE.md) 启动，分别发送队长/队员提示词即可开展预演。
 
-## 实际启用团队协作
+私有目录必须位于所有 Git 工作区之外。队长初始化时复制模型，此后权威源为 `LEADER_DIR/model.json`；仓库中的原始模型和 Git 同步分支都是不同的对象，不得把远端快照 pull 回权威源。只在 `serve` 活跃时持续同步；不同设备可能短暂持有不同 cursor，应在相同版本和范围比较。成员身份、邀请和密钥信任需要本人核对。
 
-先阅读 [团队协议](../.agents/skills/system-atlas/references/collaboration.md)，确定设计模型、队长、成员公钥与节点/字段权限。队长和每个成员各自使用工作区之外的私有状态目录，绝不提交私钥、私有状态或成员缓存。
+## 验证和后续更新
 
-上游 `team` 命令支持 `init-leader`、`init-member`、`grant`、`request`、`sync`、`serve` 等操作。团队同步默认使用独立的 `atlas-sync` 分支；`serve` 运行期间才持续同步。离线请求等待队长恢复处理，冲突后要重读字段并重新判断意图。
+2026-09-22 本机 Node.js 22.22.3：`npm ci --ignore-scripts` 成功，`npm test` **91/91** 通过。另用项目预演脚本调用实际 CLI，验证本地 bare Git 上的任务创建、授权、签名请求、冲突、原子拒绝及同版本回读。详细范围见 [预演准备验证](rehearsal/VALIDATION.md)。
 
-本次仅安装并验证完整 Skill。没有初始化本队 Atlas 身份、授权、模型或同步分支，没有创建常驻服务，也未进行真人多设备验收。具体初始化命令采用上游协议，使用本队确认后的真实参数。
+这些是本机机制验证；多人多电脑、真实 GitHub 同步、不同 Agent 执行、此次网页实际交互仍待联测。上游附带的 verification 文档只代表上游报告，不当作本次验收。
 
-## 更新与验证
-
-更新前检查上游提交、团队协议变更和本地修改；通过项目分支与 PR 更新完整目录，同时更新来源清单。当前目录为完整上游副本，避免直接修改其代码而丢失版本对应关系。
-
-CI 配置见 [.github/workflows/system-atlas.yml](../.github/workflows/system-atlas.yml)。它在实际安装目录执行依赖还原、回归测试和示例模型校验，结果见 [GitHub Actions](https://github.com/huaweibei123/huaweicup2026/actions)。安装验证不包含新增网页交互验收；上游已有浏览器记录保留在 Skill 内，不能当作本次重做的验证。
-
-2026-09-21 本次安装验证：macOS、Node.js 22.22.3；`npm ci --ignore-scripts` 成功；`npm test` 实际通过 81/81（包含 16 项团队协议测试）；示例的 3 个视图分别通过 9/9 校验，0 错误、0 警告。230 个安装文件与固定上游版本逐字节一致。以上均为本机安装/机制验证，未运行真人多设备或本次浏览器交互验收。
+更新应在任务分支核对上游提交和差异、替换完整 Skill、更新哈希清单，并通过 PR 汇合。不要直接修改这份 vendored 源码造成与记录不一致。CI 见 [.github/workflows/system-atlas.yml](../.github/workflows/system-atlas.yml)，本次项目适配内容在 Skill 外。

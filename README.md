@@ -34,8 +34,9 @@ macOS 的 ExFAT 外置盘可能产生 `._*` 元数据文件，导致依赖安装
 .
 ├── .agents/skills/
 │   ├── team-mailbox/            # GitHub Issues 团队通信
-│   ├── system-atlas/            # 0.4.0 系统设计与图谱协作
-│   └── scientific-figures/      # 科研绘图约定与 ELK → Draw.io 排版
+│   ├── system-atlas/            # 0.5.0 系统设计、共享任务看板
+│   ├── scientific-figures/      # 项目科研绘图约定与 ELK → Draw.io 排版
+│   └── scientific-figure-making/ # figures4papers 的 Matplotlib 论文图配方
 ├── .github/                    # PR / 任务卡模板、跨平台示例检查
 ├── AGENTS.md                   # Agent 协作和实验约定
 ├── pyproject.toml / uv.lock     # Python 依赖及固定版本
@@ -80,9 +81,13 @@ uv run python .agents/skills/team-mailbox/scripts/mailbox.py check --full
 
 完整查收后，Agent 还需逐个读取返回索引中的话题全文。任务通过 Issue 留言和 `@GitHub账号` 寻址，成果通过 PR 交付。默认无 Hook、无自动回信、无空闲唤醒。详见 [团队通信](docs/TEAM.md) 和 [Skill](.agents/skills/team-mailbox/SKILL.md)。
 
+## 真机联测
+
+队长和队友准备好了以后，从 [联测入口](docs/rehearsal/START_HERE.md) 开始，分别把 [队长提示词](docs/rehearsal/LEADER_PROMPT.md) 和 [队员提示词](docs/rehearsal/MEMBER_PROMPT.md) 发给自己的 Agent。支持显式读取 Skill 的其他 Agent；使用真实账号、独立机器和同一 run ID。预演包括通信、任务分配、实际执行、回执回读、冲突与离线恢复。当前仅完成材料和本机机制验证，**真机联测待你们进行**。
+
 ## 系统设计与图谱协作
 
-已安装 [System Atlas 0.4.0](.agents/skills/system-atlas/SKILL.md)，完整保留渲染器、团队协作代码、文档与测试。它让 Human 和 Agent 查看同一份已确认模型，支持队长发布、节点/字段授权、签名变更请求和冲突回执。需要 Node.js 18+，本项目使用 Node.js 22 验证。
+已安装 [System Atlas 0.5.0](.agents/skills/system-atlas/SKILL.md)，完整保留渲染器、团队协作代码、文档与测试。它让 Human 和 Agent 查看同一份已确认模型，支持队长发布、节点/字段授权、签名变更请求和冲突回执；0.5.0 新增共享任务看板、任务分配标签与明确的任务字段授权。需要 Node.js 18+，本项目使用 Node.js 22 验证。Atlas 0.5.0 原生 Windows 状态写入存在已复现问题，Windows 队友使用 WSL2/Linux，详见联测入口。
 
 从项目根目录体验随附示例：
 
@@ -102,4 +107,4 @@ node .agents/skills/system-atlas/bin/system-atlas.mjs preview .agents/skills/sys
 
 先看 [论文说明](paper/README.md)：2025 模板是课件的训练参考，不能声称符合 2026 正式格式。来源见 [SOURCES](docs/SOURCES.md)。不把模板示例正文、参考文献或旧 PDF 当成团队成果。
 
-数学建模相关 Skill 的选型见 [原调研报告](docs/SKILLS_RESEARCH.md)；科研绘图、Python / MATLAB / Wolfram / Julia 与 Astra 适配见 [绘图专项报告](docs/FIGURE_SKILLS_RESEARCH.md)。第三方候选尚未安装。当前项目 Skill 是 `team-mailbox`、`system-atlas` 与 `scientific-figures`。
+数学建模相关 Skill 的选型见 [原调研报告](docs/SKILLS_RESEARCH.md)；科研绘图、Python / MATLAB / Wolfram / Julia 与 Astra 适配见 [绘图专项报告](docs/FIGURE_SKILLS_RESEARCH.md)。用户指定的 [figures4papers / scientific-figure-making](.agents/skills/scientific-figure-making/SKILL.md) 已安装，提供 Matplotlib 图形设计与代码配方，许可为 CC BY-NC 4.0，来源见 [安装记录](docs/FIGURES4PAPERS.md)。其他调研候选尚未安装。当前项目有四个 Skill。
