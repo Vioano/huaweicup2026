@@ -25,6 +25,33 @@ try{
  assert.equal(await page.locator('.task-card').count(),600);
  let before=await geometry();assert.equal(before.bodyWidth,before.viewport);for(const lane of before.lanes){assert.ok(lane.height>100);assert.ok(lane.scrollHeight>lane.height);assert.ok(lane.scrollWidth<=lane.width+1,JSON.stringify(lane));}
  checks.push('600 cards; bounded lane widths/heights; no text overflow');
+ // A stable default screenshot is insufficient: compare every control across states.
+ const toolbarSelectors=['.board-search','.board-assignee','.board-filter-menu summary','.board-clear','.board-toolbar-actions','.board-columns'];
+ const toolbarGeometry=()=>page.evaluate(selectors=>Object.fromEntries(selectors.map(s=>{
+  const r=document.querySelector('#task-board '+s).getBoundingClientRect();
+  return [s,{x:r.x,y:r.y,width:r.width,height:r.height}];
+ })),toolbarSelectors);
+ const assertStable=async(baseline,label)=>{
+  const actual=await toolbarGeometry();
+  for(const s of toolbarSelectors)for(const key of ['x','y','width','height'])
+   assert.ok(Math.abs(actual[s][key]-baseline[s][key])<=.5,`${label}: ${s} ${key} moved`);
+  assert.ok((await geometry()).bodyWidth<=(await geometry()).viewport+1,'toolbar causes page overflow');
+ };
+ for(const width of [1440,1157,1024,760,390]){
+  await page.setViewportSize({width,height:844});const baseline=await toolbarGeometry();
+  assert.equal(await page.locator('#task-board .board-clear').isEnabled(),false);
+  await page.locator('#task-board .board-filter-menu summary').click();await assertStable(baseline,`${width} menu open`);
+  for(const filter of ['blocked','review','unassigned','active','all']){
+   await page.locator('.board-strategy').selectOption(filter);await assertStable(baseline,`${width} ${filter}`);
+  }
+  await page.locator('#task-board .board-filter-menu summary').click();
+  await page.locator('.board-assignee').selectOption('alice');await page.locator('.board-search input').fill('no-such-task');
+  await assertStable(baseline,`${width} member and empty search`);
+  await page.locator('#task-board .board-clear').click();await assertStable(baseline,`${width} clear`);
+ }
+ checks.push('toolbar geometry stable across presets, member/search empty result and clear at five widths');
+ await page.setViewportSize({width:1440,height:900});
+
  await page.screenshot({path:path.join(output,'desktop.png')});
  await lanes.evaluateAll(es=>es.forEach(e=>e.scrollTop=e.scrollHeight));
  const scrolled=await geometry();assert.deepEqual(scrolled.headings,before.headings);

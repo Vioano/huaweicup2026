@@ -104,3 +104,10 @@ html[data-theme=dark][data-atlas-style=aero] .task-card{background:linear-gradie
 .board-filter-menu[open]>select{position:absolute;right:0;top:100%;z-index:20;min-width:210px;max-width:calc(100vw - 32px);padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink)}
 .navigation-bar{flex-wrap:wrap}
 #graph-filter-note{padding:8px 12px;color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+
+/* State changes must not move established controls or rewrap the toolbar.
+   Reserve both the reset action and the longest preset label before filtering. */
+#task-board .board-filter-menu summary{width:190px;box-sizing:border-box;overflow:hidden;text-overflow:ellipsis}
+#task-board .board-clear{flex:none;white-space:nowrap;min-height:36px}
+#task-board .board-clear:disabled{opacity:.45;cursor:default}
+#task-board .board-count{font-variant-numeric:tabular-nums;text-align:center;box-sizing:content-box}

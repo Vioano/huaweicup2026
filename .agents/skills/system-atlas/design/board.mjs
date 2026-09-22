@@ -179,10 +179,10 @@ export function installAtlasBoard({ root, snapshot, locale, connection, team, po
     if(dragging){refreshDraftState();return;}
     if(!force&&signature===renderKey){refreshDraftState();return;}renderKey=signature;
     root.querySelector('h1').textContent=t('Task board');root.querySelector('.board-subtitle').textContent=(model().meta.demo?t('Demo workspace · illustrative tasks and progress')+' · ':'')+t('Move cards between columns, or change Status in details.');
-    const strategy=root.querySelector('.board-strategy');strategy.innerHTML=atlasFilterPresets('board').map(([id,en,zh])=>'<option value="'+id+'">'+esc(locale()==='zh-CN'?zh:en)+'</option>').join('');strategy.value=filters.filter;strategy.setAttribute('aria-label',t('Filter'));root.querySelector('.board-filter-menu summary').textContent=t('Filter')+(filters.filter==='all'?'':' · '+strategy.selectedOptions[0].textContent);
+    const strategy=root.querySelector('.board-strategy');strategy.innerHTML=atlasFilterPresets('board').map(([id,en,zh])=>'<option value="'+id+'">'+esc(locale()==='zh-CN'?zh:en)+'</option>').join('');strategy.value=filters.filter;strategy.setAttribute('aria-label',t('Filter'));const summary=root.querySelector('.board-filter-menu summary');summary.textContent=t('Filter')+(filters.filter==='all'?'':' · '+strategy.selectedOptions[0].textContent);summary.title=summary.textContent;
     search.placeholder=t('Search tasks');search.setAttribute('aria-label',t('Search tasks'));filter.setAttribute('aria-label',t('Assignees'));
     const members=[...new Set((model().tasks||[]).flatMap(t=>t.assignees))].sort();filter.innerHTML='<option value="">'+esc(t('All members'))+'</option><option value="__unassigned__">'+esc(t('Unassigned'))+'</option>'+members.map(m=>'<option>'+esc(m)+'</option>').join('');filter.value=filters.assignee;
-    root.querySelector('.board-clear').textContent=t('Clear filters');root.querySelector('.board-clear').hidden=!filters.assignee&&!filters.search&&filters.filter==='all';
+    root.querySelector('.board-clear').textContent=t('Clear filters');root.querySelector('.board-clear').disabled=!filters.assignee&&!filters.search&&filters.filter==='all';
     for(const [action,name] of [['new','New task'],['data','Task data'],['density','Compact view']]){const b=root.querySelector('[data-action='+action+']');b.title=t(name);b.setAttribute('aria-label',t(name));}
     root.querySelector('[data-action=density]').setAttribute('aria-pressed',String(compact));
     root.querySelector('[data-action=new]').disabled=!connection().online||team.role()==='member';
@@ -190,7 +190,8 @@ export function installAtlasBoard({ root, snapshot, locale, connection, team, po
     filterKey=nextFilterKey;
     const previousScroll=columns.scrollLeft, scrolls=new Map([...columns.querySelectorAll('.board-lane')].map(l=>[l.dataset.status,l.scrollTop]));
     const focused=document.activeElement?.closest?.('[data-task]')?.dataset.task, action=document.activeElement?.dataset?.action;
-    root.querySelector('.board-count').textContent=projection.tasks.length+' / '+(model().tasks||[]).length;
+    const count=root.querySelector('.board-count'), total=(model().tasks||[]).length;
+    count.textContent=projection.tasks.length+' / '+total;count.style.minWidth=(String(total).length*2+3)+'ch';
     columns.innerHTML=projection.columns.map((column,index)=>'<section class="board-column" data-status="'+column.status+'"><div class="board-column-heading"><span class="board-dot"></span><h2>'+esc(t(names[index]))+'</h2><span>'+column.taskIds.length+'</span></div><div class="board-lane" data-status="'+column.status+'">'+column.taskIds.map(id=>{
       const value=tasksById.get(id), related=value.entities.map(id=>model().entities.find(e=>e.id===id));
       const pending=state?.outbox?.filter(r=>!r.receipt&&r.changes.some(c=>c.taskId===id)).length;
