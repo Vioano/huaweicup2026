@@ -92,6 +92,8 @@ def main():
     args.figures.mkdir(parents=True, exist_ok=True)
     for suffix in ("svg", "png", "pdf"):
         fig.savefig(args.figures / f"paired-p2-p3.{suffix}", dpi=160)
+    svg = args.figures / "paired-p2-p3.svg"
+    svg.write_text("\n".join(line.rstrip() for line in svg.read_text().splitlines()) + "\n")
     plt.close(fig)
     manifest = {"input": str(args.run / "metrics.csv"), "input_sha256": sha(args.run / "metrics.csv"),
                 "source": "src/q3/report.py", "source_sha256": sha(Path(__file__)),
