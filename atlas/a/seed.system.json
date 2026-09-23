@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "diagram_type": "system",
+  "meta": {
+    "id": "huaweicup2026-a",
+    "title": "A 题 · 形式化与高速评估器",
+    "locale": "zh-CN",
+    "rootView": "overview",
+    "demo": false
+  },
+  "entities": [
+    {
+      "id": "official-evaluator",
+      "type": "external",
+      "label": "官方评估器 E0",
+      "purpose": "本轮冻结的官方评估语义来源；FORM、E1、E2 和独立验收围绕它交接。",
+      "inputs": [
+        "原始图、官方两字段方案、官方配置、问题编号"
+      ],
+      "outputs": [
+        "接受/拒绝与官方评价结果"
+      ],
+      "steps": [],
+      "openIssues": [
+        "公共适配器和导入 smoke 待队长侧复现。"
+      ],
+      "evidence": [],
+      "maturity": {
+        "design": {
+          "value": "unknown"
+        },
+        "implementation": {
+          "value": "unknown"
+        },
+        "verification": {
+          "value": "untested"
+        },
+        "integration": {
+          "value": "not_connected"
+        }
+      }
+    }
+  ],
+  "relations": [],
+  "views": [
+    {
+      "id": "overview",
+      "title": "A 题评价基础；具体工作在 Board",
+      "placements": [
+        {
+          "entity": "official-evaluator",
+          "pos": [
+            80,
+            160
+          ],
+          "size": [
+            300,
+            138
+          ]
+        }
+      ],
+      "relations": [],
+      "viewBox": [
+        640,
+        480
+      ]
+    }
+  ],
+  "evidence": [],
+  "tasks": []
+}
