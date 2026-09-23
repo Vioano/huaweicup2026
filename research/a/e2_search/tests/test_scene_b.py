@@ -168,6 +168,10 @@ class SceneBTest(unittest.TestCase):
         self.assertTrue(equal(full['result'], self.truth(graph, plan, self.config)))
 
     def test_pool_dispatch_recycle_timeout_and_closed(self):
+        with E2BatchEvaluator(simple_graph(),problem=self.problem,native_enabled=False) as pool:
+            row=list(pool.evaluate_batch([PLAN],**self.config))[0]
+            self.assertEqual(row['route'],'e0_fallback')
+            self.assertTrue(equal(row['makespan'],self.truth(simple_graph(),PLAN,self.config)['makespan']))
         with E2BatchEvaluator(simple_graph(), problem=self.problem, workers=2, max_tasks_per_worker=1) as pool:
             rows = list(pool.evaluate_batch([PLAN, {}, PLAN, PLAN], **self.config))
             self.assertEqual([r['status'] for r in rows], ['ok', 'invalid', 'ok', 'ok'])

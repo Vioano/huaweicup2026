@@ -28,14 +28,15 @@ class _BoundedLog(io.StringIO):
         return len(text)
 
 
-def _worker(connection, graph, cache_bytes, max_cache_entries, problem):
+def _worker(connection, graph, cache_bytes, max_cache_entries, problem, native_enabled):
     try:
         if problem == 1:
-            evaluator = E2Evaluator(graph, cache_bytes=cache_bytes, max_cache_entries=max_cache_entries)
+            evaluator = E2Evaluator(graph, cache_bytes=cache_bytes, max_cache_entries=max_cache_entries,
+                                    native_enabled=native_enabled)
         else:
             from .scene_b import SceneBEvaluator
             evaluator = SceneBEvaluator(graph, problem=problem, cache_bytes=cache_bytes,
-                                         max_cache_entries=max_cache_entries)
+                                         max_cache_entries=max_cache_entries, native_enabled=native_enabled)
         connection.send({"ready": True, "pid": os.getpid()})
         while True:
             request = connection.recv()
@@ -76,7 +77,9 @@ class E2BatchEvaluator:
     def __init__(self, graph, *, workers=1, cache_bytes=DEFAULT_CACHE_BYTES,
                  max_cache_entries=128, timeout_seconds=60.0,
                  startup_timeout_seconds=30.0, max_tasks_per_worker=256,
-                 recycle_peak_rss_bytes=None, problem=1):
+                 recycle_peak_rss_bytes=None, problem=1, native_enabled=True):
+        if type(native_enabled) is not bool:
+            raise ValueError('native_enabled must be boolean')
         if type(problem) is not int or problem not in (1, 2, 3):
             raise ValueError('problem must be 1, 2 or 3')
         self.problem = problem
@@ -98,7 +101,7 @@ class E2BatchEvaluator:
         self._recycle_rss = recycle_peak_rss_bytes
         from copy import deepcopy
         self._graph = deepcopy(graph)
-        self._options = (cache_bytes, max_cache_entries, problem)
+        self._options = (cache_bytes, max_cache_entries, problem, native_enabled)
         self._workers = workers
         self._timeout = timeout_seconds
         self._startup_timeout = startup_timeout_seconds
