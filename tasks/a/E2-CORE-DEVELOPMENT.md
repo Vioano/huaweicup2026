@@ -4,6 +4,8 @@
 
 开发：`nikolastarx/s-55b66a31d7bd49019122a179563dc1d2`；测试：`lyx0217/s-89ad75751f054b6b9929e42d899246be`；状态及写权交接由队长调度汇总。
 
+2026-09-24 后续范围：P1 首版固定 `f4ee4756fc15c65ddc4256f3c73ff4efc89accfc` / [PR42](https://github.com/huaweibei123/huaweicup2026/pull/42) 已交开发验证，尚未终验。LYX 原测试保留；yuanzhifang 的独立 Windows 测试会话 `s-b4329d86154348de9401afcbe48b34ce` 已接手，见[本人回执](https://github.com/huaweibei123/huaweicup2026/issues/15#issuecomment-5803039203)。用户随后授权同一开发专项适配第二、三问，单列 [P2/P3 适配任务](E2-P2-P3-ADAPTATION.md)，先 P2、后 P3；不能将 P1 的实现或成绩视为 P2/P3 已支持。保留 P1 固定测试分支和既有测试，不让新适配改变其被测对象。
+
 1. **目标**：研发有实际候选筛选收益的高速 E2，交付核心方案、实现与开发验证，再由 LYX 在独立工作区测试。E1 工程化继续由 LYX 单写；本任务不抢占 `src/eval_exact/` 或 Q1/Q2 生成器。
 2. **输入**：当前冻结材料、官方 I/O 与 [补充指标](../../docs/a/EVALUATOR_AMENDMENT_20260923.md)；旧 E2 固定 `d83d5f32a1c23f6450aa9c15fa85891c4ebddd7f` / PR20 的 rank、event、原生小核和公开候选池；[完整 Pro 索引](../../AI%20chats/README.md) 及相关已复核勘误。已有作者数据、专项复现与新开发验证分开，不把 Pro 建议当源码事实。
 3. **输出**：独立研究目录和不覆盖的结果目录；方案/近似清单、固定实现提交、输入及代码/环境哈希、种子、完整命令、成本与误差/排序结果、失败/回退边界、给独立测试者的清单和 Draft PR。生产目录为 `src/eval_proxy/`、`src/eval_proxy_native/` 及对应测试，但仅在旧方停写核实后的明确交接点开始写入；交接前只在本专项独立研究范围工作。
