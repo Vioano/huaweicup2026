@@ -209,6 +209,28 @@ class SceneBTest(unittest.TestCase):
             self.assertEqual([r['status'] for r in rows],['ok','invalid','ok'])
             self.assertEqual([r['problem'] for r in rows],[self.problem]*3)
 
+    def test_full_cli_result_trace_log_and_invalid_status(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            graph,plan=micro(17)
+            (root/'graph.json').write_text(json.dumps(graph))
+            (root/'plan.json').write_text(json.dumps(plan))
+            (root/'bad.json').write_text('{}')
+            commands = [[sys.executable,str(REPO_ROOT/f'data/raw/a/official/code/multicore_cut_evaluate_problem_{self.problem}.py')],
+                        [sys.executable,'-m',f'research.a.e2_search.multicore_cut_evaluate_problem_{self.problem}']]
+            for name in ('plan','bad'):
+                exits=[]
+                for i,command in enumerate(commands):
+                    result=subprocess.run(command+[str(root/'graph.json'),str(root/f'{name}.json'),
+                        '--config',str(REPO_ROOT/'data/raw/a/official/data/config.txt'),
+                        '--output',str(root/f'{i}.json'),'--trace-output',str(root/f'{i}.trace.json'),
+                        '--log-output',str(root/f'{i}.log')],capture_output=True,text=True,cwd=REPO_ROOT,timeout=30)
+                    exits.append(result.returncode)
+                self.assertEqual(exits,[0,0] if name=='plan' else [1,1])
+                if name=='plan':
+                    for suffix in ('.json','.trace.json','.log'):
+                        self.assertEqual((root/f'0{suffix}').read_bytes(),(root/f'1{suffix}').read_bytes())
+
 
 class SceneCTest(SceneBTest):
     problem = 3

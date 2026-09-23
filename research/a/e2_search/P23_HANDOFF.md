@@ -82,3 +82,10 @@ P3适配已跑通，冷搜索性能仍有限；复核成本会吞掉收益。不
 15组P2/P3合成、全操作和缓存事件对照、错误、CLI、worker回收/超时测试通过；新增BC内核也对
 已保存32个P2完整E0重查全部操作/三字段，零差异、零新增E0。正式调用总账：P2=80，P3=40，
 不同问题各32唯一候选，所有实测源码各有无损快照，P1原基线和测试安排保持。
+
+## 官方格式 CLI
+
+`uv run python -m research.a.e2_search.multicore_cut_evaluate_problem_2 GRAPH PLAN --config CONFIG -o RESULT --trace-output TRACE --log-output LOG`
+（P3 换最后的问题编号）。全部参数、完整结果/Trace/日志/错误退出由该问题冻结 E0 处理，stderr明确标示路由。
+它是兼容入口，不声称原生加速。两问题各用合成合法/非法样本实跑两端 CLI，结果、Trace、日志字节和退出码一致；
+本次新增共8次合成官方入口调用（含4次非法方案），0新增正式图调用。
