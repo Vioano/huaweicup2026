@@ -45,7 +45,8 @@ GROUPS = [
         "counterexample_evidence": [],
         "note": ("已实测：原图 COPY 字节是独立基线（128→192）；跨 Task 流量按远端消费 Task 数累加；"
                  "COPY 时长下界取整；spill 搬运按 `size*(1+int(spill_out_copies_data))`（本例 64→128）。"
-                 "F-METRIC-001 五个字段之间的等式关系仍未逐字段核对。"),
+                 "**搬运统计的不充分性已实测**（F-METRIC-004）：切图相同、搬运逐字节相同的两个方案"
+                 "可相差 900 cycles。F-METRIC-001 五个字段之间的等式关系仍未逐字段核对。"),
     },
     {
         "group": "取整/同刻事件",
@@ -126,6 +127,28 @@ payload = {
         "not_in_scope": ("补充规范主体针对 a-r1-fast-eval 的 E1/E2 门槛；"
                          "我的 FORM/对抗任务范围不扩大，故 §2/§3/§4 的数值门槛与"
                          "并行探索条款不转为我的规则卡。"),
+    },
+    "e2_ranking_adversarial": {
+        "generator": "src/adversarial/build_ranking_adversarial.py",
+        "verifier": "src/adversarial/verify_ranking_fixture.py",
+        "fixture": "tests/adversarial/ranking-inversion-pair.json",
+        "requirement": ("任务卡第 5 节：对 E2 除数值差异外，能生成同图同问题同核数的候选组，"
+                        "寻找预测排序与官方优劣相反的案例"),
+        "scope": "1 张微型图（6 算子）× 2 核 × 问题 1；30 个方案中 16 个合法、14 个因商图成环被拒",
+        "官方 makespan 区间": "42 .. 1057",
+        "inverted_pairs_by_predictor": {
+            "added_copy_bytes": 22,
+            "cross_task_traffic": 26,
+            "partition_added_copy_bytes": 22,
+            "max_subgraphs_per_core": 72,
+            "num_nonempty_cores": 20,
+        },
+        "cleanest_case": ("切图相同、搬运统计逐字节相同（cross_task_traffic=256、"
+                          "added_copy_bytes=768），仅核心归属不同 → makespan 1052 vs 152，"
+                          "差 900 = 1000 − 100。复验输出 ALL CLAIMS VERIFIED: True"),
+        "not_claimed": ("不声称任何具体 E2 实现会犯此错；『预测器』是我自选的粗糙口径。"
+                        "真值只用官方 evaluate_scene_a，未使用任何 E1/E2 内部代价模型。"),
+        "uncovered": ["问题 2/3", "核数 > 2", "Cache 命中率等分层指标的排序对抗", "正式用例"],
     },
     "dev_samples": {
         "count": len(dev_samples),

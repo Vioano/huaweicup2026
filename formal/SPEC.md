@@ -41,12 +41,20 @@ E_v(G,P,C,q;R)\longrightarrow (\text{status},\text{result})
 | F-EXEC | **3 条规则，均有实测探针** | F-EXEC-001/002 来自 `evaluation_validation.py:217-243`；F-EXEC-003 为同刻事件顺序 |
 | F-TIME | **2 条规则，均实测** | F-TIME-001/002；两类等待的实测差值为 `1000-100=900` |
 | F-RESOURCE | **5 条规则，均实测** | DDR 等分共享与回溯重算、DDR 端点判定、Cache 只由 COPY_IN 查询且走独立池、FIFO 不晋升 + 超容量不缓存、Cache key 跨 rename 稳定 |
-| F-METRIC | **3 条规则：1 读源码 + 1 规范 + 1 实测** | F-METRIC-001（搬运，仅读源码）、F-METRIC-002（规范条款）、F-METRIC-003（hit_rate 按字节加权，实测） |
+| F-METRIC | **4 条规则：1 读源码 + 1 规范 + 2 实测** | F-METRIC-001（搬运，仅读源码）、F-METRIC-002（规范条款）、F-METRIC-003（hit_rate 按字节加权）、F-METRIC-004（搬运统计不足以排序） |
 
-合计 **34 条规则**（31 条 `verified-by-probe`，3 条 `draft-sourced`），覆盖表见 `coverage.json`。
+合计 **35 条规则**（32 条 `verified-by-probe`，3 条 `draft-sourced`），覆盖表见 `coverage.json`。
 
 **覆盖表现状**：`合法性/组合环`、`取整/同刻事件`、`spill/容量临界` 三组 `covered`；
 `搬运统计`、`Step3 固定 FIFO 与内存复用`、`L2 同时 miss/FIFO` 三组 `partial`；**无 `gap`**。
+
+**E2 排序对抗（任务卡第 5 节）**：`src/adversarial/build_ranking_adversarial.py` 在
+1 张微型图 × 2 核 × 问题 1 上枚举 30 个方案（16 个合法、14 个因商图成环被拒），
+用官方 makespan 作真值，找出各朴素预测器的排序反转对数。
+最干净的一例（`tests/adversarial/ranking-inversion-pair.json`，由
+`verify_ranking_fixture.py` 复验通过）：**切图相同、搬运统计逐字节相同，仅核心归属不同
+→ makespan 1052 vs 152，差 900 = 1000 − 100**。详见 `coverage.json` 的
+`e2_ranking_adversarial` 段。
 
 补充规范（`docs/a/EVALUATOR_AMENDMENT_20260923.md`，固定提交 `ad1a2c57`）明确覆盖
 `contract-v1` §2.2–2.4 与 §5.4，细化 §5.5。**其主体是 E1/E2 的数值门槛与并行探索，属
@@ -93,6 +101,9 @@ sources / positive_tests / counterexample_tests / implementation_sites / status`
     触发条件是 `剩余驻留 > 容量`（**严格大于**）：容量 192 = 峰值驻留时 0 次 spill。
 13. **Cache key 跨 spill 重命名稳定**（F-RESOURCE-005）：重命名化身携带 `logical_tid`，
     因此换回的 COPY_IN 与原始 COPY_IN 共用同一 cache key，**spill 与 L2 命中存在耦合**。
+14. **搬运统计不足以决定优劣**（F-METRIC-004）：切图相同、搬运逐字节相同的两个方案，
+    仅核心归属不同即可相差 900 cycles。**仅按搬运量排序的预测器连区分都做不到**，
+    这使 F-TIME-001 成为排序对抗的核心。
 
 ## 5. 复现
 
@@ -108,6 +119,8 @@ python src/adversarial/verify_spill_r2.py        # spill victim 选择与插入�
 python src/adversarial/verify_time_r1.py         # F-TIME / F-RESOURCE 探针
 python src/adversarial/verify_l2_r1.py           # L2 Cache 探针（问题 3）
 python src/adversarial/build_dev_samples.py      # 首批 10 个开发反例样本
+python src/adversarial/build_ranking_adversarial.py  # E2 排序对抗：枚举候选组找排序反转
+python src/adversarial/verify_ranking_fixture.py     # 复验排序反转夹具（失败会非零退出）
 
 python src/adversarial/build_coverage.py          # 由 rules.jsonl 与实测结果重算 coverage.json
 ```
