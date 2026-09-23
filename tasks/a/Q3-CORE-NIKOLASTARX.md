@@ -17,4 +17,9 @@
 执行入口：`uv run python -m unittest discover -s tests/q3 -v`；
 `uv run python -m src.q3.experiment results/a/q3-nikolastarx/pilot-20260924`。
 
-实验前版本、实际次数、结论与 PR 在首个结果检查点填写。当前本卡为预登记，未把预计执行写成实测。
+实验前固定源码 `c1ea79869f183dc4a7a830ecfd4dae27650e680b`；17次正式E0全部成功，
+8组结构测试通过、0合成E0。完整实测、计时范围和局限见
+[REPORT](../../results/a/q3-nikolastarx/pilot-20260924/REPORT.md)。
+另交本任务图件 `figures/a/q3-nikolastarx/pilot-20260924/`，由 `src/q3/report.py` 读结果生成，
+SVG/PDF/PNG和输入/输出哈希齐备；已查看PNG，三面板同零基准、文字/图例无遮挡，非科学独立验收。
+本批仍为有限开发基线，不是最终问题三验收。PR发布后在Issue51交接。
