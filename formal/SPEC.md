@@ -137,4 +137,4 @@ python src/adversarial/build_coverage.py          # 由 rules.jsonl 与实测结
 
 各自输出到 `results/a/form/r1-20260923-farmeruncle123/`。
 所有探针**只记录 accept/reject、官方报错原文与官方返回的数值字段**，
-**没有调用 E0 评分，也不构成任何性能或质量结论**。
+**只是直接调用冻结官方函数/CLI 取原始输出**；未调用队长的 oracle 适配层，未做正式基准与全量验收，也不构成任何性能或质量结论。

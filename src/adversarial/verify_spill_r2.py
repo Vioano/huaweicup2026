@@ -9,7 +9,7 @@ Step2SchedulingError: no spill victim。
   触发 step 的 op4 只消费 A、只产出 C；
   B 在 op4 处**不被使用**但仍有未来使用（op5），因此是可淘汰候选。
 
-只读调用官方 schedule_step2/3，不改动官方材料，不做 E0 评分。
+只读调用**冻结官方函数** schedule_step2/3，不改动官方材料；未调用队长的 oracle 适配层，未做正式基准与全量验收。
 """
 from __future__ import annotations
 

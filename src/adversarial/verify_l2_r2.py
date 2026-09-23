@@ -6,7 +6,7 @@
 本批改用**图输入 tensor**：这类 tensor 没有生产者，`_build_scene_b_tasks` 会为每个消费核
 各自生成一个 COPY_IN，且**没有源核 COPY_OUT 来错开它们** —— 于是可以在 t=0 真正同时发起。
 
-只读调用官方 evaluate_problem_3，不改动官方材料，不做 E0 评分。
+只读调用**冻结官方函数** evaluate_problem_3，不改动官方材料；未调用队长的 oracle 适配层，未做正式基准与全量验收。
 """
 from __future__ import annotations
 

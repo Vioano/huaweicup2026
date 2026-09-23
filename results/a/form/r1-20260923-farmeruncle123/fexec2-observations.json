@@ -27,6 +27,7 @@
           1
         ]
       },
+      "discriminates_between_quantifiers": true,
       "outcome": "rejected",
       "error": "EvaluationValidationError: task schedule: dependency cycle; 0 -[subgraph dependency]-> 1; 1 -[core 0 task order]-> 0"
     },
@@ -55,12 +56,13 @@
           2
         ]
       },
+      "discriminates_between_quantifiers": true,
       "outcome": "rejected",
       "error": "EvaluationValidationError: task schedule: dependency cycle; 0 -[subgraph dependency]-> 1; 1 -[core 0 task order]-> 0"
     },
     {
       "case": "C) control: core0=[0,1] (forward), core1=[]; dependency 0->1",
-      "note": "顺序边为 0->1，与依赖同向，应接受",
+      "note": "顺序边为 0->1，与依赖同向，应接受；两种量词的分支条件不同但最终都接受",
       "view": {
         "core_orders": {
           "0": [
@@ -80,11 +82,12 @@
           1
         ]
       },
+      "discriminates_between_quantifiers": false,
       "outcome": "accepted"
     },
     {
       "case": "D) control: core0=[0], core1=[1]; dependency 0->1",
-      "note": "所有核均 <=1 → 源码直接 return，应接受",
+      "note": "所有核均 <=1 → 源码直接 return，应接受；两种量词在此一致",
       "view": {
         "core_orders": {
           "0": [
@@ -105,11 +108,12 @@
           1
         ]
       },
+      "discriminates_between_quantifiers": false,
       "outcome": "accepted"
     },
     {
       "case": "E) control: single core, one subgraph",
-      "note": "任何核都不超过 1 → 直接 return，应接受",
+      "note": "任何核都不超过 1 → 直接 return，应接受；两种量词在此一致",
       "view": {
         "core_orders": {
           "0": [
@@ -121,11 +125,12 @@
           0
         ]
       },
+      "discriminates_between_quantifiers": false,
       "outcome": "accepted"
     },
     {
       "case": "F) core0=[1,0] only (no other core); dependency 0->1",
-      "note": "只有 1 个核且长度 2；按任一核<=1 的错误量词会误判为直接返回（接受），实际应拒绝",
+      "note": "单核长度 2：`any(len<=1)=False` 且 `all(len<=1)=False`，**两种量词都不会提前返回**，故本用例只作单核逆序的拒绝对照，**不能区分两种量词**",
       "view": {
         "core_orders": {
           "0": [
@@ -144,10 +149,26 @@
           1
         ]
       },
+      "discriminates_between_quantifiers": false,
       "outcome": "rejected",
       "error": "EvaluationValidationError: task schedule: dependency cycle; 0 -[subgraph dependency]-> 1; 1 -[core 0 task order]-> 0"
     }
   ],
+  "discrimination_summary": {
+    "能区分两种量词": [
+      "A（core0=[1,0], core1=[]）",
+      "B（core0=[1,0], core1=[2]）"
+    ],
+    "分支条件不同但最终结果相同": [
+      "C（正向顺序 + 空核，两者都接受）"
+    ],
+    "不能区分": [
+      "D（全单子图核）",
+      "E（单核单子图）",
+      "F（单核长度 2；两种量词都不提前返回）"
+    ],
+    "note": "区分的充要形态是**混合长度核**：至少一个核长度 > 1、且至少一个核长度 <= 1。只有这种形态下『任一核 <=1』与『所有核均 <=1』的取值才不同"
+  },
   "limitations": [
     "unit-level 手工 view，非官方输入域；不声称官方入口可达（入口可能更早拒绝逆序）。",
     "未穷举核数、子图数与顺序长度的组合。"

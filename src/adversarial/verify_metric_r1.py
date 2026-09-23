@@ -8,7 +8,7 @@
     I2: added_copy_bytes == scheduled_copy_bytes - original_graph_copy_bytes
     I3: scheduled_copy_bytes >= original_graph_copy_bytes + partition_added_copy_bytes
 
-只读调用官方入口，不改动官方材料，不做 E0 评分。
+只读调用**冻结官方函数**入口，不改动官方材料；未调用队长的 oracle 适配层，未做正式基准与全量验收。
 """
 from __future__ import annotations
 

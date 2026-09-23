@@ -9,7 +9,7 @@
     因此不产生依赖边。
   - 这些依赖随后被物化成 execution_graph 的普通边，带 `dependency: 'MEMORY_REUSE'`。
 
-只读调用官方 schedule_step2/3，不改动官方材料，不做 E0 评分。
+只读调用**冻结官方函数** schedule_step2/3，不改动官方材料；未调用队长的 oracle 适配层，未做正式基准与全量验收。
 """
 from __future__ import annotations
 

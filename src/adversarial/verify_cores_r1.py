@@ -6,7 +6,7 @@
 
 本探针在同一张图上只改 `core_schedules`，复现队长的对照表。
 
-只读调用官方 evaluate_scene_a，不做 E0 评分。
+只读调用**冻结官方函数** evaluate_scene_a；未调用队长的 oracle 适配层，未做正式基准与全量验收。
 """
 from __future__ import annotations
 
@@ -170,7 +170,7 @@ def main():
         "limitations": [
             "微型构造图（3–6 个算子、2 核），不代表正式用例。",
             "未测 3 核及以上、也未测 workloads 不均衡的情形。",
-            "本探针不调用 E0，也不构成性能或质量结论。",
+            "本探针只调用冻结官方函数 evaluate_scene_a，未调用队长的 oracle 适配层、未做正式基准与全量验收，也不构成性能或质量结论。",
         ],
     }
     OUT_DIR.mkdir(parents=True, exist_ok=True)

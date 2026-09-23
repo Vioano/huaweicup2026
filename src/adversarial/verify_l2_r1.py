@@ -1,6 +1,6 @@
 """L2 Cache 探针（问题 3）。
 
-只读调用官方 evaluate_problem_3，不改动官方材料，不做 E0 评分。
+只读调用**冻结官方函数** evaluate_problem_3，不改动官方材料；未调用队长的 oracle 适配层，未做正式基准与全量验收。
 
 关键构造：场景 B 里同一个 tensor 被多个核消费时，各核各自生成一个写向
 **同一 local_tid** 的 COPY_IN；Cache key 取 COPY_IN 的 out_tid，
