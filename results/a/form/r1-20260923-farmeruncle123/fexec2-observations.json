@@ -1,0 +1,155 @@
+{
+  "generator": "src/adversarial/verify_fexec_r2.py",
+  "purpose": "响应 INDEPENDENT-REVIEW-001 R1：验证 validate_task_order 的量词方向",
+  "source_condition": "evaluation_validation.py:219 —— if not any(len(order) > 1 for order in view['core_orders'].values()): return",
+  "correct_reading": "所有核的 order 长度均 <= 1 才提前返回",
+  "wrong_reading_under_test": "任一核的 order 长度 <= 1 就提前返回",
+  "records": [
+    {
+      "case": "A) core0=[1,0] (len 2), core1=[] (len 0); dependency 0->1",
+      "note": "只有 core1 满足 <=1，core0 不满足；按正确量词应**不**提前返回，故仍应拒绝",
+      "view": {
+        "core_orders": {
+          "0": [
+            1,
+            0
+          ],
+          "1": []
+        },
+        "dependency_pairs": [
+          [
+            0,
+            1
+          ]
+        ],
+        "subgraph_ids": [
+          0,
+          1
+        ]
+      },
+      "outcome": "rejected",
+      "error": "EvaluationValidationError: task schedule: dependency cycle; 0 -[subgraph dependency]-> 1; 1 -[core 0 task order]-> 0"
+    },
+    {
+      "case": "B) core0=[1,0] (len 2), core1=[2] (len 1, independent); dependency 0->1",
+      "note": "所有核都 <=1 不成立（core0 为 2），故仍应拒绝",
+      "view": {
+        "core_orders": {
+          "0": [
+            1,
+            0
+          ],
+          "1": [
+            2
+          ]
+        },
+        "dependency_pairs": [
+          [
+            0,
+            1
+          ]
+        ],
+        "subgraph_ids": [
+          0,
+          1,
+          2
+        ]
+      },
+      "outcome": "rejected",
+      "error": "EvaluationValidationError: task schedule: dependency cycle; 0 -[subgraph dependency]-> 1; 1 -[core 0 task order]-> 0"
+    },
+    {
+      "case": "C) control: core0=[0,1] (forward), core1=[]; dependency 0->1",
+      "note": "顺序边为 0->1，与依赖同向，应接受",
+      "view": {
+        "core_orders": {
+          "0": [
+            0,
+            1
+          ],
+          "1": []
+        },
+        "dependency_pairs": [
+          [
+            0,
+            1
+          ]
+        ],
+        "subgraph_ids": [
+          0,
+          1
+        ]
+      },
+      "outcome": "accepted"
+    },
+    {
+      "case": "D) control: core0=[0], core1=[1]; dependency 0->1",
+      "note": "所有核均 <=1 → 源码直接 return，应接受",
+      "view": {
+        "core_orders": {
+          "0": [
+            0
+          ],
+          "1": [
+            1
+          ]
+        },
+        "dependency_pairs": [
+          [
+            0,
+            1
+          ]
+        ],
+        "subgraph_ids": [
+          0,
+          1
+        ]
+      },
+      "outcome": "accepted"
+    },
+    {
+      "case": "E) control: single core, one subgraph",
+      "note": "任何核都不超过 1 → 直接 return，应接受",
+      "view": {
+        "core_orders": {
+          "0": [
+            0
+          ]
+        },
+        "dependency_pairs": [],
+        "subgraph_ids": [
+          0
+        ]
+      },
+      "outcome": "accepted"
+    },
+    {
+      "case": "F) core0=[1,0] only (no other core); dependency 0->1",
+      "note": "只有 1 个核且长度 2；按任一核<=1 的错误量词会误判为直接返回（接受），实际应拒绝",
+      "view": {
+        "core_orders": {
+          "0": [
+            1,
+            0
+          ]
+        },
+        "dependency_pairs": [
+          [
+            0,
+            1
+          ]
+        ],
+        "subgraph_ids": [
+          0,
+          1
+        ]
+      },
+      "outcome": "rejected",
+      "error": "EvaluationValidationError: task schedule: dependency cycle; 0 -[subgraph dependency]-> 1; 1 -[core 0 task order]-> 0"
+    }
+  ],
+  "limitations": [
+    "unit-level 手工 view，非官方输入域；不声称官方入口可达（入口可能更早拒绝逆序）。",
+    "未穷举核数、子图数与顺序长度的组合。"
+  ]
+}

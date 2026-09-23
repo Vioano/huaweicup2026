@@ -1,0 +1,183 @@
+{
+  "generator": "src/adversarial/verify_cores_r1.py",
+  "purpose": "响应 INDEPENDENT-REVIEW-001 R2：加核论述必须用同图同划分对照",
+  "group1_independent_chains": {
+    "same_core_148_expected": 148,
+    "split_two_cores_44_expected": 44
+  },
+  "group2_dependent_segments": {
+    "one_core": 148,
+    "add_empty_core": 148,
+    "split_two_cores": 1048
+  },
+  "group3_bandwidth_contention_different_workload": {
+    "one_chain_one_core": 24,
+    "two_chains_two_cores": 44,
+    "caveat": "两者工作量不同（1 条链 vs 2 条链），只能展示共享 DDR 争用，不能论证固定工作量的加核结论"
+  },
+  "records": [
+    {
+      "case": "independent chains | core_schedules=[[0,1],[]]",
+      "note": "两个子图都放在 core 0",
+      "plan": {
+        "node_to_subgraph": {
+          "2": 0,
+          "12": 1
+        },
+        "core_schedules": [
+          [
+            0,
+            1
+          ],
+          []
+        ]
+      },
+      "outcome": "ok",
+      "makespan": 148,
+      "num_cores": 2,
+      "cross_task_traffic": 0,
+      "added_copy_bytes": 0
+    },
+    {
+      "case": "independent chains | core_schedules=[[0],[1]]",
+      "note": "两个子图分到两个核",
+      "plan": {
+        "node_to_subgraph": {
+          "2": 0,
+          "12": 1
+        },
+        "core_schedules": [
+          [
+            0
+          ],
+          [
+            1
+          ]
+        ]
+      },
+      "outcome": "ok",
+      "makespan": 44,
+      "num_cores": 2,
+      "cross_task_traffic": 0,
+      "added_copy_bytes": 0
+    },
+    {
+      "case": "dependent segments | core_schedules=[[0,1]]  (1 core)",
+      "note": "只有一个核，两段同核串行",
+      "plan": {
+        "node_to_subgraph": {
+          "2": 0,
+          "3": 1
+        },
+        "core_schedules": [
+          [
+            0,
+            1
+          ]
+        ]
+      },
+      "outcome": "ok",
+      "makespan": 148,
+      "num_cores": 1,
+      "cross_task_traffic": 600,
+      "added_copy_bytes": 1800
+    },
+    {
+      "case": "dependent segments | core_schedules=[[0,1],[]]  (add EMPTY core)",
+      "note": "只添加一个空核，工作划分不变",
+      "plan": {
+        "node_to_subgraph": {
+          "2": 0,
+          "3": 1
+        },
+        "core_schedules": [
+          [
+            0,
+            1
+          ],
+          []
+        ]
+      },
+      "outcome": "ok",
+      "makespan": 148,
+      "num_cores": 2,
+      "cross_task_traffic": 600,
+      "added_copy_bytes": 1800
+    },
+    {
+      "case": "dependent segments | core_schedules=[[0],[1]]  (split across 2 cores)",
+      "note": "把两段分到两个核 → 依赖跨核，触发跨核等待",
+      "plan": {
+        "node_to_subgraph": {
+          "2": 0,
+          "3": 1
+        },
+        "core_schedules": [
+          [
+            0
+          ],
+          [
+            1
+          ]
+        ]
+      },
+      "outcome": "ok",
+      "makespan": 1048,
+      "num_cores": 2,
+      "cross_task_traffic": 600,
+      "added_copy_bytes": 1800
+    },
+    {
+      "case": "bandwidth contention: ONE chain on 1 core (half the workload)",
+      "note": "单链单核：仅用于展示共享 DDR 争用，不可与下面两链对比以论证加核",
+      "plan": {
+        "node_to_subgraph": {
+          "2": 0
+        },
+        "core_schedules": [
+          [
+            0
+          ]
+        ]
+      },
+      "outcome": "ok",
+      "makespan": 24,
+      "num_cores": 1,
+      "cross_task_traffic": 0,
+      "added_copy_bytes": 0
+    },
+    {
+      "case": "bandwidth contention: TWO chains on 2 cores",
+      "note": "双链双核：工作量是上一行的两倍",
+      "plan": {
+        "node_to_subgraph": {
+          "2": 0,
+          "12": 1
+        },
+        "core_schedules": [
+          [
+            0
+          ],
+          [
+            1
+          ]
+        ]
+      },
+      "outcome": "ok",
+      "makespan": 44,
+      "num_cores": 2,
+      "cross_task_traffic": 0,
+      "added_copy_bytes": 0
+    }
+  ],
+  "conclusions": {
+    "supported": "具体分配方案未必因使用更多核而更快：有依赖的两段从 1 核改为跨 2 核后 makespan 由 148 升至 1048；只添加空核则仍为 148（空核不计入有效并行）",
+    "not_supported": "**不能**外推为『核预算增大时最优值必然变差』。两条独立链在同一图上从同核改为分核反而由 148 降到 44",
+    "bandwidth_only": "原 24/44 观察只作为**共享 DDR 带宽争用**的证据，其因果解释已修正；论证加核问题必须使用同图对照"
+  },
+  "limitations": [
+    "微型构造图（3–6 个算子、2 核），不代表正式用例。",
+    "未测 3 核及以上、也未测 workloads 不均衡的情形。",
+    "本探针不调用 E0，也不构成性能或质量结论。"
+  ]
+}

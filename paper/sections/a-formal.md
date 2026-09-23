@@ -166,20 +166,22 @@ spill 会把 victim 重命名到新化身并携带 `logical_tid`（实测 `{id: 
 
 ## 6. 复现
 
-`src/adversarial/` 共 **18 个 `.py` 文件**，全部列出如下，与文件数一一对应（便于核对计数口径）。
+`src/adversarial/` 共 **20 个 `.py` 文件**，全部列出如下，与文件数一一对应（便于核对计数口径）。
 
 ```sh
-# A) 形式化探针：15 个，每个产出 1 份 results/ JSON（verify_spill_r1 的产物为 PARTIAL 记录）
+# A) 形式化探针：17 个，每个产出 1 份 results/ JSON（verify_spill_r1 的产物为 PARTIAL 记录）
 python src/adversarial/verify_io_r1.py               # F-IO 官方 CLI 端到端
 python src/adversarial/verify_rules_r1.py            # F-PLAN（含商图成环反例）
 python src/adversarial/verify_ftask_r1.py            # F-TASK（生成 id / DDR→UB / 输出边界）
 python src/adversarial/verify_order_r1.py            # F-TASK-004 声明顺序敏感性
-python src/adversarial/verify_fexec_r1.py            # F-EXEC
+python src/adversarial/verify_fexec_r1.py            # F-EXEC（Task 顺序环检查）
+python src/adversarial/verify_fexec_r2.py            # F-EXEC-001 量词回归（混合长度核）
 python src/adversarial/verify_local_r1.py            # Step1 排序与 Pipe 常量
 python src/adversarial/verify_local2_r1.py           # Step3 内存复用（虚拟额度）
 python src/adversarial/verify_spill_r1.py            # spill 第一次尝试（失败留档，PARTIAL）
 python src/adversarial/verify_spill_r2.py            # spill victim 与插入位置（成功构造）
 python src/adversarial/verify_time_r1.py             # F-TIME / F-RESOURCE
+python src/adversarial/verify_cores_r1.py            # 同图同划分的加核对照（R2）
 python src/adversarial/verify_l2_r1.py               # L2 命中 / FIFO / 字节加权
 python src/adversarial/verify_l2_r2.py               # L2 同时 miss 与淘汰路径
 python src/adversarial/verify_metric_r1.py           # 搬运五字段等式核对
@@ -196,10 +198,12 @@ python src/adversarial/add_fplan005_fixture.py       # 生成商图成环反例�
 python src/adversarial/build_coverage.py
 ```
 
-**计数口径**：18 = 15（A，最终回归中实际执行的那一组）+ 1（B）+ 1（C）+ 1（D）。
-**`results/a/form/r1-20260923-farmeruncle123/` 共 17 份 JSON** = A 组的 15 份
-（`verify_spill_r1` 与 `verify_spill_r2` 各 1 份）+ B 的 1 份 + `fplan-005-observation.json`（C 的产物）。
+**计数口径**：20 = 17（A，各产出 1 份 results/ JSON）+ 1（B）+ 1（C）+ 1（D）。
+**`results/a/form/r1-20260923-farmeruncle123/` 共 19 份 JSON** = A 组的 17 份 + B 的 1 份
++ `fplan-005-observation.json`（C 的产物）。
 **文件数与运行次数是两个口径**，不混用。
+（本轮响应 INDEPENDENT-REVIEW-001 新增 `verify_fexec_r2.py` 与 `verify_cores_r1.py`，
+故由 18/17 变为 20/19。）
 
 全部命令已在原生 Windows、Python 3.13 下实际运行通过。
 
@@ -256,3 +260,46 @@ python src/adversarial/build_coverage.py
    已有规则 F-LOCAL-003 只证明了 `PIPE_SLOTS=1` 与同 Pipe 串行，**未覆盖「队首阻塞时能否被越过」**。
 2. 未读段落的**完整比对**（若其中有对评估器行为的断言，需逐条与本批规则核对）。
 3. 并列 `next_use` 时的稳定排序行为（F-LOCAL-004 的 `blocked_reason` 已列）。
+
+## 8. 独立复核发现的两处修订（响应 INDEPENDENT-REVIEW-001）
+
+队长在独立环境（macOS / Python 3.12.13）复跑本批 18 个脚本（当时版本）后提出两项修订。
+**两项都是我方的实质错误**，已修正并各自补了回归证据。修订只涉及规则文字、说明与新增探针，
+**未改动官方代码、未改 E0/阈值、未改任何已发布的观察数值**。
+
+### 8.1 R1：`F-EXEC-001` 的量词写反
+
+- **原文（错）**：谓词字段写「若**任一核**的 order 长度 <= 1 则直接返回」。
+- **源码（对）**：`evaluation_validation.py:219` ——
+  `if not any(len(order) > 1 for order in view['core_orders'].values()): return`，
+  即**所有核的 order 长度均 <= 1 才提前返回**。
+- **后果**：按错误量词重写实现，会在「一个核有多个子图、另一个核为空」时错误跳过检查，
+  漏判顺序环。
+- **已修**：谓词改为正确量词，并新增 `verify_fexec_r2.py` 覆盖 6 个用例——
+  混合长度核（`core0=[1,0], core1=[]`）**仍被拒绝**，独立单子图核同理被拒；
+  正向顺序、全单子图核、单核单子图三个对照被接受；另有最小漏判情形（单核逆序）被拒。
+- **边界**：全部为 **unit-level 手工 view**，属非正式输入域；
+  **不声称**官方入口可产出同一情形（入口可能更早拒绝逆序）。
+
+### 8.2 R2：加核结论的原对照混入了工作量变化
+
+- **原文（错）**：用「单链 1 核 = 24」对「双链 2 核 = 44」说明加核问题。
+  两者**工作量不同**（1 条链 vs 2 条链），不能支持固定工作量下的加核结论。
+- **已修**：保留该观察作为**共享 DDR 带宽争用**的证据，并改用**同图同划分**对照
+  （`verify_cores_r1.py`，数值与本队长的独立复核一致）：
+
+| 图与划分 | `core_schedules` | makespan |
+|---|---|---:|
+| 两条独立链、两个子图 | `[[0,1],[]]` | 148 |
+| 同上 | `[[0],[1]]` | 44 |
+| 有依赖的两段 | `[[0,1]]`（1 核） | 148 |
+| 同上，只添加空核 | `[[0,1],[]]` | 148 |
+| 同上，改分配到两核 | `[[0],[1]]` | 1048 |
+
+- **修正后的结论范围**：支持「**具体分配方案**未必因使用更多核而更快」——
+  **不能**外推为「核预算增大时最优值必然变差」（同图上的两条独立链分核后反而 148 → 44）。
+  必须区分具体方案、核预算与最优值。
+
+**未受影响的项**：F-EXEC-002/003、F-RESOURCE-001 的 projected_end 回溯重算观察、
+排序夹具 1052/152、以及其余全部规则与数值均未被这两项修订触及。
+
