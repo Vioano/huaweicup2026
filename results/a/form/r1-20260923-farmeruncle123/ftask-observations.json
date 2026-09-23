@@ -47,7 +47,13 @@
               7
             ],
             "PIPE_V": []
-          }
+          },
+          "generated_op_types": {
+            "COPY_IN": "COPY_IN",
+            "COPY_OUT": "COPY_OUT"
+          },
+          "n_generated_copy_out": 1,
+          "n_generated_copy_in": 1
         },
         "1": {
           "core_id": 1,
@@ -79,7 +85,13 @@
               10
             ],
             "PIPE_V": []
-          }
+          },
+          "generated_op_types": {
+            "COPY_IN": "COPY_IN",
+            "COPY_OUT": "COPY_OUT"
+          },
+          "n_generated_copy_out": 2,
+          "n_generated_copy_in": 1
         }
       }
     },
@@ -121,7 +133,13 @@
               7
             ],
             "PIPE_V": []
-          }
+          },
+          "generated_op_types": {
+            "COPY_IN": "COPY_IN",
+            "COPY_OUT": "COPY_OUT"
+          },
+          "n_generated_copy_out": 1,
+          "n_generated_copy_in": 1
         },
         "1": {
           "core_id": 1,
@@ -149,7 +167,13 @@
               9
             ],
             "PIPE_V": []
-          }
+          },
+          "generated_op_types": {
+            "COPY_IN": "COPY_IN",
+            "COPY_OUT": "COPY_OUT"
+          },
+          "n_generated_copy_out": 1,
+          "n_generated_copy_in": 1
         },
         "2": {
           "core_id": 2,
@@ -177,7 +201,13 @@
               11
             ],
             "PIPE_V": []
-          }
+          },
+          "generated_op_types": {
+            "COPY_IN": "COPY_IN",
+            "COPY_OUT": "COPY_OUT"
+          },
+          "n_generated_copy_out": 1,
+          "n_generated_copy_in": 1
         }
       }
     },
@@ -219,7 +249,13 @@
               7
             ],
             "PIPE_V": []
-          }
+          },
+          "generated_op_types": {
+            "COPY_IN": "COPY_IN",
+            "COPY_OUT": "COPY_OUT"
+          },
+          "n_generated_copy_out": 1,
+          "n_generated_copy_in": 1
         },
         "1": {
           "core_id": 1,
@@ -247,7 +283,13 @@
               9
             ],
             "PIPE_V": []
-          }
+          },
+          "generated_op_types": {
+            "COPY_IN": "COPY_IN",
+            "COPY_OUT": "COPY_OUT"
+          },
+          "n_generated_copy_out": 1,
+          "n_generated_copy_in": 1
         },
         "2": {
           "core_id": 2,
@@ -275,7 +317,13 @@
               11
             ],
             "PIPE_V": []
-          }
+          },
+          "generated_op_types": {
+            "COPY_IN": "COPY_IN",
+            "COPY_OUT": "COPY_OUT"
+          },
+          "n_generated_copy_out": 1,
+          "n_generated_copy_in": 1
         }
       }
     },
@@ -322,7 +370,13 @@
               8
             ],
             "PIPE_V": []
-          }
+          },
+          "generated_op_types": {
+            "COPY_IN": "COPY_IN",
+            "COPY_OUT": "COPY_OUT"
+          },
+          "n_generated_copy_out": 2,
+          "n_generated_copy_in": 1
         }
       }
     },
@@ -371,7 +425,69 @@
               8
             ],
             "PIPE_V": []
-          }
+          },
+          "generated_op_types": {
+            "COPY_IN": "COPY_IN",
+            "COPY_OUT": "COPY_OUT"
+          },
+          "n_generated_copy_out": 2,
+          "n_generated_copy_in": 1
+        }
+      }
+    },
+    {
+      "probe": "original COPY_OUT consumes the shared tensor (F-TASK-003)",
+      "outcome": "built",
+      "error": null,
+      "num_cores": 1,
+      "cross_task_traffic": 0,
+      "traffic": {
+        "original_graph_copy_bytes": 192,
+        "scheduled_copy_bytes": 256,
+        "added_copy_bytes": 64,
+        "partition_added_copy_bytes": 64,
+        "spill_added_copy_bytes": 0
+      },
+      "per_task": {
+        "0": {
+          "core_id": 0,
+          "pred_tasks": [],
+          "n_ops": 7,
+          "generated_op_ids": [
+            7,
+            8,
+            9,
+            10
+          ],
+          "generated_tensor_ids": [
+            10001,
+            10002,
+            10003,
+            10004
+          ],
+          "pos_of_rewritten": {},
+          "pipe_ops": {
+            "PIPE_M": [
+              2,
+              3,
+              5
+            ],
+            "PIPE_MTE2": [
+              7
+            ],
+            "PIPE_MTE3": [
+              9,
+              10,
+              8
+            ],
+            "PIPE_V": []
+          },
+          "generated_op_types": {
+            "COPY_IN": "COPY_IN",
+            "COPY_OUT": "COPY_OUT"
+          },
+          "n_generated_copy_out": 3,
+          "n_generated_copy_in": 1
         }
       }
     }

@@ -72,6 +72,16 @@ def probe(name, plan, graph=None):
                     if x in ddr_ids
                 },
                 "pipe_ops": {k: list(v) for k, v in sorted(t.get("pipe_ops", {}).items())},
+                "generated_op_types": {
+                    t["op_by_id"][o].get("op"): t["op_by_id"][o].get("op")
+                    for o in sorted(t.get("op_by_id", {})) if o > 5
+                },
+                "n_generated_copy_out": sum(
+                    1 for o in t.get("op_by_id", {})
+                    if o > 5 and t["op_by_id"][o].get("op") == "COPY_OUT"),
+                "n_generated_copy_in": sum(
+                    1 for o in t.get("op_by_id", {})
+                    if o > 5 and t["op_by_id"][o].get("op") == "COPY_IN"),
             }
         return {"probe": name, "outcome": "built", "error": None,
                 "num_cores": view["num_cores"],
@@ -113,6 +123,20 @@ def main():
         "DDR-pos tensor produced by a non-COPY op (F-TASK-002)",
         {"node_to_subgraph": {"2": 0, "3": 0, "5": 0}, "core_schedules": [[0]]},
         graph=ddr_out))
+
+    # F-TASK-003: all eligible consumers of tensor 102 live inside the same task,
+    # but an ORIGINAL COPY_OUT op also consumes it. That alone must make 102 an
+    # output boundary. Baseline (without the extra COPY_OUT) is the
+    # "all ops in one subgraph" probe above, which has no extra COPY_OUT on 102.
+    with_copy_out = json.loads(json.dumps(GRAPH))
+    with_copy_out["ops"].append(
+        {"id": 6, "op": "COPY_OUT", "pipe": "PIPE_MTE3", "cycles": 0})
+    with_copy_out["tensors"].append({"id": 106, "pos": "DDR", "size": 64})
+    with_copy_out["edges"].extend([{"source": 102, "target": 6}, {"source": 6, "target": 106}])
+    records.append(probe(
+        "original COPY_OUT consumes the shared tensor (F-TASK-003)",
+        {"node_to_subgraph": {"2": 0, "3": 0, "5": 0}, "core_schedules": [[0]]},
+        graph=with_copy_out))
     report = {
         "run_id": "r1-20260923-farmeruncle123",
         "scope": "F-TASK probes on problem-1 _build_scene_a_tasks",

@@ -36,9 +36,9 @@ E_v(G,P,C,q;R)\longrightarrow (\text{status},\text{result})
 | --- | --- | --- |
 | F-IO | 未开始 | 题面/实现差异待列；已知 config.txt 冻结字节对 Windows 检出敏感（见 ambiguities） |
 | F-PLAN | **首批已交（6 条规则，其中 5 条探针实测）** | `rules.jsonl` 的 F-PLAN-001..006 |
-| F-TASK | **首批已起草（4 条 draft-sourced）** | F-TASK-001..004，来源 `multicore_cut_evaluate_problem_1.py:86-143`；另两个入口 `problem_2.py:61`、`problem_3.py:69` 尚未比对 |
+| F-TASK | **首批已交（001-003 实测，004 仍是 draft-sourced）** | 来源 `multicore_cut_evaluate_problem_1.py:86-143`；另两个入口 `problem_2.py:61`、`problem_3.py:69` 尚未比对 |
 | F-LOCAL | 未开始 | 入口 `schedule_step1/2/3.py` |
-| F-EXEC | **2 条已起草（未夹具验证）** | F-EXEC-001/002，来源 `evaluation_validation.py:217-243` |
+| F-EXEC | **2 条已交（均有实测探针）** | F-EXEC-001/002，来源 `evaluation_validation.py:217-243`；unit-level 探针域已标注 |
 | F-TIME | 未开始 | 入口 `multicore_cut_evaluate_problem_1.py:200`、`problem_2.py:284` |
 | F-RESOURCE | 未开始 | 入口 `schedule_step3.py:74`、`problem_3.py:292` |
 | F-METRIC | 未开始 | 结果组装与 `singlecore_evaluate.py` |
