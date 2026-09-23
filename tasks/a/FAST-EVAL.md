@@ -27,6 +27,8 @@
 | 验收观察 | E1 三例 full 对象零差分，配对几何平均 1.0910x/1.1193x/1.1642x；case 001 的 `>=0.8x` 配对占 80%，另两例为 100%；成功 CLI 结果/Trace/日志 byte-exact，非法 plan 行为一致。rank E2 64/64 有 E0、遗憾 0、Spearman 0.8568；event E2 遗憾 0、Spearman 0.8127，但误差 median 25.7591%、P95 28.8954%。最新同池内存计时为 E2 0.3559557 s、E0 full 28.7685327 s、观察比 80.8205x；两路线 route median 分别 0.3385280 s、0.3438034 s。C++/Python 31,387 字节 SHA-256 相同；Rust toolchain unavailable。 |
 | 交付 | 分支 `codex/a-r1-fast-eval-lyx0217`；PR [#20](https://github.com/huaweibei123/huaweicup2026/pull/20)；Atlas 仅在 PR 可访问后提交 `review + deliverables`，pending 不记成功。 |
 
+2026-09-23 后续 E1 增量：提交 `8edccee2c85b3b46c55b0f08f3273b01d501f8b2` 在候选私有 Step3 runtime 中加入受 schema/别名 guard 保护的扩展图复制，未知结构回退官方 `deepcopy`。固定开发池 64/64 和独立生成的 169 个微型输入未发现 full 结果或异常语义差分；新增后 E1 单测 11/11 通过。三例更新证据位于 `results/a/exact/r20260923-e1-schema-copy-v2/`，配对几何平均为 1.2264x/1.2015x/1.2189x，仍未达到 3x，任务继续保持 review。
+
 主要复现命令：
 
 ```powershell

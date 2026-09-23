@@ -244,7 +244,7 @@ def main(argv=None) -> int:
         "official_problem1_sha256": PROBLEM1_SHA256,
         "official_code_hash": OFFICIAL_CODE_HASH,
         "candidate_implementation": {
-            "id": "eval-exact-indexed-task-boundary-v1",
+            "id": "eval-exact-indexed-boundary-schema-copy-v2",
             "delivery_lf_sha256": {
                 relative: _delivery_lf_sha256(repo_root / relative)
                 for relative in _CANDIDATE_SOURCE_FILES

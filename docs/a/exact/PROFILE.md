@@ -1,6 +1,6 @@
 # E1 Problem 1 等效加速候选：范围、剖析与实测
 
-> 状态：首轮开发证据，尚未通过发布验收。当前 Python 候选在三例开发矩阵中与 E0 的函数层 full 结果零差分，但配对几何平均加速仅为 1.09--1.16 倍，未达到 3 倍门槛。
+> 状态：阶段开发证据，尚未通过发布验收。当前 Python 候选在三例开发矩阵中与 E0 的函数层 full 结果零差分；加入隔离的 Step3 schema-copy 后，最新配对几何平均加速为 1.20--1.23 倍，仍未达到 3 倍门槛。
 
 ## 1. 证据身份
 
@@ -14,7 +14,9 @@
 | 冻结官方代码 hash | `de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0` |
 | 官方 Problem 1 文件 SHA-256 | `2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f` |
 | config SHA-256 | `dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9` |
-| 性能证据 | `results/a/exact/r20260923-e1-matrix/` |
+| 首轮性能证据 | `results/a/exact/r20260923-e1-matrix/` |
+| schema-copy 性能证据 | `results/a/exact/r20260923-e1-schema-copy-v2/` |
+| schema-copy 代码提交 | `8edccee2c85b3b46c55b0f08f3273b01d501f8b2` |
 | 实测环境 | Windows 11 `10.0.26200`，Python 3.12.13，AMD64 Family 25 Model 80，16 个逻辑 CPU |
 
 基准记录的是单进程、内存内函数调用。它排除进程启动、JSON/Trace 序列化和磁盘写入，因此不能解释为完整 CLI 加速比。
@@ -23,9 +25,9 @@
 
 ## 2. 实现范围
 
-E1 只实现了官方 **Problem 1 / scene A** 的第一条 Python 快路径。`problem1.py` 在隔离加载的官方模块实例中替换 `_build_scene_a_tasks`，其后的 Step1、Step2、Step3、全局校验、事件模拟和结果组装仍调用冻结官方实现。
+E1 只实现了官方 **Problem 1 / scene A** 的 Python 快路径。`problem1.py` 在隔离加载的官方模块实例中替换 `_build_scene_a_tasks`，并只在该候选的私有 Step3 模块中将一处通用 `deepcopy(ext_graph)` 替换为受 schema guard 保护的一层复制。Step1、Step2、Step3 调度逻辑、全局校验、事件模拟和结果组装仍调用冻结官方实现；官方文件和独立 E0 oracle 的模块全局量均不修改。
 
-改写点是 Task 边界构图：先在全图上建立“每个 Task 触及的 tensor”“每个 tensor 的有效生产者/消费者”“Task 内直接边”和外部 COPY_OUT 等索引，再逐 Task 只访问相关对象。生成 ID、排序、边界 COPY、流量统计、spill 和 Step3 调用顺序按官方代码保留。加载器在每次建立运行时前复算全部官方 `code/*` 的 hash，并临时隔离 `contest_io`、三个调度模块等同名依赖，避免环境中预载模块污染差分两侧。
+第一处改写是 Task 边界构图：先在全图上建立“每个 Task 触及的 tensor”“每个 tensor 的有效生产者/消费者”“Task 内直接边”和外部 COPY_OUT 等索引，再逐 Task 只访问相关对象。第二处改写利用当前 Step2 扩展图只有 `ops/tensors/edges` 的扁平字典记录和整数 `seq_ext` 的事实，在复制同时验证容器、字段和值类型。出现新增顶层字段、嵌套可变值、非标准容器、重复可变对象或共享顶层容器时，立即回退预先保存的官方 `deepcopy`，保留别名语义。生成 ID、排序、边界 COPY、流量统计、spill 和 Step3 调用顺序按官方代码保留。加载器在每次建立运行时前复算全部官方 `code/*` 的 hash，并临时隔离 `contest_io`、三个调度模块等同名依赖，避免环境中预载模块污染差分两侧。
 
 ### 2.1 当前接口支持表
 
@@ -88,6 +90,18 @@ uv run python -m cProfile `
 
 三例的 E0/E1 Makespan 分别同为 189027、141133、294124 cycles。有限矩阵满足本轮“无未解释 full 差分”观察；case 001 有 4/5 对达到 `0.8x`，另两例为 5/5。三例均没有达到配对几何平均至少 3 倍的性能门槛，故结论只能是“正确候选/局部热点增量”，不是高速 E1 验收通过。
 
+### 4.1 Step3 schema-copy 后续矩阵
+
+固定提交 `8edccee2c85b3b46c55b0f08f3273b01d501f8b2` 增加候选私有 runtime 的 schema-copy。相同三例、plan、seed、核数、预热和重复设置得到：
+
+| case | E0 中位数 / s | E1 中位数 / s | 中位数比 | 配对速度比几何平均 | 配对 `>=0.8x` | full 差分 |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| `case_001.json` | 0.5288300 | 0.4326500 | 1.2223x | **1.2264x** | 100% | 0 |
+| `case_019.json` | 0.4930355 | 0.4184126 | 1.1783x | **1.2015x** | 100% | 0 |
+| `case_080.json` | 1.3552686 | 1.1216487 | 1.2083x | **1.2189x** | 100% | 0 |
+
+三例 Makespan 仍分别为 189027、141133、294124。另对固定开发池 64 个候选和队长复核生成规则下的 169 个微型输入复跑：64/64 的保存 E0、现算 E0 与 E1 完整结果一致；微型输入 77 个正常结果、92 个拒绝均与 E0 的完整结果或异常类型和消息一致。该集合仍是有限开发检查，不是形式等价证明或封存发布验收。
+
 ## 5. 复现
 
 输出目录必须预先不存在：
@@ -112,13 +126,13 @@ uv run python -m src.eval_exact.cli `
   --log-output results/a/exact/<cli-run-id>/result.log
 ```
 
-回归测试（本机实测 7/7 通过）：
+回归测试（schema-copy 提交后本机实测 11/11 通过）：
 
 ```powershell
 uv run python -m unittest discover -s tests/eval_exact -p 'test_*.py' -v
 ```
 
-测试同时覆盖两组函数层 full 结果、预载同名依赖与私有 alias 隔离、混合 core 长度下不跳过任务环校验、基准产物 LF/哈希约束、成功 CLI 三类产物逐字节相等，以及一个非法 plan 的退出/错误/不落盘语义。它们都是有限开发证据，不等价于完整非法输入矩阵。
+测试同时覆盖两组函数层 full 结果、预载同名依赖与私有 alias 隔离、混合 core 长度下不跳过任务环校验、schema-copy 的 runtime 隔离/输出别名隔离/schema 漂移与共享别名回退、基准产物 LF/哈希约束、成功 CLI 三类产物逐字节相等，以及一个非法 plan 的退出/错误/不落盘语义。它们都是有限开发证据，不等价于完整非法输入矩阵。
 
 ## 6. 未验收项
 
