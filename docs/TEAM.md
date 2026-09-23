@@ -48,6 +48,8 @@ CU 不是 GPU 小时。若全部用于同一种运行时，预算时长为 `剩�
 
 ## 开始使用
 
+同一账号可有多个 Agent Session。新开/恢复会话先按 [会话协议](SESSION_PROTOCOL.md) 和 [登记入口](SESSIONS.md) 确认自己的地址、角色、任务范围和上下文模式；完整抓取后按角色读取，不能用另一个 session 的通知缓存代替自己的阅读回执。登记/消息/交接模板见 [SESSION_MESSAGES](templates/SESSION_MESSAGES.md)。
+
 在项目根目录执行：
 
 ```sh
