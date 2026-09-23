@@ -43,6 +43,14 @@ class SceneBEvaluator(E2Evaluator):
         self.problem = problem
         self.version = f'p{problem}-e2-native-search-v1'
         self._runtime, self._support = load_bundle(problem)
+        self._fast_runtime, self._fast_support = load_bundle(problem)
+        from ._local_b import install
+        self._local_error = None
+        try:
+            self.local_optimization = install(self._fast_support)
+        except Exception as error:
+            self._local_error = str(error)
+            self.local_optimization = None
         self._graph = deepcopy(graph)
         self._lock, self._entries = threading.RLock(), OrderedDict()
         self._limit, self._max_entries = cache_bytes, max_cache_entries
@@ -53,8 +61,10 @@ class SceneBEvaluator(E2Evaluator):
     def _native_score(self, plan, config, *, debug=False):
         if not self._native_enabled:
             raise Unsupported('native_disabled')
+        if self._local_error is not None:
+            raise Unsupported('local optimization unavailable: '+self._local_error)
         _native_b.get_lib()  # Missing DLL should not incur duplicate local compilation.
-        r = self._runtime
+        r = self._fast_runtime
         capacity = dict(config['capacity'])
         r.validate_parameters(config['bandwidth'], capacity, config['max_iter'],
                               cross_core_copy_delay=config['cross_core_copy_delay'])

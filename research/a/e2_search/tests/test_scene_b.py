@@ -3,6 +3,10 @@ import copy
 import random
 import sys
 import types
+import json
+import subprocess
+import tempfile
+from pathlib import Path
 import unittest
 from unittest.mock import patch
 
@@ -172,6 +176,29 @@ class SceneBTest(unittest.TestCase):
         with patch.dict(sys.modules, {'schedule_step3': fake}):
             self.compare(simple_graph(), PLAN, debug=True)
             self.assertIs(sys.modules['schedule_step3'], fake)
+
+    def test_cli_problem_routing_and_local_contract(self):
+        graph, plan = tensor_graph()
+        engine = self.make_engine(graph)
+        original = self.oracle._build_scene_b_tasks(graph, plan, self.config['bandwidth'], self.config['capacity'])
+        fast = engine._fast_runtime._build_scene_b_tasks(graph, plan, self.config['bandwidth'], self.config['capacity'])
+        self.assertTrue(equal(original[1:], fast[1:]))
+        for core in original[0]:
+            for field in ('graph','seq','pipe_ops','op_preds','op_succs','op_subgraph','subgraph_ids'):
+                self.assertEqual(original[0][core][field], fast[0][core][field])
+            for field in ('execution_graph','pipe_orders','makespan','memory_peak','memory_dependencies'):
+                self.assertTrue(equal(original[0][core]['step3'][field], fast[0][core]['step3'][field]))
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root/'graph.json').write_text(json.dumps(simple_graph()))
+            (root/'plans.jsonl').write_text('\n'.join(json.dumps(p) for p in [PLAN,{},PLAN]))
+            result = subprocess.run([sys.executable,'-m','research.a.e2_search.cli',str(root/'graph.json'),
+                str(root/'plans.jsonl'),'--problem',str(self.problem),'--config',str(REPO_ROOT/'data/raw/a/official/data/config.txt'),
+                '--output',str(root/'out.jsonl')],capture_output=True,text=True,timeout=30,cwd=REPO_ROOT)
+            self.assertEqual(result.returncode,1,result.stderr)
+            rows=[json.loads(line) for line in (root/'out.jsonl').read_text().splitlines()]
+            self.assertEqual([r['status'] for r in rows],['ok','invalid','ok'])
+            self.assertEqual([r['problem'] for r in rows],[self.problem]*3)
 
 
 if __name__ == '__main__':
