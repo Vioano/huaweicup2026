@@ -11,3 +11,9 @@
 - 初始远端同步提交 31500d064dd78f31a20a639bb46f2752e6c1274e，cursor 5；从 GitHub 取回签名发布，用公开邀请验证签名、project 与 epoch。
 - Codex 内置浏览器实际打开 Board，显示三张卡与正确负责人，Revision #5，与 Agent query 一致；这是队长机器观察，不是队员回读。
 - GitHub Issue #14/#15 已创建、指派并回读：作者 NikolaStarx、收件人和正文与发送草稿一致。首次回读各 0 评论，尚无成员公钥或接手证据。
+
+## 成员接手后的补验（2026-09-23）
+
+- 两名 Windows 成员分别报告：`core.autocrlf=true` 会将官方 `data/config.txt` 从 341 字节 LF 转成 360 字节 CRLF，触发原始材料哈希拒绝。补充 `data/raw/a/** -text -whitespace`，保留所有官方原件的 Git blob 字节；没有修改原件或放宽哈希校验。
+- 在 macOS 用隔离临时索引和目录执行 `git -c core.autocrlf=true -c core.eol=crlf checkout-index --all`，16 份已跟踪原始材料均与 Git blob 逐字节一致。配置仍为 341 字节，SHA-256 为 `dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9`。这是检出转换模拟，尚待成员原生 Windows 回读。
+- 对 F-PLAN-005 运行了官方入口最小反例：原图为无环链 `1 -> 2 -> 3`（三个 `PIPE_V`/1-cycle 非 COPY op，无 tensor），映射 `1,3 -> subgraph 0`、`2 -> subgraph 1`，`core_schedules=[[0],[1]]`。`validate_graph` 通过，`derive_multicore_plan` 抛出 `MulticoreCutError: contracted subgraph graph contains a cycle`。该检查可达：成环来自按方案分组合并节点，而非单独跳过 COPY 节点。样本只证明结构非法域的拒绝行为，没有进行执行评分或性能验收。
