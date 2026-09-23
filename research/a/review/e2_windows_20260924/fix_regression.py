@@ -94,6 +94,10 @@ def child(stage, private):
             receipt.update(rss=rss, tiny=tiny, normal=normal, fallback=fallback,
                            graph=simple_graph(), plan=PLAN, config=config, truth=truth,
                            limitation="Missing-library route uses explicit fault injection; no library files moved.")
+    except BaseException as error:
+        code = 1
+        receipt.update(error_type=type(error).__name__, message=str(error))
+        raise
     finally:
         receipt["exit_code"] = code
         save(private / (stage + ".child.json"), receipt)
