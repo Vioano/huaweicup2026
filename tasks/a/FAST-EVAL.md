@@ -25,7 +25,7 @@
 | 输出 | `src/eval_exact/`、`src/eval_proxy/`、对应测试；`results/a/exact/r20260923-e1-matrix/`、`results/a/proxy/r20260923-e2-dev64-gzip/`、`r20260923-e2-route-compare/`、`native-smoke/`；两份方法文档及论文片段。 |
 | 限制 | 仅 Problem 1 开发范围；单图开发池不是校准/封存集；E1 未到 3x；event E2 数值误差失败；Rust 未运行；浏览器 Canvas/Board 未由本客户端实际打开。 |
 | 验收观察 | E1 三例 full 对象零差分，配对几何平均 1.0910x/1.1193x/1.1642x；case 001 的 `>=0.8x` 配对占 80%，另两例为 100%；成功 CLI 结果/Trace/日志 byte-exact，非法 plan 行为一致。rank E2 64/64 有 E0、遗憾 0、Spearman 0.8568；event E2 遗憾 0、Spearman 0.8127，但误差 median 25.7591%、P95 28.8954%。最新同池内存计时为 E2 0.3559557 s、E0 full 28.7685327 s、观察比 80.8205x；两路线 route median 分别 0.3385280 s、0.3438034 s。C++/Python 31,387 字节 SHA-256 相同；Rust toolchain unavailable。 |
-| 交付 | 分支 `codex/a-r1-fast-eval-lyx0217`；PR 创建后回填；Atlas 仅在 PR 可访问后提交 `review + deliverables`，pending 不记成功。 |
+| 交付 | 分支 `codex/a-r1-fast-eval-lyx0217`；PR [#20](https://github.com/huaweibei123/huaweicup2026/pull/20)；Atlas 仅在 PR 可访问后提交 `review + deliverables`，pending 不记成功。 |
 
 主要复现命令：
 
