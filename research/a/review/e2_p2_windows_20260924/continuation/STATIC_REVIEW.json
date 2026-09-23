@@ -23,7 +23,18 @@
   },
   "prior_files_hash_verified": 6,
   "old_driver_actual_bytes_unchanged": true,
-  "driver_sha256": "015504f81a3c42ca990fc40a3a3f22b3de785a72dd186dc4edb1988fc04c1be3",
-  "contract_sha256": "18c89e5beb999bdfe69d73f1d6525a959e0c80e2d4424701fee4627fbd13eb83",
-  "limitations": "Call-site counts and source review are not runtime validation. C/D/E and Job mechanisms have not been run in this proposal."
+  "reviewed_guards": {
+    "save": "same-directory mkstemp + flush/fsync + os.replace; exclusive Windows os.rename",
+    "C_full_stage_seconds": 30,
+    "C_full_execution_before_cleanup_seconds_at_most": 20,
+    "D_order_slots": [
+      0,
+      1
+    ],
+    "native_max_tasks_reason_field_exists": false,
+    "PID_reuse_limitation_documented": true
+  },
+  "driver_sha256": "de2eab3d229826a67d5553f735f3b88ef63f09f1519af45309b39acaae0f61eb",
+  "contract_sha256": "8c07684fd26ea95fd0983d3219f148bc855583ad74e24ff9e2f156e3b3366aed",
+  "limitations": "Static parsing/source review only. Atomic I/O, Job guards, C/D/E have not been executed in this proposal."
 }

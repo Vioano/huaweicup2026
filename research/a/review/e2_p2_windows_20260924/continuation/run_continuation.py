@@ -18,6 +18,7 @@ from pathlib import Path
 import pickle
 import subprocess
 import sys
+import tempfile
 import time
 import traceback
 
@@ -27,7 +28,7 @@ PREVIOUS = ROOT / "results/a/review/e2-p2-windows-20260924/evidence"
 SCHEMA = "p2-windows-continuation-v1"
 CAPS = {"record": 12, "fixed_e0": 5, "possible_e0": 17, "debug": 0,
         "formal_e0": 0, "wall_seconds": 600, "evaluation_cutoff": 300,
-        "preparation_cutoff": 90, "stage_seconds": 120}
+        "preparation_cutoff": 90, "stage_seconds": 120, "C_full_stage_seconds": 30}
 # record requests, direct/CLI E0 entry points. Every record reserves one E0.
 STAGES = {"preflight": (0, 0), "C_full": (1, 1), "D_order": (4, 0),
           "D_timeout": (2, 0), "D_rss": (2, 0), "E_search": (3, 0),
@@ -40,11 +41,24 @@ def require(condition, message):
 
 
 def save(path, value, *, exclusive=False):
-    with Path(path).open("x" if exclusive else "w", encoding="utf-8", newline="\n") as f:
-        json.dump(value, f, ensure_ascii=False, indent=2, allow_nan=False)
-        f.write("\n")
-        f.flush()
-        os.fsync(f.fileno())
+    path = Path(path)
+    descriptor, temporary = tempfile.mkstemp(prefix=path.name + ".pending-", dir=path.parent)
+    pending = Path(temporary)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(value, f, ensure_ascii=False, indent=2, allow_nan=False)
+            f.write("\n")
+            f.flush()
+            os.fsync(f.fileno())
+        if exclusive:
+            # Windows os.rename refuses an existing destination. The complete
+            # file appears atomically; a gate/T0 can never be partially read.
+            require(os.name == "nt", "exclusive rename contract requires Windows")
+            os.rename(pending, path)
+        else:
+            os.replace(pending, path)
+    finally:
+        pending.unlink(missing_ok=True)  # Only the file allocated above.
 
 
 def read(path):
@@ -71,10 +85,11 @@ def elapsed(private):
     return max(utc, (tick() - state["tick64"]) / 1000)
 
 
-def remaining(private, stage_start):
+def remaining(private, stage_start, stage):
     # All calls leave ten seconds to tear down the containing Job.
+    stage_limit = CAPS["C_full_stage_seconds"] if stage == "C_full" else CAPS["stage_seconds"]
     return min(CAPS["evaluation_cutoff"] - elapsed(private),
-               CAPS["stage_seconds"] - (time.perf_counter() - stage_start)) - 10
+               stage_limit - (time.perf_counter() - stage_start)) - 10
 
 
 def typed(value):
@@ -149,7 +164,7 @@ def child(stage, private):
     require(read(gate)["pid"] == os.getpid(), "wrong child gate")
     require(read(private / "approval.json")["execute_approved"] is True, "no execution approval")
     stage_start = time.perf_counter()
-    require(remaining(private, stage_start) > 0, "window expired")
+    require(remaining(private, stage_start, stage) > 0, "window expired")
     sys.path.insert(0, str(ROOT))
     from research.a.e2_search import E2BatchEvaluator, read_config, _native_b
     if stage == "preflight":
@@ -171,7 +186,7 @@ def child(stage, private):
         save(private / (stage + ".child.json"), receipt)
 
     def admit(kind, label, count=1):
-        require(remaining(private, stage_start) > 0, "no cleanup-safe evaluation time")
+        require(remaining(private, stage_start, stage) > 0, "no cleanup-safe evaluation time")
         limit = STAGES[stage][0 if kind == "record" else 1]
         require(receipt["admitted"][kind] + count <= limit, "stage invocation cap")
         require(not any(e["label"] == label for e in receipt["events"]), "no retry/duplicate labels")
@@ -246,7 +261,7 @@ def child(stage, private):
         save(private / (label + ".command.json"), command, exclusive=True)
         with (private / (label + ".stdout")).open("xb") as out, (private / (label + ".stderr")).open("xb") as err:
             return subprocess.run(command, cwd=ROOT, stdout=out, stderr=err,
-                timeout=min(30, remaining(private, stage_start))).returncode
+                timeout=min(30, remaining(private, stage_start, stage))).returncode
 
     exit_code = 1
     try:
@@ -282,13 +297,48 @@ def child(stage, private):
                         and receipt["prior_canonical_equal"], "full result contract mismatch")
         elif stage == "D_order":
             with pool(workers=2, max_tasks_per_worker=1) as instance:
+                prior_slots = {}
+                receipt["slot_recycle_observations"] = []
+                def observe_slot(row):
+                    slot_index = row["index"] % 2
+                    slot = instance._slots[slot_index]
+                    require(slot is not None, "response slot unexpectedly empty")
+                    process, _, count = slot
+                    evidence = {"index": row["index"], "slot": slot_index,
+                        "returned_pid": row["worker_pid"], "slot_pid": process.pid,
+                        "tasks_after_response": count, "max_tasks": instance._max_tasks,
+                        "rss_policy": instance._recycle_rss,
+                        "native_recycle_reason": row.get("recycle_reason"),
+                        "interpretation": "max_tasks branch from fixed source and slot counter; no native max_tasks reason field"}
+                    if slot_index in prior_slots:
+                        previous = prior_slots[slot_index]
+                        evidence.update(previous_pid=previous["pid"],
+                            previous_tasks=previous["tasks"],
+                            previous_process_closed=getattr(previous["process"], "_closed", False))
+                    receipt["slot_recycle_observations"].append(evidence)
+                    flush()
+                    require(row["worker_pid"] == process.pid and count == 1
+                            and instance._max_tasks == 1 and instance._recycle_rss is None,
+                            "per-slot task-count recycle preconditions not observed")
+                    require("recycle_reason" not in row and "recycle_after_response" not in row,
+                            "unexpected RSS recycle annotation in max_tasks-only test")
+                    if slot_index in prior_slots:
+                        require(evidence["previous_tasks"] == 1 and evidence["previous_process_closed"]
+                                and evidence["previous_pid"] != evidence["slot_pid"],
+                                "same-slot replacement not demonstrated; no retry for possible PID reuse")
+                    prior_slots[slot_index] = {"pid": process.pid, "tasks": count, "process": process}
                 rows = batch("D-ordered-recycle", instance, [plan, {}, plan, plan],
-                             expected=["native", "invalid", "native", "native"])
+                             expected=["native", "invalid", "native", "native"], row_check=observe_slot)
                 require([r["index"] for r in rows] == [0, 1, 2, 3], "index order mismatch")
                 for i in (0, 2, 3):
                     score(rows[i])
                 invalid(rows[1])
-                require(rows[0]["worker_pid"] != rows[2]["worker_pid"], "worker was not recycled")
+                require(rows[0]["worker_pid"] != rows[2]["worker_pid"]
+                        and rows[1]["worker_pid"] != rows[3]["worker_pid"], "both slots must demonstrate replacement")
+                require(rows[0]["worker_pid"] != rows[1]["worker_pid"]
+                        and rows[2]["worker_pid"] != rows[3]["worker_pid"], "simultaneously active slots share PID")
+                receipt["observed_pid_set"] = sorted({r["worker_pid"] for r in rows})
+                flush()
         elif stage == "D_timeout":
             with pool(timeout_seconds=1e-12) as instance:
                 row = batch("D-expected-timeout", instance, [plan], expected=["timeout"])[0]
@@ -397,7 +447,9 @@ def controlled(stage, private):
     process = None
     start = time.perf_counter()
     record = {"stage": stage, "kill_on_close": True, "forced_cleanup": False,
-              "active_before_cleanup": None, "active_after_cleanup": None}
+              "active_before_cleanup": None, "active_after_cleanup": None,
+              "stage_budget_seconds": CAPS["C_full_stage_seconds"] if stage == "C_full" else CAPS["stage_seconds"],
+              "cleanup_reserve_seconds": 10}
     try:
         limit = Extended(); limit.basic.flags = 0x2000
         require(kernel.SetInformationJobObject(job, 9, ct.byref(limit), ct.sizeof(limit)), "Job setup failed")
@@ -409,8 +461,8 @@ def controlled(stage, private):
                 process.kill(); process.wait(timeout=5)
                 raise RuntimeError("Job assignment failed before gate; no evaluator imported")
             save(private / (stage + ".gate.json"), {"pid": process.pid}, exclusive=True)
-            require(remaining(private, start) > 0, "no stage time remaining")
-            record["returncode"] = process.wait(timeout=remaining(private, start))
+            require(remaining(private, start, stage) > 0, "no stage time remaining")
+            record["returncode"] = process.wait(timeout=remaining(private, start, stage))
     except BaseException as error:
         record.update(status="controller_failure", error_type=type(error).__name__, message=str(error))
         if process is not None and process.poll() is None:

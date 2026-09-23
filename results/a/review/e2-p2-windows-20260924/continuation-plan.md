@@ -44,7 +44,7 @@ D/E 成功记录复用原 `A-R.truth.json` 的三个指标；{} 复用已核 B-e
 
 ## D/E 断言与退出行为
 
-- D_order：返回索引 0/1/2/3、预期 ok/invalid/ok/ok，各成功行三指标逐类型一致，{} 异常匹配旧完整记录；第 0 和第 2 行的 worker PID 不同。每行落盘后立即验证，发现意外结果就关闭生成器和 pool，不消费后续批次；同一双 worker 批次已在途的请求仍计入原预留。
+- D_order：返回索引 0/1/2/3、预期 ok/invalid/ok/ok，各成功行三指标逐类型一致，{} 异常匹配旧完整记录；固定 pool.py 按两条分块且 slot_index 固定，逐行记录 index→slot(index%2)、返回PID与slot PID相等、任务计数=1、max_tasks=1且RSS策略为None；核同槽 0→2、1→3 均换PID、前一个Process对象已closed，特别保留{}也令slot1计数达到阈值的证据。原max_tasks机制没有recycle_reason返回字段（该字段仅RSS分支有），不能伪造；归因明确来自源码分支与slot观测。保存整个PID集合，要求同块两PID不同，不强制跨块四PID全异；Windows可能复用PID，若同槽PID相同则只能判未证实并停止，不补跑。每行落盘后立即验证，发现意外结果就关闭生成器和 pool，不消费后续批次；同一双 worker 批次已在途的请求仍计入原预留。
 - D_timeout：一次 `1e-12` timeout，随后把同 pool 的正常请求时限设为 30 秒，仅一次恢复请求；timeout 的内部进度记未知，不记零 E0。超时本身是预列路径，状态或恢复失配则停止。
 - D_rss：worker_peak_rss_bytes 正数、明确 `peak_rss_threshold` 原因、两次请求不同 PID。每行即时验证。1 byte 是回收触发阈值，不是硬 RSS 限额。
 - E_search：显式 `--problem 2 --workers 1 --timeout 30`；退出 1、三行索引/状态/问题路由正确，错误后继续，成功指标及 `.run.json` 的 P2 engine/worker 信息匹配。冻结 CLI 的三行作为一次已预留调用批次；返回后检查，不能在其中插入新测试逻辑。CLI 的 worker startup 使用源码默认 30 秒，整个 CLI 子进程另受 30 秒外层限制；这里不冒称 CLI startup=15。
@@ -69,9 +69,9 @@ D/E 成功记录复用原 `A-R.truth.json` 的三个指标；{} 复用已核 B-e
 .venv/Scripts/python.exe research/a/review/e2_p2_windows_20260924/continuation/run_continuation.py --private <全新Git外证据目录> --approval <另行批准文件>
 ```
 
-新目录必须不存在且不位于 Git workspace；不复用旧 gate/T0/账本。开始后先记 UTC 和 GetTickCount64，再验证批准 HEAD、干净工作区、固定基点 ancestry 和新驱动字节。每阶段先 fsync 全阶段预留，每次实际入口再 fsync 子账本。未返回、异常退出、CLI timeout、预列极短 timeout 均保留预留，不能用已知返回数冲减潜在 E0。
+新目录必须不存在且不位于 Git workspace；不复用旧 gate/T0/账本。开始后先记 UTC 和 GetTickCount64，再验证批准 HEAD、干净工作区、固定基点 ancestry 和新驱动字节。所有 save JSON 先在同目录独占创建临时文件，写完flush/fsync后os.replace原子替换；exclusive初建使用Windows不覆盖目标的os.rename，因此T0/gate不会半写即出现，既有文件也不能被初建覆盖。受控终止最多遗留.pending临时文件，正式账本仍是上一份完整版本；保留残留供审，不由缺失回执推成零调用。每阶段先原子落盘全阶段预留，每次实际入口再原子落盘子账本，调用只发生在预留成功返回以后。未返回、异常退出、CLI timeout、预列极短 timeout 均保留预留，不能用已知返回数冲减潜在 E0。
 
-每阶段单独 Windows kill-on-close Job，子进程先等待私有 gate，归属 Job 后才 import E0/E2 或加载库。包括 pool worker、资源追踪进程、CLI 与 execv 后代。每阶段含启动最多 120 秒，同时受 T0+300 和 10 秒清理尾部约束；API 正常请求 30 秒、startup 15 秒、workers≤2、编译缓存 16MiB/worker。C direct E0 的不可中断 Python 调用也在外层 Job 内，受相同阶段限制。
+每阶段单独 Windows kill-on-close Job，子进程先等待私有 gate，归属 Job 后才 import E0/E2 或加载库。包括 pool worker、资源追踪进程、CLI 与 execv 后代。一般阶段含启动最多120秒；C_full整阶段单独收紧为30秒，外层等待再预留10秒清理，因此C的直接官方入口和pool full共享最多约20秒执行段，每个官方入口均被更保守地限制在30秒以内。它不是只有约110秒兜底的同进程裸调用：C子进程（含direct E0）被外层Job的20秒执行截止控制，不增加oracle调用或拆出额外测试。所有阶段同时受T0+300和清理尾部约束；API正常请求30秒、startup15秒、workers≤2、编译缓存16MiB/worker；C阶段上界会先于这些宽松内部超时终止。系统终止或清理未完成仍记真实失败/未知，不宣称操作系统硬实时保证。
 
 断言/序列化异常时，pool 在 finally 中执行 close/再次close并记录 slots；外层在任何 BaseException（含中断/子进程超时）后查询 Job、必要时终止全部后代、最多 5 秒等待退出并复核 active=0。强制清理、未能查询/归零或异常退出都使阶段失败，不冒称自然退出。之后停全部阶段，保留可能未交付的请求，不修源码、不重试、不自动开第二窗口。
 
