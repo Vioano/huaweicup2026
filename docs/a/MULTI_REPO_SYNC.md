@@ -1,5 +1,7 @@
 # 多端同步与 Pro 材料交付
 
+完整研发聊天与 AI 附件按 [归档脚本与版本规则](../CHAT_ARCHIVE.md) 保存，统一入口是 [AI chats](../../AI%20chats/README.md)。`Problem A/` 留存目录与远端原件的对应关系和逐字校验见 [材料同步核对](MATERIAL_SYNC_CHECK_20260924.md)：原题、114份附件均已发布，用例以原字节 ZIP 保存。
+
 2026-09-23 队长授权新增 `Vioano/huaweicup2026` 私有研究副本。组织仓库 `huaweibei123/huaweicup2026` 继续作为团队协作主库；成员电脑继续使用组织仓库为 origin，Issues、PR 和 Atlas 权威通道不变。
 
 **2026-09-24 权限澄清**：Vioano 私有镜像及其已授权 ChatGPT 连接属于队长，队友没有因此取得镜像权限。发给队友的材料使用组织主库链接；发给队长 ChatGPT/Pro 的材料才使用已同步的 Vioano 固定提交链接。主库文件可见不等于队长 Colab OAuth、额度、软件许可或其他工具授权可用，详见 [队长资源权限](CAPTAIN_RESOURCES.md)。
