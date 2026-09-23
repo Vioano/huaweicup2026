@@ -2,7 +2,7 @@
 
 负责人：@lyx0217
 分支建议：`codex/a-r1-exact`、`codex/a-r1-proxy`，或同一任务下隔离实现目录
-沟通 Issue：见同目录 `DISPATCH.json` 中本 task ID 的 issue_url。
+沟通 Issue：https://github.com/huaweibei123/huaweicup2026/issues/15
 公共约定：[ROUND1](../../docs/a/ROUND1.md)，完整标准：[契约 v1 第 2、4、5、7 节](../../docs/a/contract-v1.md)。
 
 1. **任务目标**：两条路线同时探索。E1 通过 profiling 找到实际热点，替换热点而保持声明范围内的官方可观察行为；E2 允许改变算法和近似语义，以低总成本保留值得精评的候选。成员自主决定语言、数据结构、优化方法；如使用多个 Agent，由本人现有工具与授权决定，队長不预设客户端能力。

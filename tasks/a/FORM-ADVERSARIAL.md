@@ -2,7 +2,7 @@
 
 负责人：@farmeruncle123
 分支建议：`codex/a-r1-form-adversarial`
-沟通 Issue：见同目录 `DISPATCH.json` 中本 task ID 的 issue_url。
+沟通 Issue：https://github.com/huaweibei123/huaweicup2026/issues/14
 公共约定：[ROUND1](../../docs/a/ROUND1.md)，完整标准：[契约 v1 第 3、6 节](../../docs/a/contract-v1.md)。
 
 1. **任务目标**：将官方评估过程写成能指导实现与测试的规范，同时构造揭露 E1 不等效、E2 筛选失效的语义对抗生成器。规则、夹具、生成器和反例形成对应关系；不只重述题面，不另写整个官方评估器。
