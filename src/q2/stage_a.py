@@ -161,7 +161,7 @@ def main():
                 "child_interpreter": "sys._base_executable; same Python version; stdlib-only child tools",
                 "dependencies": {d.metadata["Name"]: d.version for d in importlib.metadata.distributions()},
                 "uv_lock_sha256": digest(ROOT / "uv.lock"),
-                "official_code_hash": json.loads((ROOT / "docs/a/source-manifest.json").read_text())["official_code_hash"],
+                "official_code_hash": json.loads((ROOT / "docs/a/source-manifest.json").read_text(encoding="utf-8"))["official_code_hash"],
                 "memory_accounting": "250 ms sum of controller + sole direct child working sets; sampled, not hard limit",
                 "budget_scope": "preparation below + all proposals/evaluations/output within this invocation",
                 "outer_preparation": "uv sync --locked and a_materials --extract recorded separately"}
@@ -214,7 +214,7 @@ def main():
                 ("07-fork-fine", "fork", "plan1.json")):
             folder = inputs / "pro3" / example
             jobs.append((label, folder / "graph.json", folder / plan_name, "ok", "Pro3 published synthetic input, independently evaluated"))
-        reverse_graph = json.loads((inputs / "pro3/head_blocking/graph.json").read_text())
+        reverse_graph = json.loads((inputs / "pro3/head_blocking/graph.json").read_text(encoding="utf-8"))
         reverse_plan = {"node_to_subgraph": {"2": 0, "3": 1, "6": 2},
                         "core_schedules": [[1, 0], [2]]}
         synthetic("08-intra-core-reverse", (reverse_graph, reverse_plan), "rejected")
