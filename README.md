@@ -46,7 +46,7 @@ macOS 的 ExFAT 外置盘可能产生 `._*` 元数据文件，导致依赖安装
 ├── src/demo.py                 # 可运行的合成拟合示例
 ├── results/                    # CSV 指标、运行记录、失败案例
 ├── figures/                    # 论文 PDF / PNG 图件
-├── paper/template-2025/         # 课件引用的完整 2025 社区模板
+├── paper/template-2026/         # 当前 2026 论文模板
 ├── tasks/                      # 六字段任务卡
 └── docs/                       # 分工、通信、来源与 Skill 调研
 ```
@@ -105,6 +105,6 @@ node .agents/skills/system-atlas/bin/system-atlas.mjs preview .agents/skills/sys
 
 排版工具需 Node.js 22+；`npm ci --ignore-scripts --prefix .agents/skills/scientific-figures` 安装固定依赖。PNG / PDF 导出另需 Draw.io Desktop；数据图继续使用现有 Python 环境。
 
-先看 [论文说明](paper/README.md)：2025 模板是课件的训练参考，不能声称符合 2026 正式格式。来源见 [SOURCES](docs/SOURCES.md)。不把模板示例正文、参考文献或旧 PDF 当成团队成果。
+先看 [论文说明](paper/README.md)：`paper/template-2026/` 已替换 2025 训练模板；正式格式以当届公告为准。来源见 [SOURCES](docs/SOURCES.md)。模板示例正文、数据、图和参考文献不是团队成果。
 
 数学建模相关 Skill 的选型见 [原调研报告](docs/SKILLS_RESEARCH.md)；科研绘图、Python / MATLAB / Wolfram / Julia 与 Astra 适配见 [绘图专项报告](docs/FIGURE_SKILLS_RESEARCH.md)。用户指定的 [figures4papers / scientific-figure-making](.agents/skills/scientific-figure-making/SKILL.md) 已安装，提供 Matplotlib 图形设计与代码配方，许可为 CC BY-NC 4.0，来源见 [安装记录](docs/FIGURES4PAPERS.md)。其他调研候选尚未安装。当前项目有四个 Skill。
