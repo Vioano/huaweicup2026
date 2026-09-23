@@ -1,0 +1,5266 @@
+{
+  "generator": "src/adversarial/verify_lyx_cross_r1.py",
+  "responds_to": "a-r1-form-adversarial/NikolaStarx/FAST-CODE-AVAILABLE-001",
+  "reviewed_commit": "d83d5f32a1c23f6450aa9c15fa85891c4ebddd7f",
+  "reviewed_component": "src/eval_exact/problem1.py::_build_scene_a_tasks_indexed",
+  "official_code_sha256_problem3": "eab1504dead881f4b67c0f0498cbc2dbbd9039dc3c9d198c6af58773c127eeb0",
+  "method": "对同一 (graph, plan) 分别调用未改写的官方 evaluate_scene_a 与 E1 的 evaluate_scene_a，比较**完整返回对象**（递归、含类型与容器长度），不使用容差或字段白名单",
+  "constants": {
+    "bandwidth": 60,
+    "capacity": {
+      "L1": 524288,
+      "UB": 131072
+    },
+    "cross_core_wait": 1000,
+    "same_core_wait": 100
+  },
+  "variants": [
+    {
+      "tag": "nominal",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      }
+    },
+    {
+      "tag": "tight_capacity",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      }
+    },
+    {
+      "tag": "tiny_bandwidth",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      }
+    }
+  ],
+  "targeted_records": 54,
+  "random_records": 280,
+  "total_records": 334,
+  "summary": {
+    "identical": 239,
+    "both_raised": 95,
+    "differ": 0,
+    "error_message_divergence": 0,
+    "task_builder_identical": 239,
+    "task_builder_differ": 0
+  },
+  "rejection_paths": {
+    "EvaluationValidationError": 6,
+    "Step2SchedulingError": 89
+  },
+  "official_cases": [
+    {
+      "case": "official_case_001_c2_b8",
+      "note": "官方开发例 + 拓扑序连续块切分（非官方候选池方案，仅作差分输入）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 216382,
+      "cross_task_traffic": 204800
+    },
+    {
+      "case": "official_case_001_c3_b16",
+      "note": "官方开发例 + 拓扑序连续块切分（非官方候选池方案，仅作差分输入）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 101683,
+      "cross_task_traffic": 102400
+    },
+    {
+      "case": "official_case_019_c2_b8",
+      "note": "官方开发例 + 拓扑序连续块切分（非官方候选池方案，仅作差分输入）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 133534,
+      "cross_task_traffic": 289852
+    },
+    {
+      "case": "official_case_019_c3_b16",
+      "note": "官方开发例 + 拓扑序连续块切分（非官方候选池方案，仅作差分输入）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 91601,
+      "cross_task_traffic": 202552
+    },
+    {
+      "case": "official_case_080_c2_b8",
+      "note": "官方开发例 + 拓扑序连续块切分（非官方候选池方案，仅作差分输入）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 279723,
+      "cross_task_traffic": 3100672
+    },
+    {
+      "case": "official_case_080_c3_b16",
+      "note": "官方开发例 + 拓扑序连续块切分（非官方候选池方案，仅作差分输入）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 296727,
+      "cross_task_traffic": 2838528
+    }
+  ],
+  "differences": [],
+  "error_message_divergences": [],
+  "records": [
+    {
+      "case": "linear_single_core__nominal",
+      "note": "基础正例：输入边界 + 输出边界各一处",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 10,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "two_independent_chains_2cores__nominal",
+      "note": "两条独立链分到两核：跨 Task 边为零",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 10,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "shared_ddr_input_two_cores__nominal",
+      "note": "同一图输入被两核消费：每条核各自 input_boundary",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 7,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "tensor_consumed_local_and_remote__nominal",
+      "note": "t101 被本子图的 11 与远端子图的 20 同时消费",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1014,
+      "cross_task_traffic": 60
+    },
+    {
+      "case": "output_boundary_no_consumers__nominal",
+      "note": "t101 无消费者 → 必须补 COPY_OUT",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 5,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "original_copy_out_consumer__nominal",
+      "note": "原图自带 COPY_OUT → original_graph_copy_bytes 非零，且 has_copy_out 为真",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 5,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "original_copy_in_producer__nominal",
+      "note": "原图自带 COPY_IN → 该 tensor 有 producer，故不再补 input_boundary",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 5,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "ids_share_one_space_large__nominal",
+      "note": "op id 100001 与 tensor id 100000/100002 同处一个 ID 空间 → 新 ID 必须同时避开两类",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 5,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "ids_interleaved__nominal",
+      "note": "op/tensor id 交错占用 → 新 ID 分配顺序敏感",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 8,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "plan_string_keys__nominal",
+      "note": "node_to_subgraph 用十进制字符串键",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 5,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "two_subgraphs_one_core_empty__nominal",
+      "note": "子图 1 排在核 1 且该核只有这一个 → 两核但其中一核空",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 110,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "multi_consumer_same_subgraph__nominal",
+      "note": "t101 同子图内被 11 与 12 消费 → 不需要跨 Task COPY_OUT",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 11,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "tensor_pos_missing__nominal",
+      "note": "tensor 无 pos 字段 → 不做 DDR→UB 改写",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "EvaluationValidationError: tensor 100: unsupported memory pos None",
+      "e1_error": "EvaluationValidationError: tensor 100: unsupported memory pos None",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "tensor_pos_l1__nominal",
+      "note": "pos='L1' 不是 DDR → 不改写，且入边界仍由 producer 缺失决定",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 5,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "direct_op_to_op_edge_same_task__nominal",
+      "note": "op→op 直接边落在同一 Task 内 → 必须保留",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 8,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "zero_size_zero_cycles__nominal",
+      "note": "size=0 与 cycles=0 → 边界 COPY 时长应为 1",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 3,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "duplicate_edges__nominal",
+      "note": "同一对 (src,dst) 重复出现",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "EvaluationValidationError: duplicate edge: 100 -> 10",
+      "e1_error": "EvaluationValidationError: duplicate edge: 100 -> 10",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "op_with_two_inputs_one_shared__nominal",
+      "note": "op11 有两个输入，其中一个与 op10 的输入相同",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 8,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "linear_single_core__tight_capacity",
+      "note": "基础正例：输入边界 + 输出边界各一处",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=12 type=UB alloc_resid=120 capacity=64 current_tids=[100] active(tid,size,next_use)=[(100, 120, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=12 type=UB alloc_resid=120 capacity=64 current_tids=[100] active(tid,size,next_use)=[(100, 120, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "two_independent_chains_2cores__tight_capacity",
+      "note": "两条独立链分到两核：跨 Task 边为零",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[100, 101] active(tid,size,next_use)=[(100, 60, 1), (101, 60, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[100, 101] active(tid,size,next_use)=[(100, 60, 1), (101, 60, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "shared_ddr_input_two_cores__tight_capacity",
+      "note": "同一图输入被两核消费：每条核各自 input_boundary",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[100, 101] active(tid,size,next_use)=[(100, 60, 1), (101, 60, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[100, 101] active(tid,size,next_use)=[(100, 60, 1), (101, 60, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "tensor_consumed_local_and_remote__tight_capacity",
+      "note": "t101 被本子图的 11 与远端子图的 20 同时消费",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[100, 101] active(tid,size,next_use)=[(100, 60, 1), (101, 60, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[100, 101] active(tid,size,next_use)=[(100, 60, 1), (101, 60, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "output_boundary_no_consumers__tight_capacity",
+      "note": "t101 无消费者 → 必须补 COPY_OUT",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[100, 101] active(tid,size,next_use)=[(100, 60, 1), (101, 60, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[100, 101] active(tid,size,next_use)=[(100, 60, 1), (101, 60, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "original_copy_out_consumer__tight_capacity",
+      "note": "原图自带 COPY_OUT → original_graph_copy_bytes 非零，且 has_copy_out 为真",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[100, 101] active(tid,size,next_use)=[(100, 60, 1), (101, 60, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[100, 101] active(tid,size,next_use)=[(100, 60, 1), (101, 60, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "original_copy_in_producer__tight_capacity",
+      "note": "原图自带 COPY_IN → 该 tensor 有 producer，故不再补 input_boundary",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[101, 102] active(tid,size,next_use)=[(101, 60, 1), (102, 60, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[101, 102] active(tid,size,next_use)=[(101, 60, 1), (102, 60, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "ids_share_one_space_large__tight_capacity",
+      "note": "op id 100001 与 tensor id 100000/100002 同处一个 ID 空间 → 新 ID 必须同时避开两类",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=100001 type=UB alloc_resid=120 capacity=64 current_tids=[100000, 100002] active(tid,size,next_use)=[(100000, 60, 1), (100002, 60, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=100001 type=UB alloc_resid=120 capacity=64 current_tids=[100000, 100002] active(tid,size,next_use)=[(100000, 60, 1), (100002, 60, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "ids_interleaved__tight_capacity",
+      "note": "op/tensor id 交错占用 → 新 ID 分配顺序敏感",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=3 type=UB alloc_resid=120 capacity=64 current_tids=[4, 6] active(tid,size,next_use)=[(4, 60, 1), (6, 60, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=3 type=UB alloc_resid=120 capacity=64 current_tids=[4, 6] active(tid,size,next_use)=[(4, 60, 1), (6, 60, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "plan_string_keys__tight_capacity",
+      "note": "node_to_subgraph 用十进制字符串键",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[100, 101] active(tid,size,next_use)=[(100, 60, 1), (101, 60, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[100, 101] active(tid,size,next_use)=[(100, 60, 1), (101, 60, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "two_subgraphs_one_core_empty__tight_capacity",
+      "note": "子图 1 排在核 1 且该核只有这一个 → 两核但其中一核空",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[100, 101] active(tid,size,next_use)=[(100, 60, 1), (101, 60, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[100, 101] active(tid,size,next_use)=[(100, 60, 1), (101, 60, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "multi_consumer_same_subgraph__tight_capacity",
+      "note": "t101 同子图内被 11 与 12 消费 → 不需要跨 Task COPY_OUT",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[100, 101] active(tid,size,next_use)=[(100, 60, 1), (101, 60, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[100, 101] active(tid,size,next_use)=[(100, 60, 1), (101, 60, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "tensor_pos_missing__tight_capacity",
+      "note": "tensor 无 pos 字段 → 不做 DDR→UB 改写",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "EvaluationValidationError: tensor 100: unsupported memory pos None",
+      "e1_error": "EvaluationValidationError: tensor 100: unsupported memory pos None",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "tensor_pos_l1__tight_capacity",
+      "note": "pos='L1' 不是 DDR → 不改写，且入边界仍由 producer 缺失决定",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 5,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "direct_op_to_op_edge_same_task__tight_capacity",
+      "note": "op→op 直接边落在同一 Task 内 → 必须保留",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 8,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "zero_size_zero_cycles__tight_capacity",
+      "note": "size=0 与 cycles=0 → 边界 COPY 时长应为 1",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 3,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "duplicate_edges__tight_capacity",
+      "note": "同一对 (src,dst) 重复出现",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "EvaluationValidationError: duplicate edge: 100 -> 10",
+      "e1_error": "EvaluationValidationError: duplicate edge: 100 -> 10",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "op_with_two_inputs_one_shared__tight_capacity",
+      "note": "op11 有两个输入，其中一个与 op10 的输入相同",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[100, 101] active(tid,size,next_use)=[(100, 60, 2), (101, 60, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=120 capacity=64 current_tids=[100, 101] active(tid,size,next_use)=[(100, 60, 2), (101, 60, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "linear_single_core__tiny_bandwidth",
+      "note": "基础正例：输入边界 + 输出边界各一处",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 42,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "two_independent_chains_2cores__tiny_bandwidth",
+      "note": "两条独立链分到两核：跨 Task 边为零",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 42,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "shared_ddr_input_two_cores__tiny_bandwidth",
+      "note": "同一图输入被两核消费：每条核各自 input_boundary",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 39,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "tensor_consumed_local_and_remote__tiny_bandwidth",
+      "note": "t101 被本子图的 11 与远端子图的 20 同时消费",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1054,
+      "cross_task_traffic": 60
+    },
+    {
+      "case": "output_boundary_no_consumers__tiny_bandwidth",
+      "note": "t101 无消费者 → 必须补 COPY_OUT",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 21,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "original_copy_out_consumer__tiny_bandwidth",
+      "note": "原图自带 COPY_OUT → original_graph_copy_bytes 非零，且 has_copy_out 为真",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 21,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "original_copy_in_producer__tiny_bandwidth",
+      "note": "原图自带 COPY_IN → 该 tensor 有 producer，故不再补 input_boundary",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 21,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "ids_share_one_space_large__tiny_bandwidth",
+      "note": "op id 100001 与 tensor id 100000/100002 同处一个 ID 空间 → 新 ID 必须同时避开两类",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 21,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "ids_interleaved__tiny_bandwidth",
+      "note": "op/tensor id 交错占用 → 新 ID 分配顺序敏感",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 24,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "plan_string_keys__tiny_bandwidth",
+      "note": "node_to_subgraph 用十进制字符串键",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 21,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "two_subgraphs_one_core_empty__tiny_bandwidth",
+      "note": "子图 1 排在核 1 且该核只有这一个 → 两核但其中一核空",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 142,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "multi_consumer_same_subgraph__tiny_bandwidth",
+      "note": "t101 同子图内被 11 与 12 消费 → 不需要跨 Task COPY_OUT",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 33,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "tensor_pos_missing__tiny_bandwidth",
+      "note": "tensor 无 pos 字段 → 不做 DDR→UB 改写",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "EvaluationValidationError: tensor 100: unsupported memory pos None",
+      "e1_error": "EvaluationValidationError: tensor 100: unsupported memory pos None",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "tensor_pos_l1__tiny_bandwidth",
+      "note": "pos='L1' 不是 DDR → 不改写，且入边界仍由 producer 缺失决定",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 21,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "direct_op_to_op_edge_same_task__tiny_bandwidth",
+      "note": "op→op 直接边落在同一 Task 内 → 必须保留",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 24,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "zero_size_zero_cycles__tiny_bandwidth",
+      "note": "size=0 与 cycles=0 → 边界 COPY 时长应为 1",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 3,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "duplicate_edges__tiny_bandwidth",
+      "note": "同一对 (src,dst) 重复出现",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "EvaluationValidationError: duplicate edge: 100 -> 10",
+      "e1_error": "EvaluationValidationError: duplicate edge: 100 -> 10",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "op_with_two_inputs_one_shared__tiny_bandwidth",
+      "note": "op11 有两个输入，其中一个与 op10 的输入相同",
+      "bandwidth": 7,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 24,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_000",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 250,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_001",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2421,
+      "cross_task_traffic": 8192
+    },
+    {
+      "case": "random_20260923_002",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 11,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_003",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1023,
+      "cross_task_traffic": 60
+    },
+    {
+      "case": "random_20260923_004",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1151,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_005",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 231,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_006",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 516,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_007",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1331,
+      "cross_task_traffic": 120
+    },
+    {
+      "case": "random_20260923_008",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2299,
+      "cross_task_traffic": 1860
+    },
+    {
+      "case": "random_20260923_009",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1116,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_010",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1077,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_011",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1350,
+      "cross_task_traffic": 602
+    },
+    {
+      "case": "random_20260923_012",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1157,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_013",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 300,
+      "cross_task_traffic": 600
+    },
+    {
+      "case": "random_20260923_014",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2327,
+      "cross_task_traffic": 4097
+    },
+    {
+      "case": "random_20260923_015",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 799,
+      "cross_task_traffic": 1200
+    },
+    {
+      "case": "random_20260923_016",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 660,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_017",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1319,
+      "cross_task_traffic": 8192
+    },
+    {
+      "case": "random_20260923_018",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 3098,
+      "cross_task_traffic": 60
+    },
+    {
+      "case": "random_20260923_019",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 317,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_020",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1211,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_021",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2068,
+      "cross_task_traffic": 1200
+    },
+    {
+      "case": "random_20260923_022",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1044,
+      "cross_task_traffic": 600
+    },
+    {
+      "case": "random_20260923_023",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1246,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_024",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 348,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_025",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 234,
+      "cross_task_traffic": 600
+    },
+    {
+      "case": "random_20260923_026",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 4414,
+      "cross_task_traffic": 8794
+    },
+    {
+      "case": "random_20260923_027",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1233,
+      "cross_task_traffic": 8192
+    },
+    {
+      "case": "random_20260923_028",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1179,
+      "cross_task_traffic": 60
+    },
+    {
+      "case": "random_20260923_029",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1021,
+      "cross_task_traffic": 62
+    },
+    {
+      "case": "random_20260923_030",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1009,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_031",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 186,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_032",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1178,
+      "cross_task_traffic": 600
+    },
+    {
+      "case": "random_20260923_033",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2125,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_034",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 176,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_035",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1155,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_036",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1250,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_037",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1060,
+      "cross_task_traffic": 1320
+    },
+    {
+      "case": "random_20260923_038",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 5,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_039",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 342,
+      "cross_task_traffic": 660
+    },
+    {
+      "case": "random_20260923_040",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1429,
+      "cross_task_traffic": 8192
+    },
+    {
+      "case": "random_20260923_041",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 4065,
+      "cross_task_traffic": 1802
+    },
+    {
+      "case": "random_20260923_042",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2018,
+      "cross_task_traffic": 2
+    },
+    {
+      "case": "random_20260923_043",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1173,
+      "cross_task_traffic": 8792
+    },
+    {
+      "case": "random_20260923_044",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1387,
+      "cross_task_traffic": 4696
+    },
+    {
+      "case": "random_20260923_045",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 350,
+      "cross_task_traffic": 4156
+    },
+    {
+      "case": "random_20260923_046",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1129,
+      "cross_task_traffic": 61
+    },
+    {
+      "case": "random_20260923_047",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 420,
+      "cross_task_traffic": 61
+    },
+    {
+      "case": "random_20260923_048",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 88,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_049",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 176,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_050",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2182,
+      "cross_task_traffic": 1260
+    },
+    {
+      "case": "random_20260923_051",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 344,
+      "cross_task_traffic": 120
+    },
+    {
+      "case": "random_20260923_052",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1335,
+      "cross_task_traffic": 4756
+    },
+    {
+      "case": "random_20260923_053",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1151,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_054",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1249,
+      "cross_task_traffic": 8192
+    },
+    {
+      "case": "random_20260923_055",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 3046,
+      "cross_task_traffic": 122
+    },
+    {
+      "case": "random_20260923_056",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1194,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_057",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 231,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_058",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 9,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_059",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1194,
+      "cross_task_traffic": 61
+    },
+    {
+      "case": "random_20260923_060",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1118,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_061",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1186,
+      "cross_task_traffic": 180
+    },
+    {
+      "case": "random_20260923_062",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 261,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_063",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 118,
+      "cross_task_traffic": 60
+    },
+    {
+      "case": "random_20260923_064",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 3405,
+      "cross_task_traffic": 4216
+    },
+    {
+      "case": "random_20260923_065",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1299,
+      "cross_task_traffic": 4156
+    },
+    {
+      "case": "random_20260923_066",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 71,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_067",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 350,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_068",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 197,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_069",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 544,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_070",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1140,
+      "cross_task_traffic": 601
+    },
+    {
+      "case": "random_20260923_071",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 313,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_072",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2010,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_073",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1117,
+      "cross_task_traffic": 60
+    },
+    {
+      "case": "random_20260923_074",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 334,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_075",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1130,
+      "cross_task_traffic": 60
+    },
+    {
+      "case": "random_20260923_076",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1024,
+      "cross_task_traffic": 1200
+    },
+    {
+      "case": "random_20260923_077",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1008,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_078",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 306,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_079",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 15,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_080",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2080,
+      "cross_task_traffic": 62
+    },
+    {
+      "case": "random_20260923_081",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1152,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_082",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1129,
+      "cross_task_traffic": 60
+    },
+    {
+      "case": "random_20260923_083",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1247,
+      "cross_task_traffic": 600
+    },
+    {
+      "case": "random_20260923_084",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 681,
+      "cross_task_traffic": 600
+    },
+    {
+      "case": "random_20260923_085",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 942,
+      "cross_task_traffic": 12408
+    },
+    {
+      "case": "random_20260923_086",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 824,
+      "cross_task_traffic": 13008
+    },
+    {
+      "case": "random_20260923_087",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 3166,
+      "cross_task_traffic": 1260
+    },
+    {
+      "case": "random_20260923_088",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2270,
+      "cross_task_traffic": 4217
+    },
+    {
+      "case": "random_20260923_089",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2024,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_090",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 338,
+      "cross_task_traffic": 60
+    },
+    {
+      "case": "random_20260923_091",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1008,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_092",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 114,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_093",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1176,
+      "cross_task_traffic": 600
+    },
+    {
+      "case": "random_20260923_094",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1313,
+      "cross_task_traffic": 4696
+    },
+    {
+      "case": "random_20260923_095",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2216,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_096",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1283,
+      "cross_task_traffic": 3
+    },
+    {
+      "case": "random_20260923_097",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 106,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_098",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2101,
+      "cross_task_traffic": 720
+    },
+    {
+      "case": "random_20260923_099",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1023,
+      "cross_task_traffic": 60
+    },
+    {
+      "case": "random_20260923_100",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 806,
+      "cross_task_traffic": 8195
+    },
+    {
+      "case": "random_20260923_101",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1293,
+      "cross_task_traffic": 123
+    },
+    {
+      "case": "random_20260923_102",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2141,
+      "cross_task_traffic": 602
+    },
+    {
+      "case": "random_20260923_103",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 202,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_104",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1006,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_105",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 174,
+      "cross_task_traffic": 60
+    },
+    {
+      "case": "random_20260923_106",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 430,
+      "cross_task_traffic": 1260
+    },
+    {
+      "case": "random_20260923_107",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1308,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_108",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1225,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_109",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 3169,
+      "cross_task_traffic": 5296
+    },
+    {
+      "case": "random_20260923_110",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 450,
+      "cross_task_traffic": 120
+    },
+    {
+      "case": "random_20260923_111",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 403,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_112",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2306,
+      "cross_task_traffic": 12288
+    },
+    {
+      "case": "random_20260923_113",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 388,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_114",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 532,
+      "cross_task_traffic": 8192
+    },
+    {
+      "case": "random_20260923_115",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2165,
+      "cross_task_traffic": 4696
+    },
+    {
+      "case": "random_20260923_116",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1085,
+      "cross_task_traffic": 8312
+    },
+    {
+      "case": "random_20260923_117",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1153,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_118",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 3,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_119",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1251,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_120",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 683,
+      "cross_task_traffic": 662
+    },
+    {
+      "case": "random_20260923_121",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 178,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_122",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1112,
+      "cross_task_traffic": 120
+    },
+    {
+      "case": "random_20260923_123",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2154,
+      "cross_task_traffic": 4156
+    },
+    {
+      "case": "random_20260923_124",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 3259,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_125",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 191,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_126",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1266,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_127",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 121,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_128",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 224,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_129",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 146,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_130",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 3126,
+      "cross_task_traffic": 5
+    },
+    {
+      "case": "random_20260923_131",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 130,
+      "cross_task_traffic": 600
+    },
+    {
+      "case": "random_20260923_132",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1152,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_133",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 194,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_134",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 110,
+      "cross_task_traffic": 60
+    },
+    {
+      "case": "random_20260923_135",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 557,
+      "cross_task_traffic": 1201
+    },
+    {
+      "case": "random_20260923_136",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1086,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_137",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2247,
+      "cross_task_traffic": 1201
+    },
+    {
+      "case": "random_20260923_138",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 81,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_139",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1189,
+      "cross_task_traffic": 180
+    },
+    {
+      "case": "random_20260923_140",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1284,
+      "cross_task_traffic": 601
+    },
+    {
+      "case": "random_20260923_141",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 720,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_142",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 5162,
+      "cross_task_traffic": 3001
+    },
+    {
+      "case": "random_20260923_143",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2200,
+      "cross_task_traffic": 1260
+    },
+    {
+      "case": "random_20260923_144",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2145,
+      "cross_task_traffic": 600
+    },
+    {
+      "case": "random_20260923_145",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 452,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_146",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 180,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_147",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1178,
+      "cross_task_traffic": 62
+    },
+    {
+      "case": "random_20260923_148",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 14,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_149",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2430,
+      "cross_task_traffic": 8373
+    },
+    {
+      "case": "random_20260923_150",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 3235,
+      "cross_task_traffic": 4216
+    },
+    {
+      "case": "random_20260923_151",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 973,
+      "cross_task_traffic": 4696
+    },
+    {
+      "case": "random_20260923_152",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 115,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_153",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 582,
+      "cross_task_traffic": 60
+    },
+    {
+      "case": "random_20260923_154",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 112,
+      "cross_task_traffic": 60
+    },
+    {
+      "case": "random_20260923_155",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1214,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_156",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2031,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_157",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 235,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_158",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 136,
+      "cross_task_traffic": 600
+    },
+    {
+      "case": "random_20260923_159",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 566,
+      "cross_task_traffic": 4158
+    },
+    {
+      "case": "random_20260923_160",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2078,
+      "cross_task_traffic": 61
+    },
+    {
+      "case": "random_20260923_161",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1041,
+      "cross_task_traffic": 600
+    },
+    {
+      "case": "random_20260923_162",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 276,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_163",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1137,
+      "cross_task_traffic": 182
+    },
+    {
+      "case": "random_20260923_164",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1128,
+      "cross_task_traffic": 3
+    },
+    {
+      "case": "random_20260923_165",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1316,
+      "cross_task_traffic": 4098
+    },
+    {
+      "case": "random_20260923_166",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1077,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_167",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1148,
+      "cross_task_traffic": 120
+    },
+    {
+      "case": "random_20260923_168",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1103,
+      "cross_task_traffic": 600
+    },
+    {
+      "case": "random_20260923_169",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 605,
+      "cross_task_traffic": 600
+    },
+    {
+      "case": "random_20260923_170",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2254,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_171",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 495,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_172",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2307,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_173",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1011,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_174",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 71,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_175",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1389,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_176",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1104,
+      "cross_task_traffic": 600
+    },
+    {
+      "case": "random_20260923_177",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1114,
+      "cross_task_traffic": 61
+    },
+    {
+      "case": "random_20260923_178",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1113,
+      "cross_task_traffic": 2
+    },
+    {
+      "case": "random_20260923_179",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1416,
+      "cross_task_traffic": 12288
+    },
+    {
+      "case": "random_20260923_180",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 261,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_181",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1461,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_182",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 219,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_183",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 399,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_184",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2140,
+      "cross_task_traffic": 660
+    },
+    {
+      "case": "random_20260923_185",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 2297,
+      "cross_task_traffic": 4756
+    },
+    {
+      "case": "random_20260923_186",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1150,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_187",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1559,
+      "cross_task_traffic": 12348
+    },
+    {
+      "case": "random_20260923_188",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 73,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_189",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1152,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_190",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1420,
+      "cross_task_traffic": 1800
+    },
+    {
+      "case": "random_20260923_191",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1078,
+      "cross_task_traffic": 60
+    },
+    {
+      "case": "random_20260923_192",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 126,
+      "cross_task_traffic": 1
+    },
+    {
+      "case": "random_20260923_193",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 423,
+      "cross_task_traffic": 120
+    },
+    {
+      "case": "random_20260923_194",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1149,
+      "cross_task_traffic": 601
+    },
+    {
+      "case": "random_20260923_195",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 185,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_196",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 185,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_197",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 23,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_198",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 114,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_199",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1159,
+      "cross_task_traffic": 4096
+    },
+    {
+      "case": "random_20260923_000__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=28 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=28 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_001__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=38 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=38 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_002__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 11,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_003__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=2 op=17 type=UB alloc_resid=660 capacity=64 current_tids=[41, 42, 43] active(tid,size,next_use)=[(41, 60, 2), (42, 0, 2), (43, 600, 3)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=2 op=17 type=UB alloc_resid=660 capacity=64 current_tids=[41, 42, 43] active(tid,size,next_use)=[(41, 60, 2), (42, 0, 2), (43, 600, 3)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_004__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=4096 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 4096, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=10 type=UB alloc_resid=4096 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 4096, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_005__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=5 type=UB alloc_resid=601 capacity=64 current_tids=[41, 44] active(tid,size,next_use)=[(41, 600, 2), (44, 1, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=5 type=UB alloc_resid=601 capacity=64 current_tids=[41, 44] active(tid,size,next_use)=[(41, 600, 2), (44, 1, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_006__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=39 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=39 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_007__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=35 type=UB alloc_resid=4096 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 4096, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=35 type=UB alloc_resid=4096 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 4096, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_008__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=2 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=2 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_009__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1116,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_010__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=34 type=UB alloc_resid=4096 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 4096, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=34 type=UB alloc_resid=4096 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 4096, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_011__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=36 type=L1 alloc_resid=600 capacity=128 current_tids=[41] active(tid,size,next_use)=[(41, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=36 type=L1 alloc_resid=600 capacity=128 current_tids=[41] active(tid,size,next_use)=[(41, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_012__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=16 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=16 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_013__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=6 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=6 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_014__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=35 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=35 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_015__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=40 type=L1 alloc_resid=600 capacity=128 current_tids=[41] active(tid,size,next_use)=[(41, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=40 type=L1 alloc_resid=600 capacity=128 current_tids=[41] active(tid,size,next_use)=[(41, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_016__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=39 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=39 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_017__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=2 op=4 type=UB alloc_resid=4156 capacity=64 current_tids=[41, 43] active(tid,size,next_use)=[(41, 60, 2), (43, 4096, 3)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=2 op=4 type=UB alloc_resid=4156 capacity=64 current_tids=[41, 43] active(tid,size,next_use)=[(41, 60, 2), (43, 4096, 3)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_018__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=40 type=L1 alloc_resid=4096 capacity=128 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=40 type=L1 alloc_resid=4096 capacity=128 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_019__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=36 type=L1 alloc_resid=4096 capacity=128 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=36 type=L1 alloc_resid=4096 capacity=128 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_020__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=13 type=UB alloc_resid=4096 capacity=64 current_tids=[41, 45] active(tid,size,next_use)=[(41, 4096, 2), (45, 0, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=13 type=UB alloc_resid=4096 capacity=64 current_tids=[41, 45] active(tid,size,next_use)=[(41, 4096, 2), (45, 0, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_021__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=3 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=3 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_022__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=2 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=2 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_023__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=2 op=1 type=UB alloc_resid=4156 capacity=64 current_tids=[41, 43] active(tid,size,next_use)=[(41, 60, 2), (43, 4096, 3)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=2 op=1 type=UB alloc_resid=4156 capacity=64 current_tids=[41, 43] active(tid,size,next_use)=[(41, 60, 2), (43, 4096, 3)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_024__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=40 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=40 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_025__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=29 type=UB alloc_resid=600 capacity=64 current_tids=[41, 42] active(tid,size,next_use)=[(41, 0, 1), (42, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=29 type=UB alloc_resid=600 capacity=64 current_tids=[41, 42] active(tid,size,next_use)=[(41, 0, 1), (42, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_026__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=7 type=UB alloc_resid=4097 capacity=64 current_tids=[41, 48] active(tid,size,next_use)=[(41, 4096, 2), (48, 1, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=7 type=UB alloc_resid=4097 capacity=64 current_tids=[41, 48] active(tid,size,next_use)=[(41, 4096, 2), (48, 1, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_027__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=28 type=L1 alloc_resid=600 capacity=128 current_tids=[42] active(tid,size,next_use)=[(42, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=28 type=L1 alloc_resid=600 capacity=128 current_tids=[42] active(tid,size,next_use)=[(42, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_028__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=1 type=UB alloc_resid=120 capacity=64 current_tids=[41, 42] active(tid,size,next_use)=[(41, 60, 1), (42, 60, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=1 type=UB alloc_resid=120 capacity=64 current_tids=[41, 42] active(tid,size,next_use)=[(41, 60, 1), (42, 60, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_029__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 1021,
+      "cross_task_traffic": 62
+    },
+    {
+      "case": "random_20260923_030__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=35 type=UB alloc_resid=600 capacity=64 current_tids=[44] active(tid,size,next_use)=[(44, 600, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=35 type=UB alloc_resid=600 capacity=64 current_tids=[44] active(tid,size,next_use)=[(44, 600, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_031__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=29 type=L1 alloc_resid=4096 capacity=128 current_tids=[42] active(tid,size,next_use)=[(42, 4096, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=29 type=L1 alloc_resid=4096 capacity=128 current_tids=[42] active(tid,size,next_use)=[(42, 4096, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_032__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=33 type=L1 alloc_resid=4096 capacity=128 current_tids=[42] active(tid,size,next_use)=[(42, 4096, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=33 type=L1 alloc_resid=4096 capacity=128 current_tids=[42] active(tid,size,next_use)=[(42, 4096, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_033__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=2 op=27 type=UB alloc_resid=600 capacity=64 current_tids=[41, 42, 44] active(tid,size,next_use)=[(41, 0, 2), (42, 0, 2), (44, 600, 3)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=2 op=27 type=UB alloc_resid=600 capacity=64 current_tids=[41, 42, 44] active(tid,size,next_use)=[(41, 0, 2), (42, 0, 2), (44, 600, 3)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_034__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=28 type=UB alloc_resid=4096 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 4096, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=28 type=UB alloc_resid=4096 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 4096, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_035__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=39 type=L1 alloc_resid=600 capacity=128 current_tids=[43] active(tid,size,next_use)=[(43, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=39 type=L1 alloc_resid=600 capacity=128 current_tids=[43] active(tid,size,next_use)=[(43, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_036__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=31 type=UB alloc_resid=4096 capacity=64 current_tids=[45] active(tid,size,next_use)=[(45, 4096, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=31 type=UB alloc_resid=4096 capacity=64 current_tids=[45] active(tid,size,next_use)=[(45, 4096, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_037__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=10 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=10 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_038__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "ok",
+      "e1_status": "ok",
+      "task_builder": "identical",
+      "outcome": "identical",
+      "makespan_e0": 5,
+      "cross_task_traffic": 0
+    },
+    {
+      "case": "random_20260923_039__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=4 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=4 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_040__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=35 type=UB alloc_resid=4096 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 4096, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=35 type=UB alloc_resid=4096 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 4096, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_041__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=6 type=UB alloc_resid=601 capacity=64 current_tids=[41, 48] active(tid,size,next_use)=[(41, 600, 2), (48, 1, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=6 type=UB alloc_resid=601 capacity=64 current_tids=[41, 48] active(tid,size,next_use)=[(41, 600, 2), (48, 1, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_042__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=32 type=UB alloc_resid=600 capacity=64 current_tids=[41, 46] active(tid,size,next_use)=[(41, 0, 1), (46, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=32 type=UB alloc_resid=600 capacity=64 current_tids=[41, 46] active(tid,size,next_use)=[(41, 0, 1), (46, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_043__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=2 op=9 type=UB alloc_resid=4098 capacity=64 current_tids=[41, 42, 43] active(tid,size,next_use)=[(41, 1, 2), (42, 1, 2), (43, 4096, 3)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=2 op=9 type=UB alloc_resid=4098 capacity=64 current_tids=[41, 42, 43] active(tid,size,next_use)=[(41, 1, 2), (42, 1, 2), (43, 4096, 3)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_044__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=11 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=11 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_045__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=2 op=14 type=UB alloc_resid=4156 capacity=64 current_tids=[41, 42, 43] active(tid,size,next_use)=[(41, 0, 2), (42, 60, 2), (43, 4096, 3)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=2 op=14 type=UB alloc_resid=4156 capacity=64 current_tids=[41, 42, 43] active(tid,size,next_use)=[(41, 0, 2), (42, 60, 2), (43, 4096, 3)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_046__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=38 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=38 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_047__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=40 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=40 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_048__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=32 type=UB alloc_resid=600 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=32 type=UB alloc_resid=600 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_049__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=2 op=20 type=UB alloc_resid=4156 capacity=64 current_tids=[41, 42, 43] active(tid,size,next_use)=[(41, 60, 2), (42, 0, 2), (43, 4096, 3)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=2 op=20 type=UB alloc_resid=4156 capacity=64 current_tids=[41, 42, 43] active(tid,size,next_use)=[(41, 60, 2), (42, 0, 2), (43, 4096, 3)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_050__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=7 type=UB alloc_resid=660 capacity=64 current_tids=[41, 46] active(tid,size,next_use)=[(41, 600, 2), (46, 60, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=7 type=UB alloc_resid=660 capacity=64 current_tids=[41, 46] active(tid,size,next_use)=[(41, 600, 2), (46, 60, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_051__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=26 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=26 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_052__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=8 type=UB alloc_resid=600 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=8 type=UB alloc_resid=600 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_053__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=39 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=39 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_054__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=1 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=1 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_055__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=36 type=UB alloc_resid=600 capacity=64 current_tids=[45] active(tid,size,next_use)=[(45, 600, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=36 type=UB alloc_resid=600 capacity=64 current_tids=[45] active(tid,size,next_use)=[(45, 600, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_056__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=33 type=UB alloc_resid=600 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=33 type=UB alloc_resid=600 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_057__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=5 type=UB alloc_resid=600 capacity=64 current_tids=[41, 42] active(tid,size,next_use)=[(41, 0, 1), (42, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=5 type=UB alloc_resid=600 capacity=64 current_tids=[41, 42] active(tid,size,next_use)=[(41, 0, 1), (42, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_058__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=6 type=UB alloc_resid=120 capacity=64 current_tids=[41, 42] active(tid,size,next_use)=[(41, 60, 1), (42, 60, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=6 type=UB alloc_resid=120 capacity=64 current_tids=[41, 42] active(tid,size,next_use)=[(41, 60, 1), (42, 60, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_059__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=2 op=28 type=UB alloc_resid=660 capacity=64 current_tids=[41, 42, 45] active(tid,size,next_use)=[(41, 0, 2), (42, 60, 2), (45, 600, 3)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=2 op=28 type=UB alloc_resid=660 capacity=64 current_tids=[41, 42, 45] active(tid,size,next_use)=[(41, 0, 2), (42, 60, 2), (45, 600, 3)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_060__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=29 type=UB alloc_resid=4096 capacity=64 current_tids=[42, 44] active(tid,size,next_use)=[(42, 0, 1), (44, 4096, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=29 type=UB alloc_resid=4096 capacity=64 current_tids=[42, 44] active(tid,size,next_use)=[(42, 0, 1), (44, 4096, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_061__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=3 type=UB alloc_resid=4156 capacity=64 current_tids=[41, 48] active(tid,size,next_use)=[(41, 4096, 2), (48, 60, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=3 type=UB alloc_resid=4156 capacity=64 current_tids=[41, 48] active(tid,size,next_use)=[(41, 4096, 2), (48, 60, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_062__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=36 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=36 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_063__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=25 type=UB alloc_resid=660 capacity=64 current_tids=[43, 44] active(tid,size,next_use)=[(43, 60, 1), (44, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=25 type=UB alloc_resid=660 capacity=64 current_tids=[43, 44] active(tid,size,next_use)=[(43, 60, 1), (44, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_064__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=5 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=5 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_065__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=17 type=UB alloc_resid=600 capacity=64 current_tids=[43] active(tid,size,next_use)=[(43, 600, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=17 type=UB alloc_resid=600 capacity=64 current_tids=[43] active(tid,size,next_use)=[(43, 600, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_066__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=31 type=UB alloc_resid=4096 capacity=64 current_tids=[43] active(tid,size,next_use)=[(43, 4096, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=31 type=UB alloc_resid=4096 capacity=64 current_tids=[43] active(tid,size,next_use)=[(43, 4096, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_067__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=24 type=UB alloc_resid=600 capacity=64 current_tids=[43] active(tid,size,next_use)=[(43, 600, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=24 type=UB alloc_resid=600 capacity=64 current_tids=[43] active(tid,size,next_use)=[(43, 600, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_068__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=28 type=L1 alloc_resid=600 capacity=128 current_tids=[42] active(tid,size,next_use)=[(42, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=28 type=L1 alloc_resid=600 capacity=128 current_tids=[42] active(tid,size,next_use)=[(42, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_069__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=40 type=L1 alloc_resid=4096 capacity=128 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=40 type=L1 alloc_resid=4096 capacity=128 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_070__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=6 type=UB alloc_resid=600 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=6 type=UB alloc_resid=600 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_071__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=30 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=30 type=UB alloc_resid=4096 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 4096, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_072__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=36 type=UB alloc_resid=600 capacity=64 current_tids=[46] active(tid,size,next_use)=[(46, 600, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=36 type=UB alloc_resid=600 capacity=64 current_tids=[46] active(tid,size,next_use)=[(46, 600, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_073__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=31 type=UB alloc_resid=660 capacity=64 current_tids=[44, 45] active(tid,size,next_use)=[(44, 60, 1), (45, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=31 type=UB alloc_resid=660 capacity=64 current_tids=[44, 45] active(tid,size,next_use)=[(44, 60, 1), (45, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_074__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=24 type=UB alloc_resid=600 capacity=64 current_tids=[41, 42] active(tid,size,next_use)=[(41, 0, 1), (42, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=24 type=UB alloc_resid=600 capacity=64 current_tids=[41, 42] active(tid,size,next_use)=[(41, 0, 1), (42, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_075__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=34 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=34 type=UB alloc_resid=600 capacity=64 current_tids=[41] active(tid,size,next_use)=[(41, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_076__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=6 type=UB alloc_resid=600 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=6 type=UB alloc_resid=600 capacity=64 current_tids=[42] active(tid,size,next_use)=[(42, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_077__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=29 type=UB alloc_resid=4096 capacity=64 current_tids=[44] active(tid,size,next_use)=[(44, 4096, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=29 type=UB alloc_resid=4096 capacity=64 current_tids=[44] active(tid,size,next_use)=[(44, 4096, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_078__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=37 type=L1 alloc_resid=600 capacity=128 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=0 op=37 type=L1 alloc_resid=600 capacity=128 current_tids=[41] active(tid,size,next_use)=[(41, 600, 1)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    },
+    {
+      "case": "random_20260923_079__tight",
+      "note": "固定种子的随机微型图（层模型生成，每 op 一子图，拓扑序分核）",
+      "bandwidth": 60,
+      "capacity": {
+        "L1": 128,
+        "UB": 64
+      },
+      "e0_status": "raised",
+      "e1_status": "raised",
+      "outcome": "both_raised",
+      "e0_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=20 type=UB alloc_resid=601 capacity=64 current_tids=[41, 43] active(tid,size,next_use)=[(41, 1, 1), (43, 600, 2)]",
+      "e1_error": "Step2SchedulingError: [STEP2 ERROR] no spill victim: step=1 op=20 type=UB alloc_resid=601 capacity=64 current_tids=[41, 43] active(tid,size,next_use)=[(41, 1, 1), (43, 600, 2)]",
+      "error_kind_agrees": true,
+      "error_message_agrees": true
+    }
+  ],
+  "limitations": [
+    "只覆盖 Problem 1（E1 仅实现 P1）；未涉 P2/P3。",
+    "官方例子用的是本人构造的『每 op 一子图、2 核』方案，不是官方候选池方案，",
+    "故这里只作差分输入，不代表候选池上的结论。",
+    "微型构造图与 60 个固定种子随机图，不代表 100 个 case 全域。",
+    "未做计时与加速比核对（本次只关心输出等价性）。"
+  ]
+}

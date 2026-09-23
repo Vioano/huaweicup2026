@@ -25,16 +25,20 @@ from __future__ import annotations
 
 import collections
 import json
+import os
 import random
 import sys
 from pathlib import Path
 
 MINE = Path(__file__).resolve().parents[2]
-LYX = Path("C:/Users/Dora/Desktop/数学建模/Workbuddy/_a-r1/lyx-3357d7e")
+# 被复核的 LYX 检出与固定提交可通过环境变量切换，便于对方用同一脚本自证：
+#   LYX_DIR=<独立 worktree 路径> LYX_SHA=<固定提交> SKIP_OFFICIAL=1 python src/adversarial/verify_lyx_cross_r1.py
+LYX = Path(os.environ.get("LYX_DIR", "C:/Users/Dora/Desktop/数学建模/Workbuddy/_a-r1/lyx-3357d7e"))
+LYX_SHA = os.environ.get("LYX_SHA", "3357d7ef9c1ad443dd0799f6ecb5b813df6753b3")
+SKIP_OFFICIAL = os.environ.get("SKIP_OFFICIAL", "") == "1"
+OUT_SUFFIX = os.environ.get("OUT_SUFFIX", "")
 OUT_DIR = MINE / "results/a/form/r1-20260923-farmeruncle123"
 CASE_DIR = MINE / "data/raw/a/official/data"
-
-LYX_SHA = "3357d7ef9c1ad443dd0799f6ecb5b813df6753b3"
 BANDWIDTH = 60
 CAPACITY = {"L1": 524288, "UB": 131072}
 CROSS_CORE_WAIT = 1000
@@ -551,7 +555,7 @@ def main():
 
     # 3) 官方开发例：连续块切分（block_size=8、2 核），跨 100 个 case 等距取样 20 个
     official = []
-    all_cases = sorted(CASE_DIR.glob("case_*.json"))
+    all_cases = [] if SKIP_OFFICIAL else sorted(CASE_DIR.glob("case_*.json"))
     picks = ["case_001", "case_019", "case_080"]
     if all_cases:
         step = max(1, len(all_cases) // 17)
@@ -623,11 +627,12 @@ def main():
         ],
     }
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    out = OUT_DIR / "lyx-cross-review-observations.json"
+    out = OUT_DIR / ("lyx-cross-review-observations" + OUT_SUFFIX + ".json")
     out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
 
     print("E0 reference:", E0.__name__, "| E1 alias:", E1.__name__)
-    print("targeted:", payload["targeted_cases"], "| random:", payload["random_cases"])
+    print("targeted:", payload.get("targeted_records"), "| random:", payload.get("random_records"),
+      "| official:", len(payload.get("official_cases") or []))
     print("summary:", payload["summary"])
     for r in differ[:5]:
         print("  DIFFER:", r["case"], json.dumps(r.get("detail") or r.get("differences"), ensure_ascii=False)[:220])

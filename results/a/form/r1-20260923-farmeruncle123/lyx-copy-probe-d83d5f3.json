@@ -1,0 +1,269 @@
+{
+  "generator": "src/adversarial/verify_lyx_copy_probe.py",
+  "reviewed_commit": "d83d5f32a1c23f6450aa9c15fa85891c4ebddd7f",
+  "reviewed_symbol": "src/eval_exact/problem1.py::_copy_step3_extended_graph",
+  "method": "对同一输入比较新拷贝与官方 deepcopy 的**值等价性**，并逐个收集可变容器 id，检查新拷贝是否与输入共享子对象；再实测改动副本是否会回流到输入。另覆盖 13 种 schema 漂移输入以验证回退路径。",
+  "step3_graph_keys": [
+    "ops",
+    "tensors",
+    "edges",
+    "seq_ext"
+  ],
+  "summary": {
+    "total": 17,
+    "ok": 17,
+    "problem": 0
+  },
+  "records": [
+    {
+      "case": "flat schema match (tuple key order)",
+      "expect_fallback": false,
+      "values_equal_to_official": true,
+      "shared_mutable_ids_with_input": [],
+      "mutation_leaked_back": null,
+      "type_new": "dict",
+      "keys_new": [
+        "ops",
+        "tensors",
+        "edges",
+        "seq_ext"
+      ],
+      "ok": true
+    },
+    {
+      "case": "flat schema match (seq_ext empty)",
+      "expect_fallback": false,
+      "values_equal_to_official": true,
+      "shared_mutable_ids_with_input": [],
+      "mutation_leaked_back": null,
+      "type_new": "dict",
+      "keys_new": [
+        "ops",
+        "tensors",
+        "edges",
+        "seq_ext"
+      ],
+      "ok": true
+    },
+    {
+      "case": "flat schema match (single op)",
+      "expect_fallback": false,
+      "values_equal_to_official": true,
+      "shared_mutable_ids_with_input": [],
+      "mutation_leaked_back": null,
+      "type_new": "dict",
+      "keys_new": [
+        "ops",
+        "tensors",
+        "edges",
+        "seq_ext"
+      ],
+      "ok": true
+    },
+    {
+      "case": "key order differs",
+      "expect_fallback": true,
+      "values_equal_to_official": true,
+      "shared_mutable_ids_with_input": [],
+      "mutation_leaked_back": null,
+      "type_new": "dict",
+      "keys_new": [
+        "seq_ext",
+        "edges",
+        "tensors",
+        "ops"
+      ],
+      "ok": true
+    },
+    {
+      "case": "extra key",
+      "expect_fallback": true,
+      "values_equal_to_official": true,
+      "shared_mutable_ids_with_input": [],
+      "mutation_leaked_back": null,
+      "type_new": "dict",
+      "keys_new": [
+        "ops",
+        "tensors",
+        "edges",
+        "seq_ext",
+        "extra"
+      ],
+      "ok": true
+    },
+    {
+      "case": "missing key",
+      "expect_fallback": true,
+      "values_equal_to_official": true,
+      "shared_mutable_ids_with_input": [],
+      "mutation_leaked_back": null,
+      "type_new": "dict",
+      "keys_new": [
+        "ops",
+        "tensors",
+        "edges"
+      ],
+      "ok": true
+    },
+    {
+      "case": "not a dict",
+      "expect_fallback": true,
+      "values_equal_to_official": true,
+      "shared_mutable_ids_with_input": [],
+      "mutation_leaked_back": null,
+      "type_new": "list",
+      "keys_new": null,
+      "ok": true
+    },
+    {
+      "case": "container is tuple",
+      "expect_fallback": true,
+      "values_equal_to_official": true,
+      "shared_mutable_ids_with_input": [],
+      "mutation_leaked_back": null,
+      "type_new": "dict",
+      "keys_new": [
+        "ops",
+        "tensors",
+        "edges",
+        "seq_ext"
+      ],
+      "ok": true
+    },
+    {
+      "case": "two keys share one container",
+      "expect_fallback": true,
+      "values_equal_to_official": true,
+      "shared_mutable_ids_with_input": [],
+      "mutation_leaked_back": null,
+      "type_new": "dict",
+      "keys_new": [
+        "ops",
+        "tensors",
+        "edges",
+        "seq_ext"
+      ],
+      "ok": true
+    },
+    {
+      "case": "record not dict",
+      "expect_fallback": true,
+      "values_equal_to_official": true,
+      "shared_mutable_ids_with_input": [],
+      "mutation_leaked_back": null,
+      "type_new": "dict",
+      "keys_new": [
+        "ops",
+        "tensors",
+        "edges",
+        "seq_ext"
+      ],
+      "ok": true
+    },
+    {
+      "case": "duplicate record object",
+      "expect_fallback": true,
+      "values_equal_to_official": true,
+      "shared_mutable_ids_with_input": [],
+      "mutation_leaked_back": null,
+      "type_new": "dict",
+      "keys_new": [
+        "ops",
+        "tensors",
+        "edges",
+        "seq_ext"
+      ],
+      "ok": true
+    },
+    {
+      "case": "nested value in record",
+      "expect_fallback": true,
+      "values_equal_to_official": true,
+      "shared_mutable_ids_with_input": [],
+      "mutation_leaked_back": null,
+      "type_new": "dict",
+      "keys_new": [
+        "ops",
+        "tensors",
+        "edges",
+        "seq_ext"
+      ],
+      "ok": true
+    },
+    {
+      "case": "value is list",
+      "expect_fallback": true,
+      "values_equal_to_official": true,
+      "shared_mutable_ids_with_input": [],
+      "mutation_leaked_back": null,
+      "type_new": "dict",
+      "keys_new": [
+        "ops",
+        "tensors",
+        "edges",
+        "seq_ext"
+      ],
+      "ok": true
+    },
+    {
+      "case": "value is None field",
+      "expect_fallback": true,
+      "values_equal_to_official": true,
+      "shared_mutable_ids_with_input": [],
+      "mutation_leaked_back": null,
+      "type_new": "dict",
+      "keys_new": [
+        "ops",
+        "tensors",
+        "edges",
+        "seq_ext"
+      ],
+      "ok": true
+    },
+    {
+      "case": "seq_ext has str element",
+      "expect_fallback": true,
+      "values_equal_to_official": true,
+      "shared_mutable_ids_with_input": [],
+      "mutation_leaked_back": null,
+      "type_new": "dict",
+      "keys_new": [
+        "ops",
+        "tensors",
+        "edges",
+        "seq_ext"
+      ],
+      "ok": true
+    },
+    {
+      "case": "seq_ext not a list",
+      "expect_fallback": true,
+      "values_equal_to_official": true,
+      "shared_mutable_ids_with_input": [],
+      "mutation_leaked_back": null,
+      "type_new": "dict",
+      "keys_new": [
+        "ops",
+        "tensors",
+        "edges",
+        "seq_ext"
+      ],
+      "ok": true
+    },
+    {
+      "case": "real spill ext_graph (seq_ext len=11)",
+      "expect_fallback": false,
+      "values_equal_to_official": true,
+      "shared_mutable_ids_with_input": [],
+      "mutation_leaked_back": null,
+      "type_new": "dict",
+      "keys_new": [
+        "ops",
+        "tensors",
+        "edges",
+        "seq_ext"
+      ],
+      "ok": true
+    }
+  ]
+}
