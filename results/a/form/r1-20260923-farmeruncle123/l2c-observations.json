@@ -1,0 +1,569 @@
+{
+  "generator": "src/adversarial/verify_l2_r3.py",
+  "official_entry": "multicore_cut_evaluate_problem_3.evaluate_problem_3",
+  "responds_to": "a-r1-form-adversarial/NikolaStarx/CACHE-HIT-RETIRE-001",
+  "claim_under_test": "所有完成的 COPY_IN 都会调用 insert_cache（含先前 hit）；hit 在飞期间 key 被淘汰时，完成会重新插入",
+  "constants": {
+    "bandwidth": 60,
+    "cross_core_copy_delay_cycles": 500,
+    "cache_bandwidth_bytes_per_cycle": 250,
+    "size_a": 600,
+    "size_b": 1,
+    "size_c": 600,
+    "cache_case_a": 1200
+  },
+  "cases": [
+    {
+      "case": "A) hit copy-in evicted in flight by a shorter copy-in, then re-inserts on retire",
+      "note": "cache=SIZE_A+SIZE_C；B 极短 → 在 A 的 hit 在飞窗口内完成并淘汰 A",
+      "cache_capacity_bytes": 1200,
+      "outcome": "ok",
+      "makespan": 39,
+      "cache_stats": {
+        "copy_in_hits": 1,
+        "copy_in_misses": 3,
+        "hit_bytes": 600,
+        "miss_bytes": 1201,
+        "accesses": 4,
+        "hits": 1,
+        "hit_rate": 0.3331482509716824
+      },
+      "cache_events": [
+        {
+          "time": 0,
+          "event": "miss",
+          "tensor_id": 200,
+          "size_bytes": 600,
+          "core_id": 0,
+          "op_id": 215,
+          "op": "COPY_IN"
+        },
+        {
+          "time": 0,
+          "event": "miss",
+          "tensor_id": 202,
+          "size_bytes": 600,
+          "core_id": 1,
+          "op_id": 221,
+          "op": "COPY_IN"
+        },
+        {
+          "time": 20,
+          "event": "insert",
+          "tensor_id": 200,
+          "size_bytes": 600,
+          "used_bytes": 600,
+          "evicted_tensor_ids": [],
+          "core_id": 0,
+          "op_id": 215
+        },
+        {
+          "time": 20,
+          "event": "insert",
+          "tensor_id": 202,
+          "size_bytes": 600,
+          "used_bytes": 1200,
+          "evicted_tensor_ids": [],
+          "core_id": 1,
+          "op_id": 221
+        },
+        {
+          "time": 20,
+          "event": "miss",
+          "tensor_id": 201,
+          "size_bytes": 1,
+          "core_id": 0,
+          "op_id": 219,
+          "op": "COPY_IN"
+        },
+        {
+          "time": 20,
+          "event": "hit",
+          "tensor_id": 200,
+          "size_bytes": 600,
+          "core_id": 1,
+          "op_id": 217,
+          "op": "COPY_IN"
+        },
+        {
+          "time": 21,
+          "event": "insert",
+          "tensor_id": 201,
+          "size_bytes": 1,
+          "used_bytes": 601,
+          "evicted_tensor_ids": [
+            200
+          ],
+          "core_id": 0,
+          "op_id": 219
+        },
+        {
+          "time": 23,
+          "event": "insert",
+          "tensor_id": 200,
+          "size_bytes": 600,
+          "used_bytes": 601,
+          "evicted_tensor_ids": [
+            202
+          ],
+          "core_id": 1,
+          "op_id": 217
+        }
+      ],
+      "copy_in_facts": [
+        {
+          "core_id": 0,
+          "op_id": 215,
+          "memory_path": "DDR",
+          "key": 200,
+          "cache_hit": false,
+          "start": 0,
+          "end": 20
+        },
+        {
+          "core_id": 0,
+          "op_id": 219,
+          "memory_path": "DDR",
+          "key": 201,
+          "cache_hit": false,
+          "start": 20,
+          "end": 21
+        },
+        {
+          "core_id": 1,
+          "op_id": 221,
+          "memory_path": "DDR",
+          "key": 202,
+          "cache_hit": false,
+          "start": 0,
+          "end": 20
+        },
+        {
+          "core_id": 1,
+          "op_id": 217,
+          "memory_path": "CACHE_READ",
+          "key": 200,
+          "cache_hit": true,
+          "start": 20,
+          "end": 23
+        }
+      ],
+      "hit_copy_ins": [
+        {
+          "core": 1,
+          "op_id": 217,
+          "key": 200,
+          "start": 20,
+          "end": 23
+        }
+      ],
+      "inserts_by_key": {
+        "200": [
+          20,
+          23
+        ],
+        "201": [
+          21
+        ],
+        "202": [
+          20
+        ]
+      },
+      "evictions_by_key": {
+        "200": [
+          21
+        ],
+        "202": [
+          23
+        ]
+      },
+      "keys_inserted_more_than_once": [
+        200
+      ],
+      "hit_copy_reinserting_at_completion": [
+        {
+          "core_id": 1,
+          "op_id": 217,
+          "key": 200,
+          "hit_copy_start": 20,
+          "hit_copy_end": 23,
+          "on_cache_at_takeoff": true,
+          "insert_times_for_key_before_takeoff": [
+            20
+          ],
+          "evicted_during_flight_at": [
+            21
+          ],
+          "reinsert_event": {
+            "time": 23,
+            "event": "insert",
+            "tensor_id": 200,
+            "size_bytes": 600,
+            "used_bytes": 601,
+            "evicted_tensor_ids": [
+              202
+            ],
+            "core_id": 1,
+            "op_id": 217
+          },
+          "all_three_legs_confirmed": true
+        }
+      ],
+      "branch_observed": true,
+      "all_three_legs_confirmed": true,
+      "cache_final_entries": [
+        {
+          "tensor_id": 201,
+          "size_bytes": 1
+        },
+        {
+          "tensor_id": 200,
+          "size_bytes": 600
+        }
+      ],
+      "cache_used_bytes_final": 601
+    },
+    {
+      "case": "B) control: cache large enough to hold all three keys",
+      "note": "容量足以装下 A/B/C → 不发生淘汰，A 的 hit 完成后插入为幂等（无事件）",
+      "cache_capacity_bytes": 1201,
+      "outcome": "ok",
+      "makespan": 39,
+      "cache_stats": {
+        "copy_in_hits": 1,
+        "copy_in_misses": 3,
+        "hit_bytes": 600,
+        "miss_bytes": 1201,
+        "accesses": 4,
+        "hits": 1,
+        "hit_rate": 0.3331482509716824
+      },
+      "cache_events": [
+        {
+          "time": 0,
+          "event": "miss",
+          "tensor_id": 200,
+          "size_bytes": 600,
+          "core_id": 0,
+          "op_id": 215,
+          "op": "COPY_IN"
+        },
+        {
+          "time": 0,
+          "event": "miss",
+          "tensor_id": 202,
+          "size_bytes": 600,
+          "core_id": 1,
+          "op_id": 221,
+          "op": "COPY_IN"
+        },
+        {
+          "time": 20,
+          "event": "insert",
+          "tensor_id": 200,
+          "size_bytes": 600,
+          "used_bytes": 600,
+          "evicted_tensor_ids": [],
+          "core_id": 0,
+          "op_id": 215
+        },
+        {
+          "time": 20,
+          "event": "insert",
+          "tensor_id": 202,
+          "size_bytes": 600,
+          "used_bytes": 1200,
+          "evicted_tensor_ids": [],
+          "core_id": 1,
+          "op_id": 221
+        },
+        {
+          "time": 20,
+          "event": "miss",
+          "tensor_id": 201,
+          "size_bytes": 1,
+          "core_id": 0,
+          "op_id": 219,
+          "op": "COPY_IN"
+        },
+        {
+          "time": 20,
+          "event": "hit",
+          "tensor_id": 200,
+          "size_bytes": 600,
+          "core_id": 1,
+          "op_id": 217,
+          "op": "COPY_IN"
+        },
+        {
+          "time": 21,
+          "event": "insert",
+          "tensor_id": 201,
+          "size_bytes": 1,
+          "used_bytes": 1201,
+          "evicted_tensor_ids": [],
+          "core_id": 0,
+          "op_id": 219
+        }
+      ],
+      "copy_in_facts": [
+        {
+          "core_id": 0,
+          "op_id": 215,
+          "memory_path": "DDR",
+          "key": 200,
+          "cache_hit": false,
+          "start": 0,
+          "end": 20
+        },
+        {
+          "core_id": 0,
+          "op_id": 219,
+          "memory_path": "DDR",
+          "key": 201,
+          "cache_hit": false,
+          "start": 20,
+          "end": 21
+        },
+        {
+          "core_id": 1,
+          "op_id": 221,
+          "memory_path": "DDR",
+          "key": 202,
+          "cache_hit": false,
+          "start": 0,
+          "end": 20
+        },
+        {
+          "core_id": 1,
+          "op_id": 217,
+          "memory_path": "CACHE_READ",
+          "key": 200,
+          "cache_hit": true,
+          "start": 20,
+          "end": 23
+        }
+      ],
+      "hit_copy_ins": [
+        {
+          "core": 1,
+          "op_id": 217,
+          "key": 200,
+          "start": 20,
+          "end": 23
+        }
+      ],
+      "inserts_by_key": {
+        "200": [
+          20
+        ],
+        "201": [
+          21
+        ],
+        "202": [
+          20
+        ]
+      },
+      "evictions_by_key": {},
+      "keys_inserted_more_than_once": [],
+      "hit_copy_reinserting_at_completion": [],
+      "branch_observed": false,
+      "all_three_legs_confirmed": false,
+      "cache_final_entries": [
+        {
+          "tensor_id": 200,
+          "size_bytes": 600
+        },
+        {
+          "tensor_id": 202,
+          "size_bytes": 600
+        },
+        {
+          "tensor_id": 201,
+          "size_bytes": 1
+        }
+      ],
+      "cache_used_bytes_final": 1201
+    },
+    {
+      "case": "C) control: cache exactly one tensor, so A never survives to the second use",
+      "note": "只够一条 → 第二次使用 A 时必然 miss；对照说明 A 是 hit 需要容量条件",
+      "cache_capacity_bytes": 600,
+      "outcome": "ok",
+      "makespan": 46,
+      "cache_stats": {
+        "copy_in_hits": 0,
+        "copy_in_misses": 4,
+        "hit_bytes": 0,
+        "miss_bytes": 1801,
+        "accesses": 4,
+        "hits": 0,
+        "hit_rate": 0.0
+      },
+      "cache_events": [
+        {
+          "time": 0,
+          "event": "miss",
+          "tensor_id": 200,
+          "size_bytes": 600,
+          "core_id": 0,
+          "op_id": 215,
+          "op": "COPY_IN"
+        },
+        {
+          "time": 0,
+          "event": "miss",
+          "tensor_id": 202,
+          "size_bytes": 600,
+          "core_id": 1,
+          "op_id": 221,
+          "op": "COPY_IN"
+        },
+        {
+          "time": 20,
+          "event": "insert",
+          "tensor_id": 200,
+          "size_bytes": 600,
+          "used_bytes": 600,
+          "evicted_tensor_ids": [],
+          "core_id": 0,
+          "op_id": 215
+        },
+        {
+          "time": 20,
+          "event": "insert",
+          "tensor_id": 202,
+          "size_bytes": 600,
+          "used_bytes": 600,
+          "evicted_tensor_ids": [
+            200
+          ],
+          "core_id": 1,
+          "op_id": 221
+        },
+        {
+          "time": 20,
+          "event": "miss",
+          "tensor_id": 201,
+          "size_bytes": 1,
+          "core_id": 0,
+          "op_id": 219,
+          "op": "COPY_IN"
+        },
+        {
+          "time": 20,
+          "event": "miss",
+          "tensor_id": 200,
+          "size_bytes": 600,
+          "core_id": 1,
+          "op_id": 217,
+          "op": "COPY_IN"
+        },
+        {
+          "time": 22,
+          "event": "insert",
+          "tensor_id": 201,
+          "size_bytes": 1,
+          "used_bytes": 1,
+          "evicted_tensor_ids": [
+            202
+          ],
+          "core_id": 0,
+          "op_id": 219
+        },
+        {
+          "time": 32,
+          "event": "insert",
+          "tensor_id": 200,
+          "size_bytes": 600,
+          "used_bytes": 600,
+          "evicted_tensor_ids": [
+            201
+          ],
+          "core_id": 1,
+          "op_id": 217
+        }
+      ],
+      "copy_in_facts": [
+        {
+          "core_id": 0,
+          "op_id": 215,
+          "memory_path": "DDR",
+          "key": 200,
+          "cache_hit": false,
+          "start": 0,
+          "end": 20
+        },
+        {
+          "core_id": 0,
+          "op_id": 219,
+          "memory_path": "DDR",
+          "key": 201,
+          "cache_hit": false,
+          "start": 20,
+          "end": 22
+        },
+        {
+          "core_id": 1,
+          "op_id": 221,
+          "memory_path": "DDR",
+          "key": 202,
+          "cache_hit": false,
+          "start": 0,
+          "end": 20
+        },
+        {
+          "core_id": 1,
+          "op_id": 217,
+          "memory_path": "DDR",
+          "key": 200,
+          "cache_hit": false,
+          "start": 20,
+          "end": 32
+        }
+      ],
+      "hit_copy_ins": [],
+      "inserts_by_key": {
+        "200": [
+          20,
+          32
+        ],
+        "201": [
+          22
+        ],
+        "202": [
+          20
+        ]
+      },
+      "evictions_by_key": {
+        "200": [
+          20
+        ],
+        "201": [
+          32
+        ],
+        "202": [
+          22
+        ]
+      },
+      "keys_inserted_more_than_once": [
+        200
+      ],
+      "hit_copy_reinserting_at_completion": [],
+      "branch_observed": false,
+      "all_three_legs_confirmed": false,
+      "cache_final_entries": [
+        {
+          "tensor_id": 200,
+          "size_bytes": 600
+        }
+      ],
+      "cache_used_bytes_final": 600
+    }
+  ],
+  "limitations": [
+    "微型构造图，不代表官方 case 规模。",
+    "只验证『完成时无条件 insert_cache』这一条分支形态；未覆盖 hit 在飞期间被淘汰后又因容量不足而插入失败（size > capacity）的组合。",
+    "与 spill/rename 的 logical_tid 交互未在本探针覆盖。"
+  ]
+}

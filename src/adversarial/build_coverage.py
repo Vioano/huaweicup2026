@@ -107,21 +107,27 @@ GROUPS = [
         "group": "L2 同时 miss/FIFO",
         "status": "covered",
         "positive_evidence": ["F-RESOURCE-003", "F-RESOURCE-004", "F-RESOURCE-005",
-                              "F-RESOURCE-006", "F-RESOURCE-007", "F-METRIC-003",
-                              "F-EXEC-003", "F-TASK-005"],
+                              "F-RESOURCE-006", "F-RESOURCE-007", "F-RESOURCE-008",
+                              "F-METRIC-003", "F-EXEC-003", "F-TASK-005"],
         "boundary_evidence": [
             "容量 < 单条 tensor → 完全不 insert、final_entries 为空",
             "两个不同 key、容量只够一条 → 淘汰最旧（evicted_tensor_ids=[200]）",
+            "命中 COPY_IN 在飞期间被淘汰 → 完成时重插自己并挤掉他人（F-RESOURCE-008）",
         ],
         "counterexample_evidence": [
             "把命中仍计入 DDR 带宽；把 Cache 当 LRU；把『超容量』与『超单条大小』混为一谈",
             "把同刻两次访问实现成第二次能看到第一次的插入（会凭空产生 hit）",
+            "把规则简化成『只有 miss 完成才插入』（会漏掉起飞时命中的 COPY_IN 完成重插）",
         ],
         "note": ("**同时 miss 已实测**：用**图输入** tensor 构造（这类 tensor 无生产者，"
                  "各消费核各自生成 COPY_IN，没有源核 COPY_OUT 把消费者错开），"
                  "实测 events_by_time = {'0': ['miss','miss'], '20': ['insert']}——"
                  "同刻两次 miss、仅一次 insert（同 key 幂等）。"
                  "**淘汰路径已实测**：容量只够一条时插入新 key 淘汰最旧（evicted=[200]）。"
+                 "**完成时无条件 insert_cache 已实测**（F-RESOURCE-008，响应 CACHE-HIT-RETIRE-001）："
+                 "起飞时命中的 COPY_IN 若在 start..end 之间被淘汰，会在 end 重新插入自己；"
+                 "同一 op_id 同时有 hit 与 insert 两条事件。对照组证明 key 仍驻留时该调用**完全静默**"
+                 "（幂等无事件），故『幂等』与『被淘汰后重插』在 cache_events 里可区分。"
                  "另已实测：只有 COPY_IN 查 Cache；命中走独立 CACHE_READ 池（250）不占 DDR（60）；"
                  "hit_rate 按字节加权（0.476 vs 0.333）；同刻 insert 先于同刻访问生效。"
                  "**未覆盖**：>=3 个并发命中时 CACHE_READ 池的分段换算；"

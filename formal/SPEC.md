@@ -40,10 +40,10 @@ E_v(G,P,C,q;R)\longrightarrow (\text{status},\text{result})
 | F-LOCAL | **6 条规则，均实测** | F-LOCAL-001..006；排序口径、spill 的 victim 选择与插入位置、Step3 内存复用的虚拟额度模型 |
 | F-EXEC | **3 条规则，均有实测探针** | F-EXEC-001/002 来自 `evaluation_validation.py:217-243`；F-EXEC-003 为同刻事件顺序 |
 | F-TIME | **2 条规则，均实测** | F-TIME-001/002；两类等待的实测差值为 `1000-100=900` |
-| F-RESOURCE | **7 条规则，均实测** | DDR 等分共享与回溯重算、DDR 端点判定、Cache 只由 COPY_IN 查询且走独立池、FIFO 不晋升 + 超容量不缓存、Cache key 跨 rename 稳定、同刻同时 miss 的幂等 insert、FIFO 淘汰 |
+| F-RESOURCE | **8 条规则，均实测** | DDR 等分共享与回溯重算、DDR 端点判定、Cache 只由 COPY_IN 查询且走独立池、FIFO 不晋升 + 超容量不缓存、Cache key 跨 rename 稳定、同刻同时 miss 的幂等 insert、FIFO 淘汰、完成的 COPY_IN 一律 insert（含起飞时命中者在飞被淘汰后重插） |
 | F-METRIC | **4 条规则：1 规范 + 3 实测** | F-METRIC-001（搬运五字段等式，已实测）、F-METRIC-002（规范条款，待独立验收）、F-METRIC-003（hit_rate 按字节加权）、F-METRIC-004（搬运统计不足以排序） |
 
-合计 **38 条规则**（36 条 `verified-by-probe`，2 条 `draft-sourced`；后者均为需独立验收的规范条款），
+合计 **39 条规则**（37 条 `verified-by-probe`，2 条 `draft-sourced`；后者均为需独立验收的规范条款），
 覆盖表见 `coverage.json`。
 
 **覆盖表现状**：任务卡第 5 节要求的**六个机制组全部 `covered`**，**无 `partial`、无 `gap`**。
@@ -126,6 +126,7 @@ python src/adversarial/verify_spill_r2.py        # spill victim 选择与插入�
 python src/adversarial/verify_time_r1.py         # F-TIME / F-RESOURCE 探针
 python src/adversarial/verify_l2_r1.py           # L2 Cache 探针（问题 3，命中/FIFO/字节加权）
 python src/adversarial/verify_l2_r2.py           # L2 同时 miss 与淘汰路径
+python src/adversarial/verify_l2_r3.py           # 命中在飞被淘汰后完成重插（CACHE-HIT-RETIRE-001）
 python src/adversarial/verify_metric_r1.py       # 搬运五字段等式核对
 python src/adversarial/verify_local2_r1.py       # Step3 内存复用（虚拟额度）
 python src/adversarial/build_dev_samples.py      # 首批 10 个开发反例样本
