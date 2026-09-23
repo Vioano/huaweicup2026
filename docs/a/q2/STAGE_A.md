@@ -5,6 +5,10 @@ Execution session: `yuanzhifang30-sudo/s-25ac3f7459f94fabb940724245a20ade`.
 Local coordinator explicitly approved **stage A only** at T0 2026-09-24
 03:56:25 Asia/Taipei. No M1/M2 search or full-data quality experiment is included.
 Atlas writes remain with the coordinator.
+Captain alignment: [Issue #33 comment](https://github.com/huaweibei123/huaweicup2026/issues/33#issuecomment-5802181435).
+The completed checkpoint is in
+`results/a/q2-yuanzhifang/stage-a-20260924-035625-retry1/REPORT.md`;
+its evaluated source HEAD is `fd9d686c37b5a27a8595fc2f7483c089bf4a92e3`.
 
 ## Reproduce
 
@@ -15,7 +19,8 @@ read-only except for the existing verified case-restoration script.
 uv sync --locked
 uv run python -B scripts/a_materials.py --extract
 uv run python -B -m unittest discover -s tests/q2 -p test_*.py -v
-uv run python -B -m src.q2.stage_a --output results/a/q2-yuanzhifang/stage-a-20260924-035625
+# Only with a separately authorized budget, replacing FRESH-RUN-ID:
+uv run python -B -m src.q2.stage_a --output results/a/q2-yuanzhifang/FRESH-RUN-ID
 ```
 
 The control tests do not invoke Q2. The one-shot stage runner refuses an existing
@@ -25,12 +30,22 @@ output directory, persists each reservation before launch, and reserves at most
 A new directory is necessary for a separately authorized reproduction, not a way
 to reset the per-stage allowance.
 
-The runner enforces 1800 seconds for its experiment, including static-input
-preparation, baseline generation, evaluator runs, and recorded cleanup. Each
-child is limited to 120 seconds or the remaining stage budget. Installation and
-the initial 114-file/100-case restoration check are separate public preparation.
-Result writing and artifact hashing overhead are reported; timeout/termination
-overshoot is retained rather than hidden. Serial execution only.
+The stage allowance is 1800 seconds. Its deadline starts before static-input
+preparation; each child is limited to 120 seconds or the remaining stage budget.
+Only supervised subprocesses are interruptible under this deadline. Static
+archive/metadata operations and final report/hash writing are not continuously
+supervised. The recorded 12.469 seconds stops at the start of final recording;
+the remaining output/hash/report tail is unmeasured. Installation and the initial
+114-file/100-case restoration check are separate public preparation. Recorded
+timeout/termination overshoot is retained. Serial execution only; this runner
+does not establish a hard end-to-end wall-time guarantee.
+
+The first attempt failed on Windows GBK default decoding before launching Q2.
+Its zero-call budget and failure receipt are preserved in
+`stage-a-20260924-035625`. After the explicit UTF-8 fix, the continuation used
+`--wall-seconds 1770`, conservatively reserving 30 seconds for that preflight.
+Together the two directories contain exactly 12 official launches, exhausting
+the approved stage A call allowance.
 
 Windows child processes use `sys._base_executable`, the actual same-version
 interpreter. A control test reproduced a venv redirector orphan on timeout;
@@ -87,6 +102,8 @@ The runner records its source HEAD and source hashes, Python/environment,
 dependency versions and lock hash, actual/reserved calls, comparison checks and
 artifact hashes. `input_plan` filename is the only excluded field in the final
 full-JSON repetition check because the plan bytes are copied to a new filename.
+The result directory has a scoped `.gitattributes` rule preserving evidence bytes
+across Windows and other checkouts; hashes must not change with line endings.
 
 The three-case proposal for later stage B is separate: each case × method would
 have equal 32-call/600-second ceilings, including the common initial baseline
