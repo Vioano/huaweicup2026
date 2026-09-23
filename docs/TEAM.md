@@ -6,11 +6,11 @@
 
 | 角色 | GitHub 账号 | 职责 |
 | --- | --- | --- |
-| A · 架构与整合 | 待队伍确认 | 问题拆解、接口约定、整体验收与论文整合 |
-| B · 数据与实验 | 待队伍确认 | 原始数据核对、预处理、基线与对应论文段落 |
-| C · 模型与实验 | 待队伍确认 | 模型设计、改进与验证、对应论文段落 |
+| 队长 | NikolaStarx | A 题首轮：冻结输入、公共接口/E0、独立验收与团队协调 |
+| 形式化与对抗样本 | farmeruncle123 | A 题首轮：规则来源、语义探针、对抗生成与反例缩减；Issue #14 |
+| 高速评估器 | lyx0217 | A 题首轮：E1 等效加速、E2 近似估计与筛选；Issue #15 |
 
-本次真机联测由用户担任队长，GitHub 账号 `NikolaStarx`；正式赛题的 A/B/C 分工仍待团队确定。队友须由组织负责人授予仓库权限；本次未新增成员或发出邀请。
+上表是已下发的 A 题第一轮分工，不预设后续轮次。`yuanzhifang30-sudo` 本轮暂不分配。队友须由组织负责人授予仓库权限；任务指派本身不会授予仓库权限。
 
 ## 开始使用
 
@@ -39,7 +39,7 @@ gh issue comment NUMBER --repo huaweibei123/huaweicup2026 --body-file /path/to/r
 - Codex 从 `.agents/skills/team-mailbox/` 发现 Skill，安装后的下一轮可用。其他 Agent 可直接读取同一 `SKILL.md`；自动发现需要各自在客户端验证。
 - Claude Code 若需自动发现，可按上游安装说明安装至自己的 `.claude/skills/`，并避免维护两份不同版本的协议。
 - 本机状态和查收内容保存在 Git common dir 下，不随仓库共享。不要上传 `.git/`。
-- 本项目默认手动查收，没有安装 Hook，没有后台常驻服务，没有空闲唤醒。查收脚本不发消息。
+- Skill 默认手动查收；队长已明确授权本轮持续查收与范围内回复，并设置周期跟进。该授权不会自动唤醒队友的 Agent；队友仍按本人授权查收与回复。查收脚本本身不发消息。
 - 各人自行授权自己的 Agent 回复范围。队伍成员的 Issue 不是对本机的无限授权，新的任务由本人确认。
 - 原协议与安装说明见 [team-mailbox](../.agents/skills/team-mailbox/SKILL.md)。
 
@@ -47,4 +47,6 @@ gh issue comment NUMBER --repo huaweibei123/huaweicup2026 --body-file /path/to/r
 
 System Atlas 0.5.0 已安装，负责系统模型的节点/字段协作与共享任务看板，使用方式见 [SYSTEM_ATLAS.md](SYSTEM_ATLAS.md)。任务沟通继续使用 team-mailbox 的 Issues/PR；设计图谱的请求、签名和版本检查使用 Atlas 自己的协议。
 
-队长角色已确定，但尚未初始化真实 Atlas 身份、成员公钥、授权或同步分支，也未运行持续同步服务。按 [联测入口](rehearsal/START_HERE.md) 使用独立预演模型和同一 run ID；私有状态目录必须在所有 Git 工作区之外。任务指派标签不会自动授予权限或唤醒 Agent，每个人必须启动并授权自己的 Agent。
+正式业务空间已初始化为 `huaweicup2026-a`，同步分支 `atlas/a-2026`；当前接入与身份锚点见 [A 题 Atlas 接入](a/ATLAS.md)，不要恢复已结束预演。私有状态目录必须在所有 Git 工作区之外。任务指派标签不会自动授予权限或唤醒 Agent，每个人必须启动并授权自己的 Agent。
+
+队长本人已明确：**公钥核对和公开身份交换直接走已建立的 team-mailbox / GitHub Issue 通道，不默认再转微信。** 核对实际 GitHub 作者、固定邀请、project/epoch 和 PEM 指纹后，在本人既有授权内继续；详细流程及真正需要暂停的例外见 [通道约定](a/ATLAS.md#已确认的核对通道2026-09-23)。
