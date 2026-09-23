@@ -1,0 +1,12 @@
+% Editable vector example, included directly by sections/problem1.tex.
+\begin{tikzpicture}[
+  stage/.style={draw=black!65,rounded corners=2pt,align=center,
+    minimum width=38mm,minimum height=13mm,font=\normalsize},
+  >={Stealth[length=2mm]}
+]
+  \node[stage] (data) {整理数据\\定义目标与约束};
+  \node[stage,right=8mm of data] (model) {NSGA-II 搜索\\生成候选方案};
+  \node[stage,right=8mm of model] (check) {比较方案\\检验结果稳定性};
+  \draw[->] (data) -- (model);
+  \draw[->] (model) -- (check);
+\end{tikzpicture}

@@ -28,11 +28,17 @@
 - Issues 已启用；未安装 Hook，未发送消息，未启用自动回信。
 - 尚未完成两个队友账号之间的实际消息往返或各客户端自动发现验证。
 
-## LaTeX
+## LaTeX（旧版训练模板历史记录）
 
 - 课堂归档内 7 个模板文件完整解压，SHA-256 来源清单在 `paper/template-source.json`。
 - 在临时副本执行 XeLaTeX，因本机缺少 `SimSun` 退出 1，无页面输出；未改动原模板。
 - 归档的 `MathModel.pdf` 为旧示例，不能作为本次编译证据。尚未做 2026 正式格式验收。
+
+## 2026 论文模板
+
+- 用户提供的压缩包中 42 个文件完整解压至 `paper/template-2026/`，SHA-256 清单见 `paper/template-source.json`；2025 模板已从当前文件树移除。
+- 本机 TeX Live 2026 使用 `latexmk -outdir=../build main.tex` 和 `latexmk -outdir=../build anonymous.tex` 均成功，分别生成 11 页和 10 页 PDF；产物在 Git 忽略的 `paper/build/`。
+- 编译检查仅覆盖示例内容与本机字体/路径，不等于实际赛题内容、队友环境或赛事格式验收。
 
 ## 远端检查
 

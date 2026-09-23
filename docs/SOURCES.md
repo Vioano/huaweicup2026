@@ -32,14 +32,12 @@
 - 保留 MIT LICENSE 及 Archify 2.16 归属说明。没有复制开发机的 node_modules、私钥或私有运行状态。
 - 0.5.0 版本号来自该固定提交的 SKILL.md、package.json 和 skill-release.json；不以未核对的 Release 标签替代固定提交。
 
-## LaTeX 训练模板
+## LaTeX 论文模板
 
-- 来源：教学演示的 `materials/2025LaTeX模板_课堂副本.zip`。
-- 社区上游：<https://github.com/zhanwen/MathModel/tree/master/2025年数模悉知%26论文模版>
-- 本项目解压至 `paper/template-2025/`，保持归档内文件内容不变。
-- 含 `MathModel.tex`、`gmcmthesis.cls`、`figures/`、`test.jpg`、`MathModel.pdf`、`READ_ME_FIRST.txt`。
-- `MathModel.pdf` 是上游附带的旧示例，并非本项目编译成果；来源清单与归档哈希见 `paper/template-source.json`。
-- 这是 2025 社区训练材料，非 2026 官方格式认证；正式使用时需核对当届要求与上游授权。
+- 来源：用户提供的 `GMCM2026-LaTeX-Template-main.zip`，上游为 <https://github.com/rudykon/GMCM2026-LaTeX-Template>，类文件标注 v1.7（2026-09-17）。
+- 当前模板完整解压于 `paper/template-2026/`，替换了旧的 2025 训练模板；逐文件 SHA-256 和压缩包 SHA-256 见 `paper/template-source.json`。旧版可从 Git 历史查阅。
+- 代码声明 MIT；字体、Logo、官方附件遵循各自许可。归档中的 `docs/preview.pdf` 是上游示例，不是本项目编译或正式交稿结果。
+- 模板说明参照 2026 附件 2、3；正式使用仍要核对当届赛事公告和授权。
 
 ## Scientific Figures
 

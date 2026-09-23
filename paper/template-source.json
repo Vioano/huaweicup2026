@@ -1,41 +1,219 @@
 {
-  "source": "教学演示/materials/2025LaTeX模板_课堂副本.zip",
-  "archive_sha256": "db39ad6fb3142932c6faa6663fcffa358679cd4670e6e1e553525eacec1e181e",
+  "source_name": "GMCM2026-LaTeX-Template-main.zip",
+  "archive_sha256": "54cba85dc8130e5f13eda0c6b5fadaa8d20873106856c36a2e697a73e848b168",
+  "template_directory": "paper/template-2026",
+  "upstream": "https://github.com/rudykon/GMCM2026-LaTeX-Template",
+  "upstream_version": "v1.7 (from gmcm2026.cls)",
   "files": [
     {
-      "path": "paper/template-2025/gmcmthesis.cls",
-      "sha256": "7a6dbcad76e30e0e30af6aa4ee92ecfe07629130af8fce2350bfd8589959395a",
-      "bytes": 14513
+      "path": "paper/template-2026/.gitattributes",
+      "sha256": "1b56437aaac4c39513f4f2c3d4fb81e8337e6487247e794ee88593c0aaf75fb7",
+      "bytes": 160
     },
     {
-      "path": "paper/template-2025/test.jpg",
-      "sha256": "e1f4f51706ea8aee0427df4af8f9f7860ae59e958ff6ca21b26c77f2e035393d",
-      "bytes": 87624
+      "path": "paper/template-2026/.github/workflows/latex.yml",
+      "sha256": "b27e78ee0b43c61bff4e0e3cfa90fa6cfe1770bea25b790805b46e996819f516",
+      "bytes": 926
     },
     {
-      "path": "paper/template-2025/MathModel.pdf",
-      "sha256": "e911b521b3dd3cb5f2d16b31b6e5245e5ee8d71c10fd6e54e0c632aa5dc052e8",
-      "bytes": 406376
+      "path": "paper/template-2026/.gitignore",
+      "sha256": "ae751821c7d700b476a9758043b38ddd7b5890082973bc250888f9213148221c",
+      "bytes": 428
     },
     {
-      "path": "paper/template-2025/figures/logo2025.png",
-      "sha256": "080da0190c892d3f3f68fde267e90f587753af3988fb9f6fa6cfd0a677f67bc3",
-      "bytes": 168191
+      "path": "paper/template-2026/.latexmkrc",
+      "sha256": "758dc6cc9edf67d4f2890a874b9d51a5f2cdc752d9f7a067d94308b522007b79",
+      "bytes": 253
     },
     {
-      "path": "paper/template-2025/figures/title2025.pdf",
-      "sha256": "49a34c923f41f8f399beedcefdbd525d81331469e1d05db68c4f37013dd9cc12",
-      "bytes": 34386
+      "path": "paper/template-2026/LICENSE",
+      "sha256": "b148918ecf27d9c1b018512b824435af629c8be8d5176be8f12c766b51c85cef",
+      "bytes": 1069
     },
     {
-      "path": "paper/template-2025/MathModel.tex",
-      "sha256": "b7003aaa85e39add0d6117d34f47e3bb49c96879686b576daf83df909cd73f69",
-      "bytes": 7439
+      "path": "paper/template-2026/README.md",
+      "sha256": "b4035ba9b54cf228825431ebac933ab3d65a3e0296c3d722e31746006cfd944a",
+      "bytes": 3727
     },
     {
-      "path": "paper/template-2025/READ_ME_FIRST.txt",
-      "sha256": "9b028d513decf43fdd2000a6074787705ad39af70f3cca27912703f15cd36110",
-      "bytes": 980
+      "path": "paper/template-2026/anonymous.tex",
+      "sha256": "c7ac54023780ac63d3bb8f3822614459281747710ac92ba300b81c64f6307240",
+      "bytes": 153
+    },
+    {
+      "path": "paper/template-2026/build.bat",
+      "sha256": "1066c96d5364a3870896c66ddc1e73dcb2679effb3b0ab9b7d6981b7d341aa24",
+      "bytes": 521
+    },
+    {
+      "path": "paper/template-2026/build.sh",
+      "sha256": "fc16fafe5a7e4261727524528b917f799d6dffcd9c842538a5ac1c9fbe3e2d47",
+      "bytes": 414
+    },
+    {
+      "path": "paper/template-2026/config.tex",
+      "sha256": "843209a2673d4f7ec552beb141313aa8b11415977e2d679752b7762a0393511f",
+      "bytes": 964
+    },
+    {
+      "path": "paper/template-2026/docs/FORMAT.md",
+      "sha256": "80eb98ea976ec05e6c9f97976bc64d0def0d27a515d704422e5cbddc3e674431",
+      "bytes": 20586
+    },
+    {
+      "path": "paper/template-2026/docs/logos.pdf",
+      "sha256": "10b275f772d02f1ac43349cf5137921b5a6f61e2b656d69accc46cee75d7866e",
+      "bytes": 830946
+    },
+    {
+      "path": "paper/template-2026/docs/overleaf配置编辑器.png",
+      "sha256": "b1e188549677a36b53fb368cea4bd5bb4d95d20171d5f0189593f0892f19a5d7",
+      "bytes": 29715
+    },
+    {
+      "path": "paper/template-2026/docs/preview.pdf",
+      "sha256": "e215c161c4ed87fe40061e2dee4db980b692de231d0895011dc2b9176868ad18",
+      "bytes": 1054637
+    },
+    {
+      "path": "paper/template-2026/docs/preview.png",
+      "sha256": "44f0ee56ac42712944865b72a4f5f7f67dce865d9fa36996ed0abfae4fd10563",
+      "bytes": 399007
+    },
+    {
+      "path": "paper/template-2026/docs/附件2：“华为杯”第二十三届中国研究生数学建模竞赛论文格式规范.docx",
+      "sha256": "46d2e2a87e90608ace764203d5326d7c7e41f01a5eb79986724a6f159fd70e16",
+      "bytes": 93167
+    },
+    {
+      "path": "paper/template-2026/docs/附件3：“华为杯”第二十三届中国研究生数学建模竞赛论文模板.doc",
+      "sha256": "195b06cf670ec1aeb796bfd07e6d3e98e36d16db119308dcf4d0756319fe2e29",
+      "bytes": 894976
+    },
+    {
+      "path": "paper/template-2026/figures/README.md",
+      "sha256": "9f962bd4b8be762585e0cbaad32111f9abad25085c5c6c16c16975270051bbd4",
+      "bytes": 595
+    },
+    {
+      "path": "paper/template-2026/figures/example-plot.pdf",
+      "sha256": "32a27fe535d2317ca377bec5356d35de82c42fa39fbd092879fb0e6486861dc1",
+      "bytes": 37228
+    },
+    {
+      "path": "paper/template-2026/figures/framework.tex",
+      "sha256": "7508ed2b2512c9c9ebb03ca55fdf94f52ec1b0e2c565e56aba35c86f959a899b",
+      "bytes": 548
+    },
+    {
+      "path": "paper/template-2026/fonts/LiSu.ttf",
+      "sha256": "e5a3a1e2e2cb6fee66d1e7f821b5c04f3ad7792f1e5b3cac545c2e52173e908d",
+      "bytes": 9223160
+    },
+    {
+      "path": "paper/template-2026/fonts/README.md",
+      "sha256": "5702438e74a3990cf2295e99d43f014643611bc74f1002bd69cd5e29da120b6a",
+      "bytes": 1101
+    },
+    {
+      "path": "paper/template-2026/fonts/STXinwei.ttf",
+      "sha256": "dd57a593c13630a2e5fd41fea9bc1bc71b5017d396926aaecaa982d2fe6f492e",
+      "bytes": 4267776
+    },
+    {
+      "path": "paper/template-2026/fonts/SimHei.ttf",
+      "sha256": "c582099366b2d28e578a831887c5b3a5746b849dbbfb4dbf01d35f2911871162",
+      "bytes": 10050868
+    },
+    {
+      "path": "paper/template-2026/fonts/SimSun.ttf",
+      "sha256": "ca4da082cd970f0c8abaa79f213ddcbc475f7b5afabcb81b385998f9ebfbb53f",
+      "bytes": 10499104
+    },
+    {
+      "path": "paper/template-2026/fonts/Times.TTF",
+      "sha256": "4e98adeff8ccc8ef4e3ece8d4547e288ff85fdc9c7ca711a4599c234874bbe86",
+      "bytes": 330412
+    },
+    {
+      "path": "paper/template-2026/fonts/Timesbd.TTF",
+      "sha256": "4357b63cef20c01661a53c5dae70ffd20cb4765503aaed6d38b17a57c5a90bff",
+      "bytes": 333900
+    },
+    {
+      "path": "paper/template-2026/fonts/Timesbi.TTF",
+      "sha256": "192e1b0d18e90334e999a99f8c32808d6a2e74b3698b8cd90c943c2249a46549",
+      "bytes": 238612
+    },
+    {
+      "path": "paper/template-2026/fonts/Timesi.TTF",
+      "sha256": "c25ae529b4cecdbca148b6ccb862ee0abad770af8b1fd29c8dba619d1b8da78a",
+      "bytes": 247092
+    },
+    {
+      "path": "paper/template-2026/gmcm-numerical.bst",
+      "sha256": "255aba1c9d22cf7aa7a363a1d201a381ce15291ad1679cee5ac0b84f16f446dc",
+      "bytes": 3006
+    },
+    {
+      "path": "paper/template-2026/gmcm2026.cls",
+      "sha256": "ec2e63ec9cd11421653d5b3720bcedfd101e40272913b9768fbf47651e7de3ad",
+      "bytes": 15808
+    },
+    {
+      "path": "paper/template-2026/main.tex",
+      "sha256": "c88486655e6fd5bb7eee7e0ff69c826c0d77a6d018ff9c0a4a72cf583a7181b5",
+      "bytes": 563
+    },
+    {
+      "path": "paper/template-2026/reference.bib",
+      "sha256": "81e20555436928a7fba5ddc670252f46fc64be9e6efe733be66ac5f6b219e92e",
+      "bytes": 395
+    },
+    {
+      "path": "paper/template-2026/sections/abstract.tex",
+      "sha256": "642d1d6240a1680d868d0f4f95bb5e176e6cf09bc1c79276749249d019fd4b28",
+      "bytes": 760
+    },
+    {
+      "path": "paper/template-2026/sections/analysis.tex",
+      "sha256": "0a9d3f17eb6b91d30a0503da96b3c03194d4629a62dcf9ba672f9b59443e9bc2",
+      "bytes": 417
+    },
+    {
+      "path": "paper/template-2026/sections/appendix.tex",
+      "sha256": "9185867bfc9f8af2141cb6ea732e2d8550e8e54ad20f07fe2658d9a0bbb3899d",
+      "bytes": 3123
+    },
+    {
+      "path": "paper/template-2026/sections/assumptions.tex",
+      "sha256": "75a8c8b28d40549c28370cb4c456c3644825b67939d5ca66a1abe1c4c7dc3eb6",
+      "bytes": 461
+    },
+    {
+      "path": "paper/template-2026/sections/evaluation.tex",
+      "sha256": "2ab5b6ebcfb837072ae981d5a6538232117083fc808fc69c127ec23e6726efa6",
+      "bytes": 502
+    },
+    {
+      "path": "paper/template-2026/sections/problem.tex",
+      "sha256": "36b96af28e318bee5b2bf770957b2722f32452bde41c51ffd1da529757a373b5",
+      "bytes": 487
+    },
+    {
+      "path": "paper/template-2026/sections/problem1.tex",
+      "sha256": "ae52005fa2466bb006e8e0f4756a8b936a57c3981cb847b94c043365fcd754e7",
+      "bytes": 2554
+    },
+    {
+      "path": "paper/template-2026/sections/problem2.tex",
+      "sha256": "cf43cb212151f475552145ce05291227ce5167c8e195e05427805fbe930d6732",
+      "bytes": 1312
+    },
+    {
+      "path": "paper/template-2026/sections/problem3.tex",
+      "sha256": "43465fd643d940b3c782b997ad4e3425b7acc63db774cf10fbd6253fd6e61385",
+      "bytes": 513
     }
   ]
 }
