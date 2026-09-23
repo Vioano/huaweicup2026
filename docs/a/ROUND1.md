@@ -8,7 +8,7 @@
 | lyx0217 | a-r1-fast-eval | E1 热点等效加速与 E2 极速近似两条路线 |
 | NikolaStarx | a-r1-oracle-test | 公共接口、E0 适配、独立基线/差分、封存集及验收 |
 
-yuanzhifang30-sudo 本轮不分配任务。三条工作线同步推进，不等待完整规范或最优切图算法。
+首轮派发时 yuanzhifang30-sudo 暂未分配；**2026-09-24 队长已更新此安排**，新增 [Q2/情况 B 构造与搜索](../../tasks/a/Q2-CORE-SEARCH.md)，沟通 [Issue #33](https://github.com/huaweibei123/huaweicup2026/issues/33)。Q1/A 与 Q2/B 由不同执行者并行，详见 [交接包](Q2_HANDOFF.md)。本页其余首轮任务不因此扩大范围，也不等待完整规范或最优算法。
 
 ## 阅读顺序与效力
 
