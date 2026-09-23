@@ -10,6 +10,8 @@
 
 首轮派发时 yuanzhifang30-sudo 暂未分配；**2026-09-24 队长已更新此安排**，新增 [Q2/情况 B 构造与搜索](../../tasks/a/Q2-CORE-SEARCH.md)，沟通 [Issue #33](https://github.com/huaweibei123/huaweicup2026/issues/33)。Q1/A 与 Q2/B 由不同执行者并行，详见 [交接包](Q2_HANDOFF.md)。本页其余首轮任务不因此扩大范围，也不等待完整规范或最优算法。
 
+**2026-09-24 后续 E2 分工调整**：上表保留首轮分配历史。当前 E2 核心开发改由队长评估器专项 `s-55b6…` 负责，LYX 在交付后独立测试；LYX 的 E1/原生精确核工程化不变。生产写权先核旧方停写再切换，详见 [E2任务卡](../../tasks/a/E2-CORE-DEVELOPMENT.md) 与 [FAST当前分工](../../tasks/a/FAST-EVAL.md)。原验收指标不变。
+
 ## 阅读顺序与效力
 
 1. 本文及本人 `tasks/a/` 六字段任务卡：本轮人员、首批范围和交接约定。
