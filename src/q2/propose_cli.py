@@ -24,6 +24,9 @@ def main():
 if __name__ == '__main__':
     try:
         main()
-    except ValueError as error:
-        print(json.dumps({'status':'construction_rejected','error':str(error)}))
-        raise SystemExit(2)
+    except (ValueError, RuntimeError) as error:
+        known = ('packet contraction creates a cycle', 'contracted subgraph graph contains a cycle',
+                 'dependency order violation on core')
+        rejected = any(marker in str(error) for marker in known)
+        print(json.dumps({'status':'construction_rejected' if rejected else 'generator_error','error':str(error)}))
+        raise SystemExit(2 if rejected else 1)

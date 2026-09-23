@@ -165,6 +165,9 @@ def main():
         actual_command = command(directory)
         measured = command_run(actual_command, directory, limit)
         measured.update(name=name, completed_elapsed=elapsed(), command=['python',*actual_command[1:]])
+        if measured['status'] == 'completed' and measured['returncode'] != 0:
+            text = (directory/'stdout.txt').read_text(encoding='utf-8',errors='replace')
+            measured['status'] = 'construction_rejected' if measured['returncode']==2 and '"construction_rejected"' in text else 'generator_error'
         save(directory/'generation.json', measured)
         proposals.append(measured)
         path = directory/'plan.json'
@@ -175,6 +178,8 @@ def main():
         first = evaluate(baseline, 'initial') if baseline else None
         if not first or first['status'] != 'ok':
             metadata['status'] = 'baseline_failed'
+            metadata['failure_kind'] = 'baseline_rejected' if first and first['status']=='rejected' else 'baseline_timeout_or_error'
+            metadata['halt_stage'] = metadata['failure_kind'] != 'baseline_rejected'
         else:
             # Exact plan JSON with insertion order retained, not graph/isomorphic equivalence.
             def key(path):
@@ -190,6 +195,12 @@ def main():
                 proposals[-1]['specification'] = specification
                 if plan is None:
                     proposals[-1]['outcome'] = 'generation_failed'
+                    if proposals[-1]['status'] == 'not_started_time_reserve':
+                        metadata['early_stop'] = 'time_reserve'
+                        break
+                    if proposals[-1]['status'] != 'construction_rejected':
+                        metadata.update(halt_stage=True,failure_kind='proposal_timeout_or_error')
+                        break
                     continue
                 identity = key(plan)
                 if identity in seen:
@@ -198,7 +209,10 @@ def main():
                 seen[identity] = rel(plan)
                 row = evaluate(plan, 'explore')
                 proposals[-1]['outcome'] = row['status'] if row else 'time_reserve'
-            final = evaluate(ROOT/incumbent['plan'], 'final')
+                if row and row['status'] not in {'ok','rejected'}:
+                    metadata.update(halt_stage=True,failure_kind='evaluation_timeout_or_error')
+                    break
+            final = evaluate(ROOT/incumbent['plan'], 'final') if not metadata.get('halt_stage') else None
             if final and final['status'] == 'ok':
                 original = json.loads((ROOT/incumbent['output']/'result.json').read_text(encoding='utf-8'))
                 confirmed = json.loads((ROOT/final['output']/'result.json').read_text(encoding='utf-8'))

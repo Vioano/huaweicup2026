@@ -15,6 +15,35 @@ RUN = ROOT/'results/a/q2-yuanzhifang/stage-b-20260924-042906'
 UNITS = [f'{case}-{method}' for case in ('002','008','044') for method in ('D','M1','M2')]
 
 
+def recover_accounting(folder, summary):
+    """Durable reservations remain charged even without a worker summary."""
+    path = folder/'calls.json'
+    if not path.exists():
+        # Calls() is created before all launches; distinguish absence explicitly.
+        return {'calls_charged':0, 'calls_launched':0, 'ledger_status':'absent_before_first_reservation'}
+    ledger = json.loads(path.read_text(encoding='utf-8'))
+    charged = len(ledger['calls'])
+    if ledger['charged'] != charged or charged > 32:
+        raise ValueError('invalid persistent reservation ledger')
+    if summary.get('calls_charged',charged) != charged:
+        raise ValueError('summary disagrees with durable reservation ledger')
+    return {'calls_charged':charged, 'calls_launched':sum(bool(c.get('launched')) for c in ledger['calls']),
+            'ledger_status':'recovered_from_calls_json'}
+
+
+def stop_after_unit(receipt, summary):
+    if (receipt.get('cleanup_error') or receipt.get('remaining_job_pids')
+            or receipt.get('worker_exit_with_descendants') or summary.get('halt_stage')):
+        return True
+    if receipt['status'] == 'completed':
+        return summary.get('status') != 'confirmed'
+    # A recognized initial-plan rejection stops this case, not other cases.
+    expected = (receipt['status'] == 'worker_error' and receipt.get('returncode') == 1
+                and summary.get('status') == 'baseline_failed'
+                and summary.get('failure_kind') == 'baseline_rejected')
+    return not expected
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--units', nargs='+', choices=UNITS, default=UNITS)
@@ -37,6 +66,9 @@ def main():
         overall_deadline = stage['started_monotonic']+5400
         blocked_cases = {name.split('-')[0] for name, unit in stage['units'].items() if unit.get('baseline_failed')}
         for name in args.units:
+            if (RUN/'PAUSE').exists():
+                print(json.dumps({'status':'paused_at_unit_boundary'}),flush=True)
+                break
             case, method = name.split('-')
             if name in stage['units']:
                 print(json.dumps({'unit':name,'skipped':'already reserved; no ledger reset'}),flush=True)
@@ -51,6 +83,7 @@ def main():
             folder = RUN/name
             folder.mkdir(exist_ok=False)
             stage['units'][name] = {'status':'reserved','started_monotonic':started,
+                                    'head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT).decode().strip(),
                                     'deadline_monotonic':deadline,'relative_folder':rel(folder)}
             save(stage_file, stage)
             command = [PYTHON,'-X','utf8','-B','-m','src.q2.budget_search','--folder',rel(folder),
@@ -69,7 +102,8 @@ def main():
             summary_path = folder/'summary.json'
             summary = json.loads(summary_path.read_text(encoding='utf-8')) if summary_path.exists() else {}
             accounting.update(status=receipt['status'], result_status=summary.get('status','incomplete'),
-                              calls_charged=summary.get('calls_charged'), baseline_failed=summary.get('status')=='baseline_failed')
+                              baseline_failed=summary.get('status')=='baseline_failed')
+            accounting.update(recover_accounting(folder,summary))
             stage['units'][name].update(accounting)
             save(stage_file,stage)
             ledger_done = time.monotonic()
@@ -78,7 +112,7 @@ def main():
                               'all_bookkeeping_overshoot':max(0,ledger_done-deadline)}),flush=True)
             if accounting['baseline_failed']:
                 blocked_cases.add(case)
-            if receipt['status'] in {'resource_limit','monitor_error','timeout'}:
+            if stop_after_unit(receipt,summary):
                 # Do not launch further work after a supervision failure.
                 break
     finally:

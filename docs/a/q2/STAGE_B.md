@@ -133,3 +133,42 @@ avoid the Windows venv redirector extra process. All solver/monitor code is stdl
 Windows control tests do not claim Linux/macOS, real-graph hard resource stress,
 independent scientific acceptance, all 100 graphs or the 2–5-core final matrix.
 Atlas remains exclusively with the local coordinator.
+
+## Controller correction checkpoint (after six units, before case044)
+
+Fixed `9b544ad28b9515f9ab53070d457774b1d8f65a58` ran six units with
+2/16/26 calls for case002 D/M1/M2 and 2/12/20 for case008: 78 total.
+All six finished and were confirmed. Their original identities and evidence
+remain unchanged; they are not relabelled as evaluated by the correction.
+
+During execution the coordinator found that an unexpected worker error would not
+stop later units, and a missing worker summary yielded an unknown call count.
+At the next available boundary, a labelled case044 directory placeholder stopped
+the old controller before any case044 reservation or process launch. Its
+FileExistsError is a coordination stop, not a rejected candidate. The original
+stage ledger/logs and a separate pause receipt are retained. A PAUSE marker now
+provides an explicit boundary gate. Six completed units are never rerun.
+
+The correction stops the stage for worker exceptions, failed supervision,
+leftover processes or unknown errors even when a saved summary says confirmed.
+Only a recognized initial-plan rejection is allowed to stop its case while
+moving to a different case. Calls are recovered from durable calls.json even if
+summary.json is absent; reservations remain charged. A present malformed ledger
+fails closed. Missing ledger before the first reservation is separately labelled.
+
+Known candidate construction rejections and recognized E0 invalid plans may
+continue exploration. A proposal/E0 timeout or unknown error conservatively
+ends the unit and stops subsequent units, retaining the prior incumbent but
+without launching an extra confirmation. This is a stop, not a zero-score or
+invalid-plan label. Fixed-size exhausted-time boundaries still reserve final
+confirmation/cleanup as above.
+
+Four additional zero-E0 controller checks cover missing-summary charge recovery
+and no next launch, confirmed-summary masking of a process fault, a known D
+rejection blocking its case only, and timeout/unknown-error halt policy. The ten
+real dummy-process/ledger tests were rerun and passed. No new E0 was used for the
+correction. Original stage start and 5400-second deadline are retained through
+the coordination pause; case044 units remain unspent and individually capped.
+The candidate families and score-selection rule are unchanged, so successful
+paths remain comparable, while the two executed control-code identities must
+be reported separately. Case044 resumes only after coordinator review.

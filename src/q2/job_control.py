@@ -135,6 +135,7 @@ def run_job(command, *, cwd: Path, folder: Path, started: float, deadline: float
                 if process.poll() is not None:
                     # A crashed worker must not leave a generator/evaluator running.
                     pids = job.pids()
+                    record["worker_exit_with_descendants"] = bool(pids)
                     record["status"] = "completed" if process.returncode == 0 and not pids else "worker_error"
                     break
                 time.sleep(min(interval, max(0, deadline - now)))
