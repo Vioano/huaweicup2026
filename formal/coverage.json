@@ -15,8 +15,8 @@
       "F-TIME": 2
     },
     "by_status": {
-      "draft-sourced": 3,
-      "verified-by-probe": 32
+      "draft-sourced": 2,
+      "verified-by-probe": 33
     }
   },
   "rule_ids": [
@@ -77,18 +77,23 @@
     },
     {
       "group": "搬运统计",
-      "status": "partial",
+      "status": "covered",
       "positive_evidence": [
         "F-TASK-003",
-        "S-TASK-COPYOUT-BOUNDARY",
         "F-RESOURCE-002",
-        "F-TASK-006"
+        "F-TASK-006",
+        "F-METRIC-001",
+        "S-TASK-COPYOUT-BOUNDARY"
       ],
       "boundary_evidence": [
-        "S-ROUND-BOUNDARY-COPY"
+        "size=0 与 size=1 的边界 COPY 都只占 1 cycle（S-ROUND-BOUNDARY-COPY）",
+        "原图已含 COPY_OUT 时 added_copy_bytes=0（切图未新增搬运）"
       ],
-      "counterexample_evidence": [],
-      "note": "已实测：原图 COPY 字节是独立基线（128→192）；跨 Task 流量按远端消费 Task 数累加；COPY 时长下界取整；spill 搬运按 `size*(1+int(spill_out_copies_data))`（本例 64→128）。**搬运统计的不充分性已实测**（F-METRIC-004）：切图相同、搬运逐字节相同的两个方案可相差 900 cycles。F-METRIC-001 五个字段之间的等式关系仍未逐字段核对。"
+      "counterexample_evidence": [
+        "搬运统计逐字节相同但 makespan 差 900（F-METRIC-004 / ranking-inversion-pair.json）",
+        "把『切图一定增加搬运』当默认会误报（added 是差值不是总量）"
+      ],
+      "note": "已实测：原图 COPY 字节是独立基线（128→192）；跨 Task 流量按远端消费 Task 数累加；COPY 时长下界取整；spill 搬运 = size*(1+int(copies_data))（64→128）。**5 个字段的 4 组恒等式在 5 个构造用例上全部成立**（含含原图 COPY_OUT、跨核、强制 spill 三种情形）。**未覆盖**：每个字段定义与题面口径的一致性；问题 2/3 的对应统计字段（transfers、memory_peak 等）。"
     },
     {
       "group": "取整/同刻事件",
@@ -155,8 +160,8 @@
     }
   ],
   "group_summary": {
-    "covered": 3,
-    "partial": 3
+    "covered": 4,
+    "partial": 2
   },
   "spec_amendment": {
     "file": "docs/a/EVALUATOR_AMENDMENT_20260923.md",

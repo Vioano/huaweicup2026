@@ -41,12 +41,13 @@ E_v(G,P,C,q;R)\longrightarrow (\text{status},\text{result})
 | F-EXEC | **3 条规则，均有实测探针** | F-EXEC-001/002 来自 `evaluation_validation.py:217-243`；F-EXEC-003 为同刻事件顺序 |
 | F-TIME | **2 条规则，均实测** | F-TIME-001/002；两类等待的实测差值为 `1000-100=900` |
 | F-RESOURCE | **5 条规则，均实测** | DDR 等分共享与回溯重算、DDR 端点判定、Cache 只由 COPY_IN 查询且走独立池、FIFO 不晋升 + 超容量不缓存、Cache key 跨 rename 稳定 |
-| F-METRIC | **4 条规则：1 读源码 + 1 规范 + 2 实测** | F-METRIC-001（搬运，仅读源码）、F-METRIC-002（规范条款）、F-METRIC-003（hit_rate 按字节加权）、F-METRIC-004（搬运统计不足以排序） |
+| F-METRIC | **4 条规则：1 规范 + 3 实测** | F-METRIC-001（搬运五字段等式，已实测）、F-METRIC-002（规范条款，待独立验收）、F-METRIC-003（hit_rate 按字节加权）、F-METRIC-004（搬运统计不足以排序） |
 
-合计 **35 条规则**（32 条 `verified-by-probe`，3 条 `draft-sourced`），覆盖表见 `coverage.json`。
+合计 **35 条规则**（33 条 `verified-by-probe`，2 条 `draft-sourced`；后者均为需独立验收的规范条款），
+覆盖表见 `coverage.json`。
 
-**覆盖表现状**：`合法性/组合环`、`取整/同刻事件`、`spill/容量临界` 三组 `covered`；
-`搬运统计`、`Step3 固定 FIFO 与内存复用`、`L2 同时 miss/FIFO` 三组 `partial`；**无 `gap`**。
+**覆盖表现状**：`合法性/组合环`、`搬运统计`、`取整/同刻事件`、`spill/容量临界` 四组 `covered`；
+`Step3 固定 FIFO 与内存复用`、`L2 同时 miss/FIFO` 两组 `partial`；**无 `gap`**。
 
 **E2 排序对抗（任务卡第 5 节）**：`src/adversarial/build_ranking_adversarial.py` 在
 1 张微型图 × 2 核 × 问题 1 上枚举 30 个方案（16 个合法、14 个因商图成环被拒），
