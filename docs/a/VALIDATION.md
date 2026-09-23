@@ -17,3 +17,9 @@
 - 两名 Windows 成员分别报告：`core.autocrlf=true` 会将官方 `data/config.txt` 从 341 字节 LF 转成 360 字节 CRLF，触发原始材料哈希拒绝。补充 `data/raw/a/** -text -whitespace`，保留所有官方原件的 Git blob 字节；没有修改原件或放宽哈希校验。
 - 在 macOS 用隔离临时索引和目录执行 `git -c core.autocrlf=true -c core.eol=crlf checkout-index --all`，16 份已跟踪原始材料均与 Git blob 逐字节一致。配置仍为 341 字节，SHA-256 为 `dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9`。这是检出转换模拟，尚待成员原生 Windows 回读。
 - 对 F-PLAN-005 运行了官方入口最小反例：原图为无环链 `1 -> 2 -> 3`（三个 `PIPE_V`/1-cycle 非 COPY op，无 tensor），映射 `1,3 -> subgraph 0`、`2 -> subgraph 1`，`core_schedules=[[0],[1]]`。`validate_graph` 通过，`derive_multicore_plan` 抛出 `MulticoreCutError: contracted subgraph graph contains a cycle`。该检查可达：成环来自按方案分组合并节点，而非单独跳过 COPY 节点。样本只证明结构非法域的拒绝行为，没有进行执行评分或性能验收。
+
+## 图谱与补发材料（2026-09-23 15:30 后）
+
+- 图谱 cursor13 扩为 24 节点、15 关系、10 视图；所有视图各 9/9 检查通过且无警告。队长在 1600×900 实际浏览器查看研究总览，并操作切换成员总览、E1 子图、lyx 个人视图与 Board；三卡 doing 保持，远端签名回读及两位成员限定授权均通过。cursor14 仅修正 lyx 的过期接入说明。此项不代表成员浏览器验收。
+- 本机题面与 114 份原始附件再次对照任务包 manifest，全部哈希一致；契约、READ_AUDIT 原文与已发布版本逐字节相同。
+- 补发 5 份 AI 讨论原文、2 份既有输出 PDF，记录原始字节哈希；它们不是本次重新运行或验证的实验结论。保留模板独立提交的来源和既有验证记录，不新增跨平台编译成功声明。
