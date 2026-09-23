@@ -1,0 +1,105 @@
+{
+  "provenance": "own mathematical verification, not E0/E1/E2 or contest benchmark",
+  "seed": 20260923,
+  "environment": {
+    "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "dependencies": "Python standard library only",
+    "gpu_used": false
+  },
+  "source_sha256": "45b209727e7901b1ba5445b66fbd2b6f5d78b522399c3f6eec28dd92736f6e95",
+  "layered_min_cut": {
+    "random_instances": 120,
+    "brute_feasible_labelings": 1814,
+    "mincut_mismatches": 0,
+    "monotone_sweeps": 120,
+    "unanchored_collapse_labels": {
+      "-1": [
+        2,
+        2,
+        2
+      ],
+      "1": [
+        1,
+        1,
+        1
+      ]
+    },
+    "wall_seconds": 0.11796490699998685
+  },
+  "quotient_equivalence": {
+    "n": 5,
+    "forward_DAGs": 1024,
+    "set_partitions": 52,
+    "DAG_partition_pairs": 53248,
+    "acyclic_quotients": 33742,
+    "mismatches": 0,
+    "convex_counterexample": {
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "labels": [
+        0,
+        1,
+        1,
+        0
+      ]
+    },
+    "wall_seconds": 0.2378109129999757
+  },
+  "maxplus_elimination": {
+    "random_DAGs": 100,
+    "release_vectors": 1000,
+    "removed_vertices_total": 563,
+    "mismatches": 0,
+    "scope": "fixed weighted DAG only; no official scheduler, DDR, cache or dynamic allocation",
+    "wall_seconds": 0.018436781999980667
+  },
+  "processor_sharing": {
+    "instances": 200,
+    "mismatches": 0,
+    "arithmetic": "fractions.Fraction",
+    "scope": "continuous equal processor sharing; NOT official integer retirement semantics",
+    "wall_seconds": 0.04727774100001625
+  },
+  "rectangle_input_union": {
+    "grid": [
+      4,
+      4
+    ],
+    "cores": 2,
+    "jobs_per_core": 8,
+    "balanced_assignments": 12870,
+    "input_union_cost_best": 12,
+    "input_union_cost_worst": 16,
+    "stripe_input_union_cost": 12,
+    "checkerboard_input_union_cost": 16,
+    "units": "number of distinct unit-sized inputs summed over cores; NOT DDR measured traffic or makespan",
+    "wall_seconds": 0.03249964299993735
+  },
+  "domain_fixture": {
+    "status": "constructed; NOT run through official validation",
+    "ops": 8,
+    "tensors": 10,
+    "original_graph": "bipartite DAG",
+    "quotient_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ]
+    ]
+  },
+  "total_wall_seconds": 0.4558986279999999
+}

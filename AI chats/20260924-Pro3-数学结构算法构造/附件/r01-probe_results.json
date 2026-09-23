@@ -1,0 +1,139 @@
+{
+  "scope": "Mathematical-model checks only. NO official code / official cases / GPU execution.",
+  "seed": 20260923,
+  "environment": {
+    "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "logical_cpus_visible": 5
+  },
+  "official_code_hash_supplied_not_verified": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+  "quotients": {
+    "partition_checks": 54253,
+    "acyclic_quotients": 34571,
+    "subset_contraction_checks": 32767,
+    "convex_blocks_counterexample": {
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "partition": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "quotient": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    }
+  },
+  "maxplus": {
+    "graphs": 500,
+    "boundary_value_comparisons": 2500,
+    "exact_integer_arithmetic": true
+  },
+  "processor_sharing": {
+    "arrival_streams": 1000,
+    "jobs": 10587,
+    "arithmetic": "fractions.Fraction",
+    "NOT_OFFICIAL": "No integer retirement / ceil(-1e-9) / floating point semantics modeled",
+    "earlier_release_counterexample": {
+      "early_makespan": "102",
+      "later_makespan": "101"
+    }
+  },
+  "fifo": {
+    "ordered_set_counterexample": [
+      [
+        [
+          "b",
+          1
+        ],
+        [
+          "c",
+          1
+        ]
+      ],
+      [
+        [
+          "a",
+          1
+        ],
+        [
+          "c",
+          1
+        ]
+      ]
+    ],
+    "unsafe_interior_dead_deletion": [
+      [
+        [
+          "dead",
+          1
+        ],
+        [
+          "b",
+          1
+        ]
+      ],
+      [
+        [
+          "a",
+          1
+        ],
+        [
+          "b",
+          1
+        ]
+      ]
+    ],
+    "pending_insert_counterexample": [
+      [
+        [
+          "a",
+          1
+        ],
+        [
+          "x",
+          1
+        ]
+      ],
+      [
+        [
+          "#DEAD",
+          1
+        ],
+        [
+          "x",
+          1
+        ]
+      ]
+    ],
+    "exhaustive_small_state_insertion_checks": 199584,
+    "alphabet_shrink_checks": 5000,
+    "normalized_dead_run_streams": 5000,
+    "normalized_dead_run_transitions": 100000,
+    "scope": "Future queries/inserts only on fixed live alphabet; ordered raw cache diagnostics NOT preserved"
+  },
+  "segmentation": {
+    "random_cost_tables": 500,
+    "scope": "exact additive closed-task special case only"
+  },
+  "elapsed_seconds_nonbenchmark": 1.7963070180001068,
+  "script_sha256": "f0b6e4331c3288e9cc9e1e9a37bc8de37e073b592793de59440fc5f8f911cf12",
+  "all_assertions_passed": true
+}
