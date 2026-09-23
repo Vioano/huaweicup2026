@@ -58,13 +58,15 @@ run：`r1-20260923-farmeruncle123`｜范围：A 题第一轮 F-PLAN/F-TASK/F-EXE
 
 ## B. 实现行为清楚但动机/边界待明确
 
-### B-1 `[疑问]` spill 触发时不允许"无可淘汰对象"
-- `schedule_step2` 在超容量且当前 step 无空闲存活 tensor 时，**硬报错**
-  `Step2SchedulingError: no spill victim`，而不是降级或放宽。
-- **我的观察**：3 种拓扑都撞到这个分支，说明"能发生 spill"本身有前提。
-- **未验证**：正式 case 里 31 个样例出现了 SPILL 新增搬运，说明该分支在真实规模可避开；
-  触发条件的完整刻画未做。
-- **状态**：机制已定位，未取得 `>=1 spill` 的成功运行（见 F-*/coverage 的 `gap-with-mechanism`）。
+### B-1 `[已解答]` spill 的触发前提与硬失败分支
+- 触发条件是 **`剩余驻留字节 > 容量`（严格大于）**：实测容量 192 = 峰值驻留时 **0 次 spill**，
+  容量 191 时 **1 次 spill**。
+- victim 必须**同时**满足：`next_use` 非 None（有未来使用）**且**不在当前 op 的使用集合中。
+  两者缺一 → 抛 `Step2SchedulingError: [STEP2 ERROR] no spill victim: ...`，**不降级、不放宽容量**。
+- **我前三次构造都撞在第二条上**：错误串里 `current_tids` 与 `active` 完全相同。
+  失败记录保留在 `src/adversarial/verify_spill_r2.py` 的 v1/v2/v3 注释与产物中。
+- **状态**：已由 F-LOCAL-004 实测。**未覆盖**同 step 多轮 while、L1 与 UB 同时触发、
+  多次 spill 的 version 递增链。
 
 ### B-2 `[疑问]` 非 COPY op 缺 `cycles` 时的默认值
 - `_op_duration`：非 COPY op 返回 `max(1, op.get('cycles', 1))`。
@@ -98,13 +100,15 @@ run：`r1-20260923-farmeruncle123`｜范围：A 题第一轮 F-PLAN/F-TASK/F-EXE
   `0.47619 = 600/1260`（按字节），而按访问次数会是 `0.3333`。二者可区分。
 - **状态**：已由 F-METRIC-003 实测。
 
-### B-7 `[疑问]` `logical_tid` 的缓存键语义
+### B-7 `[部分解答]` `logical_tid` 的缓存键语义
 - Cache key = `tensor.get('logical_tid', tids[0])`；`logical_tid` **只由 Step2 的
-  spill/rename 机制写入**（`schedule_step2.py:315-419`），普通 tensor 退化为物理 id。
-- **含义推断**：同一逻辑 tensor 的多个物理化身（spill 重命名后）**会共用同一 Cache 条目**，
-  即 spill 与 L2 命中存在耦合。这是官方语义下最微妙的耦合点之一。
-- **未验证**：我没有构造出触发 rename 的运行（见 spill 组 `gap-with-mechanism`），
-  因此**只登记字段来源与推断，不声称已观测到该耦合的行为**。
+  spill/rename 机制写入**，普通 tensor 退化为物理 id。
+- **已验证（key 层面）**：一次 spill 后重命名化身 `113` 携带 `logical_tid=102`，
+  因此 spill_in 的 COPY_IN 输出 tid=113 但其 cache key = **102**，
+  与原始 tensor 102 的 COPY_IN 相同 → 同一逻辑 tensor 的多个物理化身**共用同一 Cache 条目**。
+- **未验证（行为层面）**：未在问题 3 端到端运行中观察到由此产生的 cache hit——
+  需要一次问题 3 运行里既发生 spill、又在此之前对同一 tensor 有过访问。
+  **故只声称 key 相同，不声称已观测到命中后果。**
 
 ---
 
@@ -143,9 +147,9 @@ run：`r1-20260923-farmeruncle123`｜范围：A 题第一轮 F-PLAN/F-TASK/F-EXE
 
 | 组 | 状态 | 说明 |
 |---|---|---|
-| spill/容量临界 | `gap-with-mechanism` | 机制已定位，无可复现的成功运行；连带阻塞 B-7 的 `logical_tid` 命中验证 |
-| Step3 内存复用 | `partial` 的未覆盖部分 | 排序口径已实测，内存依赖与 rename 未构造 |
+| Step3 内部内存依赖 | `partial` 的未覆盖部分 | 排序与 spill 插入位置已实测；`memory_dependencies` 与 rename 的进一步影响未构造 |
 | L2「同时 miss」与淘汰路径 | `partial` 的未覆盖部分 | 命中/FIFO/超容量/字节加权已实测；同刻同时 miss 与 evicted 非空未构造 |
-| F-METRIC 搬运算式 | 部分 | 仅读源码，未逐字段核对 |
+| spill 多轮 / 多类型同时 | `covered` 的未覆盖部分 | 单次 spill 与容量临界已实测；同 step 多轮 while、L1 与 UB 同时触发未测 |
+| F-METRIC 搬运算式 | 部分 | 仅读源码，未逐字段核对五个字段的等式关系 |
 
 **说明**：以上缺口已写入 `formal/coverage.json`，与规则卡状态一一对应。

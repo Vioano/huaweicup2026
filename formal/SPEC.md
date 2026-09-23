@@ -36,14 +36,17 @@ E_v(G,P,C,q;R)\longrightarrow (\text{status},\text{result})
 | --- | --- | --- |
 | F-IO | **4 条规则，3 条实测 + 1 条规范** | F-IO-001（CLI 与默认路径）、F-IO-003（缺省配置硬失败）、F-IO-004（错误出口）已端到端实跑；F-IO-002（结果 JSON 不得包装/改名/跨题补字段）为补充规范条款，待独立验收 |
 | F-PLAN | **6 条规则，6 条探针实测** | `rules.jsonl` 的 F-PLAN-001..006；F-PLAN-005 的误判纠正保留在 `correction` 字段 |
-| F-TASK | **5 条规则，均探针实测** | 来源 `multicore_cut_evaluate_problem_1.py:86-143` 与 `_3.py` 的场景 B 多播；另两个入口 `problem_2.py:61`、`problem_3.py:69` 尚未逐行比对 |
-| F-LOCAL | **3 条规则，均实测（排序部分）** | F-LOCAL-001/002/003；**内存复用部分仍是缺口**，Step3 内存依赖与 rename 未构造 |
+| F-TASK | **6 条规则，均探针实测** | 来源 `multicore_cut_evaluate_problem_1.py:86-143` 与 `_3.py` 的场景 B 多播；spill 的重命名与 logical_tid 见 F-TASK-006 |
+| F-LOCAL | **5 条规则，均实测** | F-LOCAL-001..005；排序口径 + spill 的 victim 选择与插入位置；Step3 内部内存依赖仍未覆盖 |
 | F-EXEC | **3 条规则，均有实测探针** | F-EXEC-001/002 来自 `evaluation_validation.py:217-243`；F-EXEC-003 为同刻事件顺序 |
 | F-TIME | **2 条规则，均实测** | F-TIME-001/002；两类等待的实测差值为 `1000-100=900` |
-| F-RESOURCE | **4 条规则，均实测** | DDR 等分共享与回溯重算、DDR 端点判定、Cache 只由 COPY_IN 查询且走独立池、FIFO 不晋升 + 超容量不缓存 |
+| F-RESOURCE | **5 条规则，均实测** | DDR 等分共享与回溯重算、DDR 端点判定、Cache 只由 COPY_IN 查询且走独立池、FIFO 不晋升 + 超容量不缓存、Cache key 跨 rename 稳定 |
 | F-METRIC | **3 条规则：1 读源码 + 1 规范 + 1 实测** | F-METRIC-001（搬运，仅读源码）、F-METRIC-002（规范条款）、F-METRIC-003（hit_rate 按字节加权，实测） |
 
-合计 **30 条规则**（27 条 `verified-by-probe`，3 条 `draft-sourced`），覆盖表见 `coverage.json`。
+合计 **34 条规则**（31 条 `verified-by-probe`，3 条 `draft-sourced`），覆盖表见 `coverage.json`。
+
+**覆盖表现状**：`合法性/组合环`、`取整/同刻事件`、`spill/容量临界` 三组 `covered`；
+`搬运统计`、`Step3 固定 FIFO 与内存复用`、`L2 同时 miss/FIFO` 三组 `partial`；**无 `gap`**。
 
 补充规范（`docs/a/EVALUATOR_AMENDMENT_20260923.md`，固定提交 `ad1a2c57`）明确覆盖
 `contract-v1` §2.2–2.4 与 §5.4，细化 §5.5。**其主体是 E1/E2 的数值门槛与并行探索，属
@@ -85,6 +88,11 @@ sources / positive_tests / counterexample_tests / implementation_sites / status`
 11. **多播时源核串行执行 n 次 COPY_OUT**（F-TASK-005）：每个 `(源核, 目标核)` 对各自新建
     一个 DDR tensor 与一对 COPY，源核在 `PIPE_MTE3` 上串行完成；这会把各消费者错开，
     而**错开与否直接决定 L2 是否命中**。
+12. **spill 的 victim 必须「有未来使用」且「不被当前 op 使用」**（F-LOCAL-004）：
+    排除当前 op 的 buffer 是因为 SPILL_OUT 只能排在 op 之后，否则该 op 自身瞬时超容量。
+    触发条件是 `剩余驻留 > 容量`（**严格大于**）：容量 192 = 峰值驻留时 0 次 spill。
+13. **Cache key 跨 spill 重命名稳定**（F-RESOURCE-005）：重命名化身携带 `logical_tid`，
+    因此换回的 COPY_IN 与原始 COPY_IN 共用同一 cache key，**spill 与 L2 命中存在耦合**。
 
 ## 5. 复现
 
@@ -95,7 +103,8 @@ python src/adversarial/verify_ftask_r1.py        # F-TASK 探针（生成 id / D
 python src/adversarial/verify_order_r1.py        # F-TASK-004 声明顺序敏感性
 python src/adversarial/verify_fexec_r1.py        # F-EXEC 探针
 python src/adversarial/verify_local_r1.py        # F-LOCAL Step1 排序与 Pipe 常量
-python src/adversarial/verify_spill_r1.py        # spill 容量扫掠（PARTIAL）
+python src/adversarial/verify_spill_r1.py        # spill 容量扫掠（第一次尝试，PARTIAL）
+python src/adversarial/verify_spill_r2.py        # spill victim 选择与插入位置（成功构造）
 python src/adversarial/verify_time_r1.py         # F-TIME / F-RESOURCE 探针
 python src/adversarial/verify_l2_r1.py           # L2 Cache 探针（问题 3）
 python src/adversarial/build_dev_samples.py      # 首批 10 个开发反例样本

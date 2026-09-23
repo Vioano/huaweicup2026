@@ -3,20 +3,20 @@
   "produced_by": "src/adversarial/build_coverage.py",
   "rules_source": "formal/rules.jsonl",
   "rule_counts": {
-    "total": 30,
+    "total": 34,
     "by_scope": {
       "F-EXEC": 3,
       "F-IO": 4,
-      "F-LOCAL": 3,
+      "F-LOCAL": 5,
       "F-METRIC": 3,
       "F-PLAN": 6,
-      "F-RESOURCE": 4,
-      "F-TASK": 5,
+      "F-RESOURCE": 5,
+      "F-TASK": 6,
       "F-TIME": 2
     },
     "by_status": {
       "draft-sourced": 3,
-      "verified-by-probe": 27
+      "verified-by-probe": 31
     }
   },
   "rule_ids": [
@@ -30,6 +30,8 @@
     "F-LOCAL-001",
     "F-LOCAL-002",
     "F-LOCAL-003",
+    "F-LOCAL-004",
+    "F-LOCAL-005",
     "F-METRIC-001",
     "F-METRIC-002",
     "F-METRIC-003",
@@ -43,11 +45,13 @@
     "F-RESOURCE-002",
     "F-RESOURCE-003",
     "F-RESOURCE-004",
+    "F-RESOURCE-005",
     "F-TASK-001",
     "F-TASK-002",
     "F-TASK-003",
     "F-TASK-004",
     "F-TASK-005",
+    "F-TASK-006",
     "F-TIME-001",
     "F-TIME-002"
   ],
@@ -76,13 +80,14 @@
       "positive_evidence": [
         "F-TASK-003",
         "S-TASK-COPYOUT-BOUNDARY",
-        "F-RESOURCE-002"
+        "F-RESOURCE-002",
+        "F-TASK-006"
       ],
       "boundary_evidence": [
         "S-ROUND-BOUNDARY-COPY"
       ],
       "counterexample_evidence": [],
-      "note": "已实测：原图 COPY 字节是独立基线（128→192）；跨 Task 流量按远端消费 Task 数累加；COPY 时长下界取整。F-METRIC-001 五个字段的等式关系尚未逐字段核对。"
+      "note": "已实测：原图 COPY 字节是独立基线（128→192）；跨 Task 流量按远端消费 Task 数累加；COPY 时长下界取整；spill 搬运按 `size*(1+int(spill_out_copies_data))`（本例 64→128）。F-METRIC-001 五个字段之间的等式关系仍未逐字段核对。"
     },
     {
       "group": "取整/同刻事件",
@@ -100,13 +105,20 @@
     },
     {
       "group": "spill/容量临界",
-      "status": "gap-with-mechanism",
-      "positive_evidence": [],
-      "boundary_evidence": [
-        "results/a/form/r1-20260923-farmeruncle123/spill-observations.json"
+      "status": "covered",
+      "positive_evidence": [
+        "F-LOCAL-004",
+        "F-LOCAL-005",
+        "F-TASK-006"
       ],
-      "counterexample_evidence": [],
-      "note": "本批 3 种拓扑均未取得含 >=1 spill 的成功运行：容量 >= 峰值存活集则完成且 0 spill；容量低于峰值且触发 step 不存在『本 step 未被消费』的存活 tensor 时，step2 抛 Step2SchedulingError: no spill victim。要出现真实 spill，必须同时满足『超容量』与『该 step 存在空闲存活 tensor』两条。仍属未覆盖，不得当作通过。"
+      "boundary_evidence": [
+        "容量 192 = 峰值驻留 → 0 次 spill（触发条件为严格大于）",
+        "容量 191 → 1 次 spill，victim 与插入位置见 spill2-observations.json"
+      ],
+      "counterexample_evidence": [
+        "victim 候选必须排除当前 op 使用的 tensor：3 次失败构造的错误串中 current_tids 与 active 完全相同"
+      ],
+      "note": "已取得成功运行：容量 191 触发 1 次 spill，victim=L(t102)，seq_ext=[1,2,3,110,4,5,6,7,8,111,9]，SPILL_OUT 锚在 op3 之后、SPILL_IN 锚在 op9 之前；victim 被重命名到携带 logical_tid=102 的 113。**未覆盖**：同一 step 的多轮 while、L1 与 UB 同时触发、多次 spill 的 version 递增链、next_use 并列时的稳定排序。"
     },
     {
       "group": "Step3 固定 FIFO 与内存复用",
@@ -114,11 +126,13 @@
       "positive_evidence": [
         "F-LOCAL-001",
         "F-LOCAL-002",
-        "F-LOCAL-003"
+        "F-LOCAL-003",
+        "F-LOCAL-004",
+        "F-LOCAL-005"
       ],
       "boundary_evidence": [],
       "counterexample_evidence": [],
-      "note": "排序口径已实测：Step1 是确定性多源反向 DFS，key=(¬is_copy_in, depth, -id)；同深度时较小 id 先输出、COPY 分支反而最后输出；PIPE_SLOTS=1，同 Pipe 串行。**内存复用部分未开始**——Step3 的内存依赖与 rename 对序列的影响尚未构造。"
+      "note": "排序口径已实测：Step1 是确定性多源反向 DFS，key=(¬is_copy_in, depth, -id)；同深度时较小 id 先输出、COPY 分支反而最后输出；PIPE_SLOTS=1，同 Pipe 串行。**内存复用已部分实测**：spill 的 victim 选择与 SPILL_OUT/IN 插入位置已确认。仍未覆盖：Step3 内部的内存依赖（memory_dependencies）与 rename 对序列的进一步影响。"
     },
     {
       "group": "L2 同时 miss/FIFO",
@@ -140,9 +154,8 @@
     }
   ],
   "group_summary": {
-    "covered": 2,
-    "partial": 3,
-    "gap-with-mechanism": 1
+    "covered": 3,
+    "partial": 3
   },
   "spec_amendment": {
     "file": "docs/a/EVALUATOR_AMENDMENT_20260923.md",

@@ -39,11 +39,13 @@ GROUPS = [
     {
         "group": "搬运统计",
         "status": "partial",
-        "positive_evidence": ["F-TASK-003", "S-TASK-COPYOUT-BOUNDARY", "F-RESOURCE-002"],
+        "positive_evidence": ["F-TASK-003", "S-TASK-COPYOUT-BOUNDARY", "F-RESOURCE-002",
+                              "F-TASK-006"],
         "boundary_evidence": ["S-ROUND-BOUNDARY-COPY"],
         "counterexample_evidence": [],
         "note": ("已实测：原图 COPY 字节是独立基线（128→192）；跨 Task 流量按远端消费 Task 数累加；"
-                 "COPY 时长下界取整。F-METRIC-001 五个字段的等式关系尚未逐字段核对。"),
+                 "COPY 时长下界取整；spill 搬运按 `size*(1+int(spill_out_copies_data))`（本例 64→128）。"
+                 "F-METRIC-001 五个字段之间的等式关系仍未逐字段核对。"),
     },
     {
         "group": "取整/同刻事件",
@@ -58,22 +60,32 @@ GROUPS = [
     },
     {
         "group": "spill/容量临界",
-        "status": "gap-with-mechanism",
-        "positive_evidence": [],
-        "boundary_evidence": ["results/a/form/r1-20260923-farmeruncle123/spill-observations.json"],
-        "counterexample_evidence": [],
-        "note": (spill_obs.get("open_question") or
-                 "本批未取得含 >=1 spill 的成功运行，如实标为 PARTIAL。"),
+        "status": "covered",
+        "positive_evidence": ["F-LOCAL-004", "F-LOCAL-005", "F-TASK-006"],
+        "boundary_evidence": [
+            "容量 192 = 峰值驻留 → 0 次 spill（触发条件为严格大于）",
+            "容量 191 → 1 次 spill，victim 与插入位置见 spill2-observations.json",
+        ],
+        "counterexample_evidence": [
+            "victim 候选必须排除当前 op 使用的 tensor：3 次失败构造的错误串中 current_tids 与 active 完全相同",
+        ],
+        "note": ("已取得成功运行：容量 191 触发 1 次 spill，victim=L(t102)，"
+                 "seq_ext=[1,2,3,110,4,5,6,7,8,111,9]，SPILL_OUT 锚在 op3 之后、"
+                 "SPILL_IN 锚在 op9 之前；victim 被重命名到携带 logical_tid=102 的 113。"
+                 "**未覆盖**：同一 step 的多轮 while、L1 与 UB 同时触发、"
+                 "多次 spill 的 version 递增链、next_use 并列时的稳定排序。"),
     },
     {
         "group": "Step3 固定 FIFO 与内存复用",
         "status": "partial",
-        "positive_evidence": ["F-LOCAL-001", "F-LOCAL-002", "F-LOCAL-003"],
+        "positive_evidence": ["F-LOCAL-001", "F-LOCAL-002", "F-LOCAL-003",
+                              "F-LOCAL-004", "F-LOCAL-005"],
         "boundary_evidence": [],
         "counterexample_evidence": [],
         "note": ("排序口径已实测：Step1 是确定性多源反向 DFS，key=(¬is_copy_in, depth, -id)；"
                  "同深度时较小 id 先输出、COPY 分支反而最后输出；PIPE_SLOTS=1，同 Pipe 串行。"
-                 "**内存复用部分未开始**——Step3 的内存依赖与 rename 对序列的影响尚未构造。"),
+                 "**内存复用已部分实测**：spill 的 victim 选择与 SPILL_OUT/IN 插入位置已确认。"
+                 "仍未覆盖：Step3 内部的内存依赖（memory_dependencies）与 rename 对序列的进一步影响。"),
     },
     {
         "group": "L2 同时 miss/FIFO",
