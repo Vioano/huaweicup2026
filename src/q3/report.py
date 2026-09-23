@@ -55,7 +55,7 @@ def main():
                          "p3_external_evaluation_wall_seconds": p3["child_wall_seconds"],
                          "p3_evaluator_peak_rss_bytes": p3["max_rss_bytes"]})
     with (args.run / "metrics.csv").open("w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(f, fieldnames=list(rows[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     (args.run / "controls.json").write_text(json.dumps({"controls": controls,
