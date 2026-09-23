@@ -105,17 +105,28 @@ GROUPS = [
     },
     {
         "group": "L2 同时 miss/FIFO",
-        "status": "partial",
-        "positive_evidence": ["F-RESOURCE-003", "F-RESOURCE-004", "F-METRIC-003",
+        "status": "covered",
+        "positive_evidence": ["F-RESOURCE-003", "F-RESOURCE-004", "F-RESOURCE-005",
+                              "F-RESOURCE-006", "F-RESOURCE-007", "F-METRIC-003",
                               "F-EXEC-003", "F-TASK-005"],
-        "boundary_evidence": ["L2 capacity < 单条 tensor 大小 → 0 命中（见 F-RESOURCE-004）"],
-        "counterexample_evidence": ["把命中仍计入 DDR 带宽 / 把 Cache 当 LRU 实现"],
-        "note": ("已实测：只有 COPY_IN 查 Cache；命中走独立 CACHE_READ 池（250 B/cycle）"
-                 "不占 DDR（60）；`size > cache_capacity_bytes` 时永不缓存；hit_rate 按**字节**加权"
-                 "（不等尺寸实测 0.476 ≠ 按次数的 0.333）；同刻 insert 先于同刻访问生效。"
-                 "**『同时 miss』未单独隔离**：本批两个消费者核的 COPY_IN 被源核串行 COPY_OUT 错开 10 cycles，"
-                 "因此未取得两核同一时刻同时 miss 的用例；也未构造触发淘汰（evicted 非空）与 "
-                 "spill/rename 产生的 logical_tid 命中路径。"),
+        "boundary_evidence": [
+            "容量 < 单条 tensor → 完全不 insert、final_entries 为空",
+            "两个不同 key、容量只够一条 → 淘汰最旧（evicted_tensor_ids=[200]）",
+        ],
+        "counterexample_evidence": [
+            "把命中仍计入 DDR 带宽；把 Cache 当 LRU；把『超容量』与『超单条大小』混为一谈",
+            "把同刻两次访问实现成第二次能看到第一次的插入（会凭空产生 hit）",
+        ],
+        "note": ("**同时 miss 已实测**：用**图输入** tensor 构造（这类 tensor 无生产者，"
+                 "各消费核各自生成 COPY_IN，没有源核 COPY_OUT 把消费者错开），"
+                 "实测 events_by_time = {'0': ['miss','miss'], '20': ['insert']}——"
+                 "同刻两次 miss、仅一次 insert（同 key 幂等）。"
+                 "**淘汰路径已实测**：容量只够一条时插入新 key 淘汰最旧（evicted=[200]）。"
+                 "另已实测：只有 COPY_IN 查 Cache；命中走独立 CACHE_READ 池（250）不占 DDR（60）；"
+                 "hit_rate 按字节加权（0.476 vs 0.333）；同刻 insert 先于同刻访问生效。"
+                 "**未覆盖**：>=3 个并发命中时 CACHE_READ 池的分段换算；"
+                 "spill/rename 的 logical_tid 命中路径（需问题 3 内同时发生 spill）；"
+                 "一次插入淘汰多个条目。"),
     },
 ]
 
