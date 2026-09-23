@@ -36,10 +36,14 @@ class _BoundedLog(io.StringIO):
         return len(text)
 
 
-def _worker(connection, graph, cache_bytes, max_cache_entries):
+def _worker(connection, graph, cache_bytes, max_cache_entries, problem):
     try:
-        evaluator = E2Evaluator(graph, cache_bytes=cache_bytes,
-                                max_cache_entries=max_cache_entries)
+        if problem == 1:
+            evaluator = E2Evaluator(graph, cache_bytes=cache_bytes, max_cache_entries=max_cache_entries)
+        else:
+            from .scene_b import SceneBEvaluator
+            evaluator = SceneBEvaluator(graph, problem=problem, cache_bytes=cache_bytes,
+                                         max_cache_entries=max_cache_entries)
         connection.send({"ready": True, "pid": os.getpid()})
         while True:
             request = connection.recv()
@@ -80,7 +84,10 @@ class E2BatchEvaluator:
     def __init__(self, graph, *, workers=1, cache_bytes=DEFAULT_CACHE_BYTES,
                  max_cache_entries=128, timeout_seconds=60.0,
                  startup_timeout_seconds=30.0, max_tasks_per_worker=256,
-                 recycle_peak_rss_bytes=None):
+                 recycle_peak_rss_bytes=None, problem=1):
+        if type(problem) is not int or problem not in (1, 2):
+            raise ValueError('problem must be 1 or 2')
+        self.problem = problem
         for name, value in (("workers", workers), ("max_cache_entries", max_cache_entries),
                             ("max_tasks_per_worker", max_tasks_per_worker)):
             if type(value) is not int or value < 1:
@@ -99,7 +106,7 @@ class E2BatchEvaluator:
         self._recycle_rss = recycle_peak_rss_bytes
         from copy import deepcopy
         self._graph = deepcopy(graph)
-        self._options = (cache_bytes, max_cache_entries)
+        self._options = (cache_bytes, max_cache_entries, problem)
         self._workers = workers
         self._timeout = timeout_seconds
         self._startup_timeout = startup_timeout_seconds
@@ -164,11 +171,10 @@ class E2BatchEvaluator:
             self._stop(index)
             raise
 
-    @staticmethod
-    def _failure(index, status, error_type, message, seconds, pid):
+    def _failure(self, index, status, error_type, message, seconds, pid):
         return dict(index=index, status=status, error_type=error_type, message=message,
                     wall_seconds=seconds, worker_pid=pid, cache=None,
-                    engine=ENGINE_VERSION, official_code_hash=OFFICIAL_CODE_HASH)
+                    problem=self.problem, engine=f'p{self.problem}-e2-native-search-v1', official_code_hash=OFFICIAL_CODE_HASH)
 
     def evaluate_batch(self, plans, *, full=False, **config):
         """Yield at most one worker-sized chunk in order; never retain all results.
