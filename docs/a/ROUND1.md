@@ -14,6 +14,7 @@ yuanzhifang30-sudo 本轮不分配任务。三条工作线同步推进，不等�
 
 1. 本文及本人 `tasks/a/` 六字段任务卡：本轮人员、首批范围和交接约定。
 2. [契约 v1](contract-v1.md)：FORM、EXACT、PROXY、TEST 的完整目标及接口含义。
+   另读 [2026-09-23 补充规范](EVALUATOR_AMENDMENT_20260923.md)：官方格式优先、E2 更低数值误差、C++/Rust 与算法并行探索；明确覆盖的条款以补充规范为准，导入原件不改。
 3. [导入审计](READ_AUDIT.imported.md)：上一份材料报告的源码观察和六次烟测，供独立核对。
 4. 题面及本轮冻结的官方源码。发生冲突时记录题面要求与代码行为，不私自调和。
 
@@ -41,7 +42,7 @@ uv sync --locked
 
 导入契约引用的 `TASKS.json`、`contracts/*.schema.json`、`audit/official_source_manifest.json`、`verify_smoke.py`、`smoke_results.json` 和六份 golden 没有随原 Markdown 提供。本轮 source-manifest 是新生成的来源清单，不能假称就是原审计清单；六次烟测仅有导入材料的报告，尚未在本轮复现。
 
-队长侧负责补齐可执行公共契约、E0 适配器及 smoke。成员可立即读源码、开发规则/生成器、直接调用原版做 profiling。公共 `team_eval` 入口是待交付接口，不是现成命令；公共 JSON Schema 冻结前，E1/E2 使用可替换的内部入口并记录接口依赖，不各自占用同一包入口或发明互不兼容的公共字段。
+队长另行指定的实现/复核会话负责 E0 适配与独立验收；当前监控会话只负责协调路由。成员可立即读源码、开发规则/生成器、直接调用原版做 profiling。公开接口沿用官方文件/CLI；`team_eval` 只作为待交付的队内适配选项，不构成新输入格式前提或等待条件。不各自占用同一公共包入口或发明互不兼容的公开字段。
 
 ## 交付与验收
 
