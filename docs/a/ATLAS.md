@@ -63,7 +63,7 @@ node .agents/skills/system-atlas/bin/system-atlas.mjs team serve --state "MEMBER
 
 ## 状态与交付
 
-多会话使用 [team-session-v1](../SESSION_PROTOCOL.md#6-与-atlas-的映射)：复用既有成员身份，签名请求的 `context.sessionId` 填完整 `session_key`、`context.agentId` 填实际客户端。同 task 指定一个汇总写入会话，其他专项回交证据。标签不授予 session 级权限，不用反复 grant 或新建身份切换会话。需要真正的权限隔离时另行核对 actor/公钥并限字段授权。
+多会话使用 [session-v1](../SESSION_PROTOCOL.md#5-atlas-只使用现成字段)：复用既有成员身份，签名请求的 `context.sessionId` 填完整会话地址、`context.agentId` 填实际客户端。同 task 指定一个汇总写入会话，其他专项回交证据。标签不授予 session 级权限，不用反复 grant 或新建身份切换会话。需要真正的权限隔离时另行核对 actor/公钥并限字段授权。
 
 按 `references/task-board.md` 使用签名 `task.set`；字段版本读取 `team state` 的 `task:<task-id>:<field>`，不是整图 cursor。只在开始、受阻和交付时维护。交付请求一次包含 review 与 PR 引用，队长独立验收后 done。
 

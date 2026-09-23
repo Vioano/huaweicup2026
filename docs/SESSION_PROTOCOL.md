@@ -1,124 +1,100 @@
-# 多用户、多 Agent Session 协议
+# Session 临时增补协议
 
-版本：`team-session-v1`。2026-09-23，队长要求将会话分工、上下文复用与隔离纳入项目协作，并知会成员。适用于本项目所有客户端；上游 Skill 和 Atlas wire protocol 的版本不变。入口：[登记与迁移](SESSIONS.md)、[消息模板](templates/SESSION_MESSAGES.md)。
+版本 `session-v1`，2026-09-23。用于本轮协作；只增加项目约定，不改 Team Mailbox / System Atlas 的代码、Schema、密钥或运行环境。将来工具原生支持同等功能时再迁移，避免维护另一套调度系统。
 
-## 1. 现有能力与本次补充
+## 现有能力与补充方式
 
-| 层 | 已有实现 | 本协议补充及实际边界 |
-| --- | --- | --- |
-| Team Mailbox | GitHub 账号认证、Issue/评论、完整抓取；状态在 Git common dir | 正文携带 session 地址、登记和回执；脚本不解析或自动按 session 投递，共享通知去重不是各会话已读 |
-| System Atlas 0.5.0 | actor 公钥认证、任务字段授权/CAS、签名请求 `context.agentId/sessionId`、回执保留 context | 同一账号可标记多个 session 的来源；context 自述不构成新凭证，不限制该 actor 的其他会话 |
-| 任务与代码 | 任务卡、PR、独立分支/worktree、Atlas 任务板 | 为任务增加执行会话、分工编号和交接记录；不会自动创建进程、锁、租约或访问隔离 |
-
-源码依据：Mailbox `scripts/mailbox.py` 的 `locations/collect/full_inbox`；Atlas `team/protocol.mjs` 的 `validateGrant/validateRequest`、`team/member.mjs` 的 `prepare`、`team/leader.mjs` 的 receipt、`design/tasks.mjs` 的 `projectTasks`。路径均相对各 Skill 根目录。当前协议是可由 Agent 执行的协作约定，不宣称已增加运行时调度器。
-
-## 2. 四种身份不要混用
-
-| 字段 | 规则 |
+| 需要 | 现有工具与本次约定 |
 | --- | --- |
-| `owner` / `owner_id` | `gh api user` 的真实 login / 数字 ID；同一用户可有多个会话。收到消息核对 API 的实际作者，正文中的自称不是认证 |
-| `session_id` / `session_key` | `s-` + UUID 的 32 位小写 hex；公开地址为 `lowercase(login)/session_id`。ID 不含秘密、任务含义或平台信息；全局寻址时再带 `repo` |
-| `task_id` / `assignment_id` | task 是稳定工作项；assignment 是此次具体执行分工，包含会话、范围、基线和验收。换执行者或改变范围生成新的 `a-UUID`，旧编号保留 |
-| `atlas_actor` / `agent_id` | 前者是既有注册公钥的 actor；后者是实际客户端，如 codex/workbuddy。更换模型不更换身份，模型未知就写 unknown |
+| 识别不同用户 | GitHub 实际发信账号；Atlas 注册公钥。正文署名不能代替认证 |
+| 识别同用户多个会话 | Mailbox 评论加 session 地址；Atlas 已支持签名请求 context.agentId/sessionId |
+| 精确分工与交接 | 原任务 Issue + 任务卡 + 独立 worktree，增加执行会话和修改范围 |
+| 复用/隔离上下文 | 由 Agent 按阅读清单执行；不新增缓存、数据库、后台收信或会话适配器 |
 
-`requestId`、GitHub 评论 ID、客户端 thread ID、实验 run ID 不是 session ID。Atlas 请求 ID 另用 `r-UUID`（符合其 100 字符及字符集限制）；不能把含 `/` 的 session_key 塞入 actor 或 requestId。
+当前 Mailbox 提示缓存按 Git common dir/账号共享，不是每个会话的已读记录。Atlas session 标签是来源说明，同一 actor 的权限仍由同一公钥决定。本协议实现协作层面的区分，不承诺自动唤醒、排他锁或权限/上下文沙箱。
 
-**生命周期：**同一个聊天恢复、上下文压缩、客户端重连保留 session ID；新聊天、fork、并发子会话各用新 ID，以 `parent_session` 或 `replaces_session` 关联。无法可靠确认原聊天身份时生成新 ID，不能猜测复用。已关闭 ID 不重新分配给另一个聊天。同会话改任务不必改 ID，但须结束旧 assignment、重新说明范围和上下文暴露；需要独立上下文就新开会话。
+## 1. 新会话先登记一次
 
-本机将 session_key ↔ 客户端 thread ID/工作区/阅读位置的映射存于 Git 工作区外的用户私有目录，每个 session 单独文件。不得写进共享 `.git/team-mailbox/state.json`，也不得把客户端 session URL/token、密钥、完整聊天或个人绝对路径贴到 GitHub。
+唯一入口：[会话登记 Issue #26](https://github.com/huaweibei123/huaweicup2026/issues/26)。核对真实发布者 NikolaStarx / GitHub 数字 ID `120649042`；首次还未参与时可能不在邮箱索引里，直接读该 Issue。登记只放职责与路由，算法进展仍放原任务 Issue。
 
-## 3. 登记与状态
+新聊天、fork 各生成一次 `s-` + UUID hex，地址为 `小写 GitHub login/s-UUID`；原聊天恢复、压缩、重连沿用，不能把旧 ID 给另一个聊天。Python 示例：`python -c "import uuid; print('s-' + uuid.uuid4().hex)"`。本机保存地址与客户端聊天的对应关系，客户端 thread ID/个人路径不上传。
 
-使用 [SESSIONS](SESSIONS.md) 指定的唯一登记 Issue，追加 `REGISTER` 评论；成员本人账号登记自己的会话。没有发信授权时先本地登记并说明“未发布”，不把团队通知当作本人授权。首次未参与的登记 Issue 不一定出现在 Mailbox 索引，须按入口直接读取正文和全部分页评论。
+在本人已有发信授权内，用本人账号追加一条登记，字段如下；无值写 unknown，不代队友编造：
 
-必填内容：owner/owner_id、session_key、agent_id、role、purpose、task_ids、write_scope、branch/HEAD、context_mode、context_sources、excluded_context、authorization、state、updated_at（ISO8601 带时区）、protocol_commit。暂无值写 `null` 或 `[]`，不能虚构已知客户端或任务。
-
-- `role`：`coordinator` / `implementer` / `reviewer` / `researcher`；登记不改变本人已有权限。一个用户可以有一个协调入口和多个专项会话；队长也遵守。
-- `state`：`registered` / `working` / `waiting` / `paused` / `closed`；仅报告当时工作状态。`waiting` 是等待具体依赖，`paused` 是已明确暂停，`closed` 是结束本会话职责，均不等于任务 done。
-- 只在开始、任务切换、实质阻塞、交接、恢复和结束时追加 `UPDATE`；在正常进展消息中携带状态即可，不新增定时心跳。登记 Issue 可引用任务评论的固定 URL，避免复制进展流水账。
-- 每条更新引用上一条登记/更新评论 `supersedes`。评论编辑只能勘误文字，状态变更追加新事件。两条并发更新引用同一前序时视为分叉，协调者明确解决，不能按到达先后静默覆盖。
-- `updated_at`/GitHub 时间只表示最近声明。未回复或长时间不更新标“当前状态未知”，不能判已关闭、已释放或仍在线；需要调配时定向查询。
-
-登记 Issue 是轻量地址簿与变更日志，不是第二份算法任务板。任务范围/验收仍由任务卡规定，进度仍由 Atlas 表达；冲突时报告并对齐，不随意选一个覆盖另一个。
-
-## 4. 消息寻址、分工与冲突
-
-继续一项话题一个 Issue、`@LOGIN` 通知。会话登记在登记 Issue；任务执行/交付在原任务 Issue。消息头使用模板中的 YAML 字段，Agent 阅读正文处理；不存在新 CLI 的 `--session` 参数。
-
-- `to_session` 为完整 session_key、`owner:*`（该用户的协调入口）或 `*`（纯通知）。`to_owner` 与它一致。未知 session 先用 `owner:*` 请求路由；明确指定会话的消息，其他会话可转达但不得抢做。
-- `owner:*` 由该用户已经登记的协调会话处理；没有协调入口时任一会话可以回报待路由或提名自己，不能据此执行未分配的修改。多个提名由队长在原任务 Issue 明确选定。
-- `*` 广播只同步规则，不含“所有会话一起执行”的隐含指令。有行动时逐项指定 session/assignment；一条评论可列多个明确收件地址。
-- 无 session 字段的旧消息按用户/原任务解释，供历史补读；如果已有多个候选执行者，先路由消歧。不要追改旧评论冒称旧 session 已认证。
-
-**分工流程：**协调者 `ASSIGN`（session、task、assignment、write_scope、固定基线、预期产物/验收、允许上下文）；被选会话在本人既有授权内回复 `ACCEPT`（实际 HEAD、已读/未读、理解/影响、准备开始或阻塞）。已在本次用户指令中明确指定的工作可直接登记并 ACCEPT，无需额外审批或等空确认。
-
-同一 task 可拆给多个 session，但每个 assignment 的文件/结果目录/共享字段写范围必须不重叠；一个 scope 只有一个被选执行者。公共文件或同一 Atlas task 的 status/blocked/deliverables 指定一个汇总写入会话。其他专项提交证据给它；不能靠“最后写入者获胜”汇总列表。独立评审可只读同一源码，结果写到自己的目录。
-
-收到过期 assignment 的结果保留为候选证据，不覆盖现行分工或判定完成。冲突只暂停重叠写入，继续不冲突的已授权工作。独立分支不等于自动解决逻辑冲突。
-
-**交接流程：**旧会话在原 Issue 发 `HANDOFF` 与上下文包，声明该 scope 停写及在途请求清单；新会话核对后 `ACCEPT` 新 assignment；协调者发 `TRANSFER` 引用双方回执，关闭旧 assignment 后启用新写入者。旧会话还可做其他未交出的任务。若旧会话失联，由其本人或有权队长显式撤销旧分工，保留工作区、先检查在途请求及最新字段版本，再指定新会话；超时本身不授权抢占。
-
-这些是协作上的单写者规则，不是操作系统或密码学锁。Atlas 同 actor 的旧请求不会因为 assignment 撤销而自动失效；必须逐个确认 accepted/rejected/pending，必要时协调者通过现有字段版本变更使旧意图冲突，或明确撤销专用 actor 权限。没有查清在途请求时，不宣称已安全完成写权切换。
-
-## 5. 上下文：默认最小充分，复用要有来源
-
-| 模式 | 何时用 | 必须说明 |
-| --- | --- | --- |
-| `continue` | 同一任务续接、恢复、换会话接手 | 前会话、固定 handoff、已接受决定、未完成事项；重新核对当前消息、HEAD 和权限 |
-| `fork` | 从已有探索分出方案、语言或实验路线 | parent_session、继承范围、分叉基线、独立输出目录；继承假设仍是待验证假设 |
-| `isolated` | 独立复核、封存评价、与旧任务无关的新任务 | 干净新聊天、允许读取清单、禁止导入内容、实际暴露；不得从开发聊天 fork 后自称隔离 |
-
-隔离分三层分别报告：模型上下文（是否继承/读过）、文件修改（worktree/目录）、权限（OS/凭据/actor）。worktree 不能清除聊天记忆，session 标签不能限制文件或密钥访问。需要严格盲审时在读取候选推导前明确允许清单；看过开发推导只能称普通复核，重新声明模式不能“忘掉”。同一账号可访问仓库的内容不代表该独立会话应该读取它。
-
-**启动阅读顺序：**AGENTS/本协议/登记目录 → 本人授权与 task/assignment → 冻结输入/当前契约 → 固定上下文包 → 该任务新消息 → 为具体问题补读来源。对于 isolated，完整任务讨论可能污染判断，因此先读允许的任务卡/通知；仅按 allow-list 读取评论或文件，不先把整份聊天塞入上下文再过滤。
-
-`check --full` 继续抓取完整用户邮箱并读取 index。随后：
-
-- 协调会话读所有相关话题全文，包含登记与公共规则通知，维护全局路由。
-- 普通专项会话读自己 task 的完整相关话题、点名自己的请求和公共规则；无关任务只看索引，不导入正文。isolated 进一步以 allow-list 选择原文，未读部分交协调者筛查是否有必须转达的契约更正。
-- 用户明确要求全部消息时读全，并记录该暴露使严格隔离失效；不要一面读全一面声称盲审。
-- 既有 [补读通知](a/SYNC_UPDATE_20260923.md) 对原任务负责会话仍有效；专项分工可由协调者提供明确的必读子集，不让每个独立复核重复继承全部历史研究讨论。
-
-完整抓取不等于完整阅读。每个 session 单独记录 Issue/评论 ID + updated_at（有编辑则重读，必要时记 body hash）、读取范围及缺口；不要用账号共享的 `notified`/`last_success` 充当 read cursor。恢复时再次 full，随后逐条比对自己的回执。检查指定 Issue 全部分页，不能只看“最近 20 条”；没有新消息不发空回信。
-
-上下文包包含：目标/非目标、task/assignment/session 关系、已接受决定及原件链接、固定代码/输入/契约版本、实际验证/未验证、分支与未提交产物去向、待决问题/下一步、Atlas project/epoch/cursor 与在途 requestId、允许/排除阅读清单。代码/结果先发布后链接，个人临时路径留本机。跨账号只交这类可审阅的材料，不共享私钥或完整私人聊天。
-
-**复用失效条件：**源码/输入/契约/权限/epoch 改变时，旧摘要与观察只作为旧版本证据；读取影响范围并重验相关结论。摘要链接断裂、版本不明或互相冲突时回到原文，不能补造结论。
-
-## 6. 与 Atlas 的映射
-
-默认保留现有 `actor=LOGIN` 和已登记密钥，不为每个新会话 init-member。同机经已有 serve/写锁与 CLI 转发访问同一私有状态，不复制私钥到多个 worktree，不启动第二个 writer；不同机器/不同安全域不能为省事复制私钥，应单独登记新 actor 和密钥。
-
-成员 CLI 请求使用：
-
-```json
-{
-  "requestId": "r-0123456789abcdef0123456789abcdef",
-  "context": {
-    "agentId": "codex",
-    "sessionId": "lyx0217/s-0123456789abcdef0123456789abcdef"
-  },
-  "changes": [{
-    "operation": "task.set", "taskId": "a-r1-fast-eval", "field": "blocked",
-    "expectedVersion": 12, "value": "具体阻塞及其证据链接"
-  }]
-}
+```text
+session: <login>/s-<uuid>
+role: 协调 / 实现 / 复核 / 研究
+scope: <task ID + 本会话负责/可修改的范围>
+work: <分支 + 完整 HEAD；只读也注明>
+context: continue / fork / isolated；来源链接、必要阅读和排除项
+state: 工作中 / 等待具体事项 / 暂停 / 结束（仅当时自述）
+read: <协议固定 SHA + 实际已读/未读及对当前任务的影响>
 ```
 
-这是格式示例，不可直接发送。替换 session、requestId、值及**刚实际读取的字段版本**；整图 cursor 不是字段版本。assignment_id 与 requestId 的映射写在任务 Issue 回执；Atlas context 只接受 agentId/sessionId，不塞自定义字段。结果不明时重试相同 ID/载荷；冲突时重读意图后用新 ID，禁止仅改版本覆盖。
+换范围、恢复、交接或结束时，在正常实质回复中更新有变化的项并引用原登记，不每轮报到、不新增定时心跳。GitHub 评论 ID/时间就是消息标识和更新时间，无需另造 message/assignment ID。并发冲突的登记由协调者明确解决，不能按最后到达者覆盖。
 
-grant 的 sessionId 只能表达一项标签，反复 `team grant` 会替换整个授权，不能用来登记同用户多个会话。每个请求自己的 context 才是本次来源；网页保存/队长本地修改未必带该 context，必须用 Issue 回执补充操作者来源，不能伪称旧回执含有标签。
+同用户可有协调入口及多个专项会话。原有会话可直接登记现有任务，不必停实验等空确认；没有发信授权则本地记录并说明未发布，通知不扩大本人授权。状态久未更新只记“当前未知”，不能认定在线或释放任务。
 
-Atlas task `assignees` 保留原 GitHub login（大小写保持既有值，过滤精确匹配）。如队长需要在看板按会话过滤，可**保留原 login 并追加** session_key；随后 `team query --mode board --assignee SESSION_KEY` 可查到对应卡。这是可选展示投影，不是权限。详细 assignment/scope/最新转交事件链接放 task description，多个 session 不必复制任务/模块。只有独立验收的子工作才建独立 task。
+## 2. 消息只多三项
 
-**真正权限隔离**需要单独 actor/密钥与限定 taskGrants，通过现有可信 GitHub 通道核对，私有状态置于各自可控安全域；若要求同机抵抗另一进程访问，还需 OS 权限/隔离运行环境，单独目录本身不够。v1 不自动迁移既有身份、不保证同 actor 的 session 级拒绝。共享 Atlas 图谱也不提供按会话隐藏封存内容的读取权限，封存材料另在受控位置保存。
+继续原任务 Issue、`@LOGIN`、原有结论/证据/下一步格式。需要行动时加：
 
-若本机 Atlas 受阻，继续 Issue/PR 交付，记 `atlas=pending/blocked`，由既有协调会话按授权汇总；不能重建身份、篡改快照或用未验签 replica 取代 accepted 版本。本协议不要求修理已知 Windows runtime 问题。
+```text
+session: <发信 session 地址>
+to: <收信 session 地址；未知填 login:*，纯通知可填 *>
+task: <task ID；规则通知写 protocol>
+```
 
-## 7. 验收与采用回执
+具体分工、回复和交接引用原评论 URL；不新增机器消息解析器。`login:*` 由该用户已登记的协调入口分发，没有协调入口则先提名/报告待路由，由队长明确选定。`*` 是通知，不让所有会话抢做。旧消息缺少三项时仍按原用户/任务理解，有多个执行者才消歧。
 
-分清：`sent`=GitHub 创建并回读；`read`=具体 session 引用固定 protocol commit、实际已读/未读；`accepted`=该会话接受分工且有本人授权；`completed`=产物达到 task 验收。Atlas 的 accepted 是图谱请求应用，不是接受算法任务或算法验收。
+队长发给具体会话：目标、修改范围、固定版本、产物/验收、必要上下文。接收者按本人既有授权回任务理解、实际 HEAD/已读/影响或阻塞。已由当前用户明确指定的工作直接登记并执行，不增加审批。非目标会话可转达，不擅自接管。
 
-成员回 `ADOPT` 时附 session_key、protocol_commit、实际实现 HEAD、已读/未读、上下文模式/来源/排除项、任务/范围/授权、影响/冲突。未回应者保持“待采用回执”。本协议的发布与一次通信不能证明所有新会话自动加载 AGENTS 或自动唤醒；新会话仍由本人启动或既有明确授权的客户端机制启动。
+同 task 可有多个专项，但写范围/输出目录分开；同范围同时只有一个被选执行者。公共文件及同一 Atlas task 的 status/blocked/deliverables 指定一个汇总者，其他专项交证据给它。不同分支不能自动解决语义或共享状态冲突。
 
-后续修改规则必须新版本/固定提交+定向补读通知；不覆写历史版本或要求每次进展重新审批。协议登记没有改变代码验收、公共契约或消息权限。
+## 3. 上下文按需要复用
+
+| 模式 | 用法 |
+| --- | --- |
+| continue | 同任务续接，读固定交接包与最新变化，核实旧结论仍对应当前输入/代码/契约 |
+| fork | 从已有讨论分出方案，注明父会话、继承内容与分叉提交；保留独立输出 |
+| isolated | 干净新聊天，只读明确允许的任务卡、源码、输入和通知；独立复核不继承开发推导 |
+
+已读过的内容不能靠声明“忘掉”。从开发聊天 fork、继承摘要或读过相关讨论的会话只能如实说明暴露，不能自称盲审。worktree 只隔离修改；真正的文件/凭据权限隔离还需要独立安全域，不由 session 名称提供。
+
+启动/恢复仍执行 Mailbox `check --full` 并读 index，**抓取完整不等于全部导入模型上下文**：协调会话读全部相关话题；专项会话读本人任务全文及必要公共通知；isolated 按允许清单读原文，其他讨论交协调者筛查必须转达的契约更正。用户明确要求全部消息时读全，并记录相应上下文暴露。本项目这条是对 Skill 默认全历史阅读的专项例外。
+
+每个 session 自己记录读到的 Issue/评论 ID、更新时间和未读部分（聊天或本机会话笔记即可）。恢复时 full 抓取后按自己记录补读；被编辑的评论重新核对，不依赖共享 notified/last_success。全篇/全话题阅读时覆盖全部分页，不用最近 20 条冒充。既有补读要求对原任务负责会话仍有效，专项复核由明确的阅读清单限定范围。
+
+优先复用可追溯产物：任务卡/当前契约 → 固定代码与输入 → 带原件链接的交接摘要 → 按问题补读原文。摘要不是新授权；版本变化、来源缺失或结论冲突时回原件核对，不复制整份私人聊天。
+
+## 4. 交接一条消息即可
+
+在原任务 Issue 写：**固定 HEAD/产物链接、已接受决定与来源、已测/未测、下一步、允许/排除上下文、旧方停写范围、在途工作与 Atlas requestId/回执**。未提交产物先妥善保全，不能把本机路径当共享交付。
+
+新会话核对后回复接受与实际版本，协调者引用两条评论确认切换；若当前用户已经明确指定接替且旧方停写与在途检查齐全，可在同一实质回执完成，不等待额外空确认。旧方失联时，由本人或有权队长明确撤销旧分工再接替，不能因超时自动抢占。旧会话其他范围可继续。
+
+切换前必须核实旧 Atlas 在途请求。session 交接不自动撤销同 actor 请求：记录 accepted/rejected/pending，必要时由既有协调者按当前字段版本处理冲突或撤销专用 actor 权限；没查清就不能声称安全完成写权切换。旧分工的迟到产物保留作证据，不能覆盖新分工。
+
+## 5. Atlas 只使用现成字段
+
+复用既有 actor、密钥、Git 工作区外私有状态和 Windows 固定 runtime。同机沿用一个 serve/writer，CLI 经现有转发访问；不因新会话重复 init、复制密钥到 worktree 或轮流覆盖 grant。
+
+成员 CLI 仍发原来的 changes，请求中增加已有字段（示例值须替换）：
+
+```json
+{"context":{"agentId":"codex","sessionId":"lyx0217/s-0123456789abcdef0123456789abcdef"}}
+```
+
+这是**已有请求中的 context 片段，不是独立可发送请求**。只允许 agentId/sessionId 两项；task/requestId/expectedVersion 沿用 Skill，字段版本取实际已验签读取值。含 `/` 的 session 地址不能用作 actor/requestId。请求结果不明保留原 ID/载荷，冲突后重读意图，不盲改版本覆盖。
+
+grant.sessionId 只是单标签，重新 grant 会替换授权，不适合登记多个会话。看板保留原 assignees；确需按会话过滤时，队长可保留原 login 并追加 session 地址（现有精确过滤已支持），本次不要求修改图谱。网页/队长本地操作不保证带来源 context，可在任务 Issue 补充回执。
+
+同 actor 的会话仍共用权限。若将来确需强制区分权限/不同安全域，用**现有**独立 actor/公钥与限定 taskGrants 另行接入；本次不自动迁移。共享 Atlas 图谱不提供 session 级隐藏数据，封存内容另放受控位置。Atlas 故障时 Issue/PR 继续，状态如实记 pending/blocked，不重建身份或跳过验签。
+
+## 6. 同步与维护
+
+成员安全 fetch 并读通知指定的协议 SHA，无需切换当前算法分支或正在运行的 runtime；实现 HEAD 与协议 SHA 可不同。回登记中的 `read` 项即可表示实际采用，不要求额外表格或多轮 ACK。未知旧会话不补造身份，队长不能代签队友已读。
+
+区分：消息已发送、具体 session 已读、已接手、Atlas 请求 accepted、任务验收。通知不会自动唤醒 Agent；新 session 由本人或已有授权的客户端流程启动，首先读取 AGENTS。当前登记不新开后台服务，也不改变原调度会话职责。
+
+仅当本轮使用暴露真实缺口时再增加字段。约定更新用固定提交和原 Issue 通知；下一轮可明确续用或废止本增补，移除前保留未完成交接入口。
