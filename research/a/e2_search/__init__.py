@@ -1,4 +1,4 @@
-"""Problem-1 search scoring: compact native replay, explicit E1 fallback."""
+"""P1/P2/P3 search scoring: bounded native replay and matching exact fallback."""
 from .engine import E2Evaluator
 from .pool import E2BatchEvaluator
 from .scene_b import SceneBEvaluator
