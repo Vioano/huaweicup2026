@@ -12,6 +12,8 @@
 
 ## 分支与工作区
 
+用户责任与实际执行会话分开，按 [session-v1](SESSION_PROTOCOL.md) 登记会话地址、任务与修改范围，具体分工直接引用 Issue 评论。每个账号可有协调和多个专项会话；同范围仅一个执行者，交接查清在途请求后切换。独立 worktree 解决文件写入隔离，不自动隔离上下文或同 actor 的 Atlas 权限。
+
 1. 每项任务一个工作分支、一个独立 worktree；开始前确认仓库、分支、HEAD 和未提交改动。新分支用 `codex/<task>-<login>`。farmer 已存在的 `a-r1-farmeruncle123` 沿用，避免为命名重建历史。
 2. 成员只向自己的分支推送；公共源码、Schema、配置、依赖、协作约定的变更通过 PR 提给队长整合。禁止直接推 `main`、force-push 共享分支、覆盖他人分支或复用他人 worktree。
 3. 接收资料时先 `git fetch origin`。有未提交改动时，先保存到本人的工作分支，或用新的 detached worktree 阅读指定提交；不得用 `reset --hard`、`clean -fd`、强制 checkout 清场，也不把别人的改动擅自 stash。
