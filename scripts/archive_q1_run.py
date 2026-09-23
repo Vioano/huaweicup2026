@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 import tarfile
 
-RAW_NAMES = {"result.json", "trace.json", "stdout.txt", "stderr.txt", "summary.log", "proposal.stderr.txt"}
+RAW_NAMES = {"result.json", "trace.json", "stdout.txt", "stderr.txt", "summary.log", "proposal.stderr.txt", "generated.json"}
 
 
 def sha(data):
