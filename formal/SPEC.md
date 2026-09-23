@@ -37,17 +37,17 @@ E_v(G,P,C,q;R)\longrightarrow (\text{status},\text{result})
 | F-IO | **4 条规则，3 条实测 + 1 条规范** | F-IO-001（CLI 与默认路径）、F-IO-003（缺省配置硬失败）、F-IO-004（错误出口）已端到端实跑；F-IO-002（结果 JSON 不得包装/改名/跨题补字段）为补充规范条款，待独立验收 |
 | F-PLAN | **6 条规则，6 条探针实测** | `rules.jsonl` 的 F-PLAN-001..006；F-PLAN-005 的误判纠正保留在 `correction` 字段 |
 | F-TASK | **6 条规则，均探针实测** | 来源 `multicore_cut_evaluate_problem_1.py:86-143` 与 `_3.py` 的场景 B 多播；spill 的重命名与 logical_tid 见 F-TASK-006 |
-| F-LOCAL | **5 条规则，均实测** | F-LOCAL-001..005；排序口径 + spill 的 victim 选择与插入位置；Step3 内部内存依赖仍未覆盖 |
+| F-LOCAL | **6 条规则，均实测** | F-LOCAL-001..006；排序口径、spill 的 victim 选择与插入位置、Step3 内存复用的虚拟额度模型 |
 | F-EXEC | **3 条规则，均有实测探针** | F-EXEC-001/002 来自 `evaluation_validation.py:217-243`；F-EXEC-003 为同刻事件顺序 |
 | F-TIME | **2 条规则，均实测** | F-TIME-001/002；两类等待的实测差值为 `1000-100=900` |
 | F-RESOURCE | **5 条规则，均实测** | DDR 等分共享与回溯重算、DDR 端点判定、Cache 只由 COPY_IN 查询且走独立池、FIFO 不晋升 + 超容量不缓存、Cache key 跨 rename 稳定 |
 | F-METRIC | **4 条规则：1 规范 + 3 实测** | F-METRIC-001（搬运五字段等式，已实测）、F-METRIC-002（规范条款，待独立验收）、F-METRIC-003（hit_rate 按字节加权）、F-METRIC-004（搬运统计不足以排序） |
 
-合计 **35 条规则**（33 条 `verified-by-probe`，2 条 `draft-sourced`；后者均为需独立验收的规范条款），
+合计 **36 条规则**（34 条 `verified-by-probe`，2 条 `draft-sourced`；后者均为需独立验收的规范条款），
 覆盖表见 `coverage.json`。
 
-**覆盖表现状**：`合法性/组合环`、`搬运统计`、`取整/同刻事件`、`spill/容量临界` 四组 `covered`；
-`Step3 固定 FIFO 与内存复用`、`L2 同时 miss/FIFO` 两组 `partial`；**无 `gap`**。
+**覆盖表现状**：`合法性/组合环`、`搬运统计`、`取整/同刻事件`、`spill/容量临界`、`Step3 固定 FIFO 与内存复用` 五组 `covered`；
+`L2 同时 miss/FIFO` 一组 `partial`；**无 `gap`**。
 
 **E2 排序对抗（任务卡第 5 节）**：`src/adversarial/build_ranking_adversarial.py` 在
 1 张微型图 × 2 核 × 问题 1 上枚举 30 个方案（16 个合法、14 个因商图成环被拒），

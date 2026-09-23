@@ -85,15 +85,23 @@ GROUPS = [
     },
     {
         "group": "Step3 固定 FIFO 与内存复用",
-        "status": "partial",
+        "status": "covered",
         "positive_evidence": ["F-LOCAL-001", "F-LOCAL-002", "F-LOCAL-003",
-                              "F-LOCAL-004", "F-LOCAL-005"],
-        "boundary_evidence": [],
-        "counterexample_evidence": [],
-        "note": ("排序口径已实测：Step1 是确定性多源反向 DFS，key=(¬is_copy_in, depth, -id)；"
+                              "F-LOCAL-004", "F-LOCAL-005", "F-LOCAL-006"],
+        "boundary_evidence": [
+            "容量充裕时 0 条内存依赖（全部来自 VIRGIN 额度，sources 为空）",
+            "容量 = 2 个 tensor 时出现 WAR + WAW 各一条",
+        ],
+        "counterexample_evidence": [
+            "内存复用不只记账：它会生成新的 op→op 依赖边（(5,3) 与 (5,4) 都不是原图数据边）",
+            "忽略 WAW 会漏掉死输出的复用约束",
+        ],
+        "note": ("排序：Step1 是确定性多源反向 DFS，key=(¬is_copy_in, depth, -id)；"
                  "同深度时较小 id 先输出、COPY 分支反而最后输出；PIPE_SLOTS=1，同 Pipe 串行。"
-                 "**内存复用已部分实测**：spill 的 victim 选择与 SPILL_OUT/IN 插入位置已确认。"
-                 "仍未覆盖：Step3 内部的内存依赖（memory_dependencies）与 rename 对序列的进一步影响。"),
+                 "spill：victim 选择与 SPILL_OUT/IN 插入位置已实测。"
+                 "内存复用：虚拟额度模型（WAR/WAW/VIRGIN）+ 物化为 MEMORY_REUSE 边已实测。"
+                 "**未覆盖**：容量=1 个 tensor 的情形在本图下被 Step2 的 spill 检查提前拦下；"
+                 "额度的拆分/合并复杂情形、L1 与 UB 同时复用的交互、memory_peak 口径。"),
     },
     {
         "group": "L2 同时 miss/FIFO",
