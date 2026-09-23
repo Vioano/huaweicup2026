@@ -217,6 +217,46 @@
       "正式用例"
     ]
   },
+  "source_material_alignment": {
+    "material": "AI chats/讲解A题调度.md（第 4219–4611 行，形式化任务定义与 E1/E2 验收）",
+    "eight_modules_mapping": {
+      "输入与配置": "F-IO",
+      "切图与调度合法性": "F-PLAN",
+      "Task 构造": "F-TASK",
+      "核内展开": "F-LOCAL",
+      "全局可执行性": "F-EXEC",
+      "时间与同步": "F-TIME",
+      "共享资源": "F-RESOURCE",
+      "输出指标": "F-METRIC"
+    },
+    "five_deliverables": [
+      "formal/SPEC.md",
+      "formal/rules.jsonl",
+      "formal/coverage.json",
+      "formal/ambiguities.md",
+      "formal/change_impact.md"
+    ],
+    "three_priority_details": {
+      "基础切图校验通过 != 最终可执行": [
+        "F-PLAN-005",
+        "F-EXEC-001"
+      ],
+      "Step3 输出固定 Pipe 顺序与内存复用依赖": [
+        "F-LOCAL-003",
+        "F-LOCAL-005",
+        "F-LOCAL-006"
+      ],
+      "问题三搬运统计不得自行重定义": "本批未改动该字段定义；F-METRIC 系列只描述官方口径。该条作为**约束**被遵守，未作为可改动项"
+    },
+    "independently_reproduced_anchor": {
+      "material_claim": "共享输入小图在问题三中得到两个 COPY_IN 都 miss，而不是一个 miss、一个 hit，因为两次查询都发生在数据进入 L2 之前",
+      "material_location": "讲解A题调度.md 第 4510 行",
+      "our_reproduction": "F-RESOURCE-006：events_by_time={'0':['miss','miss'],'20':['insert']}——同刻两次 miss、仅一次 insert",
+      "mechanism_agrees": true,
+      "caveat": "材料提到的『两个人工小图和六份原版输出』锚点**不在本批冻结材料内**（data/raw/a/official/ 只含 100 个 case_*.json、config.txt 与 10 个源码文件），因此无法直接复跑那两个锚点，只能以自构造图独立复现同一现象"
+    },
+    "explicit_uncovered_from_material": "第 4296–4298 行要求回答「队首操作等待跨核输入时，后面的操作能否越过它」——本批未构造该探针"
+  },
   "dev_samples": {
     "count": 10,
     "covered_groups": [
@@ -244,9 +284,10 @@
   ],
   "ordering_note": "status 取值：covered=已交正例与边界；partial=部分覆盖且有明确缺口；gap-with-mechanism=机制已定位但未取得成功运行；gap=未开始。任何 gap 都不得当作通过。",
   "limitations": [
-    "所有实测均在微型构造图上完成，规模远小于官方 100 个 case，结论不可外推到正式用例。",
+    "所有实测均在微型构造图（6–9 算子）上完成，规模远小于官方 100 个 case，结论不可外推到正式用例。",
     "本批未计算任何正式 case 的 makespan，未做跨方案优劣比较。",
-    "F-METRIC-001 五个搬运字段的等式关系仍未逐字段核对。",
-    "Step3 内存复用、L2 的『同时 miss』与淘汰路径、spill 组仍未取得成功运行。"
+    "六个机制组 `covered` 仅表示任务卡所列的代表性正例与边界/反例已交，**不表示**下列子项也已完成。",
+    "**未覆盖**：Pipe 队首阻塞时能否被越过（来源材料第 4296–4298 行明确要求）；spill/rename 的 logical_tid 命中行为；>=3 并发命中的 CACHE_READ 池换算；spill 多轮 while、L1+UB 同时触发、并列 next_use 的稳定排序；一次插入淘汰多个条目；问题 2/3 统计字段口径；Step3 额度拆分合并与容量=1 tensor 的复用；交换核心/重编号/增 Cache 三类变换（未构造任何正例或反例）。",
+    "`paper/sections/a-formal.md` §7.3 记录了未读完的材料范围与由此产生的待办。"
   ]
 }

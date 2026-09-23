@@ -59,10 +59,10 @@ sources / positive_tests / counterexample_tests / implementation_sites / status`
 
 ## 3. 主要结果
 
-截至本批，`rules.jsonl` 共 **35 条**（32 条 `verified-by-probe`，3 条 `draft-sourced`），
-八个模块均已产出规则卡（F-PLAN 6、F-TASK 6、F-LOCAL 5、F-RESOURCE 5、F-IO 4、
-F-METRIC 4、F-EXEC 3、F-TIME 2），其中 `F-LOCAL` 的内存依赖部分与 `F-METRIC-001`
-的字段等式仍未实测。以下列出对实现与筛选有直接影响、且已由探针复现的语义点。
+截至本批，`rules.jsonl` 共 **38 条**（36 条 `verified-by-probe`，2 条 `draft-sourced`），
+八个模块均已产出规则卡（F-PLAN 6、F-TASK 6、F-LOCAL 6、F-RESOURCE 7、F-IO 4、
+F-METRIC 4、F-EXEC 3、F-TIME 2）。任务卡第 5 节要求的**六个机制组全部覆盖**。
+以下列出对实现与筛选有直接影响、且已由探针复现的语义点。
 
 ### 3.1 排序与内存（F-LOCAL，5 条）
 
@@ -188,3 +188,57 @@ python src/adversarial/build_coverage.py
 ```
 
 全部命令已在原生 Windows、Python 3.13 下实际运行通过。
+
+## 7. 与来源材料的对照，及补读回执
+
+### 7.1 与 `AI chats/讲解A题调度.md` §二 的对应
+
+该节（第 4255–4336 行）给出了形式化任务的直接定义。本批交付与之对应如下：
+
+| 该节要求 | 本批对应 |
+|---|---|
+| 必须覆盖的**八部分** | 八个模块一一对应：输入与配置→F-IO、切图与调度合法性→F-PLAN、Task 构造→F-TASK、核内展开→F-LOCAL、全局可执行性→F-EXEC、时间与同步→F-TIME、共享资源→F-RESOURCE、输出指标→F-METRIC |
+| 规则卡字段（含**文件哈希**） | 每条规则的 `sources[]` 均带所引源码文件的 SHA-256；另记录行区间与符号 |
+| **五类产物** | `SPEC.md`、`rules.jsonl`、`coverage.json`、`ambiguities.md`、`change_impact.md` 均已交付 |
+| 重点一：基础切图校验通过 ≠ 最终可执行 | F-PLAN-005 实测商图成环（6 算子小图上 30 个分区中 14 个被拒） |
+| 重点二：Step3 不只算局部时间，还输出固定 Pipe 顺序与内存复用依赖 | F-LOCAL-003/005/006 |
+| 重点三：问题三的搬运统计**不得自行重定义**（不得把 Cache 命中字节从 `data_movement_bytes` 里扣掉） | 本批未改动该字段的任何定义；F-METRIC 系列只**描述**官方口径。该条作为**约束**被遵守，未作为可改动项 |
+| `change_impact.md` 要服务于缓存与增量更新（移动一个子图不能假定只有两个核心受影响） | 见 `formal/change_impact.md` |
+
+### 7.2 一个独立复现的锚点
+
+`讲解A题调度.md` 第 4510 行记录：共享输入小图在问题三中得到的是「**两个 COPY_IN 都 miss，
+而不是一个 miss、一个 hit**，因为两次查询都发生在数据进入 L2 之前」。
+
+**本批 F-RESOURCE-006 独立复现了同一现象**：改用图输入 tensor 构造后，
+`events_by_time = {'0': ['miss','miss'], '20': ['insert']}`——同刻两次 miss、仅一次 insert。
+机制相同：命中判定发生在任何 insert 之前。
+
+**需要说明的是**：该节提到的「两个人工小图和六份原版输出」锚点**不在本批冻结材料内**
+（`data/raw/a/official/` 只含 100 个 `case_*.json`、`config.txt` 与 10 个源码文件），
+因此本批**无法**直接复跑那两个锚点，只能以自构造图独立复现同一现象。
+
+### 7.3 补读状态与对本批的影响
+
+**已全文读完**（与本任务直接相关）：`AI chats/A题方法.md`（1363 行全文）、
+`docs/a/contract-v1.md`、`docs/a/READ_AUDIT.imported.md`、`docs/TEAM_WORKFLOW.md`、
+`AGENTS.md`、`docs/a/SYNC_UPDATE_20260923.md`、`docs/a/EVALUATOR_AMENDMENT_20260923.md`、
+`讲解A题调度.md` 第 4219–4611 行（形式化任务定义、E1/E2 验收与交叉测试）。
+
+**未全文读完**（截至本批）：
+
+| 材料 | 行数 | 已读范围 | 对本批的影响 |
+|---|---|---|---|
+| `讲解A题调度.md` | 4611 | 251–500、606–805、935–1085、2310–2520、**4219–4611** | 未读段落主要是题目讲解与 E1/E2 背景；**形式化任务定义段已读完**。未读段落中若含评估器行为断言，本批可能尚未对照 |
+| `选择建模题目策略.md` | 4094 | 仅章节标题 | 属选题策略与论文写法，与 FORM 语义规则无直接关系 |
+| `paper/` 的 2025 模板 | — | 未读内容 | 不影响本批；正式格式需按当届公告核对 |
+| 新版 `docs/a/ATLAS.md`、`CANVAS.md`、`output/pdf/` | — | 未读 | 不影响本批 FORM 语义规则 |
+
+**交接待办（未覆盖项，不以覆盖率掩盖）**：
+
+1. `讲解A题调度.md` 第 4296–4298 行明确要求形式化必须进一步回答：
+   **「多个操作都满足依赖时，谁先进入 Pipe？已经固定的队首操作在等待跨核输入时，
+   后面的操作能否越过它？」**——本批**未构造该探针**。
+   已有规则 F-LOCAL-003 只证明了 `PIPE_SLOTS=1` 与同 Pipe 串行，**未覆盖「队首阻塞时能否被越过」**。
+2. 未读段落的**完整比对**（若其中有对评估器行为的断言，需逐条与本批规则核对）。
+3. 并列 `next_use` 时的稳定排序行为（F-LOCAL-004 的 `blocked_reason` 已列）。

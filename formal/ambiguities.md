@@ -147,9 +147,16 @@ run：`r1-20260923-farmeruncle123`｜范围：A 题第一轮 F-PLAN/F-TASK/F-EXE
 
 | 组 | 状态 | 说明 |
 |---|---|---|
-| Step3 内部内存依赖 | `partial` 的未覆盖部分 | 排序与 spill 插入位置已实测；`memory_dependencies` 与 rename 的进一步影响未构造 |
-| L2「同时 miss」与淘汰路径 | `partial` 的未覆盖部分 | 命中/FIFO/超容量/字节加权已实测；同刻同时 miss 与 evicted 非空未构造 |
-| spill 多轮 / 多类型同时 | `covered` 的未覆盖部分 | 单次 spill 与容量临界已实测；同 step 多轮 while、L1 与 UB 同时触发未测 |
-| F-METRIC 搬运算式 | 部分 | 仅读源码，未逐字段核对五个字段的等式关系 |
+| Pipe 队首阻塞时能否被越过 | **未测** | 来源材料第 4296–4298 行明确要求回答；F-LOCAL-003 只证明 `PIPE_SLOTS=1` 与同 Pipe 串行 |
+| spill/rename 的 logical_tid 命中 | 只到 key 层面 | 需问题 3 一次运行内同时发生 spill 与先前访问，未构造出 |
+| L2「同时 miss」与淘汰路径 | 已覆盖 | 但未测一次淘汰多个、同刻不同 key 混合、>=3 并发命中的池换算 |
+| spill 多轮 / L1+UB 同时触发 / 并列 next_use | 未覆盖 | 现有实测为单次 spill、单类型、容量 191/192/128 |
+| Step3 额度拆分合并 / 容量=1 tensor 的复用 | 未覆盖 | 该容量在本批构造下被 Step2 的 spill 检查提前拦下 |
+| 问题 2/3 统计字段口径 | 未覆盖 | 本批只核对问题 1 五字段的代数关系 |
+| 未读完的讨论材料中的行为断言 | 待核对 | 见 `paper/sections/a-formal.md` §7.3 补读回执 |
+
+**说明**：以上缺口已写入 `formal/coverage.json` 与 `formal/change_impact.md` 第 6 节，
+并与各规则卡的 `blocked_reason` 一一对应。**六个机制组的 `covered` 只表示
+「任务卡所列的代表性正例与边界/反例已交」，不表示这些子项也已完成。**
 
 **说明**：以上缺口已写入 `formal/coverage.json`，与规则卡状态一一对应。
