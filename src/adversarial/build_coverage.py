@@ -97,6 +97,18 @@ payload = {
     "rule_ids": sorted(r["rule_id"] for r in rules),
     "mechanism_groups": GROUPS,
     "group_summary": dict(collections.Counter(g["status"] for g in GROUPS)),
+    "spec_amendment": {
+        "file": "docs/a/EVALUATOR_AMENDMENT_20260923.md",
+        "commit": "ad1a2c57fd420af4fe327c4e8bcec6c3de4bc5cb",
+        "sha256": "f6b836d4289889da7295d88bd9f14525b14ed6ff2819c611bdab5220fad386d9",
+        "covered_clauses": {
+            "§1 公开输入输出以冻结官方接口为准": ["F-IO-001", "F-IO-002", "F-IO-003", "F-IO-004"],
+            "§1 未生成字段不得补齐 / 不得伪造诊断": ["F-METRIC-002"],
+        },
+        "not_in_scope": ("补充规范主体针对 a-r1-fast-eval 的 E1/E2 门槛；"
+                         "我的 FORM/对抗任务范围不扩大，故 §2/§3/§4 的数值门槛与"
+                         "并行探索条款不转为我的规则卡。"),
+    },
     "dev_samples": {
         "count": len(dev_samples),
         "covered_groups": dev_obs.get("covered_groups", []),

@@ -8,6 +8,8 @@ run：`r1-20260923-farmeruncle123`｜用途：任何改动进入共享分支前�
 | 变更 | 直接影响 | 需重跑的证据 | 备注 |
 |---|---|---|---|
 | `data/config.txt` 任一数值 | F-TIME-001/002、F-RESOURCE-001、F-METRIC-001 | `verify_time_r1.py`、`build_dev_samples.py` | 文件首行标注"不得修改"；改则所有 makespan 数值不可比 |
+| `code/contest_io.py::_common_paths` / `run_problem_cli` | F-IO-001/003/004 | `verify_io_r1.py` | 默认方案名、默认配置位置、三件产物命名、错误出口与退出码 |
+| `docs/a/EVALUATOR_AMENDMENT_20260923.md` | F-IO-002、F-METRIC-002 | 无需重跑探针；需重读条款 | 补充规范明确覆盖 `contract-v1` §2.2–2.4、§5.4，细化 §5.5；改版需重新比对本表 |
 | `code/schedule_step1.py::step1_from_adj`（key / start_key） | F-LOCAL-001/002 | `verify_local_r1.py`、`verify_ftask_r1.py`、`verify_order_r1.py` | 排序方向极易读反：`-id` 与 `¬is_copy_*` 叠加 LIFO 后效果与直觉相反 |
 | `code/schedule_step3.py::_op_duration` | F-TASK、F-METRIC、搬运取整 | `verify_ftask_r1.py`、`build_dev_samples.py` | COPY 时长 = `max(1, ceil(Σsize/bandwidth))` |
 | `code/schedule_step3.py::PIPES` / `PIPE_SLOTS` | F-LOCAL-003、F-TIME-002、F-RESOURCE-001 | `verify_local_r1.py`、`verify_time_r1.py` | `PIPE_SLOTS=1`，同 Pipe 串行；改值会改变所有 makespan |

@@ -92,6 +92,17 @@ run：`r1-20260923-farmeruncle123`｜范围：A 题第一轮 F-PLAN/F-TASK/F-EXE
 
 ## C. 工程环境（影响复现，不属于算法语义）
 
+### C-0 `[已澄清]` 补充规范与 `contract-v1` 的优先级
+- `docs/a/EVALUATOR_AMENDMENT_20260923.md`（固定提交 `ad1a2c57`，
+  SHA-256 `f6b836d4289889da7295d88bd9f14525b14ed6ff2819c611bdab5220fad386d9`）
+  明确覆盖 `contract-v1` §2.2–2.4 的公开接口优先级、§5.4 的校准 Makespan 门槛，
+  细化 §5.5 的计时口径；**其余一致性、来源、封存与失败处理约定继续生效**。
+- 其数值门槛（E1 ≥3×、E2 ≥10×、中位数 ≤1% / P95 ≤3%）是**队内研发标准**，
+  不是官方要求，也不是已达成结果；`AI chats/` 导入原件与 `contract-v1` 保持未改。
+- **与我的范围的关系**：补充规范主体针对 `a-r1-fast-eval`；**我的 FORM/对抗范围不扩大**。
+  我只登记与 F-IO（§1）、指标（§5）、开发反例（§1 末段）相关的条款。
+- **状态**：已读并登记为 F-IO-001..004、F-METRIC-002。
+
 ### C-1 `[差异]` 冻结材料的换行被 Git 改写
 - `.gitattributes` 的 `* text=auto` 使 `data/config.txt` 在 Windows 检出为 CRLF（360 B），
   与清单的 341 B / `dcd10de5…` 不符，`scripts/a_materials.py --extract` 直接失败。

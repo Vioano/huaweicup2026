@@ -34,16 +34,21 @@ E_v(G,P,C,q;R)\longrightarrow (\text{status},\text{result})
 
 | 模块 | 状态 | 说明 |
 | --- | --- | --- |
-| F-IO | 骨架 | 题面/实现差异见 `ambiguities.md` 第 A 节；`config.txt` 冻结字节对 Windows 检出敏感（已由队长修复） |
+| F-IO | **4 条规则，3 条实测 + 1 条规范** | F-IO-001（CLI 与默认路径）、F-IO-003（缺省配置硬失败）、F-IO-004（错误出口）已端到端实跑；F-IO-002（结果 JSON 不得包装/改名/跨题补字段）为补充规范条款，待独立验收 |
 | F-PLAN | **6 条规则，6 条探针实测** | `rules.jsonl` 的 F-PLAN-001..006；F-PLAN-005 的误判纠正保留在 `correction` 字段 |
 | F-TASK | **4 条规则，4 条探针实测** | 来源 `multicore_cut_evaluate_problem_1.py:86-143`；另两个入口 `problem_2.py:61`、`problem_3.py:69` 尚未比对 |
 | F-LOCAL | **3 条规则，均实测（排序部分）** | F-LOCAL-001/002/003；**内存复用部分仍是缺口**，Step3 内存依赖与 rename 未构造 |
 | F-EXEC | **2 条规则，均有实测探针** | F-EXEC-001/002，来源 `evaluation_validation.py:217-243`；unit-level 探针域已标注 |
 | F-TIME | **2 条规则，均实测** | F-TIME-001/002；两类等待的实测差值为 `1000-100=900` |
 | F-RESOURCE | **2 条规则，均实测** | F-RESOURCE-001/002；含 DDR 等分共享与回溯重算的直接日志证据 |
-| F-METRIC | **1 条规则，仅读源码** | F-METRIC-001；五个搬运字段的等式关系未逐字段核对 |
+| F-METRIC | **2 条规则，1 条读源码 + 1 条规范条款** | F-METRIC-001（搬运统计口径，仅读源码）；F-METRIC-002（未生成字段不得补齐，补充规范 §1） |
 
-合计 **20 条规则**（19 条 `verified-by-probe`，1 条 `draft-sourced`），覆盖表见 `coverage.json`。
+合计 **25 条规则**（22 条 `verified-by-probe`，3 条 `draft-sourced`），覆盖表见 `coverage.json`。
+
+补充规范（`docs/a/EVALUATOR_AMENDMENT_20260923.md`，固定提交 `ad1a2c57`）明确覆盖
+`contract-v1` §2.2–2.4 与 §5.4，细化 §5.5。**其主体是 E1/E2 的数值门槛与并行探索，属
+`a-r1-fast-eval` 范围，我的 FORM/对抗范围不扩大**，只登记与 F-IO、指标、开发反例相关的条款
+（见 `coverage.json` 的 `spec_amendment` 段）。
 
 ## 3. 规则卡格式
 
@@ -77,6 +82,7 @@ sources / positive_tests / counterexample_tests / implementation_sites / status`
 ## 5. 复现
 
 ```sh
+python src/adversarial/verify_io_r1.py           # F-IO 官方 CLI 端到端探针
 python src/adversarial/verify_rules_r1.py        # F-PLAN 探针（含 F-PLAN-005 反例）
 python src/adversarial/verify_ftask_r1.py        # F-TASK 探针（生成 id / DDR→UB / 输出边界）
 python src/adversarial/verify_order_r1.py        # F-TASK-004 声明顺序敏感性
