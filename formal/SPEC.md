@@ -37,13 +37,13 @@ E_v(G,P,C,q;R)\longrightarrow (\text{status},\text{result})
 | F-IO | 骨架 | 题面/实现差异见 `ambiguities.md` 第 A 节；`config.txt` 冻结字节对 Windows 检出敏感（已由队长修复） |
 | F-PLAN | **6 条规则，6 条探针实测** | `rules.jsonl` 的 F-PLAN-001..006；F-PLAN-005 的误判纠正保留在 `correction` 字段 |
 | F-TASK | **4 条规则，4 条探针实测** | 来源 `multicore_cut_evaluate_problem_1.py:86-143`；另两个入口 `problem_2.py:61`、`problem_3.py:69` 尚未比对 |
-| F-LOCAL | 未开始 | 入口 `schedule_step1/2/3.py`；Step3 固定 FIFO 与内存复用是本批最大缺口 |
+| F-LOCAL | **3 条规则，均实测（排序部分）** | F-LOCAL-001/002/003；**内存复用部分仍是缺口**，Step3 内存依赖与 rename 未构造 |
 | F-EXEC | **2 条规则，均有实测探针** | F-EXEC-001/002，来源 `evaluation_validation.py:217-243`；unit-level 探针域已标注 |
 | F-TIME | **2 条规则，均实测** | F-TIME-001/002；两类等待的实测差值为 `1000-100=900` |
 | F-RESOURCE | **2 条规则，均实测** | F-RESOURCE-001/002；含 DDR 等分共享与回溯重算的直接日志证据 |
 | F-METRIC | **1 条规则，仅读源码** | F-METRIC-001；五个搬运字段的等式关系未逐字段核对 |
 
-合计 **17 条规则**（16 条 `verified-by-probe`，1 条 `draft-sourced`），覆盖表见 `coverage.json`。
+合计 **20 条规则**（19 条 `verified-by-probe`，1 条 `draft-sourced`），覆盖表见 `coverage.json`。
 
 ## 3. 规则卡格式
 
@@ -68,6 +68,11 @@ sources / positive_tests / counterexample_tests / implementation_sites / status`
    实测 `10→20`、`34→44`。任何"发放即定局"的增量实现都错。
 6. **加核不保证提速**（F-RESOURCE-001 的对照）：单链 1 核 makespan=24，两条独立链 2 核 makespan=44。
    仅在微型构造图上成立，不足以外推到正式用例。
+7. **Step1 排序方向易读反**（F-LOCAL-001/002）：`-id` 使同深度时**较小 id 先输出**；
+   `¬is_copy_in` / `¬is_copy_out` 使 **COPY_IN / COPY_OUT 分支反而最后输出**。
+   两处都与"COPY 优先"的直觉相反，照直觉实现会整体反转排序。
+8. **同 Pipe 串行**（F-LOCAL-003）：`PIPE_SLOTS = 1`，同一 `(core, pipe)` 上不能并行，
+   且该常量不可由选手配置。
 
 ## 5. 复现
 
@@ -76,6 +81,7 @@ python src/adversarial/verify_rules_r1.py        # F-PLAN 探针（含 F-PLAN-00
 python src/adversarial/verify_ftask_r1.py        # F-TASK 探针（生成 id / DDR→UB / 输出边界）
 python src/adversarial/verify_order_r1.py        # F-TASK-004 声明顺序敏感性
 python src/adversarial/verify_fexec_r1.py        # F-EXEC 探针
+python src/adversarial/verify_local_r1.py        # F-LOCAL Step1 排序与 Pipe 常量
 python src/adversarial/verify_spill_r1.py        # spill 容量扫掠（PARTIAL）
 python src/adversarial/verify_time_r1.py         # F-TIME / F-RESOURCE 探针
 python src/adversarial/build_dev_samples.py      # 首批 10 个开发反例样本

@@ -66,12 +66,13 @@ GROUPS = [
     },
     {
         "group": "Step3 固定 FIFO 与内存复用",
-        "status": "gap",
-        "positive_evidence": [],
+        "status": "partial",
+        "positive_evidence": ["F-LOCAL-001", "F-LOCAL-002", "F-LOCAL-003"],
         "boundary_evidence": [],
         "counterexample_evidence": [],
-        "note": ("未开始。已知入口：schedule_step3.prepare_step3_execution 与 PIPES/PIPE_SLOTS。"
-                 "该组直接决定 Task 内序列与内存依赖，是当前最大缺口。"),
+        "note": ("排序口径已实测：Step1 是确定性多源反向 DFS，key=(¬is_copy_in, depth, -id)；"
+                 "同深度时较小 id 先输出、COPY 分支反而最后输出；PIPE_SLOTS=1，同 Pipe 串行。"
+                 "**内存复用部分未开始**——Step3 的内存依赖与 rename 对序列的影响尚未构造。"),
     },
     {
         "group": "L2 同时 miss/FIFO",
@@ -119,7 +120,8 @@ payload = {
     "limitations": [
         "所有实测均在微型构造图上完成，规模远小于官方 100 个 case，结论不可外推到正式用例。",
         "本批未计算任何正式 case 的 makespan，未做跨方案优劣比较。",
-        "F-LOCAL 模块尚未产出规则卡。",
+        "F-METRIC 仅有 1 条 draft-sourced 规则，搬运五个字段的等式关系未逐字段核对。",
+        "Step3 内存复用与 L2 两组仍未覆盖。",
     ],
 }
 

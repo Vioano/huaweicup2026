@@ -70,17 +70,23 @@ run：`r1-20260923-farmeruncle123`｜范围：A 题第一轮 F-PLAN/F-TASK/F-EXE
 - `_op_duration`：非 COPY op 返回 `max(1, op.get('cycles', 1))`。
 - **未验证**：样例是否恒带 `cycles`；若缺失，默认 1 是否会掩盖数据问题。
 
-### B-3 `[疑问]` `PIPE_SLOTS` 不对外开放
-- 源码注释明示"每条 Pipe 同一时刻只有 PIPE_SLOTS 个在飞指令，不对外开放"。
-- **未验证**：其取值与对 makespan 的实际影响未测。
+### B-3 `[已解答]` `PIPE_SLOTS` 不对外开放
+- 源码常量：`PIPES = ('PIPE_MTE2','PIPE_MTE3','PIPE_M','PIPE_V')`，**`PIPE_SLOTS = 1`**，
+  注释明示"不对外开放"。
+- **含义**：同一 `(core, pipe)` 上串行，选手方案无法改变。
+- **状态**：已由 F-LOCAL-003 实测（import 官方模块后直读常量）。
 
 ### B-4 `[缺口]` L2 带宽是否与 DDR 互不占用
 - config 里 L2 带宽（250）与 DDR（60）分列，讨论文档称 L2 带宽不占 DDR。
 - **未验证**：未在 Problem 3 入口实测。这是 L2 组的核心疑点。
 
-### B-5 `[缺口]` Step3 固定 FIFO 的"FIFO"边界
-- 已知 `prepare_step3_execution` 与 `PIPES` 是入口，Task 内序列由它决定。
-- **未验证**：同 Pipe 内是否存在可重排余地、内存复用如何参与排序。
+### B-5 `[部分解答]` Step1 排序方向容易读反（已实测）
+- **实现**：`key = (¬is_copy_in, depth, -id)`，升序压栈 + LIFO 弹栈。
+- **实测方向**：同深度时 **id 较小者先输出**（第三段是 `-id`）；
+  **COPY_IN / COPY_OUT 分支反而最后输出**（首段为 `False` 只让它排在升序列表前面，
+  先入栈者后出栈）。两处都与直觉相反。
+- **未验证**：Step3 内存依赖与 rename 对序列的影响；内存复用部分未开始。
+- **状态**：已由 F-LOCAL-001/002 实测；**内存复用仍是缺口**。
 
 ---
 
@@ -108,10 +114,9 @@ run：`r1-20260923-farmeruncle123`｜范围：A 题第一轮 F-PLAN/F-TASK/F-EXE
 
 | 组 | 状态 | 说明 |
 |---|---|---|
-| Step3 固定 FIFO 与内存复用 | `gap` | 未开始 |
 | L2 同时 miss/FIFO | `gap` | 未开始 |
 | spill/容量临界 | `gap-with-mechanism` | 机制已定位，无可复现的成功运行 |
-| F-LOCAL 模块 | `gap` | 尚无规则卡 |
+| Step3 内存复用 | `partial` 的未覆盖部分 | 排序口径已实测，内存依赖与 rename 未构造 |
 | F-METRIC 字段等式 | 部分 | 仅读源码，未逐字段核对 |
 
 **说明**：以上缺口已写入 `formal/coverage.json`，与规则卡状态一一对应。
