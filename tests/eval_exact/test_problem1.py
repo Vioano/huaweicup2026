@@ -168,6 +168,125 @@ class ExactProblem1Test(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "task schedule: dependency cycle"):
             exact_problem1._runtime.validate_task_order(mixed_view)
 
+    def test_step3_schema_copy_is_runtime_isolated_and_alias_free(self):
+        candidate_globals = exact_problem1._runtime.prepare_step3_execution.__globals__
+        oracle_globals = self.oracle_support[
+            "schedule_step3"
+        ].prepare_step3_execution.__globals__
+        self.assertIs(
+            candidate_globals["deepcopy"],
+            exact_problem1._copy_step3_extended_graph,
+        )
+        self.assertIsNot(
+            oracle_globals["deepcopy"],
+            exact_problem1._copy_step3_extended_graph,
+        )
+
+        source = {
+            "ops": [{"id": 1, "op": "RELU", "cycles": 3}],
+            "tensors": [{"id": 10001, "pos": "UB", "size": 16}],
+            "edges": [{"source": 1, "target": 10001}],
+            "seq_ext": [1],
+        }
+        copied = exact_problem1._copy_step3_extended_graph(source)
+        self.assertEqual(copied, source)
+        self.assertIsNot(copied, source)
+        for key in ("ops", "tensors", "edges", "seq_ext"):
+            self.assertIsNot(copied[key], source[key])
+        for key in ("ops", "tensors", "edges"):
+            self.assertIsNot(copied[key][0], source[key][0])
+
+        copied["ops"][0]["cycles"] = 99
+        copied["tensors"].append({"id": 10002, "pos": "DDR", "size": 16})
+        copied["edges"][0]["target"] = 10002
+        copied["seq_ext"].append(2)
+        self.assertEqual(source["ops"][0]["cycles"], 3)
+        self.assertEqual(len(source["tensors"]), 1)
+        self.assertEqual(source["edges"][0]["target"], 10001)
+        self.assertEqual(source["seq_ext"], [1])
+
+    def test_step3_schema_copy_falls_back_for_nested_or_unknown_fields(self):
+        cases = {
+            "nested": {
+                "ops": [{"id": 1, "metadata": {"labels": ["future"]}}],
+                "tensors": [],
+                "edges": [],
+                "seq_ext": [1],
+            },
+            "extra_top_level": {
+                "ops": [{"id": 1}],
+                "tensors": [],
+                "edges": [],
+                "seq_ext": [1],
+                "metadata": {"version": [2]},
+            },
+        }
+        for name, source in cases.items():
+            with self.subTest(name=name):
+                copied = exact_problem1._copy_step3_extended_graph(source)
+                self.assertEqual(copied, source)
+                self.assertIsNot(copied, source)
+                if name == "nested":
+                    self.assertIsNot(
+                        copied["ops"][0]["metadata"],
+                        source["ops"][0]["metadata"],
+                    )
+                    self.assertIsNot(
+                        copied["ops"][0]["metadata"]["labels"],
+                        source["ops"][0]["metadata"]["labels"],
+                    )
+                else:
+                    self.assertIsNot(copied["metadata"], source["metadata"])
+                    self.assertIsNot(
+                        copied["metadata"]["version"],
+                        source["metadata"]["version"],
+                    )
+
+    def test_step3_schema_copy_uses_saved_deepcopy_on_schema_drift(self):
+        source = {
+            "ops": [{"id": 1, "metadata": {"future": True}}],
+            "tensors": [],
+            "edges": [],
+            "seq_ext": [1],
+        }
+        original = exact_problem1._official_step3_deepcopy
+        calls = []
+
+        def recording_deepcopy(value):
+            calls.append(value)
+            return original(value)
+
+        exact_problem1._official_step3_deepcopy = recording_deepcopy
+        try:
+            copied = exact_problem1._copy_step3_extended_graph(source)
+        finally:
+            exact_problem1._official_step3_deepcopy = original
+        self.assertEqual(copied, source)
+        self.assertEqual(len(calls), 1)
+        self.assertIs(calls[0], source)
+        self.assertIsNot(copied["ops"][0]["metadata"], source["ops"][0]["metadata"])
+
+    def test_step3_schema_copy_preserves_aliases_via_fallback(self):
+        shared_record = {"id": 1}
+        source = {
+            "ops": [shared_record, shared_record],
+            "tensors": [],
+            "edges": [],
+            "seq_ext": [1],
+        }
+        copied = exact_problem1._copy_step3_extended_graph(source)
+        self.assertIs(copied["ops"][0], copied["ops"][1])
+
+        shared_container = []
+        source = {
+            "ops": shared_container,
+            "tensors": shared_container,
+            "edges": [],
+            "seq_ext": [],
+        }
+        copied = exact_problem1._copy_step3_extended_graph(source)
+        self.assertIs(copied["ops"], copied["tensors"])
+
     def test_benchmark_artifacts_use_lf_and_hash_delivered_bytes(self):
         with tempfile.TemporaryDirectory() as temporary:
             output_dir = Path(temporary) / "matrix"

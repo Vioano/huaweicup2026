@@ -14,6 +14,54 @@ from ._official import load_problem1
 
 _runtime = load_problem1("_huaweicup_eval_exact_problem1")
 
+_STEP3_GRAPH_KEYS = ("ops", "tensors", "edges", "seq_ext")
+_FLAT_VALUE_TYPES = (type(None), bool, int, float, str)
+_step3_globals = _runtime.prepare_step3_execution.__globals__
+_official_step3_deepcopy = _step3_globals["deepcopy"]
+
+
+def _copy_step3_extended_graph(ext_graph: Any) -> Any:
+    """Copy the frozen flat graph schema, falling back for any schema drift.
+
+    Validation and copying are fused so the guard does not scan every record a
+    second time. Returning through the saved official copier is important for a
+    future nested field: a shallow copy must never leak an alias to the input.
+    """
+    if type(ext_graph) is not dict or tuple(ext_graph) != _STEP3_GRAPH_KEYS:
+        return _official_step3_deepcopy(ext_graph)
+    containers = tuple(ext_graph[key] for key in _STEP3_GRAPH_KEYS)
+    if any(type(value) is not list for value in containers) or len(
+        {id(value) for value in containers}
+    ) != len(containers):
+        return _official_step3_deepcopy(ext_graph)
+    copied = {}
+    seen_records: set[int] = set()
+    for key in ("ops", "tensors", "edges"):
+        records = ext_graph[key]
+        copied_records = []
+        for record in records:
+            record_id = id(record)
+            if type(record) is not dict or record_id in seen_records:
+                return _official_step3_deepcopy(ext_graph)
+            seen_records.add(record_id)
+            copied_record = {}
+            for field, value in record.items():
+                if type(field) is not str or type(value) not in _FLAT_VALUE_TYPES:
+                    return _official_step3_deepcopy(ext_graph)
+                copied_record[field] = value
+            copied_records.append(copied_record)
+        copied[key] = copied_records
+    seq_ext = ext_graph["seq_ext"]
+    if any(type(op_id) is not int for op_id in seq_ext):
+        return _official_step3_deepcopy(ext_graph)
+    copied["seq_ext"] = list(seq_ext)
+    return copied
+
+
+# ``prepare_step3_execution`` belongs to this candidate's isolated support
+# bundle, so replacing its global leaves the frozen source and oracle untouched.
+_step3_globals["deepcopy"] = _copy_step3_extended_graph
+
 
 def _index_task_boundaries(
     tensor_by_id: dict[int, dict[str, Any]],
