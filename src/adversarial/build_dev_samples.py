@@ -225,7 +225,8 @@ def main():
         observations.append({"sample_id": s["sample_id"], **rec["observed"]})
 
     (FIX / "dev-samples.jsonl").write_text(
-        "\n".join(json.dumps(r, ensure_ascii=False) for r in manifest) + "\n", encoding="utf-8")
+        "\n".join(json.dumps(r, ensure_ascii=False) for r in manifest) + "\n",
+        encoding="utf-8", newline="\n")
     report = {
         "run_id": "r1-20260923-farmeruncle123",
         "bin": "first batch of development counterexamples",

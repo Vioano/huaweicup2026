@@ -1,0 +1,185 @@
+{
+  "verifier": "src/adversarial/verify_fixtures_r1.py",
+  "purpose": "统一复验 FORM 固定用例：供独立环境（LYX / 队长）用一条命令回跑并取得机械判据",
+  "official_code_dir": "data/raw/a/official/code",
+  "hashing": "sha256 of json.dumps(v, ensure_ascii=False, sort_keys=True, separators=(\",\",\":\"))",
+  "constants": {
+    "bandwidth": 60,
+    "capacity": {
+      "L1": 524288,
+      "UB": 131072
+    },
+    "source": "data/raw/a/official/data/config.txt (frozen)"
+  },
+  "not_done": [
+    "未做 E0 评分",
+    "未调用队长的 oracle 适配层",
+    "不构成验收结论"
+  ],
+  "checks": {
+    "ranking_inversion_pair": {
+      "fixture": "tests/adversarial/ranking-inversion-pair.json",
+      "fixture_sha256": "e046296506a55ed196490eabe733ae1f410308e367114d9dd451ccb951e06d50",
+      "official_entry": "multicore_cut_evaluate_problem_1.evaluate_scene_a",
+      "results": {
+        "a": {
+          "label": "dependency crosses cores",
+          "claimed_makespan": 1052,
+          "observed_makespan": 1052,
+          "cross_task_traffic": 256,
+          "added_copy_bytes": 768,
+          "partition_added_copy_bytes": 768,
+          "matches_claim": true
+        },
+        "b": {
+          "label": "dependency kept on one core",
+          "claimed_makespan": 152,
+          "observed_makespan": 152,
+          "cross_task_traffic": 256,
+          "added_copy_bytes": 768,
+          "partition_added_copy_bytes": 768,
+          "matches_claim": true
+        }
+      },
+      "metrics_identical_between_a_and_b": true,
+      "metrics_match_fixture": true,
+      "observed_delta_makespan": 900,
+      "claimed_delta_makespan": 900,
+      "delta_matches_claim": true,
+      "passed": true
+    },
+    "fplan_005_quotient_cycle": {
+      "fixture": "tests/adversarial/fplan-005-quotient-cycle.json",
+      "fixture_sha256": "fbbd6f8cf0f08106b4013ebeb8f66086f2fb523ffacc284133299463af634b41",
+      "graph_sha256_matches": true,
+      "plan_sha256_matches": true,
+      "validate_graph": "pass",
+      "derive_replay": {
+        "outcome": "rejected",
+        "error": "MulticoreCutError: contracted subgraph graph contains a cycle"
+      },
+      "matches_recorded_observation": true,
+      "passed": true
+    },
+    "dev_samples": {
+      "fixture": "tests/adversarial/dev-samples.jsonl",
+      "fixture_sha256": "32636cba48db1938df8c31de2cdba57f555ea86aecc55bcd0ae5f313408b9a14",
+      "sample_count": 10,
+      "samples_passed": 10,
+      "details": [
+        {
+          "sample_id": "S-PLAN-QUOTIENT-CYCLE",
+          "mechanism_group": "合法性/组合环",
+          "category": "结构非法方案",
+          "path": "derive",
+          "outcome": "rejected",
+          "graph_sha256_matches": true,
+          "plan_sha256_matches": true,
+          "replay_matches_recorded_observation": true,
+          "passed": true
+        },
+        {
+          "sample_id": "S-PLAN-EMPTY-CORE",
+          "mechanism_group": "合法性/组合环",
+          "category": "边界：空核",
+          "path": "derive",
+          "outcome": "accepted",
+          "graph_sha256_matches": true,
+          "plan_sha256_matches": true,
+          "replay_matches_recorded_observation": true,
+          "passed": true
+        },
+        {
+          "sample_id": "S-PLAN-ID-LEADING-ZERO",
+          "mechanism_group": "合法性/组合环",
+          "category": "对抗：ID 字面表示不唯一",
+          "path": "derive",
+          "outcome": "rejected",
+          "graph_sha256_matches": true,
+          "plan_sha256_matches": true,
+          "replay_matches_recorded_observation": true,
+          "passed": true
+        },
+        {
+          "sample_id": "S-PLAN-COPY-IN-ASSIGNED",
+          "mechanism_group": "合法性/组合环",
+          "category": "对抗：把 COPY op 纳入划分",
+          "path": "derive",
+          "outcome": "rejected",
+          "graph_sha256_matches": true,
+          "plan_sha256_matches": true,
+          "replay_matches_recorded_observation": true,
+          "passed": true
+        },
+        {
+          "sample_id": "S-TASK-SHARED-1REMOTE",
+          "mechanism_group": "搬运统计",
+          "category": "正例：共享 tensor / 多消费者",
+          "path": "tasks",
+          "outcome": "accepted",
+          "graph_sha256_matches": true,
+          "plan_sha256_matches": true,
+          "replay_matches_recorded_observation": true,
+          "passed": true
+        },
+        {
+          "sample_id": "S-TASK-SHARED-2REMOTE",
+          "mechanism_group": "搬运统计",
+          "category": "边界：同一 tensor 被两个远端 Task 消费",
+          "path": "tasks",
+          "outcome": "accepted",
+          "graph_sha256_matches": true,
+          "plan_sha256_matches": true,
+          "replay_matches_recorded_observation": true,
+          "passed": true
+        },
+        {
+          "sample_id": "S-TASK-COPYOUT-BOUNDARY",
+          "mechanism_group": "搬运统计",
+          "category": "对抗：消费者全在本 Task 内但仍判输出边界",
+          "path": "tasks",
+          "outcome": "accepted",
+          "graph_sha256_matches": true,
+          "plan_sha256_matches": true,
+          "replay_matches_recorded_observation": true,
+          "passed": true
+        },
+        {
+          "sample_id": "S-TASK-DDR-REWRITE",
+          "mechanism_group": "搬运统计",
+          "category": "对抗：声明 DDR 却由非 COPY op 产出",
+          "path": "tasks",
+          "outcome": "accepted",
+          "graph_sha256_matches": true,
+          "plan_sha256_matches": true,
+          "replay_matches_recorded_observation": true,
+          "passed": true
+        },
+        {
+          "sample_id": "S-ROUND-SIZE-1",
+          "mechanism_group": "取整/同刻事件",
+          "category": "边界：极小 tensor，ceil 后不足 1 cycle",
+          "path": "tasks",
+          "outcome": "accepted",
+          "graph_sha256_matches": true,
+          "plan_sha256_matches": true,
+          "replay_matches_recorded_observation": true,
+          "passed": true
+        },
+        {
+          "sample_id": "S-ROUND-SIZE-0",
+          "mechanism_group": "取整/同刻事件",
+          "category": "边界：零尺寸 tensor（非正式输入域）",
+          "path": "tasks",
+          "outcome": "accepted",
+          "graph_sha256_matches": true,
+          "plan_sha256_matches": true,
+          "replay_matches_recorded_observation": true,
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  },
+  "all_fixtures_reproduced": true
+}

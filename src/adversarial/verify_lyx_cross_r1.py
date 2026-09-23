@@ -36,7 +36,9 @@ MINE = Path(__file__).resolve().parents[2]
 LYX = Path(os.environ.get("LYX_DIR", "C:/Users/Dora/Desktop/数学建模/Workbuddy/_a-r1/lyx-3357d7e"))
 LYX_SHA = os.environ.get("LYX_SHA", "3357d7ef9c1ad443dd0799f6ecb5b813df6753b3")
 SKIP_OFFICIAL = os.environ.get("SKIP_OFFICIAL", "") == "1"
-OUT_SUFFIX = os.environ.get("OUT_SUFFIX", "")
+# SKIP_OFFICIAL 模式下默认写到 -partial 后缀，避免把上一轮的全量产物**静默覆盖**成缩减版
+# （本脚本首版即因此覆盖过一次：官方 case 由 6 条降为 3 条）。
+OUT_SUFFIX = os.environ.get("OUT_SUFFIX", "-partial" if SKIP_OFFICIAL else "")
 OUT_DIR = MINE / "results/a/form/r1-20260923-farmeruncle123"
 CASE_DIR = MINE / "data/raw/a/official/data"
 BANDWIDTH = 60
