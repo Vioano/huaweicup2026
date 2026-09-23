@@ -64,7 +64,7 @@ sources / positive_tests / counterexample_tests / implementation_sites / status`
 F-METRIC 4、F-EXEC 3、F-TIME 2）。任务卡第 5 节要求的**六个机制组全部覆盖**。
 以下列出对实现与筛选有直接影响、且已由探针复现的语义点。
 
-### 3.1 排序与内存（F-LOCAL，5 条）
+### 3.1 排序与内存（F-LOCAL，6 条）
 
 Step1 是**确定性的多源反向 DFS 拓扑排序**，`key = (¬is_copy_in, depth, -id)`，升序压栈 + LIFO 弹栈。
 两处方向与直觉相反，均经干净对照隔离：
@@ -81,7 +81,7 @@ spill 的 victim 必须**同时**满足「有未来使用」与「不被当前 o
 `seq` 原为 `[1..9]`，插入后 `seq_ext = [1, 2, 3, 110, 4, 5, 6, 7, 8, 111, 9]`：
 SPILL_OUT 锚在 victim 上次使用之后，SPILL_IN 锚在下次使用之前。
 
-### 3.2 时间与资源（F-TIME 2 条、F-RESOURCE 5 条）
+### 3.2 时间与资源（F-TIME 2 条、F-RESOURCE 7 条）
 
 - 场景 A 两类等待：同核 `task_same_core_wait_cycles = 100`，跨核
   `task_cross_core_wait_cycles = 1000`，**且跨核等待只对真实前驱的异核项生效**。
@@ -146,8 +146,9 @@ spill 会把 victim 重命名到新化身并携带 `logical_tid`（实测 `{id: 
    但**该假设未验证**。
 5. **确定性**：Step1 与整个评估过程是确定性的，因此枚举式对抗无需固定随机种子；
    3.3 节的候选组枚举为确定性穷举，不含随机成分。
-6. **模块覆盖**：`F-LOCAL` 的排序部分与 spill 部分已实测，但 **Step3 内部的内存依赖
-   （`memory_dependencies`）未覆盖**；该缺口已登记，不视作已完成。
+6. **模块覆盖**：八个模块均已产出规则卡。`F-LOCAL` 的排序、spill 与 Step3 内存复用
+   （`memory_dependencies`，见 F-LOCAL-006）均已实测；**仍未覆盖**的是「Pipe 队首阻塞时
+   能否被越过」等子项，逐条见 §5 第 6 项与 `coverage.json` 的 `limitations`。
 
 ## 5. 局限
 
@@ -161,31 +162,44 @@ spill 会把 victim 重命名到新化身并携带 `logical_tid`（实测 `{id: 
    `docs/a/EVALUATOR_AMENDMENT_20260923.md`（提交 `ad1a2c57`），
    属**团队规范要求**，需由实现者提交逐字段兼容表并由队长指定的独立会话核对。
 5. **未做 E0**：本批不包含任何 E0 评分或验收结论；E0 与队长验收不能由实现者代签。
-6. **规则状态**：3 条规则仍为 `draft-sourced`（仅读源码），未冒充已验证。
+6. **规则状态**：38 条规则中 **36 条 `verified-by-probe`**、**2 条 `draft-sourced`**（F-IO-002、F-METRIC-002，均为需独立验收的团队规范条款），未冒充已验证。
 
 ## 6. 复现
 
+`src/adversarial/` 共 **18 个 `.py` 文件**，全部列出如下，与文件数一一对应（便于核对计数口径）。
+
 ```sh
-# 形式化探针（各自输出到 results/a/form/r1-20260923-farmeruncle123/）
-python src/adversarial/verify_io_r1.py               # 官方 CLI 端到端
+# A) 形式化探针：15 个，每个产出 1 份 results/ JSON（verify_spill_r1 的产物为 PARTIAL 记录）
+python src/adversarial/verify_io_r1.py               # F-IO 官方 CLI 端到端
 python src/adversarial/verify_rules_r1.py            # F-PLAN（含商图成环反例）
-python src/adversarial/verify_ftask_r1.py            # F-TASK
-python src/adversarial/verify_order_r1.py            # 声明顺序敏感性
+python src/adversarial/verify_ftask_r1.py            # F-TASK（生成 id / DDR→UB / 输出边界）
+python src/adversarial/verify_order_r1.py            # F-TASK-004 声明顺序敏感性
 python src/adversarial/verify_fexec_r1.py            # F-EXEC
 python src/adversarial/verify_local_r1.py            # Step1 排序与 Pipe 常量
-python src/adversarial/verify_spill_r1.py            # spill 第一次尝试（失败留档）
+python src/adversarial/verify_local2_r1.py           # Step3 内存复用（虚拟额度）
+python src/adversarial/verify_spill_r1.py            # spill 第一次尝试（失败留档，PARTIAL）
 python src/adversarial/verify_spill_r2.py            # spill victim 与插入位置（成功构造）
 python src/adversarial/verify_time_r1.py             # F-TIME / F-RESOURCE
-python src/adversarial/verify_l2_r1.py               # L2 Cache（问题 3）
-
-# 对抗样本与排序对抗
-python src/adversarial/build_dev_samples.py          # 首批 10 个开发反例样本
-python src/adversarial/build_ranking_adversarial.py  # 候选组枚举找排序反转
+python src/adversarial/verify_l2_r1.py               # L2 命中 / FIFO / 字节加权
+python src/adversarial/verify_l2_r2.py               # L2 同时 miss 与淘汰路径
+python src/adversarial/verify_metric_r1.py           # 搬运五字段等式核对
 python src/adversarial/verify_ranking_fixture.py     # 复验排序反转夹具（失败非零退出）
+python src/adversarial/build_dev_samples.py          # 首批 10 个开发反例样本
 
-# 覆盖表重算
+# B) 生成器：1 个（同样产出 results/ JSON，但耗时较长，故与上面 15 条分开列）
+python src/adversarial/build_ranking_adversarial.py  # E2 排序对抗：候选组枚举找排序反转
+
+# C) 一次性夹具生成：1 个（产物在 tests/adversarial/，不写 results/）
+python src/adversarial/add_fplan005_fixture.py       # 生成商图成环反例夹具
+
+# D) 覆盖表重算：1 个（只写 formal/coverage.json，不写 results/）
 python src/adversarial/build_coverage.py
 ```
+
+**计数口径**：18 = 15（A，最终回归中实际执行的那一组）+ 1（B）+ 1（C）+ 1（D）。
+**`results/a/form/r1-20260923-farmeruncle123/` 共 17 份 JSON** = A 组的 15 份
+（`verify_spill_r1` 与 `verify_spill_r2` 各 1 份）+ B 的 1 份 + `fplan-005-observation.json`（C 的产物）。
+**文件数与运行次数是两个口径**，不混用。
 
 全部命令已在原生 Windows、Python 3.13 下实际运行通过。
 
@@ -231,7 +245,7 @@ python src/adversarial/build_coverage.py
 |---|---|---|---|
 | `讲解A题调度.md` | 4611 | 251–500、606–805、935–1085、2310–2520、**4219–4611** | 未读段落主要是题目讲解与 E1/E2 背景；**形式化任务定义段已读完**。未读段落中若含评估器行为断言，本批可能尚未对照 |
 | `选择建模题目策略.md` | 4094 | 仅章节标题 | 属选题策略与论文写法，与 FORM 语义规则无直接关系 |
-| `paper/` 的 2025 模板 | — | 未读内容 | 不影响本批；正式格式需按当届公告核对 |
+| `paper/template-2026/`（**当前共享模板**，已替换 2025 社区模板） | — | **未读** | 不影响本批 FORM 语义规则。注意：本分支基于派发提交 `ea25b933`，其 `paper/` 下仍是 `template-2025`；main 已替换为 `template-2026`（GMCM2026-LaTeX-Template v1.7）。**本分支未修改任何模板文件**，PR 差异中不含 `template-2025`（已核验 0 条） |
 | 新版 `docs/a/ATLAS.md`、`CANVAS.md`、`output/pdf/` | — | 未读 | 不影响本批 FORM 语义规则 |
 
 **交接待办（未覆盖项，不以覆盖率掩盖）**：
