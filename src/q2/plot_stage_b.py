@@ -45,6 +45,10 @@ def main():
                         hatch=hatches[method],edgecolor='#272727',linewidth=0.65,zorder=3)
             for i,(bar,value) in enumerate(zip(bars,values)):
                 text=f'{value:.1f}'
+                if ax is axes[0] and len({rows[cases[i],m]['best_cycles'] for m in methods})==1:
+                    if method!='M1':
+                        continue
+                    text+='\n(all)'
                 if ax is axes[1]:
                     text+='\n['+rows[cases[i],method]['calls']+']'
                 ax.text(bar.get_x()+bar.get_width()/2,value+1.7 if ax is axes[0] else value+0.7,
@@ -60,7 +64,7 @@ def main():
     axes[1].set_ylabel('Unit wall time (s)')
     axes[1].set_title('(b) Measured cost [E0 calls]',loc='left',fontsize=10,pad=10)
     handles,labels=axes[0].get_legend_handles_labels()
-    fig.legend(handles,labels,loc='upper center',ncol=3,bbox_to_anchor=(0.52,1.02))
+    fig.legend(handles,labels,loc='upper center',ncol=3,bbox_to_anchor=(0.52,1.00))
     fig.subplots_adjust(left=0.095,right=0.99,bottom=0.16,top=0.80,wspace=0.30)
     outputs=[]
     for suffix in ('png','pdf','svg'):
