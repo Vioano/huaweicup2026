@@ -1,22 +1,7 @@
-* text=auto
-*.py text eol=lf
-*.md text eol=lf
-*.toml text eol=lf
-*.yml text eol=lf
-*.tex text eol=lf
-*.cls text eol=lf
-*.csv text eol=lf
-*.lock text eol=lf
-*.png binary
-*.jpg binary
-*.pdf binary
-# Preserve the classroom archive byte-for-byte, including upstream whitespace.
-paper/template-2025/** -text -whitespace
-# Keep the vendored Skill identical to its pinned upstream commit.
-.agents/skills/system-atlas/** -text -whitespace
-
-# Preserve the figures4papers Skill and upstream license byte-for-byte.
-.agents/skills/scientific-figure-making/** -text -whitespace
-
-# Preserve official A-problem source bytes on every checkout (including Windows).
-data/raw/a/** -text -whitespace
+# 冻结材料与探针产物必须逐字节可复现。
+# 系统级 core.autocrlf=true 会把检出的文本转成 CRLF，使同一脚本在 Windows 与
+# macOS 上产出的 JSON 字节不同（sha256 不同），队长按字节核验时会出现假差异。
+# 以下规则禁用这些文件的行尾自动转换。
+*.json   -text
+*.jsonl  -text
+*.txt    -text

@@ -288,7 +288,7 @@ def main():
     }
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     out = OUT_DIR / "local-observations.json"
-    out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
 
     print("PIPES:", list(s3.PIPES), "| PIPE_SLOTS:", s3.PIPE_SLOTS)
     for r in records:

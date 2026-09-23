@@ -49,7 +49,7 @@ def main():
         plan = {"node_to_subgraph": {str(i): 0 for i in non_copy},
                 "core_schedules": [[0]]}
         (work / "case_001_multicore_res.json").write_text(
-            json.dumps(plan, ensure_ascii=False), encoding="utf-8")
+            json.dumps(plan, ensure_ascii=False), encoding="utf-8", newline="\n")
 
         proc = run_cli(["case_001.json"], work)
         observed = sorted(p.name for p in work.iterdir())
@@ -118,7 +118,7 @@ def main():
         }
         OUT_DIR.mkdir(parents=True, exist_ok=True)
         out = OUT_DIR / "io-observations.json"
-        out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
 
         for r in records:
             print(f"  {r['case']}")

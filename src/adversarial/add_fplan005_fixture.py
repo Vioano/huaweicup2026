@@ -67,17 +67,17 @@ def main():
         "plan_sha256": hashlib.sha256(canonical(PLAN).encode("utf-8")).hexdigest(),
     }
     path = FIXTURES / "fplan-005-quotient-cycle.json"
-    path.write_text(json.dumps(fixture, ensure_ascii=False, indent=2), encoding="utf-8")
+    path.write_text(json.dumps(fixture, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
 
     report = {
         "run_id": "r1-20260923-farmeruncle123",
-        "fixture": str(path.relative_to(ROOT)),
+        "fixture": path.relative_to(ROOT).as_posix(),
         "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
         "note": "Rejection sample only. No E0 call, no score, no legality claim beyond the observed reject.",
         **observations,
     }
     (OUT / "fplan-005-observation.json").write_text(
-        json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+        json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
     print(json.dumps(report, ensure_ascii=False, indent=2))
 
 

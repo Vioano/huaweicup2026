@@ -156,7 +156,7 @@ def main():
         "records": records,
     }
     out = OUT_DIR / "fexec-observations.json"
-    out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
     for r in records:
         print("{:<62} {:<9} {}".format(r["probe"], r["outcome"], r["error"] or ""))
     print("\nwritten:", out)

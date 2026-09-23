@@ -118,7 +118,7 @@ def main():
             "要出现真实 spill，必须同时满足『超容量』与『该 step 存在空闲存活 tensor』两条。"
             "仍属未覆盖，不得当作通过。")
     out = OUT_DIR / "spill-observations.json"
-    out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
     print("UB tensors:", len(ub), "total bytes:", total_ub, "seq len:", len(seq),
           "local ops:", len(local_graph["ops"]))
     for r in records:

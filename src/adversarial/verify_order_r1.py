@@ -119,7 +119,7 @@ def main():
         "records": records,
     }
     out = OUT_DIR / "ftask-order-observations.json"
-    out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
     for r in records:
         print("{:<34} {:<8} same_as_baseline={}".format(
             r["variant"], r["outcome"], r.get("same_as_baseline")))

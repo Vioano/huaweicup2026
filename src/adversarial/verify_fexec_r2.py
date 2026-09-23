@@ -115,7 +115,7 @@ def main():
     }
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     out = OUT_DIR / "fexec2-observations.json"
-    out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
 
     for r in records:
         print(f"  {r['case']}")

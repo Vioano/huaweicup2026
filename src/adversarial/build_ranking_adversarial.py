@@ -237,7 +237,7 @@ def main():
     }
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     out = OUT_DIR / "ranking-adversarial.json"
-    out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
 
     print(f"plans evaluated: {len(records)} | skipped: {len(skipped)}")
     if skipped:

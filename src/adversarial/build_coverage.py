@@ -251,7 +251,7 @@ payload = {
     ],
 }
 
-OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
 
 print("rules total:", len(rules), dict(sorted(by_status.items())))
 print("groups:")

@@ -146,7 +146,7 @@ def main():
         "probes": records,
     }
     out = OUT_DIR / "ftask-observations.json"
-    out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
     for r in records:
         if r["outcome"] == "built":
             print("{:<46} num_cores={} cross_task_traffic={}".format(

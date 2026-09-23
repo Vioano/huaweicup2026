@@ -147,7 +147,7 @@ def main():
         "probes": records,
     }
     out = OUT_DIR / "fplan-observations.json"
-    out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
     for r in records:
         print("{:<12} {:<12} {}".format(
             r["rule_id"], r["outcome"], (r["error"] or json.dumps(r["observed"], ensure_ascii=False))))

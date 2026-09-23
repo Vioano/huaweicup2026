@@ -239,7 +239,7 @@ def main():
         "observations": observations,
     }
     (OUT / "dev-samples-observations.json").write_text(
-        json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+        json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
 
     for r in manifest:
         o = r["observed"]
