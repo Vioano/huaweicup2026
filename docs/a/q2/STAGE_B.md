@@ -172,3 +172,29 @@ the coordination pause; case044 units remain unspent and individually capped.
 The candidate families and score-selection rule are unchanged, so successful
 paths remain comparable, while the two executed control-code identities must
 be reported separately. Case044 resumes only after coordinator review.
+
+## Delivery-time forced-stop finding (no additional E0)
+
+A later developer rerun on `2422225` retained 4/4 controller passes but 9/10
+process-suite passes: the injected memory-stop test encountered Windows
+WinError32 while immediately deleting inherited stderr. The earlier passing
+runs remain historical facts; this intermittent failure is preserved separately.
+Active job PID count alone was an insufficient exit-wait boundary. The precise
+cause of the observed file lock was not proven from that traceback alone.
+
+The additional control fix retains SYNCHRONIZE handles for observed job processes,
+waits for each to signal under one shared 10-second cleanup deadline, closes all
+retained handles plus the Popen process/gate handles, and reports wait failures
+as monitor_error. This follows Microsoft's asynchronous-termination contract:
+[TerminateProcess](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminateprocess).
+A bounded 12-iteration dummy-tree forced-stop regression checks immediate log
+cleanup, alongside injected wait failure and the existing control checks.
+Outcomes and code identity are recorded under control-validation; no real graph
+is reevaluated with this delivery-only fix, and success is not a proof that every
+future file-lock condition is eliminated.
+
+Private traceback paths are removed from shared logs using documented literal
+prefix substitutions. Exact raw logs are retained outside every Git worktree;
+redaction_manifest.json records raw/shared hashes and substitutions. Shared
+sanitized logs are not described as byte-identical originals. Official unit ZIPs
+remain original and are separately hash-verified.

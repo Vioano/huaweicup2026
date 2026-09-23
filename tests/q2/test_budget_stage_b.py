@@ -47,6 +47,32 @@ class BudgetStageB(unittest.TestCase):
         result=self.run_dummy('p=subprocess.Popen([sys.executable,"-c","import time; time.sleep(60)"]); time.sleep(60)',sampler=sampler)
         self.assertEqual(result['status'],'resource_limit')
         self.assertEqual(result['remaining_job_pids'],[])
+        self.assertGreaterEqual(result['waited_process_handles'],2)
+        self.assertEqual(result['waited_process_handles'],result['closed_wait_handles'])
+        self.assertTrue(result['closed_popen_process_handle'])
+
+    def test_repeated_forced_stop_releases_inherited_log_handles(self):
+        # Regression for intermittent WinError32 during immediate directory cleanup.
+        for repeat in range(12):
+            with self.subTest(repeat=repeat):
+                reads=[0]
+                def sampler(pid):
+                    reads[0]+=1
+                    return 10**10 if reads[0]>6 else working_set(pid)
+                result=self.run_dummy('p=subprocess.Popen([sys.executable,"-c","import time; time.sleep(60)"]); time.sleep(60)',sampler=sampler)
+                self.assertEqual(result['status'],'resource_limit')
+                self.assertEqual(result['remaining_job_pids'],[])
+                self.assertGreaterEqual(result['waited_process_handles'],2)
+                self.assertEqual(result['waited_process_handles'],result['closed_wait_handles'])
+
+    def test_wait_failure_is_monitor_error_and_closes_handles(self):
+        with patch('src.q2.job_control.Job.wait_process',side_effect=OSError('injected wait failure')):
+            result=self.run_dummy('time.sleep(0.3)')
+        self.assertEqual(result['status'],'monitor_error')
+        self.assertIn('injected wait failure',result['cleanup_error'])
+        self.assertGreaterEqual(result['closed_wait_handles'],1)
+        self.assertTrue(result['closed_popen_process_handle'])
+        self.assertLess(result['cleanup_seconds'],10)
 
     def test_sampling_failure_is_not_evaluator_invalid(self):
         reads=[0]

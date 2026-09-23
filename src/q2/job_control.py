@@ -26,6 +26,8 @@ class Job:
             "QueryInformationJobObject": ([W.HANDLE, ctypes.c_int, ctypes.c_void_p, W.DWORD, ctypes.c_void_p], W.BOOL),
             "AssignProcessToJobObject": ([W.HANDLE, W.HANDLE], W.BOOL),
             "TerminateJobObject": ([W.HANDLE, W.UINT], W.BOOL),
+            "OpenProcess": ([W.DWORD, W.BOOL, W.DWORD], W.HANDLE),
+            "WaitForSingleObject": ([W.HANDLE, W.DWORD], W.DWORD),
             "CloseHandle": ([W.HANDLE], W.BOOL),
         }
         for name, (args, returns) in signatures.items():
@@ -72,6 +74,16 @@ class Job:
         if not self.api.TerminateJobObject(self.handle, 124):
             raise ctypes.WinError(ctypes.get_last_error())
 
+    def open_wait_handle(self, pid):
+        handle = self.api.OpenProcess(0x00100000, False, pid)  # SYNCHRONIZE
+        if not handle and pid in self.pids():
+            raise ctypes.WinError(ctypes.get_last_error())
+        return handle
+
+    def wait_process(self, handle, milliseconds):
+        if self.api.WaitForSingleObject(handle,milliseconds) != 0:
+            raise OSError('process termination did not signal within cleanup deadline')
+
     def close(self):
         if self.handle:
             self.api.CloseHandle(self.handle)
@@ -86,6 +98,7 @@ def run_job(command, *, cwd: Path, folder: Path, started: float, deadline: float
     Parent control receipt writing is separately timed by the caller.
     """
     job, process = None, None
+    wait_handles = {}
     record = {"status": "monitor_error", "launched": False, "samples": 0,
               "peak_working_set_bytes": 0, "max_job_processes": 0,
               "interval_seconds": interval, "memory_limit_bytes": memory_limit}
@@ -112,6 +125,11 @@ def run_job(command, *, cwd: Path, folder: Path, started: float, deadline: float
             process.stdin.close()
             while True:
                 pids = job.pids()
+                for pid in pids:
+                    if pid not in wait_handles:
+                        handle = job.open_wait_handle(pid)
+                        if handle:
+                            wait_handles[pid] = handle
                 rss = sampler(os.getpid())
                 for pid in pids:
                     try:
@@ -143,17 +161,32 @@ def run_job(command, *, cwd: Path, folder: Path, started: float, deadline: float
         record.update(status="monitor_error", error_type=type(error).__name__, error=str(error))
     finally:
         cleanup_started = time.monotonic()
+        cleanup_deadline = cleanup_started + 10
+        record.update(waited_process_handles=0,closed_wait_handles=0)
         try:
+            if process is not None and process.stdin is not None and not process.stdin.closed:
+                process.stdin.close()  # Assignment failure never reached the GO-gate close.
             if job is not None:
+                for pid in job.pids():
+                    if pid not in wait_handles:
+                        handle = job.open_wait_handle(pid)
+                        if handle:
+                            wait_handles[pid] = handle
                 job.terminate()
             if process is not None:
                 # Also kill the gated child if assignment itself failed.
                 if process.poll() is None:
                     process.kill()
-                process.wait(timeout=10)
+                process.wait(timeout=max(0,cleanup_deadline-time.monotonic()))
             if job is not None:
+                # TerminateJobObject/TerminateProcess initiate asynchronous exits.
+                # Active PID accounting alone does not wait for handle cleanup.
+                for pid, handle in wait_handles.items():
+                    milliseconds = max(0, int((cleanup_deadline-time.monotonic())*1000))
+                    job.wait_process(handle,milliseconds)
+                    record['waited_process_handles'] += 1
                 # Waiting for only the immediate child is insufficient.
-                while job.pids() and time.monotonic() - cleanup_started < 10:
+                while job.pids() and time.monotonic() < cleanup_deadline:
                     time.sleep(0.01)
                 record["remaining_job_pids"] = job.pids()
                 if record["remaining_job_pids"]:
@@ -162,10 +195,21 @@ def run_job(command, *, cwd: Path, folder: Path, started: float, deadline: float
             record.update(status="monitor_error", cleanup_error=str(error))
             if process is not None and process.poll() is None:
                 process.kill()
-                process.wait(timeout=10)
+                try:
+                    process.wait(timeout=max(0,cleanup_deadline-time.monotonic()))
+                except subprocess.TimeoutExpired:
+                    record['cleanup_error'] += '; immediate child still unsignaled at cleanup deadline'
         finally:
             if job is not None:
+                for handle in wait_handles.values():
+                    if job.api.CloseHandle(handle):
+                        record['closed_wait_handles'] += 1
+                    else:
+                        record.update(status='monitor_error',cleanup_error='failed to close process wait handle')
                 job.close()  # KILL_ON_JOB_CLOSE remains the last fail-safe.
+            if process is not None:
+                process._handle.Close()
+                record['closed_popen_process_handle'] = True
         record["returncode"] = process.returncode if process is not None else None
         record["cleanup_seconds"] = time.monotonic() - cleanup_started
         record["wall_through_job_cleanup"] = time.monotonic() - started
