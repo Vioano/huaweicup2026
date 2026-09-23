@@ -12,13 +12,13 @@ HERE = Path(__file__).resolve().parent
 
 
 def build(compiler=None, *, problem=1):
-    if problem not in (1, 2):
-        raise ValueError('problem must be 1 or 2')
+    if problem not in (1, 2, 3):
+        raise ValueError('problem must be 1, 2 or 3')
     compiler = compiler or shutil.which("clang++") or shutil.which("g++")
     if compiler is None:
         raise RuntimeError("A C++17 compiler is required for native scoring; E1 fallback remains available")
     suffix = ".dll" if sys.platform == "win32" else ".so"
-    name = "replay" if problem == 1 else "replay_b"
+    name = "replay" if problem == 1 else "replay_bc"
     source, target = HERE / ("native/" + name + ".cpp"), HERE / ("native/lib" + name + suffix)
     command = [compiler, "-std=c++17", "-O3", "-shared", "-fno-fast-math",
                "-ffp-contract=off", "-Wall", "-Wextra"]
@@ -36,6 +36,6 @@ def build(compiler=None, *, problem=1):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--compiler")
-    parser.add_argument("--problem", type=int, choices=(1, 2), default=1)
+    parser.add_argument("--problem", type=int, choices=(1, 2, 3), default=1)
     args = parser.parse_args()
     print(json.dumps(build(args.compiler, problem=args.problem), indent=2))

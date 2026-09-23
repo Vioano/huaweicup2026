@@ -76,7 +76,8 @@ class SceneBTest(unittest.TestCase):
         self.assertEqual(row['status'], 'ok', row)
         if native:
             self.assertEqual(row['route'], 'native', row)
-        for name in ('makespan', 'data_movement_bytes', 'cross_task_traffic'):
+        fields = ('makespan', 'data_movement_bytes', 'cross_task_traffic') + (('cache_stats',) if self.problem == 3 else ())
+        for name in fields:
             self.assertTrue(equal(truth[name], row[name]), (name, row, truth))
         if debug:
             check = engine._native_score(plan, dict(config, max_iter=config.get('max_iter', 1_000_000)), debug=True)['debug']
@@ -85,6 +86,14 @@ class SceneBTest(unittest.TestCase):
             actual = {key: (int(check['op_start'][i]), int(check['op_end'][i]))
                       for i, key in enumerate(check['op_keys'])}
             self.assertTrue(equal(actual, expected), (actual, expected))
+            if self.problem == 3:
+                for field in ('cache_events','cache_final_entries','cache_used_bytes_final','cache_stats'):
+                    self.assertTrue(equal(check[field],truth[field]), (field,check[field],truth[field]))
+                paths = {(core['core_id'],op['op_id']):op['memory_path'] for core in truth['per_core_timeline']
+                         for op in core['ops'] if 'memory_path' in op}
+                for i,key in enumerate(check['op_keys']):
+                    if key in paths:
+                        self.assertEqual(('ON_CHIP','DDR','CACHE_READ')[int(check['memory_path'][i])],paths[key])
         return row
 
     def test_seeded_timelines_cold_hit_and_reassignment(self):
@@ -199,6 +208,22 @@ class SceneBTest(unittest.TestCase):
             rows=[json.loads(line) for line in (root/'out.jsonl').read_text().splitlines()]
             self.assertEqual([r['status'] for r in rows],['ok','invalid','ok'])
             self.assertEqual([r['problem'] for r in rows],[self.problem]*3)
+
+
+class SceneCTest(SceneBTest):
+    problem = 3
+
+    def test_cache_zero_oversize_concurrent_fifo_and_bandwidth(self):
+        for seed in range(20):
+            graph, plan = micro(seed+20)
+            engine = self.make_engine(graph)
+            for cap in (0, 1, 16, 60, 128, 4096):
+                config = dict(self.config, cache_capacity_bytes=cap, cache_bandwidth_bytes_per_cycle=3.25,
+                              cross_core_copy_delay=seed % 4)
+                self.compare(graph,plan,engine,config,debug=True)
+        for changes in ({'cache_capacity_bytes': -1}, {'cache_capacity_bytes': .5},
+                        {'cache_bandwidth_bytes_per_cycle': 0}, {'cache_bandwidth_bytes_per_cycle': float('nan')}):
+            self.assertEqual(self.compare(simple_graph(),PLAN,config=dict(self.config,**changes))['status'],'invalid')
 
 
 if __name__ == '__main__':

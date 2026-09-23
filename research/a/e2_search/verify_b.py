@@ -105,6 +105,9 @@ def run(problem, out):
             want = {(c['core_id'], o['op_id']):(o['start'],o['end']) for c in expected[i]['per_core_timeline'] for o in c['ops']}
             got = {key:(int(d['op_start'][j]),int(d['op_end'][j])) for j,key in enumerate(d['op_keys'])}
             assert equal(got,want), (case,i,'op timeline mismatch')
+            if problem == 3:
+                for field in ('cache_stats','cache_events','cache_final_entries','cache_used_bytes_final'):
+                    assert equal(d[field],expected[i][field]), (case,i,field)
         pool_start = time.perf_counter()
         with E2BatchEvaluator(graph,problem=problem,workers=2,max_tasks_per_worker=8) as pool:
             pool_rows = list(pool.evaluate_batch(plans,**config))

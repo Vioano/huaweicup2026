@@ -20,7 +20,7 @@ def main(argv=None):
     parser.add_argument("--cache-mib", type=int, default=16)
     parser.add_argument("--timeout", type=float, default=60)
     parser.add_argument("--recycle-after", type=int, default=256)
-    parser.add_argument("--problem", type=int, choices=(1, 2), default=1)
+    parser.add_argument("--problem", type=int, choices=(1, 2, 3), default=1)
     args = parser.parse_args(argv)
     start = time.perf_counter()
     graph = json.loads(args.graph.read_text())

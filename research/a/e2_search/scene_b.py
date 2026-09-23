@@ -32,8 +32,8 @@ class SceneBEvaluator(E2Evaluator):
     """
     def __init__(self, graph, *, problem=2, cache_bytes=16 << 20,
                  max_cache_entries=32, native_enabled=True, max_native_ops=2_000_000):
-        if type(problem) is not int or problem != 2:
-            raise ValueError('this checkpoint supports problem=2')
+        if type(problem) is not int or problem not in (2,3):
+            raise ValueError('problem must be 2 or 3')
         for name, value, minimum in (('cache_bytes', cache_bytes, 0), ('max_cache_entries', max_cache_entries, 1),
                                      ('max_native_ops', max_native_ops, 1)):
             if type(value) is not int or value < minimum:
@@ -65,6 +65,9 @@ class SceneBEvaluator(E2Evaluator):
             raise Unsupported('local optimization unavailable: '+self._local_error)
         _native_b.get_lib()  # Missing DLL should not incur duplicate local compilation.
         r = self._fast_runtime
+        if self.problem == 3:
+            r.require_integer(config['cache_capacity_bytes'],'cache_capacity_bytes')
+            r.require_number(config['cache_bandwidth_bytes_per_cycle'],'cache_bandwidth_bytes_per_cycle',positive=True)
         capacity = dict(config['capacity'])
         r.validate_parameters(config['bandwidth'], capacity, config['max_iter'],
                               cross_core_copy_delay=config['cross_core_copy_delay'])
@@ -74,7 +77,7 @@ class SceneBEvaluator(E2Evaluator):
                 or any(type(k) not in (str, int) or type(v) is not int for k, v in plan['node_to_subgraph'].items())
                 or any(type(t) is not int for row in plan['core_schedules'] for t in row)):
             raise Unsupported('plan container/numeric domain')
-        key = pickle.dumps((plan, config['bandwidth'], capacity), protocol=5)
+        key = pickle.dumps((plan, config['bandwidth'], capacity, config.get('cache_bandwidth_bytes_per_cycle')), protocol=5)
         start = time.perf_counter()
         cached = None if debug else self._entries.get(key)
         if cached is None:
@@ -83,7 +86,7 @@ class SceneBEvaluator(E2Evaluator):
             r.validate_execution(tasks, cross)
             if sum(len(t['seq']) for t in tasks.values()) > self._max_ops:
                 raise Unsupported('max_native_ops')
-            compiled = _native_b.pack(tasks, cross, r, config['bandwidth'])
+            compiled = _native_b.pack(tasks, cross, r, config['bandwidth'], cache_bandwidth=config.get('cache_bandwidth_bytes_per_cycle'))
             entry = _Entry(compiled, movement, traffic)
             del tasks
         else:
@@ -93,7 +96,7 @@ class SceneBEvaluator(E2Evaluator):
         prepared = time.perf_counter() - start
         replay_start = time.perf_counter()
         result = _native_b.score(entry.compiled, cross_core_copy_delay=config['cross_core_copy_delay'],
-                                 max_iter=config['max_iter'])
+                                 max_iter=config['max_iter'], cache_capacity=config.get('cache_capacity_bytes',0), debug=debug)
         replay = time.perf_counter() - replay_start
         if cached is None and not debug:
             entry.compiled.op_keys = range(len(entry.compiled.op_keys))
@@ -112,6 +115,8 @@ class SceneBEvaluator(E2Evaluator):
                       cross_task_traffic=entry.cross, route='native', execution='native_replayed', numeric_kind='computed',
                       replay_iterations=int(result['stats'][1]), preparation_seconds=prepared,
                       replay_seconds=replay, compilation_cache_hit=cached is not None)
+        if self.problem == 3:
+            record['cache_stats'] = result['cache_stats']
         if debug:
             record['debug'] = dict(op_keys=entry.compiled.op_keys, **result)
         return record
@@ -125,7 +130,10 @@ class SceneBEvaluator(E2Evaluator):
             if not full:
                 try:
                     # Unexpected config keys must not silently pass the native path.
-                    if set(config) != {'bandwidth', 'capacity', 'max_iter', 'cross_core_copy_delay'}:
+                    required = {'bandwidth', 'capacity', 'max_iter', 'cross_core_copy_delay'}
+                    if self.problem == 3:
+                        required.update(('cache_capacity_bytes','cache_bandwidth_bytes_per_cycle'))
+                    if set(config) != required:
                         raise Unsupported('config keys')
                     record = self._native_score(plan, config)
                 except Exception as error:
@@ -133,8 +141,10 @@ class SceneBEvaluator(E2Evaluator):
             if full or reason is not None:
                 self._counts['full_calls' if full else 'fallback_calls'] += 1
                 try:
-                    value = self._runtime.evaluate_scene_b(self._graph, plan, **config)
-                    record = {k: value[k] for k in ('makespan', 'data_movement_bytes', 'cross_task_traffic')}
+                    fn = self._runtime.evaluate_scene_b if self.problem == 2 else self._runtime.evaluate_problem_3
+                    value = fn(self._graph, plan, **config)
+                    fields = ('makespan','data_movement_bytes','cross_task_traffic') + (('cache_stats',) if self.problem == 3 else ())
+                    record = {k: value[k] for k in fields}
                     record.update(status='ok', execution='e0_replayed', numeric_kind='computed')
                     if full:
                         record['result'] = value

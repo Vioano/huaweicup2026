@@ -85,8 +85,8 @@ class E2BatchEvaluator:
                  max_cache_entries=128, timeout_seconds=60.0,
                  startup_timeout_seconds=30.0, max_tasks_per_worker=256,
                  recycle_peak_rss_bytes=None, problem=1):
-        if type(problem) is not int or problem not in (1, 2):
-            raise ValueError('problem must be 1 or 2')
+        if type(problem) is not int or problem not in (1, 2, 3):
+            raise ValueError('problem must be 1, 2 or 3')
         self.problem = problem
         for name, value in (("workers", workers), ("max_cache_entries", max_cache_entries),
                             ("max_tasks_per_worker", max_tasks_per_worker)):
