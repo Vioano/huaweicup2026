@@ -76,9 +76,13 @@ run：`r1-20260923-farmeruncle123`｜范围：A 题第一轮 F-PLAN/F-TASK/F-EXE
 - **含义**：同一 `(core, pipe)` 上串行，选手方案无法改变。
 - **状态**：已由 F-LOCAL-003 实测（import 官方模块后直读常量）。
 
-### B-4 `[缺口]` L2 带宽是否与 DDR 互不占用
-- config 里 L2 带宽（250）与 DDR（60）分列，讨论文档称 L2 带宽不占 DDR。
-- **未验证**：未在 Problem 3 入口实测。这是 L2 组的核心疑点。
+### B-4 `[已解答]` L2 带宽与 DDR 带宽互不占用
+- **实现**：`bandwidth_pools` 有 `DDR` 与 `CACHE_READ` 两个**独立池**；命中时
+  `effective_bandwidth = cache_bandwidth (250)`，且该 op **只**进 `CACHE_READ` 池，
+  `if cache_hit ... elif _uses_ddr_bandwidth(...)` 是互斥分支。
+- **实测**：600 字节 tensor，miss 时长 10（=ceil(600/60)）、命中时长 3（=ceil(600/250)）；
+  `memory_paths = {'DDR': 6, 'CACHE_READ': 1}`。
+- **状态**：已由 F-RESOURCE-003 实测。**未测** ≥3 个并发命中时 `CACHE_READ` 池的分段换算。
 
 ### B-5 `[部分解答]` Step1 排序方向容易读反（已实测）
 - **实现**：`key = (¬is_copy_in, depth, -id)`，升序压栈 + LIFO 弹栈。
@@ -87,6 +91,20 @@ run：`r1-20260923-farmeruncle123`｜范围：A 题第一轮 F-PLAN/F-TASK/F-EXE
   先入栈者后出栈）。两处都与直觉相反。
 - **未验证**：Step3 内存依赖与 rename 对序列的影响；内存复用部分未开始。
 - **状态**：已由 F-LOCAL-001/002 实测；**内存复用仍是缺口**。
+
+### B-6 `[已解答]` Cache 命中率的口径
+- **实现**：`hit_rate = hit_bytes / (hit_bytes + miss_bytes)`，**按字节加权**。
+- **实测**：把两个可缓存 COPY_IN 的尺寸做成 60 与 600 字节后，上报值
+  `0.47619 = 600/1260`（按字节），而按访问次数会是 `0.3333`。二者可区分。
+- **状态**：已由 F-METRIC-003 实测。
+
+### B-7 `[疑问]` `logical_tid` 的缓存键语义
+- Cache key = `tensor.get('logical_tid', tids[0])`；`logical_tid` **只由 Step2 的
+  spill/rename 机制写入**（`schedule_step2.py:315-419`），普通 tensor 退化为物理 id。
+- **含义推断**：同一逻辑 tensor 的多个物理化身（spill 重命名后）**会共用同一 Cache 条目**，
+  即 spill 与 L2 命中存在耦合。这是官方语义下最微妙的耦合点之一。
+- **未验证**：我没有构造出触发 rename 的运行（见 spill 组 `gap-with-mechanism`），
+  因此**只登记字段来源与推断，不声称已观测到该耦合的行为**。
 
 ---
 
@@ -125,9 +143,9 @@ run：`r1-20260923-farmeruncle123`｜范围：A 题第一轮 F-PLAN/F-TASK/F-EXE
 
 | 组 | 状态 | 说明 |
 |---|---|---|
-| L2 同时 miss/FIFO | `gap` | 未开始 |
-| spill/容量临界 | `gap-with-mechanism` | 机制已定位，无可复现的成功运行 |
+| spill/容量临界 | `gap-with-mechanism` | 机制已定位，无可复现的成功运行；连带阻塞 B-7 的 `logical_tid` 命中验证 |
 | Step3 内存复用 | `partial` 的未覆盖部分 | 排序口径已实测，内存依赖与 rename 未构造 |
-| F-METRIC 字段等式 | 部分 | 仅读源码，未逐字段核对 |
+| L2「同时 miss」与淘汰路径 | `partial` 的未覆盖部分 | 命中/FIFO/超容量/字节加权已实测；同刻同时 miss 与 evicted 非空未构造 |
+| F-METRIC 搬运算式 | 部分 | 仅读源码，未逐字段核对 |
 
 **说明**：以上缺口已写入 `formal/coverage.json`，与规则卡状态一一对应。

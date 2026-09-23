@@ -36,14 +36,14 @@ E_v(G,P,C,q;R)\longrightarrow (\text{status},\text{result})
 | --- | --- | --- |
 | F-IO | **4 条规则，3 条实测 + 1 条规范** | F-IO-001（CLI 与默认路径）、F-IO-003（缺省配置硬失败）、F-IO-004（错误出口）已端到端实跑；F-IO-002（结果 JSON 不得包装/改名/跨题补字段）为补充规范条款，待独立验收 |
 | F-PLAN | **6 条规则，6 条探针实测** | `rules.jsonl` 的 F-PLAN-001..006；F-PLAN-005 的误判纠正保留在 `correction` 字段 |
-| F-TASK | **4 条规则，4 条探针实测** | 来源 `multicore_cut_evaluate_problem_1.py:86-143`；另两个入口 `problem_2.py:61`、`problem_3.py:69` 尚未比对 |
+| F-TASK | **5 条规则，均探针实测** | 来源 `multicore_cut_evaluate_problem_1.py:86-143` 与 `_3.py` 的场景 B 多播；另两个入口 `problem_2.py:61`、`problem_3.py:69` 尚未逐行比对 |
 | F-LOCAL | **3 条规则，均实测（排序部分）** | F-LOCAL-001/002/003；**内存复用部分仍是缺口**，Step3 内存依赖与 rename 未构造 |
-| F-EXEC | **2 条规则，均有实测探针** | F-EXEC-001/002，来源 `evaluation_validation.py:217-243`；unit-level 探针域已标注 |
+| F-EXEC | **3 条规则，均有实测探针** | F-EXEC-001/002 来自 `evaluation_validation.py:217-243`；F-EXEC-003 为同刻事件顺序 |
 | F-TIME | **2 条规则，均实测** | F-TIME-001/002；两类等待的实测差值为 `1000-100=900` |
-| F-RESOURCE | **2 条规则，均实测** | F-RESOURCE-001/002；含 DDR 等分共享与回溯重算的直接日志证据 |
-| F-METRIC | **2 条规则，1 条读源码 + 1 条规范条款** | F-METRIC-001（搬运统计口径，仅读源码）；F-METRIC-002（未生成字段不得补齐，补充规范 §1） |
+| F-RESOURCE | **4 条规则，均实测** | DDR 等分共享与回溯重算、DDR 端点判定、Cache 只由 COPY_IN 查询且走独立池、FIFO 不晋升 + 超容量不缓存 |
+| F-METRIC | **3 条规则：1 读源码 + 1 规范 + 1 实测** | F-METRIC-001（搬运，仅读源码）、F-METRIC-002（规范条款）、F-METRIC-003（hit_rate 按字节加权，实测） |
 
-合计 **25 条规则**（22 条 `verified-by-probe`，3 条 `draft-sourced`），覆盖表见 `coverage.json`。
+合计 **30 条规则**（27 条 `verified-by-probe`，3 条 `draft-sourced`），覆盖表见 `coverage.json`。
 
 补充规范（`docs/a/EVALUATOR_AMENDMENT_20260923.md`，固定提交 `ad1a2c57`）明确覆盖
 `contract-v1` §2.2–2.4 与 §5.4，细化 §5.5。**其主体是 E1/E2 的数值门槛与并行探索，属
@@ -78,6 +78,13 @@ sources / positive_tests / counterexample_tests / implementation_sites / status`
    两处都与"COPY 优先"的直觉相反，照直觉实现会整体反转排序。
 8. **同 Pipe 串行**（F-LOCAL-003）：`PIPE_SLOTS = 1`，同一 `(core, pipe)` 上不能并行，
    且该常量不可由选手配置。
+9. **Cache 命中不占 DDR 带宽**（F-RESOURCE-003）：命中走独立的 `CACHE_READ` 池
+   （250 B/cycle vs DDR 的 60），两个池互不占用。把命中计入 DDR 会高估压力。
+10. **`hit_rate` 按字节加权**（F-METRIC-003）：不等尺寸实测 0.476（按字节）
+   而非 0.333（按访问次数）——两种口径会给出不同结论。
+11. **多播时源核串行执行 n 次 COPY_OUT**（F-TASK-005）：每个 `(源核, 目标核)` 对各自新建
+    一个 DDR tensor 与一对 COPY，源核在 `PIPE_MTE3` 上串行完成；这会把各消费者错开，
+    而**错开与否直接决定 L2 是否命中**。
 
 ## 5. 复现
 
@@ -90,6 +97,7 @@ python src/adversarial/verify_fexec_r1.py        # F-EXEC 探针
 python src/adversarial/verify_local_r1.py        # F-LOCAL Step1 排序与 Pipe 常量
 python src/adversarial/verify_spill_r1.py        # spill 容量扫掠（PARTIAL）
 python src/adversarial/verify_time_r1.py         # F-TIME / F-RESOURCE 探针
+python src/adversarial/verify_l2_r1.py           # L2 Cache 探针（问题 3）
 python src/adversarial/build_dev_samples.py      # 首批 10 个开发反例样本
 
 python src/adversarial/build_coverage.py          # 由 rules.jsonl 与实测结果重算 coverage.json

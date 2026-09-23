@@ -47,13 +47,14 @@ GROUPS = [
     },
     {
         "group": "取整/同刻事件",
-        "status": "partial",
-        "positive_evidence": ["S-ROUND-BOUNDARY-COPY"],
+        "status": "covered",
+        "positive_evidence": ["S-ROUND-BOUNDARY-COPY", "F-EXEC-003", "F-RESOURCE-001"],
         "boundary_evidence": ["S-ROUND-BOUNDARY-COPY"],
         "counterexample_evidence": [],
-        "note": ("取整已实测：size=0 与 size=1 的边界 COPY 都只占 1 cycle（max(1, ceil(size/bandwidth))）；"
-                 "F-RESOURCE-001 取到了同刻并发（同一 t 两个核各发起 COPY）的日志。"
-                 "同刻多事件同时退休/退出的完整判定顺序未单独构造。"),
+        "note": ("取整：size=0 与 size=1 的边界 COPY 都只占 1 cycle（max(1, ceil(size/bandwidth))）。"
+                 "同刻事件：实测同一 t 上 `miss` 完成引发的 `insert` 先于同刻另一次访问生效"
+                 "（t=534 先 insert 后 hit，见 F-EXEC-003），这是本组唯一决定命中与否的变量。"
+                 "**未穷举**同刻的 retire/issue 其它组合顺序。"),
     },
     {
         "group": "spill/容量临界",
@@ -76,12 +77,17 @@ GROUPS = [
     },
     {
         "group": "L2 同时 miss/FIFO",
-        "status": "gap",
-        "positive_evidence": [],
-        "boundary_evidence": [],
-        "counterexample_evidence": [],
-        "note": ("未开始。Problem 3 才引入 L2（capacity=1048576，bandwidth=250，FIFO）。"
-                 "未验证 L2 带宽是否与 DDR 带宽互不占用。"),
+        "status": "partial",
+        "positive_evidence": ["F-RESOURCE-003", "F-RESOURCE-004", "F-METRIC-003",
+                              "F-EXEC-003", "F-TASK-005"],
+        "boundary_evidence": ["L2 capacity < 单条 tensor 大小 → 0 命中（见 F-RESOURCE-004）"],
+        "counterexample_evidence": ["把命中仍计入 DDR 带宽 / 把 Cache 当 LRU 实现"],
+        "note": ("已实测：只有 COPY_IN 查 Cache；命中走独立 CACHE_READ 池（250 B/cycle）"
+                 "不占 DDR（60）；`size > cache_capacity_bytes` 时永不缓存；hit_rate 按**字节**加权"
+                 "（不等尺寸实测 0.476 ≠ 按次数的 0.333）；同刻 insert 先于同刻访问生效。"
+                 "**『同时 miss』未单独隔离**：本批两个消费者核的 COPY_IN 被源核串行 COPY_OUT 错开 10 cycles，"
+                 "因此未取得两核同一时刻同时 miss 的用例；也未构造触发淘汰（evicted 非空）与 "
+                 "spill/rename 产生的 logical_tid 命中路径。"),
     },
 ]
 
@@ -132,8 +138,8 @@ payload = {
     "limitations": [
         "所有实测均在微型构造图上完成，规模远小于官方 100 个 case，结论不可外推到正式用例。",
         "本批未计算任何正式 case 的 makespan，未做跨方案优劣比较。",
-        "F-METRIC 仅有 1 条 draft-sourced 规则，搬运五个字段的等式关系未逐字段核对。",
-        "Step3 内存复用与 L2 两组仍未覆盖。",
+        "F-METRIC-001 五个搬运字段的等式关系仍未逐字段核对。",
+        "Step3 内存复用、L2 的『同时 miss』与淘汰路径、spill 组仍未取得成功运行。",
     ],
 }
 
