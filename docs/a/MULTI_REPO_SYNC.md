@@ -2,6 +2,8 @@
 
 2026-09-23 队长授权新增 `Vioano/huaweicup2026` 私有研究副本。组织仓库 `huaweibei123/huaweicup2026` 继续作为团队协作主库；成员电脑继续使用组织仓库为 origin，Issues、PR 和 Atlas 权威通道不变。
 
+**2026-09-24 权限澄清**：Vioano 私有镜像及其已授权 ChatGPT 连接属于队长，队友没有因此取得镜像权限。发给队友的材料使用组织主库链接；发给队长 ChatGPT/Pro 的材料才使用已同步的 Vioano 固定提交链接。主库文件可见不等于队长 Colab OAuth、额度、软件许可或其他工具授权可用，详见 [队长资源权限](CAPTAIN_RESOURCES.md)。
+
 ## 同步方向与验收
 
 1. 本机 primary 是 `~/Projects/huaweicup2026`。未提交的工作只存在于相应工作区；不得以整目录复制把缓存、密钥和未验收改动当作远端已发布材料。
@@ -13,7 +15,7 @@
 
 ## 队长本机执行
 
-首次已配置 `vioano=https://github.com/Vioano/huaweicup2026.git`；默认 GitHub 通信账号保持 NikolaStarx。同步脚本仅在子进程环境使用本机已登录的两个账号，不把 token 写入文件、URL、命令参数或 Git 配置，也不切换全局账号。
+以下命令仅由队长或其已授权的本地会话执行，不是成员克隆后的通用初始化步骤。队长本机首次已配置 `vioano=https://github.com/Vioano/huaweicup2026.git`；默认 GitHub 通信账号保持 NikolaStarx。同步脚本仅在子进程环境使用本机已登录的两个账号，不把 token 写入文件、URL、命令参数或 Git 配置，也不切换全局账号。队友不为此切换身份、索取队长凭据或重建镜像。
 
 ```sh
 python3 scripts/sync_vioano_mirror.py
@@ -26,6 +28,8 @@ python3 scripts/sync_vioano_mirror.py --push --receipt output/sync/<unique-run-i
 
 共享 project 页面列有文件、连接能看到仓库、甚至另一个 Pro 已读到，都不证明当前 Pro 能读取相同内容。每轮先给简短材料索引、固定提交/原件哈希；对当前会话实际缺少的文件直接附加字节，并要求在自己的工具环境回报读取清单与残余缺口。私有 GitHub 必须经有权的连接读取，匿名网页 404 不能靠链接本身解决。
 
-本轮第一路缺少旧 ZIP 引用的 295 份历史完整结果；第二路未取得冻结源码/ZIP 字节；第三路未取得题面和源码。第四路已取得源码文本，但未取得题面/正式 JSON，现由用户主动停止。执行顺序为：补齐前三路材料并完成第二轮追问 → 汇总新结果与证据边界 → 再续第四路。不要提前启动第四路。
+历史缺件记录（2026-09-23）：第一路缺少旧 ZIP 引用的 295 份历史完整结果；第二路未取得冻结源码/ZIP 字节；第三路未取得题面和源码。当时用户先停第四路，要求补齐前三路二轮、汇总后再续第四路。此为当时的执行顺序，不是要求后续会话继续停在该状态。
+
+后续三路二轮回答见 [已发布研究索引](research/20260923-round2/README.md)；2026-09-24 的后续 Pro 归档与读取范围已在 [固定提交的归档说明](https://github.com/huaweibei123/huaweicup2026/blob/3a4505d4101e23d54580d15560da3820e02d05da/docs/a/research/20260924-pro-archive/README.md) 交付（PR31，待验收）。队长向 ChatGPT 提供同一内容时换用已同步的 Vioano 固定提交入口。归档、Pro 报告、本机复现和算法验收分开记录；每个新专项 Pro 仍须核实际可读材料。
 
 现有本机/仓库中没有找到的历史完整结果保持 missing，不能从摘要补造。新运行保存新的输入、命令、版本、完整结果与运行身份，不能冒充旧产物。代码集合哈希配方见 `docs/a/source-manifest.json`，可由 `scripts/a_materials.py` 复核。附件 ZIP、PDF 和单个源码的哈希不等于代码集合哈希。
