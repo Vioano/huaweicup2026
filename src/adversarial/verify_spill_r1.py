@@ -102,6 +102,21 @@ def main():
                  "spilling - that is an observed behaviour, not a claimed defect."),
         "records": records,
     }
+    # 结论写进产物本身，避免每次重跑后需要手工补写（手工补的内容会被重跑覆盖）。
+    completed_with_spill = [r for r in records
+                            if r["outcome"] == "completed" and r.get("n_spills", 0) >= 1]
+    if completed_with_spill:
+        report["group_status"] = "COVERED"
+        report["open_question"] = None
+    else:
+        report["group_status"] = ("PARTIAL - mechanism identified, no successful run with "
+                                  ">=1 spill achieved in this batch")
+        report["open_question"] = (
+            "本批 3 种拓扑均未取得含 >=1 spill 的成功运行：容量 >= 峰值存活集则完成且 0 spill；"
+            "容量低于峰值且触发 step 不存在『本 step 未被消费』的存活 tensor 时，"
+            "step2 抛 Step2SchedulingError: no spill victim。"
+            "要出现真实 spill，必须同时满足『超容量』与『该 step 存在空闲存活 tensor』两条。"
+            "仍属未覆盖，不得当作通过。")
     out = OUT_DIR / "spill-observations.json"
     out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     print("UB tensors:", len(ub), "total bytes:", total_ub, "seq len:", len(seq),

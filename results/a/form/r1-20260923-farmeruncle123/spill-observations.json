@@ -73,5 +73,5 @@
     }
   ],
   "group_status": "PARTIAL - mechanism identified, no successful run with >=1 spill achieved in this batch",
-  "open_question": "v3 结构下峰值存活集为 4 个 UB tensor(256B)：容量 >=256 全部完成且 0 spill；容量 <256 触发 step2 的 no-spill-victim 硬报错。淘汰逻辑排除「当前 step 正在使用」的 buffer，因此要出现真实 spill，必须在超容量的那个 step 存在一个空闲(本 step 未被消费)的存活 tensor。本批 3 种拓扑都没同时满足这两条，仍属未覆盖，不得当作通过。"
+  "open_question": "本批 3 种拓扑均未取得含 >=1 spill 的成功运行：容量 >= 峰值存活集则完成且 0 spill；容量低于峰值且触发 step 不存在『本 step 未被消费』的存活 tensor 时，step2 抛 Step2SchedulingError: no spill victim。要出现真实 spill，必须同时满足『超容量』与『该 step 存在空闲存活 tensor』两条。仍属未覆盖，不得当作通过。"
 }
