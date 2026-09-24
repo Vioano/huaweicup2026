@@ -73,4 +73,6 @@ Windows为当前用户创建登录计划任务 `HuaweiCup-Benchmark-Sync`；macO
 
 `accepted/current.json`是已校验完整快照的原子指针；`status.json`含最后成功时间、数据版本/数量、软件实际版本、队列数量、本轮无回执提交数/处理窗口及阶段错误。网站使用 `serve --mirror <current.json> --sync-status <status.json>`；中央使用 `--sync-inbox` 和同状态文件。
 
+上行传输可将最多16个已分别签名、具有独立submission ID的feed envelope放进同一个Git传输提交；源feed和原件仍分别按各自固定提交、路径及SHA256核验，每个submission仍有独立回执和准入结果。传输层合并提交只减少GitHub API分支更新次数，不合并成绩、不要求凑满记录数；队列里不足16个也立即发送。
+
 本机单测与GitHub读回不是双人Windows验收。最终验收必须分别记录：双方当前UI资源指纹、签名release ID、数据snapshot ID及全部记录ID集合；双方各一份真实既有benchmark的自动投递/签名回执/两端读回；断网重连、重复投递、UI升级失败回滚和真实Windows自启动。持续热更新验收还要实测一条feed从固定提交到中央准入签名、再到两端原浏览器可见的端到端时间；新记录ID/规范内容集合两端完全一致，未完成状态不可提前报已同步。实验成绩不得为了“测试同步”新增或伪造；可以重复投递现有固定feed，预期added=0。

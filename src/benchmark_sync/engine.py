@@ -13,6 +13,8 @@ from .snapshot import (atomic_write, canonical, digest, now, read_central, publi
                        unpack, reject_history_regression, payload_name, git_json)
 from .submission import discover, references, MAX_FEED
 
+OUTBOX_PUBLISH_BATCH_SIZE = 16
+
 
 def read_json(path): return json.loads(Path(path).read_bytes())
 def write_json(path,value): atomic_write(Path(path),canonical(value)+b'\n')
@@ -132,6 +134,32 @@ class Engine:
         if errors is None: errors=self.errors
         folder=self.state/'outbox'
         entries=sorted(folder.glob('*/entry.json'))
+        pending={};parents=[];commit_presence={}
+        def publish_pending():
+            if not pending: return
+            batch=dict(pending)
+            batch_parents=tuple(dict.fromkeys(parents))
+            try:
+                # Submission envelopes stay individually signed and addressable;
+                # only their transport commit is shared to avoid one branch update
+                # per small feed while preserving each source commit as a parent.
+                self.remote.update({published:canonical(envelope)
+                    for published,(_,envelope) in batch.items()},parents=batch_parents)
+                for _,(path,_) in batch.items():
+                    entry=read_json(path)
+                    entry.update(state='awaiting_receipt',error=None,last_attempt_at=now())
+                    write_json(path,entry)
+            except Exception as error:
+                for _,(path,_) in batch.items():
+                    try:
+                        entry=read_json(path)
+                        entry.update(error=str(error),last_attempt_at=now())
+                        write_json(path,entry)
+                    except (OSError,ValueError,TypeError):
+                        pass
+                    errors.append({'stage':'upload','message':str(error)})
+            finally:
+                pending.clear();parents.clear()
         for path in entries:
             try:
                 entry=read_json(path)
@@ -174,19 +202,27 @@ class Engine:
                 envelope=self.sign('submission',payload)
                 if existing:
                     if existing!=envelope: raise ValueError('Submission ID already has different bytes')
+                    # The immutable envelope already exists. Its original batch may
+                    # have reached GitHub just before a local crash.
+                    entry.update(state='awaiting_receipt',error=None,last_attempt_at=now());write_json(path,entry)
                 else:
-                    try: self.remote.request('GET','/git/commits/'+fixed_sha(payload['commit']))
-                    except RemoteError as error:
-                        if error.status!=404: raise
-                        # No mutable branch is overwritten. Each unique submission preserves its own Git commit.
-                        ref='refs/heads/benchmark-delivery/'+self.actor+'/'+entry['id']
-                        subprocess.run(['git','-C',entry['repo'],'push','https://github.com/'+self.remote.repository+'.git',payload['commit']+':'+ref],
-                                       stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=120,check=True)
-                    self.remote.update({published:canonical(envelope)},parents=(payload['commit'],))
-                entry.update(state='awaiting_receipt',error=None,last_attempt_at=now());write_json(path,entry)
+                    if payload['commit'] not in commit_presence:
+                        try:
+                            self.remote.request('GET','/git/commits/'+fixed_sha(payload['commit']))
+                            commit_presence[payload['commit']]=True
+                        except RemoteError as error:
+                            if error.status!=404: raise
+                            # No mutable branch is overwritten. Each unique submission preserves its own Git commit.
+                            ref='refs/heads/benchmark-delivery/'+self.actor+'/'+entry['id']
+                            subprocess.run(['git','-C',entry['repo'],'push','https://github.com/'+self.remote.repository+'.git',payload['commit']+':'+ref],
+                                           stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=120,check=True)
+                            commit_presence[payload['commit']]=True
+                    pending[published]=(path,envelope);parents.append(payload['commit'])
+                    if len(pending)>=OUTBOX_PUBLISH_BATCH_SIZE: publish_pending()
             except Exception as error:
                 entry.update(error=str(error),last_attempt_at=now());write_json(path,entry)
                 errors.append({'stage':'upload','message':str(error)})
+        publish_pending()
 
     def upload_pass(self,known_record_ids):
         """Run one durable, single-writer local discovery and submission pass."""
