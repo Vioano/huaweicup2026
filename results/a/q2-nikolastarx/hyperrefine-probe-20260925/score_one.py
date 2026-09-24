@@ -26,14 +26,18 @@ def main():
     p.add_argument('--raw-root', type=Path, required=True)
     p.add_argument('--seed-e0-directory', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--retimed', action='store_true')
     args = p.parse_args()
     here = Path(__file__).resolve().parent
-    probe = here / 'run-003-k2-v3'
-    meta = json.loads((probe / 'result.json').read_bytes())
-    packed = (probe / 'refined-plan.json.gz').read_bytes()
+    probe = here / ('retime-003-k2-v1' if args.retimed else 'run-003-k2-v3')
+    meta = json.loads((probe / ('receipt.json' if args.retimed else 'result.json')).read_bytes())
+    packed = (probe / ('plan.json.gz' if args.retimed else 'refined-plan.json.gz')).read_bytes()
     raw = gzip.decompress(packed)
-    assert sha(packed) == meta['output_gzip_sha256']
-    assert sha(raw) == meta['output_raw_sha256']
+    if args.retimed:
+        assert sha(raw) == meta['plan_sha256']
+    else:
+        assert sha(packed) == meta['output_gzip_sha256']
+        assert sha(raw) == meta['output_raw_sha256']
     graph, config = args.raw_root / 'case_003.json', args.raw_root / 'config.txt'
     assert sha(graph.read_bytes()) == meta['graph_sha256']
     assert sha(config.read_bytes()) == meta['config_sha256']
@@ -52,7 +56,8 @@ def main():
     plan = args.output / 'plan.json'
     plan.write_bytes(raw)
     evidence = {'status': 'starting', 'case': '003', 'cores': 2,
-                'refiner_commit': meta['source_code_commit'],
+                'refiner_commit': meta.get('source_code_commit', meta.get('constructor_commit')),
+                'retimed': args.retimed,
                 'runner_commit': subprocess.check_output(
                     ['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
                 'graph_sha256': meta['graph_sha256'],
