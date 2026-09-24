@@ -64,7 +64,7 @@ class Engine:
         return self.signatures.verify(envelope,domain=domain,trusted_keys=keys)
 
     def channel(self,head,name,domain):
-        try: envelope=json.loads(self.remote.read(head,'channels/'+name+'.json'))
+        try: envelope=json.loads(self.remote.read_path(head,'channels/'+name+'.json'))
         except FileNotFoundError: return None,None
         payload=self.verify(envelope,domain,central=True)
         if type(payload.get('generation')) is not int or payload['generation']<1: raise ValueError('Invalid channel generation')
@@ -133,7 +133,7 @@ class Engine:
                 return
         manifest=channel['manifest']; path=path_ok(channel['object'])
         if path!='objects/'+manifest['payload_sha256']: raise ValueError('Snapshot object identity mismatch')
-        data=self.remote.read(head,path); payload=unpack(data,manifest)
+        data=self.remote.read_path(head,path); payload=unpack(data,manifest)
         if payload['publisher']['actor']!=self.leader: raise ValueError('Wrong snapshot authority')
         if previous:
             if '_channel' in previous:
@@ -232,7 +232,7 @@ class Engine:
             if accepted_manifest and accepted_manifest.get('snapshot_id')==previous['manifest'].get('snapshot_id'):
                 old=self.accepted_payload(previous['manifest'])
             else:
-                old=unpack(self.remote.read(head,previous['object']),previous['manifest'])
+                old=unpack(self.remote.read_path(head,previous['object']),previous['manifest'])
             reject_history_regression(old,payload)
             if old['snapshot_id']==payload['snapshot_id']: return
         manifest=publish_files(payload,self.state/'published')
