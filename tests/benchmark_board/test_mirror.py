@@ -1,8 +1,7 @@
 import copy
+import gzip
 import json
-import shutil
 import sys
-import tempfile
 import threading
 import unittest
 from http.server import ThreadingHTTPServer
@@ -14,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src/benchmark_boar
 from core import digest, packed
 from mirror import MirrorView
 from app import make_handler
-from benchmark_sync.snapshot import read_central, publish_files, canonical
+from benchmark_sync.snapshot import read_central, publish_files, canonical, snapshot_id
 import test_ledger
 
 
@@ -44,11 +43,16 @@ class MirrorTests(unittest.TestCase):
         candidate['record_count'] = len(candidate['records'])
         candidate['record_ids_sha256'] = digest(('\n'.join(sorted(r['id'] for r in candidate['records'])) + '\n').encode())
         candidate['records_sha256'] = digest(canonical(candidate['records']))
-        candidate['snapshot_id'] = digest(canonical(candidate))
-        with tempfile.TemporaryDirectory() as tmp:
-            manifest = publish_files(candidate, Path(tmp))
-            shutil.copy2(Path(tmp) / manifest['payload_file'], self.directory)
-            shutil.copy2(Path(tmp) / 'current.json', self.current)
+        candidate['snapshot_id'] = snapshot_id(candidate)
+        raw = canonical(candidate)
+        compressed = gzip.compress(raw, mtime=0)
+        manifest = {k: candidate[k] for k in ('schema_version', 'generated_at', 'sequence',
+                    'snapshot_id', 'record_count', 'record_ids_sha256', 'records_sha256', 'publisher')}
+        name = 'snapshot-' + candidate['snapshot_id'] + '.json.gz'
+        manifest.update(payload_file=name, payload_size=len(compressed),
+                        payload_sha256=digest(compressed), decoded_size=len(raw))
+        (self.directory / name).write_bytes(compressed)
+        self.current.write_bytes(canonical(manifest))
 
     def test_full_history_and_selection_parity(self):
         f = self.fixture
@@ -111,6 +115,36 @@ class MirrorTests(unittest.TestCase):
         frozen = copy.deepcopy(self.fixture.man)
         frozen['official_code_hash'] = 'f' * 64
         with self.assertRaises(ValueError): MirrorView(self.current, frozen)
+
+    def test_nonobject_manifest_retains_view_and_rejects_first_load(self):
+        view = self.view()
+        original = view.records()
+        for bad in ([], None, 1, 'unexpected'):
+            with self.subTest(manifest=bad):
+                self.current.write_text(json.dumps(bad), encoding='utf-8')
+                self.assertEqual(view.records(), original)
+                self.assertEqual(view.health()['status'], 'degraded')
+                self.assertIn('must be an object', view.health()['runtime']['error'])
+                with self.assertRaises(ValueError): self.view()
+
+    def test_nonobject_decoded_payload_and_record_retain_view(self):
+        view = self.view()
+        original = view.records()
+        good_manifest = json.loads(self.current.read_bytes())
+        bad_record = copy.deepcopy(self.payload)
+        bad_record['records'] = [None]
+        bad_sources = dict(self.payload, source_status=[])
+        bad_source_item = dict(self.payload, source_status={'broken': None})
+        for bad in ([], None, 1, bad_record, bad_sources, bad_source_item):
+            with self.subTest(payload=type(bad).__name__):
+                raw = canonical(bad)
+                data = gzip.compress(raw, mtime=0)
+                manifest = dict(good_manifest, payload_size=len(data), payload_sha256=digest(data), decoded_size=len(raw))
+                (self.directory / manifest['payload_file']).write_bytes(data)
+                self.current.write_bytes(canonical(manifest))
+                self.assertEqual(view.records(), original)
+                self.assertEqual(view.health()['status'], 'degraded')
+                with self.assertRaises(ValueError): self.view()
 
     def test_read_only_http_contract_and_original_links(self):
         server = ThreadingHTTPServer(('127.0.0.1', 0), make_handler(self.view()))

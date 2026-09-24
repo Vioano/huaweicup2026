@@ -95,6 +95,8 @@ class MirrorView:
                     self._error = None
                     return
                 manifest = json.loads(raw)
+                if not isinstance(manifest, dict):
+                    raise ValueError('Snapshot manifest must be an object')
                 name = manifest.get('payload_file', '')
                 if not isinstance(name, str) or not re.fullmatch(r'snapshot-[0-9a-f]{64}\.json\.gz', name):
                     raise ValueError('Snapshot payload filename invalid')
