@@ -19,6 +19,15 @@ class LedgerTests(unittest.TestCase):
     def test_best_history_idempotence_and_restart(self):
         a=self.record();b=self.record('test-b',80);self.put(a,b);self.assertEqual(self.best()['metrics']['makespan_cycles'],80);self.assertEqual(self.put(a,b)['added'],0);self.assertEqual(len(self.l.records()),2)
         again=Ledger(Path(self.temp.name),self.man);self.assertEqual(len(again.events(0)),2)
+    def test_poll_cache_sees_another_connection_and_source_update(self):
+        self.put(self.record());self.assertEqual(len(self.l.records()),1);self.l.snapshot()
+        another=Ledger(Path(self.temp.name),self.man)
+        row=self.record('external',80)
+        another.ingest({'schema_version':1,'records':[row]},lambda p:self.blobs[p],self.source)
+        self.assertEqual(len(self.l.records()),2)
+        self.assertEqual(self.best()['metrics']['makespan_cycles'],80)
+        another.source_status('external',{'status':'ok'})
+        self.assertEqual(self.l.snapshot()['sources']['external']['status'],'ok')
     def test_withdraw_keeps_history_and_reverts(self):
         a=self.record();b=self.record('test-b',80);self.put(a,b);b.update(revision=2,status='withdrawn');self.put(b);self.assertEqual(self.best()['metrics']['makespan_cycles'],100);self.assertEqual(len(self.l.records()),3)
     def test_conflict_atomic(self):
