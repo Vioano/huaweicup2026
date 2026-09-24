@@ -1,0 +1,49 @@
+{
+  "artifacts": {
+    "E0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "E0.stdout.txt": "aa51aa9a43d2f0a834b37156f4558850742e0f44944a633b0fd7be87f8159ea1",
+    "comparison.json": "a3d11079202fd87900c8d037797b408db8982122161f3cfb8b81dc205cbd0193",
+    "model.json": "7df3ba90b9f7991d9337968c67e1e3f21dc9e1bbb36d51a0cc3b11dbddbf39cd",
+    "official.log": "b2929da7715bd99054567ab5c1480fd145e3c61e08705c8a05aad079eeb713a1",
+    "result.json": "d30cbd8fb221e4f96e1eee1a174d6194d8000295cfa1a23d3561c620f8a95173",
+    "trace.json": "29052954fddea7f89a787345a1f3e74cf165beb31355381222fc1b3d57435078"
+  },
+  "calls": {
+    "E0": 1
+  },
+  "process": {
+    "argv": [
+      "./.venv/bin/python",
+      "-B",
+      "./data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+      "<verified-inputs>/symmetric-k3/graph.json",
+      "<verified-inputs>/symmetric-k3/plan.json",
+      "--config",
+      "./data/raw/a/official/data/config.txt",
+      "--output",
+      "./output/p1-response-contract-probe/run-s59ee-20260924T2111Z/symmetric-k3/result.json",
+      "--trace-output",
+      "./output/p1-response-contract-probe/run-s59ee-20260924T2111Z/symmetric-k3/trace.json",
+      "--log-output",
+      "./output/p1-response-contract-probe/run-s59ee-20260924T2111Z/symmetric-k3/official.log"
+    ],
+    "cleanup_confirmed": true,
+    "cwd": ".",
+    "exit_code": 0,
+    "finished_at": "2026-09-24T21:11:05.994Z",
+    "log_derivation": "UTF-8 child output with workspace and temporary input root replaced by public labels",
+    "started_at": "2026-09-24T21:11:05.922Z",
+    "status": "ok",
+    "stderr": {
+      "path": "output/p1-response-contract-probe/run-s59ee-20260924T2111Z/symmetric-k3/E0.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "path": "output/p1-response-contract-probe/run-s59ee-20260924T2111Z/symmetric-k3/E0.stdout.txt",
+      "sha256": "aa51aa9a43d2f0a834b37156f4558850742e0f44944a633b0fd7be87f8159ea1"
+    },
+    "timeout_seconds": 10,
+    "wall_seconds": 0.0716643329942599
+  },
+  "status": "ok"
+}

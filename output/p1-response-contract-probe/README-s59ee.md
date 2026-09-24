@@ -1,0 +1,5 @@
+# P1 response-contract synthetic mechanism probe (s59ee)
+
+This is a three-case synthetic mechanism check, not a contest-case benchmark or a complete 500-cell batch. The frozen source checkout is `27339dc2ccef5f85fb77137afb66957ddd14a822`; prepared input directory `prepared-20260925-v4` is copied byte-identically from the P1 owner's handoff (prepare.json SHA-256 `b177631bb99cd8c4c26c6407c2ae302a3c9af6164c2b5f4be864b6ed18d23a53`).
+
+Command: `.venv/bin/python -B -m src.q1_benchmarks.response_contract_probe run output/p1-response-contract-probe/prepared-20260925-v4 output/p1-response-contract-probe/run-s59ee-20260924T2111Z`. It completed in about 0.243 seconds with three unmodified official E0 calls; no solver, E1, E2, or retries. Full and quotient models matched on Makespan, all operation timelines, traffic, and cross-task bytes for each case: divergent-k3 M=138, symmetric-k2 M=128, symmetric-k3 M=138. Raw receipts, comparisons, evaluator outputs, and hashes remain in the run directory. The 90-second figure in the preparer's admission protocol was a budget cap, not measured runtime.

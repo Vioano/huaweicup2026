@@ -1,0 +1,421 @@
+{
+  "compile_certificate": {
+    "bandwidth": 60,
+    "calls": {
+      "E0": 0,
+      "E1": 0,
+      "E2": 0,
+      "solver": 0
+    },
+    "capacity": {
+      "L1": 524288,
+      "UB": 131072
+    },
+    "compiler_source_hashes": {
+      "evaluation_validation.py": "103206b8c5c25e37de50cc3193de3989d7c1e01d4a11cc5f509dedd8f9be9a64",
+      "multicore_cut_evaluate_problem_1.py": "2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f",
+      "schedule_step1.py": "d8fe721ff3dbe036e34a20c00cce6430960860000a49eb467e63465f76b84034",
+      "schedule_step2.py": "2836baac176f4e0bdd9eec59b8d9ce254e209e5f7a251e23837ab684312fa0c3",
+      "schedule_step3.py": "50053db0436f1d166dd75436693ba3af49b5c339576beb6e7299477f6b69fc7a",
+      "stub_multicore_cut_and_schedule.py": "0a3a3b79b5173b466fc05fc8d33b72d11d90b4df78995435853d91c632a35892"
+    },
+    "cross_task_tensor_bytes": 0,
+    "official_sha256": "2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f",
+    "official_source": "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+    "tasks": {
+      "0": {
+        "core_id": 0,
+        "footprint": {
+          "L1": 0,
+          "UB": 182
+        },
+        "op_count": 4
+      },
+      "1": {
+        "core_id": 1,
+        "footprint": {
+          "L1": 0,
+          "UB": 182
+        },
+        "op_count": 4
+      },
+      "2": {
+        "core_id": 2,
+        "footprint": {
+          "L1": 0,
+          "UB": 182
+        },
+        "op_count": 4
+      },
+      "3": {
+        "core_id": 0,
+        "footprint": {
+          "L1": 0,
+          "UB": 182
+        },
+        "op_count": 4
+      },
+      "4": {
+        "core_id": 1,
+        "footprint": {
+          "L1": 0,
+          "UB": 182
+        },
+        "op_count": 4
+      },
+      "5": {
+        "core_id": 2,
+        "footprint": {
+          "L1": 0,
+          "UB": 182
+        },
+        "op_count": 4
+      }
+    },
+    "traffic": {
+      "added_copy_bytes": 1092,
+      "original_graph_copy_bytes": 0,
+      "partition_added_copy_bytes": 1092,
+      "scheduled_copy_bytes": 1092,
+      "spill_added_copy_bytes": 0
+    }
+  },
+  "full": {
+    "ddr_retirement_union": 30,
+    "events": 11,
+    "kind": "rational_response_NOT_E0",
+    "makespan": 138,
+    "per_core_finish": [
+      138,
+      138,
+      138
+    ],
+    "service_cycles": 30,
+    "task_intervals": [
+      {
+        "core": 0,
+        "end": 19,
+        "start": 0,
+        "task": 0
+      },
+      {
+        "core": 1,
+        "end": 19,
+        "start": 0,
+        "task": 1
+      },
+      {
+        "core": 2,
+        "end": 19,
+        "start": 0,
+        "task": 2
+      },
+      {
+        "core": 0,
+        "end": 138,
+        "start": 119,
+        "task": 3
+      },
+      {
+        "core": 1,
+        "end": 138,
+        "start": 119,
+        "task": 4
+      },
+      {
+        "core": 2,
+        "end": 138,
+        "start": 119,
+        "task": 5
+      }
+    ],
+    "trace": [
+      {
+        "core": 0,
+        "ddr": false,
+        "end": 1,
+        "op_id": 1,
+        "pipe": "PIPE_M",
+        "start": 0,
+        "task": 0,
+        "work": 1
+      },
+      {
+        "core": 1,
+        "ddr": false,
+        "end": 1,
+        "op_id": 3,
+        "pipe": "PIPE_M",
+        "start": 0,
+        "task": 1,
+        "work": 1
+      },
+      {
+        "core": 2,
+        "ddr": false,
+        "end": 1,
+        "op_id": 5,
+        "pipe": "PIPE_M",
+        "start": 0,
+        "task": 2,
+        "work": 1
+      },
+      {
+        "core": 0,
+        "ddr": true,
+        "end": 13,
+        "op_id": 14,
+        "pipe": "PIPE_MTE3",
+        "start": 1,
+        "task": 0,
+        "work": 2
+      },
+      {
+        "core": 1,
+        "ddr": true,
+        "end": 13,
+        "op_id": 16,
+        "pipe": "PIPE_MTE3",
+        "start": 1,
+        "task": 1,
+        "work": 2
+      },
+      {
+        "core": 2,
+        "ddr": true,
+        "end": 13,
+        "op_id": 18,
+        "pipe": "PIPE_MTE3",
+        "start": 1,
+        "task": 2,
+        "work": 2
+      },
+      {
+        "core": 0,
+        "ddr": true,
+        "end": 15,
+        "op_id": 13,
+        "pipe": "PIPE_MTE2",
+        "start": 0,
+        "task": 0,
+        "work": 3
+      },
+      {
+        "core": 1,
+        "ddr": true,
+        "end": 15,
+        "op_id": 15,
+        "pipe": "PIPE_MTE2",
+        "start": 0,
+        "task": 1,
+        "work": 3
+      },
+      {
+        "core": 2,
+        "ddr": true,
+        "end": 15,
+        "op_id": 17,
+        "pipe": "PIPE_MTE2",
+        "start": 0,
+        "task": 2,
+        "work": 3
+      },
+      {
+        "core": 0,
+        "ddr": false,
+        "end": 19,
+        "op_id": 2,
+        "pipe": "PIPE_V",
+        "start": 15,
+        "task": 0,
+        "work": 4
+      },
+      {
+        "core": 1,
+        "ddr": false,
+        "end": 19,
+        "op_id": 4,
+        "pipe": "PIPE_V",
+        "start": 15,
+        "task": 1,
+        "work": 4
+      },
+      {
+        "core": 2,
+        "ddr": false,
+        "end": 19,
+        "op_id": 6,
+        "pipe": "PIPE_V",
+        "start": 15,
+        "task": 2,
+        "work": 4
+      },
+      {
+        "core": 0,
+        "ddr": false,
+        "end": 120,
+        "op_id": 7,
+        "pipe": "PIPE_M",
+        "start": 119,
+        "task": 3,
+        "work": 1
+      },
+      {
+        "core": 1,
+        "ddr": false,
+        "end": 120,
+        "op_id": 9,
+        "pipe": "PIPE_M",
+        "start": 119,
+        "task": 4,
+        "work": 1
+      },
+      {
+        "core": 2,
+        "ddr": false,
+        "end": 127,
+        "op_id": 11,
+        "pipe": "PIPE_M",
+        "start": 119,
+        "task": 5,
+        "work": 8
+      },
+      {
+        "core": 0,
+        "ddr": true,
+        "end": 131,
+        "op_id": 20,
+        "pipe": "PIPE_MTE3",
+        "start": 120,
+        "task": 3,
+        "work": 2
+      },
+      {
+        "core": 1,
+        "ddr": true,
+        "end": 131,
+        "op_id": 22,
+        "pipe": "PIPE_MTE3",
+        "start": 120,
+        "task": 4,
+        "work": 2
+      },
+      {
+        "core": 0,
+        "ddr": true,
+        "end": 134,
+        "op_id": 19,
+        "pipe": "PIPE_MTE2",
+        "start": 119,
+        "task": 3,
+        "work": 3
+      },
+      {
+        "core": 1,
+        "ddr": true,
+        "end": 134,
+        "op_id": 21,
+        "pipe": "PIPE_MTE2",
+        "start": 119,
+        "task": 4,
+        "work": 3
+      },
+      {
+        "core": 2,
+        "ddr": true,
+        "end": 134,
+        "op_id": 23,
+        "pipe": "PIPE_MTE2",
+        "start": 119,
+        "task": 5,
+        "work": 3
+      },
+      {
+        "core": 2,
+        "ddr": true,
+        "end": 134,
+        "op_id": 24,
+        "pipe": "PIPE_MTE3",
+        "start": 127,
+        "task": 5,
+        "work": 2
+      },
+      {
+        "core": 0,
+        "ddr": false,
+        "end": 138,
+        "op_id": 8,
+        "pipe": "PIPE_V",
+        "start": 134,
+        "task": 3,
+        "work": 4
+      },
+      {
+        "core": 1,
+        "ddr": false,
+        "end": 138,
+        "op_id": 10,
+        "pipe": "PIPE_V",
+        "start": 134,
+        "task": 4,
+        "work": 4
+      },
+      {
+        "core": 2,
+        "ddr": false,
+        "end": 138,
+        "op_id": 12,
+        "pipe": "PIPE_V",
+        "start": 134,
+        "task": 5,
+        "work": 4
+      }
+    ]
+  },
+  "quotient": {
+    "distinct_responses": 1,
+    "equal_rounds": 1,
+    "explicit_tail_tasks": 3,
+    "kind": "synchronous_quotient_NOT_E0",
+    "makespan": 138,
+    "rounds": [
+      {
+        "end": 19,
+        "round": 0,
+        "start": 0
+      }
+    ],
+    "tail": {
+      "ddr_retirement_union": 15,
+      "events": 6,
+      "kind": "rational_response_NOT_E0",
+      "makespan": 19,
+      "per_core_finish": [
+        19,
+        19,
+        19
+      ],
+      "service_cycles": 15,
+      "task_intervals": [
+        {
+          "core": 0,
+          "end": 19,
+          "start": 0,
+          "task": 3
+        },
+        {
+          "core": 1,
+          "end": 19,
+          "start": 0,
+          "task": 4
+        },
+        {
+          "core": 2,
+          "end": 19,
+          "start": 0,
+          "task": 5
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "artifacts": {
+    "E0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "E0.stdout.txt": "8d8d5b24e2cd87919c38eba5b0ecdf81bd191c8524a8d043b44290f2edacdf9e",
+    "comparison.json": "a3d11079202fd87900c8d037797b408db8982122161f3cfb8b81dc205cbd0193",
+    "model.json": "d3077f22f7c0b665be23e85bdbac59ba5cee2425a44c7541e5e1456625c227d9",
+    "official.log": "b2929da7715bd99054567ab5c1480fd145e3c61e08705c8a05aad079eeb713a1",
+    "result.json": "e2d2e936daaec9e17b6c42e497e9360e112d455938d0c5789c083cc3df5db614",
+    "trace.json": "e79491e37aeacce60c9ea3e521bf8cbdbab2e653fa72277e53205701241999d1"
+  },
+  "calls": {
+    "E0": 1
+  },
+  "process": {
+    "argv": [
+      "./.venv/bin/python",
+      "-B",
+      "./data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+      "<verified-inputs>/divergent-k3/graph.json",
+      "<verified-inputs>/divergent-k3/plan.json",
+      "--config",
+      "./data/raw/a/official/data/config.txt",
+      "--output",
+      "./output/p1-response-contract-probe/run-s59ee-20260924T2111Z/divergent-k3/result.json",
+      "--trace-output",
+      "./output/p1-response-contract-probe/run-s59ee-20260924T2111Z/divergent-k3/trace.json",
+      "--log-output",
+      "./output/p1-response-contract-probe/run-s59ee-20260924T2111Z/divergent-k3/official.log"
+    ],
+    "cleanup_confirmed": true,
+    "cwd": ".",
+    "exit_code": 0,
+    "finished_at": "2026-09-24T21:11:06.073Z",
+    "log_derivation": "UTF-8 child output with workspace and temporary input root replaced by public labels",
+    "started_at": "2026-09-24T21:11:05.996Z",
+    "status": "ok",
+    "stderr": {
+      "path": "output/p1-response-contract-probe/run-s59ee-20260924T2111Z/divergent-k3/E0.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "path": "output/p1-response-contract-probe/run-s59ee-20260924T2111Z/divergent-k3/E0.stdout.txt",
+      "sha256": "8d8d5b24e2cd87919c38eba5b0ecdf81bd191c8524a8d043b44290f2edacdf9e"
+    },
+    "timeout_seconds": 10,
+    "wall_seconds": 0.07739395799580961
+  },
+  "status": "ok"
+}
