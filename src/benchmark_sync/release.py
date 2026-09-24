@@ -107,5 +107,5 @@ def receive_release(engine,head):
             return
     m=channel['manifest']; path=channel['object']
     if path!='objects/'+m['release_id']: raise ValueError('Release object identity mismatch')
-    dest=stage_release(engine.state,m,engine.remote.read(head,path))
+    dest=stage_release(engine.state,m,engine.remote.read_path(head,path))
     write_json(pointer,{'release_id':m['release_id'],'code_commit':m['code_commit'],'path':str(dest),'_channel':envelope})

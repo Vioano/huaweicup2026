@@ -245,6 +245,19 @@ class GitHub:
             raise ValueError('Non-regular Git file')
         return self.blob(fixed_sha(entry.get('sha')),entry.get('size'))
 
+    def present_paths(self,commit,paths):
+        """Resolve only the files a CAS update touches, never the growing whole tree."""
+        if not commit: return {}
+        entries={}
+        for path in sorted(paths):
+            path_ok(path)
+            try: entry=self.tree_entry(commit,path)
+            except FileNotFoundError: continue
+            if entry.get('type')!='blob' or entry.get('mode') not in ('100644','100755'):
+                raise ValueError('Non-regular Git file at transport path')
+            entries[path]=entry
+        return entries
+
     def put_blob(self,data):
         if len(data)>MAX_FILE: raise ValueError('Git upload too large')
         return self.request('POST','/git/blobs',{'content':base64.b64encode(data).decode(),'encoding':'base64'})['sha']
@@ -264,7 +277,7 @@ class GitHub:
         original=None
         for attempt in range(5):
             head=self.head(branch)
-            entries=self.tree(head) if head else {}
+            entries=self.present_paths(head,set(files)|(set(expected) if expected else set()))
             for p,want in (expected or {}).items():
                 current=self.blob(entries[p]['sha'],entries[p].get('size')) if p in entries else None
                 if current!=want: raise RuntimeError('Channel changed before publication; rebuild against latest generation')

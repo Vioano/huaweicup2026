@@ -11,6 +11,10 @@ class RacingGitHub(GitHub):
  def new(self): self.counter+=1;return f'{self.counter:040x}'
  def head(self,branch=None):return self.branches.get(self.branch if branch is None else branch)
  def tree(self,c):return {p:{'sha':sha,'size':len(self.data[sha])} for p,sha in self.commits[c].items()}
+ def tree_entry(self,c,p):
+  entry=self.tree(c).get(p)
+  if entry is None:raise FileNotFoundError(p)
+  return dict(entry,type='blob',mode='100644')
  def blob(self,sha,size=None):return self.data[sha]
  def put_blob(self,data):
   sha=hashlib.sha1(data).hexdigest();self.data[sha]=data;return sha
@@ -39,6 +43,19 @@ class RacingGitHub(GitHub):
   raise AssertionError((method,path))
 
 class GitHubTests(unittest.TestCase):
+ def test_cas_updates_resolve_only_touched_paths(self):
+  r=RacingGitHub(False);lookups=[]
+  def lookup(commit,path):
+   lookups.append(path)
+   sha=r.commits[commit].get(path)
+   if sha is None:raise FileNotFoundError(path)
+   return {'sha':sha,'size':len(r.data[sha]),'type':'blob','mode':'100644'}
+  r.tree_entry=lookup
+  r.tree=lambda commit: (_ for _ in ()).throw(AssertionError('recursive tree must not be read'))
+  r.update({'channels/fast.json':b'new'},expected={'channels/fast.json':None})
+  self.assertEqual(set(lookups),{'channels/fast.json'})
+  self.assertEqual(r.blob(r.commits[r.head()]['channels/fast.json']),b'new')
+
  def test_same_process_writers_serialize_branch_ref_updates(self):
   import threading
   from concurrent.futures import ThreadPoolExecutor
