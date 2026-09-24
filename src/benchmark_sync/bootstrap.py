@@ -98,8 +98,7 @@ def main():
         if channel['generation']<previous['generation'] or (channel['generation']==previous['generation'] and channel!=previous):
             raise ValueError('Bootstrap refused to roll back existing accepted release')
     write(desired_path,canonical(bootstrap))
-    launcher='''import json, pathlib, subprocess, sys\ns=pathlib.Path(__file__).resolve().parent\na=s/"software/active.json"\nc=json.loads((s/"config.json").read_bytes())\nb=json.loads((a if a.exists() else s/"bootstrap.json").read_bytes())\nsys.exit(subprocess.call([c["python"],"-X","utf8","-u","-m","src.benchmark_sync.supervisor","--config",str(s/"config.json"),"--bootstrap",str(s/"bootstrap.json")],cwd=b["path"]))\n'''
-    write(state/'start.py',launcher.encode())
+    write(state/'start.py',(release/'src/benchmark_sync/launcher.py').read_bytes())
     subprocess.run([sys.executable,'-X','utf8','-m','src.benchmark_sync','--config',str(config_path),'once'],cwd=release,check=True)
     print(json.dumps({'actor':actor,'public_key':public,'public_sha256':sha(public.encode()),'release_id':m['release_id'],
                       'next':'Send this PUBLIC key once in Issue 33 under your own account, then hand off the existing website port and install/start the supervisor. Never send identity.pem.',

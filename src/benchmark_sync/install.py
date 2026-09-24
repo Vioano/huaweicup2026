@@ -16,9 +16,7 @@ TASK='HuaweiCup-Benchmark-Sync'
 
 
 def launcher(state):
-    # Resolve approved active code on every OS restart; the launcher stays tiny and stable.
-    source='''import json,pathlib,subprocess,sys\ns=pathlib.Path(__file__).resolve().parent\na=s/"software/active.json"\nc=json.loads((s/"config.json").read_bytes())\nb=json.loads((a if a.exists() else s/"bootstrap.json").read_bytes())\nsys.exit(subprocess.call([c["python"],"-X","utf8","-u","-m","src.benchmark_sync.supervisor","--config",str(s/"config.json"),"--bootstrap",str(s/"bootstrap.json")],cwd=b["path"]))\n'''
-    atomic_write(state/'start.py',source.encode())
+    atomic_write(state/'start.py',Path(__file__).with_name('launcher.py').read_bytes())
 
 
 def install(config_path,*,start=False):

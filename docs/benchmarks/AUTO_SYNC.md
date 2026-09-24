@@ -40,6 +40,14 @@ python -X utf8 -m src.benchmark_sync --config /outside-git/config.json enqueue -
 
 已打开页面比较实际UI资源指纹，发现部署变化后保留筛选/详情/滚动并重新载入。数据更新由同一页面读取新快照。软件desired是已收到候选，active/health=ok才是实际运行；二者不混同。
 
+稳定 `start.py` 持有独立 `launcher.lock`，在原生登录任务的同一等待进程下接续监督器。监督器升级先检查候选监督器可导入及交接协议、候选页面和正式端口健康，再以退出码75交回父进程；退出前停止自己拥有的网站/worker并释放 `supervisor.lock`。父进程从已核准active启动新监督器，不调用Agent，不重新创建登录任务。新监督器在ready之前退出则将软件active退回previous并拒绝该候选，账本/快照/队列不回退。异常退出带退避；不同launcher不能并行拥有同一状态。
+
+`software/supervisor.json` 单独报告实际进程PID、代码根目录、release/commit、启动时间、子进程PID与ready/handoff状态。它与网站active版本分别核对，不能用子进程已换版代替监督器自身换版。`software/launcher.json` 标明固定父进程PID和当前监督器PID。Windows/macOS同用这条交接链。
+
+Windows短暂读句柄/杀毒软件占用引起WinError5/32/33时，原子替换最多10次，总等待2.62秒；期间保留旧目标，始终不先删目标、不改ACL。持续拒绝及其他I/O错误仍报错，保留可信旧状态；这不是绕过权限。监督器和worker使用同一实现，稳定launcher也含该实现。
+
+**既有旧启动器的一次迁移**：旧版本只subprocess.call一次，更新磁盘start.py不会改变已运行父进程。两端唯一部署者在此补丁正式签名发布后，先保留旧start.py与进程树/软件状态；仅从已核验active release执行 `from src.benchmark_sync.install import launcher; launcher(state)` 更新start.py，再在原生服务已有入口执行一次受控停旧/启动。不得重复install覆盖Fang既有WScript等待包装、创建第二任务或手工拷贝未审核源码。确认launcher protocol=1与实际监督器路径/版本后，后续升级不再需要人工重启。测试需至少再经过一次真实签名版本自动切换才能称迁移验收，不把这次手工冷启动算成自动升级。
+
 ## 一次性接入
 
 需要本人现成 Python3.12、Node、gh和Git；没有时先报告实际环境，不冒称已安装。队长会给 bootstrap.py 的固定提交链接，成员只取这一个文件，无需全库fetch：

@@ -11,9 +11,9 @@ from pathlib import Path
 import re
 import sqlite3
 import subprocess
-import tempfile
 from datetime import datetime, timezone
 from contextlib import closing
+from .launcher import atomic_write
 
 MAX_COMPRESSED = 32 * 1024 * 1024
 MAX_DECODED = 256 * 1024 * 1024
@@ -29,20 +29,6 @@ def digest(data):
 
 def now():
     return datetime.now(timezone.utc).isoformat()
-
-
-def atomic_write(path: Path, data: bytes):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd, temporary = tempfile.mkstemp(prefix=path.name + ".", suffix=".tmp", dir=path.parent)
-    try:
-        with os.fdopen(fd, "wb") as f:
-            f.write(data)
-            f.flush()
-            os.fsync(f.fileno())
-        os.replace(temporary, path)
-    finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
 
 
 def git_json(repo, commit, path):
