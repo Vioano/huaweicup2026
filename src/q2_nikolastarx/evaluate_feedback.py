@@ -43,7 +43,7 @@ def dump(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     raw = json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + '\n'
     temporary = path.with_suffix(path.suffix + '.tmp')
-    temporary.write_text(raw)
+    temporary.write_text(raw, encoding='utf-8')
     temporary.replace(path)
 
 
@@ -113,7 +113,20 @@ def cleanup_tree(root, known):
     return sorted(killed)
 
 
-def monitored(argv, folder, deadline, rss_limit):
+def is_windows():
+    return os.name == 'nt'
+
+
+def monitored(argv, folder, deadline, rss_limit, *, cleanup_timeout=5.0):
+    """Platform dispatch; POSIX behavior stays in the original implementation."""
+    if is_windows():
+        from .windows_process import monitored as windows_monitored
+        return windows_monitored(argv, folder, deadline, rss_limit, cwd=ROOT,
+            env={**os.environ, 'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONUTF8': '1'}, cleanup_timeout=cleanup_timeout)
+    return _monitored_posix(argv, folder, deadline, rss_limit)
+
+
+def _monitored_posix(argv, folder, deadline, rss_limit):
     folder.mkdir(parents=True, exist_ok=True)
     receipt = {'argv': argv, 'started_at': utc(), 'status': 'starting',
                'sample_interval_seconds': SAMPLE_INTERVAL, 'observed_peak_rss_bytes': 0,
@@ -199,15 +212,67 @@ def verify_inputs(runner_commit):
                       'inputs': inputs, 'official_files': official, 'official_sha256': code_hash}
 
 
+def _windows_host_info():
+    """Read current host facts without PowerShell/subprocess or guessed defaults."""
+    cpu = ram = None
+    missing = {}
+    try:
+        import winreg
+        with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r'HARDWARE\DESCRIPTION\System\CentralProcessor\0') as key:
+            cpu = winreg.QueryValueEx(key, 'ProcessorNameString')[0].strip()
+            if not cpu:
+                raise ValueError('empty ProcessorNameString')
+    except Exception as error:
+        cpu = None
+        missing['cpu'] = 'Windows registry CPU query unavailable: ' + repr(error)
+    try:
+        import ctypes as ct
+
+        class MemoryStatus(ct.Structure):
+            _fields_ = [('length', ct.c_uint32), ('load', ct.c_uint32)] + [
+                (name, ct.c_uint64) for name in ('total_phys', 'available_phys', 'total_page',
+                    'available_page', 'total_virtual', 'available_virtual', 'available_extended')]
+
+        api = ct.WinDLL('kernel32', use_last_error=True)
+        api.GlobalMemoryStatusEx.argtypes = [ct.POINTER(MemoryStatus)]
+        api.GlobalMemoryStatusEx.restype = ct.c_int32
+        info = MemoryStatus()
+        info.length = ct.sizeof(info)
+        ok = api.GlobalMemoryStatusEx(ct.byref(info))
+        error = ct.get_last_error()
+        if not ok or not info.total_phys:
+            raise OSError(error, 'GlobalMemoryStatusEx failed or returned zero total memory')
+        ram = int(info.total_phys)
+    except Exception as error:
+        missing['ram_bytes'] = 'Windows physical RAM query unavailable: ' + repr(error)
+    return cpu, ram, missing
+
+
 def environment():
     def sysctl(key):
         return subprocess.check_output(['sysctl', '-n', key], text=True).strip()
-    return {'os': platform.platform(), 'cpu': sysctl('machdep.cpu.brand_string'),
+    if is_windows():
+        cpu, ram, missing = _windows_host_info()
+    else:
+        cpu, ram, missing = sysctl('machdep.cpu.brand_string'), int(sysctl('hw.memsize')), {}
+    result = {'os': platform.platform(), 'cpu': cpu,
             'gpu': 'not used; CPU-only Python solver and official evaluator',
-            'ram_bytes': int(sysctl('hw.memsize')), 'python': platform.python_version(),
+            'ram_bytes': ram, 'python': platform.python_version(),
             'dependencies': 'uv.lock sha256=' + digest((ROOT / 'uv.lock').read_bytes()) +
                             '; uv sync --locked prepared before this run; no compilation/training',
             'threads': 1, 'workers': 1, 'logical_cpus_available': os.cpu_count()}
+    if missing:
+        result['_missing_reasons'] = missing
+    return result
+
+
+def observed_rss_peak(row):
+    """Whole-attempt peak is unknown if any launched stage lacks a sample."""
+    stages = [row[key] for key in ('solver', 'final') if key in row]
+    values = [stage.get('observed_peak_rss_bytes') for stage in stages]
+    if not values or any(type(value) is not int or value < 0 for value in values):
+        return None
+    return max(values)
 
 
 def compress_jsons(folder):
@@ -365,10 +430,10 @@ def export(output):
         ledger = row.get('online', {})
         attempts = ledger.get('attempts', [])
         calls = None if row.get('online_E0_calls') is None else row['online_E0_calls'] + row['final_E0_calls']
-        row_environment = {k: v for k, v in batch['environment'].items() if k != 'logical_cpus_available'}
-        row_environment['peak_rss_bytes'] = max(row.get('solver', {}).get('observed_peak_rss_bytes', 0),
-                                                row.get('final', {}).get('observed_peak_rss_bytes', 0)) or None
+        row_environment = {k: v for k, v in batch['environment'].items() if k not in ('logical_cpus_available', '_missing_reasons')}
+        row_environment['peak_rss_bytes'] = observed_rss_peak(row)
         missing = {'provenance.measurement.seed': 'Deterministic constructors; no random seed is used.'}
+        missing.update({'provenance.environment.' + k: reason for k, reason in batch['environment'].get('_missing_reasons', {}).items()})
         if calls is None:
             missing['provenance.measurement.calls.E0'] = 'Interrupted dispatch or missing solver ledger leaves actual online launches unknown; reservations remain charged.'
         if row_environment['peak_rss_bytes'] is None:

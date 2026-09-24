@@ -9,7 +9,8 @@ The protocol must exist unchanged in runner_commit. Required protocol keys:
   max_E0, max_internal_per_cell, evaluation_timeout_seconds,
   solver_wall_seconds, batch_wall_seconds, rss_observation_stop_bytes,
   workers=1, retries=0, max_E1=0, max_E2=0.
-Optional: extra_solver_argv, references, authors, offline_costs, python.
+Optional: extra_solver_argv, references, authors, offline_costs, python,
+  process_cleanup_grace_seconds (Windows; reserved inside each phase wall cap).
 
 Both solver modes receive graph/--config/--cores/--output/--evidence/--wall.
 Only portfolio receives --evaluation-timeout. Additional frozen arguments are
@@ -33,6 +34,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import sys
 import tempfile
 import time
 
@@ -43,6 +45,15 @@ REPO = common.REPO
 RUNNER = 'src/q2_nikolastarx/evaluate_matrix.py'
 REQUIRED = set('schema_version run_id session task_url cases cores methods solver_mode solver_module source_files algorithm_id algorithm_name variant method_description output_prefix config_sha256 official_sha256 max_E0 max_internal_per_cell evaluation_timeout_seconds solver_wall_seconds batch_wall_seconds rss_observation_stop_bytes workers retries max_E1 max_E2'.split())
 CONTROLLED_FLAGS = {'--config', '--cores', '--output', '--evidence', '--wall', '--evaluation-timeout'}
+
+
+def python_command(p):
+    """Preserve the historical mac command; use the actual interpreter on Win."""
+    return p.get('python', sys.executable if common.is_windows() else '.venv/bin/python')
+
+
+def cleanup_grace(p):
+    return p.get('process_cleanup_grace_seconds', 5.0) if common.is_windows() else 0.0
 
 
 def sha(raw):
@@ -57,7 +68,7 @@ def save(path, data):
     """Atomic and fsynced before launching any potentially expensive child."""
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + '.tmp')
-    with temporary.open('w') as stream:
+    with temporary.open('w', encoding='utf-8') as stream:
         json.dump(data, stream, ensure_ascii=False, indent=2, allow_nan=False)
         stream.write('\n')
         stream.flush()
@@ -124,6 +135,12 @@ def validate_protocol(p):
         raise ValueError('extra_solver_argv must be a literal string array')
     if any(a.split('=', 1)[0] in CONTROLLED_FLAGS for a in extra):
         raise ValueError('extra_solver_argv cannot override controlled arguments')
+    if 'python' in p and (not isinstance(p['python'], str) or not p['python'] or '\0' in p['python']):
+        raise ValueError('python must be one explicit interpreter path')
+    if 'process_cleanup_grace_seconds' in p or common.is_windows():
+        grace = p.get('process_cleanup_grace_seconds', 5.0)
+        if type(grace) not in (int, float) or not 0 < grace < min(p['solver_wall_seconds'], p['evaluation_timeout_seconds']):
+            raise ValueError('Cleanup grace must be positive and smaller than phase wall caps')
     return [(case, cores) for case in p['cases'] for cores in p['cores']]
 
 
@@ -134,7 +151,7 @@ def frozen_inputs(p, protocol_path, source_commit, runner_commit):
     hashes = {'source': {}, 'runner': {}, 'inputs': {}, 'official': {}}
     targets = [(source_commit, path, 'source') for path in p['source_files']]
     targets += [(runner_commit, path, 'runner') for path in
-                (RUNNER, 'src/q2_nikolastarx/evaluate_feedback.py', 'uv.lock',
+                (RUNNER, 'src/q2_nikolastarx/evaluate_feedback.py', 'src/q2_nikolastarx/windows_process.py', 'uv.lock',
                  'docs/a/source-manifest.json', relative(protocol_path))]
     for commit, path, category in targets:
         raw = repo_path(path).read_bytes()
@@ -198,13 +215,17 @@ def recovery_status(path):
             'warning': 'Read-only recovery plan. Check orphan processes before a separately authorized continuation; no automatic resume.'}
 
 
-def execute_cell(p, case, cores, folder, deadline, monitor=common.monitored):
+def execute_cell(p, case, cores, folder, deadline, monitor=None):
+    grace = cleanup_grace(p)
+    if monitor is None:
+        def monitor(argv, output, end, rss):
+            return common.monitored(argv, output, end, rss, cleanup_timeout=grace if grace else 5.0)
     folder.mkdir(parents=True, exist_ok=False)
     rel = relative(folder)
     row = {'case': case, 'cores': cores, 'status': 'failed', 'started_at': common.utc(),
            'calls': {'solver': 0, 'E0': 0, 'E1': 0, 'E2': 0}, 'phase': 'solver_dispatch',
            'solver_mode': p['solver_mode']}
-    python = p.get('python', '.venv/bin/python')
+    python = python_command(p)
     argv = [python, '-B', '-m', p['solver_module'], f'data/raw/a/official/data/case_{case}.json',
             '--config', str(common.CONFIG), '--cores', str(cores), '--output', rel + '/plan.json',
             '--evidence', rel + '/online', '--wall', str(p['solver_wall_seconds'])]
@@ -214,7 +235,7 @@ def execute_cell(p, case, cores, folder, deadline, monitor=common.monitored):
     save(folder / 'run.json', row)
     try:
         row['solver'] = monitor(argv, folder / 'solver-process',
-                                min(deadline, time.perf_counter() + p['solver_wall_seconds']),
+                                min(deadline, time.perf_counter() + p['solver_wall_seconds']) - grace,
                                 p['rss_observation_stop_bytes'])
         row['calls']['solver'] = 1 if row['solver'].get('pid') is not None else 0
         row['calls']['E0'] = None if row['calls']['solver'] else 0
@@ -232,6 +253,8 @@ def execute_cell(p, case, cores, folder, deadline, monitor=common.monitored):
         if row['solver']['status'] != 'ok' or ledger is None or ledger.get('status') != 'ok':
             row['status'] = 'timeout' if row['solver']['status'] == 'timeout' else 'failed'
             raise ValueError('Solver did not complete successfully')
+        if stop_dispatch_reason(row):
+            raise ValueError('Solver process observation or cleanup is not verified')
         names = [a['name'] for a in ledger.get('attempts', [])]
         if len(names) != len(set(names)) or not set(names) <= set(p['methods']):
             raise ValueError('Solver attempts outside frozen method enum')
@@ -252,12 +275,14 @@ def execute_cell(p, case, cores, folder, deadline, monitor=common.monitored):
                       rel + '/plan.json', '--config', str(common.CONFIG), '-o', rel + '/final/result.json',
                       '--trace-output', rel + '/final/trace.json', '--log-output', rel + '/final/official.log']
         row['final'] = monitor(final_argv, folder / 'final',
-                               min(deadline, time.perf_counter() + p['evaluation_timeout_seconds']),
+                               min(deadline, time.perf_counter() + p['evaluation_timeout_seconds']) - grace,
                                p['rss_observation_stop_bytes'])
         row['calls']['E0'] += 1 if row['final'].get('pid') is not None else 0
         if row['final']['status'] != 'ok':
             row['status'] = 'timeout' if row['final']['status'] == 'timeout' else 'failed'
             raise ValueError('Independent final E0 failed')
+        if stop_dispatch_reason(row):
+            raise ValueError('Final process observation or cleanup is not verified')
         result = common.valid_result(folder / 'final/result.json', cores)
         row['full_online_result_equal'] = None
         if p['solver_mode'] == 'portfolio':
@@ -324,8 +349,8 @@ def board_record(p, row, folder, context):
     selected_strategy = selected_attempt.get('detail', {}).get('selected_strategy', ledger.get('selected'))
     result = read(folder / 'final/result.json.gz') if row['status'] == 'ok' else None
     movement = result['data_movement_bytes'] if result else {}
-    env = {k: v for k, v in context['environment'].items() if k != 'logical_cpus_available'}
-    env['peak_rss_bytes'] = max((row.get(k, {}).get('observed_peak_rss_bytes', 0) for k in ('solver', 'final')), default=0) or None
+    env = {k: v for k, v in context['environment'].items() if k not in ('logical_cpus_available', '_missing_reasons')}
+    env['peak_rss_bytes'] = common.observed_rss_peak(row)
     source_commit, runner_commit = context['source_commit'], context['runner_commit']
     provenance = {'producer_session': p['session'], 'task_url': p['task_url'],
         'solver': {'source': code_source(source_commit, p['solver_module'].replace('.', '/') + '.py', 'main'),
@@ -346,14 +371,15 @@ def board_record(p, row, folder, context):
                         'failure': None if result else {'stage': row['phase'], 'reason': row.get('error', 'incomplete'),
                             'exit_code': row.get('final', row.get('solver', {})).get('exit_code'),
                             'elapsed_seconds': row.get('solver', {}).get('wall_seconds')}},
-        'missing_reasons': {}}
+        'missing_reasons': {'provenance.environment.' + k: reason
+                            for k, reason in context['environment'].get('_missing_reasons', {}).items()}}
     def explain_nulls(value, path='provenance'):
         if isinstance(value, dict):
             for key, item in value.items():
                 if key != 'missing_reasons':
                     explain_nulls(item, path + '.' + key)
         elif value is None and not path.endswith(('.failure', '.selected_algorithm_id', '.selected_solver_commit')):
-            provenance['missing_reasons'][path] = ('Deterministic solver, no random seed.' if path.endswith('.seed')
+            provenance['missing_reasons'].setdefault(path, 'Deterministic solver, no random seed.' if path.endswith('.seed')
                 else 'Not observed/available in this actual attempt; see original failure and process receipts.')
     explain_nulls(provenance)
     artifacts = {'run': artifact(folder / 'run.json'), 'manifest': artifact(folder / 'manifest.json')}
@@ -374,7 +400,7 @@ def board_record(p, row, folder, context):
                      'config_sha256': p['config_sha256'], 'official_sha256': p['official_sha256'],
                      'plan_sha256': ledger.get('plan_sha256')},
         'artifacts': artifacts, 'runtime_id': p['run_id'] + '-runtime', 'observed_at': row['started_at'],
-        'timing': {'solver_includes_evaluation': False, 'evaluation_precision': 'perf_counter seconds; ps observer and cleanup overhead included', 'utc': 'UTC'},
+        'timing': {'solver_includes_evaluation': False, 'evaluation_precision': 'perf_counter seconds; platform process observer and cleanup overhead included', 'utc': 'UTC'},
         'provenance': provenance, 'notes': ['Producer evidence and format checks are not central import or scientific acceptance.',
             'Subprocess/RSS observations can miss short peaks. All dispatched failures remain in the journal; no automatic retry.',
             ('Portfolio online E0 is included in solver wall; the independently reported final E0 is outside it. timing.solver_includes_evaluation=false describes that final field.'
@@ -405,7 +431,29 @@ def stop_dispatch_reason(row):
             return stage + '_' + receipt['status']
         if receipt.get('surviving_pids'):
             return stage + '_owned_processes_still_live'
+        if receipt.get('stop_dispatch') or receipt.get('cleanup_verified') is False:
+            return stage + '_cleanup_or_observation_not_verified'
+        if 'surviving_pids' in receipt and receipt['surviving_pids'] is None:
+            return stage + '_survivors_unknown'
     return None
+
+
+def run_precheck(p, feed_path, process_folder, deadline):
+    """Keep Windows format-check subprocesses under the same owned Job contract."""
+    command = [python_command(p), '-B', 'src/benchmark_board/protocol.py', relative(feed_path), '--submission']
+    if not common.is_windows():
+        checked = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+        return {'argv': command, 'exit_code': checked.returncode, 'stdout': checked.stdout, 'stderr': checked.stderr}
+    grace = cleanup_grace(p)
+    if time.perf_counter() + grace >= deadline:
+        return {'argv': command, 'exit_code': None, 'status': 'not_dispatched',
+                'stop_dispatch': True, 'reason': 'batch_deadline_before_format_precheck', 'created': False}
+    receipt = common.monitored(command, process_folder, min(deadline, time.perf_counter() + 10 + grace) - grace,
+                               p['rss_observation_stop_bytes'], cleanup_timeout=grace)
+    return {'argv': command, 'exit_code': receipt['exit_code'], 'status': receipt['status'],
+            'created': receipt['created'], 'process': receipt, 'evaluation_calls': {'E0': 0, 'E1': 0, 'E2': 0},
+            'stdout': (process_folder/'stdout.txt').read_bytes().decode('utf-8', errors='replace'),
+            'stderr': (process_folder/'stderr.txt').read_bytes().decode('utf-8', errors='replace')}
 
 
 def main():
@@ -426,13 +474,14 @@ def main():
     if args.action == 'plan':
         print(json.dumps({'cells': cells, 'cell_count': len(cells), 'mode': p['solver_mode'],
                           'maximum_E0_per_cell': p['max_internal_per_cell'] + 1, 'budget_E0': p['max_E0'],
+                          'python': python_command(p), 'process_cleanup_grace_seconds': cleanup_grace(p),
                           'frozen': hashes, 'dispatched': 0}, ensure_ascii=False))
         return
     output.mkdir(parents=True, exist_ok=False)
     context = {'source_commit': args.source_commit, 'runner_commit': args.runner_commit,
                'protocol_sha256': sha(protocol_path.read_bytes()), 'hashes': hashes,
                'environment': common.environment(),
-               'argv': [p.get('python', '.venv/bin/python'), '-B', '-m', 'src.q2_nikolastarx.evaluate_matrix',
+               'argv': [python_command(p), '-B', '-m', 'src.q2_nikolastarx.evaluate_matrix',
                         'run', '--protocol', relative(protocol_path), '--source-commit', args.source_commit,
                         '--runner-commit', args.runner_commit]}
     save(output / 'context.json', context)
@@ -443,7 +492,7 @@ def main():
     deadline = batch_start + p['batch_wall_seconds']
     for case, cores in cells:
         key = f'{case}-k{cores}'
-        if time.perf_counter() >= deadline:
+        if time.perf_counter() + cleanup_grace(p) >= deadline:
             journal.data['stop_reason'] = 'batch_wall_budget'
             break
         frozen_inputs(p, protocol_path, args.source_commit, args.runner_commit)
@@ -458,14 +507,20 @@ def main():
         feed_path = output / f'board-feed-{key}.json'
         save(feed_path, {'schema_version': 1, 'submission_version': 1,
                          'records': [board_record(p, row, folder, context)]})
-        command = [p.get('python', '.venv/bin/python'), '-B', 'src/benchmark_board/protocol.py', relative(feed_path), '--submission']
-        checked = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
-        save(output / f'precheck-{key}.json', {'argv': command, 'exit_code': checked.returncode,
-                                            'stdout': checked.stdout, 'stderr': checked.stderr})
-        if checked.returncode:
+        reason = stop_dispatch_reason(row)
+        if common.is_windows() and reason:
+            save(output / f'precheck-{key}.json', {'status': 'not_dispatched', 'created': False,
+                                                 'reason': reason, 'exit_code': None})
+            journal.data['stop_reason'] = reason
+            break
+        checked = run_precheck(p, feed_path, output / f'precheck-{key}-process', deadline)
+        save(output / f'precheck-{key}.json', checked)
+        if checked['exit_code'] != 0 or checked.get('status', 'ok') != 'ok':
+            journal.data.update(stop_reason='format_precheck_failed', finished_at=common.utc(),
+                                execution_wall_seconds=time.perf_counter() - batch_start)
+            save(journal.path, journal.data)
             raise ValueError('Producer precheck failed; evidence retained, no rerun')
         print(json.dumps({'cell': key, 'status': row['status'], 'calls': row['calls'], 'feed': relative(feed_path)}), flush=True)
-        reason = stop_dispatch_reason(row)
         if reason:
             journal.data['stop_reason'] = reason
             break
