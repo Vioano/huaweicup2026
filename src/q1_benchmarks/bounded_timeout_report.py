@@ -111,6 +111,17 @@ def main():
         "scope":"Fixed-algorithm official quality table, including explicitly selected follow-up evidence. Public development dataset, not blind independent acceptance or an optimality claim."}
     summary["fixed64_regressions"] = [{k:r[k] for k in ("case","cores","makespan_cycles","fixed64_cycles","fixed64_speedup")}
                                        for r in full if r["status"] == "ok" and r["makespan_cycles"] > r["fixed64_cycles"]]
+    summary["adjacent_core_regressions"] = []
+    for case in sorted({r["case"] for r in full}):
+        for k in range(1,5):
+            a,b = selected[case,k], selected[case,k+1]
+            if a["status"] == b["status"] == "ok" and b["makespan_cycles"] > a["makespan_cycles"]:
+                summary["adjacent_core_regressions"].append({"case":case,"from_cores":k,"to_cores":k+1,
+                    "from_makespan":a["makespan_cycles"],"to_makespan":b["makespan_cycles"],
+                    "increase_cycles":b["makespan_cycles"]-a["makespan_cycles"],
+                    "increase_ratio":b["makespan_cycles"]/a["makespan_cycles"]-1})
+    summary["adjacent_core_interpretation"] = "Regressions of this fixed constructor at adjacent core counts, not of the optimum over feasible core-budget plans. No cross-core fallback was applied in this experiment."
+    h.write(batch / "quality-regressions.json",{k:summary[k] for k in ("fixed64_regressions","adjacent_core_regressions","adjacent_core_interpretation")})
     h.write(batch / "full500-filled-comparison.json",full)
     h.write(batch / "full500-filled-summary.json",summary)
     with (batch / "full500-filled-comparison.csv").open("w",newline="") as f:
@@ -127,7 +138,7 @@ def main():
     for k,r in by_core.items():
         lines.append(f"| {k} | {r['successful']}/{r['requested']} | {r['mean_baseline_speedup']:.9f} |")
     lines += ["",cfg["interpretation"],"",cfg["resource_agreement"],"",summary["wall_time_limit"],"",
-        f"Against same-core fixed64, k1 has {by_core['1']['versus_fixed64']['worse']} regressions; k2/k3/k4 have none; k5 has {by_core['5']['versus_fixed64']['worse']}. All negative cases are retained in `fixed64_regressions` and the full comparison. Full coverage is not dominance over every comparator.","",
+        f"Against same-core fixed64, k1 has {by_core['1']['versus_fixed64']['worse']} regressions; k2/k3/k4 have none; k5 has {by_core['5']['versus_fixed64']['worse']}. All negative cases and {len(summary['adjacent_core_regressions'])} adjacent-core regressions are retained in `quality-regressions.json` and the full comparison. Full coverage is not dominance over every comparator. No cross-core fallback was applied; adjacent regressions do not prove worse core-budget optima.","",
         f"`board-feed.json` contains only new diagnostic attempts. `full500-filled-*` is a declared follow-up evidence view; `full500-comparison.json` in the original matrix directory retains the first-pass missing scores. Fixed-method cumulative calls: `{summary['cumulative_fixed_method_calls']}`, including all original failures; no baseline rerun.","",
         "Original fixed64/singlecore evidence remains inherited in this commit. `PRECHECK.json` is the read-only v1 precheck; fixed Git artifact hashes are checked separately after commit with `src/q1_benchmarks/bounded_matrix_verify.py`. No central ledger write or publication by this agent.",""]
     (batch / "README.md").write_text("\n".join(lines))
