@@ -21,6 +21,7 @@ import sys
 import time
 import threading
 import tempfile
+import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
 OFFICIAL = ROOT / "data/raw/a/official"
@@ -28,6 +29,7 @@ SOLVER_COMMIT = "ee1b8fd39efab8c8ed8140bbebe4c08e778052b9"
 CODE_HASH = "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0"
 MANIFEST = ROOT / "src/local_benchmarks/s59ee_p2_frontier_manifest.json"
 RESULT_ROOT = ROOT / "results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925"
+INPUT_ROOT = ROOT / "output/p2-frontier-input-s59ee-20260925"
 MIN_AVAILABLE = 6 * 1024**3
 MAX_GROUP_RSS = 4 * 1024**3
 
@@ -64,11 +66,18 @@ def verify_sources(source, declaration):
     manifest = read(ROOT / "docs/a/source-manifest.json")
     if manifest["official_code_hash"] != CODE_HASH:
         raise RuntimeError("official aggregate identity changed")
-    for record in manifest["files"]:
+    archive_path = ROOT / manifest["case_archive"]["path"]
+    if sha(archive_path) != manifest["case_archive"]["sha256"]:
+        raise RuntimeError("official case archive mismatch")
+    with zipfile.ZipFile(archive_path) as archive:
+      for record in manifest["files"]:
         name = record["path"]
-        if name.startswith("code/") or name == "data/config.txt" or re.fullmatch(r"data/case_\d{3}\.json", name):
-            bases = (ROOT, source) if name.startswith("code/") or name == "data/config.txt" else (ROOT,)
-            for base in bases:
+        if re.fullmatch(r"data/case_\d{3}\.json", name):
+            raw = archive.read(name)
+            if len(raw) != record["bytes"] or hashlib.sha256(raw).hexdigest() != record["sha256"]:
+                raise RuntimeError(f"frozen archive member mismatch: {name}")
+        elif name.startswith("code/") or name == "data/config.txt":
+            for base in (ROOT, source):
                 path = base / "data/raw/a/official" / name
                 if path.stat().st_size != record["bytes"] or sha(path) != record["sha256"]:
                     raise RuntimeError(f"frozen file mismatch: {name}")
@@ -174,7 +183,7 @@ def cell(case, cores, source, batch, deadline, stopped, limits):
     cell_deadline = min(deadline, time.monotonic() + limits["cell"])
     folder = batch / "cells" / case / f"k{cores}"
     folder.mkdir(parents=True, exist_ok=False)
-    graph = ROOT / f"data/raw/a/official/data/case_{case}.json"
+    graph = INPUT_ROOT / f"case_{case}.json"
     plan = folder / f"case_{case}_multicore_res.json"
     result = folder / "result.json"
     trace = folder / "trace.json"
@@ -285,6 +294,10 @@ def main():
                           "official_code_hash": manifest["official_code_hash"],
                           "available_bytes": availability, "batch_created": False}))
         return 0
+    INPUT_ROOT.mkdir(parents=True, exist_ok=False)
+    with zipfile.ZipFile(ROOT / manifest["case_archive"]["path"]) as archive:
+        for case in declaration["cases"]:
+            (INPUT_ROOT / f"case_{case}.json").write_bytes(archive.read(f"data/case_{case}.json"))
     batch.mkdir(parents=True, exist_ok=False)
     meta_path = batch / "batch.json"
     limits = declaration["timeouts_seconds"]
