@@ -69,5 +69,27 @@ The probe's wall time includes identity checks and artifact reads and is not
 solver end-to-end latency. Any subsequent online comparison must separately
 include E2 initialization, preparation and scoring in the solver ledger.
 
-Current status: static preflight passed and six guarded-selection synthetic
-tests passed; the six real E2 requests have not yet been dispatched.
+## Executed sample
+
+Completed on 2026-09-24 at 20:13:12 UTC after the production owner explicitly
+released the scoring window. Frozen runner:
+`b868b021b3d5fe9051613d7efeaccc200e890a33`. Runtime: Python 3.12.13,
+macOS ARM64. See `run/summary.json` and the per-pair process/ledger originals.
+
+All six public API requests used native execution; zero E0 fallbacks, retries,
+errors or mismatches. Makespan, all five movement fields, cross-task traffic,
+and all three pair rankings matched the immutable prior E0 results exactly.
+
+| Pair | Whole component Makespan | DAG split Makespan | Ranking |
+| --- | ---: | ---: | --- |
+| 012/k4 | 13,803 | 34,274 | Whole wins |
+| 056/k5 | 253,392 | 165,886 | Split wins |
+| 031/k4 | 419,131 | 680,364 | Whole wins |
+
+Total probe wall time was 16.459 seconds including identity and artifact checks.
+Maximum sampled child process-tree RSS was 206,012,416 bytes; maximum including
+the observer was 245,710,848 bytes. All three workers exited 0 with no surviving
+PIDs and no in-flight request. The scoring window was returned immediately;
+no additional evaluations were launched. These observations establish this
+six-plan comparison sample only, not universal E2 correctness, new solver
+quality, or a controlled throughput comparison.

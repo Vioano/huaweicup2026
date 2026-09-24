@@ -1,0 +1,560 @@
+{
+  "source_commit": "47baf7f89948aa0a1ea2038c823e60513c78f160",
+  "python": "3.12.13",
+  "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+  "calls": {
+    "construction": 6,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "scope": "Constructed candidates and static cost checks only; no new makespan or end-to-end solver speed result.",
+  "rows": [
+    {
+      "case": "003",
+      "graph_sha256": "2c80acfd37edcf811ce76b7e7b1f7194c706bd4d4aa6449e6a19e9eac1028ced",
+      "plan": {
+        "path": "003-k5-plan.json.gz",
+        "sha256": "47dade0a133537bf8d396cedd51898af8587393ed03f933a47520c5a1b259872",
+        "uncompressed_sha256": "27b287fe735c96d7713eb37291bd71d8d556c79f598078e43a63b73dd310307f"
+      },
+      "detail": {
+        "strategy": "chain_packets_eft",
+        "packet_count": 9903,
+        "max_packet_length": 9,
+        "multi_op_packets": 3220,
+        "predicted_finish_cycles": 170401,
+        "predicted_ddr_bytes_without_spill": {
+          "external_input_bytes": 3205658,
+          "cross_core_bytes": 9906756,
+          "output_bytes": 34
+        },
+        "predicted_cross_core_pairs": 7937,
+        "compute_work_by_core_pipe": [
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 87072,
+            "PIPE_V": 64508
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 88544,
+            "PIPE_V": 63638
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 89360,
+            "PIPE_V": 64638
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 85236,
+            "PIPE_V": 66889
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 88580,
+            "PIPE_V": 65516
+          }
+        ],
+        "complexity": "O(k^2*P + k*(V+E+R) + P log P) placement; P=packets, R=visited tensor/source-core incidences; one deterministic pass",
+        "model_limitations": [
+          "Pipe and COPY clocks are heuristic, not official start times",
+          "isolated COPY bandwidth omits shared-DDR contention",
+          "Step2 spills, Step3 memory dependencies and final reorder omitted"
+        ]
+      },
+      "mandatory_copy": {
+        "copy_count": 16360,
+        "transfer_bytes": 13112448,
+        "service_work": 228841,
+        "categories": {
+          "boundary_input": {
+            "copy_count": 469,
+            "transfer_bytes": 3205658,
+            "service_work": 53786
+          },
+          "boundary_output": {
+            "copy_count": 17,
+            "transfer_bytes": 34,
+            "service_work": 17
+          },
+          "cross_tensor": {
+            "copy_count": 15874,
+            "transfer_bytes": 9906756,
+            "service_work": 175038
+          },
+          "cross_direct": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          }
+        },
+        "scope": "P2 Scene B original mandatory COPYs before Step2 spills"
+      },
+      "baseline_existing_E0_M": 515736,
+      "work_exceeds_baseline_M": false,
+      "new_E0_status": "not_run"
+    },
+    {
+      "case": "005",
+      "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+      "plan": {
+        "path": "005-k5-plan.json.gz",
+        "sha256": "ed07e3b0af99686f68c06799f8e4c99fad0a9c6616545ac2620a24b36193d613",
+        "uncompressed_sha256": "37b96b550e39aca7a58463355e1b9e1a1aba702062c00bda4dcb67384ac22fba"
+      },
+      "detail": {
+        "strategy": "chain_packets_eft",
+        "packet_count": 3049,
+        "max_packet_length": 4,
+        "multi_op_packets": 980,
+        "predicted_finish_cycles": 46641,
+        "predicted_ddr_bytes_without_spill": {
+          "external_input_bytes": 712150,
+          "cross_core_bytes": 2713664,
+          "output_bytes": 14592
+        },
+        "predicted_cross_core_pairs": 1764,
+        "compute_work_by_core_pipe": [
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 13476,
+            "PIPE_V": 12086
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 12702,
+            "PIPE_V": 11896
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 12042,
+            "PIPE_V": 12859
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 12672,
+            "PIPE_V": 12006
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 12990,
+            "PIPE_V": 12083
+          }
+        ],
+        "complexity": "O(k^2*P + k*(V+E+R) + P log P) placement; P=packets, R=visited tensor/source-core incidences; one deterministic pass",
+        "model_limitations": [
+          "Pipe and COPY clocks are heuristic, not official start times",
+          "isolated COPY bandwidth omits shared-DDR contention",
+          "Step2 spills, Step3 memory dependencies and final reorder omitted"
+        ]
+      },
+      "mandatory_copy": {
+        "copy_count": 3747,
+        "transfer_bytes": 3440406,
+        "service_work": 59167,
+        "categories": {
+          "boundary_input": {
+            "copy_count": 212,
+            "transfer_bytes": 712150,
+            "service_work": 11986
+          },
+          "boundary_output": {
+            "copy_count": 7,
+            "transfer_bytes": 14592,
+            "service_work": 247
+          },
+          "cross_tensor": {
+            "copy_count": 3528,
+            "transfer_bytes": 2713664,
+            "service_work": 46934
+          },
+          "cross_direct": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          }
+        },
+        "scope": "P2 Scene B original mandatory COPYs before Step2 spills"
+      },
+      "baseline_existing_E0_M": 66385,
+      "work_exceeds_baseline_M": false,
+      "new_E0_status": "not_run"
+    },
+    {
+      "case": "056",
+      "graph_sha256": "fda213426382a3810afd172eadc10b9221330b906888537cb13b16369be3369d",
+      "plan": {
+        "path": "056-k5-plan.json.gz",
+        "sha256": "c3745e4a108be3cda980b7e2839ea117819086f9983f6da86aa6d5a3e4b9c286",
+        "uncompressed_sha256": "a52dc9aaa00ccab6fee271bdb625b10e5f20705b7ba34dacb12d97fff96ca854"
+      },
+      "detail": {
+        "strategy": "chain_packets_eft",
+        "packet_count": 5540,
+        "max_packet_length": 8,
+        "multi_op_packets": 1795,
+        "predicted_finish_cycles": 121920,
+        "predicted_ddr_bytes_without_spill": {
+          "external_input_bytes": 369038,
+          "cross_core_bytes": 5371848,
+          "output_bytes": 74
+        },
+        "predicted_cross_core_pairs": 3347,
+        "compute_work_by_core_pipe": [
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 23568,
+            "PIPE_V": 48512
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 27546,
+            "PIPE_V": 48251
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 26776,
+            "PIPE_V": 49762
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 25636,
+            "PIPE_V": 49842
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 27490,
+            "PIPE_V": 49586
+          }
+        ],
+        "complexity": "O(k^2*P + k*(V+E+R) + P log P) placement; P=packets, R=visited tensor/source-core incidences; one deterministic pass",
+        "model_limitations": [
+          "Pipe and COPY clocks are heuristic, not official start times",
+          "isolated COPY bandwidth omits shared-DDR contention",
+          "Step2 spills, Step3 memory dependencies and final reorder omitted"
+        ]
+      },
+      "mandatory_copy": {
+        "copy_count": 7099,
+        "transfer_bytes": 5740960,
+        "service_work": 101369,
+        "categories": {
+          "boundary_input": {
+            "copy_count": 368,
+            "transfer_bytes": 369038,
+            "service_work": 6392
+          },
+          "boundary_output": {
+            "copy_count": 37,
+            "transfer_bytes": 74,
+            "service_work": 37
+          },
+          "cross_tensor": {
+            "copy_count": 6694,
+            "transfer_bytes": 5371848,
+            "service_work": 94940
+          },
+          "cross_direct": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          }
+        },
+        "scope": "P2 Scene B original mandatory COPYs before Step2 spills"
+      },
+      "baseline_existing_E0_M": 253392,
+      "work_exceeds_baseline_M": false,
+      "new_E0_status": "not_run"
+    },
+    {
+      "case": "068",
+      "graph_sha256": "dfd9a58ef9d26a8a4567026b50af8b4499d87eebb3d98f8208b909b11e963c6d",
+      "plan": {
+        "path": "068-k5-plan.json.gz",
+        "sha256": "4ac36f9ce7837b7d0ca1899c1f6a41ab5ff30718e5035f56419a34df4db85971",
+        "uncompressed_sha256": "6b76045f81c5227fd2535593bf03b03c0c26d7c5bd2e46cd6db8f43fcb71f25e"
+      },
+      "detail": {
+        "strategy": "chain_packets_eft",
+        "packet_count": 3644,
+        "max_packet_length": 24,
+        "multi_op_packets": 1232,
+        "predicted_finish_cycles": 124308,
+        "predicted_ddr_bytes_without_spill": {
+          "external_input_bytes": 4532722,
+          "cross_core_bytes": 2659236,
+          "output_bytes": 31276
+        },
+        "predicted_cross_core_pairs": 1606,
+        "compute_work_by_core_pipe": [
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 50952,
+            "PIPE_V": 26232
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 51808,
+            "PIPE_V": 28622
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 49456,
+            "PIPE_V": 31413
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 49937,
+            "PIPE_V": 31229
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 46948,
+            "PIPE_V": 37200
+          }
+        ],
+        "complexity": "O(k^2*P + k*(V+E+R) + P log P) placement; P=packets, R=visited tensor/source-core incidences; one deterministic pass",
+        "model_limitations": [
+          "Pipe and COPY clocks are heuristic, not official start times",
+          "isolated COPY bandwidth omits shared-DDR contention",
+          "Step2 spills, Step3 memory dependencies and final reorder omitted"
+        ]
+      },
+      "mandatory_copy": {
+        "copy_count": 3982,
+        "transfer_bytes": 7223234,
+        "service_work": 123231,
+        "categories": {
+          "boundary_input": {
+            "copy_count": 675,
+            "transfer_bytes": 4532722,
+            "service_work": 76039
+          },
+          "boundary_output": {
+            "copy_count": 95,
+            "transfer_bytes": 31276,
+            "service_work": 608
+          },
+          "cross_tensor": {
+            "copy_count": 3212,
+            "transfer_bytes": 2659236,
+            "service_work": 46584
+          },
+          "cross_direct": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          }
+        },
+        "scope": "P2 Scene B original mandatory COPYs before Step2 spills"
+      },
+      "baseline_existing_E0_M": 295114,
+      "work_exceeds_baseline_M": false,
+      "new_E0_status": "not_run"
+    },
+    {
+      "case": "086",
+      "graph_sha256": "ef91fda2692fd0add63db3c7f677e4e03c8d115d97db3cb959cffc62fff2434a",
+      "plan": {
+        "path": "086-k5-plan.json.gz",
+        "sha256": "eddf64740334987279fa194c8cd1818002caca9cd22b7acdd174263251a75367",
+        "uncompressed_sha256": "4f3c54b042cbd3dc0a53ff78fc1d54fb55c3ebc07ba7c7e641c4b2a34caf6c2a"
+      },
+      "detail": {
+        "strategy": "chain_packets_eft",
+        "packet_count": 3914,
+        "max_packet_length": 4,
+        "multi_op_packets": 1264,
+        "predicted_finish_cycles": 52242,
+        "predicted_ddr_bytes_without_spill": {
+          "external_input_bytes": 729914,
+          "cross_core_bytes": 3981408,
+          "output_bytes": 16896
+        },
+        "predicted_cross_core_pairs": 2644,
+        "compute_work_by_core_pipe": [
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 15708,
+            "PIPE_V": 15615
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 15969,
+            "PIPE_V": 15869
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 16092,
+            "PIPE_V": 15270
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 15570,
+            "PIPE_V": 15530
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 15843,
+            "PIPE_V": 15776
+          }
+        ],
+        "complexity": "O(k^2*P + k*(V+E+R) + P log P) placement; P=packets, R=visited tensor/source-core incidences; one deterministic pass",
+        "model_limitations": [
+          "Pipe and COPY clocks are heuristic, not official start times",
+          "isolated COPY bandwidth omits shared-DDR contention",
+          "Step2 spills, Step3 memory dependencies and final reorder omitted"
+        ]
+      },
+      "mandatory_copy": {
+        "copy_count": 5519,
+        "transfer_bytes": 4728218,
+        "service_work": 81531,
+        "categories": {
+          "boundary_input": {
+            "copy_count": 223,
+            "transfer_bytes": 729914,
+            "service_work": 12289
+          },
+          "boundary_output": {
+            "copy_count": 8,
+            "transfer_bytes": 16896,
+            "service_work": 286
+          },
+          "cross_tensor": {
+            "copy_count": 5288,
+            "transfer_bytes": 3981408,
+            "service_work": 68956
+          },
+          "cross_direct": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          }
+        },
+        "scope": "P2 Scene B original mandatory COPYs before Step2 spills"
+      },
+      "baseline_existing_E0_M": 102180,
+      "work_exceeds_baseline_M": false,
+      "new_E0_status": "not_run"
+    },
+    {
+      "case": "088",
+      "graph_sha256": "2ff71575ba33875431f54823fc1f2214e018edcfc9d568edfb7c47b0f264b825",
+      "plan": {
+        "path": "088-k5-plan.json.gz",
+        "sha256": "60ffb6c15e80462daba1461b3b02ae35d00fd552dbac76a6907189e68aa62e6f",
+        "uncompressed_sha256": "486b646b6b3f74764086e965bcaacbf8a8a7a10a6b2868bca230f8b3f742b328"
+      },
+      "detail": {
+        "strategy": "chain_packets_eft",
+        "packet_count": 2283,
+        "max_packet_length": 24,
+        "multi_op_packets": 768,
+        "predicted_finish_cycles": 79166,
+        "predicted_ddr_bytes_without_spill": {
+          "external_input_bytes": 3081142,
+          "cross_core_bytes": 2094984,
+          "output_bytes": 68
+        },
+        "predicted_cross_core_pairs": 1061,
+        "compute_work_by_core_pipe": [
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 35964,
+            "PIPE_V": 19913
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 35292,
+            "PIPE_V": 19472
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 36744,
+            "PIPE_V": 17221
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 31360,
+            "PIPE_V": 22614
+          },
+          {
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0,
+            "PIPE_M": 34248,
+            "PIPE_V": 20524
+          }
+        ],
+        "complexity": "O(k^2*P + k*(V+E+R) + P log P) placement; P=packets, R=visited tensor/source-core incidences; one deterministic pass",
+        "model_limitations": [
+          "Pipe and COPY clocks are heuristic, not official start times",
+          "isolated COPY bandwidth omits shared-DDR contention",
+          "Step2 spills, Step3 memory dependencies and final reorder omitted"
+        ]
+      },
+      "mandatory_copy": {
+        "copy_count": 2523,
+        "transfer_bytes": 5176194,
+        "service_work": 87997,
+        "categories": {
+          "boundary_input": {
+            "copy_count": 367,
+            "transfer_bytes": 3081142,
+            "service_work": 51591
+          },
+          "boundary_output": {
+            "copy_count": 34,
+            "transfer_bytes": 68,
+            "service_work": 34
+          },
+          "cross_tensor": {
+            "copy_count": 2122,
+            "transfer_bytes": 2094984,
+            "service_work": 36372
+          },
+          "cross_direct": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          }
+        },
+        "scope": "P2 Scene B original mandatory COPYs before Step2 spills"
+      },
+      "baseline_existing_E0_M": 200888,
+      "work_exceeds_baseline_M": false,
+      "new_E0_status": "not_run"
+    }
+  ]
+}

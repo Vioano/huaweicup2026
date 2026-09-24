@@ -1,0 +1,96 @@
+{
+  "status": "completed",
+  "calls": {
+    "E2_api": 2,
+    "native": 2,
+    "E0_fallback": 0
+  },
+  "request_in_flight": false,
+  "records": [
+    {
+      "label": "whole_component",
+      "native_match": true,
+      "official_fields_equal": true,
+      "record": {
+        "status": "ok",
+        "makespan": 419131,
+        "data_movement_bytes": {
+          "original_graph_copy_bytes": 2185040,
+          "scheduled_copy_bytes": 6831440,
+          "added_copy_bytes": 4646400,
+          "partition_added_copy_bytes": 4314624,
+          "spill_added_copy_bytes": 331776
+        },
+        "cross_task_traffic": 0,
+        "route": "native",
+        "execution": "native_replayed",
+        "numeric_kind": "computed",
+        "replay_iterations": 6639,
+        "preparation_seconds": 0.39317024999763817,
+        "replay_seconds": 0.0005155419930815697,
+        "compilation_cache_hit": false,
+        "engine": "p2-e2-native-search-v1",
+        "problem": 2,
+        "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "wall_seconds": 0.39564620799501427,
+        "cpu_seconds": 0.393933,
+        "cache": {
+          "hits": 0,
+          "misses": 1,
+          "evictions": 0,
+          "bypasses": 0,
+          "native_calls": 1,
+          "fallback_calls": 0,
+          "full_calls": 0,
+          "accounted_bytes": 635530,
+          "limit_bytes": 16777216,
+          "entries": 1,
+          "max_entries": 32
+        }
+      }
+    },
+    {
+      "label": "dag_split",
+      "native_match": true,
+      "official_fields_equal": true,
+      "record": {
+        "status": "ok",
+        "makespan": 680364,
+        "data_movement_bytes": {
+          "original_graph_copy_bytes": 2185040,
+          "scheduled_copy_bytes": 25450120,
+          "added_copy_bytes": 23265080,
+          "partition_added_copy_bytes": 18618168,
+          "spill_added_copy_bytes": 4646912
+        },
+        "cross_task_traffic": 8919300,
+        "route": "native",
+        "execution": "native_replayed",
+        "numeric_kind": "computed",
+        "replay_iterations": 13622,
+        "preparation_seconds": 0.8592392499849666,
+        "replay_seconds": 0.001585791993420571,
+        "compilation_cache_hit": false,
+        "engine": "p2-e2-native-search-v1",
+        "problem": 2,
+        "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "wall_seconds": 0.8628477920137811,
+        "cpu_seconds": 0.8506230000000001,
+        "cache": {
+          "hits": 0,
+          "misses": 2,
+          "evictions": 0,
+          "bypasses": 0,
+          "native_calls": 2,
+          "fallback_calls": 0,
+          "full_calls": 0,
+          "accounted_bytes": 1675561,
+          "limit_bytes": 16777216,
+          "entries": 2,
+          "max_entries": 32
+        }
+      }
+    }
+  ],
+  "pair_order_equal": true
+}
