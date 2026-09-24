@@ -1,0 +1,100 @@
+{
+  "kind": "p1-variable-packet-single-cell-public-bundle",
+  "run_id": "20260924T2225Z-s6607-variableq",
+  "scope": "P1 case 084 k5 only; not full500",
+  "source_commit": "75bdb89c2f7299636967bfd27ee47aa3b1bd8083",
+  "files": {
+    "README.md": {
+      "bytes": 774,
+      "sha256": "65e2326fa62228e8ee2543537fabb2c219447ab3187f2209af0bf774a096785e"
+    },
+    "baseline-084-singlecore.json.gz": {
+      "bytes": 228446,
+      "sha256": "3cdf79e5f0cfb89108c8e763e855538e6d702c54e02c657aded96bc229d837d4"
+    },
+    "board-feed-084-k5.json": {
+      "bytes": 8274,
+      "sha256": "b093c7df785fafbbde17c21eb0066c8c99ff2bef178d5d48b35c5cc6102b5ded"
+    },
+    "constructor-public.json": {
+      "bytes": 3670,
+      "sha256": "5a3eab0525debbfce4d2efb4a8173ade0aa09a6012088f9b9b223d17cb2ee7f2"
+    },
+    "constructor.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "constructor.stdout.txt": {
+      "bytes": 414,
+      "sha256": "23784ca2d53cf180e3204b334bddda70d4bbf16a4130a5ab548838df9a2b9181"
+    },
+    "diagnostics.json": {
+      "bytes": 2215667,
+      "sha256": "d34a8aeb3d1bc8ce4f2b2138600a02bde8741da1293a11039730c669799172f6"
+    },
+    "e0-initial-attempt-public.json": {
+      "bytes": 1845,
+      "sha256": "aa621820f4c89fa5f8238969bca88f4996e16030a11f97b8f9d378ca3241345f"
+    },
+    "e0-public.json": {
+      "bytes": 4807,
+      "sha256": "f6b1581f80ebed8d6558ec78f65e3632204f433a5577588646cdd5d454bc5e8e"
+    },
+    "plan.json": {
+      "bytes": 91969,
+      "sha256": "bd30e21f6fb8a2c12e149902e90173acad7af377d9d06babe20619d56c6b1796"
+    },
+    "public-run.json": {
+      "bytes": 11489,
+      "sha256": "fce527e13d97f085438eeb37a638a482fde9e43d331ac7acd54fa421f99af796"
+    },
+    "result.json.gz": {
+      "bytes": 463773,
+      "sha256": "111feafed19414e9cf379dc363d3cc07900982a7ac50f0d0597a9e0a7ef1fa10"
+    },
+    "trace.json.gz": {
+      "bytes": 242736,
+      "sha256": "4843bf2730d1a95966909aaccf2938d02a9994161c95ce2674a762b112bf39fd"
+    }
+  },
+  "raw_local_only_sha256": {
+    "E0_result.json": "542eb1a3c94bf40d8aeacc02fa922fb9c8159c801b7c1ae5c5eb9e78e7ce0203",
+    "E0_trace.json": "1b0aff49bd632c04c40fd2f81738b358d38eebf5a3d1d024c0ebdff8c64a66cc",
+    "E0_raw_receipt.json": "d697b4d419deebcdf98a702d0575d632699cc742e277dfd7d9e62a7353bf301d",
+    "first_start_raw_receipt.json": "14fc80f0658a43811ab58907bc2546a2fe2b3b8d19b13b64e2ae9589bbdb0571",
+    "constructor_raw_receipt.json": "92e5dd7377bbfc46a35676bf8bc3daaac7d9ab534f80eeca1db79f38f024b92d",
+    "constructor_diagnostics.json": "d34a8aeb3d1bc8ce4f2b2138600a02bde8741da1293a11039730c669799172f6"
+  },
+  "compressed_roundtrip": {
+    "result_uncompressed_sha256": "542eb1a3c94bf40d8aeacc02fa922fb9c8159c801b7c1ae5c5eb9e78e7ce0203",
+    "trace_uncompressed_sha256": "1b0aff49bd632c04c40fd2f81738b358d38eebf5a3d1d024c0ebdff8c64a66cc"
+  },
+  "baseline_source_commit": "0e0d7cd327c51cc6ac365e01f4b6a7d2b28f9297",
+  "baseline_source_path": "results/a/q1-unified-v4-full500-20260925-s59/20260924T1952Z-s59ee/baseline/084/result.json.gz",
+  "protocol_preflight": {
+    "command": "<python3> -B <main-repo>/src/benchmark_board/protocol.py <feed> --repo <this-worktree> --submission",
+    "exit_code": 0,
+    "valid": true,
+    "submission": true,
+    "records": 1,
+    "eligible": 1,
+    "reported_or_failed": [],
+    "scope": "format and available artifact bytes only; no solver/evaluator run or production write",
+    "validator_source": "main project src/benchmark_board/protocol.py"
+  },
+  "plan_comparison": {
+    "constructor_plan_sha256": "bd30e21f6fb8a2c12e149902e90173acad7af377d9d06babe20619d56c6b1796",
+    "E0_plan_sha256": "bd30e21f6fb8a2c12e149902e90173acad7af377d9d06babe20619d56c6b1796",
+    "byte_equal": true
+  },
+  "call_accounting": {
+    "constructor": 1,
+    "actual_E0": 1,
+    "E1": 0,
+    "E2": 0,
+    "first_E0_startup_attempt": "pre_spawn_failure; zero child",
+    "corrected_startups": 1,
+    "E0_retries_after_success": 0,
+    "do_not_describe_entire_startup_history_as_zero_retries": true
+  }
+}

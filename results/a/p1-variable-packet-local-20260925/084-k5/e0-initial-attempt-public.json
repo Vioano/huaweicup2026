@@ -1,0 +1,54 @@
+{
+  "derived_from_raw_sha256": "14fc80f0658a43811ab58907bc2546a2fe2b3b8d19b13b64e2ae9589bbdb0571",
+  "derivation": "personal absolute workspace/runtime paths redacted; other values retained",
+  "raw_receipt_location": "results/a/p1-variable-packet-e0-20260925/084-k5/receipt.json",
+  "receipt": {
+    "kind": "single author-plan E0 attempt; E0 not started",
+    "status": "pre_spawn_failure",
+    "failure": "bounded helper could not spawn because attempted executable path under worktree .venv does not exist; subprocess raised FileNotFoundError before child process creation",
+    "attempted_command": [
+      "<repo>/.venv/bin/python",
+      "-B",
+      "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+      "<graph>",
+      "<plan>",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "--output",
+      "<result>",
+      "--trace-output",
+      "<trace>",
+      "--log-output",
+      "<log>"
+    ],
+    "calls": {
+      "constructor": 0,
+      "E0": 0,
+      "E1": 0,
+      "E2": 0,
+      "retry": 0
+    },
+    "retry_performed": false,
+    "cleanup_confirmed": true,
+    "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+    "preserved_files": {
+      "E0.stderr.txt": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "E0.stdout.txt": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "case_084.json": {
+        "bytes": 5110179,
+        "sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee"
+      },
+      "plan.json": {
+        "bytes": 91969,
+        "sha256": "bd30e21f6fb8a2c12e149902e90173acad7af377d9d06babe20619d56c6b1796"
+      }
+    },
+    "note": "Stopped after the first pre-spawn failure per instruction; do not rerun."
+  }
+}

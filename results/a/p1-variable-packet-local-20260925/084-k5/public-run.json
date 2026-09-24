@@ -1,0 +1,280 @@
+{
+  "kind": "public-provenance-receipt",
+  "derived_from": {
+    "constructor_raw_sha256": "92e5dd7377bbfc46a35676bf8bc3daaac7d9ab534f80eeca1db79f38f024b92d",
+    "e0_raw_sha256": "d697b4d419deebcdf98a702d0575d632699cc742e277dfd7d9e62a7353bf301d",
+    "first_start_raw_sha256": "14fc80f0658a43811ab58907bc2546a2fe2b3b8d19b13b64e2ae9589bbdb0571"
+  },
+  "redaction": "Personal absolute workspace/runtime paths replaced; originals remain in raw experiment directories.",
+  "constructor": {
+    "derived_from_raw_sha256": "92e5dd7377bbfc46a35676bf8bc3daaac7d9ab534f80eeca1db79f38f024b92d",
+    "derivation": "personal absolute workspace/runtime paths redacted; other values retained",
+    "raw_receipt_location": "results/a/p1-variable-packet-local-20260925/084-k5/receipt.json",
+    "receipt": {
+      "kind": "one native variable-q CLI construction; zero official scoring",
+      "solver_commit": "75bdb89c2f7299636967bfd27ee47aa3b1bd8083",
+      "source_sha256": "65c1260714ddebe0dc8a4e3bd809a00fe19ac91fb93eb2a92367dcd6b9ec7d4c",
+      "runtime_requested": "<python-3.12>",
+      "runtime_actual": "<python-3.12>",
+      "input_sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee",
+      "command": [
+        "<python-3.12>",
+        "-B",
+        "<repo>/src/q1/variable_packet.py",
+        "<repo>/results/a/p1-variable-packet-e0-20260925/084-k5/case_084.json",
+        "--cores",
+        "5",
+        "--output",
+        "<repo>/results/a/p1-variable-packet-local-20260925/084-k5/plan.json",
+        "--diagnostics",
+        "<repo>/results/a/p1-variable-packet-local-20260925/084-k5/diagnostics.json"
+      ],
+      "process": {
+        "argv": [
+          "<python-3.12>",
+          "-B",
+          "<verified-inputs>/src/q1/variable_packet.py",
+          "<verified-inputs>/results/a/p1-variable-packet-e0-20260925/084-k5/case_084.json",
+          "--cores",
+          "5",
+          "--output",
+          "<verified-inputs>/results/a/p1-variable-packet-local-20260925/084-k5/plan.json",
+          "--diagnostics",
+          "<verified-inputs>/results/a/p1-variable-packet-local-20260925/084-k5/diagnostics.json"
+        ],
+        "cwd": ".",
+        "started_at": "2026-09-24T22:25:34.788Z",
+        "finished_at": "2026-09-24T22:25:36.764Z",
+        "wall_seconds": 1.9755732499761507,
+        "timeout_seconds": 180,
+        "exit_code": 0,
+        "cleanup_confirmed": true,
+        "status": "ok",
+        "stdout": {
+          "path": "results/a/p1-variable-packet-local-20260925/084-k5/constructor.stdout.txt",
+          "sha256": "23784ca2d53cf180e3204b334bddda70d4bbf16a4130a5ab548838df9a2b9181"
+        },
+        "stderr": {
+          "path": "results/a/p1-variable-packet-local-20260925/084-k5/constructor.stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_derivation": "UTF-8 child output with workspace and temporary input root replaced by public labels"
+      },
+      "limits": {
+        "workers": 1,
+        "timeout_seconds": 180,
+        "constructor_calls": 1,
+        "E0": 0,
+        "E1": 0,
+        "E2": 0,
+        "retries": 0,
+        "representative_static_compile_budget": 512,
+        "final_static_compile_budget": 2048
+      },
+      "plan_matches_author_e0_plan_byte_for_byte": true,
+      "plan_sha256": "bd30e21f6fb8a2c12e149902e90173acad7af377d9d06babe20619d56c6b1796",
+      "diagnostics_sha256": "d34a8aeb3d1bc8ce4f2b2138600a02bde8741da1293a11039730c669799172f6",
+      "diagnostics_summary": {
+        "model_makespan": 390425,
+        "traffic": {
+          "original_graph_copy_bytes": 13236330,
+          "scheduled_copy_bytes": 22268010,
+          "added_copy_bytes": 9031680,
+          "partition_added_copy_bytes": 9031680,
+          "spill_added_copy_bytes": 0
+        },
+        "tasks": 200,
+        "Qmax": 7,
+        "Rmax": 7,
+        "representative_compiles": 210,
+        "final_task_compiles": 200,
+        "total_static_task_compiles": 410,
+        "read_to_plan_fsync_seconds": 1.8883862919756211,
+        "construct_function_seconds": 1.867911416979041,
+        "terminal_policy": "merge",
+        "terminal_pending": 6,
+        "calls": {
+          "candidate_constructors": 1,
+          "E0": 0,
+          "E1": 0,
+          "E2": 0
+        }
+      },
+      "status": "ok"
+    }
+  },
+  "e0_initial_attempt": {
+    "derived_from_raw_sha256": "14fc80f0658a43811ab58907bc2546a2fe2b3b8d19b13b64e2ae9589bbdb0571",
+    "derivation": "personal absolute workspace/runtime paths redacted; other values retained",
+    "raw_receipt_location": "results/a/p1-variable-packet-e0-20260925/084-k5/receipt.json",
+    "receipt": {
+      "kind": "single author-plan E0 attempt; E0 not started",
+      "status": "pre_spawn_failure",
+      "failure": "bounded helper could not spawn because attempted executable path under worktree .venv does not exist; subprocess raised FileNotFoundError before child process creation",
+      "attempted_command": [
+        "<repo>/.venv/bin/python",
+        "-B",
+        "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+        "<graph>",
+        "<plan>",
+        "--config",
+        "data/raw/a/official/data/config.txt",
+        "--output",
+        "<result>",
+        "--trace-output",
+        "<trace>",
+        "--log-output",
+        "<log>"
+      ],
+      "calls": {
+        "constructor": 0,
+        "E0": 0,
+        "E1": 0,
+        "E2": 0,
+        "retry": 0
+      },
+      "retry_performed": false,
+      "cleanup_confirmed": true,
+      "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+      "preserved_files": {
+        "E0.stderr.txt": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "E0.stdout.txt": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "case_084.json": {
+          "bytes": 5110179,
+          "sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee"
+        },
+        "plan.json": {
+          "bytes": 91969,
+          "sha256": "bd30e21f6fb8a2c12e149902e90173acad7af377d9d06babe20619d56c6b1796"
+        }
+      },
+      "note": "Stopped after the first pre-spawn failure per instruction; do not rerun."
+    }
+  },
+  "e0_actual": {
+    "derived_from_raw_sha256": "d697b4d419deebcdf98a702d0575d632699cc742e277dfd7d9e62a7353bf301d",
+    "derivation": "personal absolute workspace/runtime paths redacted; other values retained",
+    "raw_receipt_location": "results/a/p1-variable-packet-e0-20260925/084-k5-runtime-fixed/receipt.json",
+    "receipt": {
+      "kind": "corrected single official E0 of archived author plan; not algorithm runtime/full500",
+      "status": "ok",
+      "source_commit": "8685b5a867a4f66c7cacaf166d50896bd7c09a41",
+      "runtime": "<python-3.12>",
+      "python_version": "3.12.13 (main, May 10 2026, 19:20:41) [Clang 22.1.3 ]",
+      "input": {
+        "sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee",
+        "bytes": 5110179
+      },
+      "plan": {
+        "sha256": "bd30e21f6fb8a2c12e149902e90173acad7af377d9d06babe20619d56c6b1796",
+        "bytes": 91969
+      },
+      "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+      "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+      "command": [
+        "<python-3.12>",
+        "-B",
+        "<repo>/data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+        "<repo>/results/a/p1-variable-packet-e0-20260925/084-k5/case_084.json",
+        "<repo>/results/a/p1-variable-packet-e0-20260925/084-k5/plan.json",
+        "--config",
+        "<repo>/data/raw/a/official/data/config.txt",
+        "--output",
+        "<repo>/results/a/p1-variable-packet-e0-20260925/084-k5-runtime-fixed/result.json",
+        "--trace-output",
+        "<repo>/results/a/p1-variable-packet-e0-20260925/084-k5-runtime-fixed/trace.json",
+        "--log-output",
+        "<repo>/results/a/p1-variable-packet-e0-20260925/084-k5-runtime-fixed/official.log"
+      ],
+      "workers": 1,
+      "timeout_seconds": 30,
+      "process": {
+        "argv": [
+          "<python-3.12>",
+          "-B",
+          "<verified-inputs>/data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+          "<verified-inputs>/results/a/p1-variable-packet-e0-20260925/084-k5/case_084.json",
+          "<verified-inputs>/results/a/p1-variable-packet-e0-20260925/084-k5/plan.json",
+          "--config",
+          "<verified-inputs>/data/raw/a/official/data/config.txt",
+          "--output",
+          "<verified-inputs>/results/a/p1-variable-packet-e0-20260925/084-k5-runtime-fixed/result.json",
+          "--trace-output",
+          "<verified-inputs>/results/a/p1-variable-packet-e0-20260925/084-k5-runtime-fixed/trace.json",
+          "--log-output",
+          "<verified-inputs>/results/a/p1-variable-packet-e0-20260925/084-k5-runtime-fixed/official.log"
+        ],
+        "cwd": ".",
+        "started_at": "2026-09-24T22:23:01.687Z",
+        "finished_at": "2026-09-24T22:23:03.323Z",
+        "wall_seconds": 1.6354012499796227,
+        "timeout_seconds": 30,
+        "exit_code": 0,
+        "cleanup_confirmed": true,
+        "status": "ok",
+        "stdout": {
+          "path": "results/a/p1-variable-packet-e0-20260925/084-k5-runtime-fixed/E0.stdout.txt",
+          "sha256": "ee5dca57e3ae004d4b563a9c951f25d914605bca95ca98bc5a6fca2b745bcd2f"
+        },
+        "stderr": {
+          "path": "results/a/p1-variable-packet-e0-20260925/084-k5-runtime-fixed/E0.stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_derivation": "UTF-8 child output with workspace and temporary input root replaced by public labels"
+      },
+      "summary": {
+        "makespan_cycles": 390425,
+        "scheduled_ddr_bytes": 22268010,
+        "extra_ddr_bytes": 9031680,
+        "spill_ddr_bytes": 0,
+        "official_physical_ddr_bytes": 22268010,
+        "cross_task_traffic_bytes": 4515840,
+        "num_cores": 5,
+        "metric_mapping": "scheduled=official scheduled_copy_bytes; extra=added_copy_bytes; spill=spill_added_copy_bytes"
+      },
+      "history": {
+        "startup_attempts": 2,
+        "first_pre_spawn_failure_child_count": 0,
+        "corrected_spawn_count": 1,
+        "E0_reruns": 0
+      },
+      "calls": {
+        "constructor": 0,
+        "E0": 1,
+        "E1": 0,
+        "E2": 0,
+        "retry": 0
+      },
+      "cleanup_confirmed": true,
+      "artifacts": {
+        "E0.stderr.txt": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "E0.stdout.txt": {
+          "bytes": 204,
+          "sha256": "ee5dca57e3ae004d4b563a9c951f25d914605bca95ca98bc5a6fca2b745bcd2f"
+        },
+        "official.log": {
+          "bytes": 285,
+          "sha256": "ecb03168d2ac0a89539eed2ac43b57b6b985305a314a06fdc6a88f549f69f1bc"
+        },
+        "result.json": {
+          "bytes": 8260738,
+          "sha256": "542eb1a3c94bf40d8aeacc02fa922fb9c8159c801b7c1ae5c5eb9e78e7ce0203"
+        },
+        "trace.json": {
+          "bytes": 4940415,
+          "sha256": "1b0aff49bd632c04c40fd2f81738b358d38eebf5a3d1d024c0ebdff8c64a66cc"
+        }
+      }
+    }
+  },
+  "stage_order": "E0 on author plan first, local constructor second; byte-equality checked after both."
+}
