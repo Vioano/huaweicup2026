@@ -66,6 +66,16 @@ def audit_receipts(state, fingerprint):
             item['seconds_queued_to_central_receipt']=(datetime.fromisoformat(receipt['received_at'])-datetime.fromisoformat(local['queued_at'])).total_seconds()
             matching=[r for r in snapshot['records'] if r['source'].get('commit')==payload['commit'] and r['source'].get('path')==payload['feed']]
             item['snapshot_source_records']=[dict(id=r['id'],problem=r['problem'],case_id=r['case_id'],cores=r['cores'],eligible=r['eligible']) for r in matching]
+            if receipt['state']=='accepted' and receipt.get('receipt',{}).get('added')==0:
+                raw_feed=subprocess.check_output(['git','-C',local['repo'],'show',payload['commit']+':'+payload['feed']],timeout=30)
+                require(digest(raw_feed)==payload['feed_sha256'], 'duplicate feed content differs')
+                attempts=[(r['attempt_id'],r['revision']) for r in json.loads(raw_feed)['records']]
+                duplicate_rows=[]
+                for attempt in attempts:
+                    found=[r for r in snapshot['records'] if (r['attempt_id'],r['revision'])==attempt]
+                    require(len(found)==1, 'duplicate receipt lacks exactly one retained original attempt')
+                    duplicate_rows.append(dict(attempt_id=attempt[0],revision=attempt[1],id=found[0]['id']))
+                item['duplicate_attempts_retained_once']=duplicate_rows
             item['scope']='Signature and local receipt equality; source record linkage is reported separately from admission and scientific verification.'
         else:
             require(local['state'] not in ('accepted','rejected'), 'terminal local state lacks authoritative receipt')

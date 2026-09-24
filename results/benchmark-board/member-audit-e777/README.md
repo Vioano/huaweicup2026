@@ -6,6 +6,12 @@
 
 ## 正式同步与网页自动换版（2026-09-24 16:02 UTC）
 
+后续 `formal-runtime-pr121.json` 对自动部署的 `c368189a… / 502bb20014ba3455c8224d1aa4fe5ca8ef62e76b` 再次全项通过，3633条（快照 `6f9b0084fc221a38e2fade55ae5a60b7471f7175844480729826d83859910155`）、旧3626逐字段保留+7、原872完整保留且中央含全部ID。全部发布文件/签名/运行状态/中央publisher代码一致。`browser-3633-pr121.json` 默认1500显示值SHA与独立计算一致；这是同步器更新，UI资产保持PR119版本，没有手动刷新。
+
+`receipts-duplicate.json` 独立验证 b856… 重复样本的中央签名回执已被本机程序实收：added=0、duplicate=true；固定源feed的SHA相等，2个attempt/revision在签名中央快照中各恰好一条。真实重复交付不重记已经通过。原件持续流入时不要求永远零队列，但早期P1 StageC等具体样本的完整接收仍按实际回执跟进。
+
+仍有同步提示缺口：`syncing`阶段 Engine 将upload写成空对象，浏览器显示四项全0，实际队列仍有accepted/pending。已经给正式作者固定代码及DOM证据，请保留已知计数或明确未知；不把原件成绩正确扩大为所有提示准确。
+
 `formal-runtime-acceptance.json` 全项通过：签名快照 `200c47360d850d944a10cfae6769099e88d1282e5668623ad4894c9df551e1da` 的全部 3626 条历史与事件逐字段相等；正式/报告预览各 1500 格独立重算一致。原 3209 条记录完整保留，增加 417 条；原本机 872 条与备份逐行相等，全部 ID 确实在中央快照中。签名软件 release `fbc1b27c4154495605179cfe3d70787c2808897a5d9f66058f09dca3b4d4e434` 与中央发布者均对应完整代码 `a36cbcab441ece5df55f104c983e3341265f9f4e`；全部发布文件经 Git blob 核对，4 个 HTTP 静态资源含动态注入 HTML 指纹均相等，实际软件 health=ok。
 
 此次使用 `--sync-state $State --projection-scope overview`，38 次 HTTP，约 27 秒；overview 省略逐算法/批次重复投影，但不省略全部历史、事件或默认 1500 格的两模式验收。此前 138/156 种过滤投影的完整报告仍保留。验收要求全过程快照稳定；之前遇到快照或软件自动变更的尝试没有算通过，见 `formal-first-attempt-inconclusive.json`。
