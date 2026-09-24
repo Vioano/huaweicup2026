@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "run_id": "nikolastarx-q2-active-core-044-k4-20260925",
+  "session": "nikolastarx/s-8ee33b891eb94c529bf5be94bb5d8894",
+  "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/33",
+  "cases": [
+    "044"
+  ],
+  "cores": [
+    4
+  ],
+  "methods": [
+    "adaptive_budget"
+  ],
+  "solver_mode": "direct",
+  "solver_module": "src.q2_nikolastarx.adaptive_budget",
+  "source_files": [
+    "src/q2_nikolastarx/adaptive_frontier.py",
+    "src/q2_nikolastarx/adaptive_semantic.py",
+    "src/q2_nikolastarx/component_envelope.py",
+    "src/q2_nikolastarx/shared_input_wave.py",
+    "src/q2_nikolastarx/dag_direct.py",
+    "src/q2_nikolastarx/direct.py",
+    "src/q2_nikolastarx/baseline.py",
+    "src/q2_nikolastarx/tree_frontier.py",
+    "src/q2_nikolastarx/tree_packets_first.py",
+    "src/q2_nikolastarx/tree_paired_leaves.py",
+    "src/q2_nikolastarx/vector_lanes.py",
+    "src/q2_nikolastarx/vector_arrival.py",
+    "src/q2_nikolastarx/active_core_wave.py",
+    "src/q2_nikolastarx/adaptive_budget.py"
+  ],
+  "algorithm_id": "q2-adaptive-budget",
+  "algorithm_name": "P2 structural frontier with guarded active-core choice",
+  "variant": "frozen-active-core-wave-v1",
+  "method_description": "One structural wave plan; O(log k) compute/input-traffic core choice with raw private lifetime capacity guard. No stored scores or online evaluation.",
+  "output_prefix": "results/a/q2-nikolastarx/active-core-pilot-20260925/run/044-k4",
+  "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+  "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+  "max_E0": 1,
+  "max_internal_per_cell": 0,
+  "max_E1": 0,
+  "max_E2": 0,
+  "evaluation_timeout_seconds": 50,
+  "solver_wall_seconds": 25,
+  "batch_wall_seconds": 85,
+  "rss_observation_stop_bytes": 4294967296,
+  "workers": 1,
+  "retries": 0,
+  "case_selection": "One shared-input core-count mechanism: 044/k4. Distinct from ee1 full500.",
+  "failure_policy": "First unsuccessful or unverified attempt stops; no retry.",
+  "resources": "One macOS worker, 1solver+1finalE0, 90s aggregate, sampled4GiB; wait for explicit resource release after P3. No Colab.",
+  "offline_costs": "23 targeted tests; read-only 3graph workload/capacity diagnostic0.379s. No new original-graph solver before this pilot.",
+  "authors": [
+    "NikolaStarx"
+  ],
+  "references": [
+    "docs/a/q2-nikolastarx/ACTIVE_CORE_WAVE.md"
+  ],
+  "comparison": "Against fixed ee1 pilot00b7065e: 044/k4 M66901, extra DDR2791200B, spill0. Fang fixed4-core-budget result44234 used2activecores; a reference not a source of plan selection."
+}
