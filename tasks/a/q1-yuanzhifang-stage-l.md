@@ -38,3 +38,12 @@ brute-force loop over official scores. The current straightforward interval
 builder is conservatively O(J L^3 + J K L^2); J<=32, L<=256. Its cost remains
 inside solver wall and is a target for later optimization if the candidate
 proves useful. The model and DP limitations are detailed in the result README.
+
+## Two-cell runner preparation
+
+- Frozen constructor: `5c64b4057cb9b2f2af5426bd1efdd579b9df5559`, including the explicit excluded-COPY-bridge guard. `d3fd2a344` is superseded for this trial; its 044 metadata happened to match but does not prove E0 quality.
+- New branch `codex/q1-shared-pipeline-20260925` writes only `benchmark_l.py`, `export_l.py`, `job_l.py` and this record. `job_l.py` adapts `f3e548f1915ce895e1f785219420fc747777ceb0:src/q1_yuanzhifang/job_j.py` to execute the solver through Python module semantics after the Job gate; owned-process cleanup is retained.
+- Prepare-only command: `python -m src.q1_yuanzhifang.benchmark_l --graphs GRAPH_DIR --preflight`. Actual launch also requires `--start-token STAGE-L-20260925-START --producer-session ACTUAL_SESSION`; run output defaults to `results/a/q1-yuanzhifang-stage-l/stage-l-20260925/run` and can be passed via `--output`.
+- Fixed limits: exactly the two intended cells `044/k2`, `044/k4`; at most 2 cold solver attempts and 2 independent unchanged E0 attempts; 0 E1/E2/retries; 1 worker; 120/90/300-second solver/E0/batch caps; at least 2 GiB available RAM before launch. The CLI uses `--output DIAG --plan PLAN`; all model DP and plan construction are inside the new cold solver wall. No historical result enters model selection.
+- Export command after a real run: `python -m src.q1_yuanzhifang.export_l --run-dir RUN_DIR --feed FEED.json`. The exporter checks original plan/diagnostics/result/trace/log bytes and both matched single-core baseline originals from `6fcec11ccc472a1a652b21feb6fccf85a4555598`. Failed or unevaluated cells remain non-success without Makespan.
+- This preparation did not run a real graph constructor, Task compiler, E0 or E1. The static 044/k4 proxy 49494 cycles and cuts `[0,28,60,86,124]` with packets `[4,4,3]` are not an E0 result or promised improvement.
