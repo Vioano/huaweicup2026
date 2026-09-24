@@ -141,7 +141,8 @@ Current validation command:
 python3 -m unittest tests.q1.test_packet_dp tests.q1.test_response_contract_inputs tests.q1.test_response_compile tests.q1.test_response_oracle -v
 ```
 
-Result: 15 tests passed (0.075 seconds, Python 3.14.5, macOS 27 arm64). That includes
+Result: 16 tests passed on Python 3.12.13/macOS 27 arm64 after adding full-state
+budget selection tests. The earlier 15-test run used Python 3.14.5. Coverage includes
 the two synthetic DP constructions, three static response fixtures, and a
 regression proving unchanged timing cannot conceal a DDR-byte mismatch.
 

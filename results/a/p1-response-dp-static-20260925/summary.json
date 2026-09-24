@@ -1,0 +1,62 @@
+{
+  "kind": "static rational-model candidate comparison NOT official score",
+  "input_archive": "data/raw/a/official-cases.zip",
+  "archive_member": "data/case_084.json",
+  "input_sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee",
+  "rows": [
+    {
+      "mode": "three",
+      "source": "27339dc2ccef5f85fb77137afb66957ddd14a822",
+      "plan_sha256": "5203ed797935cbf3777586247fa82191518485da839a6d680b150efb6ed5e3f6",
+      "constructor_wall_seconds": 7.075871042034123,
+      "model_makespan": 397542,
+      "extra_ddr_bytes": 8939520,
+      "static_task_compiles": 2559,
+      "states": [
+        0,
+        4,
+        5
+      ],
+      "official_scoring_calls": 0
+    },
+    {
+      "mode": "full",
+      "source": "3c963061d3c0f59669eeecdc845b2e6d2ab37862",
+      "plan_sha256": "5203ed797935cbf3777586247fa82191518485da839a6d680b150efb6ed5e3f6",
+      "constructor_wall_seconds": 21.072407083993312,
+      "model_makespan": 397542,
+      "extra_ddr_bytes": 8939520,
+      "static_task_compiles": 8889,
+      "states": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "official_scoring_calls": 0
+    }
+  ],
+  "same_plan_bytes": true,
+  "calls": {
+    "real_case_candidate_constructors": 2,
+    "saved_plan_static_response": 1,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "limits": {
+    "constructor_child_seconds": 120,
+    "workers": 1,
+    "priority": "nice +10",
+    "retries": 0
+  },
+  "environment": {
+    "python": "3.12.13",
+    "platform": "macOS 27 arm64",
+    "cpu": "Apple M5 Pro",
+    "logical_cpus": 18
+  },
+  "scope": "No standalone quality claim; candidate E0 pending; wall times observational, not controlled parallel-load benchmark"
+}
