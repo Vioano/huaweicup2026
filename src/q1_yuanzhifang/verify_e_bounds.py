@@ -98,7 +98,10 @@ def main():
         gate = lower_bounds(graph, plan, waits)
         boundary = boundary_cost(graph, plan, bandwidth)
         chosen = diagnostic["costs"][diagnostic["selected"]]
-        require(gate == chosen["gate"] and boundary == chosen["boundary"], "Static bounds differ from the original diagnostics")
+        # JSON serializes integer Task dictionary keys as strings. This is a
+        # diagnostic value comparison, never a normalization of plan evidence.
+        boundary_json = json.loads(json.dumps(boundary))
+        require(gate == chosen["gate"] and boundary_json == chosen["boundary"], "Static bounds differ from the original diagnostics")
         require(gate["witness_compute_cycles"] + gate["witness_gate_cycles"] == gate["task_gate_lower_bound_cycles"], "Gate witness mismatch")
         bounds = {"task_gate": Fraction(gate["task_gate_lower_bound_cycles"]),
                   "mandatory_boundary_DDR": Fraction(boundary["boundary_ddr_service_cycles"]),
