@@ -76,7 +76,7 @@ def _check(value, spec, root, path='$'):
 
 
 def validate_feed(feed, submission=False):
-    schema = json.loads(SCHEMA.read_text())
+    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
     _check(feed, schema, schema)
     strict = submission or feed.get('submission_version') == 1
     seen = set()
@@ -158,8 +158,8 @@ def main():
             raise ValueError('feed too large')
         feed = json.loads(raw)
         strict = validate_feed(feed, args.submission)
-        manifest = json.loads((ROOT / 'docs/a/source-manifest.json').read_text())
-        calibrations = json.loads((ROOT / 'docs/benchmarks/board-calibrations.json').read_text())
+        manifest = json.loads((ROOT / 'docs/a/source-manifest.json').read_text(encoding="utf-8"))
+        calibrations = json.loads((ROOT / 'docs/benchmarks/board-calibrations.json').read_text(encoding="utf-8"))
         with tempfile.TemporaryDirectory(prefix='board-validate-') as tmp:
             ledger = Ledger(Path(tmp), manifest, calibrations)
             ledger.ingest(feed, load, {'commit': args.commit, 'path': str(args.feed), 'validation_only': True})
