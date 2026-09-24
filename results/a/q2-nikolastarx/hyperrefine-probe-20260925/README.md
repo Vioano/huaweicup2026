@@ -33,3 +33,12 @@ or byte result exists. The import order is corrected in the script after that
 attempt. The frozen zero-retry budget was respected; no further child was run
 under that batch. A separately authorized `run-003-k2-v2` uses the corrected
 script with the same one-worker, one-refinement, 30-second, zero-retry budget.
+
+The authorized `run-003-k2-v2` entered `refine` once and failed in its first
+narrow region: `load_guarded_cut` received the global chain-work mapping rather
+than work restricted to that region (`ValueError: work must have one record per
+unit`). See its `process.json` and `stderr.txt`. This is an adapter defect
+exposed by the 9,903-chain input, not an algorithm result. No output plan or
+after-byte count was produced, and no evaluator was called. This batch was not
+retried; a future probe requires an independently reviewed source fix and new
+authorization.
