@@ -1,0 +1,429 @@
+{
+  "accepted_row": {
+    "case": "090",
+    "cores": 5,
+    "solver_process_in_flight": false,
+    "solver_process": {
+      "argv": [
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/.venv/bin/python",
+        "-B",
+        "-m",
+        "src.q2_nikolastarx.adaptive_gap_guarded",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/data/raw/a/official/data/case_090.json",
+        "--config",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/data/raw/a/official/data/config.txt",
+        "--cores",
+        "5",
+        "--output",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/output/p2-gap-full500-20260925-s59/20260924T2124Z-s59ee/090-k5/plan.json",
+        "--evidence",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/output/p2-gap-full500-20260925-s59/20260924T2124Z-s59ee/090-k5/online",
+        "--e2-root",
+        "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/output/q2-e2-paircheck-603b-s8ee",
+        "--wall",
+        "60"
+      ],
+      "started_at": "2026-09-24T23:20:41.086881Z",
+      "status": "ok",
+      "sample_interval_seconds": 0.05,
+      "observed_peak_rss_bytes": 94306304,
+      "rss_samples": 15,
+      "cleanup_killed_pids": [],
+      "pid": 28875,
+      "observer_inclusive_peak_rss_bytes": 2137407488,
+      "exit_code": 0,
+      "surviving_pids": [],
+      "finished_at": "2026-09-24T23:20:42.384887Z",
+      "wall_seconds": 1.297995875007473
+    },
+    "solver_ledger": {
+      "status": "ok",
+      "started_at": "2026-09-24T23:20:41.263028+00:00",
+      "calls": {
+        "E0": 0,
+        "E1": 0,
+        "E2": 2,
+        "E2_api_attempted": 2,
+        "native_returns": 2,
+        "E0_fallback": 0
+      },
+      "attempts": [
+        {
+          "plan_sha256": "284ed969f01f94e34d1868412ae04913d6e713c33bf3ecc1f571726e5843f0da",
+          "started_at": "2026-09-24T23:20:41.589957+00:00",
+          "status": "native",
+          "record": {
+            "status": "ok",
+            "makespan": 260978,
+            "data_movement_bytes": {
+              "original_graph_copy_bytes": 2228352,
+              "scheduled_copy_bytes": 10822272,
+              "added_copy_bytes": 8593920,
+              "partition_added_copy_bytes": 8593920,
+              "spill_added_copy_bytes": 0
+            },
+            "cross_task_traffic": 0,
+            "route": "native",
+            "execution": "native_replayed",
+            "numeric_kind": "computed",
+            "replay_iterations": 723,
+            "preparation_seconds": 0.07174141705036163,
+            "replay_seconds": 0.00014595803804695606,
+            "compilation_cache_hit": false,
+            "engine": "p2-e2-native-search-v1",
+            "problem": 2,
+            "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+            "wall_seconds": 0.07283212500624359,
+            "cpu_seconds": 0.07122900000000001,
+            "cache": {
+              "hits": 0,
+              "misses": 1,
+              "evictions": 0,
+              "bypasses": 0,
+              "native_calls": 1,
+              "fallback_calls": 0,
+              "full_calls": 0,
+              "accounted_bytes": 164348,
+              "limit_bytes": 16777216,
+              "entries": 1,
+              "max_entries": 32
+            }
+          },
+          "wall_seconds": 0.3350212919758633
+        },
+        {
+          "plan_sha256": "bfde54c30ec491561f300c0fbeb00a2579a711bd0b62e73d66d9e20229ff1b21",
+          "started_at": "2026-09-24T23:20:41.925949+00:00",
+          "status": "native",
+          "record": {
+            "status": "ok",
+            "makespan": 305364,
+            "data_movement_bytes": {
+              "original_graph_copy_bytes": 2228352,
+              "scheduled_copy_bytes": 13117440,
+              "added_copy_bytes": 10889088,
+              "partition_added_copy_bytes": 9497088,
+              "spill_added_copy_bytes": 1392000
+            },
+            "cross_task_traffic": 451584,
+            "route": "native",
+            "execution": "native_replayed",
+            "numeric_kind": "computed",
+            "replay_iterations": 2556,
+            "preparation_seconds": 0.10006108303787187,
+            "replay_seconds": 0.00037099997280165553,
+            "compilation_cache_hit": false,
+            "engine": "p2-e2-native-search-v1",
+            "problem": 2,
+            "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+            "wall_seconds": 0.10124658397398889,
+            "cpu_seconds": 0.10046200000000002,
+            "cache": {
+              "hits": 0,
+              "misses": 1,
+              "evictions": 0,
+              "bypasses": 0,
+              "native_calls": 1,
+              "fallback_calls": 0,
+              "full_calls": 0,
+              "accounted_bytes": 212452,
+              "limit_bytes": 16777216,
+              "entries": 1,
+              "max_entries": 32
+            }
+          },
+          "wall_seconds": 0.3137830419582315
+        }
+      ],
+      "source_checked": true,
+      "possible_E0_fallback_calls": 0,
+      "request_in_flight": false,
+      "runtime": {
+        "python": "3.12.13",
+        "platform": "macOS-27.0-arm64-arm-64bit"
+      },
+      "validation_scope": "official structural check; no final E0/P2 feasibility certificate",
+      "graph_sha256": "a91d3ad4c40e53d5731b81b3eb72bcf922f5ef06094e860b5c5729619cb2d312",
+      "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+      "cores": 5,
+      "solver_checkout_commit": "9db8247f9a864a3279f3bd315aa09d8ad7dd5206",
+      "solver_source_sha256": {
+        "active_core_wave.py": "cc22791bd693b7f8385b90fff7aa344ec774054a12e6edcde65e8fa71309322a",
+        "adaptive_budget.py": "710b0c7b023584f6e44d345c9b0e2317b1c6050201bb2f2a1f9d0d524d09c185",
+        "adaptive_direct.py": "93674a572ca731fb642d20ddbcfe67dd3d3e1e5ff1b341418e9307ebc084ce3f",
+        "adaptive_frontier.py": "1f251246d2efff661e3808c6c0ff21bb1da9f71f9dbc07b9cbba71a32ebb266a",
+        "adaptive_gap_guarded.py": "e893d530e04d3b80d179d7cba6764ca8eda9df66958ec0c02b505cc19bcac777",
+        "adaptive_guarded.py": "1646e78c10205e4348f48378b3d6de3eb3f9f24c747db0a1ecd82a60a24007d9",
+        "adaptive_semantic.py": "1a29898358343ae269e69618a09fa3a680c448b585797ac3fcfd17def886197a",
+        "baseline.py": "1820b2119c650e875c219f3b23f1c0ade413f19ae8df9f320f071acc6d68b7e4",
+        "bounds.py": "65a68fcc8a3e83bc2af980898bda8afbd8269f69f61eafe06fe51632de4034aa",
+        "candidate_ddr.py": "a0b732ffc4ce68ab8a821f6ece096cd51198a437a4993f2e174cdea602d4cd3d",
+        "chain_packets.py": "59c5b9d0cab785b55a56c031f414538a7c2595a489214dd6539626ea5812ed0f",
+        "chain_pilot.py": "d55a474d86b9f47d32b4b8b5e420ead723bfe7b91ca061f37b27f2533ff08a4a",
+        "compare_matrix.py": "44dd031bdf5892b8d97176538e38b9aec0b43db5a547ccfe7aa1b53172c4aaae",
+        "component_envelope.py": "245ba6623f122420d99b77270609add13057261ecdd917a46c6a29d7b9541793",
+        "dag_direct.py": "f7033c454cd9861e8ea396850abcbfa970877f709239ec9e8ab220040bb0cccb",
+        "direct.py": "256a120bb8e6aa9a5cf57e11ce1b76f902599c82873352d01261448d7e002df3",
+        "direct_solve.py": "0189c6c295fbcd22218456ef9238f935b7ee3f384ea1662dd750a2c1c6eafcc6",
+        "e2_plan_pairs.py": "6b37e2e20834b33328548f9df1059adaa3551e8b45d79957ce6a120403a84995",
+        "evaluate_feedback.py": "9b9dbbf1b43423cafb1492285af3d9e7ec55d7201539a65c56c12f5f0edc4849",
+        "evaluate_matrix.py": "69046f2458d51ca0e7d004f2185c56bb530304bad0d151c3f9f27032ac46539e",
+        "evaluate_pruned.py": "af1719b279e6b829adfec7e412b70f28c9bbf87e27311828c21255f0183c88c8",
+        "export_board.py": "db60e5444f3ba1a4646b2adf7d2e9c7a26b2d25ded2bb414f49e19b50e342b1e",
+        "fifo_bound.py": "729a6c7a08f36a626c9089c21cfcf410269cff65ae41cbad88115632f63eea8c",
+        "gap_calendar.py": "203ebf550396bd86e2b4fc86678197ed0f5360765dce13862aca82bda5c1fc47",
+        "gap_candidate.py": "7057a35abde3aa528d4d0bc85aa217697c4219356dd2d46939d75e165311879d",
+        "gap_full500.py": "4e5349bf45d179d209947e13b269b78bcc11cda72988b886758b4e39bd2ea404",
+        "gap_solver_pilot.py": "3e6c4198a817fb525c277ae1fca059026ab12c6c577ee62646d8930702304f49",
+        "global_bounds.py": "5862e1a2a6a884f3162d445219b7b2a7b1b5b8d162b374a78f12fd45a420c0c3",
+        "guarded_component.py": "e3f3478f54d31c1a7b723c787a9cee7504b3539822724c2b0ed0ebf70f47b81d",
+        "packets.py": "1912077608b008c1d846e4511eacca7c7a87d3556dab181a3bdd40c5e259068e",
+        "shared_input_wave.py": "6a66278e6264312f4c983b6b4efe0320d17bb49806ca62071be441cc7805caa3",
+        "solve.py": "251ecff4455782e032e24ca529c69c4efed112380be9ab0384041a42dd5b1d38",
+        "static_analysis.py": "fa9ea51ac0670ca39ab217c4c2cd60a35735167a99cdf5c0739ef120fc6da255",
+        "tree_frontier.py": "0ea6976bc0d29cab898a40d040077cf6bfc07c7584d5141769a616a62f5a8ed2",
+        "tree_packets_first.py": "8cd41b9b27ef160f3ee75f70b4d5c38a115bd757421fddd8729e2d9a60e524f4",
+        "tree_paired_leaves.py": "ee100436c7c9e79d458eb8d0fc4af9a649b7dafb3837c5cb6d50ba5b0e7da485",
+        "vector_arrival.py": "f552ad98836095bc4e6bce8eb6503be928fe66a14dff0a3a640833279ea37242",
+        "vector_lanes.py": "1dbccbc915c78f491d74faa57aceff3038e0d4667d1bd65ba7c30243aec5c3ec",
+        "vector_split.py": "1896dfbdeea6eda92a3da8559fca4131a6209db47baba9a8cd15fb3f2d225e54",
+        "windows_gate.py": "6726911ca0b27c5aac6abb19a0c3f3ee85970c29784608d07b61cde2eb3a71ae",
+        "windows_process.py": "e0b4ebe7f369f666d1fa29ab0bac58bfe95e95a71d7f56c459ea6fbe42271c40"
+      },
+      "source_check_wall_seconds": 0.03202845901250839,
+      "source": {
+        "commit": "603b0741e21c449d3db652ebd67c94f2dc014cc9",
+        "manifest_sha256": "9ee379269c0c4f25b64f9d0aeaf1e397e85e48c2103b08637db356d3c9595387",
+        "native_binary_sha256": "0f765b7b1229ea221881ff8e017ba7d37b64461eded6afb7f48e9cf61bfd4e94",
+        "root": "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/output/q2-e2-paircheck-603b-s8ee"
+      },
+      "detail": {
+        "selected_strategy": "adaptive_budget",
+        "baseline_detail": {
+          "selected_strategy": "active_core_shared_wave",
+          "components": 13,
+          "cores": 5,
+          "shared_external_inputs": 54,
+          "shared_external_bytes": 2148480,
+          "raw_priority_peak_bytes": [
+            {
+              "L1": 184512,
+              "UB": 0
+            },
+            {
+              "L1": 184512,
+              "UB": 0
+            },
+            {
+              "L1": 184512,
+              "UB": 0
+            },
+            {
+              "L1": 178368,
+              "UB": 0
+            },
+            {
+              "L1": 178368,
+              "UB": 0
+            }
+          ],
+          "raw_peaks_fit_capacity": true,
+          "zero_spill_claim": false,
+          "limitations": [
+            "raw touch intervals omit official COPY/spill and Step2/Step3 reorder",
+            "fixed whole-component assignment; activation frontier may grow with component count"
+          ],
+          "requested_cores": 5,
+          "active_cores": 5,
+          "per_job_pipe_work": {
+            "PIPE_M": 64656,
+            "PIPE_V": 4560
+          },
+          "shared_input_bytes": 2148480,
+          "private_input_bytes": 39936,
+          "raw_private_peak_max": {
+            "L1": 12288,
+            "UB": 0
+          },
+          "raw_shared_wave_max": {
+            "L1": 165888
+          },
+          "raw_capacity_jobs_per_core_bound": 13,
+          "core_choice": {
+            "model_objective_cycles": 193968,
+            "compute_load_cycles": 193968,
+            "input_service_cycles": 179706,
+            "critical_path_cycles": 63936,
+            "crossing_candidates": [
+              5
+            ]
+          },
+          "official_optimality_claim": false,
+          "component_pressure": {
+            "largest_component_pipe_work": {
+              "PIPE_M": 64656,
+              "PIPE_V": 4560
+            },
+            "balanced_pipe_work_lower_bound": {
+              "PIPE_M": 168106,
+              "PIPE_V": 11856
+            },
+            "component_exceeds_balanced_pipe_work": false,
+            "shared_external_bytes": {
+              "L1": 2148480
+            },
+            "shared_external_exceeds_capacity": true
+          },
+          "adaptive_route": "active_core_shared_wave",
+          "index_constructions": 1,
+          "base_construct_calls": 1,
+          "repair_construct_calls": 0,
+          "repair_trigger": {
+            "recognized": false,
+            "large_crossings": 0,
+            "large_crossing_bytes": 0,
+            "reason": "vector lanes: all eligible ops must use PIPE_V"
+          },
+          "route_limitations": "unchanged general plan; no official feasibility/score/zero-spill certificate"
+        },
+        "candidate_detail": {
+          "selected": "join_gap_candidate",
+          "chains": 689,
+          "paired_joins": 260,
+          "operations_inserted_before_tail": 32,
+          "arithmetic_placement_choices": 7345,
+          "choice_bound": 17225,
+          "modeled_compute_finish": 175804,
+          "online_E0_calls": 0,
+          "scope": "Static communication/compute calendar; no capacity, COPY contention, or optimality claim."
+        },
+        "constructed_plans": 2,
+        "oracle_requests": 2,
+        "selected": "baseline",
+        "score_scope": "complete final plans returned by both constructors; no downstream repair",
+        "score_evidence": "injected_oracle_complete_plan_scores",
+        "baseline_score": [
+          260978,
+          8593920
+        ],
+        "candidate_score": [
+          305364,
+          10889088
+        ],
+        "reason": "baseline_wins_or_ties"
+      },
+      "plan_sha256": "d223f4f2a36ea92b605ed19203713d2532b1b6812faac72fdfcd8f47f81997dd",
+      "stop_reason": "single_structural_route_completed",
+      "finished_at": "2026-09-24T23:20:42.250157+00:00",
+      "internal_wall_seconds": 0.9872295000241138
+    },
+    "selected_comparison": {
+      "kind": "selected_native",
+      "record": {
+        "status": "ok",
+        "makespan": 260978,
+        "data_movement_bytes": {
+          "original_graph_copy_bytes": 2228352,
+          "scheduled_copy_bytes": 10822272,
+          "added_copy_bytes": 8593920,
+          "partition_added_copy_bytes": 8593920,
+          "spill_added_copy_bytes": 0
+        },
+        "cross_task_traffic": 0,
+        "route": "native",
+        "execution": "native_replayed",
+        "numeric_kind": "computed",
+        "replay_iterations": 723,
+        "preparation_seconds": 0.07174141705036163,
+        "replay_seconds": 0.00014595803804695606,
+        "compilation_cache_hit": false,
+        "engine": "p2-e2-native-search-v1",
+        "problem": 2,
+        "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "wall_seconds": 0.07283212500624359,
+        "cpu_seconds": 0.07122900000000001,
+        "cache": {
+          "hits": 0,
+          "misses": 1,
+          "evictions": 0,
+          "bypasses": 0,
+          "native_calls": 1,
+          "fallback_calls": 0,
+          "full_calls": 0,
+          "accounted_bytes": 164348,
+          "limit_bytes": 16777216,
+          "entries": 1,
+          "max_entries": 32
+        }
+      },
+      "plan_canonical_sha256": "284ed969f01f94e34d1868412ae04913d6e713c33bf3ecc1f571726e5843f0da"
+    },
+    "independent_e0_in_flight": false,
+    "e0_process": {
+      "argv": [
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/.venv/bin/python",
+        "-B",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/data/raw/a/official/code/multicore_cut_evaluate_problem_2.py",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/data/raw/a/official/data/case_090.json",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/output/p2-gap-full500-20260925-s59/20260924T2124Z-s59ee/090-k5/plan.json",
+        "--config",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/data/raw/a/official/data/config.txt",
+        "--output",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/output/p2-gap-full500-20260925-s59/20260924T2124Z-s59ee/090-k5/result.json",
+        "--trace-output",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/output/p2-gap-full500-20260925-s59/20260924T2124Z-s59ee/090-k5/trace.json",
+        "--log-output",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/output/p2-gap-full500-20260925-s59/20260924T2124Z-s59ee/090-k5/official.log"
+      ],
+      "started_at": "2026-09-24T23:20:52.933059Z",
+      "status": "ok",
+      "sample_interval_seconds": 0.05,
+      "observed_peak_rss_bytes": 44531712,
+      "rss_samples": 4,
+      "cleanup_killed_pids": [],
+      "pid": 29678,
+      "observer_inclusive_peak_rss_bytes": 1781481472,
+      "exit_code": 0,
+      "surviving_pids": [],
+      "finished_at": "2026-09-24T23:20:53.309861Z",
+      "wall_seconds": 0.3768649999983609
+    },
+    "result": {
+      "makespan": 260978,
+      "movement": {
+        "original_graph_copy_bytes": 2228352,
+        "scheduled_copy_bytes": 10822272,
+        "added_copy_bytes": 8593920,
+        "partition_added_copy_bytes": 8593920,
+        "spill_added_copy_bytes": 0
+      },
+      "cross_task_traffic": 0,
+      "result_sha256": "4c9eb759dddacfb7867bfabdd4b525bcfa85c27709686b348814f5c4b81dcec0"
+    },
+    "baseline_m": 260978,
+    "makespan_delta": 0,
+    "old_new": {
+      "old_makespan": 260978,
+      "new_makespan": 260978,
+      "old_added_ddr_bytes": 8593920,
+      "new_added_ddr_bytes": 8593920,
+      "outer_solver_wall_seconds": 1.297995875007473,
+      "outer_e0_wall_seconds": 0.3768649999983609
+    },
+    "status": "accepted"
+  },
+  "raw_evidence": {
+    "solver_process": {
+      "path": "results/a/q2-nikolastarx/gap-full500-archive-20260924T2124Z-s59/shard-401-450/090-k5/solver-process.json",
+      "sha256": "da7fcfe8be05c7726a89a00358149c35ad5d83b8ff97a9f983b19f2cf20faccf"
+    },
+    "e0_process": {
+      "path": "results/a/q2-nikolastarx/gap-full500-archive-20260924T2124Z-s59/shard-401-450/090-k5/e0-process.json",
+      "sha256": "e59db09b326b72620d92c6526b028bcc639ffda9be3c8ad8c9131ca79cfdf492"
+    },
+    "online_ledger": {
+      "path": "results/a/q2-nikolastarx/gap-full500-archive-20260924T2124Z-s59/shard-401-450/090-k5/online-ledger.json",
+      "sha256": "b04e1d503986305f4636c0286e32bd0b68ec0f94032bf108671f1cb3211cac52"
+    }
+  }
+}
