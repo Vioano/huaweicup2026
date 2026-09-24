@@ -1,0 +1,1265 @@
+{
+  "status": "ok",
+  "started_at": "2026-09-24T21:47:12.886062+00:00",
+  "calls": {
+    "E0": 0,
+    "E1": 0,
+    "E2": 2,
+    "E2_api_attempted": 2,
+    "native_returns": 2,
+    "E0_fallback": 0
+  },
+  "attempts": [
+    {
+      "plan_sha256": "264cfa8bcf462186fc9e24fabe6e56a8aca4bdb75a20c684f0e4f31bc3fa05ee",
+      "started_at": "2026-09-24T21:47:14.228905+00:00",
+      "status": "native",
+      "record": {
+        "status": "ok",
+        "makespan": 270889,
+        "data_movement_bytes": {
+          "original_graph_copy_bytes": 2802950,
+          "scheduled_copy_bytes": 11416838,
+          "added_copy_bytes": 8613888,
+          "partition_added_copy_bytes": 8558592,
+          "spill_added_copy_bytes": 55296
+        },
+        "cross_task_traffic": 0,
+        "route": "native",
+        "execution": "native_replayed",
+        "numeric_kind": "computed",
+        "replay_iterations": 8236,
+        "preparation_seconds": 0.5053011669660918,
+        "replay_seconds": 0.0008340419735759497,
+        "compilation_cache_hit": false,
+        "engine": "p2-e2-native-search-v1",
+        "problem": 2,
+        "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "wall_seconds": 0.5088068749755621,
+        "cpu_seconds": 0.49038099999999996,
+        "cache": {
+          "hits": 0,
+          "misses": 1,
+          "evictions": 0,
+          "bypasses": 0,
+          "native_calls": 1,
+          "fallback_calls": 0,
+          "full_calls": 0,
+          "accounted_bytes": 718465,
+          "limit_bytes": 16777216,
+          "entries": 1,
+          "max_entries": 32
+        }
+      },
+      "wall_seconds": 0.7756564579904079
+    },
+    {
+      "plan_sha256": "eebc4303c9b89d39259b3b395f16108ae4ccb0aa79d5cf40db672a831010ff49",
+      "started_at": "2026-09-24T21:47:15.006568+00:00",
+      "status": "native",
+      "record": {
+        "status": "ok",
+        "makespan": 332049,
+        "data_movement_bytes": {
+          "original_graph_copy_bytes": 2802950,
+          "scheduled_copy_bytes": 18615178,
+          "added_copy_bytes": 15812228,
+          "partition_added_copy_bytes": 15812228,
+          "spill_added_copy_bytes": 0
+        },
+        "cross_task_traffic": 3959106,
+        "route": "native",
+        "execution": "native_replayed",
+        "numeric_kind": "computed",
+        "replay_iterations": 12130,
+        "preparation_seconds": 0.7926016250276007,
+        "replay_seconds": 0.002075167023576796,
+        "compilation_cache_hit": false,
+        "engine": "p2-e2-native-search-v1",
+        "problem": 2,
+        "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "wall_seconds": 0.7974381250096485,
+        "cpu_seconds": 0.770895,
+        "cache": {
+          "hits": 0,
+          "misses": 1,
+          "evictions": 0,
+          "bypasses": 0,
+          "native_calls": 1,
+          "fallback_calls": 0,
+          "full_calls": 0,
+          "accounted_bytes": 897162,
+          "limit_bytes": 16777216,
+          "entries": 1,
+          "max_entries": 32
+        }
+      },
+      "wall_seconds": 1.0812567920074798
+    }
+  ],
+  "source_checked": true,
+  "possible_E0_fallback_calls": 0,
+  "request_in_flight": false,
+  "runtime": {
+    "python": "3.12.13",
+    "platform": "macOS-27.0-arm64-arm-64bit"
+  },
+  "validation_scope": "official structural check; no final E0/P2 feasibility certificate",
+  "graph_sha256": "69575019d0670552c74f386508042357a94419ed2f49d18a382a71a8cf39e5ac",
+  "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+  "cores": 5,
+  "solver_checkout_commit": "9db8247f9a864a3279f3bd315aa09d8ad7dd5206",
+  "solver_source_sha256": {
+    "active_core_wave.py": "cc22791bd693b7f8385b90fff7aa344ec774054a12e6edcde65e8fa71309322a",
+    "adaptive_budget.py": "710b0c7b023584f6e44d345c9b0e2317b1c6050201bb2f2a1f9d0d524d09c185",
+    "adaptive_direct.py": "93674a572ca731fb642d20ddbcfe67dd3d3e1e5ff1b341418e9307ebc084ce3f",
+    "adaptive_frontier.py": "1f251246d2efff661e3808c6c0ff21bb1da9f71f9dbc07b9cbba71a32ebb266a",
+    "adaptive_gap_guarded.py": "e893d530e04d3b80d179d7cba6764ca8eda9df66958ec0c02b505cc19bcac777",
+    "adaptive_guarded.py": "1646e78c10205e4348f48378b3d6de3eb3f9f24c747db0a1ecd82a60a24007d9",
+    "adaptive_semantic.py": "1a29898358343ae269e69618a09fa3a680c448b585797ac3fcfd17def886197a",
+    "baseline.py": "1820b2119c650e875c219f3b23f1c0ade413f19ae8df9f320f071acc6d68b7e4",
+    "bounds.py": "65a68fcc8a3e83bc2af980898bda8afbd8269f69f61eafe06fe51632de4034aa",
+    "candidate_ddr.py": "a0b732ffc4ce68ab8a821f6ece096cd51198a437a4993f2e174cdea602d4cd3d",
+    "chain_packets.py": "59c5b9d0cab785b55a56c031f414538a7c2595a489214dd6539626ea5812ed0f",
+    "chain_pilot.py": "d55a474d86b9f47d32b4b8b5e420ead723bfe7b91ca061f37b27f2533ff08a4a",
+    "compare_matrix.py": "44dd031bdf5892b8d97176538e38b9aec0b43db5a547ccfe7aa1b53172c4aaae",
+    "component_envelope.py": "245ba6623f122420d99b77270609add13057261ecdd917a46c6a29d7b9541793",
+    "dag_direct.py": "f7033c454cd9861e8ea396850abcbfa970877f709239ec9e8ab220040bb0cccb",
+    "direct.py": "256a120bb8e6aa9a5cf57e11ce1b76f902599c82873352d01261448d7e002df3",
+    "direct_solve.py": "0189c6c295fbcd22218456ef9238f935b7ee3f384ea1662dd750a2c1c6eafcc6",
+    "e2_plan_pairs.py": "6b37e2e20834b33328548f9df1059adaa3551e8b45d79957ce6a120403a84995",
+    "evaluate_feedback.py": "9b9dbbf1b43423cafb1492285af3d9e7ec55d7201539a65c56c12f5f0edc4849",
+    "evaluate_matrix.py": "69046f2458d51ca0e7d004f2185c56bb530304bad0d151c3f9f27032ac46539e",
+    "evaluate_pruned.py": "af1719b279e6b829adfec7e412b70f28c9bbf87e27311828c21255f0183c88c8",
+    "export_board.py": "db60e5444f3ba1a4646b2adf7d2e9c7a26b2d25ded2bb414f49e19b50e342b1e",
+    "fifo_bound.py": "729a6c7a08f36a626c9089c21cfcf410269cff65ae41cbad88115632f63eea8c",
+    "gap_calendar.py": "203ebf550396bd86e2b4fc86678197ed0f5360765dce13862aca82bda5c1fc47",
+    "gap_candidate.py": "7057a35abde3aa528d4d0bc85aa217697c4219356dd2d46939d75e165311879d",
+    "gap_full500.py": "4e5349bf45d179d209947e13b269b78bcc11cda72988b886758b4e39bd2ea404",
+    "gap_solver_pilot.py": "3e6c4198a817fb525c277ae1fca059026ab12c6c577ee62646d8930702304f49",
+    "global_bounds.py": "5862e1a2a6a884f3162d445219b7b2a7b1b5b8d162b374a78f12fd45a420c0c3",
+    "guarded_component.py": "e3f3478f54d31c1a7b723c787a9cee7504b3539822724c2b0ed0ebf70f47b81d",
+    "packets.py": "1912077608b008c1d846e4511eacca7c7a87d3556dab181a3bdd40c5e259068e",
+    "shared_input_wave.py": "6a66278e6264312f4c983b6b4efe0320d17bb49806ca62071be441cc7805caa3",
+    "solve.py": "251ecff4455782e032e24ca529c69c4efed112380be9ab0384041a42dd5b1d38",
+    "static_analysis.py": "fa9ea51ac0670ca39ab217c4c2cd60a35735167a99cdf5c0739ef120fc6da255",
+    "tree_frontier.py": "0ea6976bc0d29cab898a40d040077cf6bfc07c7584d5141769a616a62f5a8ed2",
+    "tree_packets_first.py": "8cd41b9b27ef160f3ee75f70b4d5c38a115bd757421fddd8729e2d9a60e524f4",
+    "tree_paired_leaves.py": "ee100436c7c9e79d458eb8d0fc4af9a649b7dafb3837c5cb6d50ba5b0e7da485",
+    "vector_arrival.py": "f552ad98836095bc4e6bce8eb6503be928fe66a14dff0a3a640833279ea37242",
+    "vector_lanes.py": "1dbccbc915c78f491d74faa57aceff3038e0d4667d1bd65ba7c30243aec5c3ec",
+    "vector_split.py": "1896dfbdeea6eda92a3da8559fca4131a6209db47baba9a8cd15fb3f2d225e54",
+    "windows_gate.py": "6726911ca0b27c5aac6abb19a0c3f3ee85970c29784608d07b61cde2eb3a71ae",
+    "windows_process.py": "e0b4ebe7f369f666d1fa29ab0bac58bfe95e95a71d7f56c459ea6fbe42271c40"
+  },
+  "source_check_wall_seconds": 0.03035133396042511,
+  "source": {
+    "commit": "603b0741e21c449d3db652ebd67c94f2dc014cc9",
+    "manifest_sha256": "9ee379269c0c4f25b64f9d0aeaf1e397e85e48c2103b08637db356d3c9595387",
+    "native_binary_sha256": "0f765b7b1229ea221881ff8e017ba7d37b64461eded6afb7f48e9cf61bfd4e94",
+    "root": "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/output/q2-e2-paircheck-603b-s8ee"
+  },
+  "detail": {
+    "selected_strategy": "adaptive_budget",
+    "baseline_detail": {
+      "selected_strategy": "component_envelope",
+      "eligible_ops": 5907,
+      "components": 130,
+      "cores": 5,
+      "capacity_bytes": {
+        "L1": 524288,
+        "UB": 131072
+      },
+      "per_core": [
+        {
+          "core": 0,
+          "components": 24,
+          "shared_tensors": 220,
+          "cohorts": [
+            {
+              "components": [
+                12,
+                16,
+                25,
+                29
+              ],
+              "shared_reserve_bytes": {
+                "L1": 294912,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 209920,
+                "UB": 264
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 504832,
+                "UB": 264
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                32,
+                38,
+                50,
+                53
+              ],
+              "shared_reserve_bytes": {
+                "L1": 294912,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 210944,
+                "UB": 264
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 505856,
+                "UB": 264
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                56,
+                64,
+                67,
+                73
+              ],
+              "shared_reserve_bytes": {
+                "L1": 262656,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 189952,
+                "UB": 41124
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 452608,
+                "UB": 41124
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                77,
+                84,
+                90
+              ],
+              "shared_reserve_bytes": {
+                "L1": 230400,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 244224,
+                "UB": 294
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 474624,
+                "UB": 294
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                93,
+                102
+              ],
+              "shared_reserve_bytes": {
+                "L1": 345600,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 159744,
+                "UB": 196
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 505344,
+                "UB": 196
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                105,
+                113
+              ],
+              "shared_reserve_bytes": {
+                "L1": 345600,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 159744,
+                "UB": 196
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 505344,
+                "UB": 196
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                117,
+                120,
+                126,
+                127,
+                129
+              ],
+              "shared_reserve_bytes": {
+                "L1": 307200,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 159744,
+                "UB": 59588
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 466944,
+                "UB": 59588
+              },
+              "within_capacity": true
+            }
+          ],
+          "max_open_components_bound": 5,
+          "all_raw_envelopes_fit": true
+        },
+        {
+          "core": 1,
+          "components": 25,
+          "shared_tensors": 322,
+          "cohorts": [
+            {
+              "components": [
+                0,
+                3,
+                10,
+                14,
+                18,
+                26
+              ],
+              "shared_reserve_bytes": {
+                "L1": 294912,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 206848,
+                "UB": 49416
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 501760,
+                "UB": 49416
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                33,
+                40,
+                44,
+                45
+              ],
+              "shared_reserve_bytes": {
+                "L1": 221184,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 209920,
+                "UB": 264
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 431104,
+                "UB": 264
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                52,
+                54
+              ],
+              "shared_reserve_bytes": {
+                "L1": 147456,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 103424,
+                "UB": 132
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 250880,
+                "UB": 132
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                65,
+                66
+              ],
+              "shared_reserve_bytes": {
+                "L1": 290304,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 93696,
+                "UB": 24576
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 384000,
+                "UB": 24576
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                70,
+                76
+              ],
+              "shared_reserve_bytes": {
+                "L1": 307200,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 159744,
+                "UB": 196
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 466944,
+                "UB": 196
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                83
+              ],
+              "shared_reserve_bytes": {
+                "L1": 422400,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 79872,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 502272,
+                "UB": 98
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                86
+              ],
+              "shared_reserve_bytes": {
+                "L1": 422400,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 81408,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 503808,
+                "UB": 98
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                92
+              ],
+              "shared_reserve_bytes": {
+                "L1": 460800,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 79872,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 540672,
+                "UB": 98
+              },
+              "within_capacity": false
+            },
+            {
+              "components": [
+                98
+              ],
+              "shared_reserve_bytes": {
+                "L1": 537600,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 79872,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 617472,
+                "UB": 98
+              },
+              "within_capacity": false
+            },
+            {
+              "components": [
+                101
+              ],
+              "shared_reserve_bytes": {
+                "L1": 422400,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 79872,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 502272,
+                "UB": 98
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                111
+              ],
+              "shared_reserve_bytes": {
+                "L1": 422400,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 79872,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 502272,
+                "UB": 98
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                112,
+                119,
+                125
+              ],
+              "shared_reserve_bytes": {
+                "L1": 307200,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 159744,
+                "UB": 16580
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 466944,
+                "UB": 16580
+              },
+              "within_capacity": true
+            }
+          ],
+          "max_open_components_bound": 6,
+          "all_raw_envelopes_fit": false
+        },
+        {
+          "core": 2,
+          "components": 27,
+          "shared_tensors": 272,
+          "cohorts": [
+            {
+              "components": [
+                2,
+                4,
+                8,
+                11,
+                22,
+                27,
+                35
+              ],
+              "shared_reserve_bytes": {
+                "L1": 221184,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 263168,
+                "UB": 69962
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 484352,
+                "UB": 69962
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                39,
+                41,
+                43,
+                46,
+                51,
+                58,
+                63
+              ],
+              "shared_reserve_bytes": {
+                "L1": 147456,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 310784,
+                "UB": 16778
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 458240,
+                "UB": 16778
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                69,
+                72
+              ],
+              "shared_reserve_bytes": {
+                "L1": 307200,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 159744,
+                "UB": 196
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 466944,
+                "UB": 196
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                79,
+                80
+              ],
+              "shared_reserve_bytes": {
+                "L1": 345600,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 164352,
+                "UB": 196
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 509952,
+                "UB": 196
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                87
+              ],
+              "shared_reserve_bytes": {
+                "L1": 422400,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 79872,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 502272,
+                "UB": 98
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                89
+              ],
+              "shared_reserve_bytes": {
+                "L1": 537600,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 79872,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 617472,
+                "UB": 98
+              },
+              "within_capacity": false
+            },
+            {
+              "components": [
+                96
+              ],
+              "shared_reserve_bytes": {
+                "L1": 460800,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 79872,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 540672,
+                "UB": 98
+              },
+              "within_capacity": false
+            },
+            {
+              "components": [
+                99
+              ],
+              "shared_reserve_bytes": {
+                "L1": 345600,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 84480,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 430080,
+                "UB": 98
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                106
+              ],
+              "shared_reserve_bytes": {
+                "L1": 422400,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 79872,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 502272,
+                "UB": 98
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                107,
+                116,
+                121,
+                123
+              ],
+              "shared_reserve_bytes": {
+                "L1": 311808,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 167936,
+                "UB": 8388
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 479744,
+                "UB": 8388
+              },
+              "within_capacity": true
+            }
+          ],
+          "max_open_components_bound": 7,
+          "all_raw_envelopes_fit": false
+        },
+        {
+          "core": 3,
+          "components": 27,
+          "shared_tensors": 270,
+          "cohorts": [
+            {
+              "components": [
+                6,
+                7,
+                13,
+                17,
+                19,
+                21
+              ],
+              "shared_reserve_bytes": {
+                "L1": 221184,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 259072,
+                "UB": 24906
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 480256,
+                "UB": 24906
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                28,
+                30,
+                36,
+                42,
+                47
+              ],
+              "shared_reserve_bytes": {
+                "L1": 221184,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 263168,
+                "UB": 330
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 484352,
+                "UB": 330
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                55,
+                59,
+                60,
+                61,
+                74
+              ],
+              "shared_reserve_bytes": {
+                "L1": 265728,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 144384,
+                "UB": 12644
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 410112,
+                "UB": 12644
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                75,
+                81
+              ],
+              "shared_reserve_bytes": {
+                "L1": 307200,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 159744,
+                "UB": 196
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 466944,
+                "UB": 196
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                88,
+                91
+              ],
+              "shared_reserve_bytes": {
+                "L1": 230400,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 164352,
+                "UB": 196
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 394752,
+                "UB": 196
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                100
+              ],
+              "shared_reserve_bytes": {
+                "L1": 345600,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 79872,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 425472,
+                "UB": 98
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                104
+              ],
+              "shared_reserve_bytes": {
+                "L1": 422400,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 79872,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 502272,
+                "UB": 98
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                108
+              ],
+              "shared_reserve_bytes": {
+                "L1": 422400,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 81408,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 503808,
+                "UB": 98
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                109
+              ],
+              "shared_reserve_bytes": {
+                "L1": 422400,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 79872,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 502272,
+                "UB": 98
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                110,
+                118,
+                128
+              ],
+              "shared_reserve_bytes": {
+                "L1": 307200,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 159744,
+                "UB": 16580
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 466944,
+                "UB": 16580
+              },
+              "within_capacity": true
+            }
+          ],
+          "max_open_components_bound": 6,
+          "all_raw_envelopes_fit": true
+        },
+        {
+          "core": 4,
+          "components": 27,
+          "shared_tensors": 320,
+          "cohorts": [
+            {
+              "components": [
+                1,
+                5,
+                9,
+                15,
+                20,
+                23
+              ],
+              "shared_reserve_bytes": {
+                "L1": 221184,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 207872,
+                "UB": 69896
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 429056,
+                "UB": 69896
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                24,
+                31,
+                34,
+                37
+              ],
+              "shared_reserve_bytes": {
+                "L1": 294912,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 209920,
+                "UB": 264
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 504832,
+                "UB": 264
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                48,
+                49,
+                57,
+                62
+              ],
+              "shared_reserve_bytes": {
+                "L1": 147456,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 154112,
+                "UB": 16580
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 301568,
+                "UB": 16580
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                68,
+                71
+              ],
+              "shared_reserve_bytes": {
+                "L1": 307200,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 159744,
+                "UB": 196
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 466944,
+                "UB": 196
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                78
+              ],
+              "shared_reserve_bytes": {
+                "L1": 345600,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 79872,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 425472,
+                "UB": 98
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                82
+              ],
+              "shared_reserve_bytes": {
+                "L1": 422400,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 81408,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 503808,
+                "UB": 98
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                85
+              ],
+              "shared_reserve_bytes": {
+                "L1": 537600,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 79872,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 617472,
+                "UB": 98
+              },
+              "within_capacity": false
+            },
+            {
+              "components": [
+                94
+              ],
+              "shared_reserve_bytes": {
+                "L1": 537600,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 79872,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 617472,
+                "UB": 98
+              },
+              "within_capacity": false
+            },
+            {
+              "components": [
+                95
+              ],
+              "shared_reserve_bytes": {
+                "L1": 422400,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 79872,
+                "UB": 98
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 502272,
+                "UB": 98
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                97,
+                103,
+                114
+              ],
+              "shared_reserve_bytes": {
+                "L1": 230400,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 239616,
+                "UB": 294
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 470016,
+                "UB": 294
+              },
+              "within_capacity": true
+            },
+            {
+              "components": [
+                115,
+                122,
+                124
+              ],
+              "shared_reserve_bytes": {
+                "L1": 119808,
+                "UB": 0
+              },
+              "private_peak_sum_bytes": {
+                "L1": 88064,
+                "UB": 8290
+              },
+              "raw_priority_envelope_bytes": {
+                "L1": 207872,
+                "UB": 8290
+              },
+              "within_capacity": true
+            }
+          ],
+          "max_open_components_bound": 6,
+          "all_raw_envelopes_fit": false
+        }
+      ],
+      "certificate_scope": "raw tensor priority-prefix envelope and component open-count only",
+      "zero_spill_claim": false,
+      "limitations": [
+        "shared input residency spans cohorts and is retained in reserves",
+        "oversized singleton cohorts are emitted without a memory certificate",
+        "no Step2/Step3 or global runtime feasibility guarantee"
+      ],
+      "component_pressure": {
+        "largest_component_pipe_work": {
+          "PIPE_V": 2830,
+          "PIPE_M": 26724
+        },
+        "balanced_pipe_work_lower_bound": {
+          "PIPE_V": 33556,
+          "PIPE_M": 265000
+        },
+        "component_exceeds_balanced_pipe_work": false,
+        "shared_external_bytes": {
+          "L1": 2591232
+        },
+        "shared_external_exceeds_capacity": true,
+        "wave_rejected": "requires at least two external inputs shared by every component"
+      },
+      "adaptive_route": "component_envelope",
+      "index_constructions": 1,
+      "base_construct_calls": 1,
+      "repair_construct_calls": 0,
+      "repair_trigger": {
+        "recognized": false,
+        "large_crossings": 0,
+        "large_crossing_bytes": 0,
+        "reason": "vector lanes: all eligible ops must use PIPE_V"
+      },
+      "route_limitations": "unchanged general plan; no official feasibility/score/zero-spill certificate"
+    },
+    "candidate_detail": {
+      "selected": "join_gap_candidate",
+      "chains": 5224,
+      "paired_joins": 1931,
+      "operations_inserted_before_tail": 1583,
+      "arithmetic_placement_choices": 55085,
+      "choice_bound": 130600,
+      "modeled_compute_finish": 266107,
+      "online_E0_calls": 0,
+      "scope": "Static communication/compute calendar; no capacity, COPY contention, or optimality claim."
+    },
+    "constructed_plans": 2,
+    "oracle_requests": 2,
+    "selected": "baseline",
+    "score_scope": "complete final plans returned by both constructors; no downstream repair",
+    "score_evidence": "injected_oracle_complete_plan_scores",
+    "baseline_score": [
+      270889,
+      8613888
+    ],
+    "candidate_score": [
+      332049,
+      15812228
+    ],
+    "reason": "baseline_wins_or_ties"
+  },
+  "plan_sha256": "579941f53641a9387eafd35d415795631212b62f247b83fd788483a25db97967",
+  "stop_reason": "single_structural_route_completed",
+  "finished_at": "2026-09-24T21:47:16.134467+00:00",
+  "internal_wall_seconds": 3.2484851669869386
+}
