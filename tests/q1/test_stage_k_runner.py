@@ -21,6 +21,8 @@ class ApprovedReuse(unittest.TestCase):
                          (100, 700, 8))
         self.assertEqual((runner.SOLVER_TIMEOUT, runner.E0_TIMEOUT, runner.BATCH_TIMEOUT),
                          (120, 180, 2400))
+        self.assertEqual(runner.MIN_AVAILABLE_RAM_BYTES, 3 * (1 << 29))
+        self.assertEqual(runner.JOB_MEMORY_BYTES, 1 << 30)
 
 
 if __name__ == "__main__":

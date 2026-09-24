@@ -26,17 +26,19 @@ import time
 ROOT = Path(__file__).resolve().parents[2]
 SOLVER_SHA = "08e5cbf96c57bbfb603ec9661ee591e2adb8c26f"
 CELLS = tuple((f"{number:03d}", 4) for number in range(1, 101))
-START_TOKEN = "STAGE-K-100K4-START"
+START_TOKEN = "STAGE-K-100K4-ONEWORKER-START"
 CONFIG = ROOT / "data/raw/a/official/data/config.txt"
 SOLVER = ROOT / "src/q1_yuanzhifang_stage_k/unified.py"
 E0 = ROOT / "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py"
-DEFAULT_OUTPUT = ROOT / "results/a/q1-yuanzhifang-stage-k/stage-k-100k4-20260925/run"
+DEFAULT_OUTPUT = ROOT / "results/a/q1-yuanzhifang-stage-k/stage-k-100k4-oneworker-20260925/run"
 MAX_SOLVER = 100
 MAX_E1_ATTEMPTS = 700
 MAX_NEW_E0 = 8
 SOLVER_TIMEOUT = 120
 E0_TIMEOUT = 180
 BATCH_TIMEOUT = 2400
+JOB_MEMORY_BYTES = 1 << 30
+MIN_AVAILABLE_RAM_BYTES = 3 * (1 << 29)
 APPROVED_REUSE_COMMIT = "9c5f87548cc7588465a638e032993969b5cac891"
 APPROVED_REUSE_FEED = "results/a/q1-unified-v4-full500-20260925-s59/20260924T1952Z-s59ee/board-feed-500.json"
 APPROVED_REUSE_SHA256 = "4cd79828999ad56dc00d34a79cc0dcd921fff783e5aaf793b0c84924b0f10764"
@@ -100,7 +102,7 @@ def job_api():
     return api, Extended, Accounting
 
 
-def managed_process(entry, args, cell_dir, label, timeout):
+def managed_process(entry, args, cell_dir, label, timeout, job_memory_bytes=JOB_MEMORY_BYTES):
     """Run one owned tree; verify Job active count is zero before returning."""
     api, Extended, Accounting = job_api()
     gate = cell_dir / f"{label}.gate"
@@ -113,7 +115,10 @@ def managed_process(entry, args, cell_dir, label, timeout):
     if not job:
         raise ctypes.WinError(ctypes.get_last_error())
     limits = Extended()
-    limits.BasicLimitInformation.LimitFlags = 0x00002000  # KILL_ON_JOB_CLOSE
+    if type(job_memory_bytes) is not int or job_memory_bytes <= 0:
+        raise ValueError("positive Job memory limit required")
+    limits.BasicLimitInformation.LimitFlags = 0x00002000 | 0x00000200  # KILL_ON_JOB_CLOSE | JOB_MEMORY
+    limits.JobMemoryLimit = job_memory_bytes  # aggregate committed bytes across owned descendants
     if not api.SetInformationJobObject(job, 9, ctypes.byref(limits), ctypes.sizeof(limits)):
         error = ctypes.WinError(ctypes.get_last_error())
         api.CloseHandle(job)
@@ -121,6 +126,7 @@ def managed_process(entry, args, cell_dir, label, timeout):
     proc = None
     timed_out = False
     assigned = False
+    active_at_close = None
     try:
         with stdout.open("xb") as out, stderr.open("xb") as err:
             start = time.perf_counter()
@@ -147,6 +153,7 @@ def managed_process(entry, args, cell_dir, label, timeout):
                     if not api.QueryInformationJobObject(job, 1, ctypes.byref(accounting), ctypes.sizeof(accounting), None):
                         supervision_error = "Job active-process query failed"
                         break
+                    active_at_close = accounting.ActiveProcesses
                     if accounting.ActiveProcesses == 0:
                         break
                     if time.monotonic() >= end:
@@ -168,7 +175,8 @@ def managed_process(entry, args, cell_dir, label, timeout):
             raise RuntimeError(f"{label} supervision failure: {supervision_error}")
     return dict(command=command, pid=proc.pid, returncode=proc.returncode,
                 timeout=timed_out, wall_seconds=time.perf_counter() - start,
-                stdout=str(stdout.relative_to(cell_dir)), stderr=str(stderr.relative_to(cell_dir)))
+                stdout=str(stdout.relative_to(cell_dir)), stderr=str(stderr.relative_to(cell_dir)),
+                job_memory_limit_bytes=job_memory_bytes, job_active_processes_at_close=active_at_close)
 
 
 def events(path):
@@ -365,8 +373,8 @@ def preflight(graph_dir, output, reuse_feed, reuse_commit):
     if shutil.disk_usage(output.parent if output.parent.exists() else ROOT).free < 1_000_000_000:
         raise RuntimeError("less than 1 GB free near batch output")
     available = available_ram_bytes()
-    if available < 2 * (1 << 30):
-        raise RuntimeError("less than 2 GiB available physical RAM at batch start")
+    if available < MIN_AVAILABLE_RAM_BYTES:
+        raise RuntimeError("less than 1.5 GiB available physical RAM at batch start")
     if reuse_feed is None or reuse_commit is None:
         raise ValueError("fixed --reuse-feed and --reuse-commit required; fail closed")
     reuse_rows, reuse_identity = load_reuse_feed(reuse_feed, reuse_commit)
@@ -390,7 +398,9 @@ def preflight(graph_dir, output, reuse_feed, reuse_commit):
                 cells=[f"{case}/k{cores}" for case, cores in CELLS],
                 official_code_hash=frozen_manifest["official_code_hash"],
                 available_ram_bytes_at_preflight=available, reuse_source=reuse_identity,
-                workers=2, solver_timeout_seconds=SOLVER_TIMEOUT, e0_timeout_seconds=E0_TIMEOUT,
+                workers=1, available_ram_min_bytes=MIN_AVAILABLE_RAM_BYTES,
+                owned_job_memory_limit_bytes=JOB_MEMORY_BYTES,
+                solver_timeout_seconds=SOLVER_TIMEOUT, e0_timeout_seconds=E0_TIMEOUT,
                 batch_deadline_seconds=BATCH_TIMEOUT, max_solver_attempts=MAX_SOLVER,
                 max_online_e1_interface_attempts=MAX_E1_ATTEMPTS, max_external_e0_attempts=MAX_NEW_E0,
                 retries=0, e2_attempts=0)
@@ -514,7 +524,7 @@ def main():
     hard_failure = False
     reuse_rows, _ = load_reuse_feed(args.reuse_feed, args.reuse_commit)
     e0_budget = {"used": 0, "lock": threading.Lock()}
-    with ThreadPoolExecutor(max_workers=2) as pool:
+    with ThreadPoolExecutor(max_workers=1) as pool:
         active = {}
         def launch_next():
             case, cores = next(pending)
@@ -522,7 +532,7 @@ def main():
                                output, deadline, reuse_rows, args.reuse_commit, e0_budget,
                                facts["graph_sha256"][case], facts["config_sha256"],
                                facts["official_code_hash"])] = (case, cores)
-        for _ in range(2):
+        for _ in range(1):
             launch_next()
         while active:
             done, _ = wait(active, return_when=FIRST_COMPLETED)
@@ -534,7 +544,7 @@ def main():
                 if row["status"] in {"runner-error", "online-accounting-mismatch", "bad-plan-keys"}:
                     hard_failure = True
             if not hard_failure:
-                for _ in range(2 - len(active)):
+                for _ in range(1 - len(active)):
                     try:
                         launch_next()
                     except StopIteration:
