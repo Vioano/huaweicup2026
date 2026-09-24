@@ -68,7 +68,7 @@ git commit -m "feat: add q1 baseline"
 git push -u origin feat/q1-baseline
 ```
 
-路径与分支名是示例，需要替换。PR 写明真实运行命令、结果和未验证项，按 [PR 模板](.github/pull_request_template.md) 交付；跨平台 CI 通过不等于模型正确或论文验收。
+路径与分支名是示例，需要替换。PR 写明真实运行命令、结果和未验证项，按 [PR 模板](.github/pull_request_template.md) 交付；本项目按[免费协作规范](docs/GITHUB_FREE_COLLABORATION.md)停用 GitHub Actions，在本机或队友电脑验证并标明实际平台；检查通过不等于模型正确或论文验收。
 
 ## 队友通信
 
