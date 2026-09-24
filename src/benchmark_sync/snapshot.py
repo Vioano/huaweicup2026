@@ -103,7 +103,7 @@ def snapshot_id(payload):
 
 def payload_name(manifest):
     name = manifest.get("payload_file", "")
-    if not re.fullmatch(r"snapshot-[0-9a-f]{64}\.json\.gz", name):
+    if not isinstance(name,str) or not re.fullmatch(r"snapshot-[0-9a-f]{64}\.json\.gz", name):
         raise ValueError("Unsafe snapshot filename")
     return name
 
@@ -118,7 +118,7 @@ def validate_payload(payload):
     if any(not isinstance(state, dict) for state in payload["source_status"].values()):
         raise ValueError("Invalid source status object")
     publisher=payload["publisher"]
-    if not isinstance(publisher.get("actor"),str) or not re.fullmatch(r"[0-9a-f]{40}",publisher.get("board_code_commit", "")):
+    if not isinstance(publisher.get("actor"),str) or not isinstance(publisher.get("board_code_commit"),str) or not re.fullmatch(r"[0-9a-f]{40}",publisher.get("board_code_commit", "")):
         raise ValueError("Invalid snapshot publisher")
     try:
         if datetime.fromisoformat(payload["generated_at"]).tzinfo is None: raise ValueError("Naive timestamp")
@@ -131,7 +131,7 @@ def validate_payload(payload):
         if type(seq) is not int or not last_sequence < seq <= payload["sequence"]:
             raise ValueError("Record sequence is not strictly increasing within snapshot cursor")
         last_sequence = seq
-        if not re.fullmatch(r"[0-9a-f]{64}", r.get("id", "")) or r["id"] in ids:
+        if not isinstance(r.get("id"),str) or not re.fullmatch(r"[0-9a-f]{64}", r.get("id", "")) or r["id"] in ids:
             raise ValueError("Invalid or duplicate snapshot record ID")
         ids.add(r["id"])
         key = (r.get("attempt_id"), r.get("revision"))
@@ -140,7 +140,7 @@ def validate_payload(payload):
         attempts.add(key)
         if r.get("problem") not in ("P1", "P2", "P3") or type(r.get("cores")) is not int or r["cores"] not in range(1, 6):
             raise ValueError("Invalid snapshot cell")
-        if not re.fullmatch(r"(?:00[1-9]|0[1-9][0-9]|100)", r.get("case_id", "")):
+        if not isinstance(r.get("case_id"),str) or not re.fullmatch(r"(?:00[1-9]|0[1-9][0-9]|100)", r.get("case_id", "")):
             raise ValueError("Invalid snapshot case")
         if not isinstance(r.get("metrics"), dict) or type(r.get("eligible")) is not bool:
             raise ValueError("Invalid normalized admission record")
