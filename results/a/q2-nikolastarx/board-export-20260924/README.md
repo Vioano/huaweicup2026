@@ -43,3 +43,9 @@ python3 src/benchmark_board/protocol.py results/a/q2-nikolastarx/board-export-20
 本次实际预检使用 `board-feed-20260924T132237Z-history13.json`，退出码 0。预检只在临时目录核对，不写中央库。协议仍由成绩台维护者单写；导出器不新增接收格式。
 
 首次 Git 暂存发现共享换行规范会将部分旧 Windows 原件 CRLF 转为 LF；本目录 `.gitattributes` 对 `joint-20260924/**` 禁止文本转换，保持原始字节。固定提交交付前再次逐文件比对全部历史 blob，并用 `--commit <完整SHA>` 预检；不能只凭工作区哈希通过就声称远端原件匹配。首次规范化的中间提交不作为交付入口。
+
+## Revision 2：补共享官方单核分母
+
+成绩台已确认 revision 1 的13条入库；本次追加 [board-feed-20260924T133121Z-history13-r2.json](board-feed-20260924T133121Z-history13-r2.json)，复用同提交已有 `results/benchmark-board/official-singlecore-20260924/{002,044}/result.json.gz`。002基准为261945 cycles，044为154407 cycles。已对照各自原始run.json核对graph/config/official身份、成功状态和压缩存储字节hash。仅修改baseline、revision=2和notes；逐条程序比对确保其余字段完全等于revision 1，原件没有改动。未知历史成本/solver wall仍保留。本次新评价0。
+
+仅在临时账本顺序导入revision 1与2，保留26个历史revision；revision 2的13条均eligible且baseline_verified。未写中央库；最佳格预期为002：261945/72056≈3.63530×，044：154407/69113≈2.23412×，以接收端原件重算为准。
