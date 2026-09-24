@@ -90,6 +90,7 @@ def main():
         records.append(row)
     files = ['src/q3/input_residency_profile.py', 'src/q3/construct.py',
              'src/q3/forest_memory_order.py', 'src/q3/forest_reuse_grid.py']
+    args.output.parent.mkdir(parents=True, exist_ok=True)
     write(args.output, {
         'scope': 'raw graph profile; whole-pair capacity is only a necessary condition for full group residency',
         'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
