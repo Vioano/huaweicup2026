@@ -5,7 +5,7 @@ import sqlite3
 import tempfile
 import unittest
 
-from src.benchmark_sync.snapshot import publish_files, read_central, unpack
+from src.benchmark_sync.snapshot import publish_files, read_central, unpack, validate_payload, canonical, digest, snapshot_id
 
 
 class SnapshotTests(unittest.TestCase):
@@ -77,6 +77,18 @@ class SnapshotTests(unittest.TestCase):
         changed = dict(manifest, decoded_size=1)
         with self.assertRaises(ValueError):
             unpack(data, changed)
+
+    def test_bad_json_shapes_and_semantic_forgery(self):
+        for value in (None, [], 1, {"schema_version":1,"sequence":1,"records":[None]}):
+            with self.assertRaises(ValueError): validate_payload(value)
+        for value in (None,[],1):
+            with self.assertRaises(ValueError): unpack(b"",value)
+        payload=self.read(); payload['publisher']['board_code_commit']='b'*40
+        with self.assertRaisesRegex(ValueError,'semantic'): validate_payload(payload)
+        payload=self.read(); payload['records'][0]['sequence']=0
+        payload['records_sha256']=digest(canonical(payload['records']))
+        payload['snapshot_id']=snapshot_id(payload)
+        with self.assertRaisesRegex(ValueError,'sequence'): validate_payload(payload)
 
     def test_wrong_path_does_not_create_authority(self):
         missing = self.root / "missing.sqlite3"

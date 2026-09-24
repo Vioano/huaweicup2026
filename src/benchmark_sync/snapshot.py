@@ -89,23 +89,38 @@ def read_central(db_path, *, frozen_manifest, algorithms, code_commit):
     payload["record_count"] = len(records)
     payload["record_ids_sha256"] = digest(("\n".join(sorted(r["id"] for r in records)) + "\n").encode())
     payload["records_sha256"] = digest(canonical(records))
-    semantic_sources = {name: {k: v for k, v in state.items() if k not in ("checked_at", "started_at")}
-                        for name, state in sources.items()}
-    payload["snapshot_id"] = digest(canonical({
-        "sequence": cursor, "records_sha256": payload["records_sha256"],
-        "sources": semantic_sources, "manifest": frozen_manifest,
-        "algorithms": algorithms, "publisher": payload["publisher"],
-    }))
+    payload["snapshot_id"] = snapshot_id(payload)
     return payload
 
 
+def snapshot_id(payload):
+    sources = {name: {k: v for k, v in state.items() if k not in ("checked_at", "started_at")}
+               for name, state in payload["source_status"].items()}
+    return digest(canonical({"sequence": payload["sequence"], "records_sha256": payload["records_sha256"],
+                             "sources": sources, "manifest": payload["manifest"],
+                             "algorithms": payload["algorithms"], "publisher": payload["publisher"]}))
+
+
+def payload_name(manifest):
+    name = manifest.get("payload_file", "")
+    if not re.fullmatch(r"snapshot-[0-9a-f]{64}\.json\.gz", name):
+        raise ValueError("Unsafe snapshot filename")
+    return name
+
+
 def validate_payload(payload):
-    if payload.get("schema_version") != 1 or not isinstance(payload.get("records"), list):
+    if not isinstance(payload, dict) or payload.get("schema_version") != 1 or not isinstance(payload.get("records"), list):
         raise ValueError("Unsupported central snapshot")
     if type(payload.get("sequence")) is not int or payload["sequence"] < 0:
         raise ValueError("Invalid snapshot sequence")
     ids, attempts = set(), set()
+    last_sequence = 0
     for r in payload["records"]:
+        if not isinstance(r, dict): raise ValueError("Invalid snapshot record object")
+        seq = r.get("sequence")
+        if type(seq) is not int or not last_sequence < seq <= payload["sequence"]:
+            raise ValueError("Record sequence is not strictly increasing within snapshot cursor")
+        last_sequence = seq
         if not re.fullmatch(r"[0-9a-f]{64}", r.get("id", "")) or r["id"] in ids:
             raise ValueError("Invalid or duplicate snapshot record ID")
         ids.add(r["id"])
@@ -126,6 +141,8 @@ def validate_payload(payload):
     expected_ids = digest(("\n".join(sorted(ids)) + "\n").encode())
     if payload.get("record_ids_sha256", expected_ids) != expected_ids:
         raise ValueError("Snapshot ID collection digest mismatch")
+    if "snapshot_id" in payload and payload["snapshot_id"] != snapshot_id(payload):
+        raise ValueError("Snapshot semantic identity mismatch")
 
 
 def reject_history_regression(previous, candidate):
@@ -138,6 +155,8 @@ def reject_history_regression(previous, candidate):
 
 
 def unpack(data, manifest):
+    if not isinstance(manifest, dict): raise ValueError("Invalid snapshot manifest object")
+    payload_name(manifest)
     if len(data) > MAX_COMPRESSED or len(data) != manifest["payload_size"] or digest(data) != manifest["payload_sha256"]:
         raise ValueError("Snapshot compressed bytes/hash mismatch")
     with gzip.GzipFile(fileobj=io.BytesIO(data)) as stream:
@@ -146,7 +165,7 @@ def unpack(data, manifest):
         raise ValueError("Snapshot expanded size mismatch")
     payload = json.loads(raw)
     validate_payload(payload)
-    for key in ("sequence", "record_count", "record_ids_sha256", "records_sha256", "snapshot_id"):
+    for key in ("sequence", "record_count", "record_ids_sha256", "records_sha256", "snapshot_id", "generated_at", "publisher"):
         if payload.get(key) != manifest.get(key):
             raise ValueError("Snapshot manifest mismatch: " + key)
     return payload
@@ -157,7 +176,7 @@ def publish_files(payload, output):
     current_file = output / "current.json"
     previous_manifest = json.loads(current_file.read_bytes()) if current_file.exists() else None
     if previous_manifest:
-        previous = unpack((output / previous_manifest["payload_file"]).read_bytes(), previous_manifest)
+        previous = unpack((output / payload_name(previous_manifest)).read_bytes(), previous_manifest)
         reject_history_regression(previous, payload)
         if previous["snapshot_id"] == payload["snapshot_id"]:
             return dict(previous_manifest, unchanged=True)
