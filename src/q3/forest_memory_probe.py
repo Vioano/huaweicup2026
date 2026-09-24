@@ -20,10 +20,14 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
     parser.add_argument("--construct", choices=("058", "079"))
+    parser.add_argument("--method", choices=("frontier", "reuse-grid"), default="frontier")
     args = parser.parse_args()
     if args.construct:
         from .construct import Index
-        from .forest_memory_order import construct
+        if args.method == "reuse-grid":
+            from .forest_reuse_grid import construct
+        else:
+            from .forest_memory_order import construct
         graph = ROOT / f"data/raw/a/official/data/case_{args.construct}.json"
         plan, metadata = construct(Index(json.loads(graph.read_bytes())), 5)
         args.output.write_text(json.dumps(plan, separators=(",", ":")) + "\n")
@@ -33,12 +37,14 @@ def main():
     output.mkdir(parents=True, exist_ok=False)
     output_rel = output.relative_to(ROOT)
     started = time.perf_counter()
-    state = {"status": "running", "start_utc": datetime.now(timezone.utc).isoformat(),
+    state = {"status": "running", "method": args.method,
+             "start_utc": datetime.now(timezone.utc).isoformat(),
              "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
              "python": sys.version, "platform": platform.platform(), "cores": 5,
              "budget": {"constructors": 2, "E0": 4, "workers": 1, "retry": 0,
                         "per_process_seconds": 90, "batch_seconds": 300},
-             "command": ["python", "-m", "src.q3.forest_memory_probe", str(output_rel)],
+             "command": ["python", "-m", "src.q3.forest_memory_probe", str(output_rel),
+                         "--method", args.method],
              "attempts": [], "constructors": [], "results": [],
              "timing_scope": "External whole-child construction wall and subsequent E0 wall separately. No online selection or scored solver invoked. Shared host; OS cache uncontrolled."}
     paths = list((ROOT / "src/q3").glob("*.py"))
@@ -83,7 +89,8 @@ def main():
             graph = Path(f"data/raw/a/official/data/case_{cid}.json")
             plan = output_rel / f"case_{cid}_multicore_res.json"
             metadata, wall = run(["-m", "src.q3.forest_memory_probe", str(plan),
-                                  "--construct", cid], f"{cid}-construct", "constructor")
+                                  "--construct", cid, "--method", args.method],
+                                 f"{cid}-construct", "constructor")
             plan_sha = sha(ROOT / plan)
             state["constructors"].append({"case_id": cid, "metadata": metadata,
                                            "plan_sha256": plan_sha, "wall_seconds": wall})
