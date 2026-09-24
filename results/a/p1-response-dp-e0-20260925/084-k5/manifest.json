@@ -1,0 +1,86 @@
+{
+  "kind": "P1 one-cell cached-full ordered-graph constructor plus independent official E0 archive",
+  "submission_protocol": "board-submission-v1",
+  "source_feed_commit": "0e0d7cd327c51cc6ac365e01f4b6a7d2b28f9297",
+  "source_feed_path": "results/a/q1-unified-v4-full500-20260925-s59/20260924T1952Z-s59ee/board-feed-500.json",
+  "source_feed_sha256": "4cd79828999ad56dc00d34a79cc0dcd921fff783e5aaf793b0c84924b0f10764",
+  "source_feed_case_record": "nikolastarx-20260924T1952Z-s59ee-P1-084-k5-r0",
+  "constructor": {
+    "receipt_path": "results/a/p1-response-dp-static-20260925/cached-full/receipt.json",
+    "receipt_sha256": "35dbfe735fb3c8f33e4e66c4226d6f9f75638d06f0850ad07cdbc90c3e5cbb1f",
+    "diagnostics_path": "results/a/p1-response-dp-static-20260925/cached-full/diagnostics.json",
+    "diagnostics_sha256": "16335226281bc579dcbc8dc9202572f8c60c8c2b2b82221e393ad4e43e939958",
+    "source_commit": "59aee1fa1b5df8795de158dcc96ea160663efbe2",
+    "plan_sha256": "5203ed797935cbf3777586247fa82191518485da839a6d680b150efb6ed5e3f6",
+    "wall_seconds": 3.6180724169826135
+  },
+  "e0": {
+    "raw_receipt_sha256": "916571c56df18d8eac9356b010cac79a2b519bfc4eb13170d2311ebd20c0d8df",
+    "result_raw_sha256": "2858f48dba6949e79f1031f22f51295a0393540205b38ea8df9237111b7d65ec",
+    "trace_raw_sha256": "1e539928c093904cd36706baeb43c67ef402f29d96aae341af91bda592b9fc8b",
+    "result_gzip_sha256": "61bea20491deba533e15238067b300a205f2916f94b57c77c4a98ae0400ac97c",
+    "trace_gzip_sha256": "908a9dffbb849f6144bf1820ccd7f3b9ea697c78401211c61f8e2e44c7657208",
+    "evaluator_commit": "8685b5a867a4f66c7cacaf166d50896bd7c09a41",
+    "wall_seconds": 1.9712685419945046,
+    "calls": {
+      "constructor": 0,
+      "E0": 1,
+      "E1": 0,
+      "E2": 0,
+      "retries": 0
+    }
+  },
+  "compressed_roundtrip": {
+    "result_uncompressed_sha256": "2858f48dba6949e79f1031f22f51295a0393540205b38ea8df9237111b7d65ec",
+    "trace_uncompressed_sha256": "1e539928c093904cd36706baeb43c67ef402f29d96aae341af91bda592b9fc8b",
+    "byte_equal_to_raw": true
+  },
+  "baseline": {
+    "source_commit": "0e0d7cd327c51cc6ac365e01f4b6a7d2b28f9297",
+    "source_path": "results/a/q1-unified-v4-full500-20260925-s59/20260924T1952Z-s59ee/baseline/084/result.json.gz",
+    "source_sha256": "3cdf79e5f0cfb89108c8e763e855538e6d702c54e02c657aded96bc229d837d4",
+    "copied_bytes_sha256": "3cdf79e5f0cfb89108c8e763e855538e6d702c54e02c657aded96bc229d837d4",
+    "uncompressed_makespan_cycles": 2507412
+  },
+  "input": {
+    "archive_path": "data/raw/a/official-cases.zip",
+    "archive_sha256": "e9c33753eb4c0caddc1ff8f05065144f762189d5071476611de1f7bb5887e528",
+    "member": "data/case_084.json",
+    "member_sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee",
+    "duplicated_into_feed": false
+  },
+  "shared_artifacts": {
+    "result.json.gz": "61bea20491deba533e15238067b300a205f2916f94b57c77c4a98ae0400ac97c",
+    "trace.json.gz": "908a9dffbb849f6144bf1820ccd7f3b9ea697c78401211c61f8e2e44c7657208",
+    "baseline-084-singlecore.json.gz": "3cdf79e5f0cfb89108c8e763e855538e6d702c54e02c657aded96bc229d837d4",
+    "public-run.json": "78cf4bc7ea783ed885a6a8918fa613e7ef6d7f28bf479fdb5db8d63a04f23cb0",
+    "board-feed-084-k5.json": "b1d9056c30d197b194b1415dea21c8135485f6ebeb520c85da065f4b880d2d33",
+    "README.md": "6e4ce75769640c3d3dec085c491be53f61284de36a2b1e1cf3d809a05bd26378"
+  },
+  "local_only_raw_files": {
+    "case_084_multicore_res.json": "2858f48dba6949e79f1031f22f51295a0393540205b38ea8df9237111b7d65ec",
+    "trace.json": "1e539928c093904cd36706baeb43c67ef402f29d96aae341af91bda592b9fc8b",
+    "receipt.json": "916571c56df18d8eac9356b010cac79a2b519bfc4eb13170d2311ebd20c0d8df",
+    "case_084.json": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee",
+    "official.log": "ab51b2941741caa8250ca99c4e8d32860ea7a356442f5cc6d743a420faba8a24"
+  },
+  "limitations": [
+    "single cell only",
+    "not a new unified full-matrix score",
+    "constructor and E0 were separate stages",
+    "no single combined start/finish time, runner version, or joint wall budget recorded"
+  ],
+  "protocol_preflight": {
+    "command": "python -B src/benchmark_board/protocol.py results/a/p1-response-dp-e0-20260925/084-k5/board-feed-084-k5.json --repo <this-worktree> --submission",
+    "validator_source": "src/benchmark_board/protocol.py in main project checkout",
+    "exit_code": 0,
+    "valid": true,
+    "submission": true,
+    "records": 1,
+    "eligible": 1,
+    "reported_or_failed": [],
+    "scope": "format and available artifacts only; no solver/evaluator execution or production write",
+    "validator_commit": "7b7e95efc974532924358cf9f75e2e28286c5f87",
+    "validator_sha256": "0fd859db6ab64790ba4979eaffb36789197378df11c53a02454daae7f4236a51"
+  }
+}

@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "submission_version": 1,
+  "records": [
+    {
+      "attempt_id": "nikolastarx-20260924T212958Z-p1-response-dp-084-k5-r0",
+      "revision": 1,
+      "run_id": "p1-response-dp-084-k5-cached-full-e0-20260925",
+      "algorithm_id": "q1-packet-dp",
+      "algorithm_name": "P1 pending-return packet dynamic programming",
+      "variant": "cached-full-ordered-graph",
+      "solver_commit": "59aee1fa1b5df8795de158dcc96ea160663efbe2",
+      "parameters": {
+        "cores": 5,
+        "state_mode_requested": "auto",
+        "state_mode_chosen": "full",
+        "packet": 5,
+        "profile_cache": "ordered-graph",
+        "profile_requests": 8667,
+        "profile_hits": 8625,
+        "profile_entries": 42,
+        "constructor_timeout_seconds": 120,
+        "independent_E0_timeout_seconds": 30
+      },
+      "problem": "P1",
+      "case_id": "084",
+      "cores": 5,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 397542,
+        "solver_wall_seconds": 3.6180724169826135,
+        "evaluation_wall_seconds": 1.9712685419945046,
+        "ddr_bytes": 22175850,
+        "extra_ddr_bytes": 8939520,
+        "spill_bytes": 0
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "8685b5a867a4f66c7cacaf166d50896bd7c09a41",
+        "entrypoint": "multicore_cut_evaluate_problem_1.py CLI"
+      },
+      "identity": {
+        "graph_sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "5203ed797935cbf3777586247fa82191518485da839a6d680b150efb6ed5e3f6"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/p1-response-dp-static-20260925/cached-full/plan.json",
+          "sha256": "5203ed797935cbf3777586247fa82191518485da839a6d680b150efb6ed5e3f6"
+        },
+        "result": {
+          "path": "results/a/p1-response-dp-e0-20260925/084-k5/result.json.gz",
+          "sha256": "61bea20491deba533e15238067b300a205f2916f94b57c77c4a98ae0400ac97c"
+        },
+        "run": {
+          "path": "results/a/p1-response-dp-e0-20260925/084-k5/public-run.json",
+          "sha256": "78cf4bc7ea783ed885a6a8918fa613e7ef6d7f28bf479fdb5db8d63a04f23cb0"
+        },
+        "trace": {
+          "path": "results/a/p1-response-dp-e0-20260925/084-k5/trace.json.gz",
+          "sha256": "908a9dffbb849f6144bf1820ccd7f3b9ea697c78401211c61f8e2e44c7657208"
+        }
+      },
+      "runtime_id": "macOS-27.0-arm64-arm-64bit (E0 stage)",
+      "observed_at": "2026-09-24T21:29:58.613Z",
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "perf_counter wall seconds around independent child process",
+        "utc": "UTC"
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-6607cb2735304751b36662035723372b",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "59aee1fa1b5df8795de158dcc96ea160663efbe2",
+            "path": "src/q1/packet_dp.py",
+            "entrypoint": "main"
+          },
+          "authors": [
+            "nikolastarx"
+          ],
+          "method": "Pending-return packet dynamic programming; full pending-state selection with ordered-graph profile cache. The chosen plan is independently recompiled and checked; global optimality and equivalence for unselected edges are not claimed.",
+          "references": [],
+          "upstream": [],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": null,
+          "argv": [
+            "<python3>",
+            "-B",
+            "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+            "<verified-inputs>/case_084.json",
+            "./results/a/p1-response-dp-static-20260925/three/plan.json",
+            "--config",
+            "data/raw/a/official/data/config.txt",
+            "--output",
+            "<verified-inputs>/case_084_multicore_res.json",
+            "--trace-output",
+            "<verified-inputs>/trace.json",
+            "--log-output",
+            "<verified-inputs>/official.log"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS-27.0-arm64-arm-64bit",
+          "cpu": null,
+          "gpu": null,
+          "ram_bytes": null,
+          "python": "3.12.13 (main, May 10 2026, 19:20:41) [Clang 22.1.3 ]",
+          "dependencies": null,
+          "threads": null,
+          "workers": 1,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": null,
+          "finished_at": "2026-09-24T21:30:00.613Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": "Separate constructor process from graph read through plan and diagnostics output; use the constructor receipt process wall 3.6180724169826135 seconds.",
+          "evaluation_scope": "Separate official E0 CLI process writes result, full trace and official log; evaluation is not included in constructor solver wall.",
+          "budget": {
+            "wall_seconds": null,
+            "candidate_limit": null,
+            "stop_reason": "Constructor and independent E0 stages each exited successfully; stage-specific timeouts are recorded in public-run.json."
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 1,
+            "E1": 0,
+            "E2": 0
+          },
+          "offline_costs": null,
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.solver.selected_algorithm_id": "This is a single algorithm implementation, not a portfolio selector.",
+          "provenance.solver.selected_solver_commit": "No separately selected sub-algorithm or selector commit exists.",
+          "provenance.runner.source": "The combined stages have no single preserved runner source; constructor argv is absent and the E0 launch wrapper was an inline orchestration snippet.",
+          "provenance.environment.cpu": "The captured E0 receipt records platform and Python but not CPU model.",
+          "provenance.environment.gpu": "The E0 receipt does not record accelerator hardware.",
+          "provenance.environment.ram_bytes": "The E0 receipt does not record RAM size.",
+          "provenance.environment.dependencies": "The E0 receipt does not record dependency lock identity.",
+          "provenance.environment.threads": "Neither stage receipt records the runtime thread count.",
+          "provenance.environment.peak_rss_bytes": "Neither stage receipt records peak RSS.",
+          "provenance.measurement.started_at": "The constructor receipt has no UTC start time, so the combined two-stage start is unknown.",
+          "provenance.measurement.seed": "The constructor is deterministic and neither receipt records a seed.",
+          "provenance.measurement.cold_start": "OS cache state was not measured for this two-stage package.",
+          "provenance.measurement.budget.wall_seconds": "Each stage has a separate timeout (120s constructor, 30s E0); no single combined wall budget was recorded.",
+          "provenance.measurement.budget.candidate_limit": "The constructor receipt does not record a candidate limit.",
+          "provenance.measurement.offline_costs": "Offline cache/build preparation costs are not separately recorded."
+        }
+      },
+      "notes": [
+        "Single P1 case 084, five-core result only; not a new unified full-matrix result.",
+        "Constructor and official E0 were separate processes/stages. Calls are combined across stage receipts (1 constructor, 1 E0, 0 E1/E2, 0 retries).",
+        "The static selected-plan diagnostic checks do not establish E0 equivalence for unselected edges or global optimality.",
+        "Raw result and trace are retained locally; feed references the byte-identical gzip copies. Original input came from the frozen archive and is not a feed artifact.",
+        "The E0 stage completion time is known (2026-09-24T21:30:00.613Z); the constructor start/finish timestamps are missing, so no combined interval is asserted."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+      "baseline": {
+        "graph_sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/p1-response-dp-e0-20260925/084-k5/baseline-084-singlecore.json.gz",
+          "sha256": "3cdf79e5f0cfb89108c8e763e855538e6d702c54e02c657aded96bc229d837d4"
+        }
+      },
+      "cache_pair": null
+    }
+  ]
+}

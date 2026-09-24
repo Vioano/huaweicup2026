@@ -1,0 +1,159 @@
+{
+  "kind": "single authorized official P1 E0 evaluation; not a full-matrix result",
+  "cell": {
+    "case": "084",
+    "cores": 5
+  },
+  "status": "ok",
+  "started_at": "2026-09-24T21:29:58.613Z",
+  "finished_at": "2026-09-24T21:30:00.613Z",
+  "actual_wall_seconds": 1.9712685419945046,
+  "timeout_seconds": 30,
+  "cleanup_confirmed": true,
+  "exit_code": 0,
+  "command": [
+    "<python3>",
+    "-B",
+    "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+    "<verified-inputs>/case_084.json",
+    "./results/a/p1-response-dp-static-20260925/three/plan.json",
+    "--config",
+    "data/raw/a/official/data/config.txt",
+    "--output",
+    "<verified-inputs>/case_084_multicore_res.json",
+    "--trace-output",
+    "<verified-inputs>/trace.json",
+    "--log-output",
+    "<verified-inputs>/official.log"
+  ],
+  "cwd": ".",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "python": "3.12.13 (main, May 10 2026, 19:20:41) [Clang 22.1.3 ]",
+  "official": {
+    "manifest_sha256": "713792d81693757a71cb29b9daea7434192d1bf14fcb8efd25165e6f68d9cffc",
+    "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+    "file_sha256": {
+      "code/contest_io.py": "d5936908e4c261c7003b78e783f30bd7d65cb38d6b53a269ea67f0103cac848e",
+      "code/evaluation_validation.py": "103206b8c5c25e37de50cc3193de3989d7c1e01d4a11cc5f509dedd8f9be9a64",
+      "code/multicore_cut_evaluate_problem_1.py": "2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f",
+      "code/multicore_cut_evaluate_problem_2.py": "0b39f84d5ec0a7fba9a4c92a598a9044b97ab79c71393824c1ba130ecfe6c464",
+      "code/multicore_cut_evaluate_problem_3.py": "eab1504dead881f4b67c0f0498cbc2dbbd9039dc3c9d198c6af58773c127eeb0",
+      "code/schedule_step1.py": "d8fe721ff3dbe036e34a20c00cce6430960860000a49eb467e63465f76b84034",
+      "code/schedule_step2.py": "2836baac176f4e0bdd9eec59b8d9ce254e209e5f7a251e23837ab684312fa0c3",
+      "code/schedule_step3.py": "50053db0436f1d166dd75436693ba3af49b5c339576beb6e7299477f6b69fc7a",
+      "code/singlecore_evaluate.py": "446b753ee134ef1fec8e052356bb077a2602fbe95572ccd3dddd7928e894b77a",
+      "code/stub_multicore_cut_and_schedule.py": "0a3a3b79b5173b466fc05fc8d33b72d11d90b4df78995435853d91c632a35892",
+      "data/config.txt": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9"
+    }
+  },
+  "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+  "input": {
+    "member": "data/case_084.json",
+    "archive_sha256": "e9c33753eb4c0caddc1ff8f05065144f762189d5071476611de1f7bb5887e528",
+    "sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee",
+    "path": "results/a/p1-response-dp-e0-20260925/084-k5/case_084.json"
+  },
+  "plan": {
+    "commit": "8685b5a867a4f66c7cacaf166d50896bd7c09a41",
+    "sha256": "5203ed797935cbf3777586247fa82191518485da839a6d680b150efb6ed5e3f6",
+    "path": "results/a/p1-response-dp-static-20260925/three/plan.json"
+  },
+  "calls": {
+    "constructor": 0,
+    "E0": 1,
+    "E1": 0,
+    "E2": 0,
+    "retries": 0
+  },
+  "artifacts": {
+    "input": {
+      "path": "results/a/p1-response-dp-e0-20260925/084-k5/case_084.json",
+      "sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee"
+    },
+    "plan": {
+      "path": "results/a/p1-response-dp-static-20260925/three/plan.json",
+      "sha256": "5203ed797935cbf3777586247fa82191518485da839a6d680b150efb6ed5e3f6"
+    },
+    "stdout": {
+      "path": "results/a/p1-response-dp-e0-20260925/084-k5/E0.stdout.txt",
+      "sha256": "f9342bc120c9efdf93a415f297d7e94d313b57894ddced459c015ce57efbe73d"
+    },
+    "stderr": {
+      "path": "results/a/p1-response-dp-e0-20260925/084-k5/E0.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "result": {
+      "path": "results/a/p1-response-dp-e0-20260925/084-k5/case_084_multicore_res.json",
+      "sha256": "2858f48dba6949e79f1031f22f51295a0393540205b38ea8df9237111b7d65ec"
+    },
+    "trace": {
+      "path": "results/a/p1-response-dp-e0-20260925/084-k5/trace.json",
+      "sha256": "1e539928c093904cd36706baeb43c67ef402f29d96aae341af91bda592b9fc8b"
+    },
+    "official_log": {
+      "path": "results/a/p1-response-dp-e0-20260925/084-k5/official.log",
+      "sha256": "ab51b2941741caa8250ca99c4e8d32860ea7a356442f5cc6d743a420faba8a24"
+    }
+  },
+  "metrics": {
+    "makespan_cycles": 397542,
+    "scheduled_ddr_bytes": 22175850,
+    "extra_ddr_bytes": 8939520,
+    "spill_bytes": 0,
+    "e0_result_identity": {
+      "scene": "A",
+      "num_cores": 5
+    }
+  },
+  "diagnostic_model_comparison": {
+    "model_makespan_cycles": 397542,
+    "model_scheduled_ddr_bytes": 22175850,
+    "model_extra_ddr_bytes": 8939520,
+    "model_spill_bytes": 0,
+    "model_is_not_e0": true
+  },
+  "derived_public_receipt": {
+    "derived_from": "receipt.json",
+    "original_receipt_sha256": "916571c56df18d8eac9356b010cac79a2b519bfc4eb13170d2311ebd20c0d8df",
+    "derivation": "Copied raw E0 receipt; replaced only the absolute local Python executable path in command[0] with <python3>; original retained unchanged.",
+    "stage_model": "Constructor and independent official E0 were separate processes/stages; this combined package is not one same-process run.",
+    "constructor_stage": {
+      "source_commit": "59aee1fa1b5df8795de158dcc96ea160663efbe2",
+      "source_path": "src/q1/packet_dp.py",
+      "entrypoint": "CLI main",
+      "variant": "cached-full-ordered-graph",
+      "state_mode_requested": "auto",
+      "state_mode_chosen": "full",
+      "profile_cache": "ordered-graph",
+      "packet": 5,
+      "wall_seconds": 3.6180724169826135,
+      "diagnostics_construction_seconds": 3.4845890830038115,
+      "timeout_seconds": 120,
+      "calls": {
+        "solver": 1,
+        "E0": 0,
+        "E1": 0,
+        "E2": 0
+      },
+      "plan_sha256": "5203ed797935cbf3777586247fa82191518485da839a6d680b150efb6ed5e3f6",
+      "receipt_sha256": "35dbfe735fb3c8f33e4e66c4226d6f9f75638d06f0850ad07cdbc90c3e5cbb1f",
+      "diagnostics_sha256": "16335226281bc579dcbc8dc9202572f8c60c8c2b2b82221e393ad4e43e939958",
+      "started_at": null,
+      "finished_at": null,
+      "argv": null,
+      "missing_reasons": {
+        "started_at": "Static constructor receipt records no UTC timestamps.",
+        "finished_at": "Static constructor receipt records no UTC timestamps.",
+        "argv": "Static constructor receipt stores source and hashes but not original CLI argv."
+      }
+    },
+    "combined_calls": {
+      "solver": 1,
+      "E0": 1,
+      "E1": 0,
+      "E2": 0,
+      "retries": 0
+    },
+    "stage_separation": "The solver wall is the constructor receipt wall. E0 wall is the separate E0 process wall; do not add it to claim an observed same-process solver duration."
+  }
+}

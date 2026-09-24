@@ -16,8 +16,10 @@ The incumbent's static model agrees with its already-saved E0 values; this
 is not a fresh E0 rerun. All three candidates have exactly the same plan bytes
 (SHA-256 `5203ed797935cbf3777586247fa82191518485da839a6d680b150efb6ed5e3f6`).
 The candidate model improvement is 1579 cycles, about 0.40%, with 986112 fewer
-extra DDR bytes. It needs external E0 acceptance before being called a new
-score. Fraction-model/official-binary64 equality remains unproven generally.
+extra DDR bytes. Subsequent separate E0 acceptance is archived at
+[084/k5 official result](../p1-response-dp-e0-20260925/084-k5/README.md):
+Makespan 397542, extra DDR 8939520 and spill 0, matching these predictions.
+The static constructions themselves made no scoring calls. Fraction-model/official-binary64 equality remains unproven generally.
 
 The graph has 1077 private homogeneous chains. Capacity yields five chains per
 full packet per core, 43 full synchronous packets, then two one-chain tails.
@@ -56,6 +58,6 @@ Follow-up: the separately frozen three-micrograph differential probe passed
 all 64 operation times, whole-plan responses and DDR counters in three E0
 calls, archived at commit `0eff53caa7a95d87a578fa82fe858b66f6d31cef` under
 `output/p1-response-contract-probe/`. This does not change the zero-E0 scope
-of the three real-case constructions above. One independent E0 evaluation of
-this unique 084 candidate is now queued. Changing packet size or relaxing
+of the three real-case constructions above. One subsequent independent E0 evaluation of
+this unique 084 candidate passed; see the separate official-result archive. Changing packet size or relaxing
 synchrony is a new hypothesis; no further sweep is authorized by this report.
