@@ -3,7 +3,7 @@
   "scope": "All 2697 central historical records at this snapshot. Later arrivals are outside this fixed snapshot. Existing member records are never deleted.",
   "snapshot_utc": "2026-09-24T13:50:00.688630+00:00",
   "reference_code_commit": "41a17c9d2eadc14167780a6595610ffb6927af01",
-  "recommended_code_commit": "a241394dc6bcde7dff41c1f7f4c333182436a759",
+  "recommended_code_commit": "eef65305fcfd82c54b45503f12e69c4046fe01d4",
   "record_count": 2697,
   "record_ids_sha256": "da222d10c50d133d7b0b88812cb1a105722dfe9f972f3cf802a6a19baff8b762",
   "record_ids": [
@@ -2843,5 +2843,23 @@
     "evaluation_wall_seconds"
   ],
   "admission_projection_sha256": "d1ba07a62c20cf0e51eb0e5ed3bd7d4540c38f53ad1f9a6aac9a9cbbf57a2fec",
-  "projection_note": "Checks all source record IDs and listed stable derived fields. Missing metrics normalize to null. extra_ddr_bytes is excluded because three legacy central records predate its derivation; current validator derives it from original evidence without changing source IDs."
+  "projection_note": "Checks all source record IDs and listed stable derived fields. Missing metrics normalize to null. extra_ddr_bytes is excluded because three legacy central records predate its derivation; current validator derives it from original evidence without changing source IDs.",
+  "minimum_receiver_commit": "a241394dc6bcde7dff41c1f7f4c333182436a759",
+  "website_files": [
+    {
+      "path": "src/benchmark_board/web/index.html",
+      "url_path": "/",
+      "sha256": "cb16163ed35defc6383b04a791a9e94f1e1c38076bcdd67d07f11206b0fc6ed0"
+    },
+    {
+      "path": "src/benchmark_board/web/app.js",
+      "url_path": "/app.js",
+      "sha256": "77ffcd1a94827bce66197166dbf157d147641c0528735d76f9043cb60cb8698b"
+    },
+    {
+      "path": "src/benchmark_board/web/style.css",
+      "url_path": "/style.css",
+      "sha256": "fa2615390d00a88ca876bdcb1dcdd7a3654d69fe346649e18d799b91b34ef0be"
+    }
+  ]
 }

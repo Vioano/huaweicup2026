@@ -8,7 +8,7 @@
 
 ## 网站代码也要更新
 
-同步数据与更新网站代码是两个步骤。最低适用的已发布网站版本为 **a241394dc6bcde7dff41c1f7f4c333182436a759**，分支 `codex/benchmark-board-averages-20260924` / [PR96](https://github.com/huaweibei123/huaweicup2026/pull/96)。其中包括顶部布局、默认官方单核比、均值、UTF-8支持、新来源配置及官方JSON展开上限。后续UI仍在更新，`manifest.recommended_code_commit`记录本包交付时建议版本；新发布以网站维护者在[Issue33](https://github.com/huaweibei123/huaweicup2026/issues/33)给出的固定提交为准。仅跟旧main不能保证看到与中央相同的页面。
+同步数据与更新网站代码是两个步骤。本包交付时最新已发布网站版本为 **eef65305fcfd82c54b45503f12e69c4046fe01d4**，分支 `codex/benchmark-board-averages-20260924` / [PR96](https://github.com/huaweibei123/huaweicup2026/pull/96)。其中包括顶部布局、默认官方单核比、均值、UTF-8支持、新来源配置、官方JSON展开上限，以及新版色阶/相对位置条和文本对比度修正。最小接收器要求为a241394或之后的兼容版本。后续UI仍在更新，`manifest.recommended_code_commit`记录本包交付时建议版本；新发布以网站维护者在[Issue33](https://github.com/huaweibei123/huaweicup2026/issues/33)给出的固定提交为准。仅跟旧main不能保证看到与中央相同的页面。
 
 **先更新接收器，再导P1全量数据。** 旧64 MiB展开上限会把11条大结果存为仅报告；之后换代码不会自动重验已存的相同revision。本包脚本会在打开账本前检查128 MiB能力；如果旧版已经导入这些条目，回报精确attempt/revision给维护者安排可追溯处理，不删历史或改记录。
 
@@ -55,5 +55,7 @@ da222d10c50d133d7b0b88812cb1a105722dfe9f972f3cf802a6a19baff8b762
 ## 持续联络与后续更新
 
 本包是固定快照，不是后台服务。网站维护者负责发布代码/UI变更和稳定来源配置；成员沿本人已授权的现有轮询、工作间隙查信跟踪Issue33与正式版本，不再创建重复同步器。每次更新分开记录：网站运行SHA、来源配置SHA、实际数据截止时间及记录/正式格数。代码仅fetch、通知已发和浏览器已经更新是不同状态。
+
+`manifest.website_files`给出该固定版本的HTML/JS/CSS字节SHA256，已与中央HTTP实际响应逐项对上；成员可用来排查旧服务或缓存。
 
 采用后在Issue33回：实际运行checkout/完整SHA（不用公开个人绝对路径）、导入核对摘要、页面1500格覆盖、网页JS/CSS版本与截图或实际UI检查结果；存在失败立即附具体错误/缺失feed。维护者发布新版本时及时同步并回读，发现页面或数据数量不同先核筛选条件、代码、来源列表与最新已接收批次。后续新增记录不在本快照指纹内，依更新后的来源配置继续接收。
