@@ -1,4 +1,4 @@
-"""Verify or fast-forward the private Vioano research mirror; never delete refs."""
+"""Verify or fast-forward the public Vioano research mirror; never delete refs."""
 
 import argparse
 import datetime
@@ -67,8 +67,8 @@ def main():
             if run(["git", "remote", "get-url", name]).strip() != f"https://github.com/{expected}.git":
                 raise RuntimeError(f"Unexpected {name} remote; review configuration first")
         metadata = json.loads(run(["gh", "api", f"repos/{TARGET}"], target_env))
-        if metadata["full_name"] != TARGET or not metadata["private"] or metadata["archived"]:
-            raise RuntimeError("Target must be the active private Vioano research mirror")
+        if metadata["full_name"] != TARGET or metadata["private"] or metadata.get("visibility") != "public" or metadata["archived"]:
+            raise RuntimeError("Target must be the active public Vioano research mirror")
 
         git(["fetch", "--no-tags", "origin",
              "refs/heads/*:refs/remotes/origin/*",
@@ -99,7 +99,8 @@ def main():
             raise RuntimeError("Post-push refs did not match; inspect before retrying")
         receipt = {
             "observed_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-            "source": SOURCE, "target": TARGET, "target_private": True,
+            "source": SOURCE, "target": TARGET, "target_private": metadata["private"],
+            "target_visibility": metadata["visibility"],
             "push_requested": args.push, "all_source_refs_match": matched,
             "changed_refs": changed,
             "extra_target_refs_preserved": sorted(set(after) - set(source)),
