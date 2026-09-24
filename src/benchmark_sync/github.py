@@ -16,6 +16,7 @@ import urllib.request
 from .snapshot import canonical, digest, atomic_write
 
 MAX_FILE = 64 * 1024 * 1024
+MAX_TREE_INLINE_BYTES = 512 * 1024
 
 
 def path_ok(path):
@@ -193,11 +194,22 @@ class GitHub:
                 raise RuntimeError('Same channel changed concurrently; retry from latest generation')
             changes={p:d for p,d in files.items() if p not in entries or self.blob(entries[p]['sha'],entries[p].get('size'))!=d}
             if not changes: return head
+            tree_entries=[];inline_bytes=0
             for p,data in changes.items():
                 path_ok(p)
-                key=digest(data)
-                if key not in blob_shas: blob_shas[key]=self.put_blob(data)
-            body={'tree':[{'path':p,'mode':'100644','type':'blob','sha':blob_shas[digest(data)]} for p,data in changes.items()]}
+                # GitHub's tree API can create small UTF-8 blobs inline. This avoids
+                # one REST request per signed JSON envelope in a transport batch.
+                # Binary snapshots and large files retain the explicit blob path.
+                try: content=data.decode('utf-8')
+                except UnicodeDecodeError: content=None
+                if content is not None and len(data)<=64*1024 and inline_bytes+len(data)<=MAX_TREE_INLINE_BYTES:
+                    tree_entries.append({'path':p,'mode':'100644','type':'blob','content':content})
+                    inline_bytes+=len(data)
+                else:
+                    key=digest(data)
+                    if key not in blob_shas: blob_shas[key]=self.put_blob(data)
+                    tree_entries.append({'path':p,'mode':'100644','type':'blob','sha':blob_shas[key]})
+            body={'tree':tree_entries}
             if head: body['base_tree']=self.request('GET','/git/commits/'+head)['tree']['sha']
             tree=self.request('POST','/git/trees',body)['sha']
             ps=([head] if head else [])+[fixed_sha(p) for p in parents if p!=head]
