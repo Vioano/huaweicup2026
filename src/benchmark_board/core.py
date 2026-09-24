@@ -176,31 +176,46 @@ class Ledger:
     def compatible(self, r):
         ident=r.get('identity',{})
         return ident.get('official_sha256')==self.manifest['official_code_hash'] and ident.get('config_sha256')==self.expected.get('data/config.txt') and ident.get('graph_sha256')==self.expected.get('data/case_'+r['case_id']+'.json')
-    def snapshot(self, algorithm=None, run=None, include_reported=False):
-        allrows=self.records(); latest={}
-        for r in allrows:
-            if r['attempt_id'] not in latest or r['revision']>latest[r['attempt_id']]['revision']: latest[r['attempt_id']]=r
-        groups={}
-        for r in latest.values():
-            if algorithm and r['algorithm_id']!=algorithm: continue
-            if run and r['run_id']!=run: continue
-            groups.setdefault((r['problem'],r['case_id'],r['cores']),[]).append(r)
-        cells=[]
-        for p in ('P1','P2','P3'):
-            for n in range(1,101):
-                for k in range(1,6):
-                    rows=groups.get((p,f'{n:03d}',k),[])
-                    candidates=[r for r in rows if r['status']=='ok' and (r['eligible'] or (include_reported and r.get('evaluator',{}).get('route')=='E0' and self.compatible(r)))]
-                    # Prefer admitted records; reports are preview only and never displace admitted best.
-                    candidates.sort(key=lambda r:(not r['eligible'],r['metrics']['makespan_cycles'],r['id']))
-                    best=candidates[0] if candidates else None
-                    latest_report=next((r for r in reversed(rows) if r['status']=='ok' and not r['eligible']),None)
-                    missing=[a for a in ('plan','result','run') if not latest_report.get('artifacts',{}).get(a)] if latest_report else []
-                    cells.append({'problem':p,'case_id':f'{n:03d}','cores':k,'best':best,'attempts':len(rows),'missing_artifacts':missing,'status':('ok' if best and best['eligible'] else 'reported' if best else ('reported' if rows[-1]['status']=='ok' else rows[-1]['status']) if rows else 'not_run')})
+    def health(self):
         with self.connect() as db:
+            sources={r['id']:json.loads(r['body']) for r in db.execute('SELECT * FROM sources')}
+            count=db.execute('SELECT count(*) FROM records').fetchone()[0]
+        return {'status':'ok','time':now(),'records':count,'sources':sources,'read_only':True,'mode':'local_ledger'}
+    def snapshot(self, algorithm=None, run=None, include_reported=False):
+        with self.connect() as db:
+            db.execute('BEGIN')
+            rows=[dict(json.loads(x['body']),sequence=x['seq']) for x in db.execute('SELECT * FROM records ORDER BY seq')]
             cursor=db.execute('SELECT COALESCE(MAX(seq),0) FROM events').fetchone()[0]
             sources={x['id']:json.loads(x['body']) for x in db.execute('SELECT * FROM sources')}
-        return {'schema_version':1,'cursor':cursor,'as_of':now(),'cells':cells,'sources':sources,'latest_imported_at':max((r['imported_at'] for r in allrows),default=None),'latest_observed_at':max((r.get('observed_at') for r in allrows if r.get('observed_at')),default=None),'record_count':len(allrows),'algorithms':sorted({r['algorithm_id'] for r in allrows}),'runs':sorted({r['run_id'] for r in allrows}),'metrics':METRICS,'selection':'历史最优组合：仅同问题/图/核数/冻结配置；不是单一算法的全量实验成绩。切换指标不会换赢家。'}
+        return project_records(rows,self.manifest,cursor,sources,algorithm,run,include_reported)
     def events(self, after, limit=200):
         with self.connect() as db: rows=db.execute('SELECT * FROM events WHERE seq>? ORDER BY seq LIMIT ?',(after,min(limit,1000))).fetchall()
         return [{'cursor':x['seq'],'type':x['kind'],'time':x['time'],'data':json.loads(x['body'])} for x in rows]
+
+def project_records(allrows, manifest, cursor, sources, algorithm=None, run=None, include_reported=False):
+    """Shared selection for local original checking and central read-only mirrors."""
+    expected={f["path"]:f["sha256"] for f in manifest["files"]}
+    def compatible(r):
+        ident=r.get("identity",{})
+        return ident.get("official_sha256")==manifest["official_code_hash"] and ident.get("config_sha256")==expected.get("data/config.txt") and ident.get("graph_sha256")==expected.get("data/case_"+r["case_id"]+".json")
+    latest={}
+    for r in allrows:
+        if r['attempt_id'] not in latest or r['revision']>latest[r['attempt_id']]['revision']: latest[r['attempt_id']]=r
+    groups={}
+    for r in latest.values():
+        if algorithm and r['algorithm_id']!=algorithm: continue
+        if run and r['run_id']!=run: continue
+        groups.setdefault((r['problem'],r['case_id'],r['cores']),[]).append(r)
+    cells=[]
+    for p in ('P1','P2','P3'):
+        for n in range(1,101):
+            for k in range(1,6):
+                rows=groups.get((p,f'{n:03d}',k),[])
+                candidates=[r for r in rows if r['status']=='ok' and (r['eligible'] or (include_reported and r.get('evaluator',{}).get('route')=='E0' and compatible(r)))]
+                # Prefer admitted records; reports are preview only and never displace admitted best.
+                candidates.sort(key=lambda r:(not r['eligible'],r['metrics']['makespan_cycles'],r['id']))
+                best=candidates[0] if candidates else None
+                latest_report=next((r for r in reversed(rows) if r['status']=='ok' and not r['eligible']),None)
+                missing=[a for a in ('plan','result','run') if not latest_report.get('artifacts',{}).get(a)] if latest_report else []
+                cells.append({'problem':p,'case_id':f'{n:03d}','cores':k,'best':best,'attempts':len(rows),'missing_artifacts':missing,'status':('ok' if best and best['eligible'] else 'reported' if best else ('reported' if rows[-1]['status']=='ok' else rows[-1]['status']) if rows else 'not_run')})
+    return {'schema_version':1,'cursor':cursor,'as_of':now(),'cells':cells,'sources':sources,'latest_imported_at':max((r['imported_at'] for r in allrows),default=None),'latest_observed_at':max((r.get('observed_at') for r in allrows if r.get('observed_at')),default=None),'record_count':len(allrows),'algorithms':sorted({r['algorithm_id'] for r in allrows}),'runs':sorted({r['run_id'] for r in allrows}),'metrics':METRICS,'selection':'历史最优组合：仅同问题/图/核数/冻结配置；不是单一算法的全量实验成绩。切换指标不会换赢家。'}
