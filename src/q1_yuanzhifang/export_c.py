@@ -53,7 +53,11 @@ def export(output):
                 assert sha(raw) == item["raw_sha256"]
                 artifacts[kind] = {"path": item["path"], "sha256": item["sha256"]}
                 if kind == "result":
-                    result = json.loads(raw)
+                    try:
+                        result = json.loads(raw)
+                    except (ValueError, UnicodeError):
+                        if row["status"] == "ok":
+                            raise
         if (ROOT / root / "result.txt").is_file():
             artifacts["log"] = artifact(root / "result.txt")
         if row["status"] == "ok":
@@ -72,6 +76,13 @@ def export(output):
                     "entrypoint": "singlecore_evaluate.evaluate_singlecore", "result": artifact(single_root / "result.json.gz")}
         missing = {"provenance.environment.peak_rss_bytes": "Child peak RSS not instrumented; physical RAM and worker/thread counts recorded.",
                    "provenance.measurement.seed": "Both methods are deterministic graph constructions with no RNG or seed parameter."}
+        if row["failure"]:
+            for field in ("exit_code", "elapsed_seconds"):
+                if row["failure"][field] is None:
+                    missing["provenance.measurement.failure." + field] = (
+                        "The process timed out and was terminated/reaped; no normal exit code was reported."
+                        if field == "exit_code" and row["status"] == "timeout" else
+                        "The failed supervision stage did not produce this value; original failure and prior process timing retained.")
         solver_stage, eval_stage = row.get("solver", {}), row.get("evaluation", {})
         measurement = {"started_at": row["started_at"], "finished_at": row["finished_at"], "seed": None,
                        "repeat_index": 0, "cold_start": True, "solver_scope": protocol["solver_scope"], "evaluation_scope": protocol["evaluation_scope"],
