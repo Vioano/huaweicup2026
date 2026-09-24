@@ -1,0 +1,91 @@
+{
+  "status": "ok",
+  "calls": {
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "attempts": [
+    {
+      "name": "adaptive_budget",
+      "status": "constructed",
+      "detail": {
+        "selected_strategy": "active_core_shared_wave",
+        "components": 71,
+        "cores": 2,
+        "shared_external_inputs": 50,
+        "shared_external_bytes": 3721600,
+        "raw_priority_peak_bytes": [
+          {
+            "L1": 1475584,
+            "UB": 0
+          },
+          {
+            "L1": 1442816,
+            "UB": 0
+          }
+        ],
+        "raw_peaks_fit_capacity": false,
+        "zero_spill_claim": false,
+        "limitations": [
+          "raw touch intervals omit official COPY/spill and Step2/Step3 reorder",
+          "fixed whole-component assignment; activation frontier may grow with component count"
+        ],
+        "requested_cores": 2,
+        "active_cores": 2,
+        "per_job_pipe_work": {
+          "PIPE_M": 829792,
+          "PIPE_V": 33248
+        },
+        "shared_input_bytes": 3721600,
+        "private_input_bytes": 1163264,
+        "raw_private_peak_max": {
+          "L1": 49152,
+          "UB": 0
+        },
+        "raw_shared_wave_max": {
+          "L1": 294912
+        },
+        "raw_capacity_jobs_per_core_bound": 4,
+        "core_choice": {
+          "capacity_guard": "no certified reduction; retain requested cores"
+        },
+        "official_optimality_claim": false,
+        "component_pressure": {
+          "largest_component_pipe_work": {
+            "PIPE_M": 829792,
+            "PIPE_V": 33248
+          },
+          "balanced_pipe_work_lower_bound": {
+            "PIPE_M": 29457616,
+            "PIPE_V": 1180304
+          },
+          "component_exceeds_balanced_pipe_work": false,
+          "shared_external_bytes": {
+            "L1": 3721600
+          },
+          "shared_external_exceeds_capacity": true
+        },
+        "adaptive_route": "active_core_shared_wave",
+        "index_constructions": 1,
+        "base_construct_calls": 1,
+        "repair_construct_calls": 0,
+        "repair_trigger": {
+          "recognized": false,
+          "large_crossings": 0,
+          "large_crossing_bytes": 0,
+          "reason": "vector lanes: all eligible ops must use PIPE_V"
+        },
+        "route_limitations": "unchanged general plan; no official feasibility/score/zero-spill certificate"
+      },
+      "plan_sha256": "4bff88861a48653be82b2ff6c7fac7bf94f11ae1ce6108d9ef77c358111ebb05"
+    }
+  ],
+  "started_at": "2026-09-24T19:22:29.114156+00:00",
+  "validation_scope": "official structural validation only; no E0/Step2/Step3 certificate",
+  "selected": "adaptive_budget",
+  "plan_sha256": "4bff88861a48653be82b2ff6c7fac7bf94f11ae1ce6108d9ef77c358111ebb05",
+  "stop_reason": "single_structural_route_completed",
+  "finished_at": "2026-09-24T19:22:29.376388+00:00",
+  "internal_wall_seconds": 0.2623702920100186
+}

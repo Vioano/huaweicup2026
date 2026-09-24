@@ -1,0 +1,119 @@
+{
+  "case": "095",
+  "cores": 4,
+  "status": "ok",
+  "started_at": "2026-09-24T19:26:20.510063Z",
+  "calls": {
+    "solver": 1,
+    "E0": 1,
+    "E1": 0,
+    "E2": 0
+  },
+  "phase": "complete",
+  "solver_mode": "direct",
+  "solver": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "-m",
+      "src.q2_nikolastarx.adaptive_budget",
+      "data/raw/a/official/data/case_095.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "--cores",
+      "4",
+      "--output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s04/095-k4/plan.json",
+      "--evidence",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s04/095-k4/online",
+      "--wall",
+      "25"
+    ],
+    "started_at": "2026-09-24T19:26:20.510337Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 50380800,
+    "rss_samples": 3,
+    "cleanup_killed_pids": [],
+    "pid": 44691,
+    "observer_inclusive_peak_rss_bytes": 175734784,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:26:20.775188Z",
+    "wall_seconds": 0.26487445799284615
+  },
+  "online": {
+    "status": "ok",
+    "calls": {
+      "E0": 0,
+      "E1": 0,
+      "E2": 0
+    },
+    "attempts": [
+      {
+        "name": "adaptive_budget",
+        "status": "constructed",
+        "detail": {
+          "strategy": "resource_word",
+          "components": 462,
+          "eligible_ops": 3696,
+          "cores": 4,
+          "a": 1158,
+          "b": 2196,
+          "lookahead": 3,
+          "selected_strategy": "resource_word",
+          "adaptive_route": "resource_word",
+          "index_constructions": 1,
+          "base_construct_calls": 1,
+          "repair_construct_calls": 0,
+          "word": {
+            "a": 1158,
+            "b": 2196,
+            "lookahead": 3
+          }
+        },
+        "plan_sha256": "6becb44cbe74859f609d8ede63ee402a7107334ac181207a88055cd5cbf3ecd9"
+      }
+    ],
+    "started_at": "2026-09-24T19:26:20.562633+00:00",
+    "validation_scope": "official structural validation only; no E0/Step2/Step3 certificate",
+    "selected": "adaptive_budget",
+    "plan_sha256": "6becb44cbe74859f609d8ede63ee402a7107334ac181207a88055cd5cbf3ecd9",
+    "stop_reason": "single_structural_route_completed",
+    "finished_at": "2026-09-24T19:26:20.633933+00:00",
+    "internal_wall_seconds": 0.07143395801540464
+  },
+  "final_reserved": true,
+  "final": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "data/raw/a/official/code/multicore_cut_evaluate_problem_2.py",
+      "data/raw/a/official/data/case_095.json",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s04/095-k4/plan.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "-o",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s04/095-k4/final/result.json",
+      "--trace-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s04/095-k4/final/trace.json",
+      "--log-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s04/095-k4/final/official.log"
+    ],
+    "started_at": "2026-09-24T19:26:20.776710Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 97239040,
+    "rss_samples": 8,
+    "cleanup_killed_pids": [],
+    "pid": 44707,
+    "observer_inclusive_peak_rss_bytes": 203833344,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:26:21.438902Z",
+    "wall_seconds": 0.6622143749846146
+  },
+  "full_online_result_equal": null,
+  "makespan_cycles": 269686,
+  "finished_at": "2026-09-24T19:26:21.446085Z"
+}

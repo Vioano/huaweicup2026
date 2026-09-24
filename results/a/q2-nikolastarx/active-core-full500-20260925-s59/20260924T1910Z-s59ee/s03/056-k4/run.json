@@ -1,0 +1,267 @@
+{
+  "case": "056",
+  "cores": 4,
+  "status": "ok",
+  "started_at": "2026-09-24T19:19:44.317943Z",
+  "calls": {
+    "solver": 1,
+    "E0": 1,
+    "E1": 0,
+    "E2": 0
+  },
+  "phase": "complete",
+  "solver_mode": "direct",
+  "solver": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "-m",
+      "src.q2_nikolastarx.adaptive_budget",
+      "data/raw/a/official/data/case_056.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "--cores",
+      "4",
+      "--output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/056-k4/plan.json",
+      "--evidence",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/056-k4/online",
+      "--wall",
+      "25"
+    ],
+    "started_at": "2026-09-24T19:19:44.318182Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 69697536,
+    "rss_samples": 4,
+    "cleanup_killed_pids": [],
+    "pid": 80206,
+    "observer_inclusive_peak_rss_bytes": 163921920,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:19:44.712445Z",
+    "wall_seconds": 0.3942814579932019
+  },
+  "online": {
+    "status": "ok",
+    "calls": {
+      "E0": 0,
+      "E1": 0,
+      "E2": 0
+    },
+    "attempts": [
+      {
+        "name": "adaptive_budget",
+        "status": "constructed",
+        "detail": {
+          "selected_strategy": "component_envelope",
+          "eligible_ops": 7678,
+          "components": 19,
+          "cores": 4,
+          "capacity_bytes": {
+            "L1": 524288,
+            "UB": 131072
+          },
+          "per_core": [
+            {
+              "core": 0,
+              "components": 1,
+              "shared_tensors": 0,
+              "cohorts": [
+                {
+                  "components": [
+                    0
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 0,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 39008,
+                    "UB": 73744
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 39008,
+                    "UB": 73744
+                  },
+                  "within_capacity": true
+                }
+              ],
+              "max_open_components_bound": 1,
+              "all_raw_envelopes_fit": true
+            },
+            {
+              "core": 1,
+              "components": 5,
+              "shared_tensors": 0,
+              "cohorts": [
+                {
+                  "components": [
+                    3,
+                    5,
+                    11,
+                    14,
+                    16
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 0,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 20352,
+                    "UB": 11762
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 20352,
+                    "UB": 11762
+                  },
+                  "within_capacity": true
+                }
+              ],
+              "max_open_components_bound": 5,
+              "all_raw_envelopes_fit": true
+            },
+            {
+              "core": 2,
+              "components": 6,
+              "shared_tensors": 0,
+              "cohorts": [
+                {
+                  "components": [
+                    2,
+                    7,
+                    12,
+                    15,
+                    17,
+                    18
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 0,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 23808,
+                    "UB": 14112
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 23808,
+                    "UB": 14112
+                  },
+                  "within_capacity": true
+                }
+              ],
+              "max_open_components_bound": 6,
+              "all_raw_envelopes_fit": true
+            },
+            {
+              "core": 3,
+              "components": 7,
+              "shared_tensors": 0,
+              "cohorts": [
+                {
+                  "components": [
+                    1,
+                    4,
+                    6,
+                    8,
+                    9,
+                    10,
+                    13
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 0,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 24960,
+                    "UB": 16464
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 24960,
+                    "UB": 16464
+                  },
+                  "within_capacity": true
+                }
+              ],
+              "max_open_components_bound": 7,
+              "all_raw_envelopes_fit": true
+            }
+          ],
+          "certificate_scope": "raw tensor priority-prefix envelope and component open-count only",
+          "zero_spill_claim": false,
+          "limitations": [
+            "shared input residency spans cohorts and is retained in reserves",
+            "oversized singleton cohorts are emitted without a memory certificate",
+            "no Step2/Step3 or global runtime feasibility guarantee"
+          ],
+          "component_pressure": {
+            "largest_component_pipe_work": {
+              "PIPE_M": 125808,
+              "PIPE_V": 238272
+            },
+            "balanced_pipe_work_lower_bound": {
+              "PIPE_M": 32754,
+              "PIPE_V": 61489
+            },
+            "component_exceeds_balanced_pipe_work": true,
+            "shared_external_bytes": {},
+            "shared_external_exceeds_capacity": false,
+            "component_split_deferred": "compute imbalance alone omits COPY and memory costs"
+          },
+          "adaptive_route": "component_envelope",
+          "index_constructions": 1,
+          "base_construct_calls": 1,
+          "repair_construct_calls": 0,
+          "repair_trigger": {
+            "recognized": false,
+            "large_crossings": 0,
+            "large_crossing_bytes": 0,
+            "reason": "vector lanes: all eligible ops must use PIPE_V"
+          },
+          "route_limitations": "unchanged general plan; no official feasibility/score/zero-spill certificate"
+        },
+        "plan_sha256": "f9850725d64f0346a9daea1493909416e7f3d886c5319fdaf4698bbdfcb2fa40"
+      }
+    ],
+    "started_at": "2026-09-24T19:19:44.377086+00:00",
+    "validation_scope": "official structural validation only; no E0/Step2/Step3 certificate",
+    "selected": "adaptive_budget",
+    "plan_sha256": "f9850725d64f0346a9daea1493909416e7f3d886c5319fdaf4698bbdfcb2fa40",
+    "stop_reason": "single_structural_route_completed",
+    "finished_at": "2026-09-24T19:19:44.531661+00:00",
+    "internal_wall_seconds": 0.15468549999059178
+  },
+  "final_reserved": true,
+  "final": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "data/raw/a/official/code/multicore_cut_evaluate_problem_2.py",
+      "data/raw/a/official/data/case_056.json",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/056-k4/plan.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "-o",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/056-k4/final/result.json",
+      "--trace-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/056-k4/final/trace.json",
+      "--log-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/056-k4/final/official.log"
+    ],
+    "started_at": "2026-09-24T19:19:44.715586Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 149569536,
+    "rss_samples": 19,
+    "cleanup_killed_pids": [],
+    "pid": 80284,
+    "observer_inclusive_peak_rss_bytes": 215924736,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:19:46.323728Z",
+    "wall_seconds": 1.6081542919855565
+  },
+  "full_online_result_equal": null,
+  "makespan_cycles": 253319,
+  "finished_at": "2026-09-24T19:19:46.335410Z"
+}
