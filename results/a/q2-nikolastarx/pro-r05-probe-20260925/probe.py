@@ -46,10 +46,15 @@ def main():
     seed_dir = ROOT / 'results/a/q2-nikolastarx/pro-r04-review-20260925/static-003-k2'
     seed_raw = gzip.decompress((seed_dir / 'seed-plan.json.gz').read_bytes())
     witness_raw = gzip.decompress((seed_dir / 'seed-witness.json.gz').read_bytes())
-    from src.q2_nikolastarx.direct import read_evaluation_config
+    from src.q2_nikolastarx import direct  # Install the frozen official module path.
+    from evaluation_validation import read_evaluation_config
     from multicore_cut_evaluate_problem_2 import read_scene_b_config
     from src.q2_nikolastarx.ready_exchange_candidate import build_from_seed
     config = {**read_evaluation_config(args.config), **read_scene_b_config(args.config)}
+    (args.output / 'constructor-started.json').write_text(json.dumps({
+        'source_commit': SOURCE, 'constructor': 1, 'E0': 0, 'E1': 0, 'E2': 0,
+        'graph_sha256': sha(graph_raw), 'config_sha256': sha(config_raw)
+    }, indent=2) + '\n')
     at = time.perf_counter()
     plan, detail = build_from_seed(json.loads(graph_raw), json.loads(seed_raw),
                                   json.loads(witness_raw), 2, config)
