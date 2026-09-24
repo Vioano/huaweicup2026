@@ -1,5 +1,21 @@
 # Pro1 · A题方法
 
+最新：[完整问答-20260924T103700Z.md](完整问答-20260924T103700Z.md) · [消息校验-20260924T103700Z.json](消息校验-20260924T103700Z.json) · [Coherent本轮完整回答](本轮回答-20260924T103700Z.md)
+
+本轮共20条公开消息，网页核对20条；0条仅原生清单可读并逐条标源。全部达到20000字符上限的消息均由网页补齐。历史版本与原附件保留。
+
+本轮AI附件（来自最新回答）：
+
+- [Official_Mapping_Architecture.zip](附件/r11-Official_Mapping_Architecture.zip)
+- [RESEARCH_MEMO.md](附件/r11-RESEARCH_MEMO.md)
+- [GOAL_CARDS.md](附件/r11-GOAL_CARDS.md)
+- [EVIDENCE_INDEX.md](附件/r11-EVIDENCE_INDEX.md)
+- [READ_MANIFEST.json](附件/r11-READ_MANIFEST.json)
+
+完整包CRC通过，包内作者清单87项逐一核对字节/哈希；未执行包内脚本。
+
+以下为此前归档说明与附件入口，描述对应历史版本：
+
 [完整问答](%E5%AE%8C%E6%95%B4%E9%97%AE%E7%AD%94-20260923T195552Z.md) · [消息核对](%E6%B6%88%E6%81%AF%E6%A0%A1%E9%AA%8C-20260923T195552Z.json) · [原会话](https://chatgpt.com/g/g-p-6ab2d820c86081918067a0c6d5eb1ab6/c/6ab2d851-0348-83e8-ab24-02db57b01aea)
 
 完整保存当前分支的提问与公开回答，按消息 ID/角色/顺序与独立会话清单对齐。三个首轮超长回答越过读取接口的 20000 字符上限，使用完整网页补齐；摘要不代替原文。原生引用标记如无法映射，原样保留并附网页实际来源链接。
