@@ -11,6 +11,31 @@ from star_frontier import guarded_stages
 
 
 class PrefetchTests(unittest.TestCase):
+    def test_four_core_start_and_subtree_closure(self):
+        for shape in ("balanced", "comb"):
+            for rounds in (1, 2, 24):
+                graph = model_graph(rounds, shape)
+                for fuse in (False, True):
+                    plan, info = construct(graph, 5, WAITS, startup_cores=4, fuse_reductions=fuse)
+                    mapping = plan["node_to_subgraph"]
+                    self.assertEqual(info["task_count"], 6 * rounds - 1)
+                    self.assertEqual(set(mapping), {o["id"] for o in graph["ops"]})
+                    arcs = {(mapping[e["source"]], mapping[e["target"]]) for e in graph["edges"]
+                            if mapping[e["source"]] != mapping[e["target"]]}
+                    arcs.update((a, b) for seq in plan["core_schedules"] for a, b in zip(seq, seq[1:]))
+                    self.assertTrue(all(a < b for a, b in arcs))
+                    guarded, _ = guarded_stages(graph)
+                    for entry in guarded["rounds"]:
+                        for chain in entry["chains"]:
+                            self.assertEqual(len({mapping[u] for u in chain}), 1)
+                    if not fuse:
+                        self.assertEqual(info["model_r_cycles"], 7431 + (rounds - 1) * 8727)
+                    elif shape == "balanced":
+                        # First four three-chain groups each close one pair;
+                        # later 4/2/2/2/2 groups close 3+1+1+1+1 reductions.
+                        self.assertEqual(info["fused_reduction_count"], 4 + 7 * (rounds - 1))
+                        self.assertEqual(info["model_r_cycles"], 7392 + (rounds - 1) * 8675)
+
     def test_complete_chains_and_independent_joint_rank(self):
         for shape in ("balanced", "comb"):
             for rounds in (1, 2, 24):
