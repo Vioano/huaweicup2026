@@ -52,3 +52,20 @@ class SupervisorTests(unittest.TestCase):
   self.assertEqual(get(f'http://127.0.0.1:{self.port}/'),'oneindex.html'.encode())
   self.assertEqual(read_json(self.s.software/'active.json')['release_id'],'one')
   self.assertEqual(read_json(self.s.software/'status.json')['health'],'rollback')
+
+ def test_handoff_distinguishes_closed_connections_from_live_listener(self):
+  import socket
+  from src.benchmark_sync.supervisor import ensure_no_listener
+  with socket.socket() as server:
+   server.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+   server.bind(('127.0.0.1',0));port=server.getsockname()[1];server.listen()
+   with self.assertRaisesRegex(RuntimeError,'already in use'):ensure_no_listener(port)
+   probe,_=server.accept();probe.close()
+   with socket.create_connection(('127.0.0.1',port)) as client:
+    accepted,_=server.accept();accepted.shutdown(socket.SHUT_WR)
+    self.assertEqual(client.recv(1),b'');accepted.close()
+  ensure_no_listener(port)
+  with socket.socket() as replacement:
+   replacement.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+   replacement.bind(('127.0.0.1',port));replacement.listen()
+   with self.assertRaisesRegex(RuntimeError,'already in use'):ensure_no_listener(port)
