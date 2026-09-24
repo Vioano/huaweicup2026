@@ -52,3 +52,18 @@ solver startup-to-exit wall and separate E0 wall. Other P2/Q3 tasks may share
 the host; no exclusive-machine speed claim. Three new graph-level tests check
 a balanced reduction, a diamond with shared ancestry, and chain/one-core
 fallback, alongside the four component-pack tests. No E0 is called by tests.
+
+## Third, isolated frontier-granularity probe
+
+The second batch's case002 frontier has seven packets and worker operation
+counts 295/574/574/349. It improves E0 to 85,702 but leaves a large granularity
+imbalance. A single mechanism probe is frozen before evaluation: case002 K=4,
+`--packet-factor 4`, one constructor (30 s) plus one external E0 (60 s), no
+retry/E1/E2. This makes the threshold total work/(K*4), capped below by the
+largest operation's work so leaves remain selectable. It retains at most K+1
+Tasks; only the number of independent packets and the residual tail grow.
+
+The purpose is to compare finer balancing against additional boundary DDR and
+tail work. It is one explicit structural ablation, not online parameter search
+or a claim that higher factors always help. Default factor remains 1. Source,
+runner and new batch must be independently frozen and all outcomes retained.

@@ -19,6 +19,11 @@ class FrontierTests(unittest.TestCase):
         self.assertEqual(d["core_frontier_ops"], [3] * 4)
         self.assertEqual(len({p["node_to_subgraph"][i] for i in (9, 10, 11, 12)}), 4)
         self.assertEqual({p["node_to_subgraph"][i] for i in (13, 14, 15)}, {4})
+        fine, detail = construct(g, 4, packet_factor=4)
+        self.assertEqual(detail["frontier_packet_count"], 8)
+        self.assertEqual(detail["tail_ops"], 7)
+        self.assertEqual(detail["core_frontier_ops"], [2] * 4)
+        self.assertEqual({fine["node_to_subgraph"][i] for i in range(9, 16)}, {4})
 
     def test_diamond_is_not_mistaken_for_disjoint_subtrees(self):
         g = graph([(i, "M", 1) for i in range(1, 5)], [(1, 2), (1, 3), (2, 4), (3, 4)])
@@ -32,6 +37,9 @@ class FrontierTests(unittest.TestCase):
             p, d = construct(g, k)
             self.assertEqual(d["selected"], "component-pack")
             self.assertEqual(p, component(g, k)[0])
+        for f in (0, True, 65):
+            with self.assertRaises(ValueError):
+                construct(g, 4, packet_factor=f)
 
 
 if __name__ == "__main__":

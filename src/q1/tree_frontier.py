@@ -24,11 +24,14 @@ from stub_multicore_cut_and_schedule import (  # noqa: E402
 from evaluation_validation import validate_task_order  # noqa: E402
 
 
-def construct(graph: dict, cores: int) -> tuple[dict, dict]:
+def construct(graph: dict, cores: int, packet_factor: int = 1) -> tuple[dict, dict]:
+    if type(packet_factor) is not int or not 1 <= packet_factor <= 64:
+        raise ValueError("packet_factor must be an integer in 1..64")
     # Also validates the graph/domain; its plan is the deterministic fallback.
     fallback, base = component_construct(graph, cores)
     info = {"algorithm_id": "q1-tree-frontier-pack", "variant": "threshold-antichain-tail",
-            "base": base, "selected": "component-pack", "scope": "Structural proof only; E0 required"}
+            "packet_factor": packet_factor, "base": base, "selected": "component-pack",
+            "scope": "Structural proof only; E0 required"}
     if cores == 1 or base["components"] >= cores:
         info["reason"] = "enough independent components or one core"
         return fallback, info
@@ -57,8 +60,12 @@ def construct(graph: dict, cores: int) -> tuple[dict, dict]:
         info["reason"] = "zero work"
         return fallback, info
     # Integer comparisons avoid float rounding at the frontier boundary.
-    roots = [u for u in order if mass[u] * cores <= total and
-             (not succ[u] or mass[next(iter(succ[u]))] * cores > total)]
+    divisor = cores * packet_factor
+    # Finer antichains reduce indivisible bin sizes at the cost of more
+    # boundary copies/tail work. Never demand a packet smaller than one op.
+    threshold_numerator = max(total, max(o["cycles"] for o in ops.values()) * divisor)
+    roots = [u for u in order if mass[u] * divisor <= threshold_numerator and
+             (not succ[u] or mass[next(iter(succ[u]))] * divisor > threshold_numerator)]
     packets, covered = [], set()
     for root in roots:
         stack, members, loads = [root], [], Counter()
@@ -115,11 +122,12 @@ def main():
     parser.add_argument("graph", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--cores", type=int, required=True)
+    parser.add_argument("--packet-factor", type=int, default=1)
     parser.add_argument("--diagnostics", type=Path)
     args = parser.parse_args()
     if args.output.exists() or (args.diagnostics and args.diagnostics.exists()):
         raise FileExistsError("Refuse to overwrite experiment artifacts")
-    plan, info = construct(json.loads(args.graph.read_text()), args.cores)
+    plan, info = construct(json.loads(args.graph.read_text()), args.cores, args.packet_factor)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("x") as f:
         json.dump(plan, f, separators=(",", ":"))
