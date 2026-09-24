@@ -122,11 +122,14 @@ def run(batch, spec):
 
 def export(batch):
     meta=h.read(batch/"batch.json"); cells=meta["cells"]; spec=meta["declaration"]["content"]; limits=meta["timeouts_seconds"]
-    solver=meta["solver_commit"]; old_commit=meta["comparison_source"]["commit"]; old_feed=meta["comparison_source"]["feed"]
+    solver=meta["solver_commit"]; sources=meta["comparison_source"]; old_feeds={}
     if meta["status"]=="running": raise RuntimeError("Wait for execution to finish")
-    old=json.loads(h.git("show",f"{old_commit}:{old_feed}"))
     records=[]; comparisons=[]; references=batch/"references"; references.mkdir(exist_ok=True)
     for case,cores in cells:
+        source=sources.get("overrides",{}).get(f"{case}/k{cores}",sources)
+        old_commit=source["commit"]; old_feed=source["feed"]; key=(old_commit,old_feed)
+        if key not in old_feeds: old_feeds[key]=json.loads(h.git("show",f"{old_commit}:{old_feed}"))
+        old=old_feeds[key]
         previous=next(x for x in old["records"] if x["case_id"]==case and x["cores"]==cores)
         assert previous["status"]=="ok"
         folder=batch/"cells"/case/f"k{cores}"; r=h.read(folder/"run.json")
@@ -163,7 +166,7 @@ def export(batch):
                 if r["failure"].get(key) is None: missing[f"provenance.measurement.failure.{key}"]="No completed child receipt"
         p["missing_reasons"]=missing
         rec["notes"]=[meta["resource_coordination"],f"{len(cells)} preselected mechanism probes; not all-case quality or independent blind acceptance. No sink8 batch executed.",
-            "Fresh interpreter per cell, OS caches not flushed; previous bounded04 used two workers, so timings are descriptive and cannot establish controlled speedups.",
+            "Fresh interpreter per cell, OS caches not flushed; prior bounded04 sources include shared two-worker runs and separately identified one-worker timeout diagnostics. Timings are descriptive, not controlled speedups.",
             f"Bounded04 same-cell plan/result and singlecore originals reused from {old_commit}; no comparison or baseline evaluation."]
         records.append(rec)
         comparisons.append({"case":case,"cores":cores,"status":r["status"],**metrics,"selected":r.get("diagnostics",{}).get("selected"),
