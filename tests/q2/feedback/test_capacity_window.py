@@ -20,6 +20,25 @@ def chains(jobs=6, shared_size=64):
 
 
 class CapacityWindowTests(unittest.TestCase):
+    def test_small_shared_cohort_does_not_mask_a_heavy_fork_join(self):
+        ops = [{'id': u, 'op': 'COMPUTE', 'pipe': 'PIPE_M', 'cycles': 100}
+               for u in range(1, 7)]
+        ops += [{'id': u, 'op': 'COMPUTE', 'pipe': 'PIPE_V', 'cycles': 10}
+                for u in (7, 8, 9)]
+        g = {'ops': ops, 'tensors': [{'id': 1000, 'pos': 'L1', 'size': 10}],
+             'edges': [{'source': u, 'target': 7} for u in range(1, 7)]
+                      + [{'source': 1000, 'target': u} for u in (8, 9)]}
+        index = TensorIndex(g)
+        _, old = index.build_tensor_plan(4, 60, 500)
+        self.assertEqual(old['selected'], 'shared_cohorts')
+        plan, meta = build(index, 4, 60, 500, {'L1': 512, 'UB': 128})
+        self.assertEqual(meta['selected'], 'heavy_component_packet_override')
+        self.assertEqual(meta['heavy_components'], 1)
+        self.assertEqual(sum(map(len, plan['core_schedules'])), 9)
+        expected, _ = index.packet_eft(4, 60, 500)
+        mapping = plan['node_to_subgraph']
+        self.assertEqual(plan['core_schedules'], [[mapping[str(u)] for u in seq] for seq in expected])
+
     def test_consumed_and_produced_buffers_coexist_at_a_bucket(self):
         index = TensorIndex(chains(1))
         self.assertEqual(footprint(index, [1, 2]), {'L1': 64, 'UB': 64})

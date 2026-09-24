@@ -1,7 +1,7 @@
 """Bound component admission by a conservative per-core memory envelope.
 
-Retains the tensor_packet placement. Only shared-component priorities change;
-resource-word and general packet routes stay byte-semantically unchanged.
+Refines shared-component routes using a heavy-component guard and memory.
+Resource-word and existing general packet routes stay semantically unchanged.
 No evaluator, spill planner, candidate-score loop or graph-ID rule is used.
 """
 from __future__ import annotations
@@ -11,7 +11,7 @@ from collections import Counter
 import json
 from pathlib import Path
 
-from .construct import ROOT, derive_multicore_plan
+from .construct import PIPES, ROOT, derive_multicore_plan
 from .tensor_packet import TensorIndex
 
 
@@ -82,6 +82,22 @@ def build(index, cores, bandwidth, delay, capacity):
             or any(type(v) is not int or v < 0 for v in capacity.values())):
         raise ValueError('nonnegative integer L1 and UB capacity required')
     plan, original = index.build_tensor_plan(cores, bandwidth, delay)
+    if original['selected'] == 'shared_cohorts':
+        target = {p: (sum(w[p] for w in index.work) + cores - 1) // cores for p in PIPES}
+        heavy = [j for j, work in enumerate(index.work)
+                 if any(work[p] > target[p] for p in PIPES)]
+        if heavy:
+            # A few small repeated components must not prevent the existing
+            # packet decomposition from exposing a dominant component's DAG.
+            sequences, packet = index.packet_eft(cores, bandwidth, delay)
+            mapping = plan['node_to_subgraph']
+            answer = {'node_to_subgraph': mapping,
+                      'core_schedules': [[mapping[str(u)] for u in seq] for seq in sequences]}
+            derive_multicore_plan(index.graph, answer)
+            return answer, {'selected': 'heavy_component_packet_override',
+                            'heavy_components': len(heavy), 'base': original,
+                            'packet': packet, 'online_E0_calls': 0,
+                            'scope': 'avoid whole-cohort routing across a dominant component; no spill certificate'}
     if (original['selected'] not in {'shared_stages', 'shared_cohorts'}
             or any('logical_tid' in t for t in index.tensors.values())):
         return plan, {'selected': 'capacity_window_guard_unchanged', 'base': original,
