@@ -167,4 +167,3 @@ def construct(index,cores,*,collector_policy="fixed"):
         metadata.update(collector_policy=collector_policy,collector_cycle=collector_cycle)
         metadata['order']='per stage: full original lane chains, pure-local original ADDs, mixed ADDs on alternating heavy collector'
     return plan,metadata
-
