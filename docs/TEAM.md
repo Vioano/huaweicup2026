@@ -4,11 +4,13 @@
 
 ## 分工表
 
-**2026-09-24 最新优先级：** 队长原调度会话继续全组协调与分工；网站维护已交“制定网站测试数据交接协议”会话 `nikolastarx/s-7c98eab1093e485291eacb04fd7c59ff`，登记与来源见 [Issue26](https://github.com/huaweibei123/huaweicup2026/issues/26#issuecomment-5813828246)。NikolaStarx 与 Fang 的算法专项负责后续算法、Coherent 研究和科学复核；LYX、farmer 后续优先支持成绩台的数据接入、校核和可见展示。下表的旧算法范围是历史及交接责任，不代表新研究派单；既有批次和源码单写权须在安全交接后转移，不能因调整默认释放。详见[交接规则](TEAM_WORKFLOW.md#方案成绩台与研究调度分工)。
+**2026-09-24 最新优先级：** 总调度继续跨任务协调与科学复核路由；成绩台的研发对接、benchmark 分配和数据接收由 `s-7c98…` 汇总，本机生产会话 `s-59ee…` 执行已经明确的批次。分配、执行、交成绩与网站维护统一先读 [方案成绩台](benchmarks/BENCHMARK_BOARD.md)，具体边界见 [团队工作流](TEAM_WORKFLOW.md#方案成绩台与研究调度分工)。NikolaStarx、Fang 的算法专项负责后续算法与 Coherent 研究；LYX、farmer 保全既有已授权批次，并承接独立成绩数据任务。旧算法范围仍是历史及交接责任，不因新分工默认释放单写权。
 
 | 角色 | GitHub 账号 | 职责 |
 | --- | --- | --- |
 | 队长 | NikolaStarx | A 题首轮：冻结输入、公共接口/E0、独立验收与团队协调 |
+| 成绩台研发对接与接收 | NikolaStarx 的 `s-7c98…` 会话 | 对接研发、分配明确 benchmark、协调 LYX/farmer 数据；网站、协议和中央账本单写维护 |
+| 本机 benchmark 生产 | NikolaStarx 的 `s-59ee…` 会话 | 调度/执行已明确批次；独立 runner、原件、结果、导出和预检，向成绩台交固定产物 |
 | 形式化与对抗样本 | farmeruncle123 | A 题首轮：规则来源、语义探针、对抗生成与反例缩减；Issue #14 |
 | 评估器工程化与测试 | lyx0217 | E1/原生精确核工程化；E2 开发交付后的独立测试；Issue #15 |
 | E2 核心开发专项 | NikolaStarx 的 `s-55b6…` 会话 | 2026-09-24 用户调整：E2 核心方案、实现和开发验证；[任务卡](../tasks/a/E2-CORE-DEVELOPMENT.md)，Issue #15 |
