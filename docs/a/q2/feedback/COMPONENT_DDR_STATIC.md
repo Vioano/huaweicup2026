@@ -13,4 +13,4 @@
 
 表中 M_A/M_B 是保存的官方结果（020：107,650/477,078；045：26,164/101,085），仅作为既有测量展示，未被静态触发器读取。冻结索引/证书实现身份为 `4a501d7f4a8b780263e097a963e12dcb66178e69`；旧 A、gap B 与官方 E0 身份分别为 `e64723bdf99669c44f76d8e90ab0379a8578522e`、`384b6c2a7ff937ca44180dee09a9d4bcaea0c50d`、`45f647b395b84e9569f418fd33d62c2b8eb4d190`。图、配置、plan、run、result 与源码 SHA-256 均在 JSON 中。处理仅限这两图；静态脚本耗时 3.869 s，0 solver / 0 Step2 / 0 Step3 / 0 E0。
 
-实际使用的静态脚本现已原字节入库：`src/q2/feedback/component_ddr_static_probe.py`，SHA256见同目录结果的`script-identity.json`。复现命令：`python -X utf8 src/q2/feedback/component_ddr_static_probe.py . <新的输出JSON路径>`；应使用新路径，保留本次原结果。该脚本中的两个图号仅限定事后诊断范围，不是求解算法的路由规则。
+实际使用的静态脚本现已归档入库（仅将CRLF统一为LF，原执行字节与入库字节的两个哈希均有记录）：`src/q2/feedback/component_ddr_static_probe.py`，SHA256见同目录结果的`script-identity.json`。复现命令：`python -X utf8 src/q2/feedback/component_ddr_static_probe.py . <新的输出JSON路径>`；应使用新路径，保留本次原结果。该脚本中的两个图号仅限定事后诊断范围，不是求解算法的路由规则。
