@@ -51,3 +51,10 @@ r01 最终回答已结束并归档。当时快照：[完整公开问答](完整�
 2026-09-24T21:18:02.036520+00:00 已在同一 huaweicup project chat、6 Pro 发送。公开用户消息 `869ff1ae-35a3-4f1a-ae60-b7ee2622e172`；Copy message 回读与[发送正文](r04-sent-prompt.txt)逐字一致，已见 Pro thinking / Stop answering，**不要重发或打断**。阶段见 [r04-status.json](r04-status.json)，最新七条已知公开消息快照为 [完整问答-20260924T211802Z.md](完整问答-20260924T211802Z.md)，旧六条继承上一份原件，未重新独立分页全历史。
 
 本轮问题收敛于精确 COPY 字节的超图归约、保持并行机会的有约束局部构造、及最小可证伪实验。923b 材料已核镜像回执；四格官方小样本和新增 DDR 诊断作为明确标注的本机事实写进提问，不假称已包含在923b提交，也不当全500成绩。研发与全量验收准备继续，不等待新回答。
+
+
+## r04 最终答复已追加归档（UTC 2026-09-24）
+
+助手消息 `b6a8f9d6-3f57-47b2-b478-870b60e19fdf`（2026-09-24T21:47:44.665Z）正文由公开 DOM `r04-final-dom.json` 转为 [r04-response](r04-response-b6a8f9d6.md)，并追加到 [完整问答-20260924T214744Z.md](完整问答-20260924T214744Z.md)。本快照沿用旧七条公开消息并追加一条助手答复；当前 DOM 只显示5条，**不是一次完整 live export**。Copy response仍返回旧prompt，`content.export` 不支持；正文来源为DOM。root已核对首尾和ID。结束证据为 Response actions + StartVoice，未见 Stop。旧 [r04-status.json](r04-status.json) 保留发送/生成中阶段原证据；最终状态另存 [r04-final-20260924T214744Z.json](r04-final-20260924T214744Z.json)。
+
+实际附件哈希已登记于清单：Python原型 `119b5f25cff1b75a41abb4e052fbc07c03961712ee65498f88ca7c6004055346`；ZIP `73d79552b1f8cd86fb42dcceb711c9110207c5d4e6402db373922728e37fc6c3`。ZIP安全路径检查、完整性校验通过，解压到 `附件/r04-p2_r04_tensor_cut/`；附件仅读取，未执行，ZIP原件未修改。
