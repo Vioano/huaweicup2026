@@ -83,11 +83,22 @@ def packets(graph, mode):
 def construct(graph, cores, variant="chain-wave"):
     if isinstance(cores, bool) or not isinstance(cores, int) or cores < 1:
         raise ValueError("cores must be a positive integer")
-    if variant not in {"chain-wave", "component-pack"}:
+    if variant not in {"chain-wave", "component-pack", "structural-switch"}:
         raise ValueError("Unknown construction variant")
-    ops, groups, edges, depth, packet_of = packets(graph, variant)
-    # Packet work is a ranking heuristic. The three entries retain the two
-    # compute-pipe loads and a serial-path surrogate; they are not E0 scores.
+    selected = variant
+    if variant == "structural-switch":
+        data = packets(graph, "component-pack")
+        # A weak-component packing with fewer components than cores cannot
+        # populate all cores. Otherwise preserve complete independent units.
+        # This is a graph-only heuristic, not a makespan dominance theorem.
+        selected = "component-pack" if len(data[1]) >= cores else "chain-wave"
+        if selected == "chain-wave":
+            data = packets(graph, selected)
+    else:
+        data = packets(graph, variant)
+    ops, groups, edges, depth, packet_of = data
+    # Per-pipe work totals are ranking heuristics, not E0 scores or an
+    # execution model of the packet's internal critical path.
     work = {}
     for g, nodes in groups.items():
         loads = defaultdict(int)
@@ -155,7 +166,7 @@ def construct(graph, cores, variant="chain-wave"):
     plan = {"node_to_subgraph": {u: mapping[u] for u in sorted(mapping)},
             "core_schedules": schedules}
     validate_task_order(derive_multicore_plan(graph, plan))
-    return plan, {"variant": variant, "packet_count": len(groups),
+    return plan, {"variant": variant, "selected_variant": selected, "packet_count": len(groups),
                   "levels": len(layers), "task_count": next_id, "tasks": diagnostics,
                   "scope": "Structural DAG validation only; final E0 required"}
 
@@ -165,7 +176,7 @@ def main():
     p.add_argument("graph", type=Path)
     p.add_argument("output", type=Path)
     p.add_argument("--cores", type=int, default=4)
-    p.add_argument("--variant", choices=["chain-wave", "component-pack"], default="chain-wave")
+    p.add_argument("--variant", choices=["chain-wave", "component-pack", "structural-switch"], default="chain-wave")
     p.add_argument("--diagnostics", type=Path)
     args = p.parse_args()
     graph = json.loads(args.graph.read_text(encoding="utf-8"))
