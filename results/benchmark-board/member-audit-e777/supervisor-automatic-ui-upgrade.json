@@ -1,0 +1,46 @@
+{
+  "observed_at": "2026-09-24T17:17:19.0501293Z",
+  "baseline": "supervisor-migration-baseline.json",
+  "release_id": "846b6b324d7cf9b306fb60f5736b9cfb14637f8c69050b1742a933120430e106",
+  "code_commit": "6fcec11ccc472a1a652b21feb6fccf85a4555598",
+  "launcher_protocol": 1,
+  "launcher_pid_unchanged": true,
+  "supervisor_pid_changed": true,
+  "old_supervisor_and_children_exited": true,
+  "supervisor_state": "ready",
+  "module_path_release_matches": true,
+  "processes": [
+    {
+      "name": "wscript.exe",
+      "pid": 24612,
+      "parent_pid": 2484,
+      "started_at": "2026-09-24T17:07:38.5463980Z"
+    },
+    {
+      "name": "python.exe",
+      "pid": 33652,
+      "parent_pid": 24612,
+      "started_at": "2026-09-24T17:07:39.0235240Z"
+    },
+    {
+      "name": "python.exe",
+      "pid": 37464,
+      "parent_pid": 33652,
+      "started_at": "2026-09-24T17:12:14.5731760Z"
+    },
+    {
+      "name": "python.exe",
+      "pid": 34460,
+      "parent_pid": 37464,
+      "started_at": "2026-09-24T17:12:17.4022920Z"
+    },
+    {
+      "name": "python.exe",
+      "pid": 27876,
+      "parent_pid": 37464,
+      "started_at": "2026-09-24T17:12:17.5516930Z"
+    }
+  ],
+  "production_modified_by_auditor": false,
+  "scope": "Actual native parent/launcher continuity and supervisor-owned process transition after the normal signed UI release; no auditor service restart."
+}

@@ -1,0 +1,25 @@
+{
+  "commit": "5d9b2708fbe88b215fc46e6092ebaaf7b2d98f5b",
+  "source_files": 48,
+  "source_bytes": 387990,
+  "source_verification": "All materialized bytes matched the fixed Git tree blob hash and size.",
+  "platform": "Windows 11 / Python 3.12.14",
+  "command": "python -X utf8 -B -m unittest discover -s tests/benchmark_sync -v",
+  "tests": 39,
+  "passed": 39,
+  "skipped": 0,
+  "seconds": 80.738,
+  "new_checks": [
+    "An actual Windows open reader closes during bounded retry and the replacement succeeds.",
+    "An actual Windows reader remains open: replacement fails visibly, old bytes survive.",
+    "Mocked transient WinError5 preserves old bytes until success and removes temporary bytes.",
+    "Persistent WinError5/32/33 is bounded; unrelated errors are not retried.",
+    "A real stable launcher retains its PID, hands off the actual supervisor and website to new code, and rejects a second launcher.",
+    "An unimportable candidate supervisor leaves existing service and supervisor in place.",
+    "A new supervisor exiting before ready rolls back the active release, restores service, and preserves a data sentinel."
+  ],
+  "production_modified": false,
+  "new_solver_calls": 0,
+  "new_evaluation_calls": 0,
+  "limitations": "Isolated temporary process fixtures and loopback ports only. The suite does not attest to production deployment, the one-time migration, real signed release handoff, Windows logon behavior, or a full production ledger rollback exercise. PR122 and PR126 are separate revisions; this is not a test of their future merged release."
+}

@@ -1,0 +1,51 @@
+{
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "commit": "480f4a8cc16965984c9b52c69270b93dde539a6c",
+  "scope": "Isolated ephemeral loopback port; no production listener or network setting changed.",
+  "suite": {
+    "total": 26,
+    "passed": 25,
+    "errors": 1,
+    "failing_test": "test_handoff_distinguishes_closed_connections_from_live_listener",
+    "error": "Cannot verify port 62731: timed out",
+    "seconds": 46.866
+  },
+  "listening": {
+    "timeout": 1,
+    "outcome": "connected",
+    "detail": null,
+    "elapsed": 0.014999999999417923
+  },
+  "closed": [
+    {
+      "timeout": 1,
+      "outcome": "TimeoutError",
+      "detail": "timed out",
+      "elapsed": 1.0
+    },
+    {
+      "timeout": 3,
+      "outcome": "ConnectionRefusedError",
+      "detail": "[WinError 10061] \u7531\u4e8e\u76ee\u6807\u8ba1\u7b97\u673a\u79ef\u6781\u62d2\u7edd\uff0c\u65e0\u6cd5\u8fde\u63a5\u3002",
+      "elapsed": 2.04700000000048
+    },
+    {
+      "timeout": 1,
+      "outcome": "TimeoutError",
+      "detail": "timed out",
+      "elapsed": 1.0
+    },
+    {
+      "timeout": 3,
+      "outcome": "ConnectionRefusedError",
+      "detail": "[WinError 10061] \u7531\u4e8e\u76ee\u6807\u8ba1\u7b97\u673a\u79ef\u6781\u62d2\u7edd\uff0c\u65e0\u6cd5\u8fde\u63a5\u3002",
+      "elapsed": 2.04700000000048
+    }
+  ],
+  "production_function": {
+    "result": "rejected closed port",
+    "error": "Cannot verify port 51848: timed out",
+    "elapsed": 1.0159999999996217
+  }
+}

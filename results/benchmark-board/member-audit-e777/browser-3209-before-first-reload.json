@@ -1,0 +1,14 @@
+{
+  "source": "CUA read-only DOM of existing in-app browser tab at http://127.0.0.1:52341/",
+  "snapshot_id": "e9dad2e568c23d3d35a55044052503494067ecc94fa028953d58ab47607f67e7",
+  "observation_phase": "After generation 7 data switch, still before first frontend reload",
+  "metric": "baseline_speedup",
+  "cell_count": 1500,
+  "cells_sha256": "a23e622e525194e33f152bc75075aaf9ddbcd958f7b41ab2c83e0cff64564c83",
+  "hash_encoding": "SHA256 of compact ASCII JSON arrays [problem,case_id,cores,trimmed DOM text] in DOM order",
+  "means": ["0.954","1.115","1.206","2.989","1.305","1.000","1.496","1.836","2.316","2.372","1.089","1.917","2.625","3.233","3.760"],
+  "counts": "1500 / 1500\n有原件的有效格\n1500\n已有记录的格\n3209\n历史记录",
+  "banner": null,
+  "loaded_frontend_current": false,
+  "finding": "The existing page automatically shows newly installed data without manual browser reload; old HTML/JS is still loaded. This is data polling evidence, not automatic transport or frontend code upgrade acceptance."
+}
