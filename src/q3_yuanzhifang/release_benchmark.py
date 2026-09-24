@@ -257,6 +257,37 @@ class ReleasePilot(Pilot):
         except Exception as exc:
             self.info.update(status="stopped", stop_reason=str(exc), failure_type=type(exc).__name__)
         finally:
+            self.info["partial_outputs"] = []
+            for name in ("result.json", "trace.json", "result.log"):
+                for path in sorted(self.out.rglob(name)):
+                    if any(c.get("cleanup_failure") for c in self.calls):
+                        self.info["partial_outputs"].append(dict(path=relative(path), sealed=False,
+                            reason="Subprocess cleanup not confirmed; preserve raw file without a stable-hash claim."))
+                    else:
+                        try:
+                            self.info["partial_outputs"].append(dict(**compress(path), sealed=True))
+                        except (OSError, ValueError) as exc:
+                            self.info["partial_outputs"].append(dict(path=relative(path), sealed=False,
+                                failure_type=type(exc).__name__))
+                            self.info.update(status="stopped", stop_reason="partial output preservation failed")
+            # A preceding multi-artifact compression may have sealed one file
+            # before another failed. Retain references to those orphan archives.
+            referenced = {a["path"] for e in self.evaluations for a in e["artifacts"].values()}
+            referenced.update(a["path"] for a in self.info["partial_outputs"])
+            for name in ("result.json.gz", "trace.json.gz", "result.log.gz"):
+                for path in sorted(self.out.rglob(name)):
+                    if relative(path) in referenced:
+                        continue
+                    try:
+                        raw = gzip.decompress(path.read_bytes())
+                        self.info["partial_outputs"].append(dict(**artifact(path), sealed=True,
+                            raw_sha256=digest(raw), raw_bytes=len(raw), gzip_bytes=path.stat().st_size))
+                    except (OSError, ValueError, EOFError) as exc:
+                        self.info["partial_outputs"].append(dict(path=relative(path), sealed=False,
+                            failure_type=type(exc).__name__))
+                        self.info.update(status="stopped", stop_reason="partial archive verification failed")
+            if time.perf_counter() - self.started > BUDGET["batch_seconds"]:
+                self.info.update(status="stopped", stop_reason="batch wall cap exceeded during final preservation; no new call")
             self.info["finished_at"] = utc()
             self.save()
         print(json.dumps(dict(status=self.info["status"], calls=self.info["calls"],
