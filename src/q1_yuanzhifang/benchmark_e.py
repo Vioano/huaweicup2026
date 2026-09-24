@@ -31,8 +31,7 @@ SOLVER_FILES = [SCRIPT, "src/q1_yuanzhifang/construct.py", "src/q1_yuanzhifang/d
                 "src/q1_yuanzhifang/fork_frontier.py", "src/q1_yuanzhifang/upstream_bounded/__init__.py",
                 "src/q1_yuanzhifang/upstream_bounded/bounded_tasks.py",
                 "src/q1_yuanzhifang/upstream_bounded/component_pack.py",
-                "src/q1_yuanzhifang/upstream_bounded/tree_frontier.py",
-                "src/q1_yuanzhifang/upstream_bounded/provenance.json"]
+                "src/q1_yuanzhifang/upstream_bounded/tree_frontier.py"]
 RUNNER_FILES = ["src/q1_yuanzhifang/benchmark_e.py", "src/q1_yuanzhifang/reuse_e.py",
                 "src/q1_yuanzhifang/benchmark.py", "src/q1_yuanzhifang/export_e.py"]
 
@@ -54,6 +53,13 @@ def preflight(args):
         inputs[name] = sha((args.graphs / name).read_bytes())
         require(inputs[name] == expected["data/" + name], "Frozen input mismatch: " + name)
     sources = verify_source(ROOT, SOLVER, SOLVER_FILES)
+    provenance_path = "src/q1_yuanzhifang/upstream_bounded/provenance.json"
+    fixed_provenance = git("show", f"{SOLVER}:{provenance_path}")
+    materialized_provenance = (ROOT / provenance_path).read_bytes()
+    require(json.loads(fixed_provenance) == json.loads(materialized_provenance), "Upstream attribution metadata mismatch")
+    for item in json.loads(fixed_provenance)["files"]:
+        require(sha(git("show", f"{CAPTAIN}:" + item["source_path"])) == item["upstream_sha256"], "Upstream original source hash mismatch")
+        require(sources[item["destination_path"]] == item["adapted_sha256"], "Adapted source hash mismatch")
     runner_sources = verify_source(ROOT, runner, RUNNER_FILES + [INDEX])
     index = json.loads((ROOT / INDEX).read_bytes())
     require(index["schema"] == "q1-stage-e-exact-byte-evidence-v1" and index["solver_commit"] == SOLVER, "Wrong evidence index")
@@ -64,6 +70,9 @@ def preflight(args):
         require(bool(args.window_token), "Execution requires the actual granted measurement-window token")
     return {"runner_commit": runner, "solver_commit": SOLVER, "source_sha256": sources,
             "runner_source_sha256": runner_sources, "official_source_sha256": official,
+            "upstream_provenance": {"path": provenance_path, "fixed_git_sha256": sha(fixed_provenance),
+                                    "materialized_sha256": sha(materialized_provenance),
+                                    "note": "Non-executable JSON metadata may have checkout CRLF; parsed content and every original/adapted source hash verified. Executable Python bytes match the solver commit exactly."},
             "official_code_hash": manifest["official_code_hash"], "input_sha256": inputs,
             "evidence_index": artifact(ROOT / INDEX), "preflight_wall_seconds": time.perf_counter() - t0}, index, manifest
 
