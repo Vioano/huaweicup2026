@@ -9,6 +9,8 @@
 用户进一步要求设计算法探索空间和筛选/演化机制；已汇总三问直接反馈并向同project专项Pro提交r02
 咨询，材料与待审初案见 [PRO_R02_RESEARCH_BRIEF.md](PRO_R02_RESEARCH_BRIEF.md)，
 实际发送/待回状态见 [PRO_R02_STATUS.md](PRO_R02_STATUS.md)。
+发送后P1/P2逐入口复核发现的歧义及勘误见 [PRO_R02_ERRATA.md](PRO_R02_ERRATA.md)；
+以下接口已收紧，原上传材料仍固定在ceaed932，不把后续更正冒充已发给Pro。
 研究决策层与本文件的作业执行层分开；并发设施本身不证明算法覆盖或筛选质量。
 
 ## 1. 三种使用方式，共用同一套身份和资源规则
@@ -59,7 +61,9 @@ flowchart LR
 1. 每个 worker 同时最多一个候选；任一完成立即交付，并在有符合资源条件的工作时补发。
 2. 按实验队列轮转；每次给一个可运行实验一个 dispatch 机会。租户身份来自已登记实验，
    不能通过多开 session/拆出新 experiment 获得额外权重。项目/使用方的父级配额包含子实验。
-3. 每个实验设置 `max_inflight`；默认需求先为 1，可在同一已声明总预算内借用空闲槽位。
+3. 每个实验设置 `max_inflight`；默认需求先为1。strict模式始终最多1在途；借用空闲槽位
+   仅在显式bounded_speculative、使用方max_inflight、未确认窗口和预算同时允许时发生，
+   不能突破任何一项上限。完成交付不代表原序前缀已确认，不自动推进窗口。
    最初用轮转加并发上限；长短任务的 CPU 时间公平是单独指标，不声称轮转天然等价 CPU 公平。
    若实测不均衡，再引入按已用 CPU 债务选择队列，不能凭错误时长预测饿死长任务。
 4. 图亲和仅用于公平候选之间的 worker 选择；设最大连续亲和派发数，不能无限等待凑同图。
@@ -80,7 +84,9 @@ flowchart LR
 
 ```python
 handle = client.submit(
-    experiment_id=exp, candidate_id=cid, epoch=round_id, problem=3,
+    operation_id=score_eval_id, candidate_id=cid, experiment_id=exp,
+    epoch=round_id, epoch_manifest_hash=epoch_hash, proposal_seq=original_seq,
+    parent_plan_hash=parent_hash, parent_result_ref=parent_trace_ref, problem=3,
     graph_ref=graph, config_ref=config, plan_ref=ordered_plan,
     engine_ref=pinned_engine, output="score", oracle_policy="reserve_one",
 )
@@ -90,10 +96,24 @@ winner = algorithm.select_when_round_ready(results)  # 原proposal序号tie-brea
 # 只有独立已声明的官方复核额度允许才提交 official_full。
 ```
 
-请求的完整身份包含：协议版本、experiment/session、problem、graph/config 内容哈希、保留顺序
-和类型的 plan 内容哈希、官方源码哈希、engine 源码/构建/ABI、所需输出表示、epoch、candidate_id。
-原始 plan 保存后再派发，输入快照不得随调用方 mutation 变化。`candidate_id` 重用但内容不同
-返回 identity conflict；相同 operation ID 的重传查询原状态，不能自动再运行。
+身份分层，不能把一次候选等同于一次评价：
+
+- `candidate_id`绑定problem、graph/config、有序/保留类型的plan、experiment/epoch、父计划hash、
+  父结果/trace内容引用、proposal_seq和生成谱系。父状态不可变；from-graph候选显式parent=null，
+  不猜当前incumbent。原始plan先保存再派发，调用方后续mutation不得改变请求。
+- `evaluation_id/operation_id`绑定candidate身份、官方源码hash、engine源码/构建/ABI、
+  output/representation、purpose、费用上界和deadline。重传同operation只查原状态，内容变更
+  identity conflict；不同操作的独立复核必须新计预算，不能用旧score响应当新E0。
+- 例如同候选C可以有native score操作S和official_full操作F；S重传不重跑，F重传不重跑，
+  S与F独立执行/计费，保持同一plan关联。P2/P3分别有problem身份，以pair_id关联而非混用。
+- epoch manifest绑定不可变parent_plan_hash、parent_result_ref、候选有序清单hash、
+  proposal_seq→candidate_id映射、是否封闭。开放轮次只允许带revision的追加，不能重排、
+  更换父状态或回改已派发前缀；每请求固定manifest revision/hash，封闭后才完成轮次选优。
+  单步自适应更新父状态须建立下一epoch；算法spec不用全塞进服务，但声明元数据原样冻结/回传。
+
+对外“交付完成”、后端终态持久化、算法确认前缀分别记录。E0额度释放只凭相应后端终态/成本
+证明，不凭客户端看到了结果；原序前缀停住时，已证实native没有调用E0的预留可单独结算，
+但该候选仍占投机窗口。取消和轮次失败不能撤销已经实际发生的费用。
 
 共同结果：identity、state、route/backend、合法性来源、Makespan（cycles）、搬运各字节分项、
 cross_task_traffic；P3 另返回完整聚合 cache_stats，hit_rate 保留按字节定义。
@@ -121,7 +141,11 @@ P2 不作为 P3 的无条件硬筛，已有 080 的排名反转依据见 Q3 画�
 ### 首意外失败即停：两个不可混称的契约
 
 - `strict_serial_stop`：每实验最多1在途，成功/允许继续的结果确认后才派下一项；复现原串行
-  停止与incumbent更新。不同实验仍能并行。现有Fang算法适配默认此模式。
+  停止需进一步逐入口声明策略，不能仅凭1在途声称复现全部旧算法。不同实验仍能并行。
+  现有Fang算法适配默认此模式。P1旧search对返回非ok继续，profile_refine停止后仍可final
+  E0提升失败前provisional，prospective_priority则退出且不走final提升；详见勘误。
+  adapter manifest必须声明error classification、provisional/confirmed分别何时写入、
+  final-on-partial-failure和费用圈存。若改为统一首失败停止/统一回滚，标算法策略改版。
 - `bounded_speculative`：使用方在manifest显式选择，并设置 `speculation_window=K`。
   窗口以**按原序号连续确认的前缀**为起点，已完成但前面尚未确认的候选仍占窗口；
   按去重后预声明有序候选列表计数，不用可能跳号的proposal_seq数值差。
@@ -155,7 +179,10 @@ worker 回收是健康机制，不会使一次评价突破瞬时峰值变安全�
 协调者用固定后端能力表验证，不接受调用者把可能费用虚报为0；上界未知则拒绝准入。
 提交时原子检查并预留最大可能调用的真值额度，worker 执行前记录开始。
 P2/P3 现实现会在 native 不支持/异常时自动调用本问题 E0；**仅在返回后统计 route 不够**。
-第一接入版对每个可能自动回退请求预留 1 次 E0；native 成功且证据完整才释放该预留，
+目前从evaluate_record单层静态读取推导的候选上界为每请求1次完整E0入口；这是待LYX固定603b
+完整调用链审计确认的提案，不能凭单层阅读作为已证明能力放行。审计需明确problem/mode/失败
+路径和局部官方子过程的排除口径；未确认能力表标unknown、不能派发。若审计确认上界1，
+第一接入版即为每个可能回退请求预留1次E0；native成功且证据完整才释放该预留，
 full/实际 fallback 转实耗；开始后崩溃/超时保留未知额度，不能退款或自动重投。
 当没有额度时，现后端不能运行“可能回退”的请求；下一内核版本需明确的
 `allow_fallback=False`/拆分 native 与 E0 执行能力，才可在零 E0 预算下安全跑 native。
