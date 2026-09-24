@@ -196,6 +196,37 @@ def explain_nulls(value, reasons, prefix="provenance"):
                 explain_nulls(item, reasons, prefix + "." + key)
 
 
+def environment_values(evidence):
+    """Validate supplied observations; never probe hardware or infer values."""
+    if (not isinstance(evidence, dict)
+            or evidence.get("schema") != "p123-environment-evidence-v1"
+            or evidence.get("verified") is not True):
+        raise ValueError("environment evidence must declare verified observations")
+    observed_at = evidence.get("measurement_observed_at")
+    if not isinstance(observed_at, str) or not observed_at:
+        raise ValueError("environment evidence needs an observation timestamp")
+    observed_at = utc(observed_at)
+    observation_source = evidence.get("source")
+    if not isinstance(observation_source, str) or not observation_source.strip():
+        raise ValueError("environment evidence needs its observation source")
+    evidence_notes = evidence.get("notes")
+    if (not isinstance(evidence_notes, list) or not evidence_notes
+            or any(not isinstance(note, str) or not note.strip() for note in evidence_notes)):
+        raise ValueError("environment evidence needs notes describing measurement/configuration scope")
+    values = {key: evidence.get(key) for key in ("cpu", "ram_bytes", "threads")}
+    if values["cpu"] is not None and (not isinstance(values["cpu"], str) or not values["cpu"].strip()):
+        raise ValueError("environment CPU must be a nonempty verified description or null")
+    for key in ("ram_bytes", "threads"):
+        if values[key] is not None and (type(values[key]) is not int or values[key] <= 0):
+            raise ValueError(f"environment {key} must be a positive verified integer or null")
+    if private_strings(evidence):
+        raise ValueError("environment evidence contains a private path")
+    metadata = {"measurement_observed_at": observed_at, "source": observation_source,
+                "notes": evidence_notes,
+                "scope": "Supplementary machine observations/configuration; not per-cell measurements or measured effective OS thread counts."}
+    return values, metadata
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[2])
@@ -207,6 +238,8 @@ def main(argv=None):
     parser.add_argument("--new-run-id", default="lyx-p123-multicore-20260924",
                         help="Existing prior-feed run for newly completed batch cells; old preflight IDs remain unchanged")
     parser.add_argument("--source-url", default=TASK_URL)
+    parser.add_argument("--environment-evidence", type=Path,
+                        help="Optional small verified CPU/RAM/thread evidence JSON inside the repository")
     parser.add_argument("--cell", action="append", help="Exact completed cell, e.g. P1/002/k2; repeat to select multiple cells")
     parser.add_argument("--limit", type=int, help="Finite sample of completed receipts for validation only")
     args = parser.parse_args(argv)
@@ -226,6 +259,13 @@ def main(argv=None):
     capture = Capture(repo)
     capture.relative(run)
     started = utc_now()
+    environment = {"cpu": None, "ram_bytes": None, "threads": None}
+    environment_metadata = None
+    if args.environment_evidence is not None:
+        environment_path = (repo / args.environment_evidence).resolve()
+        environment_relative = capture.relative(environment_path)
+        environment, environment_metadata = environment_values(capture.read(environment_path))
+        environment_metadata.update(path=environment_relative, sha256=capture.sha(environment_path))
     prior, run_id, runtime_id, attempt_prefix = load_prior(args.prior_feed, args.new_run_id)
     protocol_path = run / "protocol.json"
     protocol = capture.read(protocol_path)
@@ -423,9 +463,9 @@ def main(argv=None):
                        "method": method_name, "references": [args.source_url], "upstream": [],
                        "selected_algorithm_id": None, "selected_solver_commit": None},
             "runner": {"source": runner_source, "argv": [], "working_directory": None},
-            "environment": {"os": protocol.get("platform"), "cpu": None, "gpu": None, "ram_bytes": None,
+            "environment": {"os": protocol.get("platform"), "cpu": environment["cpu"], "gpu": None, "ram_bytes": environment["ram_bytes"],
                             "python": protocol.get("python"), "dependencies": "uv.lock SHA256 " + protocol["uv_lock_sha256"],
-                            "threads": None, "workers": protocol.get("workers"), "peak_rss_bytes": None},
+                            "threads": environment["threads"], "workers": protocol.get("workers"), "peak_rss_bytes": None},
             "measurement": {"started_at": utc(cell.get("started_at")), "finished_at": utc(cell.get("finished_at")),
                             "seed": parameters.get("seed"), "repeat_index": 0, "cold_start": None,
                             "solver_scope": timing_note, "evaluation_scope": scope,
@@ -435,6 +475,8 @@ def main(argv=None):
             "missing_reasons": reasons,
         }
         reasons["provenance.runner.working_directory"] = "Controller cwd was not preserved; role-placeholder child cwd is not the controller cwd."
+        if problem == "P2":
+            reasons["provenance.measurement.budget.candidate_limit"] = "Not applicable to the contiguous-block constructor; no candidate-search limit."
         explain_nulls(provenance, reasons)
         notes += ["Controller argv and author attribution were not fully recorded; empty arrays do not assert absence.",
                   "Runner source points to a later published byte-identical runtime archive, not to the export-time controller or a claimed historical checkout HEAD.",
@@ -465,6 +507,11 @@ def main(argv=None):
                                 "evaluator_source_check": {"path": capture.relative(source_check_path), "sha256": capture.sha(source_check_path)},
                                 "receipt_path": capture.relative(cell_path), "receipt_sha256": capture.sha(cell_path)},
         }
+        if environment_metadata is not None:
+            record["reported_source"]["environment_evidence"] = environment_metadata
+            notes.append("Supplementary environment evidence observed at " + environment_metadata["measurement_observed_at"]
+                         + " from " + environment_metadata["source"] + "; not a per-cell hardware/resource measurement.")
+            notes.extend(environment_metadata["notes"])
         for path, value in (("timing.evaluation_precision", None),
                             ("metrics.evaluation_wall_seconds", record["metrics"]["evaluation_wall_seconds"]),
                             ("baseline", baseline), ("cache_pair", cache_pair)):
