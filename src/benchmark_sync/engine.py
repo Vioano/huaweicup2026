@@ -15,6 +15,7 @@ from .snapshot import (atomic_write, canonical, digest, now, read_central, publi
 from .submission import discover, references, MAX_FEED
 
 OUTBOX_PUBLISH_BATCH_SIZE = 16
+OUTBOX_RECEIPT_CHECK_BATCH_SIZE = 16
 
 
 def submission_lane(actor):
@@ -212,14 +213,6 @@ class Engine:
         identity=digest(canonical(payload))
         if entry.get('id')!=identity: raise ValueError('Local fast-path submission identity mismatch')
         repo=entry.get('repo');commit=fixed_sha(payload.get('commit'));feed_path=path_ok(payload.get('feed'))
-        feed_bytes=self._local_commit_files(repo,commit,[feed_path])[feed_path]
-        if len(feed_bytes)>MAX_FEED or digest(feed_bytes)!=payload.get('feed_sha256'):
-            raise ValueError('Local fast-path feed hash mismatch')
-        feed=json.loads(feed_bytes);refs=references(feed)
-        if refs!=payload.get('artifacts'): raise ValueError('Local fast-path artifact manifest mismatch')
-        producers={r.get('provenance',{}).get('producer_session','').split('/')[0].lower()
-                   for r in feed['records']}
-        if producers!={self.actor.lower()}: raise ValueError('Local fast-path producer identity mismatch')
         target=Path(self.config['central']['inbox'])/identity
         if (target/'request.json').exists():
             prior=read_json(target/'request.json')
@@ -232,6 +225,14 @@ class Engine:
             if not isinstance(prior,dict) or prior.get('id')!=identity or prior.get('state') not in ('accepted','rejected'):
                 raise ValueError('Existing local inbox result has conflicting identity')
             return True
+        feed_bytes=self._local_commit_files(repo,commit,[feed_path])[feed_path]
+        if len(feed_bytes)>MAX_FEED or digest(feed_bytes)!=payload.get('feed_sha256'):
+            raise ValueError('Local fast-path feed hash mismatch')
+        feed=json.loads(feed_bytes);refs=references(feed)
+        if refs!=payload.get('artifacts'): raise ValueError('Local fast-path artifact manifest mismatch')
+        producers={r.get('provenance',{}).get('producer_session','').split('/')[0].lower()
+                   for r in feed['records']}
+        if producers!={self.actor.lower()}: raise ValueError('Local fast-path producer identity mismatch')
         # Keep peak memory bounded for large complete feeds. The recursive
         # split only retries metadata and blob reads; artifacts are written as
         # soon as a bounded chunk has been verified. No request marker exists
@@ -272,11 +273,14 @@ class Engine:
                 # whose immutable envelopes are already published and just await
                 # a receipt. Those are cheaply reconciled from the central tree.
                 group=0 if state in ('queued','publishing') else 1
-                return (group,not isinstance(queued,str),queued if isinstance(queued,str) else '',path.parent.name)
+                checked=item.get('last_checked_at') or item.get('last_attempt_at') or queued
+                age=queued if group==0 else checked
+                return (group,not isinstance(age,str),age if isinstance(age,str) else '',path.parent.name)
             except (OSError,ValueError,TypeError):
                 return (2,True,'',path.parent.name)
         entries.sort(key=enqueue_key)
         pending={};parents=[];commit_presence={}
+        checked_awaiting=0
         lane=submission_lane(self.actor)
         lane_head=self.remote.head(lane) if entries else None
         lane_tree=self.remote.tree(lane_head) if lane_head else {}
@@ -351,6 +355,9 @@ class Engine:
                 shutil.move(str(path.parent),dest)
                 errors.append({'stage':'outbox','message':str(error)});continue
             if entry['state'] in ('accepted','rejected'): continue
+            if entry['state']=='awaiting_receipt':
+                if checked_awaiting>=OUTBOX_RECEIPT_CHECK_BATCH_SIZE: continue
+                checked_awaiting+=1
             try:
                 receipt_path='receipts/'+self.actor+'/'+entry['id']+'.json'
                 try: receipt=json.loads(self.remote.read(head,receipt_path)) if head and receipt_path in legacy_tree else None
@@ -414,6 +421,17 @@ class Engine:
             except Exception as error:
                 entry.update(error=str(error),last_attempt_at=now());write_json(path,entry)
                 errors.append({'stage':'upload','message':str(error)})
+            finally:
+                if entry['state']=='awaiting_receipt' and path.exists():
+                    # A bounded pass keeps new complete feeds from waiting for
+                    # hundreds of old receipts. Rotating the last-check time
+                    # gives every old submission another turn across cycles.
+                    try:
+                        checked=read_json(path)
+                        checked['last_checked_at']=now()
+                        write_json(path,checked)
+                    except (OSError,ValueError,TypeError) as error:
+                        errors.append({'stage':'outbox','message':str(error)})
         publish_pending()
 
     def upload_pass(self,known_record_ids):
