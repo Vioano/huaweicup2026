@@ -22,6 +22,14 @@
         "accesses": 211,
         "hit_rate": 0.007025400840996889
       },
+      "cache_first_fill": {
+        "inserted_unique": 61,
+        "before_first_insert_duplicate_keys": 35,
+        "before_first_insert_extra_misses": 105,
+        "before_first_insert_extra_bytes": 2764896,
+        "miss_at_or_after_first_insert": 0,
+        "note": "Strict time comparison; one first miss per tensor is excluded. These observed repeated reads are not a proven avoidable-byte bound."
+      },
       "cache_event_counts": {
         "miss": 166,
         "insert": 61,
