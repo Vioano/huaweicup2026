@@ -17,7 +17,7 @@ import time
 from benchmark import (ROOT, SESSION, utc, sha, dump, git, relative, verify_source,
                        official_check, environment, call, compress)
 
-SOLVER = None  # Filled only after the parent freezes the new algorithm.
+SOLVER = "e29685da0268420f2d881246603763d6bf8baf5b"
 NEW_SCRIPT = "src/q1_yuanzhifang/prefetch_frontier.py"
 OUTPUT = "results/a/q1-yuanzhifang/stage-g-20260925/run"
 SCENARIOS = (("051", 5),)
@@ -126,7 +126,7 @@ def main():
                     measurement_window=args.window_token,
                     scenarios=SCENARIOS, variants=VARIANTS, budget=BUDGET, environment=environment(),
                     parameters={VARIANTS[0]: {"guard": "12 chains x 4 PIPE_V nodes, 11 binary reductions per round", "tail_core": 0, "first_round_chain_counts": [3, 3, 2, 2, 2], "later_round_chain_counts": [4, 2, 2, 2, 2], "fallback": "fork-frontier grain4 core tasks"}},
-                    preparation="Reuse Stage A/B/C uv sync --locked environment; initial 14-package installation reported 43.79s before A. New source and development checks will be fixed by the parent; full development wall not recorded here. Stage F negative result and exposed Stage C evidence informed this intact-chain candidate; no held-out claim. No training or precomputed graph products reused by cold solver processes. Existing Stage C successful results are reused only for post-run comparison, with 0 baseline solver/E0 calls.",
+                    preparation="Reuse Stage A/B/C uv sync --locked environment; initial 14-package installation reported 43.79s before A. Parent reports 2 synthetic structural/model tests passing in 0.273s before source freeze, with no real-graph solver/E0; full development wall not recorded here. Stage F negative result and exposed Stage C evidence informed this intact-chain candidate; no held-out claim. No training or precomputed graph products reused by cold solver processes. Existing Stage C successful results are reused only for post-run comparison, with 0 baseline solver/E0 calls.",
                     solver_scope="Outer subprocess.run from new process launch, imports, graph/config input, all graph analysis/construction/validation, final plan and diagnostics writing to process exit. No online E0/E1/E2 calls. OS caches not flushed.",
                     evaluation_scope="Separate unmodified official E0 CLI process launch through full result, trace, text log creation and exit; outside solver wall.",
                     source_control="Both solver and runner sources checked against fixed Git objects before launch; output directory and files exclusive-create.",
