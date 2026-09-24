@@ -23,3 +23,11 @@
 [独立证明审查](../../results/a/review/p1-pro-initial-20260924/INDEPENDENT_REVIEW.md)保留返程方向FIFO的深度tie反例，不能把理想响应公式不加条件应用到所有严格识别图。查收心跳已经暂停，研发继续。
 
 [008/k4 唯一正式原图对照](../../results/a/review/p1-pro-case008-e0-20260924/20260924T1720Z-pro008-auto/README.md)：直接auto候选q1/s88、112 Tasks，E0合法但123060→162326（+31.908%），新增DDR3244032 B、spill与MEM均0；本次1 solver + 1 E0，无搜索或重试。作者条件精确模型的前提不成立，其保守包络仍覆盖官方值，所以这是候选退化，不是条件定理反例。完整失败/退化证据保留，不采用该候选。
+
+## R3 follow-up in flight
+
+`PROMPT_R3_20260925.txt` records the exact follow-up sent in 6 Pro; message identity
+and native-copy verification are in `STATUS_R3_20260925.json`. It asks about
+variable packet size, sufficient state and compiled-response reuse after the
+full pending-state experiment returned the same plan at greater cost. The new
+assistant answer is pending; the latest complete conversation clip remains R2.
