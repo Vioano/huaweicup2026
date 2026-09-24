@@ -2,9 +2,11 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import gzip
 import json
 from pathlib import Path
+import statistics
 
 from benchmark import ROOT, OUTPUT, SOLVER, BASELINE, SESSION, sha, dump, git, utc
 
@@ -20,10 +22,64 @@ def artifact(path):
     return {"path": path.as_posix(), "sha256": sha((ROOT / path).read_bytes())}
 
 
+def report():
+    """Derive small comparison artifacts from preserved receipts; no scoring."""
+    out = ROOT / OUTPUT
+    protocol = json.loads((out / "protocol.json").read_bytes())
+    completion = json.loads((out / "completion.json").read_bytes())
+    rows = json.loads((out / "rows.json").read_bytes())
+    base = {}
+    for case in protocol["cases"]:
+        path = ROOT / "results/benchmark-board/official-singlecore-20260924" / case / "result.json.gz"
+        base[case] = json.loads(gzip.decompress(path.read_bytes()))["makespan"]
+    fixed = {r["case_id"]: r for r in rows if r["variant"] == "fixed64-propose"}
+    table = []
+    for row in rows:
+        case, movement = row["case_id"], row.get("data_movement_bytes", {})
+        cycles = row.get("makespan_cycles")
+        ref = fixed[case].get("makespan_cycles")
+        table.append({"case_id": case, "variant": row["variant"], "status": row["status"],
+                      "makespan_cycles": cycles, "singlecore_cycles": base[case],
+                      "singlecore_speedup": base[case] / cycles if cycles else None,
+                      "cycles_change_vs_fixed64_percent": (cycles / ref - 1) * 100 if cycles and ref else None,
+                      "solver_wall_seconds": row["solver"]["wall_seconds"],
+                      "evaluation_wall_seconds": row.get("evaluation", {}).get("wall_seconds"),
+                      "extra_ddr_bytes": movement.get("added_copy_bytes"),
+                      "scheduled_copy_bytes": movement.get("scheduled_copy_bytes"),
+                      "spill_bytes": movement.get("spill_added_copy_bytes"), "task_count": row.get("task_count")})
+    with (out / "comparison.csv").open("x", encoding="utf-8", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=list(table[0]))
+        writer.writeheader(); writer.writerows(table)
+    summary = {"scope": "8 public development graphs, P1 k=4, one trial per variant; not full 100 or independent held-out acceptance.",
+               "calls": completion["calls"], "batch_wall_seconds": completion["wall_seconds"], "variants": {}}
+    for variant in protocol["variants"]:
+        selected = [r for r in table if r["variant"] == variant and r["status"] == "ok"]
+        timings = sorted(r["solver_wall_seconds"] for r in selected)
+        index = (len(timings) - 1) * 0.95
+        lo = int(index); hi = min(lo + 1, len(timings) - 1)
+        summary["variants"][variant] = {
+            "n": len(selected), "mean_singlecore_speedup": statistics.mean(r["singlecore_speedup"] for r in selected),
+            "solver_wall_p50_seconds": statistics.median(timings),
+            "solver_wall_p95_seconds": timings[lo] + (timings[hi] - timings[lo]) * (index - lo),
+            "p95_definition": "linear interpolation at 0.95*(n-1)", "solver_wall_max_seconds": max(timings),
+            "solver_wall_sum_seconds": sum(timings), "external_e0_wall_sum_seconds": sum(r["evaluation_wall_seconds"] for r in selected),
+            "cycles_wins_ties_losses_vs_fixed64": [sum(r["cycles_change_vs_fixed64_percent"] < 0 for r in selected), sum(r["cycles_change_vs_fixed64_percent"] == 0 for r in selected), sum(r["cycles_change_vs_fixed64_percent"] > 0 for r in selected)],
+        }
+    summary["failures"] = [r for r in rows if r["status"] != "ok"]
+    dump(out / "summary.json", summary)
+    print(json.dumps(summary, ensure_ascii=False))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--report-only", action="store_true")
     args = parser.parse_args()
+    if args.report_only:
+        report()
+        return
+    if args.output is None:
+        parser.error("--output is required unless --report-only")
     out = ROOT / OUTPUT
     protocol = json.loads((out / "protocol.json").read_bytes())
     rows = json.loads((out / "rows.json").read_bytes())
