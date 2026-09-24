@@ -1,0 +1,1220 @@
+{
+  "scope": "structural census only,0E0,not performance",
+  "elapsed_seconds": 7.110778250003932,
+  "accepted": [
+    {
+      "case": "case_001",
+      "ops": 600,
+      "jobs": 200,
+      "positions": 3,
+      "common_tensors": 1,
+      "by_core": {
+        "1": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 1,
+          "active_cores": 1,
+          "jobs": 200,
+          "positions": 3,
+          "cuts": [
+            0,
+            3
+          ],
+          "stage_compute_cycles": [
+            1316
+          ],
+          "bottleneck_cycles": 1316,
+          "ideal_flowshop_cycles": 263200,
+          "shared_input_bytes_by_stage": [
+            1152
+          ],
+          "crossing_tensor_net_copies": 0,
+          "crossing_tensor_net_bytes": 0,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "2": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 2,
+          "active_cores": 2,
+          "jobs": 200,
+          "positions": 3,
+          "cuts": [
+            0,
+            1,
+            3
+          ],
+          "stage_compute_cycles": [
+            1164,
+            152
+          ],
+          "bottleneck_cycles": 1164,
+          "ideal_flowshop_cycles": 232952,
+          "shared_input_bytes_by_stage": [
+            1152,
+            0
+          ],
+          "crossing_tensor_net_copies": 200,
+          "crossing_tensor_net_bytes": 819200,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "3": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 3,
+          "active_cores": 3,
+          "jobs": 200,
+          "positions": 3,
+          "cuts": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "stage_compute_cycles": [
+            1164,
+            76,
+            76
+          ],
+          "bottleneck_cycles": 1164,
+          "ideal_flowshop_cycles": 232952,
+          "shared_input_bytes_by_stage": [
+            1152,
+            0,
+            0
+          ],
+          "crossing_tensor_net_copies": 400,
+          "crossing_tensor_net_bytes": 1638400,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "4": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 4,
+          "active_cores": 3,
+          "jobs": 200,
+          "positions": 3,
+          "cuts": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "stage_compute_cycles": [
+            1164,
+            76,
+            76
+          ],
+          "bottleneck_cycles": 1164,
+          "ideal_flowshop_cycles": 232952,
+          "shared_input_bytes_by_stage": [
+            1152,
+            0,
+            0
+          ],
+          "crossing_tensor_net_copies": 400,
+          "crossing_tensor_net_bytes": 1638400,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "5": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 5,
+          "active_cores": 3,
+          "jobs": 200,
+          "positions": 3,
+          "cuts": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "stage_compute_cycles": [
+            1164,
+            76,
+            76
+          ],
+          "bottleneck_cycles": 1164,
+          "ideal_flowshop_cycles": 232952,
+          "shared_input_bytes_by_stage": [
+            1152,
+            0,
+            0
+          ],
+          "crossing_tensor_net_copies": 400,
+          "crossing_tensor_net_bytes": 1638400,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        }
+      }
+    },
+    {
+      "case": "case_036",
+      "ops": 2400,
+      "jobs": 800,
+      "positions": 3,
+      "common_tensors": 1,
+      "by_core": {
+        "1": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 1,
+          "active_cores": 1,
+          "jobs": 800,
+          "positions": 3,
+          "cuts": [
+            0,
+            3
+          ],
+          "stage_compute_cycles": [
+            1316
+          ],
+          "bottleneck_cycles": 1316,
+          "ideal_flowshop_cycles": 1052800,
+          "shared_input_bytes_by_stage": [
+            1152
+          ],
+          "crossing_tensor_net_copies": 0,
+          "crossing_tensor_net_bytes": 0,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "2": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 2,
+          "active_cores": 2,
+          "jobs": 800,
+          "positions": 3,
+          "cuts": [
+            0,
+            1,
+            3
+          ],
+          "stage_compute_cycles": [
+            1164,
+            152
+          ],
+          "bottleneck_cycles": 1164,
+          "ideal_flowshop_cycles": 931352,
+          "shared_input_bytes_by_stage": [
+            1152,
+            0
+          ],
+          "crossing_tensor_net_copies": 800,
+          "crossing_tensor_net_bytes": 3276800,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "3": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 3,
+          "active_cores": 3,
+          "jobs": 800,
+          "positions": 3,
+          "cuts": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "stage_compute_cycles": [
+            1164,
+            76,
+            76
+          ],
+          "bottleneck_cycles": 1164,
+          "ideal_flowshop_cycles": 931352,
+          "shared_input_bytes_by_stage": [
+            1152,
+            0,
+            0
+          ],
+          "crossing_tensor_net_copies": 1600,
+          "crossing_tensor_net_bytes": 6553600,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "4": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 4,
+          "active_cores": 3,
+          "jobs": 800,
+          "positions": 3,
+          "cuts": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "stage_compute_cycles": [
+            1164,
+            76,
+            76
+          ],
+          "bottleneck_cycles": 1164,
+          "ideal_flowshop_cycles": 931352,
+          "shared_input_bytes_by_stage": [
+            1152,
+            0,
+            0
+          ],
+          "crossing_tensor_net_copies": 1600,
+          "crossing_tensor_net_bytes": 6553600,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "5": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 5,
+          "active_cores": 3,
+          "jobs": 800,
+          "positions": 3,
+          "cuts": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "stage_compute_cycles": [
+            1164,
+            76,
+            76
+          ],
+          "bottleneck_cycles": 1164,
+          "ideal_flowshop_cycles": 931352,
+          "shared_input_bytes_by_stage": [
+            1152,
+            0,
+            0
+          ],
+          "crossing_tensor_net_copies": 1600,
+          "crossing_tensor_net_bytes": 6553600,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        }
+      }
+    },
+    {
+      "case": "case_044",
+      "ops": 1364,
+      "jobs": 11,
+      "positions": 124,
+      "common_tensors": 50,
+      "by_core": {
+        "1": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 1,
+          "active_cores": 1,
+          "jobs": 11,
+          "positions": 124,
+          "cuts": [
+            0,
+            124
+          ],
+          "stage_compute_cycles": [
+            7672
+          ],
+          "bottleneck_cycles": 7672,
+          "ideal_flowshop_cycles": 84392,
+          "shared_input_bytes_by_stage": [
+            930400
+          ],
+          "crossing_tensor_net_copies": 0,
+          "crossing_tensor_net_bytes": 0,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "2": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 2,
+          "active_cores": 2,
+          "jobs": 11,
+          "positions": 124,
+          "cuts": [
+            0,
+            58,
+            124
+          ],
+          "stage_compute_cycles": [
+            3875,
+            3797
+          ],
+          "bottleneck_cycles": 3875,
+          "ideal_flowshop_cycles": 46422,
+          "shared_input_bytes_by_stage": [
+            442080,
+            488320
+          ],
+          "crossing_tensor_net_copies": 66,
+          "crossing_tensor_net_bytes": 45056,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "3": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 3,
+          "active_cores": 3,
+          "jobs": 11,
+          "positions": 124,
+          "cuts": [
+            0,
+            38,
+            80,
+            124
+          ],
+          "stage_compute_cycles": [
+            2514,
+            2552,
+            2606
+          ],
+          "bottleneck_cycles": 2606,
+          "ideal_flowshop_cycles": 33732,
+          "shared_input_bytes_by_stage": [
+            36576,
+            827392,
+            66432
+          ],
+          "crossing_tensor_net_copies": 55,
+          "crossing_tensor_net_bytes": 45056,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "4": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 4,
+          "active_cores": 4,
+          "jobs": 11,
+          "positions": 124,
+          "cuts": [
+            0,
+            28,
+            58,
+            91,
+            124
+          ],
+          "stage_compute_cycles": [
+            1928,
+            1947,
+            1883,
+            1914
+          ],
+          "bottleneck_cycles": 1947,
+          "ideal_flowshop_cycles": 27142,
+          "shared_input_bytes_by_stage": [
+            13536,
+            428544,
+            472064,
+            16256
+          ],
+          "crossing_tensor_net_copies": 110,
+          "crossing_tensor_net_bytes": 67584,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "5": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 5,
+          "active_cores": 5,
+          "jobs": 11,
+          "positions": 124,
+          "cuts": [
+            0,
+            21,
+            45,
+            70,
+            97,
+            124
+          ],
+          "stage_compute_cycles": [
+            1502,
+            1494,
+            1535,
+            1567,
+            1574
+          ],
+          "bottleneck_cycles": 1574,
+          "ideal_flowshop_cycles": 23412,
+          "shared_input_bytes_by_stage": [
+            5472,
+            86400,
+            645120,
+            186368,
+            7040
+          ],
+          "crossing_tensor_net_copies": 121,
+          "crossing_tensor_net_bytes": 83072,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        }
+      }
+    },
+    {
+      "case": "case_046",
+      "ops": 992,
+      "jobs": 8,
+      "positions": 124,
+      "common_tensors": 50,
+      "by_core": {
+        "1": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 1,
+          "active_cores": 1,
+          "jobs": 8,
+          "positions": 124,
+          "cuts": [
+            0,
+            124
+          ],
+          "stage_compute_cycles": [
+            28456
+          ],
+          "bottleneck_cycles": 28456,
+          "ideal_flowshop_cycles": 227648,
+          "shared_input_bytes_by_stage": [
+            930400
+          ],
+          "crossing_tensor_net_copies": 0,
+          "crossing_tensor_net_bytes": 0,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "2": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 2,
+          "active_cores": 2,
+          "jobs": 8,
+          "positions": 124,
+          "cuts": [
+            0,
+            58,
+            124
+          ],
+          "stage_compute_cycles": [
+            14456,
+            14000
+          ],
+          "bottleneck_cycles": 14456,
+          "ideal_flowshop_cycles": 129648,
+          "shared_input_bytes_by_stage": [
+            442080,
+            488320
+          ],
+          "crossing_tensor_net_copies": 48,
+          "crossing_tensor_net_bytes": 131072,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "3": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 3,
+          "active_cores": 3,
+          "jobs": 8,
+          "positions": 124,
+          "cuts": [
+            0,
+            38,
+            80,
+            124
+          ],
+          "stage_compute_cycles": [
+            9372,
+            9452,
+            9632
+          ],
+          "bottleneck_cycles": 9632,
+          "ideal_flowshop_cycles": 95880,
+          "shared_input_bytes_by_stage": [
+            36576,
+            827392,
+            66432
+          ],
+          "crossing_tensor_net_copies": 40,
+          "crossing_tensor_net_bytes": 131072,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "4": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 4,
+          "active_cores": 4,
+          "jobs": 8,
+          "positions": 124,
+          "cuts": [
+            0,
+            28,
+            58,
+            91,
+            124
+          ],
+          "stage_compute_cycles": [
+            7208,
+            7248,
+            6938,
+            7062
+          ],
+          "bottleneck_cycles": 7248,
+          "ideal_flowshop_cycles": 79192,
+          "shared_input_bytes_by_stage": [
+            13536,
+            428544,
+            472064,
+            16256
+          ],
+          "crossing_tensor_net_copies": 80,
+          "crossing_tensor_net_bytes": 196608,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "5": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 5,
+          "active_cores": 5,
+          "jobs": 8,
+          "positions": 124,
+          "cuts": [
+            0,
+            20,
+            45,
+            70,
+            98,
+            124
+          ],
+          "stage_compute_cycles": [
+            5592,
+            5582,
+            5690,
+            5804,
+            5788
+          ],
+          "bottleneck_cycles": 5804,
+          "ideal_flowshop_cycles": 69084,
+          "shared_input_bytes_by_stage": [
+            5472,
+            86400,
+            645120,
+            186368,
+            7040
+          ],
+          "crossing_tensor_net_copies": 80,
+          "crossing_tensor_net_bytes": 225280,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        }
+      }
+    },
+    {
+      "case": "case_067",
+      "ops": 8804,
+      "jobs": 71,
+      "positions": 124,
+      "common_tensors": 50,
+      "by_core": {
+        "1": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 1,
+          "active_cores": 1,
+          "jobs": 71,
+          "positions": 124,
+          "cuts": [
+            0,
+            124
+          ],
+          "stage_compute_cycles": [
+            863040
+          ],
+          "bottleneck_cycles": 863040,
+          "ideal_flowshop_cycles": 61275840,
+          "shared_input_bytes_by_stage": [
+            3721600
+          ],
+          "crossing_tensor_net_copies": 0,
+          "crossing_tensor_net_bytes": 0,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "2": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 2,
+          "active_cores": 2,
+          "jobs": 71,
+          "positions": 124,
+          "cuts": [
+            0,
+            58,
+            124
+          ],
+          "stage_compute_cycles": [
+            440480,
+            422560
+          ],
+          "bottleneck_cycles": 440480,
+          "ideal_flowshop_cycles": 31696640,
+          "shared_input_bytes_by_stage": [
+            1768320,
+            1953280
+          ],
+          "crossing_tensor_net_copies": 426,
+          "crossing_tensor_net_bytes": 2326528,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "3": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 3,
+          "active_cores": 3,
+          "jobs": 71,
+          "positions": 124,
+          "cuts": [
+            0,
+            38,
+            78,
+            124
+          ],
+          "stage_compute_cycles": [
+            281760,
+            293760,
+            287520
+          ],
+          "bottleneck_cycles": 293760,
+          "ideal_flowshop_cycles": 21426240,
+          "shared_input_bytes_by_stage": [
+            146304,
+            3309568,
+            265728
+          ],
+          "crossing_tensor_net_copies": 426,
+          "crossing_tensor_net_bytes": 2471936,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "4": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 4,
+          "active_cores": 4,
+          "jobs": 71,
+          "positions": 124,
+          "cuts": [
+            0,
+            28,
+            58,
+            91,
+            124
+          ],
+          "stage_compute_cycles": [
+            215360,
+            225120,
+            214896,
+            207664
+          ],
+          "bottleneck_cycles": 225120,
+          "ideal_flowshop_cycles": 16621440,
+          "shared_input_bytes_by_stage": [
+            54144,
+            1714176,
+            1888256,
+            65024
+          ],
+          "crossing_tensor_net_copies": 710,
+          "crossing_tensor_net_bytes": 3489792,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "5": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 5,
+          "active_cores": 5,
+          "jobs": 71,
+          "positions": 124,
+          "cuts": [
+            0,
+            21,
+            45,
+            70,
+            96,
+            124
+          ],
+          "stage_compute_cycles": [
+            167408,
+            170496,
+            177392,
+            177952,
+            169792
+          ],
+          "bottleneck_cycles": 177952,
+          "ideal_flowshop_cycles": 13319680,
+          "shared_input_bytes_by_stage": [
+            21888,
+            345600,
+            2580480,
+            745472,
+            28160
+          ],
+          "crossing_tensor_net_copies": 781,
+          "crossing_tensor_net_bytes": 4289536,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        }
+      }
+    },
+    {
+      "case": "case_073",
+      "ops": 4836,
+      "jobs": 39,
+      "positions": 124,
+      "common_tensors": 50,
+      "by_core": {
+        "1": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 1,
+          "active_cores": 1,
+          "jobs": 39,
+          "positions": 124,
+          "cuts": [
+            0,
+            124
+          ],
+          "stage_compute_cycles": [
+            220224
+          ],
+          "bottleneck_cycles": 220224,
+          "ideal_flowshop_cycles": 8588736,
+          "shared_input_bytes_by_stage": [
+            3721600
+          ],
+          "crossing_tensor_net_copies": 0,
+          "crossing_tensor_net_bytes": 0,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "2": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 2,
+          "active_cores": 2,
+          "jobs": 39,
+          "positions": 124,
+          "cuts": [
+            0,
+            58,
+            124
+          ],
+          "stage_compute_cycles": [
+            112208,
+            108016
+          ],
+          "bottleneck_cycles": 112208,
+          "ideal_flowshop_cycles": 4484128,
+          "shared_input_bytes_by_stage": [
+            1768320,
+            1953280
+          ],
+          "crossing_tensor_net_copies": 234,
+          "crossing_tensor_net_bytes": 319488,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "3": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 3,
+          "active_cores": 3,
+          "jobs": 39,
+          "positions": 124,
+          "cuts": [
+            0,
+            38,
+            78,
+            124
+          ],
+          "stage_compute_cycles": [
+            71808,
+            74880,
+            73536
+          ],
+          "bottleneck_cycles": 74880,
+          "ideal_flowshop_cycles": 3065664,
+          "shared_input_bytes_by_stage": [
+            146304,
+            3309568,
+            265728
+          ],
+          "crossing_tensor_net_copies": 234,
+          "crossing_tensor_net_bytes": 339456,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "4": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 4,
+          "active_cores": 4,
+          "jobs": 39,
+          "positions": 124,
+          "cuts": [
+            0,
+            28,
+            58,
+            91,
+            124
+          ],
+          "stage_compute_cycles": [
+            54848,
+            57360,
+            54912,
+            53104
+          ],
+          "bottleneck_cycles": 57360,
+          "ideal_flowshop_cycles": 2399904,
+          "shared_input_bytes_by_stage": [
+            54144,
+            1714176,
+            1888256,
+            65024
+          ],
+          "crossing_tensor_net_copies": 390,
+          "crossing_tensor_net_bytes": 479232,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "5": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 5,
+          "active_cores": 5,
+          "jobs": 39,
+          "positions": 124,
+          "cuts": [
+            0,
+            21,
+            45,
+            70,
+            96,
+            124
+          ],
+          "stage_compute_cycles": [
+            42608,
+            43488,
+            45248,
+            45424,
+            43456
+          ],
+          "bottleneck_cycles": 45424,
+          "ideal_flowshop_cycles": 1946336,
+          "shared_input_bytes_by_stage": [
+            21888,
+            345600,
+            2580480,
+            745472,
+            28160
+          ],
+          "crossing_tensor_net_copies": 429,
+          "crossing_tensor_net_bytes": 589056,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        }
+      }
+    },
+    {
+      "case": "case_083",
+      "ops": 3844,
+      "jobs": 31,
+      "positions": 124,
+      "common_tensors": 50,
+      "by_core": {
+        "1": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 1,
+          "active_cores": 1,
+          "jobs": 31,
+          "positions": 124,
+          "cuts": [
+            0,
+            124
+          ],
+          "stage_compute_cycles": [
+            28456
+          ],
+          "bottleneck_cycles": 28456,
+          "ideal_flowshop_cycles": 882136,
+          "shared_input_bytes_by_stage": [
+            930400
+          ],
+          "crossing_tensor_net_copies": 0,
+          "crossing_tensor_net_bytes": 0,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "2": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 2,
+          "active_cores": 2,
+          "jobs": 31,
+          "positions": 124,
+          "cuts": [
+            0,
+            58,
+            124
+          ],
+          "stage_compute_cycles": [
+            14456,
+            14000
+          ],
+          "bottleneck_cycles": 14456,
+          "ideal_flowshop_cycles": 462136,
+          "shared_input_bytes_by_stage": [
+            442080,
+            488320
+          ],
+          "crossing_tensor_net_copies": 186,
+          "crossing_tensor_net_bytes": 507904,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "3": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 3,
+          "active_cores": 3,
+          "jobs": 31,
+          "positions": 124,
+          "cuts": [
+            0,
+            38,
+            80,
+            124
+          ],
+          "stage_compute_cycles": [
+            9372,
+            9452,
+            9632
+          ],
+          "bottleneck_cycles": 9632,
+          "ideal_flowshop_cycles": 317416,
+          "shared_input_bytes_by_stage": [
+            36576,
+            827392,
+            66432
+          ],
+          "crossing_tensor_net_copies": 155,
+          "crossing_tensor_net_bytes": 507904,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "4": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 4,
+          "active_cores": 4,
+          "jobs": 31,
+          "positions": 124,
+          "cuts": [
+            0,
+            28,
+            58,
+            91,
+            124
+          ],
+          "stage_compute_cycles": [
+            7208,
+            7248,
+            6938,
+            7062
+          ],
+          "bottleneck_cycles": 7248,
+          "ideal_flowshop_cycles": 245896,
+          "shared_input_bytes_by_stage": [
+            13536,
+            428544,
+            472064,
+            16256
+          ],
+          "crossing_tensor_net_copies": 310,
+          "crossing_tensor_net_bytes": 761856,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "5": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 5,
+          "active_cores": 5,
+          "jobs": 31,
+          "positions": 124,
+          "cuts": [
+            0,
+            20,
+            45,
+            70,
+            98,
+            124
+          ],
+          "stage_compute_cycles": [
+            5592,
+            5582,
+            5690,
+            5804,
+            5788
+          ],
+          "bottleneck_cycles": 5804,
+          "ideal_flowshop_cycles": 202576,
+          "shared_input_bytes_by_stage": [
+            5472,
+            86400,
+            645120,
+            186368,
+            7040
+          ],
+          "crossing_tensor_net_copies": 310,
+          "crossing_tensor_net_bytes": 872960,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        }
+      }
+    },
+    {
+      "case": "case_092",
+      "ops": 17608,
+      "jobs": 142,
+      "positions": 124,
+      "common_tensors": 50,
+      "by_core": {
+        "1": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 1,
+          "active_cores": 1,
+          "jobs": 142,
+          "positions": 124,
+          "cuts": [
+            0,
+            124
+          ],
+          "stage_compute_cycles": [
+            28456
+          ],
+          "bottleneck_cycles": 28456,
+          "ideal_flowshop_cycles": 4040752,
+          "shared_input_bytes_by_stage": [
+            930400
+          ],
+          "crossing_tensor_net_copies": 0,
+          "crossing_tensor_net_bytes": 0,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "2": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 2,
+          "active_cores": 2,
+          "jobs": 142,
+          "positions": 124,
+          "cuts": [
+            0,
+            58,
+            124
+          ],
+          "stage_compute_cycles": [
+            14456,
+            14000
+          ],
+          "bottleneck_cycles": 14456,
+          "ideal_flowshop_cycles": 2066752,
+          "shared_input_bytes_by_stage": [
+            442080,
+            488320
+          ],
+          "crossing_tensor_net_copies": 852,
+          "crossing_tensor_net_bytes": 2326528,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "3": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 3,
+          "active_cores": 3,
+          "jobs": 142,
+          "positions": 124,
+          "cuts": [
+            0,
+            38,
+            80,
+            124
+          ],
+          "stage_compute_cycles": [
+            9372,
+            9452,
+            9632
+          ],
+          "bottleneck_cycles": 9632,
+          "ideal_flowshop_cycles": 1386568,
+          "shared_input_bytes_by_stage": [
+            36576,
+            827392,
+            66432
+          ],
+          "crossing_tensor_net_copies": 710,
+          "crossing_tensor_net_bytes": 2326528,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "4": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 4,
+          "active_cores": 4,
+          "jobs": 142,
+          "positions": 124,
+          "cuts": [
+            0,
+            28,
+            58,
+            91,
+            124
+          ],
+          "stage_compute_cycles": [
+            7208,
+            7248,
+            6938,
+            7062
+          ],
+          "bottleneck_cycles": 7248,
+          "ideal_flowshop_cycles": 1050424,
+          "shared_input_bytes_by_stage": [
+            13536,
+            428544,
+            472064,
+            16256
+          ],
+          "crossing_tensor_net_copies": 1420,
+          "crossing_tensor_net_bytes": 3489792,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        },
+        "5": {
+          "guard": true,
+          "selected": "pipeline_stages",
+          "requested_cores": 5,
+          "active_cores": 5,
+          "jobs": 142,
+          "positions": 124,
+          "cuts": [
+            0,
+            20,
+            45,
+            70,
+            98,
+            124
+          ],
+          "stage_compute_cycles": [
+            5592,
+            5582,
+            5690,
+            5804,
+            5788
+          ],
+          "bottleneck_cycles": 5804,
+          "ideal_flowshop_cycles": 846820,
+          "shared_input_bytes_by_stage": [
+            5472,
+            86400,
+            645120,
+            186368,
+            7040
+          ],
+          "crossing_tensor_net_copies": 1420,
+          "crossing_tensor_net_bytes": 3998720,
+          "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+        }
+      }
+    }
+  ]
+}

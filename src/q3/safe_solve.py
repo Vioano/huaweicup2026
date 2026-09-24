@@ -63,7 +63,7 @@ def evaluate_candidates(index, cores, evaluate, save):
     return winner, calls, records, selection
 
 
-def main(policy=evaluate_candidates):
+def main(policy=evaluate_candidates, *, candidate_limit=2):
     start = time.perf_counter()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("graph", type=Path)
@@ -88,6 +88,8 @@ def main(policy=evaluate_candidates):
     evaluations = []
 
     def evaluate(plan):
+        if len(evaluations) >= candidate_limit:
+            raise RuntimeError("policy exceeded declared online E0 candidate limit")
         # Charge before dispatch; an exception or process death cannot erase it.
         (args.evidence / f"evaluated-plan-{len(evaluations)}.json").write_bytes(encoded(plan))
         evaluations.append({"ordinal": len(evaluations), "status": "started",
@@ -122,7 +124,7 @@ def main(policy=evaluate_candidates):
     payload = encoded(plan)
     full = gzip.compress(encoded(result), mtime=0)
     receipt = {"strategy": strategy, "selected_strategy": strategy,
-               "official_e0_calls": calls, "candidate_limit": 2,
+               "official_e0_calls": calls, "candidate_limit": candidate_limit,
                "seed_selection": selection, "candidates": candidates,
                "makespan": result["makespan"],
                "data_movement_bytes": result["data_movement_bytes"],
