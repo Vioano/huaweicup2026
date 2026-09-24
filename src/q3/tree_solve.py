@@ -15,13 +15,14 @@ from .capacity_tree import construct as capacity_construct
 from .reduction_tree import construct as balanced_construct
 from .fragment_tree import construct as fragment_construct
 from .release_tree import construct as release_construct
+from .stage_fork_join import construct as stage_construct
 from .safe_solve import encoded
 from .solve import publish_new, select
 
 
 def prepare(index, cores, method):
     builder = {"balanced": balanced_construct, "capacity": capacity_construct,
-               "fragment": fragment_construct,
+               "fragment": fragment_construct, "stage": stage_construct,
                "release-order": release_construct,
                "release-place": lambda i, k: release_construct(i, k, place=True)}[method]
     try:
@@ -39,7 +40,7 @@ def main():
     parser.add_argument("graph", type=Path)
     parser.add_argument("--cores", type=int, default=4)
     parser.add_argument("--tree-method", choices=("balanced", "capacity", "fragment",
-                                                "release-order", "release-place"), required=True)
+                                                "release-order", "release-place", "stage"), required=True)
     parser.add_argument("-o", "--output", type=Path, required=True)
     parser.add_argument("--evidence", type=Path, required=True)
     args = parser.parse_args()
