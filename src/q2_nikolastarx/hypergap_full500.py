@@ -401,7 +401,8 @@ def main():
     python = args.python.absolute()  # Do not resolve venv symlink to its base interpreter.
     manifest = args.manifest.resolve(strict=True)
     doc, old, identity = preflight(manifest, raw_root, e2_root, python,
-                                   args.runner_commit, frozen=args.mode == 'run')
+                                   args.runner_commit,
+                                   frozen=args.mode == 'run' or bool(args.runner_commit))
     if args.mode == 'preflight':
         print(json.dumps({'status': 'preflight_ok', 'cells': 500, 'calls': 0,
                           'solver_frozen': bool(doc['solver_commit'])}))

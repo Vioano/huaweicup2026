@@ -19,6 +19,9 @@ passed through `--python` without resolving its symlink, and an import-only
 probe checks NumPy and E2 modules inside the pinned export. Preflight checks
 500 graph hashes, official code/config, E2 source/binary, and every frozen
 baseline plan/result hash. It makes zero candidate or evaluator calls.
+Pass `--runner-commit <full SHA>` to `preflight` to also check the committed
+runner, manifest, monitor, and full solver file set before any run directory
+is created.
 
 ```sh
 /path/to/venv/bin/python -B -m src.q2_nikolastarx.hypergap_full500 preflight \
