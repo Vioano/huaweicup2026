@@ -16,10 +16,9 @@ memory, rather than the failed balance-only proxy. E2's current P2 interface
 can compare complete plans, but new-plan cold preparation is substantial and
 its existing 32-plan validation does not cover this new candidate family.
 
-`adaptive_budget` is a new algorithm version. The currently assigned full500
-experiment remains fixed at `ee1b8fd` / `adaptive_frontier`; it does not use this
-new version. No original-graph solver or official evaluation has yet been run
-for `adaptive_budget`.
+`adaptive_budget` is a new algorithm version. The completed `ee1b8fd` / `adaptive_frontier` full500 does not use this
+new version. Source2794 now has one independently produced official pilot
+(044/k4); its own full500 has been commissioned and remains pending.
 
 ## Why fewer cores can help
 
@@ -75,4 +74,30 @@ future measured solver wall time.
 Validation uses exhaustive small-domain comparison of the binary-search
 optimizer against direct arithmetic enumeration, plus synthetic padding,
 capacity rejection, fallback preservation and existing adaptive-route tests.
-Official quality, whole-suite regression and end-to-end time remain pending.
+Whole-suite regression and aggregate quality remain pending.
+
+## First official core-choice pilot
+
+Source `2794ceba93acc1f7fc119154f61082511843d4b3`, runner
+`696186ec328b31a988ce9f35b9b38cac32c8ab1e`, immutable result commit
+`4526add27e180f2f6e18859a4c207df43de377db`. Production ran 044/k4
+once: one cold solver and one final E0, zero online E0/E1/E2/retries.
+The formula selected two active cores under a four-core budget. Official
+Makespan is 43,795 cycles, extra DDR 930,400 bytes, spill zero. The prior
+shared-wave four-active-core plan measured 66,901 cycles and 2,791,200
+extra bytes. This is a 34.54% Makespan reduction on this cell only.
+Solver wall was 0.197130s; external final E0 0.274407s.
+
+Root verified all23 artifact files equal the fixed result commit, read the
+compressed official result, checked zero exit/survivor receipts and that the
+three recorded driver/solver/E0 PIDs no longer existed. Production authorship
+and this read-only verification remain separate. These results do not prove
+the relaxation exact on other structures or replace a fixed-algorithm full500.
+
+A separate2794 full500 has been commissioned: 100graphs x1–5cores, one cold
+solver and final E0 per cell, no score-table selection/online E0/E1/E2/retry.
+Declared limits: solver25s, E060s, cell95s, batch1800s, at most four independent workers with total sampled
+process-group RSS4GiB. The former one-worker arrangement was a conservative
+resource choice, superseded before dispatch; all500 cells remain unique.
+Shared-host concurrent wall times are not isolated throughput benchmarks. The production owner freezes its runner/manifest before dispatch.
+Failures/missing cells remain visible; this is authorization, not completion.
