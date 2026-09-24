@@ -5,6 +5,8 @@ from src.benchmark_sync.github import GitHub,RemoteError
 class RacingGitHub(GitHub):
  def __init__(self,collision):
   self.commits={};self.trees_data={};self.data={};self.latest='a'*40;self.trees={};self.counter=1
+  import threading
+  self.write_lock=threading.RLock()
   self.branch='test';self.collision=collision;self.raced=False;self.parents={};self.tree_bodies=[];self.commits[self.latest]={'channel':self.put_blob(b'old')}
  def new(self): self.counter+=1;return f'{self.counter:040x}'
  def head(self):return self.latest
@@ -32,6 +34,21 @@ class RacingGitHub(GitHub):
   raise AssertionError((method,path))
 
 class GitHubTests(unittest.TestCase):
+ def test_same_process_writers_serialize_branch_ref_updates(self):
+  import threading
+  from concurrent.futures import ThreadPoolExecutor
+  r=RacingGitHub(False);barrier=threading.Barrier(3)
+  def write(path):
+   barrier.wait(timeout=3)
+   return r.update({path:path.encode()})
+  with ThreadPoolExecutor(max_workers=2) as pool:
+   a=pool.submit(write,'submissions/a.json');b=pool.submit(write,'receipts/b.json')
+   barrier.wait(timeout=3);a.result(timeout=5);b.result(timeout=5)
+  entries=r.tree(r.head())
+  self.assertIn('submissions/a.json',entries)
+  self.assertIn('receipts/b.json',entries)
+  self.assertIn('other',entries)
+
  def test_small_utf8_envelopes_are_inlined_while_binary_snapshots_use_blobs(self):
   r=RacingGitHub(False);binary=b'\x00\xff'+b'x'*70000
   r.update({'submissions/member/one.json':b'{"id":"one"}','objects/snapshot.gz':binary})

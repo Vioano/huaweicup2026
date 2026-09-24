@@ -50,6 +50,7 @@ class GitHub:
         self.local_repository=Path(local_repository) if local_repository else None
         self.trees = OrderedDict()
         self.tree_lock=threading.Lock()
+        self.write_lock=threading.RLock()
         self.cooldown_lock=threading.Lock()
         self.cooldown_file=self.cache/'cooldown.json'
         self.cooldown_until=json.loads(self.cooldown_file.read_bytes()).get('until',0) if self.cooldown_file.exists() else 0
@@ -178,6 +179,13 @@ class GitHub:
         return self.request('POST','/git/blobs',{'content':base64.b64encode(data).decode(),'encoding':'base64'})['sha']
 
     def update(self, files, *, parents=(), expected=None):
+        # Receiver, uploader, snapshot publisher, and release publisher share this
+        # branch. CAS remains the cross-process guard; this lock prevents our own
+        # threads from needlessly racing each other through the same ref update.
+        with self.write_lock:
+            return self._update(files,parents=parents,expected=expected)
+
+    def _update(self, files, *, parents=(), expected=None):
         """CAS non-force update. Unknown-success retry compares bytes and is idempotent."""
         blob_shas={}
         original=None
