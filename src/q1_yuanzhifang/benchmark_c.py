@@ -22,7 +22,7 @@ BASELINE_SCRIPT = "src/q1/bounded_tasks.py"
 OUTPUT = "results/a/q1-yuanzhifang/stage-c-20260924"
 SCENARIOS = tuple(("051", k) for k in (2, 3, 4, 5)) + tuple(
     (case, 4) for case in ("002", "008", "016", "024", "044", "048", "071", "080"))
-VARIANTS = ("frontier-then-independent-chunks", "fork-stage-frontier")
+VARIANTS = ("frontier-then-independent-chunks", "chain-atomic-grain4")
 BUDGET = {"solver": 24, "E0": 24, "E1": 0, "E2": 0, "workers": 1,
           "wall_seconds": 1200, "solver_timeout_seconds": 30,
           "evaluation_timeout_seconds": 90, "retries": 0}
