@@ -127,7 +127,9 @@ class GateJob(wp.NativeJob):
             else:
                 # Direct base calls bypass only this case's injected accounting
                 # error. Any real native error still fails the independent witness.
-                if self.pid is not None and not self.assigned and not wp.NativeJob.exited(self, self.process):
+                if self.pid is not None and not self.assigned:
+                    # Native termination checks the held handle and also tries
+                    # cleanup when that observation itself fails.
                     wp.NativeJob.terminate(self)
                 accounting = wp.NativeJob.accounting(self)
                 if accounting['active_processes']:

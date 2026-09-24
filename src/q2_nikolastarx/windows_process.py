@@ -314,7 +314,9 @@ class NativeJob:
                             continue
                     except Exception as error:
                         errors.append(repr(error))
-                        continue  # Failed exit observation is not a termination race.
+                        # Observation failure cannot release ownership. Still try
+                        # to terminate this held, unassigned child; retain the
+                        # observation error even if termination succeeds.
                 try:
                     self.call(name, handle, FORCED_EXIT)
                 except Exception as error:

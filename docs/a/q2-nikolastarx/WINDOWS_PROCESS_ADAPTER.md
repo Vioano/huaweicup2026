@@ -43,6 +43,8 @@ Job 先创建、设定并回读 `KILL_ON_JOB_CLOSE`，不启用两种 breakaway 
 
 调用 TerminateProcess 前先查询同一持有句柄是否已 signaled。微软 [TerminateProcess 文档](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminateprocess)明确已退出进程再次终止可能返回 ERROR_ACCESS_DENIED(5)；只有即时复查同一句柄已 signaled 才记录为退出竞态。仍存活或无法观察时保留原错误，不能普遍忽略错误 5。GateJob.close 同样先检查，不在 monitor 已完成清退后无条件再终止一次。
 
+s55 对 `75bb3e9` 的后续定点审查发现：首次等待观察失败时跳过 TerminateProcess，会留下尚未加入 Job 的挂起子进程。修正版保留观察错误，同时仍尝试终止该持有句柄；GateJob.close 复用这一逻辑。终止成功本身不冒充已观察到退出，收据继续 unknown/stop。新增 ctypes 替身贯穿 Create 成功、Assign 失败、Wait 失败、仍发出 TerminateProcess 的完整清理链。根会话本次四模块 **72 项通过**，无原生 Windows 或评分调用。
+
 保证的边界是“首线程放行前已归属 Job”，不是“OS 创建前就归属”。父程序在 CreateProcess 成功与 Assign 成功之间被强制杀死的窗口，没有在本模块内建立独立外部回收者；成功 PID 也可能尚未持久化。该进程仍挂起，但可能需要外部 owner 收尾；本次不声称关闭了该窗口。父进程突然退出后的 Job 自动回收，从成功分配以后成立。当前实现不是恶意代码沙箱，也不能把经 WMI/外部服务创建的进程声称为受控后代。
 
 每个样本查询 Job PID 列表，打开成员句柄并确认仍属于该 Job，读取当前工作集求和，再加观察进程当前工作集用于阈值判定。成员在列表读取与打开句柄之间退出的有限竞态，只有新的完整 Job 列表已排除它才允许忽略；其他观察异常停止派发。共享页可被多个进程重复计入，短峰可能漏采，故是观察阈值而非内核硬 RSS 上限。

@@ -393,7 +393,7 @@ class ABITests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'wait observation failure'):
             native.terminate()
         self.assertEqual(polls, [22])
-        self.assertEqual(calls, [])
+        self.assertEqual(calls, [('TerminateProcess', 22, win.FORCED_EXIT)])
 
 
 class KernelSubstitute:
@@ -483,6 +483,33 @@ class NativeCreationSubstituteTests(unittest.TestCase):
         names = [x[0] for x in kernel.calls]
         self.assertNotIn('ResumeThread', names)
         self.assertIn('TerminateProcess', names)
+
+    def test_assign_failure_and_failed_wait_still_attempts_owned_child_termination(self):
+        class Kernel(KernelSubstitute):
+            def __getattr__(self, name):
+                base = super().__getattr__(name)
+                def invoke(*args):
+                    result = base(*args)
+                    if name == 'WaitForSingleObject':
+                        self.error = 5
+                        return 0xFFFFFFFF
+                    return result
+                return invoke
+        kernel = Kernel(assign_fail=True)
+        native = self.native(kernel)
+        clock = Clock()
+        with patch.object(ct, 'get_last_error', lambda: kernel.error, create=True), tempfile.TemporaryDirectory() as directory:
+            receipt = win.monitored(['python.exe'], Path(directory)/'run', 100.3, 10**8,
+                cleanup_timeout=.1, _backend_factory=lambda: native, _clock=clock, _sleep=clock.sleep)
+        names = [name for name, args in kernel.calls]
+        self.assertLess(names.index('CreateProcessW'), names.index('AssignProcessToJobObject'))
+        self.assertIn('TerminateProcess', names)
+        self.assertNotIn('ResumeThread', names)
+        self.assertEqual(receipt['status'], 'runner_error')
+        self.assertFalse(receipt['cleanup_verified'])
+        self.assertIsNone(receipt['surviving_pids'])
+        self.assertTrue(receipt['stop_dispatch'])
+        self.assertIn('cleanup_error', receipt)
 
 
 if __name__ == '__main__':
