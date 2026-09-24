@@ -93,15 +93,17 @@ contraction and repeated structural validations, whose cost must be reported
 separately when measuring complete solver time. No linear end-to-end claim.
 
 Defaults are 64 rounds / 64 sinks. If either budget is exceeded, the entire
-candidate is discarded and the validated component-pack plan is returned.
-Single-core, sufficiently many whole independent components, or a decomposition
-with no multiple independent packets also returns component-pack. A remaining
+candidate is discarded and the frozen-base bounded04 plan is returned.
+Single-core, sufficiently many whole independent components, an existing
+in-tree selection, or a decomposition with no multiple independent packets
+also retains bounded04. No existing constructor is modified. A remaining
 single-sink shared prefix may stay one large Task; this is safe but can erase
-benefits. No case-ID trigger or measured-score tuning is used.
+benefits. Shallow side sinks can produce short-work waves for which 100/1000
+cycle gates dominate; no performance-based activation rule is claimed. No case-ID trigger or measured-score tuning is used.
 
 Validation command:
 `uv sync --locked && .venv/bin/python -B -m unittest tests.q1.test_sink_peel -v`
-Five tests passed: coarse diamond regions, repeated shared layers, COPY bridge,
+Six tests passed: existing in-tree baseline preservation, coarse diamond regions, repeated shared layers, COPY bridge,
 complete fallback under budgets/single-sink, zero-cycle load, and exhaustive
 all 1024 ordered five-vertex DAG structural witnesses. These are mathematical
 and graph-level tests, not evaluator/solver benchmark calls.

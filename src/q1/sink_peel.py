@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from collections import Counter, deque
 
-from src.q1.component_pack import construct as component_construct
+from src.q1.bounded_tasks import construct as bounded_construct
 from stub_multicore_cut_and_schedule import (
     _build_op_adjacency, _contract_excluded_copy_nodes, derive_multicore_plan,
 )
@@ -78,13 +78,14 @@ def construct(graph, cores, *, max_rounds=64, max_sinks=64):
     for value in (max_rounds, max_sinks):
         if type(value) is not int or value < 1:
             raise ValueError("decomposition budgets must be positive integers")
-    fallback, base = component_construct(graph, cores)
+    fallback, base = bounded_construct(graph, cores)
     info = {"algorithm_id": "q1-sink-peel", "variant": "exclusive-suffix-waves",
-            "selected": "component-pack", "base": base,
+            "selected": "bounded04", "base": base,
             "max_rounds": max_rounds, "max_sinks": max_sinks,
             "scope": "Task-order proof only; no spill, performance or E0 feasibility guarantee"}
-    if cores == 1 or base["components"] >= cores:
-        info["reason"] = "one core or enough independent components"
+    if (cores == 1 or base["base"]["selected"] != "component-pack"
+            or base["base"]["base"]["components"] >= cores):
+        info["reason"] = "existing bounded04 structural route retained"
         return fallback, info
     ops = {op["id"]: op for op in graph["ops"]
            if op["op"] not in {"COPY_IN", "COPY_OUT"}}
