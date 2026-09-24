@@ -17,6 +17,7 @@ def record(run,case,ratio=2,**changes):
     row={'id':run+case,'attempt_id':run+case,'revision':1,'run_id':run,'algorithm_id':'solver',
          'solver_commit':'a'*40,'problem':'P1','cores':5,'case_id':case,'status':'ok',
          'eligible':True,'baseline_verified':True,
+         'provenance':{'solver':{'source':{'path':'src/solver.py','entrypoint':'main'}}},
          'metrics':{'makespan_cycles':100/ratio,'baseline_speedup':ratio,'solver_wall_seconds':.5}}
     row.update(changes)
     return row
@@ -68,6 +69,69 @@ class BatchTests(unittest.TestCase):
         self.assertEqual([r['run_id'] for r in result['complete']],['4','3','2'])
         self.assertEqual(result['case_ids'],['002'])
         self.assertEqual(len(result['batches']),5)
+
+    def test_full_problem_requires_same_run_and_source_across_all_500_cells(self):
+        rows=[]
+        for core in range(1,6):
+            for n in range(1,101):
+                case=f'{n:03d}'
+                rows.append(record('full',case,core,id=f'full-{case}-{core}',
+                                   attempt_id=f'full-{case}-{core}',cores=core,
+                                   variant='structural-a' if n%2 else 'structural-b'))
+        rows.append(record('partial','001',30))
+        result=batch_candidates(rows,'P1',5,['001'])
+        self.assertEqual(result['full_complete_count'],1)
+        self.assertEqual(result['full'][0]['run_id'],'full')
+        self.assertEqual(result['full'][0]['full_valid_count'],500)
+        self.assertEqual(result['full'][0]['full_mean_speedup'],5)
+        self.assertEqual(result['batches'][0]['run_id'],'full')
+        self.assertFalse(result['batches'][1]['full_complete'])
+        self.assertEqual(result['batches'][1]['mean_speedup'],30)
+        self.assertEqual(result['batches'][1]['full_valid_count'],1)
+
+    def test_repeated_attempt_in_one_cell_is_preview_until_selection_rule_is_audited(self):
+        rows=[record('repeat',f'{n:03d}',core,id=f'{n}-{core}',attempt_id=f'{n}-{core}',cores=core)
+              for core in range(1,6) for n in range(1,101)]
+        rows.append(record('repeat','001',100,id='extra',attempt_id='extra',cores=5))
+        result=batch_candidates(rows,'P1',5,['001'])
+        self.assertEqual(result['full_complete_count'],0)
+        self.assertEqual(result['batches'][0]['full_valid_count'],500)
+        self.assertFalse(result['batches'][0]['one_attempt_per_cell'])
+        self.assertFalse(result['batches'][0]['full_complete'])
+
+    def test_all_full_runs_remain_searchable_when_top_three_is_truncated(self):
+        rows=[record(f'run-{run}',f'{n:03d}',run,id=f'{run}-{n}-{core}',
+                     attempt_id=f'{run}-{n}-{core}',cores=core)
+              for run in range(1,5) for core in range(1,6) for n in range(1,101)]
+        result=batch_candidates(rows,'P1',5,['001'])
+        self.assertEqual(result['full_complete_count'],4)
+        self.assertEqual([row['run_id'] for row in result['full']],['run-4','run-3','run-2'])
+        self.assertEqual([row['run_id'] for row in result['batches']],['run-4','run-3','run-2','run-1'])
+
+    def test_full_problem_coverage_does_not_hide_missing_baseline_ratio(self):
+        rows=[]
+        for core in range(1,6):
+            for n in range(1,101):
+                case=f'{n:03d}'
+                rows.append(record('full',case,core,id=f'{case}-{core}',attempt_id=f'{case}-{core}',
+                                   cores=core,baseline_verified=not(core==5 and n==100)))
+        result=batch_candidates(rows,'P1',5,[f'{n:03d}' for n in range(1,101)])
+        self.assertEqual(result['full_complete_count'],1)
+        self.assertEqual(result['full'][0]['full_scored_count'],499)
+        self.assertIsNone(result['full'][0]['full_mean_speedup'])
+
+    def test_full_problem_with_multiple_solver_entrypoints_is_not_a_primary_batch(self):
+        rows=[]
+        for core in range(1,6):
+            for n in range(1,101):
+                case=f'{n:03d}'
+                rows.append(record('mixed-entry',case,core,id=f'{case}-{core}',attempt_id=f'{case}-{core}',
+                                   cores=core))
+        rows[-1]['provenance']['solver']['source']['entrypoint']='other_main'
+        result=batch_candidates(rows,'P1',5,[f'{n:03d}' for n in range(1,101)])
+        self.assertEqual(result['full_complete_count'],0)
+        self.assertEqual(result['batches'][0]['full_valid_count'],500)
+        self.assertFalse(result['batches'][0]['fixed_entrypoint'])
 
     def test_all_problem_batches_remain_discoverable_without_selected_core_results(self):
         rows=[record('other-core','002',cores=2),record('failed','001',status='failed',eligible=False),
