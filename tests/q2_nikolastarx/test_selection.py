@@ -10,7 +10,7 @@ from src.q2_nikolastarx.solve import solve
 
 
 class IncumbentTests(unittest.TestCase):
-    def run_mock(self, outcomes):
+    def run_mock(self, outcomes, bounds=None):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             graph = root / 'graph.json'
@@ -40,8 +40,11 @@ class IncumbentTests(unittest.TestCase):
 
             with patch('src.q2_nikolastarx.solve.construct', proposal), \
                  patch('src.q2_nikolastarx.solve.subprocess.Popen', FakeProcess), \
+                 patch('src.q2_nikolastarx.solve.assigned_pipe_lower_bound',
+                       side_effect=bounds), \
                  patch('src.q2_nikolastarx.solve.os.killpg'):
-                receipt = solve(graph, root/'unused.conf', 1, output, root/'evidence')
+                receipt = solve(graph, root/'unused.conf', 1, output, root/'evidence',
+                                prune_bounds=bounds is not None)
             return receipt, json.loads(output.read_text()) if output.exists() else None
 
     def test_regression_error_and_timeout_keep_confirmed_seed(self):
@@ -67,6 +70,20 @@ class IncumbentTests(unittest.TestCase):
         result, plan = self.run_mock(['error', 110, 100, 120])
         self.assertEqual(result['selected'], 'affine_eighth')
         self.assertEqual(list(plan['node_to_subgraph']), ['affine_eighth'])
+
+    def test_equal_bound_skips_call_but_preserves_later_improvement(self):
+        result, plan = self.run_mock([12, 10, 9], [5, 10, 10, 9])
+        self.assertEqual(result['calls']['E0'], 3)
+        self.assertEqual(result['selected'], 'guarded_reentry')
+        skipped = result['attempts'][2]
+        self.assertEqual(skipped['status'], 'bound_pruned')
+        self.assertEqual(skipped['incumbent_makespan_cycles'], 10)
+        self.assertIn('plan_sha256', skipped)
+
+    def test_no_confirmed_incumbent_or_no_certificate_cannot_prune(self):
+        result, plan = self.run_mock(['error', 110, 100, 120], [999, 100, None, None])
+        self.assertEqual(result['calls']['E0'], 4)
+        self.assertEqual(result['selected'], 'affine_eighth')
 
 
 if __name__ == '__main__':

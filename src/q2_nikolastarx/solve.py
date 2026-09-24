@@ -21,6 +21,7 @@ from datetime import datetime, timezone
 from .baseline import contiguous_plan, OFFICIAL, ROOT
 from .direct import Index
 from .packets import GraphIndex
+from .bounds import assigned_pipe_lower_bound
 
 
 def utc():
@@ -41,11 +42,13 @@ def construct(graph, cores, name):
     return Index(graph).build(cores, name)
 
 
-def solve(graph_path, config, cores, output, evidence, timeout=60, wall=240):
+def solve(graph_path, config, cores, output, evidence, timeout=60, wall=240,
+          prune_bounds=False):
     started = time.perf_counter()
     evidence.mkdir(parents=True, exist_ok=False)
     record = {'started_at': utc(), 'calls': {'E0': 0, 'E1': 0, 'E2': 0},
-              'attempts': [], 'budget': {'max_E0': 4, 'wall_seconds': wall,
+              'attempts': [], 'prune_bounds': prune_bounds,
+              'budget': {'max_E0': 4, 'wall_seconds': wall,
               'evaluation_timeout_seconds': timeout}, 'status': 'running'}
     ledger = evidence / 'solver.json'
     dump(ledger, record)
@@ -76,6 +79,15 @@ def solve(graph_path, config, cores, output, evidence, timeout=60, wall=240):
             dump(ledger, record)
             continue
         seen[digest] = name
+        if prune_bounds:
+            lower = assigned_pipe_lower_bound(graph, plan)
+            item['assigned_pipe_lower_bound_cycles'] = lower
+            if lower is not None and best is not None and lower >= best[0]:
+                item.update(status='bound_pruned', incumbent_name=best[1],
+                            incumbent_makespan_cycles=best[0],
+                            prune_reason='assigned_pipe_work_cannot_strictly_improve')
+                dump(ledger, record)
+                continue
         remaining = wall - (time.perf_counter() - started) - 3
         if remaining <= 0:
             item['status'] = 'not_evaluated'
@@ -143,9 +155,11 @@ def main():
     p.add_argument('--evidence', type=Path, required=True)
     p.add_argument('--evaluation-timeout', type=float, default=60)
     p.add_argument('--wall', type=float, default=240)
+    p.add_argument('--prune-bounds', action='store_true',
+                   help='Skip candidates whose certified pipe work cannot improve the incumbent')
     a = p.parse_args()
     r = solve(a.graph.resolve(), a.config.resolve(), a.cores, a.output.resolve(),
-              a.evidence.resolve(), a.evaluation_timeout, a.wall)
+              a.evidence.resolve(), a.evaluation_timeout, a.wall, a.prune_bounds)
     print(json.dumps({k:r[k] for k in ('status','calls','internal_wall_seconds')}))
     if r['status'] != 'ok':
         raise SystemExit(1)
