@@ -1,6 +1,7 @@
 import itertools
 import random
 import unittest
+from unittest.mock import patch
 
 from src.q3_yuanzhifang.construct import SharingIndex
 from src.q3_yuanzhifang.pipeline_capacity import build, partition
@@ -9,6 +10,53 @@ from test_pipeline_setup import recurrence, synthetic_jobs
 
 
 class CapacityPartitionTest(unittest.TestCase):
+    def test_original_ddr_copy_endpoints_do_not_consume_l1_ub_budget(self):
+        graph = synthetic_jobs()
+        for j in range(6):
+            first, last = 6*j + 1, 6*j + 6
+            ddr_in, copy_in, local_in = 1000+j, 1100+j, 1200+j
+            local_out, copy_out, ddr_out = 1300+j, 1400+j, 1500+j
+            graph["tensors"].extend([
+                {"id": ddr_in, "pos": "DDR", "size": 64},
+                {"id": local_in, "pos": "L1", "size": 64},
+                {"id": local_out, "pos": "L1", "size": 64},
+                {"id": ddr_out, "pos": "DDR", "size": 64}])
+            graph["ops"].extend([
+                {"id": copy_in, "op": "COPY_IN", "pipe": "PIPE_MTE2", "cycles": 2},
+                {"id": copy_out, "op": "COPY_OUT", "pipe": "PIPE_MTE3", "cycles": 2}])
+            graph["edges"].extend([
+                {"source": ddr_in, "target": copy_in},
+                {"source": copy_in, "target": local_in},
+                {"source": local_in, "target": first},
+                {"source": last, "target": local_out},
+                {"source": local_out, "target": copy_out},
+                {"source": copy_out, "target": ddr_out}])
+        plan, meta = build(SharingIndex(graph), 2, 60, {"L1": 7000, "UB": 0})
+        self.assertTrue(meta["guard"])
+        self.assertEqual(meta["selected"], "pipeline_capacity")
+        self.assertEqual(len(plan["node_to_subgraph"]), 36)
+        self.assertTrue(all(row["modeled_required_bytes"]["L1"] <= 7000
+                            for row in meta["stage_memory"]))
+
+    def test_direct_shared_ddr_input_explicitly_falls_back(self):
+        graph = synthetic_jobs()
+        graph["tensors"][0]["pos"] = "DDR"
+        index = SharingIndex(graph)
+        expected, _ = baseline(index, 2, 60)
+        plan, meta = build(index, 2, 60, {"L1": 6000, "UB": 6000})
+        self.assertEqual(plan, expected)
+        self.assertFalse(meta["guard"])
+        self.assertEqual(meta["reason"], "shared_ddr_input_requires_ub_materialization_model")
+
+    def test_unknown_space_keeps_guarded_fallback(self):
+        index = SharingIndex(synthetic_jobs())
+        index.graph["tensors"][0]["pos"] = "UNKNOWN"
+        with patch("src.q3_yuanzhifang.pipeline_capacity.pipeline_build", return_value=({"fallback": True}, {})):
+            plan, meta = build(index, 2, 60, {"L1": 6000, "UB": 0})
+        self.assertEqual(plan, {"fallback": True})
+        self.assertFalse(meta["guard"])
+        self.assertEqual(meta["reason"], "unsupported_tensor_memory_space")
+
     def test_exact_small_partition_and_flowshop_oracle(self):
         rng = random.Random(24533)
         feasible_count = infeasible_count = 0

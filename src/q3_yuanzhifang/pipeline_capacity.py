@@ -88,8 +88,12 @@ def build(index, cores, bandwidth, capacity):
                 reason = "shared_input_reused_at_multiple_positions"
                 break
             by_position[next(iter(used))].append(tid)
-        if any(t["pos"] not in SPACES for t in tensors.values()):
+        if any(t["pos"] not in (*SPACES, "DDR") for t in tensors.values()):
             reason = "unsupported_tensor_memory_space"
+        elif any(tensors[t]["pos"] == "DDR" for t in common):
+            # E0 materializes a compute-facing DDR tensor in local UB. Counting
+            # its raw DDR bytes as zero would understate shared residence.
+            reason = "shared_ddr_input_requires_ub_materialization_model"
     if reason is not None:
         plan, meta = pipeline_build(index, cores, bandwidth)
         return plan, dict(guard=False, selected="pipeline_fallback", reason=reason, fallback=meta)
@@ -133,7 +137,7 @@ def build(index, cores, bandwidth, capacity):
         stage_compute_cycles=[sum(weights[l:r]) for l, r in zip(cuts, cuts[1:])],
         stage_first_job_setup_cycles=[sum(setup[l:r]) for l, r in zip(cuts, cuts[1:])],
         modeled_cold_flowshop_cycles=modeled, capacity=capacity, stage_memory=rows,
-        assumption="serial stage cold-setup model with shared-residence constraints; not an E0 bound or zero-spill certificate")
+        assumption="serial stage cold-setup model with L1/UB shared-residence constraints; raw DDR COPY endpoints excluded; not an E0 bound or zero-spill certificate")
 
 
 def main():
