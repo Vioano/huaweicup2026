@@ -1,0 +1,170 @@
+{
+  "case_id": "007",
+  "cores": 5,
+  "status": "ok",
+  "started_at": "2026-09-24T19:52:44.999Z",
+  "finished_at": "2026-09-24T19:52:47.395Z",
+  "graph_sha256": "6e786044ca1fa5d4632f8b7d03e95364da8d88f4fff5e403d3ab8153da84b518",
+  "calls": {
+    "solver": 1,
+    "external_E0": 1,
+    "internal_E1": 2,
+    "E2": 0
+  },
+  "artifacts": {
+    "trace.json": {
+      "path": "output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/trace.json",
+      "sha256": "2220f5884768671978f567820f89b1d947981f56770a7b5151f61644cef35006"
+    },
+    "solver.rss.jsonl": {
+      "path": "output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/solver.rss.jsonl",
+      "sha256": "4aa74f115f03df784c64d65bec8f86bb8f56c7c1001ef170ea67bdfa7562b168"
+    },
+    "e0.stdout.txt": {
+      "path": "output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/e0.stdout.txt",
+      "sha256": "450a620f0902068c9ddbf985698341b57c53a839c26ffa37dab61a06b194dd9e"
+    },
+    "plan.json": {
+      "path": "output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/plan.json",
+      "sha256": "4d5bada2ebc0bd383cd121979b3f07dba7ae6b5543a0a3dfe7395c31f423d3be"
+    },
+    "result.json": {
+      "path": "output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/result.json",
+      "sha256": "72959ce49db0620fd79cdcddfaed8af464253d6bc69378f0c92df3ad3bf7084c"
+    },
+    "solver.stdout.txt": {
+      "path": "output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/solver.stdout.txt",
+      "sha256": "1ac02c838f060b95c0bb8be2acc8a0bcc57f18f69911f046cf44bf8ea719612e"
+    },
+    "solver-process.json": {
+      "path": "output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/solver-process.json",
+      "sha256": "f42d77e82768214898cf7afd3385678aa6645b24512a06cb466f0afd92d7c82a"
+    },
+    "diagnostics.json": {
+      "path": "output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/diagnostics.json",
+      "sha256": "f37a4c7fe47a018ddb6c5ca209a50830642286dc0d2b900b8aee0a4f9148a98f"
+    },
+    "e0-process.json": {
+      "path": "output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/e0-process.json",
+      "sha256": "f56a668149872ec429fc3b30ff0557f5ca5f34e8d3b365672e5919ff9d3895e9"
+    },
+    "e0.stderr.txt": {
+      "path": "output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/e0.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "official.log": {
+      "path": "output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/official.log",
+      "sha256": "baaf4316e89e3e160b39713d68e806ee8124c2ffb1a223af08491ad672bf8c27"
+    },
+    "solver.stderr.txt": {
+      "path": "output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/solver.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e0.rss.jsonl": {
+      "path": "output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/e0.rss.jsonl",
+      "sha256": "e1860adf920582101607c663148a45a1b1a5127e906eeaf6f6fe3eaee92d1b7e"
+    }
+  },
+  "reason": null,
+  "solver": {
+    "argv": [
+      "./.venv/bin/python",
+      "-B",
+      "src/q1/unified.py",
+      "<temp-root>/_6/0z4zntj91634v8qxgvfwhkfr0000gn/T/p1-v4-full500-input-tfdoj08d/case_007.json",
+      "--cores",
+      "5",
+      "--output",
+      "./output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/plan.json",
+      "--diagnostics",
+      "./output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/diagnostics.json"
+    ],
+    "cwd": ".",
+    "started_at": "2026-09-24T19:52:44.999Z",
+    "status": "ok",
+    "pid": 76412,
+    "exit_code": 0,
+    "cleanup_confirmed": true,
+    "sampled_peak_group_rss_bytes": 172015616,
+    "rss_limit_bytes": 4294967296,
+    "sample_interval_seconds": 0.1,
+    "rss_scope": "Sum of observed owned process-group RSS; sampled, not continuous",
+    "timeout_including_cleanup_seconds": 300.0,
+    "cleanup_reserve_seconds": 2.0,
+    "process_group_id": 76412,
+    "finished_at": "2026-09-24T19:52:46.592Z",
+    "wall_seconds": 1.5926649580069352,
+    "user_cpu_seconds": null,
+    "system_cpu_seconds": null,
+    "cpu_scope": "Concurrent RUSAGE_CHILDREN overlaps other cells and is not attributable per cell; original values deliberately omitted. Wall time remains per process."
+  },
+  "online_ledger": {
+    "score_attempts_observed": 2,
+    "score_returns_observed": 2,
+    "confirmed_worker_calls_lower_bound": 2,
+    "worker_calls_upper_bound": 2,
+    "actual_e1_calls": 2,
+    "exact": true,
+    "unresolved_requests": 0
+  },
+  "evaluation": {
+    "argv": [
+      "./.venv/bin/python",
+      "-B",
+      "./data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+      "<temp-root>/_6/0z4zntj91634v8qxgvfwhkfr0000gn/T/p1-v4-full500-input-tfdoj08d/case_007.json",
+      "./output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/plan.json",
+      "--config",
+      "./data/raw/a/official/data/config.txt",
+      "--output",
+      "./output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/result.json",
+      "--trace-output",
+      "./output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/trace.json",
+      "--log-output",
+      "./output/p1-v4-full500-e0900-s59ee/20260924T1952Z-s59ee/cells/007/k5/official.log"
+    ],
+    "cwd": ".",
+    "started_at": "2026-09-24T19:52:46.593Z",
+    "status": "ok",
+    "pid": 76825,
+    "exit_code": 0,
+    "cleanup_confirmed": true,
+    "sampled_peak_group_rss_bytes": 66912256,
+    "rss_limit_bytes": 4294967296,
+    "sample_interval_seconds": 0.1,
+    "rss_scope": "Sum of observed owned process-group RSS; sampled, not continuous",
+    "timeout_including_cleanup_seconds": 900.0,
+    "cleanup_reserve_seconds": 2.0,
+    "process_group_id": 76825,
+    "finished_at": "2026-09-24T19:52:47.390Z",
+    "wall_seconds": 0.79708104202291,
+    "user_cpu_seconds": null,
+    "system_cpu_seconds": null,
+    "cpu_scope": "Concurrent RUSAGE_CHILDREN overlaps other cells and is not attributable per cell; original values deliberately omitted. Wall time remains per process."
+  },
+  "consistency": {
+    "status": "equal",
+    "makespan": 203834,
+    "data_movement_bytes": {
+      "original_graph_copy_bytes": 1732608,
+      "scheduled_copy_bytes": 1843200,
+      "added_copy_bytes": 110592,
+      "partition_added_copy_bytes": 110592,
+      "spill_added_copy_bytes": 0
+    }
+  },
+  "selected": "bounded",
+  "stop_reason": "all-distinct-plans-scored",
+  "makespan_cycles": 203834,
+  "data_movement_bytes": {
+    "original_graph_copy_bytes": 1732608,
+    "scheduled_copy_bytes": 1843200,
+    "added_copy_bytes": 110592,
+    "partition_added_copy_bytes": 110592,
+    "spill_added_copy_bytes": 0
+  },
+  "derivation": {
+    "original_local_run_sha256": "138ef802d97e24d22432dd11dcab8b4d854c5a0876cbde5c1977ce416d2cc1d2",
+    "change": "Absolute workspace and temporary paths replaced; global child CPU counters blanked because concurrent cells overlap. Original remains in local output directory."
+  }
+}
