@@ -72,7 +72,7 @@
 | send后超时/崩溃/取消/响应丢失 | 每请求条件上界仍为1，实际可能 unknown | 保留最坏预留、不自动重投；执行资源须另等进程退出/清理证据，不能随调用账结算提前释放 |
 | pool ready、已 yield 数、进程工具退出0 | 只对应所观察事件 | ready仅初始化；可能超时判定早于读取完成响应；chunk未yield可能已执行；同步send无独立硬截止保证 |
 
-Windows失败原件：[PR74 / 5ff92f](https://github.com/huaweibei123/huaweicup2026/blob/5ff92f36851b89ebb9278b2fdff6dc762bc0060e/results/a/review/e2_cli_window_48b1268_20260924/README.md)。固定驱动创建控制器时报203，15例均未准入；确认 E0完成0，实际入口次数及最终完整进程清理仍unknown，原8潜在额度封存。不能把这次控制器失败归咎于算法分值，也不能记为15例通过。
+Windows失败原件（PR74 / 5ff92f）：[控制层记录](https://github.com/huaweibei123/huaweicup2026/blob/5ff92f36851b89ebb9278b2fdff6dc762bc0060e/results/a/review/e2_cli_window_48b1268_20260924/README.md#L29)明确控制父固定入口已调用1次、controller创建请求1次后报203，15例全部未准入；[完整E0记录](https://github.com/huaweibei123/huaweicup2026/blob/5ff92f36851b89ebb9278b2fdff6dc762bc0060e/results/a/review/e2_cli_window_48b1268_20260924/README.md#L37)为确认完成0、函数体实际进入次数unknown，原8潜在额度封存。成功OS进程数及最终ActiveProcesses缺证据，完整清理仍未证明，不能用终止返回true推成已清零。不能把这次控制器失败归咎于算法分值，也不能记为15例通过。
 
 [PR75 / 6f91055](https://github.com/huaweibei123/huaweicup2026/blob/6f91055d37bd94d4d0b9f7789ccb36baf0d44f88/research/a/review/e2_cli_fix_validation_20260924/README.md)互操作静态修订，以及[PR80 / 1411772](https://github.com/huaweibei123/huaweicup2026/blob/14117724cbbb01c6a3ada3c13898028213a277c7/research/a/review/e2_cli_fix_validation_20260924/M_PREPARATION.md)元数据入口，均不构成新的 ABI/进程/评分运行证据。后者明确尚未运行、执行端/外部截止与终止责任未闭合。本表不重启 M/S 审查循环，不改变封存窗口；PR67/75/80 的相关 Windows 验证继续列待验/阻塞，不能外推成全部平台 E2 均不可用。
 
