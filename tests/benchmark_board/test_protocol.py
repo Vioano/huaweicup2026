@@ -84,7 +84,7 @@ class AdmissionTests(unittest.TestCase):
 
     def test_extra_movement_from_official_field(self):
         row = self.record()
-        row['artifacts']['result'] = self.artifact('movement.json', {'scene':'C','num_cores':4,'makespan':100,'data_movement_bytes':{'scheduled_copy_bytes':250,'added_copy_bytes':50}})
+        row['artifacts']['result'] = self.artifact('movement.json', {'scene':'B','problem':3,'cache_mode':'read_only','num_cores':4,'makespan':100,'data_movement_bytes':{'scheduled_copy_bytes':250,'added_copy_bytes':50}})
         self.put(row)
         self.assertEqual(self.best()['metrics']['extra_ddr_bytes'], 50)
         self.assertEqual(self.best()['metrics']['ddr_bytes'], 250)

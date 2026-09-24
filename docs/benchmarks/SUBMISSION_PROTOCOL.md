@@ -79,6 +79,8 @@
 
 E0仍是最终官方确认来源；E1须匹配维护者校准表的固定实现/问题/图/核数/config/runtime，E2只存研发来源、不入正式最优榜。`artifacts_checked`只表示原件和声明身份匹配，**不证明运行收据语义真实、执行过未修改官方代码、算法合法性已独立复跑或科学验收通过**。`eligible/evidence/admission_notes/source/imported_at/id/sequence`由服务生成，队友不填写。
 
+官方P3原件实际标识是 `scene:"B", problem:3, cache_mode:"read_only"`（冻结problem3源码684–689行）；不得改成scene C来迎合网站。P2同plan对照是无Cache的B结果，不含P3标识或Cache统计。网站场景名称“情况C”不是原件scene字段的值。
+
 ### `provenance`：谁的算法，谁运行，怎么运行
 
 下列对象和列出的键均必需；未知使用schema允许的null，并在 `missing_reasons` 给出完整点路径及原因。
@@ -115,6 +117,8 @@ cache_pair = {graph_sha256, config_sha256, official_sha256, plan_sha256,
 ```
 
 baseline必须为冻结官方单核A结果，不能用stub或优化solver k=1代替；P1/P2均值为逐例B/M的算术平均，报告有效n/100，缺项不算0。P3配对必须是本条同图/config/official/plan/核数的P2无Cache结果，CacheGain为P2/P3，不能取两张独立最优表相除。P3相对单核是另一个指标。网站当前不代做全100均值验收。
+
+维护者可将同一冻结身份的已核官方单核分母补给已有记录，无需重跑多核。对于缺少多核原件的E0报告，所得加速比仅在“包括仅报告”预览中显示，并明确“分母已核、分子仍为报告”；`eligible`不因此改变，不能当成正式成绩。单核基准只运行一次并共享，不冒充P1/P2两次求解器运行。
 
 历史最优组合可跨算法选每格最低Makespan，但它不是一个算法的完整实验。比较耗时须核环境、线程、冷热、预算和计时范围；不同条件只并列，不宣称程序提速。官方5–10分钟是效率建议，非600秒淘汰线，也不是研发停止点。方案质量与端到端耗时分别持续比较。
 
