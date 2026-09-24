@@ -14,7 +14,7 @@ class Remote:
     repository='test/repository'
     def __init__(self): self.commits={};self.current=None;self.fail_path=None
     def head(self): return self.current
-    def tree(self,commit): return {p:{} for p in self.commits[commit]}
+    def tree(self,commit): return {p:{'sha':hashlib.sha1(b'blob '+str(len(v)).encode()+b'\0'+v).hexdigest()} for p,v in self.commits[commit].items()}
     def read(self,commit,path):
         if path==self.fail_path: raise RemoteError(503)
         if path not in self.commits[commit]: raise FileNotFoundError(path)
@@ -105,3 +105,75 @@ class EngineTests(unittest.TestCase):
         self.engines['leader'].trusted={'leader':self.keys['leader']}
         self.engines['leader'].receive_submissions(self.remote.head())
         self.assertFalse((self.root/'inbox'/identity/'request.json').exists())
+
+    def scheduler_fixture(self,count=64):
+        # Signature validation is covered separately; virtual 2 s validations reproduce
+        # a long receipt prefix without sleeping or producing research data.
+        items=[]
+        for nonce in range(count):
+            payload={'actor':'member','nonce':nonce}
+            identity=digest(canonical(payload));path=f'submissions/member/{identity}.json'
+            items.append((path,identity,payload))
+        items.sort()
+        files={p:canonical({'issuer':'member','payload':v}) for p,_,v in items}
+        for _,identity,_ in items[:-1]:
+            files[f'receipts/member/{identity}.json']=canonical({'payload':{'id':identity,'actor':'member','state':'accepted'}})
+        self.remote.update(files)
+        return items
+
+    def test_completed_prefix_cannot_starve_new_submission(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        items=self.scheduler_fixture();leader=self.engines['leader'];clock=[0];visited=[]
+        def verify(envelope,domain,**kwargs):
+            clock[0]+=2
+            if domain=='submission':visited.append(digest(canonical(envelope['payload'])))
+            return envelope['payload']
+        leader.verify=verify
+        with patch('src.benchmark_sync.engine.time',SimpleNamespace(monotonic=lambda:clock[0])):
+            leader.receive_submissions(self.remote.head())
+        pending_id=items[-1][1]
+        self.assertEqual(visited[0],pending_id)
+        self.assertEqual(read_json(self.root/'inbox'/pending_id/'result.json')['state'],'rejected')
+
+    def test_partial_batch_yields_to_next_pending_after_restart(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        p,identity=self.queue();self.engines['member'].deliver_outbox(None)
+        payload=read_json(p)['payload'];other=dict(payload,nonce='second')
+        other_id=digest(canonical(other))
+        self.remote.update({f'submissions/member/{other_id}.json':canonical(self.engines['member'].sign('submission',other))})
+        identities=sorted([identity,other_id]);clock=[0];visited=[]
+        for expected in identities:
+            leader=Engine(self.configs['leader'],self.remote,self.sign)
+            original=leader.verify
+            def slow_verify(envelope,domain,**kwargs):
+                result=original(envelope,domain,**kwargs)
+                if domain=='submission':
+                    clock[0]+=9;visited.append(digest(canonical(result)))
+                return result
+            leader.verify=slow_verify
+            with patch('src.benchmark_sync.engine.time',SimpleNamespace(monotonic=lambda:clock[0])):
+                leader.receive_submissions(self.remote.head())
+            self.assertEqual(visited[-1],expected)
+            self.assertFalse((self.root/'inbox'/expected/'request.json').exists())
+        self.engines['leader'].receive_submissions(self.remote.head())
+        for identity in identities:self.assertTrue((self.root/'inbox'/identity/'request.json').exists())
+
+    def test_receipt_cache_requires_identical_blobs_and_trust(self):
+        from unittest.mock import patch
+        p,identity=self.queue();leader=self.engines['leader'];member=self.engines['member']
+        member.deliver_outbox(None);leader.receive_submissions(self.remote.head())
+        result={'schema_version':1,'id':identity,'state':'accepted','receipt':{'added':1},'error':None}
+        write_json(self.root/'inbox'/identity/'result.json',result);leader.receive_submissions(self.remote.head())
+        leader.receive_submissions(self.remote.head())
+        with patch.object(leader,'verify',wraps=leader.verify) as check:
+            leader.receive_submissions(self.remote.head());self.assertEqual(check.call_count,0)
+            leader.trusted=dict(leader.trusted,unused=self.keys['member'])
+            leader.receive_submissions(self.remote.head());self.assertEqual(check.call_count,2)
+        receipt=f'receipts/member/{identity}.json'
+        self.remote.update({receipt:b'{"tampered":true}'})
+        leader.receive_submissions(self.remote.head())
+        self.assertTrue(leader.errors)
+        write_json(leader.state/'receive-progress.json',[]) # Corrupt hints do not block revalidation.
+        leader.receive_submissions(self.remote.head());self.assertIsInstance(read_json(leader.state/'receive-progress.json'),dict)

@@ -18,6 +18,18 @@ def free_port():
     with socket.socket() as s: s.bind(('127.0.0.1',0));return s.getsockname()[1]
 
 
+def ensure_no_listener(port):
+    # bind() without SO_REUSEADDR also rejects a closed server's TIME_WAIT sockets.
+    # Check an actual listener instead; the board's own bind remains the final guard.
+    try:
+        with socket.create_connection(('127.0.0.1',port),timeout=1): pass
+    except ConnectionRefusedError:
+        return
+    except OSError as error:
+        raise RuntimeError(f'Cannot verify port {port}: {error}') from None
+    raise RuntimeError(f'Port {port} already in use. One-time controlled handoff required; no process was killed.')
+
+
 def get(url):
     with urllib.request.urlopen(url,timeout=3) as r:
         data=r.read(32*1024*1024+1)
@@ -114,9 +126,7 @@ class Supervisor:
         return desired
     def run(self,bootstrap):
         port=self.config.get('port',52341)
-        with socket.socket() as probe:
-            try: probe.bind(('127.0.0.1',port))
-            except OSError: raise RuntimeError(f'Port {port} already in use. One-time controlled handoff required; no process was killed.') from None
+        ensure_no_listener(port)
         active_path=self.software/'active.json'
         active=read_json(active_path) if active_path.exists() else None
         rejected=read_json(self.software/'rejected.json') if (self.software/'rejected.json').exists() else {}

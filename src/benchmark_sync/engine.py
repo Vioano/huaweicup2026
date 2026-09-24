@@ -144,10 +144,40 @@ class Engine:
     def receive_submissions(self,head):
         inbox=Path(self.config['central']['inbox'])
         if not head: return
-        deadline=time.monotonic()+8
-        for path in sorted(self.remote.tree(head)):
-            if time.monotonic()>deadline: break
+        tree=self.remote.tree(head)
+        progress_file=self.state/'receive-progress.json'
+        try:
+            progress=read_json(progress_file)
+            if not isinstance(progress,dict): raise ValueError('Invalid receive cursor')
+            if not isinstance(progress.get('verified_receipts',{}),dict): raise ValueError('Invalid receipt cache')
+        except (OSError,ValueError,TypeError):
+            # Scheduling hints are disposable; never repair ledger/snapshot history here.
+            progress={}
+        cache=progress.setdefault('verified_receipts',{})
+        trust_id=digest(canonical(self.trusted))
+        groups={'pending':[], 'completed':[]}
+        for path in sorted(tree):
             if not path.startswith('submissions/') or not path.endswith('.json'): continue
+            receipt_path='receipts/'+path.removeprefix('submissions/')
+            groups['completed' if receipt_path in tree else 'pending'].append(path)
+        ordered=[]
+        for group,paths in groups.items():
+            cursor=progress.get(group,'')
+            if not isinstance(cursor,str): cursor=''
+            ordered.extend((group,p) for p in paths if p>cursor)
+            ordered.extend((group,p) for p in paths if p<=cursor)
+        deadline=time.monotonic()+8
+        for group,path in ordered:
+            if time.monotonic()>deadline: break
+            receipt_path='receipts/'+path.removeprefix('submissions/')
+            def blob_sha(name):
+                entry=tree.get(name)
+                sha=entry.get('sha') if isinstance(entry,dict) else None
+                return sha if isinstance(sha,str) and re.fullmatch('[0-9a-f]{40}',sha) else None
+            submission_sha,receipt_sha=blob_sha(path),blob_sha(receipt_path)
+            fingerprint=[submission_sha,receipt_sha,trust_id]
+            if submission_sha and receipt_sha and cache.get(path)==fingerprint: continue
+            progress[group]=path
             verified_delivery=False
             try:
                 envelope=json.loads(self.remote.read(head,path)); payload=self.verify(envelope,'submission')
@@ -155,9 +185,11 @@ class Engine:
                 if payload.get('actor')!=actor or path!=f'submissions/{actor}/{identity}.json':
                     raise ValueError('Submission path/actor identity mismatch')
                 receipt_path=f'receipts/{actor}/{identity}.json'
-                if receipt_path in self.remote.tree(head):
+                if receipt_path in tree:
                     prior=self.verify(json.loads(self.remote.read(head,receipt_path)),'receipt',central=True)
-                    if prior.get('id')!=identity or prior.get('actor')!=actor: raise ValueError('Receipt identity mismatch')
+                    if prior.get('id')!=identity or prior.get('actor')!=actor or prior.get('state') not in ('accepted','rejected'):
+                        raise ValueError('Receipt identity/state mismatch')
+                    if submission_sha and receipt_sha: cache[path]=fingerprint
                     continue
                 target=inbox/identity; result_file=target/'result.json'
                 if result_file.exists():
@@ -190,6 +222,10 @@ class Engine:
                 if verified_delivery and isinstance(error,(ValueError,KeyError,TypeError,FileNotFoundError)):
                     write_json(result_file,{'schema_version':1,'id':identity,'state':'rejected','receipt':None,'stage':'transport','error':str(error)})
                 self.errors.append({'stage':'receive','message':str(error),'submission':path})
+            finally:
+                # Advance even on a partial download, rejection or transient error. A restart
+                # must give the next pending batch a turn before retrying this one.
+                write_json(progress_file,progress)
 
     def cycle(self):
         self.errors=[]; status_path=self.state/'status.json'
