@@ -78,7 +78,7 @@ def discover(state, roots, actor):
             try:
                 commit=git(repo,'rev-parse','HEAD').decode().strip()
                 if cursors.get(repo)==commit: continue
-                names=git(repo,'ls-tree','-r','--name-only',commit,'--','results').decode('utf-8').splitlines()
+                names=git(repo,'ls-tree','-r','--name-only','-z',commit,'--','results').decode('utf-8').split('\0')
                 failed=False
                 for name in names:
                     if not (Path(name).name.startswith('board-feed') and name.endswith('.json')): continue

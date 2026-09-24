@@ -17,6 +17,7 @@ DOCS={'docs/a/source-manifest.json',*(f'docs/benchmarks/{name}' for name in (
 
 
 def allowed(path):
+    if path not in DOCS and not path.startswith(('src/benchmark_board/','src/benchmark_sync/')): return False
     path_ok(path)
     return path in DOCS or (path.startswith(('src/benchmark_board/','src/benchmark_sync/'))
                            and Path(path).suffix in ('.py','.mjs','.html','.css','.js'))
@@ -24,7 +25,7 @@ def allowed(path):
 
 def build_release(repo,commit):
     fixed_sha(commit)
-    names=subprocess.check_output(['git','-C',str(repo),'ls-tree','-r','--name-only',commit],text=True).splitlines()
+    names=subprocess.check_output(['git','-C',str(repo),'ls-tree','-r','--name-only','-z',commit],text=True).split('\0')
     files={}
     stream=io.BytesIO()
     with zipfile.ZipFile(stream,'w',compression=zipfile.ZIP_DEFLATED) as archive:

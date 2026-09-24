@@ -85,7 +85,7 @@ class GitHub:
             meta=self.request('GET','/git/commits/'+commit)
             obj=self.request('GET','/git/trees/'+fixed_sha(meta['tree']['sha']),params={'recursive':'1'})
             if obj.get('truncated') or len(obj['tree'])>100000: raise ValueError('Truncated or excessive Git tree')
-            entries={path_ok(item['path']):item for item in obj['tree'] if item['type']=='blob'}
+            entries={item['path']:item for item in obj['tree'] if item['type']=='blob'}
             self.trees[commit]=entries
         return self.trees[commit]
 
