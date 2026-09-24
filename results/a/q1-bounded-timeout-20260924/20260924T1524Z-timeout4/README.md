@@ -29,7 +29,7 @@ Prior two-worker 400-cell batch is finished. This diagnostic uses one worker; P2
 
 Original k4 used one worker; original 400 used two; this diagnostic uses one with longer E0 cap. Keep times by actual run; do not infer a controlled speedup or cause of old timeout.
 
-Against same-core fixed64, k1 has 25 regressions; k2/k3/k4 have none; k5 has 1. All negative cases are retained in `fixed64_regressions` and the full comparison. Full coverage is not dominance over every comparator.
+Against same-core fixed64, k1 has 25 regressions; k2/k3/k4 have none; k5 has 1. All negative cases and 54 adjacent-core regressions are retained in `quality-regressions.json` and the full comparison. Full coverage is not dominance over every comparator. No cross-core fallback was applied; adjacent regressions do not prove worse core-budget optima.
 
 `board-feed.json` contains only new diagnostic attempts. `full500-filled-*` is a declared follow-up evidence view; `full500-comparison.json` in the original matrix directory retains the first-pass missing scores. Fixed-method cumulative calls: `{'solver': 504, 'E0': 504, 'E1': 0, 'E2': 0}`, including all original failures; no baseline rerun.
 
