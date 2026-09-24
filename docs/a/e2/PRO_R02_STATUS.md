@@ -1,0 +1,23 @@
+# Pro r02：提问已提交，答案待回
+
+2026-09-24，本专项在huaweicup project的既有[评估器加速对话](https://chatgpt.com/g/g-p-6ab2d820c86081918067a0c6d5eb1ab6-huaweicup/c/6ab41f23-a4ec-83e8-88db-52c342b8c975)提交新追问。
+页面模型为6 Pro，发送后显示Pro thinking；用户消息ID
+`e2fbea55-86a1-4db4-9f3a-e463f14e0c6f`已通过独立read_thread回读。
+
+两份新材料`PRO_R02_RESEARCH_BRIEF.md`与`CONCURRENT_EVALUATION_DESIGN.md`已在本会话
+重新上传，提交消息中可见；没有依赖别处ZIP。材料固定版本
+`ceaed932e1951af00969c481e5ebc0f7d2bd1e82`，研究镜像于00:40:26 UTC回读同SHA。
+公开代码入口均在Vioano，要求Pro使用授权连接并逐文件说明实际读取/缺口。
+
+本轮问题涵盖机制族/条件变量、交互覆盖、筛选/演化、多样性保护、反例、统计可信度和
+最小验证方案，并限定不进行正式评价、仓库修改或云实验。
+[提问回读与状态](PRO_R02_PENDING.json)保存原文和材料身份；它不是完整r02网页clip。
+
+答案生成后：在同一网页分支抓完整问答，与分页消息清单逐ID核对；下载该轮AI生成附件，
+核大小/SHA/ZIP CRC，按r02前缀保留。完整归档追加到既有
+`AI chats/20260924-Pro-评估器加速/`，保留r01，README/manifest记录UTC、previous、新增/更正。
+后续追问/勘误继续追加，不覆盖；用户上传材料只留本固定仓库入口。
+
+共享`AI chats`由协调session统一合入，本专项提供原件和核对清单，避免并发写中央索引。
+目前尚未取得r02回答或新AI附件，不声称已完整归档、Pro已读全部源码、或研究结论已验证。
+未创建自动化或后台轮询；这是此次提问的已核对检查点。

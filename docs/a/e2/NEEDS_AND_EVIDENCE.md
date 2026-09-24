@@ -64,7 +64,8 @@ prospective_priority冻结pool/ranking_before_evaluation的position/pool_index�
 LYX本人已在[5805058735](https://github.com/huaweibei123/huaweicup2026/issues/15#issuecomment-5805058735)
 回报旧E2目录无在途/未提交生产改动，后在5805166783核验Atlas94；共享写权由调度正式汇总。
 本专项已建议由LYX做固定603b的路由/最大E0成本只读矩阵审计，0调用/0构建、30分钟首检查点，
-不触碰Fang的C/D/E PID门禁。由调度正式派发，不将建议视为已接手或已交付。
+不触碰Fang的C/D/E PID门禁。调度后续已正式派发PR61任务卡，回报LYX本人5805307559实际
+确认接手，T0 08:31:14 Asia/Taipei、09:01:14前首检查点；尚无本专项实际核对的审计交付。
 
 ## 固定源码和数值依据（只读，未新跑评估）
 
@@ -93,3 +94,5 @@ LYX本人已在[5805058735](https://github.com/huaweibei123/huaweicup2026/issues
 - 接受状态：已收到真实需求，提案供技术审阅；消息发送和PR创建不是接口已接受或部署。
 - 任务分工：本专项写公共基础设施研究，算法方写各自薄适配，原独立测试保留；
   公共任务卡、AGENTS和Atlas由调度汇总。无正式E0/E1/E2新增调用，无新正式实验预算。
+- 用户追加探索机制问题后，三问本人均给出机制族/交互/负例，已汇总并实际投递
+  [Pro r02](PRO_R02_STATUS.md)。答案未回，上传/镜像/Pro读取/研究有效性分层记录。

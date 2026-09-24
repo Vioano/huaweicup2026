@@ -6,8 +6,9 @@
 当前交付是使用方反馈、接口/调度设计和无评估调用的控制面模型检查。共享服务、算法接入、
 跨机器执行和真实性能尚未实现或验收。原 E2 PR42/46、独立测试及其固定版本继续保留。
 使用方反馈与源码依据见 [NEEDS_AND_EVIDENCE.md](NEEDS_AND_EVIDENCE.md)。
-用户进一步要求设计算法探索空间和筛选/演化机制；已汇总三问直接反馈，准备同project专项Pro r02
-咨询，材料与待审初案见 [PRO_R02_RESEARCH_BRIEF.md](PRO_R02_RESEARCH_BRIEF.md)。
+用户进一步要求设计算法探索空间和筛选/演化机制；已汇总三问直接反馈并向同project专项Pro提交r02
+咨询，材料与待审初案见 [PRO_R02_RESEARCH_BRIEF.md](PRO_R02_RESEARCH_BRIEF.md)，
+实际发送/待回状态见 [PRO_R02_STATUS.md](PRO_R02_STATUS.md)。
 研究决策层与本文件的作业执行层分开；并发设施本身不证明算法覆盖或筛选质量。
 
 ## 1. 三种使用方式，共用同一套身份和资源规则
