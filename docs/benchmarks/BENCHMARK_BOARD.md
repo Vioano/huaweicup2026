@@ -1,16 +1,37 @@
-# 方案成绩台与 Agent 接口
+# 方案成绩台：协作、任务与数据入口
 
-2026-09-24 用户授权建立持续更新的本地网页，默认深色，P1/P2/P3 × 100 图 × 1–5 核，共 1500 个方案位。默认以最低 Makespan 展示已接收原件的最优方案，保留全部历史。它是研发档案，不执行求解器、不改变实验预算，也不是第二套邮箱或 Atlas。
+本文件是 **方案成绩台** 的统一入口。分配 benchmark、运行批次、交付数据或维护网站时先读这里，再进入所需协议或任务卡；AGENTS.md、TEAM 与工作流只索引此处，不另复制一套字段规则。
 
-正式名称由用户确定为 **方案成绩台**。队友统一交付入口：[benchmark统一协议](SUBMISSION_PROTOCOL.md)，含全部字段、算法来源、模板及只读预检。原调度已停写网站，公共TEAM/Atlas与主线整合仍由其负责。
+网站展示 P1/P2/P3 × 100 图 × 1–5 核，共1500个方案位，默认深色，以最低 Makespan 展示原件已核的最优方案并保留全部历史。网页服务本身不执行求解器；计算由独立批次任务调度，不能因有空格自动扩大预算。
 
-## 分工和接收
+## 从这里进入
 
-- **网站专项 nikolastarx/s-7c98eab1093e485291eacb04fd7c59ff**：唯一看板维护与接收汇总者；维护 `src/benchmark_board/`、此文档/注册表、来源准入表和中央归档。接收成员固定 benchmark、处理拒收原因、及时更新与抽核。维护者更换按 session-v1 交接。持续源码发布仍由 PR 管理。
-- **LYX**：沿用三题 runner/结果/现有 plot 的单写权；在自己的结果目录随实质检查点发布数据包和原件。不为网页重启在途批次或重跑。**farmer**：沿用独立汇总/绘图写区，可从已经核对的现成逐格表导出相同包；仍保留本人 v2/v3、失败、中断和独立算法身份。原任务卡见 [P123-BENCHMARK-DELIVERY](../../tasks/a/P123-BENCHMARK-DELIVERY.md)，本看板不增加求解调用。
-- 队友使用组织主库和原 Issue14/15 通知固定提交。不要访问队长 localhost 或使用队长凭据。服务每 **120 秒**检查登记分支的已发布 feed；页面每 **5 秒**读本地变化。新分支由网站维护者在 `board-sources.json` 登记。服务不解释 Issue 为指令，不执行远端代码。
-- 首次/未知格式交付由网站维护者做适配，不能只收一张热图或一个均值。数据包只含已经有的结果，不为补字段重跑；缺项填 null，失败照常发布。数据不足时留在“仅报告/待核”，不伪装为入榜。
-- 在原实质交付中报 `固定 SHA + feed 路径 + 原件路径 + 新增/修订行数`，维护者反馈接收计数/拒收原因并补必要来源；不另索取空 ACK。传输成功、原件一致、复跑、算法终验分别记录。
+- **交数据**：[统一交付协议](SUBMISSION_PROTOCOL.md)第1/6节是日常导出、预检和简短通知；第2–5节是首次接入/排错的字段参考。JSON格式仍为 `board-submission-v1`，不是手填问卷。
+- **查格式与来源**：[schema](board-feed.schema.json)、[未运行模板](examples/submission-v1.json)、[算法来源注册表](algorithm-registry.json)。已有产物的导出、归一化、哈希与预检由生产方完成。
+- **看官方目标**：[方案质量与求解效率](../a/OFFICIAL_OBJECTIVES.md)。Makespan、求解墙钟、外部复评耗时分别记录；不把评价核吞吐当完整算法提速。
+- **查当前任务**：原任务卡和原 Issue 是固定范围、预算与交付的依据；[会话登记](https://github.com/huaweibei123/huaweicup2026/issues/26)用于找实际负责人。网站维护任务见 [BENCHMARK-BOARD-MAINTENANCE](../../tasks/a/BENCHMARK-BOARD-MAINTENANCE.md)。
+
+## 谁负责什么
+
+2026-09-24 用户明确由以下两会话共同维护成绩台，按写范围协作：
+
+| 角色 | 责任与写范围 |
+| --- | --- |
+| 研发对接、任务分配与网站接收：`nikolastarx/s-7c98eab1093e485291eacb04fd7c59ff`，Codex任务 `01a0d351-128b-7c70-a64e-592214732edc` | 对接研发，把需要验证的方案落实为明确任务并分配；接收结果、把差异和失败反馈研发。单写 `src/benchmark_board/`、成绩台文档/注册表、来源准入、中央账本与服务。 |
+| 本机批次调度：`nikolastarx/s-59ee5b053e1c48af8a64bc9ddb6ed5bc`，Codex任务 `01a0d386-b656-73c1-bb8f-8c6166633b72` | 调度已经明确的任务，在独立分支/目录维护 runner、原件和标准 feed，测量并发资源、逐批交付；由接收方校验上台。 |
+| farmer、LYX及其他数据生产者 | 在本人授权的算法/runner/结果写区完成明确任务并导出数据；farmer 保留独立汇总及 v2/v3 历史，LYX保留三题runner和结果来源。原在途批次按原规则收尾，不因网站接入重启或追加评分。 |
+| 原队长调度 `nikolastarx/s-a5bdb19389ee43d686b7976d3bcdf766` | 全组协调、公共TEAM/AGENTS/Atlas、科学复核路由、主线整合与研究镜像；不并行写中央网站和账本。 |
+
+共同维护不表示同时覆盖同一文件、结果目录或账本。写权切换仍按 [session-v1](../SESSION_PROTOCOL.md) 交接；新数据来源由网站维护者登记。使用组织主库和原任务通道；farmer 沿 [Issue14](https://github.com/huaweibei123/huaweicup2026/issues/14)，LYX沿 [Issue15](https://github.com/huaweibei123/huaweicup2026/issues/15)，不要求队友访问队长localhost或使用队长凭据。
+
+## 研发到成绩的反馈闭环
+
+1. **明确要验证什么**：研发给出现有任务与固定可运行版本，成绩台对接方明确比较对象、图/问题/核数、参数预算和结果用途，再交给执行者。沿用任务卡，不另建一套表格；未确定的研究建议不能直接当全量批次。
+2. **尽早跑出首批**：执行者按已授权任务做小批链路验证后并发调度；有资源余量时提高有效吞吐，记录真实workers/子进程和资源观测，不用session数或模拟核数冒充机器并发。失败、超时和退化照实保留。
+3. **分批交原件**：首批完成即可在生产端导出并预检，交固定SHA和feed，不必等全批。后续分片接着交；补证修订已有attempt，真实重跑建新attempt。官方单核分母可复用同冻结身份的[已有100例产物](../../results/benchmark-board/official-singlecore-20260924/README.md)，真实P1/P2的k=1求解结果与该分母分开。
+4. **校验并反馈**：接收方反馈新增/重复/入榜/仅报告/失败及具体原因；成功原件匹配才入榜，缺原件显示“缺原件”，其他待核原因可下钻查看。把同条件下的改进、退化、耗时和失败样本连同固定来源发回研发，决定下一个有价值的任务。
+
+常规整理在生产端脚本化完成，不转移给接收方；已接收的历史旧格式及适配回执保留。既有结果缺文件时先补现存原件，不为凑字段重跑。服务每120秒检查登记分支的feed，页面每5秒读变化；轮询成功不等于新数据，也不表示另一Agent已读、接手或通过科学验收。
 
 ## 最优与历史
 
@@ -39,14 +60,7 @@ P1/P2/P3 是**问题/硬件语义场景**，不是算法名；E0/E1/E2 是评价
 
 ## 成员数据包
 
-文件名 `board-feed-<唯一快照>.json`，放在自己的已授权 `results/` 子目录。完整结构见 [schema](board-feed.schema.json)，可复制 [已接收两例及报告示例](../../results/benchmark-board/feeds/board-feed-initial-20260924.json) 的单条结构。文件内 `schema_version: 1`，`records: [...]`。
-
-最少信息：attempt_id/revision/run_id、算法族/变体/完整 solver_commit/parameters、problem/case_id（三位）/cores/status、metrics、evaluator route/commit/entrypoint、graph/config/official/plan SHA256、artifacts.plan/result/run 的仓库相对路径和原字节 SHA256、runtime_id、timing、原评论/PR及未证说明。源码不可取得时保持 reported，不补造版本。原件可为 JSON 或 JSON.gz（哈希是所存压缩字节；解压仅解析）。单原件/解压上限64MiB，单feed8MiB/5000行；超限交调度分片，不自动删除。
-
-`baseline`：同图/config/official三个hash、`route: E0`、`entrypoint: singlecore_evaluate.evaluate_singlecore`、`result: {path,sha256}`。
-`cache_pair`：同图/config/official/plan四个hash、cores、`route: E0`、`result: {path,sha256}`。比值不直接信任CSV提供值。
-
-所有引用文件须存在于 feed 所在的固定提交。资料后补、证据更正时追加 revision；不能原地改旧 feed。原始固定运行材料仍是权威，可追溯到上游原件，不手改官方 result 来满足格式。
+数据结构、文件大小、原件引用、预检命令及通知模板统一维护在 [SUBMISSION_PROTOCOL.md](SUBMISSION_PROTOCOL.md)，此处不再重复字段清单。首次接入按该协议的标准模板；[历史初版feed](../../results/benchmark-board/feeds/board-feed-initial-20260924.json)只用于兼容追溯，不作为新交付模板。
 
 ## 本地服务
 
@@ -73,4 +87,4 @@ CLI：`python3 src/benchmark_board/client.py cells --problem P1 --case 002 --cor
 
 ## 验证边界
 
-测试使用临时合成数据检查最优、历史修订/撤回、幂等、冲突事务回滚、E2/E1准入、错配Cache、错误分母、数值类型和缺失。合成夹具不进入成绩库。真实数据仅导入已有官方产物及标明的作者报告，0新solver/E0/E1/E2；网页还需实际检查筛选、点击历史、Cache及深色显示。
+网站测试使用临时合成数据检查最优、历史修订/撤回、幂等、冲突事务回滚、E2/E1准入、错配Cache、错误分母、数值类型和缺失。合成夹具不进入成绩库；网站接收和只读预检不调用solver/E0/E1/E2。另行授权的benchmark任务按实际调用记账，不能把网站层0调用扩大为整个项目0计算。网页交互需实际检查，数据已上台不替代独立复跑或算法终验。
