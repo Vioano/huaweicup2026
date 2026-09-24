@@ -43,3 +43,5 @@ python -X utf8 src/benchmark_board/protocol.py results/a/q2-yuanzhifang/board-sy
 GitHub Actions按项目规则保持停用。实际验证平台为Windows，本包不代签其他电脑复现或网站接收。
 
 Windows预检须启用Python UTF-8模式。首次未启用时校验器读取UTF-8 schema触发GBK解码错误；加 `-X utf8` 后9/9通过，无需修改公共校验器或原件。
+
+原计划JSON采用CRLF；本目录Git属性关闭JSON行尾转换并将CRLF识别为正常行尾，保证提交内字节与原计划SHA不变。初次普通diff检查将CR报为行尾空白，未为消除提示改写原件。Windows无 `dot_clean`，只读扫描本目录未发现 `._*`、`.DS_Store` 或 `__MACOSX`。
