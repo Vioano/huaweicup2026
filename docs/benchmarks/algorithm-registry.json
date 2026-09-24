@@ -1,1 +1,118 @@
-{"schema_version":1,"problems":{"P1":"情况 A · 同核/跨核等待","P2":"情况 B · 搬运与计算重叠","P3":"情况 C · 只读 Cache"},"naming":"algorithm_id 标识方法族；variant 标识策略；solver_commit 固定实现；parameters 与 run_id 标识实验。P1/P2/P3 是问题而非算法。","algorithms":[{"id":"q1-bounded-search","name":"有预算结构候选搜索","problems":["P1"],"aliases":["q1_search_32_seed0"],"entrypoint":"src/q1/search.py search","commit":"4dff90ef699fd51845cf482951e8477066f5f566","note":"32/seed0 是参数，不写进稳定方法族名。propose+逐候选E0与search+E1须分 variant / run。"},{"id":"q1-stage-plan","name":"P1 已交付结构方案","problems":["P1"],"aliases":["case002-order-preserving-v2","case044 best_plan"],"commit":"4dff90ef699fd51845cf482951e8477066f5f566","note":"仅指固定历史计划，不能假称同一通用入口已生成全部算例。"},{"id":"q2-contiguous-baseline","name":"拓扑连续块基线","problems":["P2"],"aliases":["q2_contiguous_baseline"],"entrypoint":"python -m src.q2.construct","commit":"0b58c123cccf02fc993b741d79dcd8511e4dd38f","note":"不等于 M1/M2 或双样本专项优化。"},{"id":"q3-structure-selected","name":"结构守卫选择构造","problems":["P3"],"aliases":["q3_structure_selected_online"],"entrypoint":"python -m src.q3.solve","variants":["resource_word","affine_eighth"],"commit":"a4e7ee13310d693ec4fb5cc236669ceb3b172d1f"}]}
+{
+  "schema_version": 1,
+  "problems": {
+    "P1": "情况 A · 同核/跨核等待",
+    "P2": "情况 B · 搬运与计算重叠",
+    "P3": "情况 C · 只读 Cache"
+  },
+  "naming": "algorithm_id 标识方法族；variant 标识策略；solver_commit 固定实现；parameters 与 run_id 标识实验。P1/P2/P3 是问题而非算法。",
+  "algorithms": [
+    {
+      "id": "q1-bounded-search",
+      "name": "有预算结构候选搜索",
+      "problems": [
+        "P1"
+      ],
+      "aliases": [
+        "q1_search_32_seed0"
+      ],
+      "entrypoint": "src/q1/search.py search",
+      "commit": "4dff90ef699fd51845cf482951e8477066f5f566",
+      "note": "32/seed0 是参数，不写进稳定方法族名。propose+逐候选E0与search+E1须分 variant / run。"
+    },
+    {
+      "id": "q1-stage-plan",
+      "name": "P1 已交付结构方案",
+      "problems": [
+        "P1"
+      ],
+      "aliases": [
+        "case002-order-preserving-v2",
+        "case044 best_plan"
+      ],
+      "commit": "4dff90ef699fd51845cf482951e8477066f5f566",
+      "note": "仅指固定历史计划，不能假称同一通用入口已生成全部算例。"
+    },
+    {
+      "id": "q2-contiguous-baseline",
+      "name": "拓扑连续块基线",
+      "problems": [
+        "P2"
+      ],
+      "aliases": [
+        "q2_contiguous_baseline"
+      ],
+      "entrypoint": "python -m src.q2.construct",
+      "commit": "0b58c123cccf02fc993b741d79dcd8511e4dd38f",
+      "note": "不等于 M1/M2 或双样本专项优化。"
+    },
+    {
+      "id": "q3-structure-selected",
+      "name": "结构守卫选择构造",
+      "problems": [
+        "P3"
+      ],
+      "aliases": [
+        "q3_structure_selected_online"
+      ],
+      "entrypoint": "python -m src.q3.solve",
+      "variants": [
+        "resource_word",
+        "affine_eighth"
+      ],
+      "commit": "a4e7ee13310d693ec4fb5cc236669ceb3b172d1f"
+    },
+    {
+      "id": "q1-component-pack",
+      "name": "P1 complete-component pipe-load packing",
+      "problems": [
+        "P1"
+      ],
+      "variants": [
+        "pipe-lpt-one-task-per-core"
+      ],
+      "entrypoint": "src/q1/component_pack.py:main",
+      "commit": "2cf3951af50be1e35ff78acb91629f2d0207bd82",
+      "note": "原件准入登记，不代表全域或算法终验；每格实际选择/回退见feed，固定版本与来源分开保留。"
+    },
+    {
+      "id": "q1-tree-frontier-pack",
+      "name": "P1 threshold subtree frontier and tail packing",
+      "problems": [
+        "P1"
+      ],
+      "variants": [
+        "threshold-antichain-tail"
+      ],
+      "entrypoint": "src/q1/tree_frontier.py:main",
+      "commit": "40c3c093d15ac6bd57f1f0b06472c8a09e1e7d79",
+      "note": "原件准入登记，不代表全域或算法终验；每格实际选择/回退见feed，固定版本与来源分开保留。"
+    },
+    {
+      "id": "q2-structural-portfolio",
+      "name": "P2 四构造官方保护组合",
+      "problems": [
+        "P2"
+      ],
+      "variants": [
+        "e0-protected-four-constructors"
+      ],
+      "entrypoint": "src/q2_nikolastarx/solve.py:main",
+      "commit": "f17fcc2d84d20497482a1269de7bac95ab7a3138",
+      "note": "原件准入登记，不代表全域或算法终验；每格实际选择/回退见feed，固定版本与来源分开保留。"
+    },
+    {
+      "id": "q3-guarded-tree-select",
+      "name": "结构种子与平衡归约树精确选择",
+      "problems": [
+        "P3"
+      ],
+      "variants": [
+        "seed-plus-balanced-tree-e0"
+      ],
+      "entrypoint": "src/q3/safe_solve.py:src.q3.safe_solve.main",
+      "commit": "45b29c7d8defe349c02cc58c87cb7bce1212de06",
+      "note": "原件准入登记，不代表全域或算法终验；每格实际选择/回退见feed，固定版本与来源分开保留。"
+    }
+  ]
+}

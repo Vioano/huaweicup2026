@@ -8,6 +8,7 @@
 
 - **交数据**：[统一交付协议](SUBMISSION_PROTOCOL.md)第1/6节是日常导出、预检和简短通知；第2–5节是首次接入/排错的字段参考。JSON格式仍为 `board-submission-v1`，不是手填问卷。
 - **成员同步代码与全部数据**：[2697条/1500格固定重建包](https://github.com/huaweibei123/huaweicup2026/blob/36bb66b1adf755e20e495a4a210e77ce48f5abfb/results/benchmark-board/member-sync-20260924/README.md)包含13个固定feed、核对指纹及重建脚本（PR97）。这是2026-09-24固定快照；后续数据按 [来源登记](board-sources.json) 增量同步，代码更新以维护会话在原Issue给的固定提交为准。先更新接收程序再导入大结果，保留本地库/额外记录，并分别回读运行代码版本、记录数、网页显示；fetch不等于页面已更新。
+- **研发接收与比较回执**：[首轮28条研发增量](../../results/benchmark-board/receipts/20260924-rd-first/README.md)，固定来源、原件准入和入库当时赢家分别记录；更早快照与之后增量分开。
 - **查格式与来源**：[schema](board-feed.schema.json)、[未运行模板](examples/submission-v1.json)、[算法来源注册表](algorithm-registry.json)。已有产物的导出、归一化、哈希与预检由生产方完成。
 - **看官方目标**：[方案质量与求解效率](../a/OFFICIAL_OBJECTIVES.md)。Makespan、求解墙钟、外部复评耗时分别记录；不把评价核吞吐当完整算法提速。
 - **查当前任务**：原任务卡和原 Issue 是固定范围、预算与交付的依据；[会话登记](https://github.com/huaweibei123/huaweicup2026/issues/26)用于找实际负责人。网站维护任务见 [BENCHMARK-BOARD-MAINTENANCE](../../tasks/a/BENCHMARK-BOARD-MAINTENANCE.md)。
