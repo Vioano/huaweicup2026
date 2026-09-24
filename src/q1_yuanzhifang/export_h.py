@@ -7,7 +7,7 @@ import gzip
 import json
 from pathlib import Path
 
-from benchmark_h import ROOT, SESSION, SOLVER, OUTPUT, VARIANTS, NEW_SCRIPT, OLD_COMMIT, OLD_FEED, G_COMMIT, G_FEED, check_reused
+from benchmark_h import ROOT, H_SESSION, SOLVER, OUTPUT, VARIANTS, NEW_SCRIPT, OLD_COMMIT, OLD_FEED, G_COMMIT, G_FEED, check_reused
 from benchmark import sha, dump, git
 from trace_c import boundary_metadata
 
@@ -135,7 +135,7 @@ def export(output, graphs):
                        "budget": {"wall_seconds": 30, "candidate_limit": 1, "stop_reason": row["status"] + "; no retries; batch=" + completion["status"]},
                        "calls": row["calls"], "offline_costs": protocol["preparation"] + " Existing frozen official singlecore denominator reused; 0 new singlecore calls.",
                        "failure": row["failure"]}
-        provenance = {"producer_session": SESSION, "task_url": protocol["task_url"],
+        provenance = {"producer_session": H_SESSION, "task_url": protocol["task_url"],
                       "solver": {"source": source(row["solver_commit"], NEW_SCRIPT, "construct / main"),
                                  "authors": ["yuanzhifang30-sudo"],
                                  "method": "Guarded intact four-node chains: first round 3/3/3/3/0, later 4/2/2/2/2, remaining reduction tail on core 0; " +

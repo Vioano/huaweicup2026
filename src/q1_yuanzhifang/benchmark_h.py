@@ -14,8 +14,11 @@ import shutil
 import sys
 import time
 
-from benchmark import (ROOT, SESSION, utc, sha, dump, git, relative, verify_source,
+from benchmark import (ROOT, utc, sha, dump, git, relative, verify_source,
                        official_check, environment, call, compress)
+
+# Stage H is executed by its own forked session; do not inherit Stage A's ID.
+H_SESSION = "yuanzhifang30-sudo/s-7748b08eb22a449797a2417ad7825aaa"
 
 SOLVER = "4f1b9f8be4bbcc98759a19451c108e62e80abb17"
 NEW_SCRIPT = "src/q1_yuanzhifang/prefetch_frontier.py"
@@ -143,7 +146,7 @@ def main():
                           "scenarios": SCENARIOS, "budget": BUDGET, "calls": {"solver": 0, "E0": 0, "E1": 0, "E2": 0},
                           **protocol}, ensure_ascii=False))
         return
-    protocol.update(producer_session=SESSION, task_url="https://github.com/huaweibei123/huaweicup2026/issues/98",
+    protocol.update(producer_session=H_SESSION, task_url="https://github.com/huaweibei123/huaweicup2026/issues/98",
                     measurement_window=args.window_token,
                     scenarios=SCENARIOS, variants=VARIANTS, budget=BUDGET, environment=environment(),
                     parameters=PARAMETERS,
