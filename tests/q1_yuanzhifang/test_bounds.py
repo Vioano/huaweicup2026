@@ -49,6 +49,19 @@ class BoundTests(unittest.TestCase):
                          {"task_same_core_wait_cycles": 100, "task_cross_core_wait_cycles": 1000})
         self.assertEqual(b["task_gate_lower_bound_cycles"], 2)
 
+    def test_multiple_release_constraints_use_max_not_sum(self):
+        waits = {"task_same_core_wait_cycles": 100, "task_cross_core_wait_cycles": 1000}
+        for costs, schedules, expected in (([5000, 1, 3], [[0, 2], [1]], 5103),
+                                            ([50, 5000, 3], [[0, 2], [1]], 6003),
+                                            ([5, 7, 11], [[0], [1], [2]], 1018)):
+            graph = {"ops": [{"id": u, "op": "X", "pipe": "PIPE_V", "cycles": cost}
+                             for u, cost in enumerate(costs)],
+                     "tensors": [], "edges": [{"source": 0, "target": 2},
+                                                {"source": 1, "target": 2}]}
+            bound = lower_bounds(graph, {"node_to_subgraph": {0: 0, 1: 1, 2: 2},
+                                          "core_schedules": schedules}, waits)
+            self.assertEqual(bound["task_gate_lower_bound_cycles"], expected)
+
 
 if __name__ == "__main__":
     unittest.main()
