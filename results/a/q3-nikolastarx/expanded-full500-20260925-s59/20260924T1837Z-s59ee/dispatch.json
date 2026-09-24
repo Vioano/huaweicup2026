@@ -1,0 +1,250 @@
+{
+  "schema": "p3-ten-shard-dispatch-v1",
+  "source_commit": "a5dafdf94d0694132fb9ec7121f5fe1fe0d6ee3b",
+  "handoff_commit": "a0d968df1a028592d6989746829cf693fdec2647",
+  "runner_commit": "a5dafdf94d0694132fb9ec7121f5fe1fe0d6ee3b",
+  "runner_path": "src/q3/feedback_benchmark.py",
+  "controller_path": "scripts/s59ee_p3_expanded_dispatch.py",
+  "controller_sha256": "d9c5de1827ddd724f770d92ee967e502b46b4e5b032e81c084a50b6aada5b847",
+  "started_at": "2026-09-24T18:37:19.245Z",
+  "finished_at": "2026-09-24T18:43:00.568Z",
+  "status": "complete",
+  "max_workers": 8,
+  "max_solver_calls": 500,
+  "max_E0_calls": 1000,
+  "deadline_seconds": 3600,
+  "retries": 0,
+  "pilot": [
+    [
+      "001",
+      1
+    ],
+    [
+      "051",
+      5
+    ],
+    [
+      "082",
+      4
+    ],
+    [
+      "062",
+      5
+    ]
+  ],
+  "available_bytes_at_start": 11533172736,
+  "shards": {
+    "s01": {
+      "status": "stage_complete",
+      "manifest_sha256": "38bc02c9134ba9fed46620333ec4665ce91cb5064445fad8cb87d35cb0c8f114",
+      "run_id": "q3-expanded-full500-20260925-s59-s01",
+      "coordinates": 50,
+      "pid": 58990,
+      "started_at": "2026-09-24T18:37:19.250Z",
+      "available_bytes_at_launch": 11533156352,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/expanded500-handoff-20260925/manifest-s01.json",
+        "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s01"
+      ],
+      "finished_at": "2026-09-24T18:41:12.083Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 77
+    },
+    "s02": {
+      "status": "stage_complete",
+      "manifest_sha256": "30c4646b7d19258f477cfd9bc1f7ff48540919b616751e30c04e5a0a940519ce",
+      "run_id": "q3-expanded-full500-20260925-s59-s02",
+      "coordinates": 50,
+      "pid": 58992,
+      "started_at": "2026-09-24T18:37:19.255Z",
+      "available_bytes_at_launch": 11530911744,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/expanded500-handoff-20260925/manifest-s02.json",
+        "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s02"
+      ],
+      "finished_at": "2026-09-24T18:40:28.052Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 77
+    },
+    "s03": {
+      "status": "stage_complete",
+      "manifest_sha256": "b81ba6fe3a99e27ac58b9927b4686c251028f7ff9e6a1aba8374f1681b2f6ce0",
+      "run_id": "q3-expanded-full500-20260925-s59-s03",
+      "coordinates": 50,
+      "pid": 58994,
+      "started_at": "2026-09-24T18:37:19.259Z",
+      "available_bytes_at_launch": 11526012928,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/expanded500-handoff-20260925/manifest-s03.json",
+        "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s03"
+      ],
+      "finished_at": "2026-09-24T18:40:17.930Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 78
+    },
+    "s04": {
+      "status": "stage_complete",
+      "manifest_sha256": "2fa0b67fa55d6dce7ea224ded0eaa494336a15eb7ea43f0126c06328bd0c917f",
+      "run_id": "q3-expanded-full500-20260925-s59-s04",
+      "coordinates": 50,
+      "pid": 58996,
+      "started_at": "2026-09-24T18:37:19.264Z",
+      "available_bytes_at_launch": 11518214144,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/expanded500-handoff-20260925/manifest-s04.json",
+        "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s04"
+      ],
+      "finished_at": "2026-09-24T18:40:06.242Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 72
+    },
+    "s05": {
+      "status": "stage_complete",
+      "manifest_sha256": "2fa676ed7b216338ed57560eda07ad05ec2abea597befa60f784a0be341a2f10",
+      "run_id": "q3-expanded-full500-20260925-s59-s05",
+      "coordinates": 50,
+      "pid": 59856,
+      "started_at": "2026-09-24T18:37:28.356Z",
+      "available_bytes_at_launch": 11189010432,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/expanded500-handoff-20260925/manifest-s05.json",
+        "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s05"
+      ],
+      "finished_at": "2026-09-24T18:40:06.807Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 71
+    },
+    "s06": {
+      "status": "stage_complete",
+      "manifest_sha256": "b1645dad0c5e0452e186df0ed1579258063bcb087f55362e44202769b2e9a328",
+      "run_id": "q3-expanded-full500-20260925-s59-s06",
+      "coordinates": 50,
+      "pid": 59858,
+      "started_at": "2026-09-24T18:37:28.361Z",
+      "available_bytes_at_launch": 11189256192,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/expanded500-handoff-20260925/manifest-s06.json",
+        "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s06"
+      ],
+      "finished_at": "2026-09-24T18:39:30.304Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 74
+    },
+    "s07": {
+      "status": "stage_complete",
+      "manifest_sha256": "e8c4c1e9a2769562b53c182663a41d8d6f3305073b16f8218c8d8c3b889e6bc2",
+      "run_id": "q3-expanded-full500-20260925-s59-s07",
+      "coordinates": 50,
+      "pid": 59860,
+      "started_at": "2026-09-24T18:37:28.367Z",
+      "available_bytes_at_launch": 11182063616,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/expanded500-handoff-20260925/manifest-s07.json",
+        "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s07"
+      ],
+      "finished_at": "2026-09-24T18:40:04.644Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 72
+    },
+    "s08": {
+      "status": "stage_complete",
+      "manifest_sha256": "04d28989a3ac49cc24a2602563aa9c7bbd1fa75f5172596f6c0346db2e618f59",
+      "run_id": "q3-expanded-full500-20260925-s59-s08",
+      "coordinates": 50,
+      "pid": 59862,
+      "started_at": "2026-09-24T18:37:28.373Z",
+      "available_bytes_at_launch": 11177558016,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/expanded500-handoff-20260925/manifest-s08.json",
+        "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s08"
+      ],
+      "finished_at": "2026-09-24T18:40:33.687Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 75
+    },
+    "s09": {
+      "status": "stage_complete",
+      "manifest_sha256": "6e9d464b4f2828c60bc0a17e39eb947549de409e75edeeb85106042b02fa2297",
+      "run_id": "q3-expanded-full500-20260925-s59-s09",
+      "coordinates": 50,
+      "pid": 69075,
+      "started_at": "2026-09-24T18:39:30.310Z",
+      "available_bytes_at_launch": 10685169664,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/expanded500-handoff-20260925/manifest-s09.json",
+        "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s09"
+      ],
+      "finished_at": "2026-09-24T18:42:38.817Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 79
+    },
+    "s10": {
+      "status": "stage_complete",
+      "manifest_sha256": "349cf28507cf843eb42ff411985c6f95b894f6e17e5671b1229b7bc5cc6e302a",
+      "run_id": "q3-expanded-full500-20260925-s59-s10",
+      "coordinates": 50,
+      "pid": 71580,
+      "started_at": "2026-09-24T18:40:04.653Z",
+      "available_bytes_at_launch": 10329915392,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/expanded500-handoff-20260925/manifest-s10.json",
+        "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s10"
+      ],
+      "finished_at": "2026-09-24T18:43:00.062Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 80
+    }
+  },
+  "pilot_completed_at": "2026-09-24T18:37:28.350Z",
+  "queued_shards": []
+}
