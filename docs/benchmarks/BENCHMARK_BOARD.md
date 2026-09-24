@@ -40,6 +40,10 @@
 1. 默认只从相同 problem/case/cores、当前冻结图/config/官方源码身份的成功记录中选最低 `makespan_cycles`；int/float 不强转。并列按稳定内容哈希排序。其他指标跟随**同一赢家**，切换指标不拼接不同方案的最好数字。
 2. 跨算法/版本的默认视图明确叫**历史最优组合**。用户用于看当前可用最优方案；不得把它汇总冒充某算法全 100 图实验。选择 algorithm/run 可查看单独来源。无法一眼比较不同大小图的绝对 Makespan 优劣；另看基准比、耗时和同格历史。
 3. 每次尝试有稳定 `attempt_id`、`revision`；同 revision 内容改变拒收，勘误/撤回追加更大 revision，旧记录永久保留。最高 revision 决定本次尝试现状；失败/撤回不入榜，另一旧成功方案仍可成为赢家。重复导入幂等。
+
+   P2 active-core 全量实验的四个原始分片 `s01`–`s04` 分别覆盖 001–025、026–050、051–075、076–100，每片 125 格。另造的 500 格整包复用同一批 `attempt_id/revision` 却改写 `run_id`，中央按本条拒收；不能重投、覆盖或冒充第二次测量。
+
+   成绩台的 `composite:q2-activecore-full500-20260925-s59` **只是读取视图**。固定来源为[提交 60af 的 manifest](https://github.com/huaweibei123/huaweicup2026/blob/60afc38b327680fbda0ff10182e3e05a01edd72d/results/a/q2-nikolastarx/active-core-full500-20260925-s59/manifest.json)（SHA-256 `46ca4a4e77271d2051828f4fffa8df2e3cb143d098d1a683f841691efc3824ce`）；逐格原始记录 ID 的有序摘要为 `c6e658c375bd70fa085fdf737a24fdc7386bf64d729f911f74056ac4e60d2172`。仅当 500 个唯一格的官方 E0 原件、单核分母、算法/版本来源和记录摘要全部符合时进入全量排名；未补齐时只显示已核覆盖和子集预览。每条记录保留原分片 `run_id`、`attempt_id`、revision 和 Git 原件链接，账本不增新测量。
 4. E0 的计划、结果、运行收据须有固定 Git 原件与 SHA256；结果 Makespan/类型/问题/核数要匹配。身份与原件一致不等于重新运行或独立证实成员电脑行为。E1 另须匹配队长 `board-calibrations.json` 明确的实现、问题、图集合、核数、配置和 runtime；初版准入表为空，不因名字 exact 放行。E2 仅存来源记录，不入正式榜。
 5. 官方单核比值只由固定 `singlecore_evaluate.evaluate_singlecore` 的匹配原件计算；没有原件留 NA，不能用 stub 或优化算法 k=1 代替。
 6. P3 CacheGain = **同图、同配置、同计划哈希、同核数的 P2 无 Cache Makespan / 当前 P3 Makespan**。配对不符留 NA；不是任取最好 P2 与最好 P3 相除。Cache 命中率用官方按字节字段。P3的“Cache 对照”按钮打开独立面板，只列当前筛选内已核的同计划配对，并说明未配对数量；面板中可切换字节命中率，返回按钮或Esc关闭后保留主表指标、筛选及滚动。工具栏P3专属指标同样打开此面板，不把P1/P2切成NA。选中方案详情仍有双柱对照。P3 相对单核另列。
