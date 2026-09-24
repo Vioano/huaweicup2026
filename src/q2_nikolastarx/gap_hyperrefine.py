@@ -43,7 +43,8 @@ def _priority(index, plan, view):
     return order
 
 
-def refine(graph, plan, config, region_width=16):
+def refine(graph, plan, config, region_width=16, *, model_factory=None,
+           cost_label='original_copy_bytes'):
     if type(region_width) is not int or not 1 <= region_width <= 16:
         raise ValueError('region_width must be in 1..16')
     index = DAGIndex(graph)
@@ -64,11 +65,11 @@ def refine(graph, plan, config, region_width=16):
             raise UnsupportedStructure('each chain must be on one core')
         chaincores[j] = owners.pop()
     try:
-        model = HypergraphCost(graph, index.ops)
+        model = (model_factory or HypergraphCost)(graph, index.ops)
     except UnsupportedHypergraph as error:
         raise UnsupportedStructure(str(error)) from error
     state = model.state(core_by_op)
-    initial_bytes = state.total_bytes
+    initial_cost = state.total_bytes
     cores = len(plan['core_schedules'])
     pipes = sorted({op['pipe'] for op in index.ops.values()})
     work = {j: dict(Counter({p: sum(index.duration(u) for u in chain
@@ -127,7 +128,7 @@ def refine(graph, plan, config, region_width=16):
                     if pins:
                         state.apply(pins, source, target)
                 if state.total_bytes - old_total != cut.cost - baseline_cost:
-                    raise AssertionError('region cut cost disagrees with original-pin bytes')
+                    raise AssertionError('region cut cost disagrees with original-pin cost')
                 for j in units:
                     source, target = initial[j], cut.labels[j]
                     if source != target:
@@ -136,13 +137,15 @@ def refine(graph, plan, config, region_width=16):
                             loads[target][p] += amount
                         chaincores[j] = target
                 accepted += 1
-    detail = {'before_original_copy_bytes': initial_bytes,
-              'after_original_copy_bytes': state.total_bytes,
+    detail = {f'before_{cost_label}': initial_cost,
+              f'after_{cost_label}': state.total_bytes,
               'before_pipe_loads': before_loads, 'after_pipe_loads': loads,
               'pipe_caps': caps, 'regions': regions, 'flows': flows,
               'accepted_regions': accepted, 'skipped_by_connection_floor': skipped_by_bound,
               'region_width': region_width,
-              'scope': 'Pre-Step2 original COPY bytes and compute-work caps only; no Makespan or capacity guarantee'}
+              'scope': ('Pre-Step2 original COPY bytes and compute-work caps only; no Makespan or capacity guarantee'
+                        if cost_label == 'original_copy_bytes' else
+                        'Sum isolated-transfer proxy and compute-work caps only; no Makespan or capacity guarantee')}
     if not accepted:
         return plan, detail
     mapping = plan['node_to_subgraph']

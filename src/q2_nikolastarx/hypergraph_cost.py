@@ -21,7 +21,14 @@ class Edge:
 
 
 class HypergraphCost:
-    def __init__(self, graph: dict, eligible_ids):
+    def __init__(self, graph: dict, eligible_ids, *, proxy_bandwidth=None,
+                 cross_core_delay=None):
+        proxy = proxy_bandwidth is not None or cross_core_delay is not None
+        if proxy and (type(proxy_bandwidth) is not int or proxy_bandwidth <= 0 or
+                      type(cross_core_delay) is not int or cross_core_delay < 0):
+            raise ValueError('proxy requires positive integer bandwidth and nonnegative integer delay')
+        def transfer(size):
+            return (size + proxy_bandwidth - 1) // proxy_bandwidth
         original = {op['id']: op for op in graph['ops']}
         eligible = set(eligible_ids)
         expected = {u for u, op in original.items() if op['op'] not in {'COPY_IN', 'COPY_OUT'}}
@@ -65,18 +72,24 @@ class HypergraphCost:
                 continue
             if ps:
                 producer = next(iter(ps))
-                if any(original[u]['op'] == 'COPY_OUT' for u in consumers[tid]) or not cs:
+                if not proxy and (any(original[u]['op'] == 'COPY_OUT' for u in consumers[tid]) or not cs):
                     self.constant_bytes += size
-                add(cs | {producer}, 2 * size)
+                add(cs | {producer}, cross_core_delay + 2 * transfer(size) if proxy else 2 * size)
             else:
-                self.constant_bytes += size
-                add(cs, size)
+                if not proxy:
+                    self.constant_bytes += size
+                add(cs, transfer(size) if proxy else size)
         for edge in direct:
-            try:
-                size = max(0, int(edge.get('data_size', 0)))
-            except (TypeError, ValueError, OverflowError) as error:
-                raise UnsupportedHypergraph('invalid direct edge data_size') from error
-            add({edge['source'], edge['target']}, 2 * size)
+            if proxy:
+                size = edge.get('data_size', 0)
+                if type(size) is not int or size < 0:
+                    raise UnsupportedHypergraph('direct edge data_size must be a nonnegative integer')
+            else:
+                try:
+                    size = max(0, int(edge.get('data_size', 0)))
+                except (TypeError, ValueError, OverflowError) as error:
+                    raise UnsupportedHypergraph('invalid direct edge data_size') from error
+            add({edge['source'], edge['target']}, cross_core_delay + 2 * transfer(size) if proxy else 2 * size)
         self.incidence = {u: tuple(incidence[u]) for u in eligible}
 
     def state(self, op_to_core: Mapping[int, int]) -> HypergraphState:
