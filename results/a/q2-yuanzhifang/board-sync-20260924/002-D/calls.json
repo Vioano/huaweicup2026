@@ -1,0 +1,128 @@
+{
+  "maximum": 32,
+  "charged": 2,
+  "calls": [
+    {
+      "slot": 1,
+      "charged_index": 1,
+      "phase": "initial",
+      "reserved_elapsed": 0.9369999999998981,
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "-B",
+        "data/raw/a/official/code/multicore_cut_evaluate_problem_2.py",
+        "data/raw/a/official/data/case_002.json",
+        "results/a/q2-yuanzhifang/stage-b-20260924-042906/002-D/baseline/plan.json",
+        "--config",
+        "data/raw/a/official/data/config.txt",
+        "-o",
+        "results/a/q2-yuanzhifang/stage-b-20260924-042906/002-D/eval-01-initial/result.json",
+        "--trace-output",
+        "results/a/q2-yuanzhifang/stage-b-20260924-042906/002-D/eval-01-initial/trace.json",
+        "--log-output",
+        "results/a/q2-yuanzhifang/stage-b-20260924-042906/002-D/eval-01-initial/summary.txt"
+      ],
+      "launched": true,
+      "status": "ok",
+      "plan": "results/a/q2-yuanzhifang/stage-b-20260924-042906/002-D/baseline/plan.json",
+      "plan_sha256": "41c18c428c094bf2a07223ec2deffd3d174e3c26b3cef35064fd54c430c6b07e",
+      "output": "results/a/q2-yuanzhifang/stage-b-20260924-042906/002-D/eval-01-initial",
+      "launch_attempted": true,
+      "pid": 10968,
+      "returncode": 0,
+      "wall_seconds": 0.6869999999998981,
+      "timeout_seconds": 120,
+      "timeout_overshoot_seconds": 0,
+      "makespan": 132209,
+      "movement": {
+        "original_graph_copy_bytes": 1224192,
+        "scheduled_copy_bytes": 1709568,
+        "added_copy_bytes": 485376,
+        "partition_added_copy_bytes": 485376,
+        "spill_added_copy_bytes": 0
+      },
+      "peak": {
+        "0": {
+          "L1": 7680,
+          "UB": 1536
+        },
+        "1": {
+          "L1": 7680,
+          "UB": 3072
+        },
+        "2": {
+          "L1": 7680,
+          "UB": 3072
+        },
+        "3": {
+          "L1": 7680,
+          "UB": 16896
+        }
+      },
+      "completed_elapsed": 1.655999999999949
+    },
+    {
+      "slot": 32,
+      "charged_index": 2,
+      "phase": "final",
+      "reserved_elapsed": 1.6719999999995707,
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "-B",
+        "data/raw/a/official/code/multicore_cut_evaluate_problem_2.py",
+        "data/raw/a/official/data/case_002.json",
+        "results/a/q2-yuanzhifang/stage-b-20260924-042906/002-D/baseline/plan.json",
+        "--config",
+        "data/raw/a/official/data/config.txt",
+        "-o",
+        "results/a/q2-yuanzhifang/stage-b-20260924-042906/002-D/eval-02-final/result.json",
+        "--trace-output",
+        "results/a/q2-yuanzhifang/stage-b-20260924-042906/002-D/eval-02-final/trace.json",
+        "--log-output",
+        "results/a/q2-yuanzhifang/stage-b-20260924-042906/002-D/eval-02-final/summary.txt"
+      ],
+      "launched": true,
+      "status": "ok",
+      "plan": "results/a/q2-yuanzhifang/stage-b-20260924-042906/002-D/baseline/plan.json",
+      "plan_sha256": "41c18c428c094bf2a07223ec2deffd3d174e3c26b3cef35064fd54c430c6b07e",
+      "output": "results/a/q2-yuanzhifang/stage-b-20260924-042906/002-D/eval-02-final",
+      "launch_attempted": true,
+      "pid": 31636,
+      "returncode": 0,
+      "wall_seconds": 0.7960000000002765,
+      "timeout_seconds": 105,
+      "timeout_overshoot_seconds": 0,
+      "makespan": 132209,
+      "movement": {
+        "original_graph_copy_bytes": 1224192,
+        "scheduled_copy_bytes": 1709568,
+        "added_copy_bytes": 485376,
+        "partition_added_copy_bytes": 485376,
+        "spill_added_copy_bytes": 0
+      },
+      "peak": {
+        "0": {
+          "L1": 7680,
+          "UB": 1536
+        },
+        "1": {
+          "L1": 7680,
+          "UB": 3072
+        },
+        "2": {
+          "L1": 7680,
+          "UB": 3072
+        },
+        "3": {
+          "L1": 7680,
+          "UB": 16896
+        }
+      },
+      "completed_elapsed": 2.483999999999469
+    }
+  ]
+}
