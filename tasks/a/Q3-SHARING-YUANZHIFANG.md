@@ -33,3 +33,6 @@ session: yuanzhifang30-sudo/s-3d9c78db26714786b88b987ca6f58e2b
 已实际补读0a97785fae0df0354424c5d760914c7c9ae2d3ac新增模型预算节，按用户要求由Luna medium执行冻结脚本、Sol medium实现一般runner，均最小上下文、软token预算，工具无硬cap，不编造用量。下一批优先6bae8dfa在044/046/067/073/083/092的5核同构家族，独立最多6cold/12E0、双case worker、2GiB RAM/磁盘门控、30/300/270秒保护；见PIPELINE_FAMILY.md。与统一入口完整100×5分开。
 
 18:45:38–18:45:46Z完整Mailbox抓取6话题481评论；专项补读Issue51至5819834064，公共26至5820007698，未导入其他任务全部历史。队长已在新expanded版本复用本线gap并排队全500；本线不重复其同版本批次，继续共享链薄弱处。队长2d5459fa的完整500格已实际从成员镜像读回，但未下载全部原件，明确local_artifacts_verified=false。
+
+
+第十三家族批次63810a05实际2cold/2E0成功退出，但新父runner误要求P2含problem字段，故保留校验失败并停止。原件ba3f8484；错误feed额外call_ledger键以84ec8dec的revision2删除，旧feed/失败预检不覆盖。第十四独立缺格补测84ec8dec完整核复用旧044/046 cold/P2后，新4cold/8E0；044/046/067/073/083 k5 P3=41205/83050/15686331/3337352/241719。092 cold成功后RAM低于2GiB，未派P2/P3。累计实际32cold/54E0，0自动重试；保留所有负例，仅计划补092两个缺评估。详见pipeline-family-followup-20260925/REPORT.md。容量候选3d864fd3新增4项合成测试（150个小问题独立穷举事件表），0E0；不晋升未测候选，不无条件推广流水。
