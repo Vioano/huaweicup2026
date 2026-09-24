@@ -95,6 +95,10 @@ class EngineTests(unittest.TestCase):
         self.assertEqual((self.root/'inbox'/identity/'artifacts/results/plan.json').read_bytes(),artifact)
         self.assertIn(f'submissions/leader/{identity}.json',self.remote.tree(self.remote.head('benchmark-submissions/leader')))
         self.assertEqual(read_json(entry_path)['state'],'awaiting_receipt')
+        from concurrent.futures import ThreadPoolExecutor
+        envelope=leader.sign('submission',payload)
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            self.assertEqual(list(pool.map(lambda _:leader.materialize_local_submission(read_json(entry_path),envelope),range(2))),[True,True])
         bad_payload=dict(payload,artifacts={'results/plan.json':'0'*64})
         bad_entry={'id':digest(canonical(bad_payload)),'payload':bad_payload,'repo':str(repo)}
         with self.assertRaisesRegex(ValueError,'artifact manifest'):
@@ -104,6 +108,68 @@ class EngineTests(unittest.TestCase):
         engine=self.engines['leader'];engine.config['central']={'inbox':str(self.root/'inbox')}
         entry={'id':'x','payload':{'actor':'member'}}
         self.assertFalse(engine.materialize_local_submission(entry,{}))
+
+    def test_local_fastpath_waits_for_fixed_commit_to_be_publicly_reachable(self):
+        import os,subprocess
+        from unittest.mock import patch
+        repo=self.root/'source-unreachable';repo.mkdir()
+        subprocess.run(['git','init','-q',str(repo)],check=True)
+        subprocess.run(['git','-C',str(repo),'config','user.name','Sync Test'],check=True)
+        subprocess.run(['git','-C',str(repo),'config','user.email','sync-test@example.invalid'],check=True)
+        artifact=b'{}';feed={'schema_version':1,'records':[{
+            'provenance':{'producer_session':'leader/s-source-reachability'},
+            'artifacts':{'plan':{'path':'results/plan.json','sha256':digest(artifact)}}}]}
+        feed_bytes=canonical(feed);(repo/'results').mkdir();(repo/'results/plan.json').write_bytes(artifact)
+        (repo/'results/board-feed.json').write_bytes(feed_bytes)
+        subprocess.run(['git','-C',str(repo),'add','results'],check=True)
+        env=dict(os.environ,GIT_AUTHOR_NAME='Sync Test',GIT_AUTHOR_EMAIL='sync-test@example.invalid',
+                 GIT_COMMITTER_NAME='Sync Test',GIT_COMMITTER_EMAIL='sync-test@example.invalid')
+        subprocess.run(['git','-C',str(repo),'commit','-qm','fixed benchmark feed'],check=True,env=env)
+        commit=subprocess.check_output(['git','-C',str(repo),'rev-parse','HEAD'],text=True).strip()
+        payload={'schema_version':1,'actor':'leader','commit':commit,'feed':'results/board-feed.json',
+                 'feed_sha256':digest(feed_bytes),'artifacts':{'results/plan.json':digest(artifact)}}
+        identity=digest(canonical(payload));entry_path=self.root/'leader'/'outbox'/identity/'entry.json'
+        write_json(entry_path,{'id':identity,'payload':payload,'state':'queued','repo':str(repo)})
+        leader=self.engines['leader'];inbox=self.root/'inbox'/identity
+        with patch('src.benchmark_sync.engine.subprocess.run',side_effect=subprocess.CalledProcessError(1,['git','push'])):
+            leader.deliver_outbox(None)
+        self.assertFalse((inbox/'request.json').exists())
+        self.assertEqual(read_json(entry_path)['state'],'queued')
+        self.remote.commits[commit]={'results/board-feed.json':feed_bytes,'results/plan.json':artifact}
+        leader.deliver_outbox(None)
+        self.assertTrue((inbox/'request.json').exists())
+
+    def test_local_fastpath_splits_artifact_reads_when_batch_exceeds_memory_bound(self):
+        import os,subprocess
+        from unittest.mock import patch
+        repo=self.root/'source-large-feed';repo.mkdir()
+        subprocess.run(['git','init','-q',str(repo)],check=True)
+        subprocess.run(['git','-C',str(repo),'config','user.name','Sync Test'],check=True)
+        subprocess.run(['git','-C',str(repo),'config','user.email','sync-test@example.invalid'],check=True)
+        artifacts={f'results/part-{n}.json':f'{{"part":{n}}}'.encode() for n in range(3)}
+        records=[{'provenance':{'producer_session':'leader/s-large-feed'},
+                  'artifacts':{'result':{'path':name,'sha256':digest(data)}}}
+                 for name,data in artifacts.items()]
+        feed_bytes=canonical({'schema_version':1,'records':records})
+        for name,data in artifacts.items():
+            path=repo/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)
+        (repo/'results/board-feed.json').write_bytes(feed_bytes)
+        subprocess.run(['git','-C',str(repo),'add','results'],check=True)
+        env=dict(os.environ,GIT_AUTHOR_NAME='Sync Test',GIT_AUTHOR_EMAIL='sync-test@example.invalid',
+                 GIT_COMMITTER_NAME='Sync Test',GIT_COMMITTER_EMAIL='sync-test@example.invalid')
+        subprocess.run(['git','-C',str(repo),'commit','-qm','fixed benchmark feed'],check=True,env=env)
+        commit=subprocess.check_output(['git','-C',str(repo),'rev-parse','HEAD'],text=True).strip()
+        payload={'schema_version':1,'actor':'leader','commit':commit,'feed':'results/board-feed.json',
+                 'feed_sha256':digest(feed_bytes),'artifacts':{name:digest(data) for name,data in artifacts.items()}}
+        identity=digest(canonical(payload));entry={'id':identity,'payload':payload,'repo':str(repo)}
+        leader=self.engines['leader'];original=Engine._local_commit_files
+        def bounded(repo_arg,commit_arg,paths,max_bytes=128*1024*1024):
+            if len(paths)>1: raise ValueError('Local fast-path artifact set exceeds size bound')
+            return original(repo_arg,commit_arg,paths,max_bytes)
+        with patch.object(Engine,'_local_commit_files',side_effect=bounded):
+            self.assertTrue(leader.materialize_local_submission(entry,leader.sign('submission',payload)))
+        for name,data in artifacts.items(): self.assertEqual((self.root/'inbox'/identity/'artifacts'/name).read_bytes(),data)
+        self.assertTrue((self.root/'inbox'/identity/'request.json').exists())
 
     def test_small_feeds_keep_individual_signatures_in_bounded_transport_batches(self):
         from unittest.mock import patch

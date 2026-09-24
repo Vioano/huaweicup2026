@@ -34,6 +34,8 @@ class Engine:
         self.actor=config['actor']; self.leader=config['leader']; self.role=config['role']
         self.trusted=config['trusted_keys']; self.key=Path(config['private_key'])
         self.errors=[]
+        self._submission_locks={}
+        self._submission_locks_guard=threading.Lock()
         self.receive_status={}
         self._accepted_cache_key=None
         self._accepted_payload_cache=None
@@ -45,6 +47,9 @@ class Engine:
                                      'finished_at':None,'error':None}
 
     def sign(self,domain,payload): return self.signatures.sign(domain,self.actor,payload,self.key)
+    def submission_lock(self,identity):
+        with self._submission_locks_guard:
+            return self._submission_locks.setdefault(identity,threading.RLock())
     def verify(self,envelope,domain,*,central=False):
         keys={self.leader:self.trusted[self.leader]} if central else self.trusted
         return self.signatures.verify(envelope,domain=domain,trusted_keys=keys)
@@ -199,6 +204,10 @@ class Engine:
         """
         if self.role!='leader' or entry.get('payload',{}).get('actor')!=self.actor:
             return False
+        with self.submission_lock(entry.get('id','')):
+            return self._materialize_local_submission(entry,envelope)
+
+    def _materialize_local_submission(self,entry,envelope):
         payload=self.verify(envelope,'submission')
         identity=digest(canonical(payload))
         if entry.get('id')!=identity: raise ValueError('Local fast-path submission identity mismatch')
@@ -223,11 +232,24 @@ class Engine:
             if not isinstance(prior,dict) or prior.get('id')!=identity or prior.get('state') not in ('accepted','rejected'):
                 raise ValueError('Existing local inbox result has conflicting identity')
             return True
-        files=self._local_commit_files(repo,commit,list(refs)) if refs else {}
-        for name,sha in refs.items():
-            data=files[name]
-            if digest(data)!=sha: raise ValueError('Local fast-path artifact hash mismatch: '+name)
-            atomic_write(target/'artifacts'/name,data)
+        # Keep peak memory bounded for large complete feeds. The recursive
+        # split only retries metadata and blob reads; artifacts are written as
+        # soon as a bounded chunk has been verified. No request marker exists
+        # until every file has passed its manifest hash check.
+        def materialize_chunk(names):
+            try:
+                files=self._local_commit_files(repo,commit,names)
+            except ValueError as error:
+                if 'exceeds size bound' not in str(error) or len(names)<2: raise
+                middle=len(names)//2
+                materialize_chunk(names[:middle]);materialize_chunk(names[middle:])
+                return
+            for name in names:
+                data=files[name]
+                if digest(data)!=refs[name]: raise ValueError('Local fast-path artifact hash mismatch: '+name)
+                atomic_write(target/'artifacts'/name,data)
+        names=list(refs)
+        for start in range(0,len(names),128): materialize_chunk(names[start:start+128])
         atomic_write(target/'feed.json',feed_bytes)
         source={'id':f'auto:{self.actor}:{identity}','repo':self.remote.repository,'commit':commit,
                 'feed':feed_path,'path':feed_path,
@@ -286,6 +308,22 @@ class Engine:
                     errors.append({'stage':'upload','message':str(error)})
             finally:
                 pending.clear();parents.clear()
+        def ensure_fixed_commit(payload,entry):
+            commit=payload['commit']
+            if commit in commit_presence: return
+            try:
+                self.remote.request('GET','/git/commits/'+fixed_sha(commit))
+                commit_presence[commit]=True
+                return
+            except RemoteError as error:
+                if error.status!=404: raise
+            ref='refs/heads/benchmark-delivery/'+self.actor+'/'+entry['id']
+            subprocess.run(['git','-C',entry['repo'],'push','https://github.com/'+self.remote.repository+'.git',commit+':'+ref],
+                           stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=120,check=True)
+            # Do not expose the source in the central ledger until its immutable
+            # public URL is confirmed reachable from the organization repository.
+            self.remote.request('GET','/git/commits/'+fixed_sha(commit))
+            commit_presence[commit]=True
         for path in entries:
             try:
                 entry=read_json(path)
@@ -327,6 +365,7 @@ class Engine:
                 if entry['state']=='awaiting_receipt' and is_published:
                     envelope=self.sign('submission',payload)
                     if self.role=='leader' and payload.get('actor')==self.actor:
+                        ensure_fixed_commit(payload,entry)
                         try:
                             self._local_fastpath_status={'state':'syncing','delivery_id':entry['id'],
                                                          'started_at':now(),'finished_at':None,'error':None}
@@ -349,6 +388,7 @@ class Engine:
                 except FileNotFoundError: existing=None
                 envelope=self.sign('submission',payload)
                 if entry['state'] not in ('accepted','rejected') and self.role=='leader' and payload.get('actor')==self.actor:
+                    ensure_fixed_commit(payload,entry)
                     try:
                         self._local_fastpath_status={'state':'syncing','delivery_id':entry['id'],
                                                      'started_at':now(),'finished_at':None,'error':None}
@@ -368,17 +408,7 @@ class Engine:
                     # have reached GitHub just before a local crash.
                     entry.update(state='awaiting_receipt',error=None,last_attempt_at=now());write_json(path,entry)
                 else:
-                    if payload['commit'] not in commit_presence:
-                        try:
-                            self.remote.request('GET','/git/commits/'+fixed_sha(payload['commit']))
-                            commit_presence[payload['commit']]=True
-                        except RemoteError as error:
-                            if error.status!=404: raise
-                            # No mutable branch is overwritten. Each unique submission preserves its own Git commit.
-                            ref='refs/heads/benchmark-delivery/'+self.actor+'/'+entry['id']
-                            subprocess.run(['git','-C',entry['repo'],'push','https://github.com/'+self.remote.repository+'.git',payload['commit']+':'+ref],
-                                           stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=120,check=True)
-                            commit_presence[payload['commit']]=True
+                    ensure_fixed_commit(payload,entry)
                     pending[published]=(path,envelope);parents.append(payload['commit'])
                     if len(pending)>=OUTBOX_PUBLISH_BATCH_SIZE: publish_pending()
             except Exception as error:
@@ -534,6 +564,7 @@ class Engine:
         for actor,lane_head,lane_tree,group,cursor_key,path,_is_new in scheduled:
             if time.monotonic()>deadline: break
             receipt_path='receipts/'+path.removeprefix('submissions/')
+            submission_lock=None
             def blob_sha(name):
                 entry=central_tree.get(name) if name.startswith('receipts/') else lane_tree.get(name)
                 sha=entry.get('sha') if isinstance(entry,dict) else None
@@ -562,6 +593,8 @@ class Engine:
                         raise ValueError('Receipt identity/state mismatch')
                     if submission_sha and receipt_sha: cache[path]=fingerprint
                     continue
+                submission_lock=self.submission_lock(identity)
+                submission_lock.acquire()
                 target=inbox/identity; result_file=target/'result.json'
                 if result_file.exists():
                     result=read_json(result_file)
@@ -592,6 +625,7 @@ class Engine:
             finally:
                 # Advance even on a partial download, rejection or transient error. A restart
                 # must give the next pending batch a turn before retrying this one.
+                if submission_lock is not None: submission_lock.release()
                 write_json(progress_file,progress)
 
     def receive_pass(self,head):

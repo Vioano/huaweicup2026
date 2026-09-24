@@ -37,7 +37,7 @@ python -X utf8 -m src.benchmark_sync --config /outside-git/config.json enqueue -
 
 #### 任意大小补片的低延迟路径
 
-没有“凑够500条再发送”门槛，也不要求每个科研run覆盖500个格：任意大小的完整feed按各自attempt/revision立即追加，后续补片继续追加，旧历史不会被覆盖。队长同机同步器先验证本人签名、固定commit、producer身份及feed/原件SHA，再将同一submission ID的完整请求写入唯一中央inbox；远端签名传输同时继续。中央Ledger仍是唯一准入写者，本机快路径失败时远端通路继续。中央接收器每0.25秒检查本机已完整落盘的inbox。
+没有“凑够500条再发送”门槛，也不要求每个科研run覆盖500个格：任意大小的完整feed按各自attempt/revision立即追加，后续补片继续追加，旧历史不会被覆盖。队长同机同步器先验证本人签名、固定commit、producer身份及feed/原件SHA，再将同一submission ID的完整请求写入唯一中央inbox；远端签名传输同时继续。相同submission ID的本地与远端物化由per-ID锁串行，request marker始终最后原子发布。中央Ledger仍是唯一准入写者，本机快路径失败时远端通路继续。中央接收器每0.25秒检查本机已完整落盘的inbox。
 
 远端收件优先处理最近首次发现的pending交付，每四个新件至少处理一个旧pending，持续新数据不会饿死旧队列。固定源仓库按commit root逐目录查询非递归Git tree，避免GitHub递归整树截断；固定commit和目录tree按SHA有界缓存。需分别测量E0完成到固定feed提交/入队、中央准入/签收、快照生成/发布、两端验签及双方原页面完整可见时间；轮询频率不代表端到端延迟保证。
 
