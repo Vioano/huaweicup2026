@@ -95,7 +95,7 @@ def consume(ledger, directory):
                 raise ValueError('Artifact bytes/hash mismatch: ' + path)
         receipt = ledger.ingest(feed, loader, source)
         ids = {digest(packed(row).encode()) for row in feed['records']}
-        rows = [row for row in ledger.records() if row['id'] in ids]
+        rows = ledger.records_by_ids(ids)
         response.update(state='accepted', receipt=receipt,
                         admission={'records': len(rows), 'eligible': sum(r['eligible'] for r in rows),
                                    'reported_ok': sum(r['status'] == 'ok' and not r['eligible'] for r in rows),
