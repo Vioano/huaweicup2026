@@ -5,6 +5,8 @@ from unittest.mock import patch
 
 from src.q2_nikolastarx import gap_calendar, ready_exchange as r05
 from src.q2_nikolastarx import ready_exchange_candidate as adapter
+from src.q2_nikolastarx.gap_candidate import build_with_witness
+from src.q2_nikolastarx.candidate_ddr import mandatory_copy_work
 from src.q2_nikolastarx.direct import UnsupportedStructure, derive_multicore_plan
 from tests.q2_nikolastarx.test_gap_candidate import CONFIG, diamond
 
@@ -52,6 +54,26 @@ class ReadyExchangeTests(unittest.TestCase):
         self.assertIn(meta['returned'], ('seed', 'rebuilt'))
         self.assertEqual(meta['calls'], {'E0': 0, 'E1': 0, 'E2': 0})
         self.assertIn('independent_bytes_returned', meta)
+
+    def test_proxy_guard_is_explicit_and_default_build_stays_guarded(self):
+        graph = diamond()
+        for op in graph['ops']:
+            if op['pipe'].startswith('PIPE_MTE'):
+                op['pipe'] = 'PIPE_M'
+        seed, _, witness = build_with_witness(graph, 2, CONFIG)
+        default_plan, default_meta = adapter.build_from_seed(graph, seed, witness, 2, CONFIG)
+        raw_plan, raw_meta = adapter.build_from_seed(
+            graph, seed, witness, 2, CONFIG, final_proxy_guard=False)
+        self.assertTrue(default_meta['final_proxy_guard_enabled'])
+        self.assertFalse(raw_meta['final_proxy_guard_enabled'])
+        for plan, meta in ((default_plan, default_meta), (raw_plan, raw_meta)):
+            derive_multicore_plan(graph, plan)
+            self.assertEqual(mandatory_copy_work(graph, plan, CONFIG['bandwidth'])['transfer_bytes'],
+                             meta['independent_bytes_returned'])
+            self.assertLessEqual(meta['independent_bytes_returned'], meta['pre_step2_bytes_seed'])
+        with patch.object(adapter, 'build_from_seed', wraps=adapter.build_from_seed) as wrapped:
+            adapter.build(graph, 2, CONFIG)
+            self.assertNotIn('final_proxy_guard', wrapped.call_args.kwargs)
 
     def test_unsupported_only_is_guarded(self):
         seed = {'node_to_subgraph': {}, 'core_schedules': [[], []]}

@@ -2,15 +2,19 @@
 
 Ported from ChatGPT 6 Pro r05 attachment ``ready_exchange_candidate.py``
 (SHA-256 c2a1695618d917d974a184c0574222b391242b484159e09bee8a9c8ae133c998).
-Local change: package documentation now points to the existing gap_calendar
-used by ready_exchange. Uses public existing imports only; no evaluator call.
+Local changes: package documentation points to the existing gap_calendar;
+build_from_seed exposes the core's existing final_proxy_guard for isolated
+falsification, while build() keeps its original guarded default. Uses public
+existing imports only; no evaluator call.
 Real graph compatibility and official score remain unverified by this port.
 """
 from __future__ import annotations
 from collections import defaultdict
 
 
-def build_from_seed(graph, seed_plan, witness, cores, config):
+def build_from_seed(graph, seed_plan, witness, cores, config, *, final_proxy_guard=True):
+    if type(final_proxy_guard) is not bool:
+        raise ValueError('final_proxy_guard must be bool')
     from .dag_direct import DAGIndex
     from .direct import derive_multicore_plan, UnsupportedStructure
     from .gap_corridor import physical_nets
@@ -20,6 +24,7 @@ def build_from_seed(graph, seed_plan, witness, cores, config):
         derive_multicore_plan(graph, seed_plan)
         return seed_plan, {'method':'ready_injective_tensor_matching', 'returned':'seed',
                            'reason':'no cross-core assignment at one core',
+                           'final_proxy_guard_enabled':final_proxy_guard,
                            'calls':{'E0':0,'E1':0,'E2':0}}
     index=DAGIndex(graph)
     bandwidth=config['bandwidth']; delay=config['cross_core_copy_delay_cycles']
@@ -66,7 +71,8 @@ def build_from_seed(graph, seed_plan, witness, cores, config):
     lags={uv:delay+2*sum(max(1,(s+bandwidth-1)//bandwidth) for s in values)
           for uv,values in sizes.items()}
     ops={u:Op(o['pipe'],index.duration(u)) for u,o in index.ops.items()}
-    sequences,meta=rebuild(ops,packets,lags,nets,constant,owner,seed_sequences)
+    sequences,meta=rebuild(ops,packets,lags,nets,constant,owner,seed_sequences,
+                           final_proxy_guard=final_proxy_guard)
     mapping=seed_plan['node_to_subgraph']
     plan={'node_to_subgraph':dict(mapping),'core_schedules':[
         [mapping[str(u)] for u in row] for row in sequences]}
@@ -76,7 +82,8 @@ def build_from_seed(graph, seed_plan, witness, cores, config):
     assert old==meta['pre_step2_bytes_seed']
     expected=meta['pre_step2_bytes_rebuilt'] if meta['returned']=='rebuilt' else old
     assert new==expected<=old
-    meta.update(original_chains=len(chains), independent_bytes_returned=new,
+    meta.update(final_proxy_guard_enabled=final_proxy_guard,
+                original_chains=len(chains), independent_bytes_returned=new,
                 original_starts_retained=False, low_slack_groups_retained=False,
                 original_chain_ownership_retained=False)
     return plan,meta
@@ -90,6 +97,7 @@ def build(graph,cores,config):
         plan,meta=build_from_seed(graph,seed,witness,cores,config)
     except UnsupportedStructure as error:
         plan,meta=seed, {'method':'ready_injective_tensor_matching', 'returned':'seed',
-                        'guard_rejected':str(error), 'calls':{'E0':0,'E1':0,'E2':0}}
+                        'guard_rejected':str(error), 'final_proxy_guard_enabled':True,
+                        'calls':{'E0':0,'E1':0,'E2':0}}
     meta['seed_metadata']=seed_meta
     return plan,meta
