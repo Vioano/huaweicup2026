@@ -42,3 +42,16 @@ python3 -B results/a/q1-historical-refine-feed-20260924/export.py
 本地预检使用成绩台维护代码 `3f0004815ca1c8f1af14b4f77db652caa98b37ac` 的 `src/benchmark_board/protocol.py`，以本 worktree 为 `--repo`，传入上述 feed 和 `--submission`。结果见 [`preflight.json`](preflight.json)：`valid=true, submission=true, records=3, eligible=3`。此预检只读格式和原件，在临时账本验证，没有写中央成绩台，没有重新运行算法，也不等于独立复跑或算法验收。
 
 本导出新启动次数：solver=0、E0=0、E1=0、E2=0。原历史每例 2 次 E0、9 次 E1 的成本仍在 feed，不用导出零调用覆盖历史成本。原件、当前 feed、所有引用均在同一新交付提交内可读。
+
+## Revision 2：补齐已存在的官方单核分母
+
+维护者指出胜出记录需要自己附身份匹配的分母，不能从被替代的旧记录继承。
+[`board-feed-historical-refine-r2.json`](board-feed-historical-refine-r2.json)
+因此保留同三个 `attempt_id`，仅升 `revision=2`、添加 baseline 原件及说明。
+原 revision 1 保留，历史求解墙钟仍为 null，全部 metrics 和运行来源不变。
+
+`add_baselines.py` 从固定 `6664a63adc3464d28d1f835d907cdeaea23e6b35`
+的 fixed64 feed 定位已发布 official-singlecore 原件，逐一核对 graph/config/official
+三项身份及压缩文件 SHA-256，将原字节复制到 `baselines/`。这不是从 fixed64
+Makespan 构造分母，也没有重新评分。002、044、051 分母分别为 261945、154407、607628。
+维护者当前协议的本地预检为 3 条全部有效；原件一致不等于独立科学验收。
