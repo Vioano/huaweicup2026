@@ -264,7 +264,7 @@ class Engine:
         status={'schema_version':1,'role':self.role,'state':'syncing','last_attempt_at':now(),
                 'last_success_at':previous.get('last_success_at'),'error':None,'data':previous.get('data',{}),
                 'software':previous.get('software',{}),'upload':self.outbox_counts(),
-                'transport':{'backend':'github-api','poll_seconds':self.config.get('poll_seconds',5)}}
+                'transport':{'backend':'github-api','poll_seconds':self.config.get('poll_seconds',2)}}
         write_json(status_path,status)
         try:
             head=self.remote.head()
