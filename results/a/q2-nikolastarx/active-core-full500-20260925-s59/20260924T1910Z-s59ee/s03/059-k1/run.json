@@ -1,0 +1,1205 @@
+{
+  "case": "059",
+  "cores": 1,
+  "status": "ok",
+  "started_at": "2026-09-24T19:20:34.881835Z",
+  "calls": {
+    "solver": 1,
+    "E0": 1,
+    "E1": 0,
+    "E2": 0
+  },
+  "phase": "complete",
+  "solver_mode": "direct",
+  "solver": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "-m",
+      "src.q2_nikolastarx.adaptive_budget",
+      "data/raw/a/official/data/case_059.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "--cores",
+      "1",
+      "--output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/059-k1/plan.json",
+      "--evidence",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/059-k1/online",
+      "--wall",
+      "25"
+    ],
+    "started_at": "2026-09-24T19:20:34.882160Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 40812544,
+    "rss_samples": 3,
+    "cleanup_killed_pids": [],
+    "pid": 92814,
+    "observer_inclusive_peak_rss_bytes": 132513792,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:20:35.199462Z",
+    "wall_seconds": 0.31732712499797344
+  },
+  "online": {
+    "status": "ok",
+    "calls": {
+      "E0": 0,
+      "E1": 0,
+      "E2": 0
+    },
+    "attempts": [
+      {
+        "name": "adaptive_budget",
+        "status": "constructed",
+        "detail": {
+          "selected_strategy": "component_envelope",
+          "eligible_ops": 2752,
+          "components": 64,
+          "cores": 1,
+          "capacity_bytes": {
+            "L1": 524288,
+            "UB": 131072
+          },
+          "per_core": [
+            {
+              "core": 0,
+              "components": 64,
+              "shared_tensors": 352,
+              "cohorts": [
+                {
+                  "components": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 405504,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 49152,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 454656,
+                    "UB": 0
+                  },
+                  "within_capacity": true
+                },
+                {
+                  "components": [
+                    4
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 495616,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 507904,
+                    "UB": 0
+                  },
+                  "within_capacity": true
+                },
+                {
+                  "components": [
+                    5
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 585728,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 598016,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    6
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 675840,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 688128,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    7
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    8
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    9
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    10
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    11
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    12
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    13
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    14
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    15
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    16
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    17
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    18
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    19
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    20
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    21
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    22
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    23
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    24
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    25
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    26
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    27
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    28
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    29
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    30
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    31
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    32
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    33
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    34
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    35
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    36
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    37
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    38
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    39
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    40
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    41
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    42
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    43
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    44
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    45
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    46
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    47
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    48
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    49
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    50
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    51
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    52
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    53
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    54
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    55
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    56
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 765952,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 778240,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    57
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 675840,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 688128,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    58
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 585728,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 12288,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 598016,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    59,
+                    60
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 495616,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 24576,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 520192,
+                    "UB": 0
+                  },
+                  "within_capacity": true
+                },
+                {
+                  "components": [
+                    61,
+                    62,
+                    63
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 315392,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 36864,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 352256,
+                    "UB": 0
+                  },
+                  "within_capacity": true
+                }
+              ],
+              "max_open_components_bound": 4,
+              "all_raw_envelopes_fit": false
+            }
+          ],
+          "certificate_scope": "raw tensor priority-prefix envelope and component open-count only",
+          "zero_spill_claim": false,
+          "limitations": [
+            "shared input residency spans cohorts and is retained in reserves",
+            "oversized singleton cohorts are emitted without a memory certificate",
+            "no Step2/Step3 or global runtime feasibility guarantee"
+          ],
+          "component_pressure": {
+            "largest_component_pipe_work": {
+              "PIPE_M": 11528,
+              "PIPE_V": 1596
+            },
+            "balanced_pipe_work_lower_bound": {
+              "PIPE_M": 737792,
+              "PIPE_V": 102144
+            },
+            "component_exceeds_balanced_pipe_work": false,
+            "shared_external_bytes": {
+              "L1": 1081344
+            },
+            "shared_external_exceeds_capacity": true,
+            "wave_rejected": "requires at least two external inputs shared by every component"
+          },
+          "adaptive_route": "component_envelope",
+          "index_constructions": 1,
+          "base_construct_calls": 1,
+          "repair_construct_calls": 0,
+          "repair_trigger": {
+            "recognized": false,
+            "large_crossings": 0,
+            "large_crossing_bytes": 0,
+            "reason": "vector lanes: all eligible ops must use PIPE_V"
+          },
+          "route_limitations": "unchanged general plan; no official feasibility/score/zero-spill certificate"
+        },
+        "plan_sha256": "cca82a904bea62563fb7fcd01e402eeab56331e7966af4f9f21c86319b0df41c"
+      }
+    ],
+    "started_at": "2026-09-24T19:20:34.945558+00:00",
+    "validation_scope": "official structural validation only; no E0/Step2/Step3 certificate",
+    "selected": "adaptive_budget",
+    "plan_sha256": "cca82a904bea62563fb7fcd01e402eeab56331e7966af4f9f21c86319b0df41c",
+    "stop_reason": "single_structural_route_completed",
+    "finished_at": "2026-09-24T19:20:35.018299+00:00",
+    "internal_wall_seconds": 0.0728440000093542
+  },
+  "final_reserved": true,
+  "final": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "data/raw/a/official/code/multicore_cut_evaluate_problem_2.py",
+      "data/raw/a/official/data/case_059.json",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/059-k1/plan.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "-o",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/059-k1/final/result.json",
+      "--trace-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/059-k1/final/trace.json",
+      "--log-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/059-k1/final/official.log"
+    ],
+    "started_at": "2026-09-24T19:20:35.201802Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 70713344,
+    "rss_samples": 7,
+    "cleanup_killed_pids": [],
+    "pid": 92874,
+    "observer_inclusive_peak_rss_bytes": 162414592,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:20:35.789563Z",
+    "wall_seconds": 0.5877839590248186
+  },
+  "full_online_result_equal": null,
+  "makespan_cycles": 826573,
+  "finished_at": "2026-09-24T19:20:35.794896Z"
+}

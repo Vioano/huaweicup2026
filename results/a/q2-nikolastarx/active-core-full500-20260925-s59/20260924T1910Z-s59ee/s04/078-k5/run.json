@@ -1,0 +1,183 @@
+{
+  "case": "078",
+  "cores": 5,
+  "status": "ok",
+  "started_at": "2026-09-24T19:20:05.555712Z",
+  "calls": {
+    "solver": 1,
+    "E0": 1,
+    "E1": 0,
+    "E2": 0
+  },
+  "phase": "complete",
+  "solver_mode": "direct",
+  "solver": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "-m",
+      "src.q2_nikolastarx.adaptive_budget",
+      "data/raw/a/official/data/case_078.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "--cores",
+      "5",
+      "--output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s04/078-k5/plan.json",
+      "--evidence",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s04/078-k5/online",
+      "--wall",
+      "25"
+    ],
+    "started_at": "2026-09-24T19:20:05.556265Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 30146560,
+    "rss_samples": 2,
+    "cleanup_killed_pids": [],
+    "pid": 85720,
+    "observer_inclusive_peak_rss_bytes": 141082624,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:20:05.807503Z",
+    "wall_seconds": 0.2512542499753181
+  },
+  "online": {
+    "status": "ok",
+    "calls": {
+      "E0": 0,
+      "E1": 0,
+      "E2": 0
+    },
+    "attempts": [
+      {
+        "name": "adaptive_budget",
+        "status": "constructed",
+        "detail": {
+          "selected_strategy": "active_core_shared_wave",
+          "components": 8,
+          "cores": 5,
+          "shared_external_inputs": 54,
+          "shared_external_bytes": 2148480,
+          "raw_priority_peak_bytes": [
+            {
+              "L1": 215808,
+              "UB": 0
+            },
+            {
+              "L1": 215808,
+              "UB": 0
+            },
+            {
+              "L1": 215808,
+              "UB": 0
+            },
+            {
+              "L1": 215808,
+              "UB": 0
+            }
+          ],
+          "raw_peaks_fit_capacity": true,
+          "zero_spill_claim": false,
+          "limitations": [
+            "raw touch intervals omit official COPY/spill and Step2/Step3 reorder",
+            "fixed whole-component assignment; activation frontier may grow with component count"
+          ],
+          "requested_cores": 5,
+          "active_cores": 4,
+          "per_job_pipe_work": {
+            "PIPE_M": 254736,
+            "PIPE_V": 12912
+          },
+          "shared_input_bytes": 2148480,
+          "private_input_bytes": 98304,
+          "raw_private_peak_max": {
+            "L1": 49152,
+            "UB": 0
+          },
+          "raw_shared_wave_max": {
+            "L1": 165888
+          },
+          "raw_capacity_jobs_per_core_bound": 7,
+          "core_choice": {
+            "model_objective_cycles": 509472,
+            "compute_load_cycles": 509472,
+            "input_service_cycles": 144871,
+            "critical_path_cycles": 246816,
+            "crossing_candidates": [
+              5
+            ]
+          },
+          "official_optimality_claim": false,
+          "component_pressure": {
+            "largest_component_pipe_work": {
+              "PIPE_M": 254736,
+              "PIPE_V": 12912
+            },
+            "balanced_pipe_work_lower_bound": {
+              "PIPE_M": 407578,
+              "PIPE_V": 20660
+            },
+            "component_exceeds_balanced_pipe_work": false,
+            "shared_external_bytes": {
+              "L1": 2148480
+            },
+            "shared_external_exceeds_capacity": true
+          },
+          "adaptive_route": "active_core_shared_wave",
+          "index_constructions": 1,
+          "base_construct_calls": 1,
+          "repair_construct_calls": 0,
+          "repair_trigger": {
+            "recognized": false,
+            "large_crossings": 0,
+            "large_crossing_bytes": 0,
+            "reason": "vector lanes: all eligible ops must use PIPE_V"
+          },
+          "route_limitations": "unchanged general plan; no official feasibility/score/zero-spill certificate"
+        },
+        "plan_sha256": "b7e3540d2c168ff4f8b583823b623c767504975f0498b22af351198b7c7f784c"
+      }
+    ],
+    "started_at": "2026-09-24T19:20:05.627845+00:00",
+    "validation_scope": "official structural validation only; no E0/Step2/Step3 certificate",
+    "selected": "adaptive_budget",
+    "plan_sha256": "b7e3540d2c168ff4f8b583823b623c767504975f0498b22af351198b7c7f784c",
+    "stop_reason": "single_structural_route_completed",
+    "finished_at": "2026-09-24T19:20:05.658381+00:00",
+    "internal_wall_seconds": 0.030653582973172888
+  },
+  "final_reserved": true,
+  "final": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "data/raw/a/official/code/multicore_cut_evaluate_problem_2.py",
+      "data/raw/a/official/data/case_078.json",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s04/078-k5/plan.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "-o",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s04/078-k5/final/result.json",
+      "--trace-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s04/078-k5/final/trace.json",
+      "--log-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s04/078-k5/final/official.log"
+    ],
+    "started_at": "2026-09-24T19:20:05.808840Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 35684352,
+    "rss_samples": 3,
+    "cleanup_killed_pids": [],
+    "pid": 85763,
+    "observer_inclusive_peak_rss_bytes": 146620416,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:20:06.166245Z",
+    "wall_seconds": 0.3574477910005953
+  },
+  "full_online_result_equal": null,
+  "makespan_cycles": 516480,
+  "finished_at": "2026-09-24T19:20:06.168667Z"
+}

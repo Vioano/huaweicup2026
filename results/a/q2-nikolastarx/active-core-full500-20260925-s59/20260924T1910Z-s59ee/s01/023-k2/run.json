@@ -1,0 +1,308 @@
+{
+  "case": "023",
+  "cores": 2,
+  "status": "ok",
+  "started_at": "2026-09-24T19:23:33.264814Z",
+  "calls": {
+    "solver": 1,
+    "E0": 1,
+    "E1": 0,
+    "E2": 0
+  },
+  "phase": "complete",
+  "solver_mode": "direct",
+  "solver": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "-m",
+      "src.q2_nikolastarx.adaptive_budget",
+      "data/raw/a/official/data/case_023.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "--cores",
+      "2",
+      "--output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s01/023-k2/plan.json",
+      "--evidence",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s01/023-k2/online",
+      "--wall",
+      "25"
+    ],
+    "started_at": "2026-09-24T19:23:33.265073Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 4833280,
+    "rss_samples": 2,
+    "cleanup_killed_pids": [],
+    "pid": 26433,
+    "observer_inclusive_peak_rss_bytes": 89702400,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:23:33.497781Z",
+    "wall_seconds": 0.23273633301141672
+  },
+  "online": {
+    "status": "ok",
+    "calls": {
+      "E0": 0,
+      "E1": 0,
+      "E2": 0
+    },
+    "attempts": [
+      {
+        "name": "adaptive_budget",
+        "status": "constructed",
+        "detail": {
+          "selected_strategy": "component_envelope",
+          "eligible_ops": 1011,
+          "components": 43,
+          "cores": 2,
+          "capacity_bytes": {
+            "L1": 524288,
+            "UB": 131072
+          },
+          "per_core": [
+            {
+              "core": 0,
+              "components": 25,
+              "shared_tensors": 7,
+              "cohorts": [
+                {
+                  "components": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    9
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 0,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 8832,
+                    "UB": 129034
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 8832,
+                    "UB": 129034
+                  },
+                  "within_capacity": true
+                },
+                {
+                  "components": [
+                    10,
+                    12,
+                    13,
+                    15,
+                    18,
+                    21,
+                    26,
+                    28,
+                    31
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 73728,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 70656,
+                    "UB": 121216
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 144384,
+                    "UB": 121216
+                  },
+                  "within_capacity": true
+                },
+                {
+                  "components": [
+                    32,
+                    34,
+                    35,
+                    36,
+                    38,
+                    39,
+                    40,
+                    42
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 49440,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 94720,
+                    "UB": 92160
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 144160,
+                    "UB": 92160
+                  },
+                  "within_capacity": true
+                }
+              ],
+              "max_open_components_bound": 9,
+              "all_raw_envelopes_fit": true
+            },
+            {
+              "core": 1,
+              "components": 18,
+              "shared_tensors": 3,
+              "cohorts": [
+                {
+                  "components": [
+                    7,
+                    8,
+                    11,
+                    14,
+                    16,
+                    17,
+                    19
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 73728,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 37888,
+                    "UB": 114700
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 111616,
+                    "UB": 114700
+                  },
+                  "within_capacity": true
+                },
+                {
+                  "components": [
+                    20,
+                    22,
+                    23,
+                    24,
+                    25,
+                    27,
+                    29
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 73728,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 92672,
+                    "UB": 116360
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 166400,
+                    "UB": 116360
+                  },
+                  "within_capacity": true
+                },
+                {
+                  "components": [
+                    30,
+                    33,
+                    37,
+                    41
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 0,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 46496,
+                    "UB": 42240
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 46496,
+                    "UB": 42240
+                  },
+                  "within_capacity": true
+                }
+              ],
+              "max_open_components_bound": 7,
+              "all_raw_envelopes_fit": true
+            }
+          ],
+          "certificate_scope": "raw tensor priority-prefix envelope and component open-count only",
+          "zero_spill_claim": false,
+          "limitations": [
+            "shared input residency spans cohorts and is retained in reserves",
+            "oversized singleton cohorts are emitted without a memory certificate",
+            "no Step2/Step3 or global runtime feasibility guarantee"
+          ],
+          "component_pressure": {
+            "largest_component_pipe_work": {
+              "PIPE_V": 6285,
+              "PIPE_M": 6716
+            },
+            "balanced_pipe_work_lower_bound": {
+              "PIPE_V": 34779,
+              "PIPE_M": 31692
+            },
+            "component_exceeds_balanced_pipe_work": false,
+            "shared_external_bytes": {
+              "L1": 133536
+            },
+            "shared_external_exceeds_capacity": false
+          },
+          "adaptive_route": "component_envelope",
+          "index_constructions": 1,
+          "base_construct_calls": 1,
+          "repair_construct_calls": 0,
+          "repair_trigger": {
+            "recognized": false,
+            "large_crossings": 0,
+            "large_crossing_bytes": 0,
+            "reason": "vector lanes: all eligible ops must use PIPE_V"
+          },
+          "route_limitations": "unchanged general plan; no official feasibility/score/zero-spill certificate"
+        },
+        "plan_sha256": "adb851af82e6217332de40a5dccf6f826b0bf26a5d621607172fced73c67ccca"
+      }
+    ],
+    "started_at": "2026-09-24T19:23:33.324842+00:00",
+    "validation_scope": "official structural validation only; no E0/Step2/Step3 certificate",
+    "selected": "adaptive_budget",
+    "plan_sha256": "adb851af82e6217332de40a5dccf6f826b0bf26a5d621607172fced73c67ccca",
+    "stop_reason": "single_structural_route_completed",
+    "finished_at": "2026-09-24T19:23:33.342400+00:00",
+    "internal_wall_seconds": 0.017646041000261903
+  },
+  "final_reserved": true,
+  "final": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "data/raw/a/official/code/multicore_cut_evaluate_problem_2.py",
+      "data/raw/a/official/data/case_023.json",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s01/023-k2/plan.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "-o",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s01/023-k2/final/result.json",
+      "--trace-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s01/023-k2/final/trace.json",
+      "--log-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s01/023-k2/final/official.log"
+    ],
+    "started_at": "2026-09-24T19:23:33.499164Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 36257792,
+    "rss_samples": 3,
+    "cleanup_killed_pids": [],
+    "pid": 26462,
+    "observer_inclusive_peak_rss_bytes": 116375552,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:23:33.797108Z",
+    "wall_seconds": 0.29796812499989755
+  },
+  "full_online_result_equal": null,
+  "makespan_cycles": 45705,
+  "finished_at": "2026-09-24T19:23:33.798981Z"
+}

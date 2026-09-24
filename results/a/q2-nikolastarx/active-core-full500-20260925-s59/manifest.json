@@ -1,0 +1,38 @@
+{
+  "source_commit": "2794ceba93acc1f7fc119154f61082511843d4b3",
+  "solver_module": "src.q2_nikolastarx.adaptive_budget",
+  "protocols": [
+    "results/a/q2-nikolastarx/active-core-full500-20260925-s59/protocol-s01.json",
+    "results/a/q2-nikolastarx/active-core-full500-20260925-s59/protocol-s02.json",
+    "results/a/q2-nikolastarx/active-core-full500-20260925-s59/protocol-s03.json",
+    "results/a/q2-nikolastarx/active-core-full500-20260925-s59/protocol-s04.json"
+  ],
+  "shards": {
+    "s01": "001-025",
+    "s02": "026-050",
+    "s03": "051-075",
+    "s04": "076-100"
+  },
+  "total_cells": 500,
+  "max_workers": 4,
+  "maximum_calls": {
+    "solver": 500,
+    "external_E0": 500,
+    "online_E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "retries": 0
+  },
+  "per_cell_seconds": {
+    "solver": 25,
+    "E0": 60,
+    "whole": 95
+  },
+  "aggregate_wall_seconds": 1800,
+  "global_rss_cap_bytes": 4294967296,
+  "conservative_per_shard_rss_cap_bytes": 943718400,
+  "global_stop_file": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/global-stop.json",
+  "previous_pilot_reuse": false,
+  "first_failure_stops_new_dispatch": true,
+  "timing_note": "Concurrent shared-host wall seconds are not exclusive-process latency."
+}
