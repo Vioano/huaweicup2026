@@ -79,6 +79,8 @@
 
 E0仍是最终官方确认来源；E1须匹配维护者校准表的固定实现/问题/图/核数/config/runtime，E2只存研发来源、不入正式最优榜。`artifacts_checked`只表示原件和声明身份匹配，**不证明运行收据语义真实、执行过未修改官方代码、算法合法性已独立复跑或科学验收通过**。`eligible/evidence/admission_notes/source/imported_at/id/sequence`由服务生成，队友不填写。
 
+官方P3原件实际标识是 `scene:"B", problem:3, cache_mode:"read_only"`（冻结problem3源码684–689行）；不得改成scene C来迎合网站。P2同plan对照是无Cache的B结果，不含P3标识或Cache统计。网站场景名称“情况C”不是原件scene字段的值。
+
 ### `provenance`：谁的算法，谁运行，怎么运行
 
 下列对象和列出的键均必需；未知使用schema允许的null，并在 `missing_reasons` 给出完整点路径及原因。

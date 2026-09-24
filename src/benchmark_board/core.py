@@ -14,6 +14,12 @@ def digest(data): return hashlib.sha256(data).hexdigest()
 def number(x, positive=False): return type(x) in (int, float) and math.isfinite(x) and (x > 0 if positive else x >= 0)
 def sha(x, size=64): return isinstance(x, str) and re.fullmatch('[0-9a-f]{%s}' % size, x) is not None
 
+def official_scene(result, problem):
+    # The frozen P3 evaluator calls its base execution scene B, not C.
+    if problem == 'P3':
+        return result.get('scene') == 'B' and type(result.get('problem')) is int and result['problem'] == 3 and result.get('cache_mode') == 'read_only'
+    return result.get('scene') == ('A' if problem == 'P1' else 'B') and result.get('problem') in (None, int(problem[1])) and result.get('cache_mode') is None and 'cache_stats' not in result
+
 def safe_path(path):
     if not isinstance(path, str) or '\\' in path or ':' in path or any(p in ('..', '.git') for p in path.split('/')) or PurePosixPath(path).is_absolute():
         raise ValueError('unsafe artifact path')
@@ -92,7 +98,7 @@ class Ledger:
             result=self.artifact(arts.get('result'),loader,source)
             self.artifact(arts.get('run'),loader,source)  # real receipt bytes; semantics remain source-reported
             if type(result.get('makespan')) is not type(metrics['makespan_cycles']) or result['makespan']!=metrics['makespan_cycles']: raise ValueError('result/makespan or number type mismatch')
-            if result.get('scene')!={'P1':'A','P2':'B','P3':'C'}[p] or result.get('num_cores')!=k: raise ValueError('result scene/core mismatch')
+            if not official_scene(result,p) or result.get('num_cores')!=k: raise ValueError('result problem/cache/scene/core mismatch')
             # Derive memory metrics from official result, never caller's prettier numbers.
             movement=result.get('data_movement_bytes',{})
             metrics['ddr_bytes']=movement.get('scheduled_copy_bytes')
@@ -125,7 +131,7 @@ class Ledger:
                     if not r['eligible']:
                         r['admission_notes'].append('单核分母原件已核；加速比的多核分子仍为作者报告，仅用于报告预览')
                 else:
-                    if p!='P3' or pair.get('plan_sha256')!=identity.get('plan_sha256') or pair.get('cores')!=k or result.get('scene')!='B' or result.get('num_cores')!=k: raise ValueError('Cache 必须同计划、同核数 P2/P3 配对')
+                    if p!='P3' or pair.get('plan_sha256')!=identity.get('plan_sha256') or pair.get('cores')!=k or not official_scene(result,'P2') or result.get('num_cores')!=k: raise ValueError('Cache 必须同计划、同核数 P2/P3 配对')
                     metrics['cache_gain']=cycles/metrics['makespan_cycles']; r['cache_pair_verified']=True
             except (ValueError,KeyError,TypeError,FileNotFoundError,json.JSONDecodeError) as error: r['admission_notes'].append(field+': '+str(error))
         return r
@@ -183,7 +189,9 @@ class Ledger:
                     # Prefer admitted records; reports are preview only and never displace admitted best.
                     candidates.sort(key=lambda r:(not r['eligible'],r['metrics']['makespan_cycles'],r['id']))
                     best=candidates[0] if candidates else None
-                    cells.append({'problem':p,'case_id':f'{n:03d}','cores':k,'best':best,'attempts':len(rows),'status':('ok' if best and best['eligible'] else 'reported' if best else ('reported' if rows[-1]['status']=='ok' else rows[-1]['status']) if rows else 'not_run')})
+                    latest_report=next((r for r in reversed(rows) if r['status']=='ok' and not r['eligible']),None)
+                    missing=[a for a in ('plan','result','run') if not latest_report.get('artifacts',{}).get(a)] if latest_report else []
+                    cells.append({'problem':p,'case_id':f'{n:03d}','cores':k,'best':best,'attempts':len(rows),'missing_artifacts':missing,'status':('ok' if best and best['eligible'] else 'reported' if best else ('reported' if rows[-1]['status']=='ok' else rows[-1]['status']) if rows else 'not_run')})
         with self.connect() as db:
             cursor=db.execute('SELECT COALESCE(MAX(seq),0) FROM events').fetchone()[0]
             sources={x['id']:json.loads(x['body']) for x in db.execute('SELECT * FROM sources')}

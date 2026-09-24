@@ -11,7 +11,7 @@ class LedgerTests(unittest.TestCase):
         data=packed(obj).encode();path='results/'+name;self.blobs[path]=data;return {'path':path,'sha256':digest(data)}
     def record(self,attempt='test-a',makespan=100):
         plan=self.artifact(attempt+'plan.json',{'node_to_subgraph':{},'core_schedules':{}})
-        result=self.artifact(attempt+'result.json',{'scene':'C','num_cores':4,'makespan':makespan})
+        result=self.artifact(attempt+'result.json',{'scene':'B','problem':3,'cache_mode':'read_only','num_cores':4,'makespan':makespan})
         run=self.artifact(attempt+'run.json',{'test_fixture':True})
         return {'attempt_id':attempt,'revision':1,'run_id':'synthetic-test-only','algorithm_id':'fixture','algorithm_name':'fixture','solver_commit':'1'*40,'problem':'P3','case_id':'002','cores':4,'status':'ok','metrics':{'makespan_cycles':makespan},'evaluator':{'route':'E0','commit':'2'*40,'entrypoint':'test'},'identity':{'official_sha256':'a'*64,'config_sha256':'b'*64,'graph_sha256':'c'*64,'plan_sha256':plan['sha256']},'artifacts':{'plan':plan,'result':result,'run':run}}
     def put(self,*rows): return self.l.ingest({'schema_version':1,'records':list(rows)},lambda p:self.blobs[p],self.source)
@@ -60,6 +60,14 @@ class LedgerTests(unittest.TestCase):
         self.assertTrue(row['baseline_verified']);self.assertFalse(row['eligible']);self.assertIsNone(self.best())
         r['revision']=2;r['identity']['config_sha256']='f'*64;self.put(r)
         self.assertIsNone(self.l.records()[-1]['metrics'].get('baseline_speedup'))
+    def test_official_p3_identity_and_no_cache_pair_are_distinct(self):
+        r=self.record('native-p3');self.put(r);self.assertTrue(self.best()['eligible'])
+        for name,result in [('old-c',{'scene':'C'}),('plain-b',{'scene':'B'}),('missing-mode',{'scene':'B','problem':3})]:
+            row=self.record(name);row['artifacts']['result']=self.artifact(name+'.json',dict(result,num_cores=4,makespan=100));self.put(row)
+            self.assertFalse(self.l.records()[-1]['eligible'])
+        r['revision']=2
+        r['cache_pair']=dict(r['identity'],route='E0',cores=4,result=self.artifact('bad-no-cache.json',{'scene':'B','problem':3,'cache_mode':'read_only','num_cores':4,'makespan':150}))
+        self.put(r);self.assertFalse(self.l.records()[-1]['cache_pair_verified'])
         r['revision']=3;r['identity']['config_sha256']='b'*64;r['evaluator']['route']='E2';self.put(r)
         self.assertIsNone(self.l.records()[-1]['metrics'].get('baseline_speedup'))
 if __name__=='__main__':unittest.main()
