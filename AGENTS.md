@@ -63,7 +63,7 @@ LYX、farmer 按本人已授权的批次和独立数据任务参与；维护者�
 
 团队成员继续使用本人 GitHub 身份读取组织主库 `huaweibei123/huaweicup2026`，协作材料给组织主库的固定提交链接，Issues、PR、验收和 Atlas 通道不变。需要队长资源时，在原任务 Issue 提供固定输入/代码提交、命令、资源与时间预算、预期产物，由队长安排执行并把可共享结果发布到主库；资源登记本身不授权无限运行、训练或采购。详见 [资源权限与实测状态](docs/a/CAPTAIN_RESOURCES.md)。
 
-**仅向队长的 ChatGPT/Pro 提供材料时**：该 GitHub 连接目前仅授权 `Vioano`，不能读取组织主库，因此使用研究镜像 `Vioano/huaweicup2026` 的 `blob/<完整 SHA>/<路径>`。这不是要求队友改用镜像。队长发送前用既有 `scripts/sync_vioano_mirror.py` 确认所需提交与文件已同步，具体见 [多端同步与 Pro 材料交付](docs/a/MULTI_REPO_SYNC.md)。要求当前 Pro 回报实际读到的文件；同步成功不等于已读到。
+**向 ChatGPT/Pro 提供材料时**：2026-09-24 用户已将组织主库与研究镜像都设为公开。优先给组织主库 `huaweibei123/huaweicup2026` 的 `blob/<完整 SHA>/<路径>`，避免分支移动和镜像时差；若当前连接只能使用 `Vioano`，则使用已核同步的镜像固定链接。公开访问不等于变更了连接授权，也不等于当前 Pro 已读到文件；要求其回报实际读取清单，缺件时补原件。镜像继续按既有 `scripts/sync_vioano_mirror.py` 同步，详见 [多端同步与 Pro 材料交付](docs/a/MULTI_REPO_SYNC.md)。
 
 ## GitHub 免费协作（2026-09-24）
 
