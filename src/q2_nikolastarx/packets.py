@@ -175,4 +175,3 @@ class GraphIndex:
                 'core_schedules': schedules}
         self.validate(self.graph, plan)
         return plan
-
