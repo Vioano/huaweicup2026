@@ -15,6 +15,7 @@ from .snapshot import (atomic_write, canonical, digest, now, read_central, publi
                        unpack, reject_history_regression, payload_name, git_json)
 from .submission import discover, references, MAX_FEED
 from .delta import pack_delta, unpack_delta
+from .git_fast import GitFastLane
 
 OUTBOX_PUBLISH_BATCH_SIZE = 16
 OUTBOX_RECEIPT_CHECK_BATCH_SIZE = 16
@@ -54,6 +55,7 @@ class Engine:
         self._receive_worker_status={'stage':'idle','started_at':None,'finished_at':None,'pending':0,'errors':[]}
         self._local_fastpath_status={'state':'idle','delivery_id':None,'started_at':None,
                                      'finished_at':None,'error':None}
+        self._git_fast_lane=None
 
     def sign(self,domain,payload): return self.signatures.sign(domain,self.actor,payload,self.key)
     def submission_lock(self,identity):
@@ -63,8 +65,9 @@ class Engine:
         keys={self.leader:self.trusted[self.leader]} if central else self.trusted
         return self.signatures.verify(envelope,domain=domain,trusted_keys=keys)
 
-    def channel(self,head,name,domain):
-        try: envelope=json.loads(self.remote.read_path(head,'channels/'+name+'.json'))
+    def channel(self,head,name,domain,*,remote=None):
+        source=remote or self.remote
+        try: envelope=json.loads(source.read_path(head,'channels/'+name+'.json'))
         except FileNotFoundError: return None,None
         payload=self.verify(envelope,domain,central=True)
         if type(payload.get('generation')) is not int or payload['generation']<1: raise ValueError('Invalid channel generation')
@@ -146,10 +149,13 @@ class Engine:
         self._accepted_cache_key=(manifest.get('payload_sha256'),manifest.get('payload_size'),manifest.get('snapshot_id'))
         self._accepted_payload_cache=payload
 
-    def accept_fast_snapshot(self,head):
+    def accept_fast_snapshot(self,head,*,remote=None,base_head=None):
         """Install a signed small change while the full object is still uploading."""
-        fast,envelope=self.channel(head,'fast','snapshot-delta')
+        source=remote or self.remote
+        fast,envelope=self.channel(head,'fast','snapshot-delta',remote=source)
         if fast is None: return
+        if (source is self.remote and fast.get('transport','rest')!='rest') or (source is not self.remote and fast.get('transport')!='git'):
+            raise ValueError('Fast snapshot transport mismatch')
         if fast.get('schema_version')!=1 or type(fast.get('base_generation')) is not int or fast['base_generation']<1:
             raise ValueError('Invalid fast snapshot channel')
         base_manifest=fast.get('base_manifest');target_manifest=fast.get('target_manifest')
@@ -164,7 +170,9 @@ class Engine:
         previous=read_json(current) if current.exists() else None
         if previous and '_fast_channel' in previous:
             prior=self.verify(previous['_fast_channel'],'snapshot-delta',central=True)
-            if fast['generation']<prior['generation'] or (fast['generation']==prior['generation'] and fast!=prior):
+            if (fast.get('transport','rest')==prior.get('transport','rest') and
+                    (fast['generation']<prior['generation'] or
+                     (fast['generation']==prior['generation'] and fast!=prior))):
                 raise ValueError('Fast snapshot generation rollback')
         if previous:
             if previous['sequence']>target_manifest['sequence']:
@@ -172,6 +180,9 @@ class Engine:
             if (previous['sequence']==target_manifest['sequence'] and
                     previous['records_sha256']!=target_manifest['records_sha256']):
                 raise ValueError('Fast snapshot rewrote accepted records')
+            if (previous['sequence']==target_manifest['sequence'] and
+                    target_manifest['generated_at']<=previous['generated_at']):
+                self.accepted_payload(previous);return
             if '_channel' in previous:
                 full=self.verify(previous['_channel'],'snapshot',central=True)
                 if full['generation']>fast['base_generation'] and previous['sequence']>=target_manifest['sequence']:
@@ -184,14 +195,18 @@ class Engine:
         elif base_path.exists():
             try: base=unpack(base_path.read_bytes(),base_manifest)
             except ValueError:
-                data=self.remote.read_path(head,base_object)
+                if source is not self.remote and base_head is None:
+                    raise FileNotFoundError('REST base snapshot is not cached yet')
+                data=self.remote.read_path(base_head or head,base_object)
                 base=unpack(data,base_manifest)
                 atomic_write(base_path,data)
         else:
-            data=self.remote.read_path(head,base_object)
+            if source is not self.remote and base_head is None:
+                raise FileNotFoundError('REST base snapshot is not cached yet')
+            data=self.remote.read_path(base_head or head,base_object)
             base=unpack(data,base_manifest)
             atomic_write(base_path,data)
-        delta=self.remote.read_path(head,delta_object)
+        delta=source.read_path(head,delta_object)
         if len(delta)!=fast['delta_size'] or digest(delta)!=fast['delta_sha256']:
             raise ValueError('Fast snapshot delta bytes/hash mismatch')
         target=unpack_delta(base,delta)
@@ -238,16 +253,22 @@ class Engine:
         manifest=publish_files(payload,self.state/'published')
         manifest={k:v for k,v in manifest.items() if k!='unchanged'}
         if previous:
-            self.publish_fast_delta(head,previous,old,payload,manifest)
+            data=pack_delta(old,payload)
+            if data is not None:
+                if self.config.get('git_fast_enabled',True):
+                    try: self.publish_git_fast_delta(previous,payload,manifest,data)
+                    except Exception as error:
+                        self.errors.append({'stage':'git_fast_publish','message':str(error)})
+                self.publish_fast_delta(head,previous,old,payload,manifest,data=data)
         path='objects/'+manifest['payload_sha256']
         channel={'generation':(previous['generation']+1 if previous else 1),'manifest':manifest,'object':path}
         self.remote.update({path:(self.state/'published'/payload_name(manifest)).read_bytes(),
                             'channels/central.json':canonical(self.sign('snapshot',channel))},
                            expected={'channels/central.json':canonical(envelope) if envelope else None})
 
-    def publish_fast_delta(self,head,base_channel,base_payload,target,manifest):
+    def publish_fast_delta(self,head,base_channel,base_payload,target,manifest,*,data=None):
         """Publish a small signed change before the legacy full object upload."""
-        data=pack_delta(base_payload,target)
+        if data is None: data=pack_delta(base_payload,target)
         if data is None: return
         prior,prior_envelope=self.channel(head,'fast','snapshot-delta') if head else (None,None)
         if prior:
@@ -268,6 +289,33 @@ class Engine:
         self.remote.update({object_path:data,
                             'channels/fast.json':canonical(self.sign('snapshot-delta',fast))},
                            expected={'channels/fast.json':canonical(prior_envelope) if prior_envelope else None})
+
+    def git_fast_lane(self):
+        if self._git_fast_lane is None:
+            self._git_fast_lane=GitFastLane(self.state,self.remote.repository)
+        return self._git_fast_lane
+
+    def publish_git_fast_delta(self,base_channel,target,manifest,data):
+        """Publish the same signed delta to a tiny, independently polled Git ref."""
+        lane=self.git_fast_lane();head=lane.head()
+        prior,prior_envelope=self.channel(head,'fast','snapshot-delta',remote=lane) if head else (None,None)
+        if prior:
+            prior_manifest=prior.get('target_manifest',{})
+            if prior_manifest.get('sequence',-1)>manifest['sequence']:
+                raise ValueError('Fast Git sequence rollback')
+            if (prior_manifest.get('sequence')==manifest['sequence'] and
+                    prior_manifest.get('records_sha256')!=manifest['records_sha256']):
+                raise ValueError('Fast Git rewrote records at the same sequence')
+            if prior_manifest==manifest: return
+        object_path='deltas/'+digest(data)+'.json.gz'
+        fast={'schema_version':1,'transport':'git','generation':prior['generation']+1 if prior else 1,
+              'base_generation':base_channel['generation'],
+              'base_manifest':base_channel['manifest'],'base_object':base_channel['object'],
+              'target_manifest':manifest,'delta_object':object_path,
+              'delta_sha256':digest(data),'delta_size':len(data),
+              'target_canonical_sha256':digest(canonical(target))}
+        lane.update({'channels/fast.json':canonical(self.sign('snapshot-delta',fast)),object_path:data},
+                    expected=canonical(prior_envelope) if prior_envelope else None)
 
     @staticmethod
     def _local_commit_files(repo,commit,paths,max_bytes=128*1024*1024):
@@ -802,7 +850,8 @@ class Engine:
         status={'schema_version':1,'role':self.role,'state':'syncing','last_attempt_at':now(),
                 'last_success_at':previous.get('last_success_at'),'error':None,'data':previous.get('data',{}),
                 'software':previous.get('software',{}),'upload':self.outbox_counts(),
-                'transport':{'backend':'github-api','poll_seconds':self.config.get('poll_seconds',2)},
+                'transport':{'backend':'github-api+git-fast' if self.config.get('git_fast_enabled',True) else 'github-api',
+                             'poll_seconds':self.config.get('poll_seconds',2)},
                 'current_stage':None,'stage_started_at':None,'stage_timings_ms':{},
                 'runtime_stage':previous.get('runtime_stage'),'runtime_stage_started_at':previous.get('runtime_stage_started_at'),
                 'runtime_stage_timings_ms':previous.get('runtime_stage_timings_ms',{}),
@@ -820,14 +869,43 @@ class Engine:
                 status['cycle_elapsed_ms']=round((time.monotonic()-cycle_started)*1000,1)
                 write_json(status_path,status)
         try:
-            head=stage('remote_head',self.remote.head)
             had_accepted=(self.state/'accepted/current.json').exists()
+            fast_head=None;fast_lane=None;fast_error=None;fast_accepted=False
+            if self.role!='leader' and had_accepted and self.config.get('git_fast_enabled',True):
+                try:
+                    fast_lane=self.git_fast_lane()
+                    fast_head=stage('git_fast_head',fast_lane.head)
+                    if fast_head:
+                        stage('accept_git_fast_snapshot',lambda:self.accept_fast_snapshot(
+                            fast_head,remote=fast_lane,base_head=None))
+                        fast_accepted=True
+                except Exception as error:
+                    fast_error=error
+            head=stage('remote_head',self.remote.head)
+            if head and fast_head and not fast_accepted:
+                try:
+                    stage('accept_git_fast_snapshot',lambda:self.accept_fast_snapshot(
+                        fast_head,remote=fast_lane,base_head=head))
+                    fast_accepted=True;fast_error=None
+                except Exception as error:
+                    fast_error=error
+            if fast_error is not None:
+                self.errors.append({'stage':'git_fast_snapshot','message':str(fast_error)})
             if head and self.role!='leader' and had_accepted:
                 try: stage('accept_fast_snapshot',lambda:self.accept_fast_snapshot(head))
                 except Exception as error:
                     self.errors.append({'stage':'fast_snapshot','message':str(error)})
             if head: stage('accept_snapshot',lambda:self.accept_snapshot(head))
             if head and self.role!='leader' and not had_accepted:
+                try:
+                    if self.config.get('git_fast_enabled',True):
+                        fast_lane=self.git_fast_lane()
+                        fast_head=stage('git_fast_head',fast_lane.head)
+                    if fast_head:
+                        stage('accept_git_fast_snapshot',lambda:self.accept_fast_snapshot(
+                            fast_head,remote=fast_lane,base_head=head))
+                except Exception as error:
+                    self.errors.append({'stage':'fast_snapshot','message':str(error)})
                 try: stage('accept_fast_snapshot',lambda:self.accept_fast_snapshot(head))
                 except Exception as error:
                     self.errors.append({'stage':'fast_snapshot','message':str(error)})
