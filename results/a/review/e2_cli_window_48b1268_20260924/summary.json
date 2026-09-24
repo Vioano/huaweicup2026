@@ -10,7 +10,6 @@
   "driver_end_utc": "2026-09-24T03:55:53.5890635+00:00",
   "driver_wall_seconds": 4.7239312,
   "host_finally_seconds": 4.7439562,
-  "whole_delivery_window_finished": false,
   "observed_error": "Create suspended controller failed: 203",
   "error_root_cause": "unknown; reported203 is not proof of production CLI cause",
   "entry_invocations": 1,
@@ -60,5 +59,6 @@
     "final.accounting.json",
     "case stdout/stderr/JSON/Trace/log"
   ],
-  "actions_after_failure": "Evidence reads and archive only; no controller/target/probe invocation, code repair, retry or permission expansion."
+  "actions_after_failure": "Evidence reads and archive only; no controller/target/probe invocation, code repair, retry or permission expansion.",
+  "delivery_timing_source": "publication_receipt.json records first-publication roundtrip; final same-T0 readback is supplied in Issue handoff/coordinator receipt. Driver wall_seconds is only the run phase."
 }
