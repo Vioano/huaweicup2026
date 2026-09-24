@@ -1,0 +1,883 @@
+{
+  "features": {
+    "cores": 4,
+    "components": 1077,
+    "external_input_bytes": 9927786,
+    "shared_external_input_bytes": 0,
+    "additional_route": "shared-input"
+  },
+  "duplicates": [
+    {
+      "name": "heavy-or-sink",
+      "plan_sha256": "3ae7cddba057ba934ece098e02fe322958351919f6c6e60eb32336ba32495997",
+      "construction_seconds": 0.6790346000016143,
+      "details": {
+        "algorithm_id": "q1-heavy-component-suffix",
+        "variant": "dominant-pipe-suffix-waves",
+        "selected": "sink-or-bounded",
+        "dominant_percent": 80,
+        "max_rounds": 64,
+        "max_sinks": 64,
+        "base": {
+          "algorithm_id": "q1-sink-peel",
+          "variant": "exclusive-suffix-waves",
+          "selected": "bounded04",
+          "base": {
+            "algorithm_id": "q1-bounded-component-tasks",
+            "variant": "frontier-then-independent-chunks",
+            "base": {
+              "algorithm_id": "q1-tree-frontier-pack",
+              "variant": "threshold-antichain-tail",
+              "packet_factor": 4,
+              "base": {
+                "algorithm_id": "q1-component-pack",
+                "variant": "pipe-lpt-one-task-per-core",
+                "compute_ops": 8616,
+                "components": 1077,
+                "largest_component_ops": 8,
+                "tasks": 4,
+                "core_compute_ops": [
+                  2160,
+                  2152,
+                  2152,
+                  2152
+                ],
+                "compute_pipe_work_by_core": [
+                  {
+                    "PIPE_M": 317520,
+                    "PIPE_V": 311040
+                  },
+                  {
+                    "PIPE_M": 316344,
+                    "PIPE_V": 309888
+                  },
+                  {
+                    "PIPE_M": 316344,
+                    "PIPE_V": 309888
+                  },
+                  {
+                    "PIPE_M": 316344,
+                    "PIPE_V": 309888
+                  }
+                ],
+                "scope": "Structural Task-order check only; load is a proposal proxy, not E0 or a spill certificate"
+              },
+              "selected": "component-pack",
+              "scope": "Structural proof only; E0 required",
+              "reason": "enough independent components or one core"
+            },
+            "chunks": {
+              "trigger_ops": 4096,
+              "chunk_ops": 1024,
+              "split_tasks": [],
+              "oversize_indivisible_components": [],
+              "tasks_before": 4,
+              "tasks_after": 4
+            },
+            "scope": "Structural validation only; bounds on common Task size are not E0, spill or runtime guarantees"
+          },
+          "max_rounds": 64,
+          "max_sinks": 64,
+          "scope": "Task-order proof only; no spill, performance or E0 feasibility guarantee",
+          "reason": "existing bounded04 structural route retained"
+        },
+        "scope": "Structural candidate; neither dominance nor zero spill proves quality",
+        "components": 1077,
+        "dominant_pipe": "PIPE_M",
+        "total_pipe_work": {
+          "PIPE_M": 1266552,
+          "PIPE_V": 1240704
+        },
+        "heavy_pipe_work": {
+          "PIPE_M": 1176,
+          "PIPE_V": 1152
+        },
+        "heavy_anchor": 4,
+        "heavy_ops": 8,
+        "reason": "no dominant component"
+      },
+      "duplicate_of": "bounded"
+    },
+    {
+      "name": "overload",
+      "plan_sha256": "3ae7cddba057ba934ece098e02fe322958351919f6c6e60eb32336ba32495997",
+      "construction_seconds": 0.728442299998278,
+      "details": {
+        "algorithm_id": "q1-component-overload-list",
+        "variant": "any-pipe-overload-quotient-ready-list",
+        "max_rounds": 64,
+        "max_sinks": 64,
+        "base": {
+          "algorithm_id": "q1-heavy-component-suffix",
+          "variant": "dominant-pipe-suffix-waves",
+          "selected": "sink-or-bounded",
+          "dominant_percent": 80,
+          "max_rounds": 64,
+          "max_sinks": 64,
+          "base": {
+            "algorithm_id": "q1-sink-peel",
+            "variant": "exclusive-suffix-waves",
+            "selected": "bounded04",
+            "base": {
+              "algorithm_id": "q1-bounded-component-tasks",
+              "variant": "frontier-then-independent-chunks",
+              "base": {
+                "algorithm_id": "q1-tree-frontier-pack",
+                "variant": "threshold-antichain-tail",
+                "packet_factor": 4,
+                "base": {
+                  "algorithm_id": "q1-component-pack",
+                  "variant": "pipe-lpt-one-task-per-core",
+                  "compute_ops": 8616,
+                  "components": 1077,
+                  "largest_component_ops": 8,
+                  "tasks": 4,
+                  "core_compute_ops": [
+                    2160,
+                    2152,
+                    2152,
+                    2152
+                  ],
+                  "compute_pipe_work_by_core": [
+                    {
+                      "PIPE_M": 317520,
+                      "PIPE_V": 311040
+                    },
+                    {
+                      "PIPE_M": 316344,
+                      "PIPE_V": 309888
+                    },
+                    {
+                      "PIPE_M": 316344,
+                      "PIPE_V": 309888
+                    },
+                    {
+                      "PIPE_M": 316344,
+                      "PIPE_V": 309888
+                    }
+                  ],
+                  "scope": "Structural Task-order check only; load is a proposal proxy, not E0 or a spill certificate"
+                },
+                "selected": "component-pack",
+                "scope": "Structural proof only; E0 required",
+                "reason": "enough independent components or one core"
+              },
+              "chunks": {
+                "trigger_ops": 4096,
+                "chunk_ops": 1024,
+                "split_tasks": [],
+                "oversize_indivisible_components": [],
+                "tasks_before": 4,
+                "tasks_after": 4
+              },
+              "scope": "Structural validation only; bounds on common Task size are not E0, spill or runtime guarantees"
+            },
+            "max_rounds": 64,
+            "max_sinks": 64,
+            "scope": "Task-order proof only; no spill, performance or E0 feasibility guarantee",
+            "reason": "existing bounded04 structural route retained"
+          },
+          "scope": "Structural candidate; neither dominance nor zero spill proves quality",
+          "components": 1077,
+          "dominant_pipe": "PIPE_M",
+          "total_pipe_work": {
+            "PIPE_M": 1266552,
+            "PIPE_V": 1240704
+          },
+          "heavy_pipe_work": {
+            "PIPE_M": 1176,
+            "PIPE_V": 1152
+          },
+          "heavy_anchor": 4,
+          "heavy_ops": 8,
+          "reason": "no dominant component"
+        },
+        "selected": "heavy-suffix-fallback",
+        "scope": "Direct structural proposal; proxy times omit DDR, FIFO and capacity",
+        "reason": "no overloaded component with independent suffix packets"
+      },
+      "duplicate_of": "bounded"
+    }
+  ],
+  "construction_failures": [],
+  "generation_seconds": 4.640197500000795,
+  "base_candidates": [
+    "bounded",
+    "shared-input"
+  ],
+  "additional_route": "capacity-return",
+  "prefetch_guard": "five-core guard only",
+  "algorithm_id": "q1-unified-prefetch-return",
+  "variant": "base-four-plus-one-v1",
+  "selected": "capacity-return",
+  "stop_reason": "all-distinct-plans-scored",
+  "candidates": [
+    {
+      "name": "bounded",
+      "plan_sha256": "3ae7cddba057ba934ece098e02fe322958351919f6c6e60eb32336ba32495997",
+      "construction_seconds": 0.365642900000239,
+      "details": {
+        "algorithm_id": "q1-bounded-component-tasks",
+        "variant": "frontier-then-independent-chunks",
+        "base": {
+          "algorithm_id": "q1-tree-frontier-pack",
+          "variant": "threshold-antichain-tail",
+          "packet_factor": 4,
+          "base": {
+            "algorithm_id": "q1-component-pack",
+            "variant": "pipe-lpt-one-task-per-core",
+            "compute_ops": 8616,
+            "components": 1077,
+            "largest_component_ops": 8,
+            "tasks": 4,
+            "core_compute_ops": [
+              2160,
+              2152,
+              2152,
+              2152
+            ],
+            "compute_pipe_work_by_core": [
+              {
+                "PIPE_M": 317520,
+                "PIPE_V": 311040
+              },
+              {
+                "PIPE_M": 316344,
+                "PIPE_V": 309888
+              },
+              {
+                "PIPE_M": 316344,
+                "PIPE_V": 309888
+              },
+              {
+                "PIPE_M": 316344,
+                "PIPE_V": 309888
+              }
+            ],
+            "scope": "Structural Task-order check only; load is a proposal proxy, not E0 or a spill certificate"
+          },
+          "selected": "component-pack",
+          "scope": "Structural proof only; E0 required",
+          "reason": "enough independent components or one core"
+        },
+        "chunks": {
+          "trigger_ops": 4096,
+          "chunk_ops": 1024,
+          "split_tasks": [],
+          "oversize_indivisible_components": [],
+          "tasks_before": 4,
+          "tasks_after": 4
+        },
+        "scope": "Structural validation only; bounds on common Task size are not E0, spill or runtime guarantees"
+      }
+    },
+    {
+      "name": "shared-input",
+      "plan_sha256": "3e719091498c9813029c4fc68219c34b22577147df70be2f7a77a82f8217cf8c",
+      "construction_seconds": 1.9231889000002411,
+      "details": {
+        "algorithm_id": "q1-shared-input-budget",
+        "variant": "active-core-then-local-windows",
+        "requested_cores": 4,
+        "input_budget_bytes": 262144,
+        "activation_bytes": 524288,
+        "max_phases": 32,
+        "external_input_bytes": 9927786,
+        "components": 1077,
+        "scope": "Static proxies are neither lower bounds, E0 predictions, nor capacity certificates",
+        "selected": "shared-input-budget",
+        "active_cores": 4,
+        "configurations": [
+          {
+            "active_cores": 1,
+            "core_compute_ops": [
+              8616
+            ],
+            "core_compute_pipe_work": [
+              {
+                "PIPE_M": 1266552,
+                "PIPE_V": 1240704
+              }
+            ],
+            "base_task_count": 9,
+            "task_counts_by_core": [
+              26
+            ],
+            "input_copy_proxy_bytes": 9927786,
+            "input_repeat_proxy_bytes": 0,
+            "cut_tensor_payload_bytes_once": 9681408,
+            "internal_boundary_copy_proxy_bytes": 19362816,
+            "terminal_copy_proxy_bytes": 3308544,
+            "total_copy_proxy_bytes": 32599146,
+            "original_graph_copy_bytes": 13236330,
+            "partition_added_copy_proxy_bytes": 19362816,
+            "max_window_input_union_bytes": 786432,
+            "windows_over_input_budget": 17,
+            "phase_limit_base_tasks": 0,
+            "same_core_wait_proxy_by_core": [
+              2500
+            ],
+            "window_pipe_work_proxy_by_core": [
+              2476092
+            ],
+            "max_compute_with_wait_proxy_cycles": 2478592,
+            "ddr_service_proxy_cycles": 548647,
+            "cost_proxy_cycles": 2478592
+          },
+          {
+            "active_cores": 2,
+            "core_compute_ops": [
+              4312,
+              4304
+            ],
+            "core_compute_pipe_work": [
+              {
+                "PIPE_M": 633864,
+                "PIPE_V": 620928
+              },
+              {
+                "PIPE_M": 632688,
+                "PIPE_V": 619776
+              }
+            ],
+            "base_task_count": 10,
+            "task_counts_by_core": [
+              13,
+              13
+            ],
+            "input_copy_proxy_bytes": 9927786,
+            "input_repeat_proxy_bytes": 0,
+            "cut_tensor_payload_bytes_once": 9437184,
+            "internal_boundary_copy_proxy_bytes": 18874368,
+            "terminal_copy_proxy_bytes": 3308544,
+            "total_copy_proxy_bytes": 32110698,
+            "original_graph_copy_bytes": 13236330,
+            "partition_added_copy_proxy_bytes": 18874368,
+            "max_window_input_union_bytes": 786432,
+            "windows_over_input_budget": 16,
+            "phase_limit_base_tasks": 0,
+            "same_core_wait_proxy_by_core": [
+              1200,
+              1200
+            ],
+            "window_pipe_work_proxy_by_core": [
+              1223688,
+              1222512
+            ],
+            "max_compute_with_wait_proxy_cycles": 1224888,
+            "ddr_service_proxy_cycles": 540485,
+            "cost_proxy_cycles": 1224888
+          },
+          {
+            "active_cores": 3,
+            "core_compute_ops": [
+              2872,
+              2872,
+              2872
+            ],
+            "core_compute_pipe_work": [
+              {
+                "PIPE_M": 422184,
+                "PIPE_V": 413568
+              },
+              {
+                "PIPE_M": 422184,
+                "PIPE_V": 413568
+              },
+              {
+                "PIPE_M": 422184,
+                "PIPE_V": 413568
+              }
+            ],
+            "base_task_count": 3,
+            "task_counts_by_core": [
+              3,
+              3,
+              3
+            ],
+            "input_copy_proxy_bytes": 9927786,
+            "input_repeat_proxy_bytes": 0,
+            "cut_tensor_payload_bytes_once": 9925632,
+            "internal_boundary_copy_proxy_bytes": 19851264,
+            "terminal_copy_proxy_bytes": 3308544,
+            "total_copy_proxy_bytes": 33087594,
+            "original_graph_copy_bytes": 13236330,
+            "partition_added_copy_proxy_bytes": 19851264,
+            "max_window_input_union_bytes": 2205696,
+            "windows_over_input_budget": 6,
+            "phase_limit_base_tasks": 0,
+            "same_core_wait_proxy_by_core": [
+              200,
+              200,
+              200
+            ],
+            "window_pipe_work_proxy_by_core": [
+              835752,
+              835752,
+              835752
+            ],
+            "max_compute_with_wait_proxy_cycles": 835952,
+            "ddr_service_proxy_cycles": 556809,
+            "cost_proxy_cycles": 835952
+          },
+          {
+            "active_cores": 4,
+            "core_compute_ops": [
+              2160,
+              2152,
+              2152,
+              2152
+            ],
+            "core_compute_pipe_work": [
+              {
+                "PIPE_M": 317520,
+                "PIPE_V": 311040
+              },
+              {
+                "PIPE_M": 316344,
+                "PIPE_V": 309888
+              },
+              {
+                "PIPE_M": 316344,
+                "PIPE_V": 309888
+              },
+              {
+                "PIPE_M": 316344,
+                "PIPE_V": 309888
+              }
+            ],
+            "base_task_count": 4,
+            "task_counts_by_core": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "input_copy_proxy_bytes": 9927786,
+            "input_repeat_proxy_bytes": 0,
+            "cut_tensor_payload_bytes_once": 9925632,
+            "internal_boundary_copy_proxy_bytes": 19851264,
+            "terminal_copy_proxy_bytes": 3308544,
+            "total_copy_proxy_bytes": 33087594,
+            "original_graph_copy_bytes": 13236330,
+            "partition_added_copy_proxy_bytes": 19851264,
+            "max_window_input_union_bytes": 1658880,
+            "windows_over_input_budget": 8,
+            "phase_limit_base_tasks": 0,
+            "same_core_wait_proxy_by_core": [
+              200,
+              200,
+              200,
+              200
+            ],
+            "window_pipe_work_proxy_by_core": [
+              628560,
+              626232,
+              626232,
+              626232
+            ],
+            "max_compute_with_wait_proxy_cycles": 628760,
+            "ddr_service_proxy_cycles": 556809,
+            "cost_proxy_cycles": 628760
+          }
+        ],
+        "chosen_configuration": {
+          "active_cores": 4,
+          "core_compute_ops": [
+            2160,
+            2152,
+            2152,
+            2152
+          ],
+          "core_compute_pipe_work": [
+            {
+              "PIPE_M": 317520,
+              "PIPE_V": 311040
+            },
+            {
+              "PIPE_M": 316344,
+              "PIPE_V": 309888
+            },
+            {
+              "PIPE_M": 316344,
+              "PIPE_V": 309888
+            },
+            {
+              "PIPE_M": 316344,
+              "PIPE_V": 309888
+            }
+          ],
+          "base_task_count": 4,
+          "task_counts_by_core": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "input_copy_proxy_bytes": 9927786,
+          "input_repeat_proxy_bytes": 0,
+          "cut_tensor_payload_bytes_once": 9925632,
+          "internal_boundary_copy_proxy_bytes": 19851264,
+          "terminal_copy_proxy_bytes": 3308544,
+          "total_copy_proxy_bytes": 33087594,
+          "original_graph_copy_bytes": 13236330,
+          "partition_added_copy_proxy_bytes": 19851264,
+          "max_window_input_union_bytes": 1658880,
+          "windows_over_input_budget": 8,
+          "phase_limit_base_tasks": 0,
+          "same_core_wait_proxy_by_core": [
+            200,
+            200,
+            200,
+            200
+          ],
+          "window_pipe_work_proxy_by_core": [
+            628560,
+            626232,
+            626232,
+            626232
+          ],
+          "max_compute_with_wait_proxy_cycles": 628760,
+          "ddr_service_proxy_cycles": 556809,
+          "cost_proxy_cycles": 628760
+        },
+        "fixed_bandwidth_bytes_per_cycle": 60,
+        "fixed_task_waits": {
+          "task_cross_core_wait_cycles": 1000,
+          "task_same_core_wait_cycles": 100
+        },
+        "base": {
+          "algorithm_id": "q1-bounded-component-tasks",
+          "variant": "frontier-then-independent-chunks",
+          "base": {
+            "algorithm_id": "q1-tree-frontier-pack",
+            "variant": "threshold-antichain-tail",
+            "packet_factor": 4,
+            "base": {
+              "algorithm_id": "q1-component-pack",
+              "variant": "pipe-lpt-one-task-per-core",
+              "compute_ops": 8616,
+              "components": 1077,
+              "largest_component_ops": 8,
+              "tasks": 4,
+              "core_compute_ops": [
+                2160,
+                2152,
+                2152,
+                2152
+              ],
+              "compute_pipe_work_by_core": [
+                {
+                  "PIPE_M": 317520,
+                  "PIPE_V": 311040
+                },
+                {
+                  "PIPE_M": 316344,
+                  "PIPE_V": 309888
+                },
+                {
+                  "PIPE_M": 316344,
+                  "PIPE_V": 309888
+                },
+                {
+                  "PIPE_M": 316344,
+                  "PIPE_V": 309888
+                }
+              ],
+              "scope": "Structural Task-order check only; load is a proposal proxy, not E0 or a spill certificate"
+            },
+            "selected": "component-pack",
+            "scope": "Structural proof only; E0 required",
+            "reason": "enough independent components or one core"
+          },
+          "chunks": {
+            "trigger_ops": 4096,
+            "chunk_ops": 1024,
+            "split_tasks": [],
+            "oversize_indivisible_components": [],
+            "tasks_before": 4,
+            "tasks_after": 4
+          },
+          "scope": "Structural validation only; bounds on common Task size are not E0, spill or runtime guarantees"
+        },
+        "task_refinements": [
+          {
+            "base_task": 0,
+            "new_tasks": [
+              0,
+              4,
+              5
+            ],
+            "phase_limit_fallback": false,
+            "phases": [
+              {
+                "task": 0,
+                "compute_ops": 270,
+                "depth_begin": 0,
+                "depth_end": 0,
+                "external_input_bytes": 1658880
+              },
+              {
+                "task": 4,
+                "compute_ops": 1620,
+                "depth_begin": 1,
+                "depth_end": 6,
+                "external_input_bytes": 540
+              },
+              {
+                "task": 5,
+                "compute_ops": 270,
+                "depth_begin": 7,
+                "depth_end": 7,
+                "external_input_bytes": 829440
+              }
+            ]
+          },
+          {
+            "base_task": 1,
+            "new_tasks": [
+              1,
+              6,
+              7
+            ],
+            "phase_limit_fallback": false,
+            "phases": [
+              {
+                "task": 1,
+                "compute_ops": 269,
+                "depth_begin": 0,
+                "depth_end": 0,
+                "external_input_bytes": 1652736
+              },
+              {
+                "task": 6,
+                "compute_ops": 1614,
+                "depth_begin": 1,
+                "depth_end": 6,
+                "external_input_bytes": 538
+              },
+              {
+                "task": 7,
+                "compute_ops": 269,
+                "depth_begin": 7,
+                "depth_end": 7,
+                "external_input_bytes": 826368
+              }
+            ]
+          },
+          {
+            "base_task": 2,
+            "new_tasks": [
+              2,
+              8,
+              9
+            ],
+            "phase_limit_fallback": false,
+            "phases": [
+              {
+                "task": 2,
+                "compute_ops": 269,
+                "depth_begin": 0,
+                "depth_end": 0,
+                "external_input_bytes": 1652736
+              },
+              {
+                "task": 8,
+                "compute_ops": 1614,
+                "depth_begin": 1,
+                "depth_end": 6,
+                "external_input_bytes": 538
+              },
+              {
+                "task": 9,
+                "compute_ops": 269,
+                "depth_begin": 7,
+                "depth_end": 7,
+                "external_input_bytes": 826368
+              }
+            ]
+          },
+          {
+            "base_task": 3,
+            "new_tasks": [
+              3,
+              10,
+              11
+            ],
+            "phase_limit_fallback": false,
+            "phases": [
+              {
+                "task": 3,
+                "compute_ops": 269,
+                "depth_begin": 0,
+                "depth_end": 0,
+                "external_input_bytes": 1652736
+              },
+              {
+                "task": 10,
+                "compute_ops": 1614,
+                "depth_begin": 1,
+                "depth_end": 6,
+                "external_input_bytes": 538
+              },
+              {
+                "task": 11,
+                "compute_ops": 269,
+                "depth_begin": 7,
+                "depth_end": 7,
+                "external_input_bytes": 826368
+              }
+            ]
+          }
+        ],
+        "tasks": 12
+      }
+    },
+    {
+      "name": "capacity-return",
+      "plan_sha256": "bb90e42bc9a917c22fe40fc56641f476a21636e5634dc94f10c0c1f42d72f7c3",
+      "construction_seconds": 0.5269574000012653,
+      "details": {
+        "algorithm_id": "q1-capacity-return",
+        "variant": "all-cut-capacity-packet-v1",
+        "chains": 1077,
+        "packet": 5,
+        "cut_chains": 1077,
+        "representative_prefix_bytes": {
+          "L1": 10752,
+          "UB": 18626
+        },
+        "representative_return_bytes": {
+          "L1": 6144,
+          "UB": 4608
+        },
+        "mixed_packet_bytes": {
+          "L1": 84480,
+          "UB": 116170
+        },
+        "capacity_bytes": {
+          "L1": 524288,
+          "UB": 131072
+        },
+        "tasks": 220,
+        "scope": "Graph-derived candidate; no model scoring, no DDR or quality certificate; external E0 required"
+      }
+    }
+  ],
+  "online_scores": [
+    {
+      "name": "bounded",
+      "plan_sha256": "3ae7cddba057ba934ece098e02fe322958351919f6c6e60eb32336ba32495997",
+      "status": "ok",
+      "makespan": 629028,
+      "data_movement_bytes": {
+        "original_graph_copy_bytes": 13236330,
+        "scheduled_copy_bytes": 13236330,
+        "added_copy_bytes": 0,
+        "partition_added_copy_bytes": 0,
+        "spill_added_copy_bytes": 0
+      },
+      "cross_task_traffic": 0,
+      "wall_seconds": 3.943056300002354,
+      "engine": "p1-exact-batch-v1",
+      "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+      "cache": {
+        "hits": 0,
+        "misses": 1,
+        "evictions": 0,
+        "bypasses": 0,
+        "payload_bytes": 5745163,
+        "limit_bytes": 16777216,
+        "entries": 1,
+        "max_entries": 128
+      },
+      "index": 0,
+      "worker_pid": 34352,
+      "cpu_seconds": 3.890625,
+      "worker_peak_rss_bytes": null,
+      "dispatch_wall_seconds": 3.9680000000007567
+    },
+    {
+      "name": "shared-input",
+      "plan_sha256": "3e719091498c9813029c4fc68219c34b22577147df70be2f7a77a82f8217cf8c",
+      "status": "ok",
+      "makespan": 703147,
+      "data_movement_bytes": {
+        "original_graph_copy_bytes": 13236330,
+        "scheduled_copy_bytes": 33087594,
+        "added_copy_bytes": 19851264,
+        "partition_added_copy_bytes": 19851264,
+        "spill_added_copy_bytes": 0
+      },
+      "cross_task_traffic": 9925632,
+      "wall_seconds": 4.195535300001211,
+      "engine": "p1-exact-batch-v1",
+      "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+      "cache": {
+        "hits": 0,
+        "misses": 2,
+        "evictions": 0,
+        "bypasses": 0,
+        "payload_bytes": 12572516,
+        "limit_bytes": 16777216,
+        "entries": 2,
+        "max_entries": 128
+      },
+      "index": 0,
+      "worker_pid": 34352,
+      "cpu_seconds": 4.09375,
+      "worker_peak_rss_bytes": null,
+      "dispatch_wall_seconds": 4.21900000000096
+    },
+    {
+      "name": "capacity-return",
+      "plan_sha256": "bb90e42bc9a917c22fe40fc56641f476a21636e5634dc94f10c0c1f42d72f7c3",
+      "status": "ok",
+      "makespan": 446068,
+      "data_movement_bytes": {
+        "original_graph_copy_bytes": 13236330,
+        "scheduled_copy_bytes": 23161962,
+        "added_copy_bytes": 9925632,
+        "partition_added_copy_bytes": 9925632,
+        "spill_added_copy_bytes": 0
+      },
+      "cross_task_traffic": 4962816,
+      "wall_seconds": 2.6119849999995495,
+      "engine": "p1-exact-batch-v1",
+      "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+      "cache": {
+        "hits": 0,
+        "misses": 3,
+        "evictions": 0,
+        "bypasses": 0,
+        "payload_bytes": 15726813,
+        "limit_bytes": 16777216,
+        "entries": 3,
+        "max_entries": 128
+      },
+      "index": 0,
+      "worker_pid": 34352,
+      "cpu_seconds": 2.4375,
+      "worker_peak_rss_bytes": null,
+      "dispatch_wall_seconds": 2.6409999999996217
+    }
+  ],
+  "online_score_attempts": 3,
+  "e1_interface_attempts": 3,
+  "actual_e1_calls": 3,
+  "e1_worker_execution_unknown_attempts": 0,
+  "e1_call_accounting": "actual_e1_calls counts returned worker_pid only; unknown attempts are charged to budget",
+  "scoring_parameters": {
+    "workers": 1,
+    "cache_bytes": 16777216,
+    "timeout_seconds": 60,
+    "startup_timeout_seconds": 10,
+    "max_tasks_per_worker": 5
+  },
+  "e1_source_commit": "5bfe53a29c1ba05167239f51ea937e602f7f85b4",
+  "online_scoring_seconds": 12.453102899999067,
+  "solve_function_seconds": 17.093531400001666,
+  "scope": "E1 online ranking is not external E0 acceptance",
+  "cli_body_through_plan_wall_seconds": 17.176521700002922,
+  "cli_body_scope": "Starts after CLI parsing; ends after plan close; excludes imports, diagnostics write and process exit. External runner owns full cold wall."
+}

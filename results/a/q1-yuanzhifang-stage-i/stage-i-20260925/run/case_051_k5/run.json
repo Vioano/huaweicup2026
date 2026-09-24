@@ -1,0 +1,60 @@
+{
+  "case": "051",
+  "cores": 5,
+  "graph_sha256": "884e8b12ac1f7a9b569958909680e8c2f6055966a59c9f929ffd5cee48aae43b",
+  "status": "success",
+  "started_at": "2026-09-24T20:16:57.249650Z",
+  "solver": {
+    "command": [
+      "C:\\Users\\24580\\Desktop\\huaweicup2026\\.venv\\Scripts\\python.exe",
+      "-u",
+      "-c",
+      "import os,runpy,sys,time;gate=os.environ['Q1_JOB_GATE'];entry=os.environ['Q1_JOB_ENTRY'];\nwhile not os.path.exists(gate): time.sleep(.01)\nsys.path.insert(0,os.path.dirname(entry));runpy.run_path(entry,run_name='__main__')",
+      "C:\\Users\\24580\\Desktop\\huaweicup2026\\.worktrees\\q1-research-yuanzhifang\\data\\raw\\a\\official\\data\\case_051.json",
+      "--cores",
+      "5",
+      "--output",
+      "C:\\Users\\24580\\Desktop\\huaweicup2026-workspace\\worktrees\\q1-unified-race-yuanzhifang\\results\\a\\q1-yuanzhifang-stage-i\\stage-i-20260925\\run\\case_051_k5\\case_051_multicore_res.json",
+      "--diagnostics",
+      "C:\\Users\\24580\\Desktop\\huaweicup2026-workspace\\worktrees\\q1-unified-race-yuanzhifang\\results\\a\\q1-yuanzhifang-stage-i\\stage-i-20260925\\run\\case_051_k5\\diagnostics.json"
+    ],
+    "pid": 4660,
+    "returncode": 0,
+    "timeout": false,
+    "wall_seconds": 3.257824799999071,
+    "stdout": "solver.stdout.jsonl",
+    "stderr": "solver.stderr.txt"
+  },
+  "e1_interface_attempts_observed": 3,
+  "e1_worker_confirmed_calls": 3,
+  "e1_worker_execution_unknown_attempts": 0,
+  "e1_budget_charge": 3,
+  "e1_interface_attempts_diagnostics": 3,
+  "plan_sha256": "d7de42f7eea7ca83787244b2307448d6d34b5b61045fd902fb2a97540b8ed5e2",
+  "e0": {
+    "command": [
+      "C:\\Users\\24580\\Desktop\\huaweicup2026\\.venv\\Scripts\\python.exe",
+      "-u",
+      "-c",
+      "import os,runpy,sys,time;gate=os.environ['Q1_JOB_GATE'];entry=os.environ['Q1_JOB_ENTRY'];\nwhile not os.path.exists(gate): time.sleep(.01)\nsys.path.insert(0,os.path.dirname(entry));runpy.run_path(entry,run_name='__main__')",
+      "C:\\Users\\24580\\Desktop\\huaweicup2026\\.worktrees\\q1-research-yuanzhifang\\data\\raw\\a\\official\\data\\case_051.json",
+      "C:\\Users\\24580\\Desktop\\huaweicup2026-workspace\\worktrees\\q1-unified-race-yuanzhifang\\results\\a\\q1-yuanzhifang-stage-i\\stage-i-20260925\\run\\case_051_k5\\case_051_multicore_res.json",
+      "--config",
+      "C:\\Users\\24580\\Desktop\\huaweicup2026-workspace\\worktrees\\q1-unified-race-yuanzhifang\\data\\raw\\a\\official\\data\\config.txt",
+      "--output",
+      "C:\\Users\\24580\\Desktop\\huaweicup2026-workspace\\worktrees\\q1-unified-race-yuanzhifang\\results\\a\\q1-yuanzhifang-stage-i\\stage-i-20260925\\run\\case_051_k5\\e0_result.json",
+      "--trace-output",
+      "C:\\Users\\24580\\Desktop\\huaweicup2026-workspace\\worktrees\\q1-unified-race-yuanzhifang\\results\\a\\q1-yuanzhifang-stage-i\\stage-i-20260925\\run\\case_051_k5\\e0_trace.json",
+      "--log-output",
+      "C:\\Users\\24580\\Desktop\\huaweicup2026-workspace\\worktrees\\q1-unified-race-yuanzhifang\\results\\a\\q1-yuanzhifang-stage-i\\stage-i-20260925\\run\\case_051_k5\\e0_log.txt"
+    ],
+    "pid": 35440,
+    "returncode": 0,
+    "timeout": false,
+    "wall_seconds": 1.0353279999981169,
+    "stdout": "e0.stdout.jsonl",
+    "stderr": "e0.stderr.txt"
+  },
+  "e0_result_sha256": "7817efbf0a0b87773a1e6f2eb2cb16c9565f5d6ecc91bfa6c2d97334c24cb706",
+  "finished_at": "2026-09-24T20:17:01.713717Z"
+}

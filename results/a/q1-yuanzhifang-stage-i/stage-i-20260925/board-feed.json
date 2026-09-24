@@ -1,0 +1,1111 @@
+{
+  "schema_version": 1,
+  "submission_version": 1,
+  "records": [
+    {
+      "attempt_id": "fang-q1-stage-i-20260925-051-k5-r0",
+      "revision": 1,
+      "run_id": "fang-q1-stage-i-20260925",
+      "algorithm_id": "q1-unified-prefetch-return",
+      "algorithm_name": "Fang structural union with one additional candidate",
+      "variant": "base-four-plus-one-v1",
+      "solver_commit": "397e7ca0b680f50336e4dd4eefb14831015107d8",
+      "parameters": {
+        "cores": 5,
+        "candidate_limit": 5,
+        "online_e1_worker_limit": 1,
+        "singlecore_baseline_commit": "0b47d802cdd0bfe7011017c8098c1c0917b2c959",
+        "batch_budget": {
+          "solver": 5,
+          "E0": 5,
+          "E1_attempts": 25,
+          "E2": 0,
+          "workers": 2,
+          "wall_seconds": 1200,
+          "retries": 0
+        },
+        "batch_actual_calls": {
+          "finished_at": "2026-09-24T20:17:45.062864Z",
+          "wall_seconds": 47.81599479999932,
+          "solver_attempts": 5,
+          "online_e1_interface_budget_charge": 15,
+          "external_e0_attempts": 5,
+          "statuses": {
+            "051/k5": "success",
+            "084/k2": "success",
+            "084/k4": "success",
+            "008/k5": "success",
+            "084/k5": "success"
+          },
+          "no_retries": true,
+          "stopped_after_supervision_failure": false
+        },
+        "e1_unknown_execution_attempts": 0,
+        "e1_conservative_budget_charge": 3
+      },
+      "problem": "P1",
+      "case_id": "051",
+      "cores": 5,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 231551,
+        "solver_wall_seconds": 3.257824799999071,
+        "evaluation_wall_seconds": 1.0353279999981169,
+        "ddr_bytes": 9437954,
+        "extra_ddr_bytes": 9044736,
+        "spill_bytes": 0,
+        "cache_hit_rate": null
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "1cc29d207ebad396d5a0bbfcabf2ef4b4c26ffed",
+        "entrypoint": "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py"
+      },
+      "identity": {
+        "graph_sha256": "884e8b12ac1f7a9b569958909680e8c2f6055966a59c9f929ffd5cee48aae43b",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "d7de42f7eea7ca83787244b2307448d6d34b5b61045fd902fb2a97540b8ed5e2"
+      },
+      "artifacts": {
+        "run": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_051_k5/run.json",
+          "sha256": "216eef054cb7280d80b0b652438a5af0a6440cb4a7c8db1a99630a450afc247a"
+        },
+        "manifest": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/batch_manifest.json",
+          "sha256": "1cfee0a513ff18c31431249255c1d3a792bf61c82cf3fbf10d61abbb76993749"
+        },
+        "plan": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_051_k5/case_051_multicore_res.json",
+          "sha256": "d7de42f7eea7ca83787244b2307448d6d34b5b61045fd902fb2a97540b8ed5e2"
+        },
+        "result": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_051_k5/e0_result.json.gz",
+          "sha256": "7817efbf0a0b87773a1e6f2eb2cb16c9565f5d6ecc91bfa6c2d97334c24cb706"
+        },
+        "trace": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_051_k5/e0_trace.json.gz",
+          "sha256": "034a93833dc3f0074b39b82142bfb65e5e5785f4b1c6aad00814455e060614b7"
+        },
+        "log": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_051_k5/e0_log.txt",
+          "sha256": "942770af5e400e8cdb3a3be598105726ba588cc0ba6ad02d5bd5eee5f7e08239"
+        }
+      },
+      "runtime_id": "fang-windows-q1-stage-i-20260925",
+      "observed_at": "2026-09-24T20:17:01.713717Z",
+      "timing": {
+        "solver_includes_evaluation": true,
+        "evaluation_precision": "perf_counter cold process wall; E1 online in solver and external E0 separate",
+        "utc": "UTC ISO8601 Z"
+      },
+      "provenance": {
+        "producer_session": "yuanzhifang30-sudo/s-7748b08eb22a449797a2417ad7825aaa",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "397e7ca0b680f50336e4dd4eefb14831015107d8",
+            "path": "src/q1_yuanzhifang/unified.py",
+            "entrypoint": "main"
+          },
+          "authors": [
+            "NikolaStarx",
+            "yuanzhifang30-sudo"
+          ],
+          "method": "Frozen captain candidate union plus one structure-gated H or private capacity-return candidate; E1 online ranking",
+          "references": [
+            "https://github.com/huaweibei123/huaweicup2026/issues/98"
+          ],
+          "upstream": [
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "48faef6f1386c3dc7d037674a38af29d533ba774",
+              "path": "src/q1/unified.py",
+              "entrypoint": "generate_candidates"
+            },
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "4f1b9f8be4bbcc98759a19451c108e62e80abb17",
+              "path": "src/q1_yuanzhifang/prefetch_frontier.py",
+              "entrypoint": "construct"
+            },
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "e566dd5ce6a1737880ca88d35964bfd846bc4512",
+              "path": "src/q1/capacity_return.py",
+              "entrypoint": "construct"
+            }
+          ],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "7993bafe22cbdbcd9ebc12b15dfecd4ef651563b",
+            "path": "src/q1_yuanzhifang/benchmark_i.py",
+            "entrypoint": "main"
+          },
+          "argv": [
+            "C:\\Users\\24580\\Desktop\\huaweicup2026\\.venv\\Scripts\\python.exe",
+            "-u",
+            "-c",
+            "import os,runpy,sys,time;gate=os.environ['Q1_JOB_GATE'];entry=os.environ['Q1_JOB_ENTRY'];\nwhile not os.path.exists(gate): time.sleep(.01)\nsys.path.insert(0,os.path.dirname(entry));runpy.run_path(entry,run_name='__main__')",
+            "C:\\Users\\24580\\Desktop\\huaweicup2026\\.worktrees\\q1-research-yuanzhifang\\data\\raw\\a\\official\\data\\case_051.json",
+            "--cores",
+            "5",
+            "--output",
+            "C:\\Users\\24580\\Desktop\\huaweicup2026-workspace\\worktrees\\q1-unified-race-yuanzhifang\\results\\a\\q1-yuanzhifang-stage-i\\stage-i-20260925\\run\\case_051_k5\\case_051_multicore_res.json",
+            "--diagnostics",
+            "C:\\Users\\24580\\Desktop\\huaweicup2026-workspace\\worktrees\\q1-unified-race-yuanzhifang\\results\\a\\q1-yuanzhifang-stage-i\\stage-i-20260925\\run\\case_051_k5\\diagnostics.json"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "Windows-11-10.0.26200-SP0",
+          "cpu": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+          "gpu": null,
+          "ram_bytes": null,
+          "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+          "dependencies": "uv.lock sha256 7b03fee57044ac272d8895533cbdca6d70a29d2da955f98a5552e72ef944fdc4",
+          "threads": null,
+          "workers": 2,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": "2026-09-24T20:16:57.249650Z",
+          "finished_at": "2026-09-24T20:17:01.713717Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": true,
+          "solver_scope": "external perf_counter from process launch through Job close, outputs and descendant cleanup",
+          "evaluation_scope": "separate unchanged official E0 CLI through Job close",
+          "budget": {
+            "wall_seconds": 1200,
+            "candidate_limit": 5,
+            "stop_reason": "success; 0 retries"
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 1,
+            "E1": 3,
+            "E2": 0
+          },
+          "offline_costs": "Preparation and fixed earlier baselines separate; no current-case offline training or score selection.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.gpu": "GPU was not measured; this CPU solver does not request one.",
+          "provenance.environment.ram_bytes": "Host RAM capacity was not measured by this runner.",
+          "provenance.environment.threads": "OS thread count was not measured; batch processes limited to two.",
+          "provenance.environment.peak_rss_bytes": "Child peak RSS was not instrumented.",
+          "provenance.measurement.seed": "Deterministic fixed structural construction has no RNG parameter."
+        }
+      },
+      "notes": [
+        "Five exposed prospective pilot cells only; no full 100x5 mean or blind test.",
+        "Official singlecore denominator 607628 cycles copied byte-for-byte from 0b47d802cdd0bfe7011017c8098c1c0917b2c959 and independently identity-checked; 0 baseline reruns.",
+        "E1 execution unknown attempts are charged conservatively; see original diagnostics/events."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+      "baseline": {
+        "graph_sha256": "884e8b12ac1f7a9b569958909680e8c2f6055966a59c9f929ffd5cee48aae43b",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/baseline/051/result.json.gz",
+          "sha256": "9c62a3dec13b1628b296c4847691f252e716a475677f807c80b0b06ef5c58c3f"
+        }
+      },
+      "cache_pair": null
+    },
+    {
+      "attempt_id": "fang-q1-stage-i-20260925-084-k2-r0",
+      "revision": 1,
+      "run_id": "fang-q1-stage-i-20260925",
+      "algorithm_id": "q1-unified-prefetch-return",
+      "algorithm_name": "Fang structural union with one additional candidate",
+      "variant": "base-four-plus-one-v1",
+      "solver_commit": "397e7ca0b680f50336e4dd4eefb14831015107d8",
+      "parameters": {
+        "cores": 2,
+        "candidate_limit": 5,
+        "online_e1_worker_limit": 1,
+        "singlecore_baseline_commit": "0b47d802cdd0bfe7011017c8098c1c0917b2c959",
+        "batch_budget": {
+          "solver": 5,
+          "E0": 5,
+          "E1_attempts": 25,
+          "E2": 0,
+          "workers": 2,
+          "wall_seconds": 1200,
+          "retries": 0
+        },
+        "batch_actual_calls": {
+          "finished_at": "2026-09-24T20:17:45.062864Z",
+          "wall_seconds": 47.81599479999932,
+          "solver_attempts": 5,
+          "online_e1_interface_budget_charge": 15,
+          "external_e0_attempts": 5,
+          "statuses": {
+            "051/k5": "success",
+            "084/k2": "success",
+            "084/k4": "success",
+            "008/k5": "success",
+            "084/k5": "success"
+          },
+          "no_retries": true,
+          "stopped_after_supervision_failure": false
+        },
+        "e1_unknown_execution_attempts": 0,
+        "e1_conservative_budget_charge": 3
+      },
+      "problem": "P1",
+      "case_id": "084",
+      "cores": 2,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 792218,
+        "solver_wall_seconds": 16.96616989999893,
+        "evaluation_wall_seconds": 6.507913900000858,
+        "ddr_bytes": 23161962,
+        "extra_ddr_bytes": 9925632,
+        "spill_bytes": 0,
+        "cache_hit_rate": null
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "1cc29d207ebad396d5a0bbfcabf2ef4b4c26ffed",
+        "entrypoint": "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py"
+      },
+      "identity": {
+        "graph_sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "dc52f7e98602f41b77c8745d41a72bd839c3a433f1fbf181dbadd92c896a7d8f"
+      },
+      "artifacts": {
+        "run": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_084_k2/run.json",
+          "sha256": "0cce4432514447449bf7178c0e2c8224d47cf60b28cae53c5d3631954c084ef8"
+        },
+        "manifest": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/batch_manifest.json",
+          "sha256": "1cfee0a513ff18c31431249255c1d3a792bf61c82cf3fbf10d61abbb76993749"
+        },
+        "plan": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_084_k2/case_084_multicore_res.json",
+          "sha256": "dc52f7e98602f41b77c8745d41a72bd839c3a433f1fbf181dbadd92c896a7d8f"
+        },
+        "result": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_084_k2/e0_result.json.gz",
+          "sha256": "3f3476c7bd2a7b7a3579a83f0fe08e87a545eeb3164ab789dd1a3045c169b389"
+        },
+        "trace": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_084_k2/e0_trace.json.gz",
+          "sha256": "93f16cf19fa6c807e1dd86a25fbd2a05923911e2edfc6f2132ef4a62f78d1ba6"
+        },
+        "log": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_084_k2/e0_log.txt",
+          "sha256": "d299b7ba5bc8a50c967df0ef98b691fd78ed03c6095adc0785776d483a2be76c"
+        }
+      },
+      "runtime_id": "fang-windows-q1-stage-i-20260925",
+      "observed_at": "2026-09-24T20:17:21.428195Z",
+      "timing": {
+        "solver_includes_evaluation": true,
+        "evaluation_precision": "perf_counter cold process wall; E1 online in solver and external E0 separate",
+        "utc": "UTC ISO8601 Z"
+      },
+      "provenance": {
+        "producer_session": "yuanzhifang30-sudo/s-7748b08eb22a449797a2417ad7825aaa",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "397e7ca0b680f50336e4dd4eefb14831015107d8",
+            "path": "src/q1_yuanzhifang/unified.py",
+            "entrypoint": "main"
+          },
+          "authors": [
+            "NikolaStarx",
+            "yuanzhifang30-sudo"
+          ],
+          "method": "Frozen captain candidate union plus one structure-gated H or private capacity-return candidate; E1 online ranking",
+          "references": [
+            "https://github.com/huaweibei123/huaweicup2026/issues/98"
+          ],
+          "upstream": [
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "48faef6f1386c3dc7d037674a38af29d533ba774",
+              "path": "src/q1/unified.py",
+              "entrypoint": "generate_candidates"
+            },
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "4f1b9f8be4bbcc98759a19451c108e62e80abb17",
+              "path": "src/q1_yuanzhifang/prefetch_frontier.py",
+              "entrypoint": "construct"
+            },
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "e566dd5ce6a1737880ca88d35964bfd846bc4512",
+              "path": "src/q1/capacity_return.py",
+              "entrypoint": "construct"
+            }
+          ],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "7993bafe22cbdbcd9ebc12b15dfecd4ef651563b",
+            "path": "src/q1_yuanzhifang/benchmark_i.py",
+            "entrypoint": "main"
+          },
+          "argv": [
+            "C:\\Users\\24580\\Desktop\\huaweicup2026\\.venv\\Scripts\\python.exe",
+            "-u",
+            "-c",
+            "import os,runpy,sys,time;gate=os.environ['Q1_JOB_GATE'];entry=os.environ['Q1_JOB_ENTRY'];\nwhile not os.path.exists(gate): time.sleep(.01)\nsys.path.insert(0,os.path.dirname(entry));runpy.run_path(entry,run_name='__main__')",
+            "C:\\Users\\24580\\Desktop\\huaweicup2026\\.worktrees\\q1-research-yuanzhifang\\data\\raw\\a\\official\\data\\case_084.json",
+            "--cores",
+            "2",
+            "--output",
+            "C:\\Users\\24580\\Desktop\\huaweicup2026-workspace\\worktrees\\q1-unified-race-yuanzhifang\\results\\a\\q1-yuanzhifang-stage-i\\stage-i-20260925\\run\\case_084_k2\\case_084_multicore_res.json",
+            "--diagnostics",
+            "C:\\Users\\24580\\Desktop\\huaweicup2026-workspace\\worktrees\\q1-unified-race-yuanzhifang\\results\\a\\q1-yuanzhifang-stage-i\\stage-i-20260925\\run\\case_084_k2\\diagnostics.json"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "Windows-11-10.0.26200-SP0",
+          "cpu": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+          "gpu": null,
+          "ram_bytes": null,
+          "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+          "dependencies": "uv.lock sha256 7b03fee57044ac272d8895533cbdca6d70a29d2da955f98a5552e72ef944fdc4",
+          "threads": null,
+          "workers": 2,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": "2026-09-24T20:16:57.254682Z",
+          "finished_at": "2026-09-24T20:17:21.428195Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": true,
+          "solver_scope": "external perf_counter from process launch through Job close, outputs and descendant cleanup",
+          "evaluation_scope": "separate unchanged official E0 CLI through Job close",
+          "budget": {
+            "wall_seconds": 1200,
+            "candidate_limit": 5,
+            "stop_reason": "success; 0 retries"
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 1,
+            "E1": 3,
+            "E2": 0
+          },
+          "offline_costs": "Preparation and fixed earlier baselines separate; no current-case offline training or score selection.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.gpu": "GPU was not measured; this CPU solver does not request one.",
+          "provenance.environment.ram_bytes": "Host RAM capacity was not measured by this runner.",
+          "provenance.environment.threads": "OS thread count was not measured; batch processes limited to two.",
+          "provenance.environment.peak_rss_bytes": "Child peak RSS was not instrumented.",
+          "provenance.measurement.seed": "Deterministic fixed structural construction has no RNG parameter."
+        }
+      },
+      "notes": [
+        "Five exposed prospective pilot cells only; no full 100x5 mean or blind test.",
+        "Official singlecore denominator 2507412 cycles copied byte-for-byte from 0b47d802cdd0bfe7011017c8098c1c0917b2c959 and independently identity-checked; 0 baseline reruns.",
+        "E1 execution unknown attempts are charged conservatively; see original diagnostics/events."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+      "baseline": {
+        "graph_sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/baseline/084/result.json.gz",
+          "sha256": "3cdf79e5f0cfb89108c8e763e855538e6d702c54e02c657aded96bc229d837d4"
+        }
+      },
+      "cache_pair": null
+    },
+    {
+      "attempt_id": "fang-q1-stage-i-20260925-084-k4-r0",
+      "revision": 1,
+      "run_id": "fang-q1-stage-i-20260925",
+      "algorithm_id": "q1-unified-prefetch-return",
+      "algorithm_name": "Fang structural union with one additional candidate",
+      "variant": "base-four-plus-one-v1",
+      "solver_commit": "397e7ca0b680f50336e4dd4eefb14831015107d8",
+      "parameters": {
+        "cores": 4,
+        "candidate_limit": 5,
+        "online_e1_worker_limit": 1,
+        "singlecore_baseline_commit": "0b47d802cdd0bfe7011017c8098c1c0917b2c959",
+        "batch_budget": {
+          "solver": 5,
+          "E0": 5,
+          "E1_attempts": 25,
+          "E2": 0,
+          "workers": 2,
+          "wall_seconds": 1200,
+          "retries": 0
+        },
+        "batch_actual_calls": {
+          "finished_at": "2026-09-24T20:17:45.062864Z",
+          "wall_seconds": 47.81599479999932,
+          "solver_attempts": 5,
+          "online_e1_interface_budget_charge": 15,
+          "external_e0_attempts": 5,
+          "statuses": {
+            "051/k5": "success",
+            "084/k2": "success",
+            "084/k4": "success",
+            "008/k5": "success",
+            "084/k5": "success"
+          },
+          "no_retries": true,
+          "stopped_after_supervision_failure": false
+        },
+        "e1_unknown_execution_attempts": 0,
+        "e1_conservative_budget_charge": 3
+      },
+      "problem": "P1",
+      "case_id": "084",
+      "cores": 4,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 446068,
+        "solver_wall_seconds": 17.888707000001887,
+        "evaluation_wall_seconds": 7.360864600002969,
+        "ddr_bytes": 23161962,
+        "extra_ddr_bytes": 9925632,
+        "spill_bytes": 0,
+        "cache_hit_rate": null
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "1cc29d207ebad396d5a0bbfcabf2ef4b4c26ffed",
+        "entrypoint": "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py"
+      },
+      "identity": {
+        "graph_sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "bb90e42bc9a917c22fe40fc56641f476a21636e5634dc94f10c0c1f42d72f7c3"
+      },
+      "artifacts": {
+        "run": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_084_k4/run.json",
+          "sha256": "0e914f8e58fe8f418cb3e34ffe3e815905ce2da2cb5212a13fdc5cae71e2927f"
+        },
+        "manifest": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/batch_manifest.json",
+          "sha256": "1cfee0a513ff18c31431249255c1d3a792bf61c82cf3fbf10d61abbb76993749"
+        },
+        "plan": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_084_k4/case_084_multicore_res.json",
+          "sha256": "bb90e42bc9a917c22fe40fc56641f476a21636e5634dc94f10c0c1f42d72f7c3"
+        },
+        "result": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_084_k4/e0_result.json.gz",
+          "sha256": "172afbf122c3d9db719e0835e586a6eebceb7f4af46e6e00a9c3774091d334e6"
+        },
+        "trace": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_084_k4/e0_trace.json.gz",
+          "sha256": "9a853b4d60b1af951b8275a1be9f25472b4cc4f8bb74b132ee0492a9667958bb"
+        },
+        "log": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_084_k4/e0_log.txt",
+          "sha256": "c1fb95219b9ba259f847ce1c20dc002eee4828a27c5a09ea908872425fee3b79"
+        }
+      },
+      "runtime_id": "fang-windows-q1-stage-i-20260925",
+      "observed_at": "2026-09-24T20:17:27.725053Z",
+      "timing": {
+        "solver_includes_evaluation": true,
+        "evaluation_precision": "perf_counter cold process wall; E1 online in solver and external E0 separate",
+        "utc": "UTC ISO8601 Z"
+      },
+      "provenance": {
+        "producer_session": "yuanzhifang30-sudo/s-7748b08eb22a449797a2417ad7825aaa",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "397e7ca0b680f50336e4dd4eefb14831015107d8",
+            "path": "src/q1_yuanzhifang/unified.py",
+            "entrypoint": "main"
+          },
+          "authors": [
+            "NikolaStarx",
+            "yuanzhifang30-sudo"
+          ],
+          "method": "Frozen captain candidate union plus one structure-gated H or private capacity-return candidate; E1 online ranking",
+          "references": [
+            "https://github.com/huaweibei123/huaweicup2026/issues/98"
+          ],
+          "upstream": [
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "48faef6f1386c3dc7d037674a38af29d533ba774",
+              "path": "src/q1/unified.py",
+              "entrypoint": "generate_candidates"
+            },
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "4f1b9f8be4bbcc98759a19451c108e62e80abb17",
+              "path": "src/q1_yuanzhifang/prefetch_frontier.py",
+              "entrypoint": "construct"
+            },
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "e566dd5ce6a1737880ca88d35964bfd846bc4512",
+              "path": "src/q1/capacity_return.py",
+              "entrypoint": "construct"
+            }
+          ],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "7993bafe22cbdbcd9ebc12b15dfecd4ef651563b",
+            "path": "src/q1_yuanzhifang/benchmark_i.py",
+            "entrypoint": "main"
+          },
+          "argv": [
+            "C:\\Users\\24580\\Desktop\\huaweicup2026\\.venv\\Scripts\\python.exe",
+            "-u",
+            "-c",
+            "import os,runpy,sys,time;gate=os.environ['Q1_JOB_GATE'];entry=os.environ['Q1_JOB_ENTRY'];\nwhile not os.path.exists(gate): time.sleep(.01)\nsys.path.insert(0,os.path.dirname(entry));runpy.run_path(entry,run_name='__main__')",
+            "C:\\Users\\24580\\Desktop\\huaweicup2026\\.worktrees\\q1-research-yuanzhifang\\data\\raw\\a\\official\\data\\case_084.json",
+            "--cores",
+            "4",
+            "--output",
+            "C:\\Users\\24580\\Desktop\\huaweicup2026-workspace\\worktrees\\q1-unified-race-yuanzhifang\\results\\a\\q1-yuanzhifang-stage-i\\stage-i-20260925\\run\\case_084_k4\\case_084_multicore_res.json",
+            "--diagnostics",
+            "C:\\Users\\24580\\Desktop\\huaweicup2026-workspace\\worktrees\\q1-unified-race-yuanzhifang\\results\\a\\q1-yuanzhifang-stage-i\\stage-i-20260925\\run\\case_084_k4\\diagnostics.json"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "Windows-11-10.0.26200-SP0",
+          "cpu": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+          "gpu": null,
+          "ram_bytes": null,
+          "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+          "dependencies": "uv.lock sha256 7b03fee57044ac272d8895533cbdca6d70a29d2da955f98a5552e72ef944fdc4",
+          "threads": null,
+          "workers": 2,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": "2026-09-24T20:17:01.721544Z",
+          "finished_at": "2026-09-24T20:17:27.725053Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": true,
+          "solver_scope": "external perf_counter from process launch through Job close, outputs and descendant cleanup",
+          "evaluation_scope": "separate unchanged official E0 CLI through Job close",
+          "budget": {
+            "wall_seconds": 1200,
+            "candidate_limit": 5,
+            "stop_reason": "success; 0 retries"
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 1,
+            "E1": 3,
+            "E2": 0
+          },
+          "offline_costs": "Preparation and fixed earlier baselines separate; no current-case offline training or score selection.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.gpu": "GPU was not measured; this CPU solver does not request one.",
+          "provenance.environment.ram_bytes": "Host RAM capacity was not measured by this runner.",
+          "provenance.environment.threads": "OS thread count was not measured; batch processes limited to two.",
+          "provenance.environment.peak_rss_bytes": "Child peak RSS was not instrumented.",
+          "provenance.measurement.seed": "Deterministic fixed structural construction has no RNG parameter."
+        }
+      },
+      "notes": [
+        "Five exposed prospective pilot cells only; no full 100x5 mean or blind test.",
+        "Official singlecore denominator 2507412 cycles copied byte-for-byte from 0b47d802cdd0bfe7011017c8098c1c0917b2c959 and independently identity-checked; 0 baseline reruns.",
+        "E1 execution unknown attempts are charged conservatively; see original diagnostics/events."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+      "baseline": {
+        "graph_sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/baseline/084/result.json.gz",
+          "sha256": "3cdf79e5f0cfb89108c8e763e855538e6d702c54e02c657aded96bc229d837d4"
+        }
+      },
+      "cache_pair": null
+    },
+    {
+      "attempt_id": "fang-q1-stage-i-20260925-084-k5-r0",
+      "revision": 1,
+      "run_id": "fang-q1-stage-i-20260925",
+      "algorithm_id": "q1-unified-prefetch-return",
+      "algorithm_name": "Fang structural union with one additional candidate",
+      "variant": "base-four-plus-one-v1",
+      "solver_commit": "397e7ca0b680f50336e4dd4eefb14831015107d8",
+      "parameters": {
+        "cores": 5,
+        "candidate_limit": 5,
+        "online_e1_worker_limit": 1,
+        "singlecore_baseline_commit": "0b47d802cdd0bfe7011017c8098c1c0917b2c959",
+        "batch_budget": {
+          "solver": 5,
+          "E0": 5,
+          "E1_attempts": 25,
+          "E2": 0,
+          "workers": 2,
+          "wall_seconds": 1200,
+          "retries": 0
+        },
+        "batch_actual_calls": {
+          "finished_at": "2026-09-24T20:17:45.062864Z",
+          "wall_seconds": 47.81599479999932,
+          "solver_attempts": 5,
+          "online_e1_interface_budget_charge": 15,
+          "external_e0_attempts": 5,
+          "statuses": {
+            "051/k5": "success",
+            "084/k2": "success",
+            "084/k4": "success",
+            "008/k5": "success",
+            "084/k5": "success"
+          },
+          "no_retries": true,
+          "stopped_after_supervision_failure": false
+        },
+        "e1_unknown_execution_attempts": 0,
+        "e1_conservative_budget_charge": 3
+      },
+      "problem": "P1",
+      "case_id": "084",
+      "cores": 5,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 399121,
+        "solver_wall_seconds": 17.40235109999776,
+        "evaluation_wall_seconds": 5.585883799998555,
+        "ddr_bytes": 23161962,
+        "extra_ddr_bytes": 9925632,
+        "spill_bytes": 0,
+        "cache_hit_rate": null
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "1cc29d207ebad396d5a0bbfcabf2ef4b4c26ffed",
+        "entrypoint": "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py"
+      },
+      "identity": {
+        "graph_sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "3b0ffc7d4d0f4c9c3dce958ba87e026481cbe551e17b8a932c1a2a5a92888b62"
+      },
+      "artifacts": {
+        "run": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_084_k5/run.json",
+          "sha256": "13dd59235d353ec1af23e41d4538e63720dc108b8213341813f9d5f621f1b14b"
+        },
+        "manifest": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/batch_manifest.json",
+          "sha256": "1cfee0a513ff18c31431249255c1d3a792bf61c82cf3fbf10d61abbb76993749"
+        },
+        "plan": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_084_k5/case_084_multicore_res.json",
+          "sha256": "3b0ffc7d4d0f4c9c3dce958ba87e026481cbe551e17b8a932c1a2a5a92888b62"
+        },
+        "result": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_084_k5/e0_result.json.gz",
+          "sha256": "8ac9961c651f6909cefceb01375fddbc57e71209becbee7450ca92dff8b54479"
+        },
+        "trace": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_084_k5/e0_trace.json.gz",
+          "sha256": "dd280017364a7a88c2257a8c65d5cdcb214fe21356ddb63bb9fd9daa3d7b1cc7"
+        },
+        "log": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_084_k5/e0_log.txt",
+          "sha256": "7a96e7736473d9af71f432d7d8bf96b1f956ff7403bbf75772361446ff5d9cd4"
+        }
+      },
+      "runtime_id": "fang-windows-q1-stage-i-20260925",
+      "observed_at": "2026-09-24T20:17:45.060863Z",
+      "timing": {
+        "solver_includes_evaluation": true,
+        "evaluation_precision": "perf_counter cold process wall; E1 online in solver and external E0 separate",
+        "utc": "UTC ISO8601 Z"
+      },
+      "provenance": {
+        "producer_session": "yuanzhifang30-sudo/s-7748b08eb22a449797a2417ad7825aaa",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "397e7ca0b680f50336e4dd4eefb14831015107d8",
+            "path": "src/q1_yuanzhifang/unified.py",
+            "entrypoint": "main"
+          },
+          "authors": [
+            "NikolaStarx",
+            "yuanzhifang30-sudo"
+          ],
+          "method": "Frozen captain candidate union plus one structure-gated H or private capacity-return candidate; E1 online ranking",
+          "references": [
+            "https://github.com/huaweibei123/huaweicup2026/issues/98"
+          ],
+          "upstream": [
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "48faef6f1386c3dc7d037674a38af29d533ba774",
+              "path": "src/q1/unified.py",
+              "entrypoint": "generate_candidates"
+            },
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "4f1b9f8be4bbcc98759a19451c108e62e80abb17",
+              "path": "src/q1_yuanzhifang/prefetch_frontier.py",
+              "entrypoint": "construct"
+            },
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "e566dd5ce6a1737880ca88d35964bfd846bc4512",
+              "path": "src/q1/capacity_return.py",
+              "entrypoint": "construct"
+            }
+          ],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "7993bafe22cbdbcd9ebc12b15dfecd4ef651563b",
+            "path": "src/q1_yuanzhifang/benchmark_i.py",
+            "entrypoint": "main"
+          },
+          "argv": [
+            "C:\\Users\\24580\\Desktop\\huaweicup2026\\.venv\\Scripts\\python.exe",
+            "-u",
+            "-c",
+            "import os,runpy,sys,time;gate=os.environ['Q1_JOB_GATE'];entry=os.environ['Q1_JOB_ENTRY'];\nwhile not os.path.exists(gate): time.sleep(.01)\nsys.path.insert(0,os.path.dirname(entry));runpy.run_path(entry,run_name='__main__')",
+            "C:\\Users\\24580\\Desktop\\huaweicup2026\\.worktrees\\q1-research-yuanzhifang\\data\\raw\\a\\official\\data\\case_084.json",
+            "--cores",
+            "5",
+            "--output",
+            "C:\\Users\\24580\\Desktop\\huaweicup2026-workspace\\worktrees\\q1-unified-race-yuanzhifang\\results\\a\\q1-yuanzhifang-stage-i\\stage-i-20260925\\run\\case_084_k5\\case_084_multicore_res.json",
+            "--diagnostics",
+            "C:\\Users\\24580\\Desktop\\huaweicup2026-workspace\\worktrees\\q1-unified-race-yuanzhifang\\results\\a\\q1-yuanzhifang-stage-i\\stage-i-20260925\\run\\case_084_k5\\diagnostics.json"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "Windows-11-10.0.26200-SP0",
+          "cpu": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+          "gpu": null,
+          "ram_bytes": null,
+          "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+          "dependencies": "uv.lock sha256 7b03fee57044ac272d8895533cbdca6d70a29d2da955f98a5552e72ef944fdc4",
+          "threads": null,
+          "workers": 2,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": "2026-09-24T20:17:21.436769Z",
+          "finished_at": "2026-09-24T20:17:45.060863Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": true,
+          "solver_scope": "external perf_counter from process launch through Job close, outputs and descendant cleanup",
+          "evaluation_scope": "separate unchanged official E0 CLI through Job close",
+          "budget": {
+            "wall_seconds": 1200,
+            "candidate_limit": 5,
+            "stop_reason": "success; 0 retries"
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 1,
+            "E1": 3,
+            "E2": 0
+          },
+          "offline_costs": "Preparation and fixed earlier baselines separate; no current-case offline training or score selection.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.gpu": "GPU was not measured; this CPU solver does not request one.",
+          "provenance.environment.ram_bytes": "Host RAM capacity was not measured by this runner.",
+          "provenance.environment.threads": "OS thread count was not measured; batch processes limited to two.",
+          "provenance.environment.peak_rss_bytes": "Child peak RSS was not instrumented.",
+          "provenance.measurement.seed": "Deterministic fixed structural construction has no RNG parameter."
+        }
+      },
+      "notes": [
+        "Five exposed prospective pilot cells only; no full 100x5 mean or blind test.",
+        "Official singlecore denominator 2507412 cycles copied byte-for-byte from 0b47d802cdd0bfe7011017c8098c1c0917b2c959 and independently identity-checked; 0 baseline reruns.",
+        "E1 execution unknown attempts are charged conservatively; see original diagnostics/events."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+      "baseline": {
+        "graph_sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/baseline/084/result.json.gz",
+          "sha256": "3cdf79e5f0cfb89108c8e763e855538e6d702c54e02c657aded96bc229d837d4"
+        }
+      },
+      "cache_pair": null
+    },
+    {
+      "attempt_id": "fang-q1-stage-i-20260925-008-k5-r0",
+      "revision": 1,
+      "run_id": "fang-q1-stage-i-20260925",
+      "algorithm_id": "q1-unified-prefetch-return",
+      "algorithm_name": "Fang structural union with one additional candidate",
+      "variant": "base-four-plus-one-v1",
+      "solver_commit": "397e7ca0b680f50336e4dd4eefb14831015107d8",
+      "parameters": {
+        "cores": 5,
+        "candidate_limit": 5,
+        "online_e1_worker_limit": 1,
+        "singlecore_baseline_commit": "0b47d802cdd0bfe7011017c8098c1c0917b2c959",
+        "batch_budget": {
+          "solver": 5,
+          "E0": 5,
+          "E1_attempts": 25,
+          "E2": 0,
+          "workers": 2,
+          "wall_seconds": 1200,
+          "retries": 0
+        },
+        "batch_actual_calls": {
+          "finished_at": "2026-09-24T20:17:45.062864Z",
+          "wall_seconds": 47.81599479999932,
+          "solver_attempts": 5,
+          "online_e1_interface_budget_charge": 15,
+          "external_e0_attempts": 5,
+          "statuses": {
+            "051/k5": "success",
+            "084/k2": "success",
+            "084/k4": "success",
+            "008/k5": "success",
+            "084/k5": "success"
+          },
+          "no_retries": true,
+          "stopped_after_supervision_failure": false
+        },
+        "e1_unknown_execution_attempts": 0,
+        "e1_conservative_budget_charge": 3
+      },
+      "problem": "P1",
+      "case_id": "008",
+      "cores": 5,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 100603,
+        "solver_wall_seconds": 3.044874399998662,
+        "evaluation_wall_seconds": 0.7451097000011941,
+        "ddr_bytes": 2654424,
+        "extra_ddr_bytes": 0,
+        "spill_bytes": 0,
+        "cache_hit_rate": null
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "1cc29d207ebad396d5a0bbfcabf2ef4b4c26ffed",
+        "entrypoint": "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py"
+      },
+      "identity": {
+        "graph_sha256": "c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "14d849a2d0898bfc4421cc4b42e68dbcea305803d9a69def81773eb09393e6e4"
+      },
+      "artifacts": {
+        "run": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_008_k5/run.json",
+          "sha256": "218b310bdd5781e2d51a991d0f4e626302d31600006366b67a209c5439d50253"
+        },
+        "manifest": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/batch_manifest.json",
+          "sha256": "1cfee0a513ff18c31431249255c1d3a792bf61c82cf3fbf10d61abbb76993749"
+        },
+        "plan": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_008_k5/case_008_multicore_res.json",
+          "sha256": "14d849a2d0898bfc4421cc4b42e68dbcea305803d9a69def81773eb09393e6e4"
+        },
+        "result": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_008_k5/e0_result.json.gz",
+          "sha256": "8228bff83037d139c213ab6193858d2c5d210f80b85cfdafabe7f3375ac23c17"
+        },
+        "trace": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_008_k5/e0_trace.json.gz",
+          "sha256": "b51351a80910d47a6d39585401d6c889e2e9e27de3e2316c096925f14a1f552c"
+        },
+        "log": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/run/case_008_k5/e0_log.txt",
+          "sha256": "d2f5872b69a2c6dfaeaf144a37940ab59a0fc3ddd7df484492ddd6580350b3d7"
+        }
+      },
+      "runtime_id": "fang-windows-q1-stage-i-20260925",
+      "observed_at": "2026-09-24T20:17:31.637711Z",
+      "timing": {
+        "solver_includes_evaluation": true,
+        "evaluation_precision": "perf_counter cold process wall; E1 online in solver and external E0 separate",
+        "utc": "UTC ISO8601 Z"
+      },
+      "provenance": {
+        "producer_session": "yuanzhifang30-sudo/s-7748b08eb22a449797a2417ad7825aaa",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "397e7ca0b680f50336e4dd4eefb14831015107d8",
+            "path": "src/q1_yuanzhifang/unified.py",
+            "entrypoint": "main"
+          },
+          "authors": [
+            "NikolaStarx",
+            "yuanzhifang30-sudo"
+          ],
+          "method": "Frozen captain candidate union plus one structure-gated H or private capacity-return candidate; E1 online ranking",
+          "references": [
+            "https://github.com/huaweibei123/huaweicup2026/issues/98"
+          ],
+          "upstream": [
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "48faef6f1386c3dc7d037674a38af29d533ba774",
+              "path": "src/q1/unified.py",
+              "entrypoint": "generate_candidates"
+            },
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "4f1b9f8be4bbcc98759a19451c108e62e80abb17",
+              "path": "src/q1_yuanzhifang/prefetch_frontier.py",
+              "entrypoint": "construct"
+            },
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "e566dd5ce6a1737880ca88d35964bfd846bc4512",
+              "path": "src/q1/capacity_return.py",
+              "entrypoint": "construct"
+            }
+          ],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "7993bafe22cbdbcd9ebc12b15dfecd4ef651563b",
+            "path": "src/q1_yuanzhifang/benchmark_i.py",
+            "entrypoint": "main"
+          },
+          "argv": [
+            "C:\\Users\\24580\\Desktop\\huaweicup2026\\.venv\\Scripts\\python.exe",
+            "-u",
+            "-c",
+            "import os,runpy,sys,time;gate=os.environ['Q1_JOB_GATE'];entry=os.environ['Q1_JOB_ENTRY'];\nwhile not os.path.exists(gate): time.sleep(.01)\nsys.path.insert(0,os.path.dirname(entry));runpy.run_path(entry,run_name='__main__')",
+            "C:\\Users\\24580\\Desktop\\huaweicup2026\\.worktrees\\q1-research-yuanzhifang\\data\\raw\\a\\official\\data\\case_008.json",
+            "--cores",
+            "5",
+            "--output",
+            "C:\\Users\\24580\\Desktop\\huaweicup2026-workspace\\worktrees\\q1-unified-race-yuanzhifang\\results\\a\\q1-yuanzhifang-stage-i\\stage-i-20260925\\run\\case_008_k5\\case_008_multicore_res.json",
+            "--diagnostics",
+            "C:\\Users\\24580\\Desktop\\huaweicup2026-workspace\\worktrees\\q1-unified-race-yuanzhifang\\results\\a\\q1-yuanzhifang-stage-i\\stage-i-20260925\\run\\case_008_k5\\diagnostics.json"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "Windows-11-10.0.26200-SP0",
+          "cpu": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+          "gpu": null,
+          "ram_bytes": null,
+          "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+          "dependencies": "uv.lock sha256 7b03fee57044ac272d8895533cbdca6d70a29d2da955f98a5552e72ef944fdc4",
+          "threads": null,
+          "workers": 2,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": "2026-09-24T20:17:27.730052Z",
+          "finished_at": "2026-09-24T20:17:31.637711Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": true,
+          "solver_scope": "external perf_counter from process launch through Job close, outputs and descendant cleanup",
+          "evaluation_scope": "separate unchanged official E0 CLI through Job close",
+          "budget": {
+            "wall_seconds": 1200,
+            "candidate_limit": 5,
+            "stop_reason": "success; 0 retries"
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 1,
+            "E1": 3,
+            "E2": 0
+          },
+          "offline_costs": "Preparation and fixed earlier baselines separate; no current-case offline training or score selection.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.gpu": "GPU was not measured; this CPU solver does not request one.",
+          "provenance.environment.ram_bytes": "Host RAM capacity was not measured by this runner.",
+          "provenance.environment.threads": "OS thread count was not measured; batch processes limited to two.",
+          "provenance.environment.peak_rss_bytes": "Child peak RSS was not instrumented.",
+          "provenance.measurement.seed": "Deterministic fixed structural construction has no RNG parameter."
+        }
+      },
+      "notes": [
+        "Five exposed prospective pilot cells only; no full 100x5 mean or blind test.",
+        "Official singlecore denominator 487605 cycles copied byte-for-byte from 0b47d802cdd0bfe7011017c8098c1c0917b2c959 and independently identity-checked; 0 baseline reruns.",
+        "E1 execution unknown attempts are charged conservatively; see original diagnostics/events."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+      "baseline": {
+        "graph_sha256": "c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/baseline/008/result.json.gz",
+          "sha256": "126b4f87980a9d8ab5fe4a5736f0dae2be0a77a5517c2c245e2041475bb564ee"
+        }
+      },
+      "cache_pair": null
+    }
+  ]
+}
