@@ -23,3 +23,13 @@ python3 results/a/q2-nikolastarx/hyperrefine-probe-20260925/probe.py \
   --seed results/a/q2-nikolastarx/pro-r04-review-20260925/static-003-k2/seed-plan.json.gz \
   --output results/a/q2-nikolastarx/hyperrefine-probe-20260925/run-003-k2
 ```
+
+2026-09-24 UTC attempt: the first invocation used a short SHA and failed the
+outer exact-HEAD preflight before creating a child. The subsequent invocation
+created one child; it failed during import with `ModuleNotFoundError` for
+`evaluation_validation` before calling `refine`. See `run-003-k2/process.json`
+and `stderr.txt`. Actual refinement and evaluator calls were zero, and no plan
+or byte result exists. The import order is corrected in the script after that
+attempt. The frozen zero-retry budget was respected; no further child was run
+under that batch. A separately authorized `run-003-k2-v2` uses the corrected
+script with the same one-worker, one-refinement, 30-second, zero-retry budget.

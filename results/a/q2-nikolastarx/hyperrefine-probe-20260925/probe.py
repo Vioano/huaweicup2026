@@ -34,10 +34,11 @@ def encoded(value) -> bytes:
 
 def child(args):
     started = time.perf_counter()
+    # direct.py exposes the frozen official code directory to these readers.
+    from src.q2_nikolastarx.direct import derive_multicore_plan
     from evaluation_validation import read_evaluation_config
     from multicore_cut_evaluate_problem_2 import read_scene_b_config
     from src.q2_nikolastarx.candidate_ddr import mandatory_copy_work
-    from src.q2_nikolastarx.direct import derive_multicore_plan
     from src.q2_nikolastarx.gap_hyperrefine import refine
 
     graph_path = args.raw_root / 'case_003.json'
