@@ -53,7 +53,7 @@ def main():
         rows.append({'case_id':key[0],'cores':key[1],'old_makespan':xm,'calendar_makespan':ym,'baseline_makespan':bm,'old_speedup':bm/xm,'calendar_speedup':bm/ym,'m_change':('improved' if ym<xm else 'regressed' if ym>xm else 'equal'),'old_solver_wall_s':x['metrics']['solver_wall_seconds'],'calendar_solver_wall_s':y['metrics']['solver_wall_seconds'],'old_extra_ddr_bytes':x['metrics']['extra_ddr_bytes'],'calendar_extra_ddr_bytes':y['metrics']['extra_ddr_bytes'],'old_spill_bytes':x['metrics']['spill_bytes'],'calendar_spill_bytes':y['metrics']['spill_bytes'],'old_cache_hit_rate':x['metrics']['cache_hit_rate'],'calendar_cache_hit_rate':y['metrics']['cache_hit_rate']})
     out=Path(a.output); out.mkdir(parents=True,exist_ok=True)
     with (out/'cells.csv').open('w',newline='') as f:
-        w=csv.DictWriter(f,fieldnames=rows[0].keys());w.writeheader();w.writerows(rows)
+        w=csv.DictWriter(f,fieldnames=rows[0].keys(),lineterminator="\n");w.writeheader();w.writerows(rows)
     summary=[]
     for k in range(1,6):
         q=[r for r in rows if r['cores']==k]; n=len(q)

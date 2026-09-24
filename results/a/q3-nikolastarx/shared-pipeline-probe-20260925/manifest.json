@@ -1,0 +1,68 @@
+{
+  "schema": "q3-feedback-benchmark-v1",
+  "run_id": "q3-shared-pipeline-probe-20260925",
+  "stage_id": "three",
+  "producer_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+  "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+  "solver_commit": "87f677f8f16e31a71c071d49dd176d4420efb36d",
+  "solver_module": "src.q3.pipeline_solve",
+  "algorithm": {
+    "id": "q3-pipeline-structure",
+    "name": "统一日历算法加共享输入连续流水分段",
+    "authors": [
+      "NikolaStarx",
+      "yuanzhifang30-sudo"
+    ],
+    "method": "Fresh calendar incumbent, plus exactly one shared-input homogeneous-chain minimax contiguous-partition proposal when guarded; duplicate and certified-bound skips; strict official M selection. At most3onlineE0, including incumbent; no parameter sweep.",
+    "references": [
+      "https://github.com/huaweibei123/huaweicup2026/issues/51",
+      "https://github.com/huaweibei123/huaweicup2026/blob/6bae8dfa317bc71226068344b59dd65d2612c32b/src/q3_yuanzhifang/pipeline_stages.py"
+    ],
+    "upstream": []
+  },
+  "runtime_id": "q3-local-shared-pipeline-probe-20260925",
+  "budget": {
+    "max_e0_calls": 9,
+    "total_wall_seconds": 120,
+    "per_job_seconds": 30
+  },
+  "offline_costs": "All100 seen graphs structural census0E0:guard recognizes8,including6homogeneous124-position shared-input chains.4constructor and5policy tests plus full138tests137pass1explicitE0skip. No training or historical result lookup. Cases selected as seen mechanism representatives jobs11/8/71,not unseen performance.",
+  "jobs": [
+    {
+      "case_id": "044",
+      "cores": 5,
+      "variant": "unified-shared-pipeline-e0",
+      "solver_args": [],
+      "parameters": {
+        "structural_router": "calendar_then_one_shared_pipeline",
+        "candidate_limit": 3,
+        "selection": "strictly smaller official makespan than fresh calendar incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "046",
+      "cores": 5,
+      "variant": "unified-shared-pipeline-e0",
+      "solver_args": [],
+      "parameters": {
+        "structural_router": "calendar_then_one_shared_pipeline",
+        "candidate_limit": 3,
+        "selection": "strictly smaller official makespan than fresh calendar incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "067",
+      "cores": 5,
+      "variant": "unified-shared-pipeline-e0",
+      "solver_args": [],
+      "parameters": {
+        "structural_router": "calendar_then_one_shared_pipeline",
+        "candidate_limit": 3,
+        "selection": "strictly smaller official makespan than fresh calendar incumbent"
+      },
+      "e0_call_limit": 3
+    }
+  ]
+}
