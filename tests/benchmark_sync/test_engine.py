@@ -38,9 +38,10 @@ class EngineTests(unittest.TestCase):
         self.engines={a:Engine(c,self.remote,self.sign) for a,c in self.configs.items()}
         self.engines['leader'].config['central']={'inbox':str(self.root/'inbox')}
     def tearDown(self): self.tmp.cleanup()
-    def queue(self,actor='member'):
-        artifact=b'{"test":true}';feed={'schema_version':1,'records':[{'provenance':{'producer_session':actor+'/s-test'},'artifacts':{'plan':{'path':'results/plan.json','sha256':digest(artifact)}}}]}
-        feed_bytes=canonical(feed);commit='a'*40
+    def queue(self,actor='member',nonce=None):
+        artifact=b'{"test":true}';session=actor+'/s-test'+('' if nonce is None else '-'+str(nonce))
+        feed={'schema_version':1,'records':[{'provenance':{'producer_session':session},'artifacts':{'plan':{'path':'results/plan.json','sha256':digest(artifact)}}}]}
+        feed_bytes=canonical(feed);commit='a'*40 if nonce is None else hashlib.sha1(str(nonce).encode()).hexdigest()
         self.remote.commits[commit]={'results/board-feed.json':feed_bytes,'results/plan.json':artifact}
         payload={'schema_version':1,'actor':actor,'commit':commit,'feed':'results/board-feed.json',
                  'feed_sha256':digest(feed_bytes),'artifacts':{'results/plan.json':digest(artifact)}}
@@ -58,6 +59,21 @@ class EngineTests(unittest.TestCase):
         self.assertEqual(read_json(p)['state'],'accepted')
         before=self.remote.head();member.deliver_outbox(before);leader.receive_submissions(before)
         self.assertEqual(before,self.remote.head())
+
+    def test_small_feeds_keep_individual_signatures_in_bounded_transport_batches(self):
+        from unittest.mock import patch
+        member=self.engines['member'];items=[self.queue(nonce=i) for i in range(35)]
+        original=self.remote.update;calls=[]
+        def count_update(files,**kwargs):
+            calls.append((set(files),kwargs.get('parents',())))
+            return original(files,**kwargs)
+        with patch.object(self.remote,'update',side_effect=count_update):
+            member.deliver_outbox(None)
+        self.assertEqual([len(files) for files,_ in calls],[16,16,3])
+        self.assertEqual(sum(len(files) for files,_ in calls),35)
+        tree=self.remote.tree(self.remote.head())
+        self.assertEqual(sum(p.startswith('submissions/member/') for p in tree),35)
+        for entry,_ in items:self.assertEqual(read_json(entry)['state'],'awaiting_receipt')
     def test_leader_can_also_submit_and_neighbour_corruption_is_isolated(self):
         p,identity=self.queue('leader');bad=self.root/'leader'/'outbox'/'broken'/'entry.json';bad.parent.mkdir(parents=True);bad.write_text('{')
         leader=self.engines['leader'];leader.deliver_outbox(None)
