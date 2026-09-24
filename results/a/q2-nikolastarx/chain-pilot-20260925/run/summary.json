@@ -1,0 +1,694 @@
+{
+  "status": "completed",
+  "runner_commit": "9e84fc880aaf48129ef3c0ab5414c52b48ba7a29",
+  "manifest_sha256": "0cca6bdd9bdb54ce74bc177c5426d63ad74e57732ca06a6471934f9ab91ec997",
+  "cases": [
+    {
+      "case": "003",
+      "process": {
+        "argv": [
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/.venv/bin/python",
+          "-B",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/src/q2_nikolastarx/chain_pilot.py",
+          "worker",
+          "--manifest",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/results/a/q2-nikolastarx/chain-pilot-20260925/manifest.json",
+          "--e2-root",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/output/q2-e2-paircheck-603b-s8ee",
+          "--runner-commit",
+          "9e84fc880aaf48129ef3c0ab5414c52b48ba7a29",
+          "--case-index",
+          "0",
+          "--output",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/results/a/q2-nikolastarx/chain-pilot-20260925/run/003-k5/records"
+        ],
+        "started_at": "2026-09-24T20:37:18.052880Z",
+        "status": "ok",
+        "sample_interval_seconds": 0.05,
+        "observed_peak_rss_bytes": 425476096,
+        "rss_samples": 102,
+        "cleanup_killed_pids": [],
+        "pid": 24803,
+        "observer_inclusive_peak_rss_bytes": 470122496,
+        "exit_code": 0,
+        "surviving_pids": [],
+        "finished_at": "2026-09-24T20:37:25.515895Z",
+        "wall_seconds": 7.462849458999699
+      },
+      "ledger": {
+        "case": "003",
+        "status": "completed",
+        "calls": {
+          "E2_api": 1,
+          "native": 1,
+          "E0_fallback": 0,
+          "E0_independent": 1
+        },
+        "request_in_flight": false,
+        "scope": "fixed candidate pilot; not full algorithm score",
+        "fallback_status": "native",
+        "e2_wall_seconds": 2.0583060840144753,
+        "e2_record": {
+          "status": "ok",
+          "makespan": 269209,
+          "data_movement_bytes": {
+            "original_graph_copy_bytes": 1284264,
+            "scheduled_copy_bytes": 13112448,
+            "added_copy_bytes": 11828184,
+            "partition_added_copy_bytes": 11828184,
+            "spill_added_copy_bytes": 0
+          },
+          "cross_task_traffic": 4953378,
+          "route": "native",
+          "execution": "native_replayed",
+          "numeric_kind": "computed",
+          "replay_iterations": 28076,
+          "preparation_seconds": 1.9595178329909686,
+          "replay_seconds": 0.005515083001228049,
+          "compilation_cache_hit": false,
+          "engine": "p2-e2-native-search-v1",
+          "problem": 2,
+          "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+          "wall_seconds": 1.9733422079880256,
+          "cpu_seconds": 1.957783,
+          "cache": {
+            "hits": 0,
+            "misses": 1,
+            "evictions": 0,
+            "bypasses": 0,
+            "native_calls": 1,
+            "fallback_calls": 0,
+            "full_calls": 0,
+            "accounted_bytes": 2229060,
+            "limit_bytes": 16777216,
+            "entries": 1,
+            "max_entries": 32
+          }
+        },
+        "e0_in_flight": false,
+        "e0_wall_seconds": 3.7734546669817064,
+        "e2_e0_equal": true,
+        "candidate": {
+          "makespan": 269209,
+          "movement": {
+            "original_graph_copy_bytes": 1284264,
+            "scheduled_copy_bytes": 13112448,
+            "added_copy_bytes": 11828184,
+            "partition_added_copy_bytes": 11828184,
+            "spill_added_copy_bytes": 0
+          },
+          "cross_task_traffic": 4953378
+        },
+        "baseline": {
+          "makespan": 515736,
+          "movement": {
+            "original_graph_copy_bytes": 1284264,
+            "scheduled_copy_bytes": 1677480,
+            "added_copy_bytes": 393216,
+            "partition_added_copy_bytes": 393216,
+            "spill_added_copy_bytes": 0
+          },
+          "cross_task_traffic": 0
+        },
+        "candidate_vs_baseline_m": -246527,
+        "lexicographic_comparison": "better"
+      },
+      "accepted": true
+    },
+    {
+      "case": "005",
+      "process": {
+        "argv": [
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/.venv/bin/python",
+          "-B",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/src/q2_nikolastarx/chain_pilot.py",
+          "worker",
+          "--manifest",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/results/a/q2-nikolastarx/chain-pilot-20260925/manifest.json",
+          "--e2-root",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/output/q2-e2-paircheck-603b-s8ee",
+          "--runner-commit",
+          "9e84fc880aaf48129ef3c0ab5414c52b48ba7a29",
+          "--case-index",
+          "1",
+          "--output",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/results/a/q2-nikolastarx/chain-pilot-20260925/run/005-k5/records"
+        ],
+        "started_at": "2026-09-24T20:37:25.516817Z",
+        "status": "ok",
+        "sample_interval_seconds": 0.05,
+        "observed_peak_rss_bytes": 187318272,
+        "rss_samples": 33,
+        "cleanup_killed_pids": [],
+        "pid": 25271,
+        "observer_inclusive_peak_rss_bytes": 232030208,
+        "exit_code": 0,
+        "surviving_pids": [],
+        "finished_at": "2026-09-24T20:37:27.958971Z",
+        "wall_seconds": 2.4421468329965137
+      },
+      "ledger": {
+        "case": "005",
+        "status": "completed",
+        "calls": {
+          "E2_api": 1,
+          "native": 1,
+          "E0_fallback": 0,
+          "E0_independent": 1
+        },
+        "request_in_flight": false,
+        "scope": "fixed candidate pilot; not full algorithm score",
+        "fallback_status": "native",
+        "e2_wall_seconds": 0.3531365839880891,
+        "e2_record": {
+          "status": "ok",
+          "makespan": 72375,
+          "data_movement_bytes": {
+            "original_graph_copy_bytes": 333414,
+            "scheduled_copy_bytes": 3440406,
+            "added_copy_bytes": 3106992,
+            "partition_added_copy_bytes": 3106992,
+            "spill_added_copy_bytes": 0
+          },
+          "cross_task_traffic": 1356832,
+          "route": "native",
+          "execution": "native_replayed",
+          "numeric_kind": "computed",
+          "replay_iterations": 7650,
+          "preparation_seconds": 0.3024537089804653,
+          "replay_seconds": 0.001422542001819238,
+          "compilation_cache_hit": false,
+          "engine": "p2-e2-native-search-v1",
+          "problem": 2,
+          "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+          "wall_seconds": 0.30536583298817277,
+          "cpu_seconds": 0.30501,
+          "cache": {
+            "hits": 0,
+            "misses": 1,
+            "evictions": 0,
+            "bypasses": 0,
+            "native_calls": 1,
+            "fallback_calls": 0,
+            "full_calls": 0,
+            "accounted_bytes": 580964,
+            "limit_bytes": 16777216,
+            "entries": 1,
+            "max_entries": 32
+          }
+        },
+        "e0_in_flight": false,
+        "e0_wall_seconds": 0.5891120419837534,
+        "e2_e0_equal": true,
+        "candidate": {
+          "makespan": 72375,
+          "movement": {
+            "original_graph_copy_bytes": 333414,
+            "scheduled_copy_bytes": 3440406,
+            "added_copy_bytes": 3106992,
+            "partition_added_copy_bytes": 3106992,
+            "spill_added_copy_bytes": 0
+          },
+          "cross_task_traffic": 1356832
+        },
+        "baseline": {
+          "makespan": 66385,
+          "movement": {
+            "original_graph_copy_bytes": 333414,
+            "scheduled_copy_bytes": 3430330,
+            "added_copy_bytes": 3096916,
+            "partition_added_copy_bytes": 3096916,
+            "spill_added_copy_bytes": 0
+          },
+          "cross_task_traffic": 1361296
+        },
+        "candidate_vs_baseline_m": 5990,
+        "lexicographic_comparison": "worse"
+      },
+      "accepted": true
+    },
+    {
+      "case": "056",
+      "process": {
+        "argv": [
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/.venv/bin/python",
+          "-B",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/src/q2_nikolastarx/chain_pilot.py",
+          "worker",
+          "--manifest",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/results/a/q2-nikolastarx/chain-pilot-20260925/manifest.json",
+          "--e2-root",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/output/q2-e2-paircheck-603b-s8ee",
+          "--runner-commit",
+          "9e84fc880aaf48129ef3c0ab5414c52b48ba7a29",
+          "--case-index",
+          "2",
+          "--output",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/results/a/q2-nikolastarx/chain-pilot-20260925/run/056-k5/records"
+        ],
+        "started_at": "2026-09-24T20:37:27.960106Z",
+        "status": "ok",
+        "sample_interval_seconds": 0.05,
+        "observed_peak_rss_bytes": 264863744,
+        "rss_samples": 51,
+        "cleanup_killed_pids": [],
+        "pid": 25999,
+        "observer_inclusive_peak_rss_bytes": 307527680,
+        "exit_code": 0,
+        "surviving_pids": [],
+        "finished_at": "2026-09-24T20:37:31.696849Z",
+        "wall_seconds": 3.7367340000055265
+      },
+      "ledger": {
+        "case": "056",
+        "status": "completed",
+        "calls": {
+          "E2_api": 1,
+          "native": 1,
+          "E0_fallback": 0,
+          "E0_independent": 1
+        },
+        "request_in_flight": false,
+        "scope": "fixed candidate pilot; not full algorithm score",
+        "fallback_status": "native",
+        "e2_wall_seconds": 0.8051845000009052,
+        "e2_record": {
+          "status": "ok",
+          "makespan": 148632,
+          "data_movement_bytes": {
+            "original_graph_copy_bytes": 221600,
+            "scheduled_copy_bytes": 5740960,
+            "added_copy_bytes": 5519360,
+            "partition_added_copy_bytes": 5519360,
+            "spill_added_copy_bytes": 0
+          },
+          "cross_task_traffic": 2685924,
+          "route": "native",
+          "execution": "native_replayed",
+          "numeric_kind": "computed",
+          "replay_iterations": 14516,
+          "preparation_seconds": 0.7382791249838192,
+          "replay_seconds": 0.0026391249848529696,
+          "compilation_cache_hit": false,
+          "engine": "p2-e2-native-search-v1",
+          "problem": 2,
+          "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+          "wall_seconds": 0.743480915989494,
+          "cpu_seconds": 0.737511,
+          "cache": {
+            "hits": 0,
+            "misses": 1,
+            "evictions": 0,
+            "bypasses": 0,
+            "native_calls": 1,
+            "fallback_calls": 0,
+            "full_calls": 0,
+            "accounted_bytes": 1101975,
+            "limit_bytes": 16777216,
+            "entries": 1,
+            "max_entries": 32
+          }
+        },
+        "e0_in_flight": false,
+        "e0_wall_seconds": 1.4167641660023946,
+        "e2_e0_equal": true,
+        "candidate": {
+          "makespan": 148632,
+          "movement": {
+            "original_graph_copy_bytes": 221600,
+            "scheduled_copy_bytes": 5740960,
+            "added_copy_bytes": 5519360,
+            "partition_added_copy_bytes": 5519360,
+            "spill_added_copy_bytes": 0
+          },
+          "cross_task_traffic": 2685924
+        },
+        "baseline": {
+          "makespan": 253392,
+          "movement": {
+            "original_graph_copy_bytes": 221600,
+            "scheduled_copy_bytes": 221600,
+            "added_copy_bytes": 0,
+            "partition_added_copy_bytes": 0,
+            "spill_added_copy_bytes": 0
+          },
+          "cross_task_traffic": 0
+        },
+        "candidate_vs_baseline_m": -104760,
+        "lexicographic_comparison": "better"
+      },
+      "accepted": true
+    },
+    {
+      "case": "068",
+      "process": {
+        "argv": [
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/.venv/bin/python",
+          "-B",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/src/q2_nikolastarx/chain_pilot.py",
+          "worker",
+          "--manifest",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/results/a/q2-nikolastarx/chain-pilot-20260925/manifest.json",
+          "--e2-root",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/output/q2-e2-paircheck-603b-s8ee",
+          "--runner-commit",
+          "9e84fc880aaf48129ef3c0ab5414c52b48ba7a29",
+          "--case-index",
+          "3",
+          "--output",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/results/a/q2-nikolastarx/chain-pilot-20260925/run/068-k5/records"
+        ],
+        "started_at": "2026-09-24T20:37:31.697951Z",
+        "status": "ok",
+        "sample_interval_seconds": 0.05,
+        "observed_peak_rss_bytes": 205520896,
+        "rss_samples": 36,
+        "cleanup_killed_pids": [],
+        "pid": 26319,
+        "observer_inclusive_peak_rss_bytes": 248250368,
+        "exit_code": 0,
+        "surviving_pids": [],
+        "finished_at": "2026-09-24T20:37:34.312285Z",
+        "wall_seconds": 2.6143327089957893
+      },
+      "ledger": {
+        "case": "068",
+        "status": "completed",
+        "calls": {
+          "E2_api": 1,
+          "native": 1,
+          "E0_fallback": 0,
+          "E0_independent": 1
+        },
+        "request_in_flight": false,
+        "scope": "fixed candidate pilot; not full algorithm score",
+        "fallback_status": "native",
+        "e2_wall_seconds": 0.4505997920059599,
+        "e2_record": {
+          "status": "ok",
+          "makespan": 159409,
+          "data_movement_bytes": {
+            "original_graph_copy_bytes": 2771250,
+            "scheduled_copy_bytes": 7223234,
+            "added_copy_bytes": 4451984,
+            "partition_added_copy_bytes": 4451984,
+            "spill_added_copy_bytes": 0
+          },
+          "cross_task_traffic": 1329618,
+          "route": "native",
+          "execution": "native_replayed",
+          "numeric_kind": "computed",
+          "replay_iterations": 9345,
+          "preparation_seconds": 0.3910577920032665,
+          "replay_seconds": 0.0015637500036973506,
+          "compilation_cache_hit": false,
+          "engine": "p2-e2-native-search-v1",
+          "problem": 2,
+          "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+          "wall_seconds": 0.3944130000018049,
+          "cpu_seconds": 0.39124100000000006,
+          "cache": {
+            "hits": 0,
+            "misses": 1,
+            "evictions": 0,
+            "bypasses": 0,
+            "native_calls": 1,
+            "fallback_calls": 0,
+            "full_calls": 0,
+            "accounted_bytes": 708749,
+            "limit_bytes": 16777216,
+            "entries": 1,
+            "max_entries": 32
+          }
+        },
+        "e0_in_flight": false,
+        "e0_wall_seconds": 0.7248354589974042,
+        "e2_e0_equal": true,
+        "candidate": {
+          "makespan": 159409,
+          "movement": {
+            "original_graph_copy_bytes": 2771250,
+            "scheduled_copy_bytes": 7223234,
+            "added_copy_bytes": 4451984,
+            "partition_added_copy_bytes": 4451984,
+            "spill_added_copy_bytes": 0
+          },
+          "cross_task_traffic": 1329618
+        },
+        "baseline": {
+          "makespan": 295114,
+          "movement": {
+            "original_graph_copy_bytes": 2771250,
+            "scheduled_copy_bytes": 2773194,
+            "added_copy_bytes": 1944,
+            "partition_added_copy_bytes": 1944,
+            "spill_added_copy_bytes": 0
+          },
+          "cross_task_traffic": 0
+        },
+        "candidate_vs_baseline_m": -135705,
+        "lexicographic_comparison": "better"
+      },
+      "accepted": true
+    },
+    {
+      "case": "086",
+      "process": {
+        "argv": [
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/.venv/bin/python",
+          "-B",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/src/q2_nikolastarx/chain_pilot.py",
+          "worker",
+          "--manifest",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/results/a/q2-nikolastarx/chain-pilot-20260925/manifest.json",
+          "--e2-root",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/output/q2-e2-paircheck-603b-s8ee",
+          "--runner-commit",
+          "9e84fc880aaf48129ef3c0ab5414c52b48ba7a29",
+          "--case-index",
+          "4",
+          "--output",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/results/a/q2-nikolastarx/chain-pilot-20260925/run/086-k5/records"
+        ],
+        "started_at": "2026-09-24T20:37:34.313504Z",
+        "status": "ok",
+        "sample_interval_seconds": 0.05,
+        "observed_peak_rss_bytes": 216596480,
+        "rss_samples": 40,
+        "cleanup_killed_pids": [],
+        "pid": 26548,
+        "observer_inclusive_peak_rss_bytes": 259375104,
+        "exit_code": 0,
+        "surviving_pids": [],
+        "finished_at": "2026-09-24T20:37:37.185666Z",
+        "wall_seconds": 2.872154832992237
+      },
+      "ledger": {
+        "case": "086",
+        "status": "completed",
+        "calls": {
+          "E2_api": 1,
+          "native": 1,
+          "E0_fallback": 0,
+          "E0_independent": 1
+        },
+        "request_in_flight": false,
+        "scope": "fixed candidate pilot; not full algorithm score",
+        "fallback_status": "native",
+        "e2_wall_seconds": 0.5205210419953801,
+        "e2_record": {
+          "status": "ok",
+          "makespan": 94865,
+          "data_movement_bytes": {
+            "original_graph_copy_bytes": 338022,
+            "scheduled_copy_bytes": 4728218,
+            "added_copy_bytes": 4390196,
+            "partition_added_copy_bytes": 4390196,
+            "spill_added_copy_bytes": 0
+          },
+          "cross_task_traffic": 1990704,
+          "route": "native",
+          "execution": "native_replayed",
+          "numeric_kind": "computed",
+          "replay_iterations": 10284,
+          "preparation_seconds": 0.46429366699885577,
+          "replay_seconds": 0.0019287079921923578,
+          "compilation_cache_hit": false,
+          "engine": "p2-e2-native-search-v1",
+          "problem": 2,
+          "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+          "wall_seconds": 0.4681958329747431,
+          "cpu_seconds": 0.465664,
+          "cache": {
+            "hits": 0,
+            "misses": 1,
+            "evictions": 0,
+            "bypasses": 0,
+            "native_calls": 1,
+            "fallback_calls": 0,
+            "full_calls": 0,
+            "accounted_bytes": 796525,
+            "limit_bytes": 16777216,
+            "entries": 1,
+            "max_entries": 32
+          }
+        },
+        "e0_in_flight": false,
+        "e0_wall_seconds": 0.8791314589907415,
+        "e2_e0_equal": true,
+        "candidate": {
+          "makespan": 94865,
+          "movement": {
+            "original_graph_copy_bytes": 338022,
+            "scheduled_copy_bytes": 4728218,
+            "added_copy_bytes": 4390196,
+            "partition_added_copy_bytes": 4390196,
+            "spill_added_copy_bytes": 0
+          },
+          "cross_task_traffic": 1990704
+        },
+        "baseline": {
+          "makespan": 102180,
+          "movement": {
+            "original_graph_copy_bytes": 338022,
+            "scheduled_copy_bytes": 5226778,
+            "added_copy_bytes": 4888756,
+            "partition_added_copy_bytes": 4888756,
+            "spill_added_copy_bytes": 0
+          },
+          "cross_task_traffic": 2226064
+        },
+        "candidate_vs_baseline_m": -7315,
+        "lexicographic_comparison": "better"
+      },
+      "accepted": true
+    },
+    {
+      "case": "088",
+      "process": {
+        "argv": [
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/.venv/bin/python",
+          "-B",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/src/q2_nikolastarx/chain_pilot.py",
+          "worker",
+          "--manifest",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/results/a/q2-nikolastarx/chain-pilot-20260925/manifest.json",
+          "--e2-root",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/output/q2-e2-paircheck-603b-s8ee",
+          "--runner-commit",
+          "9e84fc880aaf48129ef3c0ab5414c52b48ba7a29",
+          "--case-index",
+          "5",
+          "--output",
+          "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/results/a/q2-nikolastarx/chain-pilot-20260925/run/088-k5/records"
+        ],
+        "started_at": "2026-09-24T20:37:37.186820Z",
+        "status": "ok",
+        "sample_interval_seconds": 0.05,
+        "observed_peak_rss_bytes": 172048384,
+        "rss_samples": 29,
+        "cleanup_killed_pids": [],
+        "pid": 26791,
+        "observer_inclusive_peak_rss_bytes": 214859776,
+        "exit_code": 0,
+        "surviving_pids": [],
+        "finished_at": "2026-09-24T20:37:39.305337Z",
+        "wall_seconds": 2.118519000010565
+      },
+      "ledger": {
+        "case": "088",
+        "status": "completed",
+        "calls": {
+          "E2_api": 1,
+          "native": 1,
+          "E0_fallback": 0,
+          "E0_independent": 1
+        },
+        "request_in_flight": false,
+        "scope": "fixed candidate pilot; not full algorithm score",
+        "fallback_status": "native",
+        "e2_wall_seconds": 0.2793336669856217,
+        "e2_record": {
+          "status": "ok",
+          "makespan": 106272,
+          "data_movement_bytes": {
+            "original_graph_copy_bytes": 1829798,
+            "scheduled_copy_bytes": 5176194,
+            "added_copy_bytes": 3346396,
+            "partition_added_copy_bytes": 3346396,
+            "spill_added_copy_bytes": 0
+          },
+          "cross_task_traffic": 1047492,
+          "route": "native",
+          "execution": "native_replayed",
+          "numeric_kind": "computed",
+          "replay_iterations": 5858,
+          "preparation_seconds": 0.23220462500466965,
+          "replay_seconds": 0.0010323330061510205,
+          "compilation_cache_hit": false,
+          "engine": "p2-e2-native-search-v1",
+          "problem": 2,
+          "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+          "wall_seconds": 0.23449691699352115,
+          "cpu_seconds": 0.23395500000000002,
+          "cache": {
+            "hits": 0,
+            "misses": 1,
+            "evictions": 0,
+            "bypasses": 0,
+            "native_calls": 1,
+            "fallback_calls": 0,
+            "full_calls": 0,
+            "accounted_bytes": 441036,
+            "limit_bytes": 16777216,
+            "entries": 1,
+            "max_entries": 32
+          }
+        },
+        "e0_in_flight": false,
+        "e0_wall_seconds": 0.4158397499995772,
+        "e2_e0_equal": true,
+        "candidate": {
+          "makespan": 106272,
+          "movement": {
+            "original_graph_copy_bytes": 1829798,
+            "scheduled_copy_bytes": 5176194,
+            "added_copy_bytes": 3346396,
+            "partition_added_copy_bytes": 3346396,
+            "spill_added_copy_bytes": 0
+          },
+          "cross_task_traffic": 1047492
+        },
+        "baseline": {
+          "makespan": 200888,
+          "movement": {
+            "original_graph_copy_bytes": 1829798,
+            "scheduled_copy_bytes": 1977254,
+            "added_copy_bytes": 147456,
+            "partition_added_copy_bytes": 147456,
+            "spill_added_copy_bytes": 0
+          },
+          "cross_task_traffic": 0
+        },
+        "candidate_vs_baseline_m": -94616,
+        "lexicographic_comparison": "better"
+      },
+      "accepted": true
+    }
+  ],
+  "limits": {
+    "e2_requests": 6,
+    "e2_fallback": 6,
+    "independent_e0": 6,
+    "retries": 0,
+    "workers": 1,
+    "case_seconds": 120,
+    "batch_seconds": 600,
+    "rss_bytes": 4294967296
+  },
+  "preflight_wall_seconds": 1.2448188330163248,
+  "evaluation_batch_wall_seconds": 21.254390041984152,
+  "constructor_wall_seconds": null,
+  "scope": "six fixed chain plans; no complete solver algorithm score",
+  "preflight_plus_evaluation_wall_seconds": 22.499208875000477
+}

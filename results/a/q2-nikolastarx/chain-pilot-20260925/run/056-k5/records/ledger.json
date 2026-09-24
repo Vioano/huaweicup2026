@@ -1,0 +1,78 @@
+{
+  "case": "056",
+  "status": "completed",
+  "calls": {
+    "E2_api": 1,
+    "native": 1,
+    "E0_fallback": 0,
+    "E0_independent": 1
+  },
+  "request_in_flight": false,
+  "scope": "fixed candidate pilot; not full algorithm score",
+  "fallback_status": "native",
+  "e2_wall_seconds": 0.8051845000009052,
+  "e2_record": {
+    "status": "ok",
+    "makespan": 148632,
+    "data_movement_bytes": {
+      "original_graph_copy_bytes": 221600,
+      "scheduled_copy_bytes": 5740960,
+      "added_copy_bytes": 5519360,
+      "partition_added_copy_bytes": 5519360,
+      "spill_added_copy_bytes": 0
+    },
+    "cross_task_traffic": 2685924,
+    "route": "native",
+    "execution": "native_replayed",
+    "numeric_kind": "computed",
+    "replay_iterations": 14516,
+    "preparation_seconds": 0.7382791249838192,
+    "replay_seconds": 0.0026391249848529696,
+    "compilation_cache_hit": false,
+    "engine": "p2-e2-native-search-v1",
+    "problem": 2,
+    "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+    "wall_seconds": 0.743480915989494,
+    "cpu_seconds": 0.737511,
+    "cache": {
+      "hits": 0,
+      "misses": 1,
+      "evictions": 0,
+      "bypasses": 0,
+      "native_calls": 1,
+      "fallback_calls": 0,
+      "full_calls": 0,
+      "accounted_bytes": 1101975,
+      "limit_bytes": 16777216,
+      "entries": 1,
+      "max_entries": 32
+    }
+  },
+  "e0_in_flight": false,
+  "e0_wall_seconds": 1.4167641660023946,
+  "e2_e0_equal": true,
+  "candidate": {
+    "makespan": 148632,
+    "movement": {
+      "original_graph_copy_bytes": 221600,
+      "scheduled_copy_bytes": 5740960,
+      "added_copy_bytes": 5519360,
+      "partition_added_copy_bytes": 5519360,
+      "spill_added_copy_bytes": 0
+    },
+    "cross_task_traffic": 2685924
+  },
+  "baseline": {
+    "makespan": 253392,
+    "movement": {
+      "original_graph_copy_bytes": 221600,
+      "scheduled_copy_bytes": 221600,
+      "added_copy_bytes": 0,
+      "partition_added_copy_bytes": 0,
+      "spill_added_copy_bytes": 0
+    },
+    "cross_task_traffic": 0
+  },
+  "candidate_vs_baseline_m": -104760,
+  "lexicographic_comparison": "better"
+}
