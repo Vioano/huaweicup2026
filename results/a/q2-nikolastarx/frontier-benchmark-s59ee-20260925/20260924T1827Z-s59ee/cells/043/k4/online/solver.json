@@ -1,0 +1,76 @@
+{
+  "status": "ok",
+  "calls": {
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "attempts": [
+    {
+      "name": "adaptive_frontier",
+      "status": "constructed",
+      "detail": {
+        "strategy": "tensor_dag_eft",
+        "eligible_ops": 9309,
+        "components": 38,
+        "cores": 4,
+        "bandwidth": 60,
+        "cross_core_delay": 500,
+        "predicted_finish_cycles": 217331,
+        "predicted_ddr_bytes_without_spill": {
+          "external_input_bytes": 3616526,
+          "cross_core_bytes": 12804588,
+          "output_bytes": 126
+        },
+        "predicted_cross_core_pairs": 4674,
+        "compute_load_by_core": [
+          210709,
+          229375,
+          204658,
+          216851
+        ],
+        "model_limitations": [
+          "isolated COPY bandwidth; shared DDR contention omitted",
+          "spill, memory reuse dependencies and Step3 reorder omitted",
+          "predicted times are not bounds or official scores"
+        ],
+        "selected_strategy": "dominant_component_dag",
+        "component_pressure": {
+          "largest_component_pipe_work": {
+            "PIPE_V": 164207,
+            "PIPE_M": 207816
+          },
+          "balanced_pipe_work_lower_bound": {
+            "PIPE_V": 85961,
+            "PIPE_M": 129438
+          },
+          "component_exceeds_balanced_pipe_work": true,
+          "shared_external_bytes": {
+            "L1": 506880
+          },
+          "shared_external_exceeds_capacity": false
+        },
+        "route_guarantee": "heuristic; splitting may add COPY, spill and delays",
+        "adaptive_route": "dominant_component_dag",
+        "index_constructions": 1,
+        "base_construct_calls": 1,
+        "repair_construct_calls": 0,
+        "repair_trigger": {
+          "recognized": false,
+          "large_crossings": 0,
+          "large_crossing_bytes": 0,
+          "reason": "vector lanes: all eligible ops must use PIPE_V"
+        },
+        "route_limitations": "unchanged general plan; no official feasibility/score/zero-spill certificate"
+      },
+      "plan_sha256": "0fa60cb59e456b1cccb332108c9c8ea3d982c652aa9366725b874165443d4e83"
+    }
+  ],
+  "started_at": "2026-09-24T18:28:57.065979+00:00",
+  "validation_scope": "official structural validation only; no E0/Step2/Step3 certificate",
+  "selected": "adaptive_frontier",
+  "plan_sha256": "0fa60cb59e456b1cccb332108c9c8ea3d982c652aa9366725b874165443d4e83",
+  "stop_reason": "single_structural_route_completed",
+  "finished_at": "2026-09-24T18:28:57.295963+00:00",
+  "internal_wall_seconds": 0.23010070901364088
+}

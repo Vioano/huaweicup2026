@@ -1,0 +1,73 @@
+{
+  "status": "ok",
+  "calls": {
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "attempts": [
+    {
+      "name": "adaptive_frontier",
+      "status": "constructed",
+      "detail": {
+        "strategy": "tensor_dag_eft",
+        "eligible_ops": 7678,
+        "components": 19,
+        "cores": 3,
+        "bandwidth": 60,
+        "cross_core_delay": 500,
+        "predicted_finish_cycles": 142600,
+        "predicted_ddr_bytes_without_spill": {
+          "external_input_bytes": 357798,
+          "cross_core_bytes": 6047308,
+          "output_bytes": 74
+        },
+        "predicted_cross_core_pairs": 3304,
+        "compute_load_by_core": [
+          130003,
+          117728,
+          129238
+        ],
+        "model_limitations": [
+          "isolated COPY bandwidth; shared DDR contention omitted",
+          "spill, memory reuse dependencies and Step3 reorder omitted",
+          "predicted times are not bounds or official scores"
+        ],
+        "selected_strategy": "dominant_component_dag",
+        "component_pressure": {
+          "largest_component_pipe_work": {
+            "PIPE_M": 125808,
+            "PIPE_V": 238272
+          },
+          "balanced_pipe_work_lower_bound": {
+            "PIPE_M": 43672,
+            "PIPE_V": 81985
+          },
+          "component_exceeds_balanced_pipe_work": true,
+          "shared_external_bytes": {},
+          "shared_external_exceeds_capacity": false
+        },
+        "route_guarantee": "heuristic; splitting may add COPY, spill and delays",
+        "adaptive_route": "dominant_component_dag",
+        "index_constructions": 1,
+        "base_construct_calls": 1,
+        "repair_construct_calls": 0,
+        "repair_trigger": {
+          "recognized": false,
+          "large_crossings": 0,
+          "large_crossing_bytes": 0,
+          "reason": "vector lanes: all eligible ops must use PIPE_V"
+        },
+        "route_limitations": "unchanged general plan; no official feasibility/score/zero-spill certificate"
+      },
+      "plan_sha256": "6937a4f2ace797902631d03e94ae056b0be56815ea9e5547296c0039325488c4"
+    }
+  ],
+  "started_at": "2026-09-24T18:29:24.177880+00:00",
+  "validation_scope": "official structural validation only; no E0/Step2/Step3 certificate",
+  "selected": "adaptive_frontier",
+  "plan_sha256": "6937a4f2ace797902631d03e94ae056b0be56815ea9e5547296c0039325488c4",
+  "stop_reason": "single_structural_route_completed",
+  "finished_at": "2026-09-24T18:29:24.347773+00:00",
+  "internal_wall_seconds": 0.16998399997828528
+}

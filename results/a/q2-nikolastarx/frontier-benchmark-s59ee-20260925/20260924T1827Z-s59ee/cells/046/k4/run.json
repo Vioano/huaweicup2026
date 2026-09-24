@@ -1,0 +1,127 @@
+{
+  "case_id": "046",
+  "problem": "P2",
+  "cores": 4,
+  "algorithm_id": "q2-adaptive-frontier",
+  "solver_commit": "ee1b8fd39efab8c8ed8140bbebe4c08e778052b9",
+  "started_at": "2026-09-24T18:29:01.008Z",
+  "status": "ok",
+  "graph_sha256": "1917fbb2bfe1141fd8dc4bdac6119dd44014df9a13eb18faa3e55f25bcc91659",
+  "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+  "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+  "artifacts": {
+    "online_ledger": {
+      "path": "results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/046/k4/online/solver.json",
+      "sha256": "54486dd4de8a257c1704586647e685d253e3dd45e232b430f8a0720e1292b441"
+    },
+    "online_plan": {
+      "path": "results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/046/k4/online/adaptive_frontier/plan.json",
+      "sha256": "66b458c0220bda9604d98488c4c5cfee21fe983e1599691af9ce280a9475d784"
+    },
+    "plan": {
+      "path": "results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/046/k4/case_046_multicore_res.json",
+      "sha256": "66b458c0220bda9604d98488c4c5cfee21fe983e1599691af9ce280a9475d784"
+    },
+    "result": {
+      "path": "results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/046/k4/result.json.gz",
+      "sha256": "72e74620b8b15c49f4039364a5e4c3e3bcc0e58b46db8cf20401285dbf132a01",
+      "raw_sha256": "7d9a4a754cf508d0d12cc0c6e2d7aea9b7b4eed4698ae981f2935c93b24b352f",
+      "raw_bytes": 420287
+    },
+    "trace": {
+      "path": "results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/046/k4/trace.json.gz",
+      "sha256": "1a3123810c1c0f3eb877e554891adcb1a9984aafe1217fca697cbb921829c4ba",
+      "raw_sha256": "87d0b66c4948749d2a81ee2693202f606af6afb6b1a790b530da1a3d5641d70c",
+      "raw_bytes": 662743
+    },
+    "log": {
+      "path": "results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/046/k4/official.log",
+      "sha256": "0ca86617be97416bb22d9dbc31d1419714507182b3c77ec88a515994ab6debb5"
+    }
+  },
+  "calls": {
+    "solver": 1,
+    "E0": 1,
+    "E1": 0,
+    "E2": 0
+  },
+  "solver": {
+    "argv": [
+      "/Users/nikolastar/Projects/huaweicup2026/.venv/bin/python",
+      "-B",
+      "-m",
+      "src.q2_nikolastarx.adaptive_frontier",
+      "<benchmark-root>/output/p2-frontier-input-s59ee-20260925/case_046.json",
+      "--config",
+      "<benchmark-root>/data/raw/a/official/data/config.txt",
+      "--cores",
+      "4",
+      "--output",
+      "<benchmark-root>/results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/046/k4/case_046_multicore_res.json",
+      "--evidence",
+      "<benchmark-root>/results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/046/k4/online",
+      "--wall",
+      "25"
+    ],
+    "cwd": "<solver-root>",
+    "started_at": "2026-09-24T18:29:01.012Z",
+    "finished_at": "2026-09-24T18:29:01.288Z",
+    "wall_seconds": 0.27653195898164995,
+    "timeout_seconds": 25,
+    "returncode": 0,
+    "status": "ok",
+    "limit_reason": null,
+    "peak_rss_bytes_sampled": 6799360,
+    "cleanup_confirmed": true,
+    "stdout_tail": "{\"status\": \"ok\", \"calls\": {\"E0\": 0, \"E1\": 0, \"E2\": 0}, \"internal_wall_seconds\": 0.01765833402168937}\n",
+    "stderr_tail": ""
+  },
+  "solver_evidence": {
+    "status": "ok",
+    "calls": {
+      "E0": 0,
+      "E1": 0,
+      "E2": 0
+    },
+    "route": "shared_input_wave",
+    "selected": "adaptive_frontier"
+  },
+  "evaluation": {
+    "argv": [
+      "/Users/nikolastar/Projects/huaweicup2026/.venv/bin/python",
+      "-B",
+      "<benchmark-root>/data/raw/a/official/code/multicore_cut_evaluate_problem_2.py",
+      "<benchmark-root>/output/p2-frontier-input-s59ee-20260925/case_046.json",
+      "<benchmark-root>/results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/046/k4/case_046_multicore_res.json",
+      "--config",
+      "<benchmark-root>/data/raw/a/official/data/config.txt",
+      "--output",
+      "<benchmark-root>/results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/046/k4/result.json",
+      "--trace-output",
+      "<benchmark-root>/results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/046/k4/trace.json",
+      "--log-output",
+      "<benchmark-root>/results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/046/k4/official.log"
+    ],
+    "cwd": "<benchmark-root>",
+    "started_at": "2026-09-24T18:29:01.289Z",
+    "finished_at": "2026-09-24T18:29:01.565Z",
+    "wall_seconds": 0.27594966598553583,
+    "timeout_seconds": 50,
+    "returncode": 0,
+    "status": "ok",
+    "limit_reason": null,
+    "peak_rss_bytes_sampled": 4718592,
+    "cleanup_confirmed": true,
+    "stdout_tail": "data movement: scheduled_copy_bytes=3852672, physical_ddr_bytes=3852672\nOK: problem 2 makespan=77846; result=<benchmark-root>/results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/046/k4/result.json\n",
+    "stderr_tail": ""
+  },
+  "makespan_cycles": 77846,
+  "data_movement_bytes": {
+    "original_graph_copy_bytes": 1061472,
+    "scheduled_copy_bytes": 3852672,
+    "added_copy_bytes": 2791200,
+    "partition_added_copy_bytes": 2791200,
+    "spill_added_copy_bytes": 0
+  },
+  "finished_at": "2026-09-24T18:29:01.570Z"
+}

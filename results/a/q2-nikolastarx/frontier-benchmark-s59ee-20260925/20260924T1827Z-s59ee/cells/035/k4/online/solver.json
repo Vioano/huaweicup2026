@@ -1,0 +1,76 @@
+{
+  "status": "ok",
+  "calls": {
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "attempts": [
+    {
+      "name": "adaptive_frontier",
+      "status": "constructed",
+      "detail": {
+        "strategy": "tensor_dag_eft",
+        "eligible_ops": 3857,
+        "components": 16,
+        "cores": 4,
+        "bandwidth": 60,
+        "cross_core_delay": 500,
+        "predicted_finish_cycles": 78718,
+        "predicted_ddr_bytes_without_spill": {
+          "external_input_bytes": 839892,
+          "cross_core_bytes": 3076756,
+          "output_bytes": 13976
+        },
+        "predicted_cross_core_pairs": 1356,
+        "compute_load_by_core": [
+          54800,
+          57308,
+          54345,
+          39648
+        ],
+        "model_limitations": [
+          "isolated COPY bandwidth; shared DDR contention omitted",
+          "spill, memory reuse dependencies and Step3 reorder omitted",
+          "predicted times are not bounds or official scores"
+        ],
+        "selected_strategy": "dominant_component_dag",
+        "component_pressure": {
+          "largest_component_pipe_work": {
+            "PIPE_V": 77834,
+            "PIPE_M": 45472
+          },
+          "balanced_pipe_work_lower_bound": {
+            "PIPE_V": 35978,
+            "PIPE_M": 15548
+          },
+          "component_exceeds_balanced_pipe_work": true,
+          "shared_external_bytes": {
+            "L1": 4608
+          },
+          "shared_external_exceeds_capacity": false
+        },
+        "route_guarantee": "heuristic; splitting may add COPY, spill and delays",
+        "adaptive_route": "dominant_component_dag",
+        "index_constructions": 1,
+        "base_construct_calls": 1,
+        "repair_construct_calls": 0,
+        "repair_trigger": {
+          "recognized": false,
+          "large_crossings": 0,
+          "large_crossing_bytes": 0,
+          "reason": "vector lanes: all eligible ops must use PIPE_V"
+        },
+        "route_limitations": "unchanged general plan; no official feasibility/score/zero-spill certificate"
+      },
+      "plan_sha256": "1e512fbecf29f9ac38f840334cde0d336d3cbc92c2e3dd28c38cd7dd58ece326"
+    }
+  ],
+  "started_at": "2026-09-24T18:28:40.995531+00:00",
+  "validation_scope": "official structural validation only; no E0/Step2/Step3 certificate",
+  "selected": "adaptive_frontier",
+  "plan_sha256": "1e512fbecf29f9ac38f840334cde0d336d3cbc92c2e3dd28c38cd7dd58ece326",
+  "stop_reason": "single_structural_route_completed",
+  "finished_at": "2026-09-24T18:28:41.084047+00:00",
+  "internal_wall_seconds": 0.08862170900101773
+}
