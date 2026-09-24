@@ -43,7 +43,10 @@ input, construction and output; they are observational under shared machine
 load, not a controlled runtime comparison. Synthetic unit-test calls are
 separate from the two real-case constructors recorded here.
 
-Next: first execute the already-frozen three-micrograph differential probe
-after the shared scoring window clears. Then independently E0-score this one
-unique candidate if that check passes. Changing packet size or relaxing
+Follow-up: the separately frozen three-micrograph differential probe passed
+all 64 operation times, whole-plan responses and DDR counters in three E0
+calls, archived at commit `0eff53caa7a95d87a578fa82fe858b66f6d31cef` under
+`output/p1-response-contract-probe/`. This does not change the zero-E0 scope
+of the two real-case constructions above. One independent E0 evaluation of
+this unique 084 candidate is now queued. Changing packet size or relaxing
 synchrony is a new hypothesis; no further sweep is authorized by this report.

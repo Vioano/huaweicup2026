@@ -109,12 +109,21 @@ timeout. Current experiments use a 120-second constructor child limit.
 This optimizes only this accepted packet template with fixed remainder
 treatment under the rational model. It is not an optimum over all P1 plans.
 
+An experimental `--profile-cache ordered-graph` option reuses projected Task
+profiles after normalizing the joint original op/tensor ID order, preserving
+list order, all other attributes and the compute-member set. The input graph
+is never renumbered. Default is `none`: equivalence for every unselected
+transition has not been proved. With caching, the algorithm is a candidate
+proposer and does not claim even template optimality. Its complete final plan
+still undergoes independent actual compilation and signature/DDR/response
+checks; cache-derived labels are never treated as final operation trace IDs.
+
 Three new tests cover a drain that beats every direct continuation, a 12-chain
 two-core multi-round construction and a seven-chain three-core remainder.
 The latter two execute small synthetic constructors; they are not official
 case performance measurements.
 
-## Frozen differential probe, prepared only
+## Frozen differential probe and finite E0 acceptance
 
 `src/q1_benchmarks/response_contract_probe.py` defines exactly three micrographs:
 two symmetric two-round plans at K=2 and K=3, and a K=3 plan whose second
@@ -133,7 +142,18 @@ Root review added missing DDR comparisons, froze the process helper, and
 clarified that timing boundary. The current prepared input is
 `output/p1-response-contract-probe/prepared-20260925-v4`; earlier preparations
 predate those corrections or runtime receipt metadata and must not be executed.
-No E0/E1/E2 has been run for this probe.
+The original preparation made no E0/E1/E2 calls. Subsequently s59 executed
+exactly three unmodified E0 calls under Python 3.12.13, with zero solver/E1/E2
+calls and no retries. Total probe wall time was 0.243 seconds. Symmetric K2,
+symmetric K3, and divergent K3 returned 128, 138 and 138 cycles respectively.
+All 64 operation start/end pairs, whole-plan/quotient Makespan, data-movement
+counters and Task-cut bytes matched. Root independently rehashed every saved
+artifact and recomputed these comparisons without rerunning E0.
+
+Frozen original inputs, source snapshots and official outputs:
+[`0eff53c` probe archive](https://github.com/huaweibei123/huaweicup2026/tree/0eff53caa7a95d87a578fa82fe858b66f6d31cef/output/p1-response-contract-probe).
+This is finite synthetic evidence, not proof of general binary64 equivalence
+and not a new official-case result or board batch.
 
 Current validation command:
 

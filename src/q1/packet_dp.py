@@ -109,7 +109,7 @@ class _TaskProjection:
 
 
 def construct(graph, cores, capacity=None, bandwidth=60, gate=100,
-              max_task_compiles=10000, state_mode="auto"):
+              max_task_compiles=10000, state_mode="auto", profile_cache="none"):
     if type(cores) is not int or not 2 <= cores <= 5:
         raise ValueError("packet DP requires an integer core count in 2..5")
     capacity = {"L1": 524288, "UB": 131072} if capacity is None else dict(capacity)
@@ -121,6 +121,8 @@ def construct(graph, cores, capacity=None, bandwidth=60, gate=100,
         raise ValueError("invalid static compilation budget")
     if state_mode not in ("three", "full", "auto"):
         raise ValueError("state_mode must be three, full, or auto")
+    if profile_cache not in ("none", "ordered-graph"):
+        raise ValueError("profile_cache must be none or ordered-graph")
     began = time.perf_counter()
     view, chains, _, _, _ = author.recognize(graph)
 
@@ -174,6 +176,29 @@ def construct(graph, cores, capacity=None, bandwidth=60, gate=100,
     projection = _TaskProjection(graph, view)
     compiled_count = 0
     response_cache, signatures, rejected = {}, {}, []
+    profile_entries = {}
+    profile_requests = profile_hits = 0
+
+    def ordered_graph_key(local, nodes):
+        """Candidate key only; equivalence for unselected edges is unproved.
+
+        Normalize the joint original op/tensor ID space, but preserve each
+        list's order and every other attribute. The compute member set is a
+        separate part of the key because the projected graph may contain an
+        excluded COPY_OUT marker not submitted as a compute member.
+        """
+        ids = sorted({item["id"] for item in local["ops"] + local["tensors"]})
+        ranks = {ident: rank for rank, ident in enumerate(ids)}
+        normalized = {
+            "ops": [{**op, "id": ranks[op["id"]]} for op in local["ops"]],
+            "tensors": [{**tensor, "id": ranks[tensor["id"]]}
+                        for tensor in local["tensors"]],
+            "edges": [{**edge, "source": ranks[edge["source"]],
+                       "target": ranks[edge["target"]]}
+                      for edge in local["edges"]],
+        }
+        return (json.dumps(normalized, sort_keys=True, separators=(",", ":")),
+                tuple(sorted(ranks[u] for u in nodes)))
 
     def members(core, j, pending, following, drain=False):
         old = blocks[core][j - 1][-pending:] if pending else []
@@ -187,14 +212,24 @@ def construct(graph, cores, capacity=None, bandwidth=60, gate=100,
                 [chain[-1] for chain in old])
 
     def compile_members(nodes):
-        nonlocal compiled_count
+        nonlocal compiled_count, profile_requests, profile_hits
+        profile_requests += 1
+        local = projection.graph(nodes)
+        key = ordered_graph_key(local, nodes) if profile_cache == "ordered-graph" else None
+        if key is not None and key in profile_entries:
+            profile_hits += 1
+            # Cached original_id belongs to the representative projected
+            # Task. It is never used for a final-plan trace or validation.
+            return profile_entries[key]
         if compiled_count >= max_task_compiles:
             raise RuntimeError("static Task compilation budget exhausted")
         compiled_count += 1
-        local = projection.graph(nodes)
         plan = dict(node_to_subgraph={str(u): 0 for u in nodes}, core_schedules=[[0]])
         lines, certificate = compile_plan(local, plan, capacity, bandwidth)
-        return lines[0][0], certificate["traffic"]["scheduled_copy_bytes"]
+        result = lines[0][0], certificate["traffic"]["scheduled_copy_bytes"]
+        if key is not None:
+            profile_entries[key] = result
+        return result
 
     def profile(j, pending, following, drain=False):
         tasks, traffic = [], 0
@@ -283,10 +318,12 @@ def construct(graph, cores, capacity=None, bandwidth=60, gate=100,
     if scheduled_bytes != score[1] + tail_traffic:
         raise UnsupportedResponse("full-plan boundary bytes differ from projected costs")
     return plan, dict(algorithm_id="q1-packet-response-dp",
-                     variant=f"{chosen}-state-rational-v2",
+                     variant=f"{chosen}-state-rational-v3-{profile_cache}",
                      chains=len(chains), cores=cores, packet=packet, states=states,
                      state_mode_requested=state_mode, state_mode_chosen=chosen,
                      state_compile_estimates=estimates,
+                     profile_cache=profile_cache, profile_requests=profile_requests,
+                     profile_hits=profile_hits, profile_entries=len(profile_entries),
                      complete_rounds=blocks_count, actions=actions, tasks=next_task,
                      profiled_transitions=len(signatures), unique_responses=len(response_cache),
                      static_task_compiles=compiled_count, max_task_compiles=max_task_compiles,
@@ -295,7 +332,10 @@ def construct(graph, cores, capacity=None, bandwidth=60, gate=100,
                      compilation_certificate=certificate,
                      construction_seconds=time.perf_counter() - began,
                      official_scoring_calls={"E0": 0, "E1": 0, "E2": 0},
-                     scope="Conditional rational-model template optimum; not E0 or global optimum")
+                     scope=("Candidate ordered-graph cache agreement checked on the selected "
+                            "final plan; equivalence for all unselected edges is unproved; "
+                            "not E0 or global optimality" if profile_cache != "none" else
+                            "Conditional rational-model template optimum; not E0 or global optimum"))
 
 
 def main():
@@ -306,13 +346,16 @@ def main():
     parser.add_argument("--diagnostics", type=Path, required=True)
     parser.add_argument("--state-mode", choices=("auto", "three", "full"), default="auto")
     parser.add_argument("--max-task-compiles", type=int, default=10000)
+    parser.add_argument("--profile-cache", choices=("none", "ordered-graph"),
+                        default="none")
     args = parser.parse_args()
     if args.output == args.diagnostics or args.output.exists() or args.diagnostics.exists():
         raise FileExistsError("refuse to overwrite outputs")
     started = time.perf_counter()
     plan, details = construct(json.loads(args.graph.read_bytes()), args.cores,
                               max_task_compiles=args.max_task_compiles,
-                              state_mode=args.state_mode)
+                              state_mode=args.state_mode,
+                              profile_cache=args.profile_cache)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("x") as stream:
         stream.write(json.dumps(plan, separators=(",", ":")) + "\n")

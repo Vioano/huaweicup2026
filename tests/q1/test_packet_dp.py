@@ -58,6 +58,21 @@ class PacketDPTests(unittest.TestCase):
                 construct(graph, max_task_compiles=full_bound - 1,
                           state_mode='full', **kwargs)
 
+    def test_ordered_graph_cache_matches_uncached_tiny_multiround(self):
+        graph = chains(12)
+        kwargs = dict(cores=2, capacity={'L1': 1024, 'UB': 160},
+                      state_mode='three')
+        plain_plan, plain = construct(graph, profile_cache='none', **kwargs)
+        cached_plan, cached = construct(graph, profile_cache='ordered-graph', **kwargs)
+        self.assertEqual(cached_plan, plain_plan)
+        self.assertEqual(cached['model_makespan'], plain['model_makespan'])
+        self.assertEqual(cached['model_scheduled_copy_bytes'],
+                         plain['model_scheduled_copy_bytes'])
+        self.assertGreater(cached['profile_hits'], 0)
+        self.assertEqual(cached['profile_requests'], plain['profile_requests'])
+        self.assertLess(cached['static_task_compiles'], plain['static_task_compiles'])
+        self.assertIn('unselected edges is unproved', cached['scope'])
+
 
 if __name__ == '__main__':
     unittest.main()
