@@ -7,6 +7,7 @@
 ## 从这里进入
 
 - **交数据**：[统一交付协议](SUBMISSION_PROTOCOL.md)第1/6节是日常导出、预检和简短通知；第2–5节是首次接入/排错的字段参考。JSON格式仍为 `board-submission-v1`，不是手填问卷。
+- **成员同步代码与全部数据**：[2697条/1500格固定重建包](https://github.com/huaweibei123/huaweicup2026/blob/36bb66b1adf755e20e495a4a210e77ce48f5abfb/results/benchmark-board/member-sync-20260924/README.md)包含13个固定feed、核对指纹及重建脚本（PR97）。这是2026-09-24固定快照；后续数据按 [来源登记](board-sources.json) 增量同步，代码更新以维护会话在原Issue给的固定提交为准。先更新接收程序再导入大结果，保留本地库/额外记录，并分别回读运行代码版本、记录数、网页显示；fetch不等于页面已更新。
 - **查格式与来源**：[schema](board-feed.schema.json)、[未运行模板](examples/submission-v1.json)、[算法来源注册表](algorithm-registry.json)。已有产物的导出、归一化、哈希与预检由生产方完成。
 - **看官方目标**：[方案质量与求解效率](../a/OFFICIAL_OBJECTIVES.md)。Makespan、求解墙钟、外部复评耗时分别记录；不把评价核吞吐当完整算法提速。
 - **查当前任务**：原任务卡和原 Issue 是固定范围、预算与交付的依据；[会话登记](https://github.com/huaweibei123/huaweicup2026/issues/26)用于找实际负责人。网站维护任务见 [BENCHMARK-BOARD-MAINTENANCE](../../tasks/a/BENCHMARK-BOARD-MAINTENANCE.md)。
@@ -40,7 +41,7 @@
 3. 每次尝试有稳定 `attempt_id`、`revision`；同 revision 内容改变拒收，勘误/撤回追加更大 revision，旧记录永久保留。最高 revision 决定本次尝试现状；失败/撤回不入榜，另一旧成功方案仍可成为赢家。重复导入幂等。
 4. E0 的计划、结果、运行收据须有固定 Git 原件与 SHA256；结果 Makespan/类型/问题/核数要匹配。身份与原件一致不等于重新运行或独立证实成员电脑行为。E1 另须匹配队长 `board-calibrations.json` 明确的实现、问题、图集合、核数、配置和 runtime；初版准入表为空，不因名字 exact 放行。E2 仅存来源记录，不入正式榜。
 5. 官方单核比值只由固定 `singlecore_evaluate.evaluate_singlecore` 的匹配原件计算；没有原件留 NA，不能用 stub 或优化算法 k=1 代替。
-6. P3 CacheGain = **同图、同配置、同计划哈希、同核数的 P2 无 Cache Makespan / 当前 P3 Makespan**。配对不符留 NA；不是任取最好 P2 与最好 P3 相除。Cache 命中率用官方按字节字段。可查看热力比值及选中方案的双柱对照。P3 相对单核另列。
+6. P3 CacheGain = **同图、同配置、同计划哈希、同核数的 P2 无 Cache Makespan / 当前 P3 Makespan**。配对不符留 NA；不是任取最好 P2 与最好 P3 相除。Cache 命中率用官方按字节字段。P3的“Cache 对照”按钮打开独立面板，只列当前筛选内已核的同计划配对，并说明未配对数量；面板中可切换字节命中率，返回按钮或Esc关闭后保留主表指标、筛选及滚动。工具栏P3专属指标同样打开此面板，不把P1/P2切成NA。选中方案详情仍有双柱对照。P3 相对单核另列。
 7. `solver_wall_seconds` 与 `evaluation_wall_seconds` 分开，`timing` 保留包含关系、精度及未知项；不据此自动相加。`ddr_bytes` 在 v1 明确映射官方 `data_movement_bytes.scheduled_copy_bytes`，UI 标“调度搬运”，**不将它宣称为 P3 实际物理 DDR 访问量**；`spill_bytes` 为 spill_added_copy_bytes。未提供物理 DDR 指标时不猜测。
 
 每列均值随当前算法、批次、算例筛选计算，并显示有效样本数/筛选内图数。相对单核逐例比值取算术平均，不能用总周期相除；只有原件已核且分母已核的有限数值参与。P3 CacheGain 另需同计划配对已核；缺项、失败和仅报告不作0参与。历史最优组合的均值仍是混合方案统计，不能标成单一算法成绩。默认显示相对官方单核，桌面顶部合并品牌、说明、统计及导航，窄屏换行。

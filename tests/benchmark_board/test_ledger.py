@@ -70,4 +70,19 @@ class LedgerTests(unittest.TestCase):
         self.put(r);self.assertFalse(self.l.records()[-1]['cache_pair_verified'])
         r['revision']=3;r['identity']['config_sha256']='b'*64;r['evaluator']['route']='E2';self.put(r)
         self.assertIsNone(self.l.records()[-1]['metrics'].get('baseline_speedup'))
+    def test_simultaneous_same_batch_is_idempotent(self):
+        from concurrent.futures import ThreadPoolExecutor
+        from threading import Barrier
+        r=self.record('concurrent');original=self.l.validate
+        # Pre-existing blobs isolate the observed batch-admission race.
+        original(r,lambda p:self.blobs[p],self.source)
+        barrier=Barrier(2)
+        def validated(*args):
+            row=original(*args);barrier.wait(timeout=5);return row
+        self.l.validate=validated
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            results=list(pool.map(lambda _:self.put(r),range(2)))
+        self.assertEqual(sorted(x['added'] for x in results),[0,1])
+        self.assertEqual(len(self.l.records()),1)
+        self.assertEqual(len(self.l.events(0)),1)
 if __name__=='__main__':unittest.main()
