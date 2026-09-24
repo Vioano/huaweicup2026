@@ -3,6 +3,8 @@
 The timing model is compute dependency + per-core M/V FIFO + fixed remote
 release delay. It is not E0, a cache/DDR model, or a memory-feasibility proof.
 Rows restrict placement only; all submitted subgraphs remain singletons.
+Optional FFN packing adds closed original M/V/V/M diamonds to that placement
+restriction; the final operation-level ready pass still permits interleaving.
 """
 from __future__ import annotations
 
@@ -231,11 +233,13 @@ def recognize(index):
     return rows
 
 
-def _capsules(index, rows):
+def _capsules(index, rows, ffn_diamonds=()):
     positions = {u: i for i, u in enumerate(index.order)}
     blocks = [{"kind": "attention_row", "nodes": tuple(sorted(row["nodes"], key=positions.get)),
                "row_sink": row["sink"]} for row in rows]
-    remaining = set(index.ops) - {u for row in rows for u in row["nodes"]}
+    blocks.extend({"kind": "ffn_diamond", "nodes": tuple(sorted(nodes, key=positions.get))}
+                  for nodes in ffn_diamonds)
+    remaining = set(index.ops) - {u for block in blocks for u in block["nodes"]}
     assigned = set()
     for u in index.order:
         if u not in remaining or u in assigned:
@@ -265,7 +269,8 @@ def _capsules(index, rows):
         border_order = topo(successors, successors)
     except ValueError as error:
         # This is the explicit quotient cycle check, not a motif-mismatch catch.
-        raise UnsupportedStructure("attention/chain quotient contains a cycle") from error
+        family = "attention/FFN/chain" if ffn_diamonds else "attention/chain"
+        raise UnsupportedStructure(f"{family} quotient contains a cycle") from error
     return blocks, owner, predecessors, successors, border_order
 
 
@@ -332,8 +337,8 @@ def _ready_word(index, op_owner, cores, cross_delay):
     return schedules, finish, starts, global_word
 
 
-def _ffn_diagnostics(index, ports, op_owner):
-    """Report closed original M -> (SIGMOID, MUL) -> M diamonds, not new units."""
+def _ffn_motifs(index, ports):
+    """Recognize original four-op, raw-port-closed diamonds without ownership."""
     result = []
     for a in index.order:
         if index.ops[a]["op"] != "MATMUL" or len(index.succ[a]) != 2:
@@ -352,6 +357,29 @@ def _ffn_diagnostics(index, ports, op_owner):
         nodes = {a, b, c, d}
         if any(ports.consumers[t] - nodes for u in (a, b, c) for t in ports.outputs[u]):
             continue
+        result.append((a, b, c, d))
+    return result
+
+
+def _packed_ffn_motifs(index, ports, rows):
+    """Pick disjoint M/V/V/M diamonds outside rows, in original topological order."""
+    occupied = {u for row in rows for u in row["nodes"]}
+    result = []
+    for nodes in _ffn_motifs(index, ports):
+        if len(set(nodes)) != 4 or occupied.intersection(nodes):
+            continue
+        if tuple(index.ops[u]["pipe"] for u in nodes) != ("PIPE_M", "PIPE_V", "PIPE_V", "PIPE_M"):
+            continue
+        result.append(nodes)
+        occupied.update(nodes)
+    return result
+
+
+def _ffn_diagnostics(index, ports, op_owner):
+    """Report closed original M -> (SIGMOID, MUL) -> M diamonds, not new ops."""
+    result = []
+    for a, b, c, d in _ffn_motifs(index, ports):
+        nodes = {a, b, c, d}
         remote = []
         for u in (a, b, c):
             for t in sorted(ports.outputs[u]):
@@ -369,15 +397,18 @@ def _ffn_diagnostics(index, ports, op_owner):
     return result
 
 
-def construct(index, cores, cross_delay=500):
-    """One deterministic ready-list construction, with at most k core trials/unit."""
+def construct(index, cores, cross_delay=500, *, pack_ffn=False):
+    """One construction, at most k core trials/unit; optional closed FFN packing."""
     if type(cores) is not int or cores < 1:
         raise ValueError("cores must be a positive integer")
     if type(cross_delay) is not int or cross_delay < 0:
         raise ValueError("cross_delay must be a nonnegative integer")
+    if type(pack_ffn) is not bool:
+        raise ValueError("pack_ffn must be a boolean")
     ports = _ports(index)
     rows = _recognize(index, ports)
-    blocks, block_of, predecessors, successors, border_order = _capsules(index, rows)
+    ffn_diamonds = _packed_ffn_motifs(index, ports, rows) if pack_ffn else ()
+    blocks, block_of, predecessors, successors, border_order = _capsules(index, rows, ffn_diamonds)
     weights = {u: index.duration(u) for u in index.ops}
     block_work = [{p: sum(weights[u] for u in b["nodes"] if index.ops[u]["pipe"] == p)
                    for p in ("PIPE_M", "PIPE_V")} for b in blocks]
@@ -454,7 +485,7 @@ def construct(index, cores, cross_delay=500):
                   for p in ("PIPE_M", "PIPE_V")}
     row_work = {p: sum(weights[u] for u in row_nodes if index.ops[u]["pipe"] == p)
                 for p in ("PIPE_M", "PIPE_V")}
-    return plan, {"strategy": "attention_rows", "cores": cores,
+    metadata = {"strategy": "attention_rows", "cores": cores,
                   "row_count": len(rows), "row_compute_ops": len(row_nodes),
                   "eligible_ops": len(index.ops), "capsule_count": len(blocks),
                   "chain_capsule_count": sum(b["kind"] == "exclusive_chain" for b in blocks),
@@ -480,3 +511,11 @@ def construct(index, cores, cross_delay=500):
                                   "Placement is chosen using contiguous capsule trial words; the final op-level ready pass may improve or worsen that proxy and does not revisit ownership.",
                                   "Bottom-level and remote tensor bytes are proxies, not optimality guarantees or actual traffic.",
                                   "A fixed row/chain placement family can miss useful splits; peripheral FFN diamonds are not separately packed."]}
+    if pack_ffn:
+        metadata["strategy"] = "attention_rows_ffn"
+        metadata["packed_ffn_count"] = len(ffn_diamonds)
+        metadata["guards"][3] = "closed nonoverlapping attention/FFN capsules and acyclic quotient"
+        metadata["guards"].append("four original M/V/V/M FFN ops outside rows; no raw nonterminal tensor consumer outside the diamond")
+        metadata["limitations"][1] = "Only row/FFN placement is shared; each op uses its own original predecessor release, no all-frontier barrier."
+        metadata["limitations"][-1] = "A fixed row/FFN/chain placement family can miss useful splits; packing does not fuse, clone or remove original ops."
+    return plan, metadata

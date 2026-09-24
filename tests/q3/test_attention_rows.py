@@ -1,10 +1,13 @@
 """Synthetic original tensor graphs and independent scheduling checks; 0 E0."""
 import heapq
+import hashlib
 import json
 import random
 import unittest
 from functools import lru_cache
+from unittest.mock import patch
 
+from src.q3 import attention_rows
 from src.q3.attention_rows import _ready_word, construct, recognize
 from src.q3.construct import Index, UnsupportedStructure, derive_multicore_plan
 
@@ -78,6 +81,21 @@ def plan_words(plan):
     return [[inverse[sg] for sg in seq] for seq in plan["core_schedules"]]
 
 
+def attention_ffn_graph(count=2):
+    """Original tensor-port FFN diamonds after a valid attention row."""
+    builder, row = attention_graph()
+    weight = builder.source()
+    diamonds = []
+    for _ in range(count):
+        a = builder.op("MATMUL", "PIPE_M", 1, [row["output"], weight])
+        b = builder.op("SIGMOID", "PIPE_V", 10, [a[1]])
+        c = builder.op("MUL", "PIPE_V", 1, [a[1], b[1]])
+        d = builder.op("MATMUL", "PIPE_M", 1, [c[1], weight])
+        builder.op("COPY_OUT", "PIPE_MTE3", 0, [d[1]], pos="DDR")
+        diamonds.append((a, b, c, d))
+    return builder, row, diamonds
+
+
 def dag_timing(index, words, delay, whole_core_order=False):
     """Independent enhanced-DAG longest path, optionally serializing whole cores."""
     owner = {u: c for c, word in enumerate(words) for u in word}
@@ -137,6 +155,140 @@ def ready_scan_oracle(index, owner, cores, delay):
 
 
 class AttentionRowsTests(unittest.TestCase):
+    def test_default_plan_and_metadata_bytes_match_frozen_80fabde1(self):
+        # Captured from the unmodified 80fabde1 implementation before this
+        # optional packing change. Hash the full insertion-ordered plan/meta,
+        # including diagnostic order, not merely Makespan or node coverage.
+        golden = {
+            "attention": ("0e9d7855b46f53b34cfa4b7fbae507a885cbfa1d286e0321db2d5b7d6c77fc67",
+                          "a76c88c07fda0f9d931c22967af687876fd8a76ddc2f5640f22b314f41a0a358",
+                          "4107a2cba4dbb32e562b3d28d23fc13c0a5da33f9f41d995334dd1e8c17fb2f8"),
+            "ffn": ("b5e8fdef9f166104497b03e0966a8e2539e8519431d45ff544f3bf82e5aba4dd",
+                    "6f9115c5f688535b0bb6de5144d2ecc479d194d501fce3e5844053baaef1f4a8",
+                    "777af80c7441c01d8d5285811d5af61b783d04539c0c2f9c0cae2a3b2ad9797e"),
+        }
+        for name, fixture in (("attention", attention_graph), ("ffn", attention_ffn_graph)):
+            for cores, digest in zip((1, 2, 5), golden[name]):
+                with self.subTest(fixture=name, cores=cores):
+                    index = Index(fixture()[0].graph)
+                    default = construct(index, cores, cross_delay=5)
+                    explicit = construct(index, cores, cross_delay=5, pack_ffn=False)
+                    self.assertEqual(default, explicit)
+                    encoded = json.dumps(default, ensure_ascii=False, separators=(",", ":")).encode()
+                    self.assertEqual(hashlib.sha256(encoded).hexdigest(), digest)
+                    self.assertNotIn("packed_ffn_count", default[1])
+
+    def test_closed_ffn_is_one_owner_but_keeps_four_original_ops(self):
+        builder, row, diamonds = attention_ffn_graph()
+        original = json.dumps(builder.graph, sort_keys=True)
+        index = Index(builder.graph)
+        for cores in (1, 2, 5):
+            with self.subTest(cores=cores):
+                plan, meta = construct(index, cores, cross_delay=5, pack_ffn=True)
+                self.assertEqual(meta["strategy"], "attention_rows_ffn")
+                self.assertEqual(meta["packed_ffn_count"], 2)
+                words = plan_words(plan)
+                owner = {u: c for c, word in enumerate(words) for u in word}
+                self.assertEqual(len(owner), sum(map(len, words)))
+                self.assertEqual(set(owner), set(index.ops))
+                self.assertEqual(len(set(plan["node_to_subgraph"].values())), len(index.ops))
+                units = [r for r in meta["capsule_dispatch"] if r["kind"] == "ffn_diamond"]
+                self.assertEqual(len(units), 2)
+                self.assertEqual({tuple(u["nodes"]) for u in units},
+                                 {tuple(o[0] for o in diamond) for diamond in diamonds})
+                for diamond in diamonds:
+                    nodes = [o[0] for o in diamond]
+                    self.assertEqual(len({owner[u] for u in nodes}), 1)
+                    self.assertFalse(set(nodes).intersection(row["nodes"]))
+                    # The a->MUL edge remains in addition to the sigmoid chain.
+                    self.assertEqual(index.pred[nodes[2]], {nodes[0], nodes[1]})
+                self.assertTrue(all(not d["split"] for d in meta["ffn_diamonds"]))
+                self.assertTrue(all(d["remote_internal_tensor_bytes_proxy"] == 0 for d in meta["ffn_diamonds"]))
+                derive_multicore_plan(builder.graph, plan)
+                dag_timing(index, words, 5, whole_core_order=True)
+                _, finish = dag_timing(index, words, 5)
+                self.assertEqual(meta["proxy_makespan_cycles"], max(finish.values()))
+        self.assertEqual(json.dumps(builder.graph, sort_keys=True), original)
+
+    def test_ffn_nonterminal_raw_compute_or_copy_consumer_prevents_packing(self):
+        for position in (0, 1, 2):
+            for copy in (False, True):
+                with self.subTest(position=position, copy=copy):
+                    b, _, diamonds = attention_ffn_graph(count=1)
+                    tensor = diamonds[0][position][1]
+                    if copy:
+                        b.op("COPY_OUT", "PIPE_MTE3", 0, [tensor], pos="DDR")
+                    else:
+                        b.op("RELU", "PIPE_V", 1, [tensor])
+                    _, meta = construct(Index(b.graph), 2, pack_ffn=True)
+                    self.assertEqual(meta["packed_ffn_count"], 0)
+                    self.assertFalse(any(x["kind"] == "ffn_diamond" for x in meta["capsule_dispatch"]))
+
+    def test_ffn_terminal_external_consumer_is_allowed(self):
+        b, _, diamonds = attention_ffn_graph(count=1)
+        b.op("RELU", "PIPE_V", 1, [diamonds[0][-1][1]])
+        _, meta = construct(Index(b.graph), 2, pack_ffn=True)
+        self.assertEqual(meta["packed_ffn_count"], 1)
+
+    def test_near_motif_missing_skip_edge_wrong_op_or_pipe_is_not_packed(self):
+        for change in ("missing_skip", "wrong_op", "wrong_pipe"):
+            with self.subTest(change=change):
+                b, _, diamonds = attention_ffn_graph(count=1)
+                a, sigmoid, mul, _ = diamonds[0]
+                if change == "missing_skip":
+                    b.graph["edges"].remove({"source": a[1], "target": mul[0]})
+                else:
+                    op = next(o for o in b.graph["ops"] if o["id"] == sigmoid[0])
+                    op["op" if change == "wrong_op" else "pipe"] = "RELU" if change == "wrong_op" else "PIPE_M"
+                _, meta = construct(Index(b.graph), 2, pack_ffn=True)
+                self.assertEqual(meta["packed_ffn_count"], 0)
+
+    def test_overlapping_ffn_diamonds_have_a_deterministic_disjoint_selection(self):
+        b, row = attention_graph()
+        weight = b.source()
+        a = b.op("MATMUL", "PIPE_M", 1, [row["output"], weight])
+        sigmoid = b.op("SIGMOID", "PIPE_V", 10, [a[1]])
+        mul = b.op("MUL", "PIPE_V", 1, [a[1], sigmoid[1]])
+        shared = b.op("MATMUL", "PIPE_M", 1, [mul[1], weight])
+        sigmoid2 = b.op("SIGMOID", "PIPE_V", 10, [shared[1]])
+        mul2 = b.op("MUL", "PIPE_V", 1, [shared[1], sigmoid2[1]])
+        end = b.op("MATMUL", "PIPE_M", 1, [mul2[1], weight])
+        b.op("COPY_OUT", "PIPE_MTE3", 0, [end[1]], pos="DDR")
+        index = Index(b.graph)
+        plan, meta = construct(index, 2, cross_delay=5, pack_ffn=True)
+        self.assertEqual(len(meta["ffn_diamonds"]), 2)
+        self.assertEqual(meta["packed_ffn_count"], 1)
+        packed = [x for x in meta["capsule_dispatch"] if x["kind"] == "ffn_diamond"]
+        self.assertEqual(packed[0]["nodes"], [a[0], sigmoid[0], mul[0], shared[0]])
+        flat = [u for word in plan_words(plan) for u in word]
+        self.assertEqual(len(flat), len(set(flat)))
+        self.assertEqual(set(flat), set(index.ops))
+        self.assertEqual((plan, meta), construct(index, 2, cross_delay=5, pack_ffn=True))
+
+    def test_packed_ffn_final_ready_pass_can_interleave_M_and_V(self):
+        builder, _, diamonds = attention_ffn_graph()
+        index = Index(builder.graph)
+        plan, meta = construct(index, 1, cross_delay=5, pack_ffn=True)
+        words = plan_words(plan)
+        owner = dict.fromkeys(index.ops, 0)
+        expected_words, expected_finish, starts, _ = ready_scan_oracle(index, owner, 1, 5)
+        self.assertEqual(words, expected_words)
+        self.assertEqual(meta["proxy_makespan_cycles"], max(expected_finish.values()))
+        first, second = diamonds
+        self.assertLess(starts[second[0][0]], expected_finish[first[1][0]])
+        _, contiguous = dag_timing(index, [[u for d in meta["capsule_dispatch"] for u in d["nodes"]]], 5)
+        self.assertLess(max(expected_finish.values()), max(contiguous.values()))
+
+    def test_packed_quotient_is_checked_and_invalid_switch_is_rejected(self):
+        builder, _, _ = attention_ffn_graph()
+        index = Index(builder.graph)
+        with patch.object(attention_rows, "topo", side_effect=ValueError("synthetic quotient cycle")):
+            with self.assertRaisesRegex(UnsupportedStructure, "attention/FFN/chain quotient"):
+                construct(index, 2, pack_ffn=True)
+        for bad in (0, 1, None, "yes"):
+            with self.subTest(pack_ffn=bad), self.assertRaises(ValueError):
+                construct(index, 2, pack_ffn=bad)
+
     def test_exact_row_cover_immutability_and_independent_final_timing(self):
         b, expected = attention_graph()
         graph = b.graph

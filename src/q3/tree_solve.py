@@ -22,9 +22,10 @@ from .solve import publish_new, select
 
 def prepare(index, cores, method):
     # Keep the research attention route separate from the adaptive production router.
-    if method == "attention":
+    if method in ("attention", "attention-ffn"):
         from .attention_rows import construct as attention_construct
-        return _prepare(index, cores, method, attention_construct)
+        builder = lambda i, k: attention_construct(i, k, pack_ffn=method == "attention-ffn")
+        return _prepare(index, cores, method, builder)
     builder = {"balanced": balanced_construct, "capacity": capacity_construct,
                "fragment": fragment_construct, "stage": stage_construct,
                "stage-rotate": lambda i, k: stage_construct(i, k, collector_policy="rotate_heavy"),
@@ -49,7 +50,7 @@ def main():
     parser.add_argument("graph", type=Path)
     parser.add_argument("--cores", type=int, default=4)
     parser.add_argument("--tree-method", choices=("balanced", "capacity", "fragment",
-                                                "release-order", "release-place", "stage", "stage-rotate", "attention"), required=True)
+                                                "release-order", "release-place", "stage", "stage-rotate", "attention", "attention-ffn"), required=True)
     parser.add_argument("-o", "--output", type=Path, required=True)
     parser.add_argument("--evidence", type=Path, required=True)
     args = parser.parse_args()
