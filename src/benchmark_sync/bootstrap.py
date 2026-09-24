@@ -85,7 +85,7 @@ def main():
     config_path=state/'config.json'
     config=json.loads(config_path.read_bytes()) if config_path.exists() else {
         'schema_version':1,'state':str(state),'actor':actor,'leader':LEADER,'role':'member','repository':REPO,'branch':BRANCH,
-        'private_key':str(key),'trusted_keys':{LEADER:PUBLIC,actor:public},'port':52341,'poll_seconds':5,'receive_releases':True,
+        'private_key':str(key),'trusted_keys':{LEADER:PUBLIC,actor:public},'port':52341,'poll_seconds':2,'receive_releases':True,
         'watch_repositories':[str(p.resolve()) for p in args.watch_repo]}
     if config['actor']!=actor or config['role']!='member': raise ValueError('Existing configuration belongs to a different role/user')
     config.update(python=sys.executable,node=node,gh=gh)

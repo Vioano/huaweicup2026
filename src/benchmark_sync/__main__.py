@@ -14,7 +14,7 @@ from .release import publish_release, receive_release
 
 
 def poll_delay(config,status,failures,cooldown_until):
-    delay=min(300,config.get('poll_seconds',5)*2**min(failures,5))
+    delay=min(300,config.get('poll_seconds',2)*2**min(failures,5))
     if config['role']=='leader' and status['state']=='online' and status.get('receive',{}).get('pending',0):
         delay=min(delay,2)
     return max(delay,cooldown_until-time.time(),status.get('error',{}).get('retry_after',0) if status.get('error') else 0)
@@ -33,10 +33,10 @@ def main():
         s=Signatures();print(json.dumps({'public_key':s.generate(args.private_key)},ensure_ascii=False));return
     if not args.config: p.error('--config is required')
     config=read_json(args.config)
-    if config['role'] not in ('leader','member') or not 2<=config.get('poll_seconds',5)<=3600: raise ValueError('Invalid runtime role/poll interval')
+    if config['role'] not in ('leader','member') or not 2<=config.get('poll_seconds',2)<=3600: raise ValueError('Invalid runtime role/poll interval')
     # Keep older installations on the low-latency default without editing their
-    # private config file; explicit faster settings remain available.
-    config['poll_seconds']=min(config.get('poll_seconds',5),5)
+    # private config file; respect the two-second polling floor.
+    config['poll_seconds']=min(config.get('poll_seconds',2),2)
     state=Path(config['state']);state.mkdir(parents=True,exist_ok=True)
     if args.command=='enqueue':
         print(enqueue(state,args.repo,args.commit,args.feed,config['actor']));return
@@ -48,20 +48,23 @@ def main():
         if args.command=='publish-release':
             if config['role']!='leader': raise ValueError('Only central publisher may release code')
             print(json.dumps(publish_release(e,args.repo,args.commit),ensure_ascii=False));return
-        failures=0;last_release_check=0
+        failures=0;last_release_check=0;last_main_sha=None
         while True:
             fresh=read_json(args.config)
             e.trusted=fresh['trusted_keys']
-            e.config['poll_seconds']=min(max(fresh.get('poll_seconds',5),2),5)
+            e.config['poll_seconds']=min(max(fresh.get('poll_seconds',2),2),2)
             status=e.cycle()
             try:
                 if config.get('receive_releases',True) and remote.head(): receive_release(e,remote.head())
-                if config['role']=='leader' and config.get('release_repository') and time.monotonic()-last_release_check>60:
+                if config['role']=='leader' and config.get('release_repository') and time.monotonic()-last_release_check>5:
+                    last_release_check=time.monotonic()
                     repo=config['release_repository']
                     # Approved main only; never change a working tree or accept a research branch as software.
                     sha=subprocess.check_output(['git','-C',repo,'ls-remote','origin','refs/heads/main'],text=True,timeout=30).split()[0]
-                    subprocess.run(['git','-C',repo,'fetch','--no-tags','origin',sha],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=60)
-                    publish_release(e,repo,sha);last_release_check=time.monotonic()
+                    if sha!=last_main_sha:
+                        subprocess.run(['git','-C',repo,'fetch','--no-tags','origin',sha],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=60)
+                        publish_release(e,repo,sha)
+                        last_main_sha=sha
             except Exception as error:
                 status['error']={'stage':'release','message':str(error)};status['state']='error';write_json(state/'status.json',status)
             if args.command=='once': print(json.dumps(status,ensure_ascii=False));return
