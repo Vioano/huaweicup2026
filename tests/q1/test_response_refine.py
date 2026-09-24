@@ -28,6 +28,31 @@ def ok_validator(graph, plan):
 
 
 class ResponseControllerTests(unittest.TestCase):
+    def test_refiner_command_and_diagnostics_are_explicit(self):
+        fixed = target.child_command("fixed", "in.json", 5, "plan.json", "diag.json")
+        variable = target.child_command("variable", "in.json", 5, "plan.json", "diag.json")
+        self.assertTrue(fixed[2].endswith("/packet_dp.py"))
+        self.assertEqual(fixed[-4:], ["--profile-cache", "ordered-graph",
+                                      "--state-mode", "auto"])
+        self.assertTrue(variable[2].endswith("/variable_packet.py"))
+        self.assertNotIn("--profile-cache", variable)
+        self.assertNotIn("--state-mode", variable)
+        with self.assertRaises(ValueError):
+            target.child_command("unknown", "in.json", 5, "plan.json", "diag.json")
+        plan, out = target.solve({}, 2, baseline_solve=baseline(diagnostics()),
+                                 constructor=lambda *_: (OTHER, {}),
+                                 scorer=lambda *_: {"status": "ok", "worker_pid": 7,
+                                                    "makespan": 99,
+                                                    "data_movement_bytes": {"scheduled_copy_bytes": 999}},
+                                 validator=ok_validator, refiner="variable")
+        self.assertEqual(plan, OTHER)
+        self.assertEqual(out["selected"], "variable-packet-refinement")
+        self.assertEqual(out["variant"], target.VARIANTS["variable"])
+        self.assertEqual(out["refinement"]["refiner"], "variable")
+        self.assertEqual(out["refinement"]["construction_parameters"],
+                         target.VARIABLE_COMPILE_BUDGETS)
+        self.assertEqual(out["refinement"]["score_attempts"], 1)
+
     def test_child_timeout_reaps_direct_process_without_new_session(self):
         class FakeChild:
             def __init__(self):

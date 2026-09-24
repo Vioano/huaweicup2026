@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import inspect
 import json
 import os
 from pathlib import Path
@@ -28,7 +29,10 @@ from stub_multicore_cut_and_schedule import derive_multicore_plan
 from evaluation_validation import validate_task_order
 
 ALGORITHM_ID = "q1-response-refine-experimental"
-VARIANT = "capacity-winner-ordered-graph-auto-once-v1"
+VARIANTS = {"fixed": "capacity-winner-ordered-graph-auto-once-v1",
+            "variable": "capacity-winner-variable-packet-once-v1"}
+VARIABLE_COMPILE_BUDGETS = {"representative_task_compiles": 512,
+                            "final_task_compiles": 2048}
 # This starts termination; process cleanup is included in measured wall time.
 CHILD_LIMIT_SECONDS = 120
 
@@ -60,7 +64,26 @@ def validate_candidate(graph, plan):
     validate_task_order(derive_multicore_plan(graph, plan))
 
 
-def packet_child(graph, cores):
+def child_command(refiner, source, cores, plan_path, diag_path):
+    """The variable CLI's frozen defaults enforce the recorded 512/2048 caps."""
+    if refiner not in VARIANTS:
+        raise ValueError("refiner must be fixed or variable")
+    if refiner == "variable":
+        from src.q1.variable_packet import construct as variable_construct
+        parameters = inspect.signature(variable_construct).parameters
+        if (parameters["compile_limit"].default != 512 or
+                parameters["final_limit"].default != 2048):
+            raise RuntimeError("variable CLI compile defaults differ from recorded budgets")
+    script = "packet_dp.py" if refiner == "fixed" else "variable_packet.py"
+    command = [sys.executable, "-B", str(ROOT / "src/q1" / script), str(source),
+               "--cores", str(cores), "--output", str(plan_path),
+               "--diagnostics", str(diag_path)]
+    if refiner == "fixed":
+        command += ["--profile-cache", "ordered-graph", "--state-mode", "auto"]
+    return command
+
+
+def packet_child(graph, cores, refiner="fixed"):
     """Run one bounded direct child in the wrapper's process group.
 
     The DP path has no descendants. An external process-group cancellation can
@@ -75,10 +98,7 @@ def packet_child(graph, cores):
         for name in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS",
                      "NUMEXPR_NUM_THREADS", "VECLIB_MAXIMUM_THREADS"):
             env[name] = "1"
-        command = [sys.executable, "-B", str(ROOT / "src/q1/packet_dp.py"), str(source),
-                   "--cores", str(cores), "--output", str(plan_path),
-                   "--diagnostics", str(diag_path), "--profile-cache", "ordered-graph",
-                   "--state-mode", "auto"]
+        command = child_command(refiner, source, cores, plan_path, diag_path)
         with (root / "stdout.txt").open("wb") as out, (root / "stderr.txt").open("wb") as err:
             child = subprocess.Popen(command, stdin=subprocess.DEVNULL, stdout=out,
                                      stderr=err, env=env)
@@ -97,7 +117,7 @@ def packet_child(graph, cores):
             raise RuntimeError(f"packet DP child exited {returncode}")
         candidate = json.loads(plan_path.read_bytes())
         details = json.loads(diag_path.read_bytes())
-        return candidate, {"child_returncode": returncode,
+        return candidate, {"child_returncode": returncode, "refiner": refiner,
                            "child_wall_seconds": time.perf_counter() - started,
                            "details": details}
 
@@ -112,21 +132,28 @@ def score_once(graph, candidate):
 
 
 def solve(graph, cores, *, baseline_solve=None, constructor=None, scorer=None,
-          validator=None, emit=None):
+          validator=None, emit=None, refiner="fixed"):
     """Pure one-shot controller with injectable expensive boundaries for tests."""
     started = time.perf_counter()
+    if refiner not in VARIANTS:
+        raise ValueError("refiner must be fixed or variable")
     baseline_solve = unified.solve if baseline_solve is None else baseline_solve
-    constructor = packet_child if constructor is None else constructor
+    if constructor is None:
+        constructor = lambda graph, cores: packet_child(graph, cores, refiner)
     scorer = score_once if scorer is None else scorer
     validator = validate_candidate if validator is None else validator
     base_plan, base_info = baseline_solve(graph, cores, emit=emit)
     baseline = scored_capacity_winner(base_plan, base_info)
-    result = dict(algorithm_id=ALGORITHM_ID, variant=VARIANT,
+    result = dict(algorithm_id=ALGORITHM_ID, variant=VARIANTS[refiner],
                   baseline=dict(selected=base_info.get("selected"),
                                 actual_e1_calls=base_info.get("actual_e1_calls"),
                                 online_score_attempts=base_info.get("online_score_attempts"),
                                 diagnostics=base_info),
-                  refinement=dict(eligible=baseline is not None, child_attempts=0,
+                  refinement=dict(refiner=refiner,
+                                  construction_parameters=(
+                                      {"profile_cache": "ordered-graph", "state_mode": "auto"}
+                                      if refiner == "fixed" else dict(VARIABLE_COMPILE_BUDGETS)),
+                                  eligible=baseline is not None, child_attempts=0,
                                   child_wall_seconds=0.0, score_attempts=0,
                                   actual_e1_calls=0, score_wall_seconds=0.0,
                                   child_limit_seconds=CHILD_LIMIT_SECONDS,
@@ -176,7 +203,8 @@ def solve(graph, cores, *, baseline_solve=None, constructor=None, scorer=None,
         if scored.get("status") != "ok":
             refinement["stop_reason"] = "refinement-score-failed"
         elif objective(scored) < objective(baseline):
-            result["selected"] = "packet-dp-refinement"
+            result["selected"] = ("packet-dp-refinement" if refiner == "fixed"
+                                  else "variable-packet-refinement")
             refinement["stop_reason"] = "strict-objective-improvement"
             refinement["score_wall_seconds"] = time.perf_counter() - score_start
             result["solve_function_seconds"] = time.perf_counter() - started
@@ -197,12 +225,13 @@ def main():
     parser.add_argument("--cores", type=int, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--diagnostics", type=Path, required=True)
+    parser.add_argument("--refiner", choices=tuple(VARIANTS), default="fixed")
     args = parser.parse_args()
     if args.output == args.diagnostics or args.output.exists() or args.diagnostics.exists():
         raise FileExistsError("refuse to overwrite solver artifacts")
     started = time.perf_counter()  # before input read, through final diagnostics write
     graph = json.loads(args.graph.read_bytes())
-    plan, info = solve(graph, args.cores)
+    plan, info = solve(graph, args.cores, refiner=args.refiner)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.diagnostics.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("xb") as stream:
