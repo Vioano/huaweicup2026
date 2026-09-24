@@ -5,8 +5,9 @@ from pathlib import Path
 import sqlite3
 import tempfile
 import unittest
+from unittest.mock import patch
 from src.benchmark_sync.engine import Engine, write_json, read_json
-from src.benchmark_sync.snapshot import canonical, digest
+from src.benchmark_sync.snapshot import canonical, digest, publish_files, read_central, snapshot_id
 from src.benchmark_sync.signing import Signatures
 from src.benchmark_sync.github import RemoteError
 
@@ -36,6 +37,36 @@ class EngineTests(unittest.TestCase):
         self.engines={a:Engine(c,self.remote,self.sign) for a,c in self.configs.items()}
         self.engines['leader'].config['central']={'inbox':str(self.root/'inbox')}
     def tearDown(self): self.tmp.cleanup()
+    def test_unchanged_snapshot_rechecks_signed_bytes_without_decoding(self):
+        db_path=self.root/'ledger.sqlite3'
+        with closing(sqlite3.connect(db_path)) as db, db:
+            db.executescript('CREATE TABLE records(seq INTEGER,id TEXT,body TEXT); '
+                             'CREATE TABLE events(seq INTEGER,kind TEXT,body TEXT); '
+                             'CREATE TABLE sources(id TEXT,body TEXT);')
+            record={'id':'1'*64,'attempt_id':'attempt-1','revision':1,'problem':'P1',
+                    'case_id':'001','cores':1,'metrics':{'makespan_cycles':1},'eligible':True}
+            db.execute('INSERT INTO records VALUES(?,?,?)',(1,record['id'],json.dumps(record)))
+            db.execute('INSERT INTO events VALUES(?,?,?)',(1,'record',json.dumps({'id':record['id']})))
+        payload=read_central(db_path,frozen_manifest={},algorithms={},code_commit='a'*40)
+        payload['publisher']['actor']='leader'
+        payload['snapshot_id']=snapshot_id(payload)
+        published=self.root/'published'
+        manifest={k:v for k,v in publish_files(payload,published).items() if k!='unchanged'}
+        channel={'generation':1,'manifest':manifest,'object':'objects/'+manifest['payload_sha256']}
+        envelope=self.engines['leader'].sign('snapshot',channel)
+        head=self.remote.update({'channels/central.json':canonical(envelope),
+                                 channel['object']:(published/manifest['payload_file']).read_bytes()})
+        member=self.engines['member']
+        member.accept_snapshot(head)
+        current=self.root/'member'/'accepted'/'current.json'
+        accepted=self.root/'member'/'accepted'/manifest['payload_file']
+        self.assertEqual(read_json(current)['snapshot_id'],manifest['snapshot_id'])
+        with patch('src.benchmark_sync.engine.unpack',side_effect=AssertionError('redecoded')):
+            member.accept_snapshot(head)
+            accepted.write_bytes(b'corrupt')
+            with self.assertRaisesRegex(ValueError,'compressed bytes/hash mismatch'):
+                member.accept_snapshot(head)
+        self.assertEqual(read_json(current)['snapshot_id'],manifest['snapshot_id'])
     def queue(self,actor='member'):
         artifact=b'{"test":true}';feed={'schema_version':1,'records':[{'provenance':{'producer_session':actor+'/s-test'},'artifacts':{'plan':{'path':'results/plan.json','sha256':digest(artifact)}}}]}
         feed_bytes=canonical(feed);commit='a'*40

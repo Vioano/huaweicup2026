@@ -150,11 +150,15 @@ def reject_history_regression(previous, candidate):
             raise ValueError("Snapshot dropped or rewrote historical records")
 
 
-def unpack(data, manifest):
+def verify_compressed_bytes(data, manifest):
     if not isinstance(manifest, dict): raise ValueError("Invalid snapshot manifest object")
     payload_name(manifest)
     if len(data) > MAX_COMPRESSED or len(data) != manifest["payload_size"] or digest(data) != manifest["payload_sha256"]:
         raise ValueError("Snapshot compressed bytes/hash mismatch")
+
+
+def unpack(data, manifest):
+    verify_compressed_bytes(data, manifest)
     with gzip.GzipFile(fileobj=io.BytesIO(data)) as stream:
         raw = stream.read(MAX_DECODED + 1)
     if len(raw) > MAX_DECODED or len(raw) != manifest["decoded_size"]:

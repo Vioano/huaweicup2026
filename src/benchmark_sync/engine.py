@@ -9,7 +9,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
 from .github import fixed_sha, path_ok, RemoteError
 from .snapshot import (atomic_write, canonical, digest, now, read_central, publish_files,
-                       unpack, reject_history_regression, payload_name, git_json)
+                       unpack, verify_compressed_bytes, reject_history_regression, payload_name, git_json)
 from .submission import discover, references, MAX_FEED
 
 
@@ -48,8 +48,9 @@ class Engine:
             if channel['generation']<prior['generation']: raise ValueError('Signed snapshot generation rollback')
             if channel['generation']==prior['generation']:
                 if channel!=prior: raise ValueError('Snapshot generation reused for different content')
-                # Still verify disk bytes on each startup/cycle; never bless a damaged cache.
-                unpack((output/payload_name(previous)).read_bytes(),previous)
+                # The payload was fully decoded before acceptance. Recheck its signed
+                # compressed bytes on every cycle without decoding the same history twice.
+                verify_compressed_bytes((output/payload_name(previous)).read_bytes(),previous)
                 return
         manifest=channel['manifest']; path=path_ok(channel['object'])
         if path!='objects/'+manifest['payload_sha256']: raise ValueError('Snapshot object identity mismatch')
