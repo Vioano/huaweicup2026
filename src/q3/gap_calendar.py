@@ -1,5 +1,6 @@
-# Adapted verbatim from Fang's a37eb931a22fb7df7e0d00d193538ce5289ae045.
+# Adapted from Fang's a37eb931a22fb7df7e0d00d193538ce5289ae045.
 # Original: src/q3_yuanzhifang/gap_calendar.py (huaweicup2026 team source).
+# Persistent release and AVL deletion are extensions on this branch; old APIs are unchanged.
 """Persistent AVL index of free resource intervals, with exact earliest fit."""
 from __future__ import annotations
 
@@ -61,6 +62,28 @@ def put(node, key, stop):
     return balance(make(node.key, node.stop, node.left, put(node.right, key, stop)))
 
 
+def pop_min(node):
+    """Return the minimum node and a persistent tree without it."""
+    if node.left is None:
+        return node, node.right
+    minimum, left = pop_min(node.left)
+    return minimum, balance(make(node.key, node.stop, left, node.right))
+
+
+def delete(node, key):
+    """Remove an existing key without changing any earlier tree version."""
+    if key < node.key:
+        return balance(make(node.key, node.stop, delete(node.left, key), node.right))
+    if key > node.key:
+        return balance(make(node.key, node.stop, node.left, delete(node.right, key)))
+    if node.left is None:
+        return node.right
+    if node.right is None:
+        return node.left
+    successor, right = pop_min(node.right)
+    return balance(make(successor.key, successor.stop, node.left, right))
+
+
 def floor(node, key):
     found = None
     while node:
@@ -110,3 +133,50 @@ def reserve(root, start, duration):
     # Replace one free interval by its left and right remainders. Empty
     # intervals are harmless and keep insertion logic and witnesses simple.
     return put(put(root, preceding.key, start), start + duration, preceding.stop)
+
+
+def release(root, start, duration):
+    """Free an occupied half-open interval and coalesce adjacent free space.
+
+    Work is O(log N + Z log N), where Z is the number of zero-length
+    witnesses within the released range. Releasing a single unchanged
+    reservation encounters at most its two boundary witnesses.
+    """
+    if type(start) is not int or type(duration) is not int or start < 0 or duration <= 0:
+        raise ValueError('nonnegative integer start and positive integer duration required')
+    stop = start + duration
+    left = floor(root, start - 1)
+    if left and left.stop > start:
+        raise ValueError('release overlaps an already free interval')
+
+    # The old reserve() may leave zero-length witnesses at either boundary.
+    # Visit only keys in [start, stop], so remote intervals are not scanned.
+    nearby = []
+
+    def collect(node):
+        if node is None:
+            return
+        if node.key >= start:
+            collect(node.left)
+        if start <= node.key <= stop:
+            nearby.append(node)
+        if node.key <= stop:
+            collect(node.right)
+
+    collect(root)
+    for node in nearby:
+        if node.key < stop and node.stop > node.key:
+            raise ValueError('release overlaps an already free interval')
+
+    keys = [node.key for node in nearby]
+    merged_start = start
+    merged_stop = stop
+    if left and left.stop == start:
+        merged_start = left.key
+        keys.append(left.key)
+    if nearby and nearby[-1].key == stop:
+        merged_stop = nearby[-1].stop
+    updated = root
+    for key in keys:
+        updated = delete(updated, key)
+    return put(updated, merged_start, merged_stop)
