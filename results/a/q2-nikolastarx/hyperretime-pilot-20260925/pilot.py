@@ -231,8 +231,8 @@ def main():
     args.raw_root, args.old_run, args.e2_root = (p.resolve(strict=True) for p in
                                                 (args.raw_root, args.old_run, args.e2_root))
     args.output = args.output.resolve()
-    args.python = args.python.resolve(strict=True)
-    if Path(sys.executable).resolve() != args.python:
+    args.python = args.python.absolute()
+    if not args.python.is_file() or Path(sys.executable).absolute() != args.python:
         raise ValueError('parent and native worker must use requested Python')
     if args.worker:
         worker(args)

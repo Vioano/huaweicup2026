@@ -28,7 +28,7 @@ Inputs are passed at run time; the script contains no machine-specific paths:
   --raw-root /path/to/official/data \
   --old-run /path/to/old-gap-full500-run \
   --e2-root /path/to/isolated-603b-export \
-  --output results/a/q2-nikolastarx/hyperretime-pilot-20260925/run-v2
+  --output results/a/q2-nikolastarx/hyperretime-pilot-20260925/run-v3
 ```
 
 The runner checks the fixed script and constructor bytes against its full
@@ -58,8 +58,11 @@ stderr or resolve the uncertain ledger. See `run/batch.json`,
 `run/003-k5/e2-ledger.json`, `run/003-k5/failure-receipt.json`, and the process
 stdout/stderr receipts for the exact evidence.
 
-The authorized second batch uses a verified environment for both parent and
-native worker, checks only E2 package/NumPy imports before the batch, and
-records nested subprocess stdout/stderr on `CalledProcessError`. It writes to
-the separate `run-v2` directory. The first batch remains one attempted E2
-request plus one possible E0 fallback in the cumulative call account.
+The attempted `run-v2` stopped in its import-only preflight, before creating
+the output directory or constructing/scoring any candidate: its script followed
+the venv `bin/python` symlink to an unconfigured base interpreter. The failure
+is retained in `run-v2-preflight-failure.json`. The corrected runner preserves
+the requested venv entry path, checks E2/NumPy imports, and records nested
+subprocess stdout/stderr on `CalledProcessError`; its separately authorized
+batch uses `run-v3`. The first batch remains one attempted E2 request plus one
+possible E0 fallback in the cumulative call account.
