@@ -1,0 +1,591 @@
+{
+  "schema_version": 1,
+  "submission_version": 1,
+  "records": [
+    {
+      "attempt_id": "p2-gap-full500-20260925-s59-20260924T2124Z-P2-091-k1",
+      "revision": 1,
+      "run_id": "p2-gap-full500-20260925-s59-20260924T2124Z",
+      "algorithm_id": "q2-adaptive-gap-guarded",
+      "algorithm_name": "Adaptive budget with join/gap guarded candidate",
+      "variant": "complete-plan-native-e2-select-independent-e0",
+      "solver_commit": "923b25ecb0b9d6d0e2d3f149fccef431b5403f99",
+      "parameters": {
+        "global_budget": {
+          "solver": 500,
+          "E2_api": 1000,
+          "E0_fallback_reserved": 1000,
+          "E0_independent": 500,
+          "workers": 1,
+          "solver_seconds": 60,
+          "e0_seconds": 60,
+          "batch_seconds": 7200,
+          "rss_bytes": 4294967296,
+          "retries": 0
+        },
+        "candidate_limit": 2,
+        "selection": "strict_lexicographic_makespan_added_copy_bytes",
+        "retry": false
+      },
+      "problem": "P2",
+      "case_id": "091",
+      "cores": 1,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 9013014,
+        "solver_wall_seconds": 18.018258832977153,
+        "evaluation_wall_seconds": 9.160207249980886,
+        "ddr_bytes": 50627064,
+        "extra_ddr_bytes": 44049408,
+        "spill_bytes": 44049408,
+        "cache_hit_rate": null
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "2794ceba93acc1f7fc119154f61082511843d4b3",
+        "entrypoint": "multicore_cut_evaluate_problem_2.evaluate_problem_2"
+      },
+      "identity": {
+        "graph_sha256": "6fa7e61f09003382ba36061d74d4be90ed3acbe750a3d46c3b6d1e1fc27579f3",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "c9600af6749fb7bfc8bf1a20364d21d9e42c6b978615afc13ea1bddf779cc8c9"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/q2-nikolastarx/gap-full500-archive-20260924T2124Z-s59/shard-451-453/091-k1/plan.json.gz",
+          "sha256": "c9600af6749fb7bfc8bf1a20364d21d9e42c6b978615afc13ea1bddf779cc8c9"
+        },
+        "result": {
+          "path": "results/a/q2-nikolastarx/gap-full500-archive-20260924T2124Z-s59/shard-451-453/091-k1/result.json.gz",
+          "sha256": "bc814b3f46e5b7cd50b8417c5472b3d7a9473e989443184dcd6da72da5b82df3"
+        },
+        "run": {
+          "path": "results/a/q2-nikolastarx/gap-full500-archive-20260924T2124Z-s59/shard-451-453/091-k1/run.json",
+          "sha256": "ce1cded42681eedbc4eb428893acb696b249fb89fd89fdab840c5ee8d3a3bb45"
+        }
+      },
+      "runtime_id": "macos-arm64-p2-gap-full500-s59",
+      "observed_at": "2026-09-24T23:21:47.543694Z",
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "Outer perf_counter child wall; online E2 is included in solver wall.",
+        "utc": "UTC"
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-8ee33b891eb94c529bf5be94bb5d8894",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/33",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "923b25ecb0b9d6d0e2d3f149fccef431b5403f99",
+            "path": "src/q2_nikolastarx/adaptive_gap_guarded.py",
+            "entrypoint": "src.q2_nikolastarx.adaptive_gap_guarded.main"
+          },
+          "authors": [
+            "NikolaStarx",
+            "yuanzhifang30-sudo"
+          ],
+          "method": "Adaptive budget baseline versus join/gap complete-plan candidate; native E2 selects strict Makespan/DDR improvement; independent E0 confirms selected plan.",
+          "references": [
+            "https://github.com/huaweibei123/huaweicup2026/blob/71616ac7c4c7fca56e37e2d3245dd13725316d82/src/q2/feedback/gap_packet.py",
+            "https://github.com/huaweibei123/huaweicup2026/blob/a37eb931a22fb7df7e0d00d193538ce5289ae045/src/q3_yuanzhifang/gap_calendar.py"
+          ],
+          "upstream": [
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "71616ac7c4c7fca56e37e2d3245dd13725316d82",
+              "path": "src/q2/feedback/gap_packet.py",
+              "entrypoint": null
+            },
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "a37eb931a22fb7df7e0d00d193538ce5289ae045",
+              "path": "src/q3_yuanzhifang/gap_calendar.py",
+              "entrypoint": null
+            }
+          ],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "9db8247f9a864a3279f3bd315aa09d8ad7dd5206",
+            "path": "src/q2_nikolastarx/gap_full500.py",
+            "entrypoint": "src.q2_nikolastarx.gap_full500.main"
+          },
+          "argv": [
+            "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/.venv/bin/python",
+            "-B",
+            "-m",
+            "src.q2_nikolastarx.adaptive_gap_guarded",
+            "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/data/raw/a/official/data/case_091.json",
+            "--config",
+            "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/data/raw/a/official/data/config.txt",
+            "--cores",
+            "1",
+            "--output",
+            "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/output/p2-gap-full500-20260925-s59/20260924T2124Z-s59ee/091-k1/plan.json",
+            "--evidence",
+            "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/output/p2-gap-full500-20260925-s59/20260924T2124Z-s59ee/091-k1/online",
+            "--e2-root",
+            "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/output/q2-e2-paircheck-603b-s8ee",
+            "--wall",
+            "60"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS-27.0-arm64-arm-64bit",
+          "cpu": null,
+          "gpu": null,
+          "ram_bytes": null,
+          "python": "3.12.13",
+          "dependencies": "frozen solver and E2 source identities in archived online ledger",
+          "threads": null,
+          "workers": 1,
+          "peak_rss_bytes": 915357696
+        },
+        "measurement": {
+          "started_at": "2026-09-24T23:21:09.199915Z",
+          "finished_at": "2026-09-24T23:21:27.218293Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": "Outer child start through exit includes graph read, candidate construction, online native E2, plan/evidence writes and cleanup.",
+          "evaluation_scope": "Separate independent official E0 child; its wall is not included in solver wall.",
+          "budget": {
+            "wall_seconds": 60,
+            "candidate_limit": 2,
+            "stop_reason": "completed"
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 1,
+            "E1": 0,
+            "E2": 2
+          },
+          "offline_costs": "none",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.cpu": "Per-run CPU model was not recorded.",
+          "provenance.environment.gpu": "GPU presence was not recorded.",
+          "provenance.environment.ram_bytes": "Physical RAM size was not recorded.",
+          "provenance.environment.threads": "Thread count was not sampled.",
+          "provenance.measurement.seed": "Deterministic construction; no seed.",
+          "provenance.measurement.cold_start": "Fresh child process, but OS cache state not controlled."
+        }
+      },
+      "notes": [
+        "One cell of a fresh fixed-solver P2 run; full-suite claim requires 500 accepted cells.",
+        "Online E2 is selection evidence; independent E0 is final score.",
+        "Single-core denominator is fixed 60afc38 official E0, not the old solver makespan."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/33",
+      "baseline": {
+        "graph_sha256": "6fa7e61f09003382ba36061d74d4be90ed3acbe750a3d46c3b6d1e1fc27579f3",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/benchmark-board/official-singlecore-20260924/091/result.json.gz",
+          "sha256": "28ab4e4193a12bb42e468c18c8bbe287b9d8c00769bc53fb25ae6a131a8022b2"
+        }
+      },
+      "cache_pair": null
+    },
+    {
+      "attempt_id": "p2-gap-full500-20260925-s59-20260924T2124Z-P2-091-k2",
+      "revision": 1,
+      "run_id": "p2-gap-full500-20260925-s59-20260924T2124Z",
+      "algorithm_id": "q2-adaptive-gap-guarded",
+      "algorithm_name": "Adaptive budget with join/gap guarded candidate",
+      "variant": "complete-plan-native-e2-select-independent-e0",
+      "solver_commit": "923b25ecb0b9d6d0e2d3f149fccef431b5403f99",
+      "parameters": {
+        "global_budget": {
+          "solver": 500,
+          "E2_api": 1000,
+          "E0_fallback_reserved": 1000,
+          "E0_independent": 500,
+          "workers": 1,
+          "solver_seconds": 60,
+          "e0_seconds": 60,
+          "batch_seconds": 7200,
+          "rss_bytes": 4294967296,
+          "retries": 0
+        },
+        "candidate_limit": 2,
+        "selection": "strict_lexicographic_makespan_added_copy_bytes",
+        "retry": false
+      },
+      "problem": "P2",
+      "case_id": "091",
+      "cores": 2,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 4510546,
+        "solver_wall_seconds": 17.111461583001073,
+        "evaluation_wall_seconds": 8.711371334036812,
+        "ddr_bytes": 60843040,
+        "extra_ddr_bytes": 54265384,
+        "spill_bytes": 25783296,
+        "cache_hit_rate": null
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "2794ceba93acc1f7fc119154f61082511843d4b3",
+        "entrypoint": "multicore_cut_evaluate_problem_2.evaluate_problem_2"
+      },
+      "identity": {
+        "graph_sha256": "6fa7e61f09003382ba36061d74d4be90ed3acbe750a3d46c3b6d1e1fc27579f3",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "b43e83611c479daf222ebb4436ea5cef3337c3fc03a9bcac806eed8758542da7"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/q2-nikolastarx/gap-full500-archive-20260924T2124Z-s59/shard-451-453/091-k2/plan.json.gz",
+          "sha256": "b43e83611c479daf222ebb4436ea5cef3337c3fc03a9bcac806eed8758542da7"
+        },
+        "result": {
+          "path": "results/a/q2-nikolastarx/gap-full500-archive-20260924T2124Z-s59/shard-451-453/091-k2/result.json.gz",
+          "sha256": "aa5f3ee2684f2a0c681d170bbb2fc35ec1f05a9787aadf7584b1ee14a5a22350"
+        },
+        "run": {
+          "path": "results/a/q2-nikolastarx/gap-full500-archive-20260924T2124Z-s59/shard-451-453/091-k2/run.json",
+          "sha256": "af4c877e771f9c9b8faf648979cb55cf4aa5fe5e746c467a19720c886b7c3419"
+        }
+      },
+      "runtime_id": "macos-arm64-p2-gap-full500-s59",
+      "observed_at": "2026-09-24T23:22:40.694399Z",
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "Outer perf_counter child wall; online E2 is included in solver wall.",
+        "utc": "UTC"
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-8ee33b891eb94c529bf5be94bb5d8894",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/33",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "923b25ecb0b9d6d0e2d3f149fccef431b5403f99",
+            "path": "src/q2_nikolastarx/adaptive_gap_guarded.py",
+            "entrypoint": "src.q2_nikolastarx.adaptive_gap_guarded.main"
+          },
+          "authors": [
+            "NikolaStarx",
+            "yuanzhifang30-sudo"
+          ],
+          "method": "Adaptive budget baseline versus join/gap complete-plan candidate; native E2 selects strict Makespan/DDR improvement; independent E0 confirms selected plan.",
+          "references": [
+            "https://github.com/huaweibei123/huaweicup2026/blob/71616ac7c4c7fca56e37e2d3245dd13725316d82/src/q2/feedback/gap_packet.py",
+            "https://github.com/huaweibei123/huaweicup2026/blob/a37eb931a22fb7df7e0d00d193538ce5289ae045/src/q3_yuanzhifang/gap_calendar.py"
+          ],
+          "upstream": [
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "71616ac7c4c7fca56e37e2d3245dd13725316d82",
+              "path": "src/q2/feedback/gap_packet.py",
+              "entrypoint": null
+            },
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "a37eb931a22fb7df7e0d00d193538ce5289ae045",
+              "path": "src/q3_yuanzhifang/gap_calendar.py",
+              "entrypoint": null
+            }
+          ],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "9db8247f9a864a3279f3bd315aa09d8ad7dd5206",
+            "path": "src/q2_nikolastarx/gap_full500.py",
+            "entrypoint": "src.q2_nikolastarx.gap_full500.main"
+          },
+          "argv": [
+            "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/.venv/bin/python",
+            "-B",
+            "-m",
+            "src.q2_nikolastarx.adaptive_gap_guarded",
+            "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/data/raw/a/official/data/case_091.json",
+            "--config",
+            "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/data/raw/a/official/data/config.txt",
+            "--cores",
+            "2",
+            "--output",
+            "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/output/p2-gap-full500-20260925-s59/20260924T2124Z-s59ee/091-k2/plan.json",
+            "--evidence",
+            "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/output/p2-gap-full500-20260925-s59/20260924T2124Z-s59ee/091-k2/online",
+            "--e2-root",
+            "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/output/q2-e2-paircheck-603b-s8ee",
+            "--wall",
+            "60"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS-27.0-arm64-arm-64bit",
+          "cpu": null,
+          "gpu": null,
+          "ram_bytes": null,
+          "python": "3.12.13",
+          "dependencies": "frozen solver and E2 source identities in archived online ledger",
+          "threads": null,
+          "workers": 1,
+          "peak_rss_bytes": 755351552
+        },
+        "measurement": {
+          "started_at": "2026-09-24T23:22:04.062755Z",
+          "finished_at": "2026-09-24T23:22:21.174321Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": "Outer child start through exit includes graph read, candidate construction, online native E2, plan/evidence writes and cleanup.",
+          "evaluation_scope": "Separate independent official E0 child; its wall is not included in solver wall.",
+          "budget": {
+            "wall_seconds": 60,
+            "candidate_limit": 2,
+            "stop_reason": "completed"
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 1,
+            "E1": 0,
+            "E2": 2
+          },
+          "offline_costs": "none",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.cpu": "Per-run CPU model was not recorded.",
+          "provenance.environment.gpu": "GPU presence was not recorded.",
+          "provenance.environment.ram_bytes": "Physical RAM size was not recorded.",
+          "provenance.environment.threads": "Thread count was not sampled.",
+          "provenance.measurement.seed": "Deterministic construction; no seed.",
+          "provenance.measurement.cold_start": "Fresh child process, but OS cache state not controlled."
+        }
+      },
+      "notes": [
+        "One cell of a fresh fixed-solver P2 run; full-suite claim requires 500 accepted cells.",
+        "Online E2 is selection evidence; independent E0 is final score.",
+        "Single-core denominator is fixed 60afc38 official E0, not the old solver makespan."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/33",
+      "baseline": {
+        "graph_sha256": "6fa7e61f09003382ba36061d74d4be90ed3acbe750a3d46c3b6d1e1fc27579f3",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/benchmark-board/official-singlecore-20260924/091/result.json.gz",
+          "sha256": "28ab4e4193a12bb42e468c18c8bbe287b9d8c00769bc53fb25ae6a131a8022b2"
+        }
+      },
+      "cache_pair": null
+    },
+    {
+      "attempt_id": "p2-gap-full500-20260925-s59-20260924T2124Z-P2-091-k3",
+      "revision": 1,
+      "run_id": "p2-gap-full500-20260925-s59-20260924T2124Z",
+      "algorithm_id": "q2-adaptive-gap-guarded",
+      "algorithm_name": "Adaptive budget with join/gap guarded candidate",
+      "variant": "complete-plan-native-e2-select-independent-e0",
+      "solver_commit": "923b25ecb0b9d6d0e2d3f149fccef431b5403f99",
+      "parameters": {
+        "global_budget": {
+          "solver": 500,
+          "E2_api": 1000,
+          "E0_fallback_reserved": 1000,
+          "E0_independent": 500,
+          "workers": 1,
+          "solver_seconds": 60,
+          "e0_seconds": 60,
+          "batch_seconds": 7200,
+          "rss_bytes": 4294967296,
+          "retries": 0
+        },
+        "candidate_limit": 2,
+        "selection": "strict_lexicographic_makespan_added_copy_bytes",
+        "retry": false
+      },
+      "problem": "P2",
+      "case_id": "091",
+      "cores": 3,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 3051545,
+        "solver_wall_seconds": 17.678436667018104,
+        "evaluation_wall_seconds": 9.984251541958656,
+        "ddr_bytes": 45166904,
+        "extra_ddr_bytes": 38589248,
+        "spill_bytes": 25632576,
+        "cache_hit_rate": null
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "2794ceba93acc1f7fc119154f61082511843d4b3",
+        "entrypoint": "multicore_cut_evaluate_problem_2.evaluate_problem_2"
+      },
+      "identity": {
+        "graph_sha256": "6fa7e61f09003382ba36061d74d4be90ed3acbe750a3d46c3b6d1e1fc27579f3",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "7f457fd31b527dec2ed39d1eb1be7660ad9457f94fbdfb434e83c580f8850d89"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/q2-nikolastarx/gap-full500-archive-20260924T2124Z-s59/shard-451-453/091-k3/plan.json.gz",
+          "sha256": "7f457fd31b527dec2ed39d1eb1be7660ad9457f94fbdfb434e83c580f8850d89"
+        },
+        "result": {
+          "path": "results/a/q2-nikolastarx/gap-full500-archive-20260924T2124Z-s59/shard-451-453/091-k3/result.json.gz",
+          "sha256": "1a089054d356342ad8fdc71e9303827bdf859bcc116d9aa8f5156c98b10ec009"
+        },
+        "run": {
+          "path": "results/a/q2-nikolastarx/gap-full500-archive-20260924T2124Z-s59/shard-451-453/091-k3/run.json",
+          "sha256": "d511394f0ffaeb280a5a2e2f7a9fd3c5b3a658df231f122980d0dbaead250de7"
+        }
+      },
+      "runtime_id": "macos-arm64-p2-gap-full500-s59",
+      "observed_at": "2026-09-24T23:23:34.925830Z",
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "Outer perf_counter child wall; online E2 is included in solver wall.",
+        "utc": "UTC"
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-8ee33b891eb94c529bf5be94bb5d8894",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/33",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "923b25ecb0b9d6d0e2d3f149fccef431b5403f99",
+            "path": "src/q2_nikolastarx/adaptive_gap_guarded.py",
+            "entrypoint": "src.q2_nikolastarx.adaptive_gap_guarded.main"
+          },
+          "authors": [
+            "NikolaStarx",
+            "yuanzhifang30-sudo"
+          ],
+          "method": "Adaptive budget baseline versus join/gap complete-plan candidate; native E2 selects strict Makespan/DDR improvement; independent E0 confirms selected plan.",
+          "references": [
+            "https://github.com/huaweibei123/huaweicup2026/blob/71616ac7c4c7fca56e37e2d3245dd13725316d82/src/q2/feedback/gap_packet.py",
+            "https://github.com/huaweibei123/huaweicup2026/blob/a37eb931a22fb7df7e0d00d193538ce5289ae045/src/q3_yuanzhifang/gap_calendar.py"
+          ],
+          "upstream": [
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "71616ac7c4c7fca56e37e2d3245dd13725316d82",
+              "path": "src/q2/feedback/gap_packet.py",
+              "entrypoint": null
+            },
+            {
+              "repo": "huaweibei123/huaweicup2026",
+              "commit": "a37eb931a22fb7df7e0d00d193538ce5289ae045",
+              "path": "src/q3_yuanzhifang/gap_calendar.py",
+              "entrypoint": null
+            }
+          ],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "9db8247f9a864a3279f3bd315aa09d8ad7dd5206",
+            "path": "src/q2_nikolastarx/gap_full500.py",
+            "entrypoint": "src.q2_nikolastarx.gap_full500.main"
+          },
+          "argv": [
+            "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/.venv/bin/python",
+            "-B",
+            "-m",
+            "src.q2_nikolastarx.adaptive_gap_guarded",
+            "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/data/raw/a/official/data/case_091.json",
+            "--config",
+            "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/data/raw/a/official/data/config.txt",
+            "--cores",
+            "3",
+            "--output",
+            "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/output/p2-gap-full500-20260925-s59/20260924T2124Z-s59ee/091-k3/plan.json",
+            "--evidence",
+            "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/output/p2-gap-full500-20260925-s59/20260924T2124Z-s59ee/091-k3/online",
+            "--e2-root",
+            "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/output/q2-e2-paircheck-603b-s8ee",
+            "--wall",
+            "60"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS-27.0-arm64-arm-64bit",
+          "cpu": null,
+          "gpu": null,
+          "ram_bytes": null,
+          "python": "3.12.13",
+          "dependencies": "frozen solver and E2 source identities in archived online ledger",
+          "threads": null,
+          "workers": 1,
+          "peak_rss_bytes": 753221632
+        },
+        "measurement": {
+          "started_at": "2026-09-24T23:22:56.526288Z",
+          "finished_at": "2026-09-24T23:23:14.204824Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": "Outer child start through exit includes graph read, candidate construction, online native E2, plan/evidence writes and cleanup.",
+          "evaluation_scope": "Separate independent official E0 child; its wall is not included in solver wall.",
+          "budget": {
+            "wall_seconds": 60,
+            "candidate_limit": 2,
+            "stop_reason": "completed"
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 1,
+            "E1": 0,
+            "E2": 2
+          },
+          "offline_costs": "none",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.cpu": "Per-run CPU model was not recorded.",
+          "provenance.environment.gpu": "GPU presence was not recorded.",
+          "provenance.environment.ram_bytes": "Physical RAM size was not recorded.",
+          "provenance.environment.threads": "Thread count was not sampled.",
+          "provenance.measurement.seed": "Deterministic construction; no seed.",
+          "provenance.measurement.cold_start": "Fresh child process, but OS cache state not controlled."
+        }
+      },
+      "notes": [
+        "One cell of a fresh fixed-solver P2 run; full-suite claim requires 500 accepted cells.",
+        "Online E2 is selection evidence; independent E0 is final score.",
+        "Single-core denominator is fixed 60afc38 official E0, not the old solver makespan."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/33",
+      "baseline": {
+        "graph_sha256": "6fa7e61f09003382ba36061d74d4be90ed3acbe750a3d46c3b6d1e1fc27579f3",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/benchmark-board/official-singlecore-20260924/091/result.json.gz",
+          "sha256": "28ab4e4193a12bb42e468c18c8bbe287b9d8c00769bc53fb25ae6a131a8022b2"
+        }
+      },
+      "cache_pair": null
+    }
+  ]
+}
