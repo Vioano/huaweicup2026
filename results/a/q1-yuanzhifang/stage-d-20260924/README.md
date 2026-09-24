@@ -42,3 +42,5 @@ python -X utf8 -B src/benchmark_board/protocol.py results/a/q1-yuanzhifang/stage
 ```
 
 Windows has no dot_clean; scoped metadata scan is empty. Raw Windows CRLF is preserved using `* -text`; diff whitespace check uses per-command cr-at-eol rather than editing official bytes.
+
+Fixed Git-object precheck passed at artifact commit `a7f51f2d5ca7d735899addd8bc14900045484fc3`: valid/submission=true, records=5, eligible=5, no reported/failed rows. Receipt: `precheck-fixed-a7f51f2.json`.
