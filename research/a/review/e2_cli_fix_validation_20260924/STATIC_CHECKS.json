@@ -1,15 +1,15 @@
 {
   "phase": "three_point_interop_static_increment",
   "actual_start_utc": "2026-09-24T04:54:44.8333134Z",
-  "checked_utc": "2026-09-24T05:07:02.696189+00:00",
+  "checked_utc": "2026-09-24T05:23:28.254477+00:00",
   "session": "yuanzhifang30-sudo/s-b4329d86154348de9401afcbe48b34ce",
   "baseline": "48b12684d1273515f34ddcb2c347690cffea566f",
   "branch": "codex/e2-interop-static-yuanzhifang",
   "authority": "https://github.com/huaweibei123/huaweicup2026/issues/15#issuecomment-5807884960",
   "diagnosis": "https://github.com/huaweibei123/huaweicup2026/issues/15#issuecomment-5807750597",
-  "source_bundle": "4e2bdce4f2091cb470643384c44b0756a9856eeae2f36ce47d381c26309638e2",
-  "sources_file_sha256": "b741882da508af2cb9200d274351b5da25b363e6bdfe05c03af5a8a83de857ee",
-  "changed_source_sha256": "1a414c6f8c1755432cbaf8bedbcb39018d597cc0089d66d9ae361bc458aad7e1",
+  "source_bundle": "be2e85f472b124ee167ce06f6077bfd940940f0a1dd6fefc7d78d39cb043b8cc",
+  "sources_file_sha256": "33bf15051d29ef5fbf95a814ba8f6b0942d48abb09810764d8e2a70a407a1c26",
+  "changed_source_sha256": "fd24c63a6c701213d86ecaecbf735d36c5a48652033eeadb952a6412ea25809b",
   "checks": {
     "PowerShell_parser": "passed, source parsing only; no emitted type code executed",
     "native_declarations": 15,
@@ -35,7 +35,6 @@
       "$e2Il.Emit([Reflection.Emit.OpCodes]::Call, $e2GetError)",
       "$e2Il.Emit([Reflection.Emit.OpCodes]::Stloc, $e2ErrorLocal)"
     ],
-    "capture_before_return_array_allocation": true,
     "same_T0_preparation_block_unchanged": true,
     "argument_quoting_function_unchanged": true,
     "post_creation_assignment_resume_and_normal_monitor_body_unchanged": true,
@@ -55,7 +54,10 @@
       "research/a/review/e2_cli_fix_validation_20260924/README.md",
       "research/a/review/e2_cli_fix_validation_20260924/launch_once.ps1"
     ],
-    "other_manifest_values_unchanged": true
+    "other_manifest_values_unchanged": true,
+    "capture_output": "Caller-owned fresh typed arrays allocated and validated before native call; void wrapper stores through byref slots after immediate error capture; no post-call Newarr/Box/Unbox",
+    "saved_result_recovery": "catch recovers Job and process/thread handles; partial preallocation guarded",
+    "deadline_snapshot_semantics": "Last successful Active>0 sample may remain after sleep crosses deadline; not final clearance"
   },
   "inventory_work": {
     "workspace_698_files_rescanned": false,

@@ -19,14 +19,14 @@
 | 要求 | 静态实现 |
 | --- | --- |
 | 单一声明路径 | 15项原生方法均只经DefineMethod + 一次完整DllImportAttribute；不调用DefinePInvokeMethod。六个具名字段为EntryPoint=原生名、CharSet.Unicode、CallingConvention.Winapi、SetLastError=true、ExactSpelling=true、PreserveSig=true。不存在第二条P/Invoke map定义路径。 |
-| 同一托管包装捕获 | 三个Captured方法沿已有Reflection.Emit生成短IL。顺序是加载参数→原生Call→Stloc结果→Call GetLastPInvokeError→Stloc错误，之后才分配/装箱返回二元素object[]。原生返回与错误读取之间没有PowerShell绑定、日志、分配或另一原生调用。CreateJob/Object碰撞和CreateProcess结果均用此保存值，不在PowerShell调用边界后重新取错误。 |
+| 同一托管包装捕获 | 三个Captured方法沿已有Reflection.Emit生成短IL。顺序是加载参数→原生Call→Stloc结果→Call GetLastPInvokeError→Stloc错误，捕获后直接写入调用前已分配的全新类型数组槽，返回void。包装器在原生调用前校验carrier、数组类型与下标并保留托管byref；原生调用后不再Newarr/Box/Unbox。调用方保有carrier，catch据保存值恢复Job或PROCESS_INFORMATION句柄；部分预分配失败尚未产生资源，直接跳过恢复。原生返回与错误读取之间没有PowerShell绑定、日志、分配或另一原生调用。CreateJob/Object碰撞和CreateProcess结果均用此保存值，不在PowerShell调用边界后重新取错误。 |
 | Assign前失败计数 | 只有非零Job句柄且同包装捕获error=0才标为本次独占创建；error183仅关闭本次打开的句柄、不终止/查询碰撞Job，其他非零错误也不能确认独占。48字节会计buffer移到Job创建前分配。失败清理在独占Job/有效buffer条件下查询，不再要求Assigned；同包装保存Query结果/错误、真实Active/Total和QPC。 |
 
 CreateProcess返回成功时先接管PROCESS_INFORMATION中的进程/线程句柄，再记录与传播结果；CREATE_SUSPENDED|CREATE_NO_WINDOW、非继承句柄、NULL环境、先Assign再唯一Resume的顺序保持。新增error=0独占条件是保守准入，不能将未知成功状态当成自己的Job。
 
 捕获范围严格区分：**CreateJobObjectW、CreateProcessW，以及失败清理使用的QueryInformationJobObjectCaptured**具有保存的(result,error)；正常路径的Query与其余原生调用仍沿原调用/失败传播，只判断既有返回值，没有经验证的即时error。E2-Check在未提供捕获值时明确报native error not captured；CloseHandle失败记录operation/error=null/error_capture=not_wrapped，仍进入close_errors并使最终失败，绝不把迟读缓存当原生错误。没有声称全体15项调用均已即时捕获。
 
-失败查询受原min(670,Tfailure+10)边界限制，循环进入前检查截止，不新增清理额度。每次查询先将当前结果/计数置unknown；BOOL失败保留捕获error、计数null，托管异常保留exception/unknown且不覆盖最初失败。成功才读取buffer。cleanup_root_query是当前查询记录；cleanup_root_last_success保留此前真实成功快照，root_cumulative_before_cleanup仅保留清理前已观察值，不混为最终清理计数。无有效独占Job/buffer或已超时则记录跳过原因，不填0。
+失败查询受原min(670,Tfailure+10)边界限制，循环进入前检查截止，不新增清理额度。每次查询先将当前结果/计数置unknown；BOOL失败保留捕获error、计数null，托管异常保留exception/unknown且不覆盖最初失败。成功才读取buffer。cleanup_root_query是当前查询记录；cleanup_root_last_success保留此前真实成功快照，root_cumulative_before_cleanup仅保留清理前已观察值，不混为最终清理计数。无有效独占Job/buffer或查询前已超时则记录跳过原因，不填0。若最后一次成功样本Active>0，随后Sleep跨过截止，该带QPC样本仍保留；它不是截止时已清零的证明。只有实际成功查询到Active=0才具有对应时刻的清零证据。
 
 ## 4. 本阶段验证与未证事项
 

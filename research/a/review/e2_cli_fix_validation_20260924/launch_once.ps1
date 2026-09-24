@@ -113,16 +113,34 @@ function Add-E2Native([string]$Name, [type]$Return, [type[]]$Arguments, [switch]
             [Runtime.InteropServices.CallingConvention]::Winapi, $true, $true, $true))
     $e2Method.SetCustomAttribute($e2Attribute)
     if ($CaptureError) {
-        # The managed wrapper returns object[]{nativeResult, capturedError}.
+        # Caller owns object[]{nativeResult[1], intError[1]} before the call.
+        # Validate fresh typed array slots before creating any native resource.
         # Native call -> store result -> GetLastPInvokeError, with no PowerShell
         # binding, logging, allocation or other native call between them.
+        $e2CaptureArguments = [type[]](@($Arguments) + @([object[]]))
         $e2Capture = $e2Type.DefineMethod(($Name+'Captured'), [Reflection.MethodAttributes]'Public, Static',
-            [Reflection.CallingConventions]::Standard, [object[]], $Arguments)
+            [Reflection.CallingConventions]::Standard, [void], $e2CaptureArguments)
         $e2Il = $e2Capture.GetILGenerator()
         $e2ResultLocal = $e2Il.DeclareLocal($Return)
         $e2ErrorLocal = $e2Il.DeclareLocal([int])
+        $e2ResultSlot = $e2Il.DeclareLocal($Return.MakeByRefType())
+        $e2ErrorSlot = $e2Il.DeclareLocal([int].MakeByRefType())
         $e2GetError = [Runtime.InteropServices.Marshal].GetMethod('GetLastPInvokeError', [type[]]@())
         if ($null -eq $e2GetError) { throw 'Required managed P/Invoke error getter unavailable' }
+        $e2Il.Emit([Reflection.Emit.OpCodes]::Ldarg, [int16]$Arguments.Count)
+        $e2Il.Emit([Reflection.Emit.OpCodes]::Ldc_I4_0)
+        $e2Il.Emit([Reflection.Emit.OpCodes]::Ldelem_Ref)
+        $e2Il.Emit([Reflection.Emit.OpCodes]::Castclass, $Return.MakeArrayType())
+        $e2Il.Emit([Reflection.Emit.OpCodes]::Ldc_I4_0)
+        $e2Il.Emit([Reflection.Emit.OpCodes]::Ldelema, $Return)
+        $e2Il.Emit([Reflection.Emit.OpCodes]::Stloc, $e2ResultSlot)
+        $e2Il.Emit([Reflection.Emit.OpCodes]::Ldarg, [int16]$Arguments.Count)
+        $e2Il.Emit([Reflection.Emit.OpCodes]::Ldc_I4_1)
+        $e2Il.Emit([Reflection.Emit.OpCodes]::Ldelem_Ref)
+        $e2Il.Emit([Reflection.Emit.OpCodes]::Castclass, [int[]])
+        $e2Il.Emit([Reflection.Emit.OpCodes]::Ldc_I4_0)
+        $e2Il.Emit([Reflection.Emit.OpCodes]::Ldelema, [int])
+        $e2Il.Emit([Reflection.Emit.OpCodes]::Stloc, $e2ErrorSlot)
         for ($e2Arg=0; $e2Arg -lt $Arguments.Count; $e2Arg++) {
             $e2Il.Emit([Reflection.Emit.OpCodes]::Ldarg, [int16]$e2Arg)
         }
@@ -130,18 +148,14 @@ function Add-E2Native([string]$Name, [type]$Return, [type[]]$Arguments, [switch]
         $e2Il.Emit([Reflection.Emit.OpCodes]::Stloc, $e2ResultLocal)
         $e2Il.Emit([Reflection.Emit.OpCodes]::Call, $e2GetError)
         $e2Il.Emit([Reflection.Emit.OpCodes]::Stloc, $e2ErrorLocal)
-        $e2Il.Emit([Reflection.Emit.OpCodes]::Ldc_I4_2)
-        $e2Il.Emit([Reflection.Emit.OpCodes]::Newarr, [object])
-        $e2Il.Emit([Reflection.Emit.OpCodes]::Dup)
-        $e2Il.Emit([Reflection.Emit.OpCodes]::Ldc_I4_0)
+        # Only stores through validated managed references follow capture.
+        # No Newarr/Box/Unbox, logging, or returned-array marshalling here.
+        $e2Il.Emit([Reflection.Emit.OpCodes]::Ldloc, $e2ResultSlot)
         $e2Il.Emit([Reflection.Emit.OpCodes]::Ldloc, $e2ResultLocal)
-        $e2Il.Emit([Reflection.Emit.OpCodes]::Box, $Return)
-        $e2Il.Emit([Reflection.Emit.OpCodes]::Stelem_Ref)
-        $e2Il.Emit([Reflection.Emit.OpCodes]::Dup)
-        $e2Il.Emit([Reflection.Emit.OpCodes]::Ldc_I4_1)
+        $e2Il.Emit([Reflection.Emit.OpCodes]::Stobj, $Return)
+        $e2Il.Emit([Reflection.Emit.OpCodes]::Ldloc, $e2ErrorSlot)
         $e2Il.Emit([Reflection.Emit.OpCodes]::Ldloc, $e2ErrorLocal)
-        $e2Il.Emit([Reflection.Emit.OpCodes]::Box, [int])
-        $e2Il.Emit([Reflection.Emit.OpCodes]::Stelem_Ref)
+        $e2Il.Emit([Reflection.Emit.OpCodes]::Stobj, [int])
         $e2Il.Emit([Reflection.Emit.OpCodes]::Ret)
     }
 }
@@ -184,6 +198,8 @@ $e2Buffers = [Collections.Generic.List[IntPtr]]::new()
 $e2Assigned = $false
 $e2JobExclusive = $false
 $e2Accounting = [IntPtr]::Zero
+$e2Pi = [IntPtr]::Zero
+$e2JobCall = $null; $e2ProcessCall = $null
 $e2ControllerObservers=[Collections.Generic.List[object]]::new()
 $e2ControllerAcked=$false
 try {
@@ -195,9 +211,11 @@ try {
     # Allocate before Job creation so an early post-create failure can be queried.
     $e2Accounting = [Runtime.InteropServices.Marshal]::AllocHGlobal(48); $e2Buffers.Add($e2Accounting)
     $e2JobName = 'Local\e2-cli-outer-' + [Guid]::NewGuid().ToString('N')
-    $e2JobCall = $e2Native::CreateJobObjectWCaptured([IntPtr]::Zero,$e2JobName)
-    $e2Job = [IntPtr]$e2JobCall[0]
-    $e2CreateError = [int]$e2JobCall[1]
+    $e2JobCall = [object[]]::new(2)
+    $e2JobCall[0]=[IntPtr[]]::new(1); $e2JobCall[1]=[int[]]::new(1)
+    $e2Native::CreateJobObjectWCaptured([IntPtr]::Zero,$e2JobName,$e2JobCall)
+    $e2Job = [IntPtr]$e2JobCall[0][0]
+    $e2CreateError = [int]$e2JobCall[1][0]
     $e2Outer.root_create=@{handle_nonzero=($e2Job -ne [IntPtr]::Zero);error=$e2CreateError;error_capture='same_managed_wrapper'}
     E2-Check ($e2Job -ne [IntPtr]::Zero) 'Create outer Job' $e2CreateError
     if ($e2CreateError -eq 183) { throw 'Job collision; never take over an existing Job' }
@@ -223,15 +241,17 @@ try {
     $e2Tokens = @($e2Python,'-I','-B','-X','utf8',(Join-Path $e2Here 'controller.py'),$e2Run)
     $e2Command = [Text.StringBuilder]::new((($e2Tokens | ForEach-Object { E2-Quote $_ }) -join ' '))
     if ((E2-Elapsed) -ge 90) { throw 'No controller launch after preparation cutoff' }
-    $e2ProcessCall = $e2Native::CreateProcessWCaptured($e2Python,$e2Command,[IntPtr]::Zero,[IntPtr]::Zero,$false,
-        0x08000004,[IntPtr]::Zero,$e2Root,$e2Si,$e2Pi)
-    if ([bool]$e2ProcessCall[0]) {
+    $e2ProcessCall = [object[]]::new(2)
+    $e2ProcessCall[0]=[bool[]]::new(1); $e2ProcessCall[1]=[int[]]::new(1)
+    $e2Native::CreateProcessWCaptured($e2Python,$e2Command,[IntPtr]::Zero,[IntPtr]::Zero,$false,
+        0x08000004,[IntPtr]::Zero,$e2Root,$e2Si,$e2Pi,$e2ProcessCall)
+    if ([bool]$e2ProcessCall[0][0]) {
         # Retain owned handles before logging or PowerShell failure propagation.
         $e2Process = [Runtime.InteropServices.Marshal]::ReadIntPtr($e2Pi,0)
         $e2Thread = [Runtime.InteropServices.Marshal]::ReadIntPtr($e2Pi,8)
     }
-    $e2Outer.controller_creation=@{result=[bool]$e2ProcessCall[0];error=[int]$e2ProcessCall[1];error_capture='same_managed_wrapper'}
-    E2-Check ([bool]$e2ProcessCall[0]) 'Create suspended controller' ([int]$e2ProcessCall[1])
+    $e2Outer.controller_creation=@{result=[bool]$e2ProcessCall[0][0];error=[int]$e2ProcessCall[1][0];error_capture='same_managed_wrapper'}
+    E2-Check ([bool]$e2ProcessCall[0][0]) 'Create suspended controller' ([int]$e2ProcessCall[1][0])
     foreach ($e2Owned in @($e2Job,$e2Process,$e2Thread)) {
         E2-Check ($e2Native::GetHandleInformation($e2Owned,$e2Exit)) 'Outer handle inheritance'
         if (([Runtime.InteropServices.Marshal]::ReadInt32($e2Exit) -band 1) -ne 0) { throw 'Unexpected inherited outer handle' }
@@ -320,6 +340,18 @@ try {
 } catch {
     $e2CatchDeadline=[Math]::Min(670,(E2-Elapsed)+10)
     $e2Outer.error=$_.Exception.Message; $e2Outer.status='stopped'
+    # The carrier exists before the call, even if PowerShell throws on return.
+    if ($null -ne $e2JobCall -and $null -ne $e2JobCall[0] -and $null -ne $e2JobCall[1]) {
+        if ($e2Job -eq [IntPtr]::Zero) { $e2Job=[IntPtr]$e2JobCall[0][0] }
+        $e2CreateError=[int]$e2JobCall[1][0]
+        $e2JobExclusive=($e2Job -ne [IntPtr]::Zero -and $e2CreateError -eq 0)
+        $e2Outer.root_handle_recovered_from_saved_result=($e2Job -ne [IntPtr]::Zero)
+    }
+    if ($null -ne $e2ProcessCall -and $null -ne $e2ProcessCall[0] -and [bool]$e2ProcessCall[0][0] -and $e2Pi -ne [IntPtr]::Zero) {
+        if ($e2Process -eq [IntPtr]::Zero) { $e2Process=[Runtime.InteropServices.Marshal]::ReadIntPtr($e2Pi,0) }
+        if ($e2Thread -eq [IntPtr]::Zero) { $e2Thread=[Runtime.InteropServices.Marshal]::ReadIntPtr($e2Pi,8) }
+        $e2Outer.controller_handles_available_from_saved_result=$true
+    }
     if ($e2JobExclusive -and $e2Job -ne [IntPtr]::Zero) {
         $e2Outer.forced_outer_cleanup=$true
         $e2Outer.root_terminate_success=$e2Native::TerminateJobObject($e2Job,[uint32]3758096385)
@@ -349,18 +381,20 @@ try {
             $e2Outer.root_active_after_cleanup=$null
             $e2Outer.root_cumulative_OS_processes=$null
             try {
-                $e2QueryCall=$e2Native::QueryInformationJobObjectCaptured($e2Job,1,$e2Accounting,48,[IntPtr]::Zero)
+                $e2QueryCall=[object[]]::new(2)
+                $e2QueryCall[0]=[bool[]]::new(1); $e2QueryCall[1]=[int[]]::new(1)
+                $e2Native::QueryInformationJobObjectCaptured($e2Job,1,$e2Accounting,48,[IntPtr]::Zero,$e2QueryCall)
             } catch {
                 $e2Outer.cleanup_root_query.exception=$_.Exception.Message
                 break  # Preserve the original failure; query evidence remains unknown.
             }
-            $e2QueryOk=[bool]$e2QueryCall[0]
+            $e2QueryOk=[bool]$e2QueryCall[0][0]
             $e2Outer.cleanup_root_query.success=$e2QueryOk
-            $e2Outer.cleanup_root_query.error=[int]$e2QueryCall[1]
+            $e2Outer.cleanup_root_query.error=[int]$e2QueryCall[1][0]
             $e2Outer.cleanup_root_query.error_capture='same_managed_wrapper'
             $e2Outer.cleanup_root_query.qpc=[Diagnostics.Stopwatch]::GetTimestamp()
             $e2Outer.cleanup_root_query_success=$e2QueryOk
-            $e2Outer.cleanup_root_query_error=[int]$e2QueryCall[1]
+            $e2Outer.cleanup_root_query_error=[int]$e2QueryCall[1][0]
             if (-not $e2QueryOk) { break }
             $e2Outer.root_active_after_cleanup=[Runtime.InteropServices.Marshal]::ReadInt32($e2Accounting,40)
             $e2Outer.root_cumulative_OS_processes=[Runtime.InteropServices.Marshal]::ReadInt32($e2Accounting,36)
