@@ -11,7 +11,7 @@ import json
 from .snapshot import canonical, digest
 
 PROJECT = "huaweicup2026-benchmark-board"
-DOMAINS = {"snapshot", "release", "submission", "receipt", "members"}
+DOMAINS = {"snapshot", "snapshot-delta", "release", "submission", "receipt", "members"}
 
 
 class Signatures:
