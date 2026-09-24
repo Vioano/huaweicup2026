@@ -162,7 +162,7 @@ def discover(state, roots, actor, *, known_record_ids=None):
                 if previous:
                     try:
                         names=git(repo,'diff','--no-ext-diff','--no-renames',
-                                  '--diff-filter=ACMR','--name-only','-z',previous,commit,
+                                  '--diff-filter=ACMRT','--name-only','-z',previous,commit,
                                   '--','results').decode('utf-8').split('\0')
                     except subprocess.CalledProcessError:
                         names=git(repo,'ls-tree','-r','--name-only','-z',commit,'--','results').decode('utf-8').split('\0')

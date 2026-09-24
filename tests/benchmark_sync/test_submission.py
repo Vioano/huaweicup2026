@@ -97,5 +97,26 @@ class SubmissionDiscoveryTests(unittest.TestCase):
             self.assertEqual(enqueue_call.call_count,1)
             self.assertEqual(enqueue_call.call_args.args[3],'results/board-feed-second.json')
 
+    def test_symlink_to_regular_type_change_is_discovered(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);repo=root/'repo';repo.mkdir();state=root/'state';state.mkdir()
+            subprocess.run(['git','-C',str(repo),'init','-q'],check=True)
+            subprocess.run(['git','-C',str(repo),'config','user.name','Test'],check=True)
+            subprocess.run(['git','-C',str(repo),'config','user.email','test@example.invalid'],check=True)
+            path=repo/'results/board-feed-type.json'
+            path.parent.mkdir(parents=True)
+            path.symlink_to('missing-target.json')
+            self.commit(repo,'old symlink')
+            # An older watcher could skip this type change and advance a cursor
+            # at a symlink tree. The next regular feed must still be discovered.
+            symlink_head=subprocess.check_output(['git','-C',str(repo),'rev-parse','HEAD'],text=True).strip()
+            write_json(state/'watch-cursors.json',{str(repo.resolve()):symlink_head})
+            path.unlink();self.feed(path,1)
+            self.commit(repo,'new regular feed')
+            with patch('src.benchmark_sync.submission.enqueue') as enqueue_call:
+                self.assertEqual(discover(state,[str(repo)],'member',known_record_ids=set()),[])
+            self.assertEqual(enqueue_call.call_count,1)
+            self.assertEqual(enqueue_call.call_args.args[3],'results/board-feed-type.json')
+
 
 if __name__=='__main__': unittest.main()
