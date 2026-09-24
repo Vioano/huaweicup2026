@@ -50,5 +50,16 @@
   ],
   "omitted_original_files": [],
   "source_vs_delivery_metadata": "13 control/run source files frozen and all copied; private processing metadata lives in separate delivery area.",
-  "replacement_order": "Create raw-string and JSON-escaped-string UTF-8 variants, de-duplicate within each category, sort all variants by descending byte length, then replace every exact occurrence. Per-file counts are in manifest."
+  "replacement_order": "Generate raw UTF-8 token and successive JSON string-content encodings at escape levels0..4; de-duplicate equal variants per category; sort descending by byte length; replace exact occurrences without parsing/reserializing evidence. Nested tool output needed level2 (four backslashes). Per-file levels/counts are in manifest.",
+  "nested_JSON_scan": "Verification only: parse public JSON, recursively decode string values that are valid JSON, and scan all values and raw escape-level variants for recorded private tokens. Never regenerate evidence bytes through JSON serialization.",
+  "correction_history": {
+    "affected_previous_commits": [
+      "e3bf41638b8c790776d6f7f483d2e697126da382",
+      "7ceb2372937075af4354da774820553f8bce003b"
+    ],
+    "affected_file": "evidence/control/entry-tool-result.json",
+    "omission": "Temporary root Job identifier survived in twice-escaped nested JSON; nonce already redacted.",
+    "fix": "Additional root_job_name replacement at escape level2; derivative hash/size and manifest updated; original unchanged.",
+    "history_limit": "Earlier Git objects retain the temporary local identifier. Append-only correction does not erase history. The Job identifier is not a credential/token."
+  }
 }
