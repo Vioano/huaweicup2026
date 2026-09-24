@@ -83,6 +83,9 @@ class SnapshotTests(unittest.TestCase):
             with self.assertRaises(ValueError): validate_payload(value)
         for value in (None,[],1):
             with self.assertRaises(ValueError): unpack(b"",value)
+        for field,value in [('source_status',[]),('source_status',{'x':None}),('publisher',[]),('algorithms',None),('generated_at',0)]:
+            payload=self.read(); payload[field]=value
+            with self.assertRaises(ValueError): validate_payload(payload)
         payload=self.read(); payload['publisher']['board_code_commit']='b'*40
         with self.assertRaisesRegex(ValueError,'semantic'): validate_payload(payload)
         payload=self.read(); payload['records'][0]['sequence']=0

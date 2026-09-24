@@ -113,6 +113,16 @@ def validate_payload(payload):
         raise ValueError("Unsupported central snapshot")
     if type(payload.get("sequence")) is not int or payload["sequence"] < 0:
         raise ValueError("Invalid snapshot sequence")
+    for field in ("source_status", "manifest", "algorithms", "publisher"):
+        if not isinstance(payload.get(field), dict): raise ValueError("Invalid snapshot " + field)
+    if any(not isinstance(state, dict) for state in payload["source_status"].values()):
+        raise ValueError("Invalid source status object")
+    publisher=payload["publisher"]
+    if not isinstance(publisher.get("actor"),str) or not re.fullmatch(r"[0-9a-f]{40}",publisher.get("board_code_commit", "")):
+        raise ValueError("Invalid snapshot publisher")
+    try:
+        if datetime.fromisoformat(payload["generated_at"]).tzinfo is None: raise ValueError("Naive timestamp")
+    except (KeyError,TypeError,ValueError): raise ValueError("Invalid snapshot generation timestamp") from None
     ids, attempts = set(), set()
     last_sequence = 0
     for r in payload["records"]:
