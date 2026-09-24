@@ -1,4 +1,14 @@
-# Stage G：051/k5 整链根核预取，准备阶段
+# Stage G：051/k5 整链根核预取，实测完成
+
+E0 Makespan **234536**，比既有 C 的253856降低 **19320周期（7.6106%）**；单格官方单核比 **2.59076645**。本批实际 **1冷solver+1外部E0**，均成功，0retry/E1/E2。cold solver **0.5056320秒**，独立E0 **1.4357794秒**；共享资源环境，不能据跨批耗时差声称算法提速。
+
+作者 `e29685da0268420f2d881246603763d6bf8baf5b`，实际runner `902000f6504f5c23e566f02d434a176ec9e83ceb`；与准备版66f4559相比仅任务卡更正服务量下界措辞，算法与runner源码字节不变。批次T0 `2026-09-24T17:55:51.560790Z`、T1 `17:55:53.758253Z`，2.1977067秒。预算封存，不追加评分。
+
+144 Tasks，调度搬运9438614B、总额外9045396B、spill0，与C完全相同；逐(tensor,direction,bytes)边界COPY多重集也相同，共1003个。原外部重复加载仍9043968B。R从180644升到208152，E0反而改善，说明仅计算/gate和总DDR工作量不足以排序这两个计划；不能将收益唯一归因于预取，未做完整trace因果分解。
+
+原件在 `run/`；[逐例比较](run/comparison.csv)、[静态DDR分析](run/ddr-analysis.json)、[COPY多重集对照](run/copy-signature-comparison.json)、[完整报告](REPORT.md)。标准feed为 [board-feed-20260924T175725Z-stage-g.json](board-feed-20260924T175725Z-stage-g.json)，[本地预检](precheck-local.json) `valid=true, eligible=1`。单例不代表全100均值；未代签成绩台接收、上台或独立复跑。
+
+## 原准备记录（保留）
 
 新族 `q1-guarded-intact-prefetch / fixed-root-four-two-v1`，作者固定 `e29685da0268420f2d881246603763d6bf8baf5b`。只准备这一个真实单格，没有求解、评分或Task编译，F预算保持封存；完整零评分身份预检后仍需父审阅与START。
 

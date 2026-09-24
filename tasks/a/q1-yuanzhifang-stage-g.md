@@ -20,3 +20,9 @@ START后同命令追加 `--execute --window-token PARENT_START_REFERENCE`。
 作者固定提交提供的合成测试由父报告：2个测试、包含两种归约树与1/2/24轮、独立手算/联合环/完整链/重编号/回退，0.273秒；0真实图solver/E0。生产者已阅读源码、测试与 `PREFETCH_FRONTIER.md`，不重复运行构造测试占评分窗口。官方DDR以 `_op_duration` 初始化每个COPY的 `ddr_remaining_work`，活跃请求公平共享总服务容量1。因此各COPY独占服务量 `max(1,ceil(bytes/60))` 的总和仍是合法的必要Makespan下界，总字节/带宽界则更弱；服务量和不能当作精确E0持续时间、不能与gate直接相加，也不能假设COPY按某个顺序独占执行。此处更正此前“只允许字节界”的过强表述，不改算法或runner。
 
 零评分预检已通过：五算法依赖、十官方源、051/config与旧C同身份原件；静态旧计划重复外部输入9043968B和官方分区搬运一致。preparation-checks记录19.948239秒准备成本（含硬件清单），不是求解wall。真实solver/E0/Task compiler及全图扫描仍全部为0，run目录未创建。
+
+## 执行交付追加（准备记录保留）
+
+父明确START后，先只更正DDR服务量下界措辞，实际runner提交 `902000f6504f5c23e566f02d434a176ec9e83ceb`；算法及runner代码相对66f4559未改。按token `parent-s-bdf7e1f4-20260924T1755Z-shared-stage-g-1plus1` 的共享资源窗口运行1worker。实际T0/T1 `2026-09-24T17:55:51.560790Z` / `17:55:53.758253Z`，1solver+1E0均ok，0retry/E1/E2。
+
+E0=234536，较C降低19320周期（7.6106%）；cold solver0.5056320s、外部E01.4357794s。144Tasks、R208152；调度搬运9438614B、额外9045396B、spill0均与C相同，COPY多重集也一致。预算已封存；结果、完整原件、CSV/feed与限制见该批README/REPORT，维护接收/上台/独立复跑不由生产方预检代签。
