@@ -1,0 +1,1639 @@
+{
+  "source_material_commit": "6732c77c1b90f75a038122ad699baed83ef497da",
+  "official_evaluations": 0,
+  "raw_official_cases_read": 0,
+  "scope": "self-contained compute+delta examples only",
+  "memory_or_cache_claims": false,
+  "examples": [
+    {
+      "name": "three_FFN_one_tail_migration",
+      "co_location_optimum_proved": 8000,
+      "baseline": {
+        "makespan": 8000,
+        "core_words": [
+          [
+            "a0",
+            "b0",
+            "c0",
+            "a2",
+            "b2",
+            "c2",
+            "d0",
+            "d2"
+          ],
+          [
+            "a1",
+            "b1",
+            "c1",
+            "d1"
+          ]
+        ],
+        "operations": [
+          {
+            "op": "a0",
+            "pipe": "M",
+            "duration": 2000,
+            "predecessors": [],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 0,
+            "end": 2000
+          },
+          {
+            "op": "a1",
+            "pipe": "M",
+            "duration": 2000,
+            "predecessors": [],
+            "external_input_ports": [],
+            "core": 1,
+            "start": 0,
+            "end": 2000
+          },
+          {
+            "op": "a2",
+            "pipe": "M",
+            "duration": 2000,
+            "predecessors": [],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 2000,
+            "end": 4000
+          },
+          {
+            "op": "b0",
+            "pipe": "V",
+            "duration": 10,
+            "predecessors": [
+              "a0"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 2000,
+            "end": 2010
+          },
+          {
+            "op": "b1",
+            "pipe": "V",
+            "duration": 10,
+            "predecessors": [
+              "a1"
+            ],
+            "external_input_ports": [],
+            "core": 1,
+            "start": 2000,
+            "end": 2010
+          },
+          {
+            "op": "b2",
+            "pipe": "V",
+            "duration": 10,
+            "predecessors": [
+              "a2"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 4000,
+            "end": 4010
+          },
+          {
+            "op": "c0",
+            "pipe": "V",
+            "duration": 10,
+            "predecessors": [
+              "a0",
+              "b0"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 2010,
+            "end": 2020
+          },
+          {
+            "op": "c1",
+            "pipe": "V",
+            "duration": 10,
+            "predecessors": [
+              "a1",
+              "b1"
+            ],
+            "external_input_ports": [],
+            "core": 1,
+            "start": 2010,
+            "end": 2020
+          },
+          {
+            "op": "c2",
+            "pipe": "V",
+            "duration": 10,
+            "predecessors": [
+              "a2",
+              "b2"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 4010,
+            "end": 4020
+          },
+          {
+            "op": "d0",
+            "pipe": "M",
+            "duration": 2000,
+            "predecessors": [
+              "c0"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 4000,
+            "end": 6000
+          },
+          {
+            "op": "d1",
+            "pipe": "M",
+            "duration": 2000,
+            "predecessors": [
+              "c1"
+            ],
+            "external_input_ports": [],
+            "core": 1,
+            "start": 2020,
+            "end": 4020
+          },
+          {
+            "op": "d2",
+            "pipe": "M",
+            "duration": 2000,
+            "predecessors": [
+              "c2"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 6000,
+            "end": 8000
+          }
+        ]
+      },
+      "candidate": {
+        "makespan": 6520,
+        "core_words": [
+          [
+            "a0",
+            "a2",
+            "b0",
+            "c0",
+            "b2",
+            "d0",
+            "c2"
+          ],
+          [
+            "a1",
+            "b1",
+            "c1",
+            "d1",
+            "d2"
+          ]
+        ],
+        "operations": [
+          {
+            "op": "a0",
+            "pipe": "M",
+            "duration": 2000,
+            "predecessors": [],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 0,
+            "end": 2000
+          },
+          {
+            "op": "a1",
+            "pipe": "M",
+            "duration": 2000,
+            "predecessors": [],
+            "external_input_ports": [],
+            "core": 1,
+            "start": 0,
+            "end": 2000
+          },
+          {
+            "op": "a2",
+            "pipe": "M",
+            "duration": 2000,
+            "predecessors": [],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 2000,
+            "end": 4000
+          },
+          {
+            "op": "b0",
+            "pipe": "V",
+            "duration": 10,
+            "predecessors": [
+              "a0"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 2000,
+            "end": 2010
+          },
+          {
+            "op": "b1",
+            "pipe": "V",
+            "duration": 10,
+            "predecessors": [
+              "a1"
+            ],
+            "external_input_ports": [],
+            "core": 1,
+            "start": 2000,
+            "end": 2010
+          },
+          {
+            "op": "b2",
+            "pipe": "V",
+            "duration": 10,
+            "predecessors": [
+              "a2"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 4000,
+            "end": 4010
+          },
+          {
+            "op": "c0",
+            "pipe": "V",
+            "duration": 10,
+            "predecessors": [
+              "a0",
+              "b0"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 2010,
+            "end": 2020
+          },
+          {
+            "op": "c1",
+            "pipe": "V",
+            "duration": 10,
+            "predecessors": [
+              "a1",
+              "b1"
+            ],
+            "external_input_ports": [],
+            "core": 1,
+            "start": 2010,
+            "end": 2020
+          },
+          {
+            "op": "c2",
+            "pipe": "V",
+            "duration": 10,
+            "predecessors": [
+              "a2",
+              "b2"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 4010,
+            "end": 4020
+          },
+          {
+            "op": "d0",
+            "pipe": "M",
+            "duration": 2000,
+            "predecessors": [
+              "c0"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 4000,
+            "end": 6000
+          },
+          {
+            "op": "d1",
+            "pipe": "M",
+            "duration": 2000,
+            "predecessors": [
+              "c1"
+            ],
+            "external_input_ports": [],
+            "core": 1,
+            "start": 2020,
+            "end": 4020
+          },
+          {
+            "op": "d2",
+            "pipe": "M",
+            "duration": 2000,
+            "predecessors": [
+              "c2"
+            ],
+            "external_input_ports": [],
+            "core": 1,
+            "start": 4520,
+            "end": 6520
+          }
+        ]
+      },
+      "repair": [
+        {
+          "mode": "island:0/helper:1",
+          "old_arrivals": [
+            8000
+          ],
+          "new_arrivals": [
+            6520
+          ]
+        }
+      ]
+    },
+    {
+      "name": "isolated_serial_FFN_no_gain",
+      "baseline": {
+        "makespan": 4020,
+        "core_words": [
+          [
+            "a0",
+            "b0",
+            "c0",
+            "d0"
+          ],
+          []
+        ],
+        "operations": [
+          {
+            "op": "a0",
+            "pipe": "M",
+            "duration": 2000,
+            "predecessors": [],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 0,
+            "end": 2000
+          },
+          {
+            "op": "b0",
+            "pipe": "V",
+            "duration": 10,
+            "predecessors": [
+              "a0"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 2000,
+            "end": 2010
+          },
+          {
+            "op": "c0",
+            "pipe": "V",
+            "duration": 10,
+            "predecessors": [
+              "a0",
+              "b0"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 2010,
+            "end": 2020
+          },
+          {
+            "op": "d0",
+            "pipe": "M",
+            "duration": 2000,
+            "predecessors": [
+              "c0"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 2020,
+            "end": 4020
+          }
+        ]
+      },
+      "candidate": {
+        "makespan": 4020,
+        "core_words": [
+          [
+            "a0",
+            "b0",
+            "c0",
+            "d0"
+          ],
+          []
+        ],
+        "operations": [
+          {
+            "op": "a0",
+            "pipe": "M",
+            "duration": 2000,
+            "predecessors": [],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 0,
+            "end": 2000
+          },
+          {
+            "op": "b0",
+            "pipe": "V",
+            "duration": 10,
+            "predecessors": [
+              "a0"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 2000,
+            "end": 2010
+          },
+          {
+            "op": "c0",
+            "pipe": "V",
+            "duration": 10,
+            "predecessors": [
+              "a0",
+              "b0"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 2010,
+            "end": 2020
+          },
+          {
+            "op": "d0",
+            "pipe": "M",
+            "duration": 2000,
+            "predecessors": [
+              "c0"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 2020,
+            "end": 4020
+          }
+        ]
+      },
+      "repair": [
+        {
+          "mode": "whole_home",
+          "old_arrivals": [
+            4020
+          ],
+          "new_arrivals": [
+            4020
+          ]
+        }
+      ]
+    },
+    {
+      "name": "two_key_original_style_attention_row",
+      "scope": "synthetic 20-op row; not an official case",
+      "co_location_M_work_lower_bound": 8002,
+      "baseline": {
+        "makespan": 8013,
+        "core_words": [
+          [
+            "score0",
+            "score1",
+            "div0",
+            "div1",
+            "maxred0",
+            "maxred1",
+            "maxsub",
+            "maxrelu",
+            "maxadd",
+            "shift0",
+            "shift1",
+            "exp0",
+            "exp1",
+            "sumred0",
+            "sumred1",
+            "denominator",
+            "product0",
+            "product1",
+            "numerator",
+            "output"
+          ],
+          []
+        ],
+        "operations": [
+          {
+            "op": "denominator",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "sumred0",
+              "sumred1"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 14,
+            "end": 15
+          },
+          {
+            "op": "div0",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "score0"
+            ],
+            "external_input_ports": [
+              {
+                "key": "scale",
+                "ready": 0,
+                "owner": null,
+                "size": 2,
+                "pos": "UB"
+              }
+            ],
+            "core": 0,
+            "start": 1,
+            "end": 2
+          },
+          {
+            "op": "div1",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "score1"
+            ],
+            "external_input_ports": [
+              {
+                "key": "scale",
+                "ready": 0,
+                "owner": null,
+                "size": 2,
+                "pos": "UB"
+              }
+            ],
+            "core": 0,
+            "start": 2,
+            "end": 3
+          },
+          {
+            "op": "exp0",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "shift0"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 10,
+            "end": 11
+          },
+          {
+            "op": "exp1",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "shift1"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 11,
+            "end": 12
+          },
+          {
+            "op": "maxadd",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "maxrelu",
+              "maxred1"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 7,
+            "end": 8
+          },
+          {
+            "op": "maxred0",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "div0"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 3,
+            "end": 4
+          },
+          {
+            "op": "maxred1",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "div1"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 4,
+            "end": 5
+          },
+          {
+            "op": "maxrelu",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "maxsub"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 6,
+            "end": 7
+          },
+          {
+            "op": "maxsub",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "maxred0",
+              "maxred1"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 5,
+            "end": 6
+          },
+          {
+            "op": "numerator",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "product0",
+              "product1"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 8011,
+            "end": 8012
+          },
+          {
+            "op": "output",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "numerator",
+              "denominator"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 8012,
+            "end": 8013
+          },
+          {
+            "op": "product0",
+            "pipe": "M",
+            "duration": 4000,
+            "predecessors": [
+              "exp0"
+            ],
+            "external_input_ports": [
+              {
+                "key": "V0",
+                "ready": 0,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              }
+            ],
+            "core": 0,
+            "start": 11,
+            "end": 4011
+          },
+          {
+            "op": "product1",
+            "pipe": "M",
+            "duration": 4000,
+            "predecessors": [
+              "exp1"
+            ],
+            "external_input_ports": [
+              {
+                "key": "V1",
+                "ready": 0,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              }
+            ],
+            "core": 0,
+            "start": 4011,
+            "end": 8011
+          },
+          {
+            "op": "score0",
+            "pipe": "M",
+            "duration": 1,
+            "predecessors": [],
+            "external_input_ports": [
+              {
+                "key": "Q",
+                "ready": 0,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              },
+              {
+                "key": "K0",
+                "ready": 0,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              }
+            ],
+            "core": 0,
+            "start": 0,
+            "end": 1
+          },
+          {
+            "op": "score1",
+            "pipe": "M",
+            "duration": 1,
+            "predecessors": [],
+            "external_input_ports": [
+              {
+                "key": "Q",
+                "ready": 0,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              },
+              {
+                "key": "K1",
+                "ready": 0,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              }
+            ],
+            "core": 0,
+            "start": 1,
+            "end": 2
+          },
+          {
+            "op": "shift0",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "div0",
+              "maxadd"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 8,
+            "end": 9
+          },
+          {
+            "op": "shift1",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "div1",
+              "maxadd"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 9,
+            "end": 10
+          },
+          {
+            "op": "sumred0",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "exp0"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 12,
+            "end": 13
+          },
+          {
+            "op": "sumred1",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "exp1"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 13,
+            "end": 14
+          }
+        ]
+      },
+      "candidate": {
+        "makespan": 5013,
+        "core_words": [
+          [
+            "score0",
+            "div0",
+            "score1",
+            "div1",
+            "maxred0",
+            "maxred1",
+            "maxsub",
+            "maxrelu",
+            "maxadd",
+            "shift0",
+            "shift1",
+            "exp0",
+            "exp1",
+            "product1",
+            "sumred0",
+            "sumred1",
+            "denominator",
+            "numerator",
+            "output"
+          ],
+          [
+            "product0"
+          ]
+        ],
+        "operations": [
+          {
+            "op": "denominator",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "sumred0",
+              "sumred1"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 14,
+            "end": 15
+          },
+          {
+            "op": "div0",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "score0"
+            ],
+            "external_input_ports": [
+              {
+                "key": "scale",
+                "ready": 0,
+                "owner": null,
+                "size": 2,
+                "pos": "UB"
+              }
+            ],
+            "core": 0,
+            "start": 1,
+            "end": 2
+          },
+          {
+            "op": "div1",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "score1"
+            ],
+            "external_input_ports": [
+              {
+                "key": "scale",
+                "ready": 0,
+                "owner": null,
+                "size": 2,
+                "pos": "UB"
+              }
+            ],
+            "core": 0,
+            "start": 2,
+            "end": 3
+          },
+          {
+            "op": "exp0",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "shift0"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 10,
+            "end": 11
+          },
+          {
+            "op": "exp1",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "shift1"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 11,
+            "end": 12
+          },
+          {
+            "op": "maxadd",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "maxrelu",
+              "maxred1"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 7,
+            "end": 8
+          },
+          {
+            "op": "maxred0",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "div0"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 3,
+            "end": 4
+          },
+          {
+            "op": "maxred1",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "div1"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 4,
+            "end": 5
+          },
+          {
+            "op": "maxrelu",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "maxsub"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 6,
+            "end": 7
+          },
+          {
+            "op": "maxsub",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "maxred0",
+              "maxred1"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 5,
+            "end": 6
+          },
+          {
+            "op": "numerator",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "product0",
+              "product1"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 5011,
+            "end": 5012
+          },
+          {
+            "op": "output",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "numerator",
+              "denominator"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 5012,
+            "end": 5013
+          },
+          {
+            "op": "product0",
+            "pipe": "M",
+            "duration": 4000,
+            "predecessors": [
+              "exp0"
+            ],
+            "external_input_ports": [
+              {
+                "key": "V0",
+                "ready": 0,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              }
+            ],
+            "core": 1,
+            "start": 511,
+            "end": 4511
+          },
+          {
+            "op": "product1",
+            "pipe": "M",
+            "duration": 4000,
+            "predecessors": [
+              "exp1"
+            ],
+            "external_input_ports": [
+              {
+                "key": "V1",
+                "ready": 0,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              }
+            ],
+            "core": 0,
+            "start": 12,
+            "end": 4012
+          },
+          {
+            "op": "score0",
+            "pipe": "M",
+            "duration": 1,
+            "predecessors": [],
+            "external_input_ports": [
+              {
+                "key": "Q",
+                "ready": 0,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              },
+              {
+                "key": "K0",
+                "ready": 0,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              }
+            ],
+            "core": 0,
+            "start": 0,
+            "end": 1
+          },
+          {
+            "op": "score1",
+            "pipe": "M",
+            "duration": 1,
+            "predecessors": [],
+            "external_input_ports": [
+              {
+                "key": "Q",
+                "ready": 0,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              },
+              {
+                "key": "K1",
+                "ready": 0,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              }
+            ],
+            "core": 0,
+            "start": 1,
+            "end": 2
+          },
+          {
+            "op": "shift0",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "div0",
+              "maxadd"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 8,
+            "end": 9
+          },
+          {
+            "op": "shift1",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "div1",
+              "maxadd"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 9,
+            "end": 10
+          },
+          {
+            "op": "sumred0",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "exp0"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 12,
+            "end": 13
+          },
+          {
+            "op": "sumred1",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "exp1"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 13,
+            "end": 14
+          }
+        ]
+      },
+      "repair": [
+        {
+          "mode": "island:0/helper:1",
+          "old_arrivals": [
+            8013
+          ],
+          "new_arrivals": [
+            5013
+          ]
+        }
+      ]
+    },
+    {
+      "name": "same_max_port_release_early",
+      "baseline": {
+        "makespan": 6201,
+        "core_words": [
+          [
+            "u",
+            "v",
+            "j"
+          ],
+          []
+        ],
+        "operations": [
+          {
+            "op": "j",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "u",
+              "v"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 6200,
+            "end": 6201
+          },
+          {
+            "op": "u",
+            "pipe": "M",
+            "duration": 1200,
+            "predecessors": [],
+            "external_input_ports": [
+              {
+                "key": "Pu",
+                "ready": 0,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              }
+            ],
+            "core": 0,
+            "start": 0,
+            "end": 1200
+          },
+          {
+            "op": "v",
+            "pipe": "M",
+            "duration": 1200,
+            "predecessors": [],
+            "external_input_ports": [
+              {
+                "key": "Pv",
+                "ready": 5000,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              }
+            ],
+            "core": 0,
+            "start": 5000,
+            "end": 6200
+          }
+        ]
+      },
+      "candidate": {
+        "makespan": 6201,
+        "core_words": [
+          [
+            "u",
+            "v",
+            "j"
+          ],
+          []
+        ],
+        "operations": [
+          {
+            "op": "j",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "u",
+              "v"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 6200,
+            "end": 6201
+          },
+          {
+            "op": "u",
+            "pipe": "M",
+            "duration": 1200,
+            "predecessors": [],
+            "external_input_ports": [
+              {
+                "key": "Pu",
+                "ready": 0,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              }
+            ],
+            "core": 0,
+            "start": 0,
+            "end": 1200
+          },
+          {
+            "op": "v",
+            "pipe": "M",
+            "duration": 1200,
+            "predecessors": [],
+            "external_input_ports": [
+              {
+                "key": "Pv",
+                "ready": 5000,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              }
+            ],
+            "core": 0,
+            "start": 5000,
+            "end": 6200
+          }
+        ]
+      },
+      "repair": [
+        {
+          "mode": "whole_home",
+          "old_arrivals": [
+            6201
+          ],
+          "new_arrivals": [
+            6201
+          ]
+        }
+      ]
+    },
+    {
+      "name": "same_max_port_release_late",
+      "baseline": {
+        "makespan": 7401,
+        "core_words": [
+          [
+            "u",
+            "v",
+            "j"
+          ],
+          []
+        ],
+        "operations": [
+          {
+            "op": "j",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "u",
+              "v"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 7400,
+            "end": 7401
+          },
+          {
+            "op": "u",
+            "pipe": "M",
+            "duration": 1200,
+            "predecessors": [],
+            "external_input_ports": [
+              {
+                "key": "Pu",
+                "ready": 5000,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              }
+            ],
+            "core": 0,
+            "start": 5000,
+            "end": 6200
+          },
+          {
+            "op": "v",
+            "pipe": "M",
+            "duration": 1200,
+            "predecessors": [],
+            "external_input_ports": [
+              {
+                "key": "Pv",
+                "ready": 5000,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              }
+            ],
+            "core": 0,
+            "start": 6200,
+            "end": 7400
+          }
+        ]
+      },
+      "candidate": {
+        "makespan": 7201,
+        "core_words": [
+          [
+            "u",
+            "j"
+          ],
+          [
+            "v"
+          ]
+        ],
+        "operations": [
+          {
+            "op": "j",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "u",
+              "v"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 7200,
+            "end": 7201
+          },
+          {
+            "op": "u",
+            "pipe": "M",
+            "duration": 1200,
+            "predecessors": [],
+            "external_input_ports": [
+              {
+                "key": "Pu",
+                "ready": 5000,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              }
+            ],
+            "core": 0,
+            "start": 5000,
+            "end": 6200
+          },
+          {
+            "op": "v",
+            "pipe": "M",
+            "duration": 1200,
+            "predecessors": [],
+            "external_input_ports": [
+              {
+                "key": "Pv",
+                "ready": 5000,
+                "owner": 0,
+                "size": 0,
+                "pos": "UB"
+              }
+            ],
+            "core": 1,
+            "start": 5500,
+            "end": 6700
+          }
+        ]
+      },
+      "repair": [
+        {
+          "mode": "island:1/helper:1",
+          "old_arrivals": [
+            7401
+          ],
+          "new_arrivals": [
+            7201
+          ]
+        }
+      ]
+    },
+    {
+      "name": "faster_tail_but_later_future_join_rejected",
+      "rejected_remote_tail_finish": 504,
+      "rejected_arrival_to_z": 1004,
+      "baseline": {
+        "makespan": 605,
+        "core_words": [
+          [
+            "a",
+            "b",
+            "c",
+            "x",
+            "d",
+            "z"
+          ],
+          []
+        ],
+        "operations": [
+          {
+            "op": "a",
+            "pipe": "M",
+            "duration": 1,
+            "predecessors": [],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 0,
+            "end": 1
+          },
+          {
+            "op": "b",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "a"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 1,
+            "end": 2
+          },
+          {
+            "op": "c",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "a",
+              "b"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 2,
+            "end": 3
+          },
+          {
+            "op": "d",
+            "pipe": "M",
+            "duration": 1,
+            "predecessors": [
+              "c"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 603,
+            "end": 604
+          },
+          {
+            "op": "x",
+            "pipe": "M",
+            "duration": 602,
+            "predecessors": [],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 1,
+            "end": 603
+          },
+          {
+            "op": "z",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "d"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 604,
+            "end": 605
+          }
+        ]
+      },
+      "candidate": {
+        "makespan": 605,
+        "core_words": [
+          [
+            "a",
+            "b",
+            "x",
+            "c",
+            "d",
+            "z"
+          ],
+          []
+        ],
+        "operations": [
+          {
+            "op": "a",
+            "pipe": "M",
+            "duration": 1,
+            "predecessors": [],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 0,
+            "end": 1
+          },
+          {
+            "op": "b",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "a"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 1,
+            "end": 2
+          },
+          {
+            "op": "c",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "a",
+              "b"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 2,
+            "end": 3
+          },
+          {
+            "op": "d",
+            "pipe": "M",
+            "duration": 1,
+            "predecessors": [
+              "c"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 603,
+            "end": 604
+          },
+          {
+            "op": "x",
+            "pipe": "M",
+            "duration": 602,
+            "predecessors": [],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 1,
+            "end": 603
+          },
+          {
+            "op": "z",
+            "pipe": "V",
+            "duration": 1,
+            "predecessors": [
+              "d"
+            ],
+            "external_input_ports": [],
+            "core": 0,
+            "start": 604,
+            "end": 605
+          }
+        ]
+      },
+      "repair": [
+        {
+          "mode": "whole_home",
+          "old_arrivals": [
+            604
+          ],
+          "new_arrivals": [
+            604
+          ]
+        }
+      ]
+    }
+  ],
+  "interval_calendar_oracle_checks": 216
+}

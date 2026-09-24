@@ -1,0 +1,105 @@
+{
+  "scope": "six author synthetic compute+delta witnesses only",
+  "source_sha256": "faa8e0bf4f922d19b3f4724049d1ccdd017a3658665d696f5345d128dd654b2b",
+  "new_official_evaluations": 0,
+  "author_code_executed": false,
+  "negative_checks": 2,
+  "examples": [
+    {
+      "name": "three_FFN_one_tail_migration",
+      "baseline": {
+        "operations": 12,
+        "witness_makespan": 8000,
+        "independent_asap_makespan": 8000,
+        "all_constraints_checked": true
+      },
+      "candidate": {
+        "operations": 12,
+        "witness_makespan": 6520,
+        "independent_asap_makespan": 6520,
+        "all_constraints_checked": true
+      }
+    },
+    {
+      "name": "isolated_serial_FFN_no_gain",
+      "baseline": {
+        "operations": 4,
+        "witness_makespan": 4020,
+        "independent_asap_makespan": 4020,
+        "all_constraints_checked": true
+      },
+      "candidate": {
+        "operations": 4,
+        "witness_makespan": 4020,
+        "independent_asap_makespan": 4020,
+        "all_constraints_checked": true
+      }
+    },
+    {
+      "name": "two_key_original_style_attention_row",
+      "baseline": {
+        "operations": 20,
+        "witness_makespan": 8013,
+        "independent_asap_makespan": 8013,
+        "all_constraints_checked": true
+      },
+      "candidate": {
+        "operations": 20,
+        "witness_makespan": 5013,
+        "independent_asap_makespan": 5013,
+        "all_constraints_checked": true
+      }
+    },
+    {
+      "name": "same_max_port_release_early",
+      "baseline": {
+        "operations": 3,
+        "witness_makespan": 6201,
+        "independent_asap_makespan": 6201,
+        "all_constraints_checked": true
+      },
+      "candidate": {
+        "operations": 3,
+        "witness_makespan": 6201,
+        "independent_asap_makespan": 6201,
+        "all_constraints_checked": true
+      }
+    },
+    {
+      "name": "same_max_port_release_late",
+      "baseline": {
+        "operations": 3,
+        "witness_makespan": 7401,
+        "independent_asap_makespan": 7401,
+        "all_constraints_checked": true
+      },
+      "candidate": {
+        "operations": 3,
+        "witness_makespan": 7201,
+        "independent_asap_makespan": 7201,
+        "all_constraints_checked": true
+      }
+    },
+    {
+      "name": "faster_tail_but_later_future_join_rejected",
+      "baseline": {
+        "operations": 6,
+        "witness_makespan": 605,
+        "independent_asap_makespan": 605,
+        "all_constraints_checked": true
+      },
+      "candidate": {
+        "operations": 6,
+        "witness_makespan": 605,
+        "independent_asap_makespan": 605,
+        "all_constraints_checked": true
+      }
+    }
+  ],
+  "not_proved": [
+    "official performance",
+    "general optimality",
+    "capacity/cache correctness",
+    "production complexity"
+  ]
+}
