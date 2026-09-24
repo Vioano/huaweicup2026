@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from src.q1.bounded_tasks import construct as bounded
 from src.q1.heavy_suffix import construct as heavy
+from src.q1.sink_peel import construct as sink
 from src.q1.component_overload import construct as overload
 from src.q1.shared_input_budget import construct as shared_input, _view, _size
 from src.q1.fork_frontier import construct as fork_frontier
@@ -71,8 +72,9 @@ def generate_candidates(graph, cores, emit=None):
             candidates.append(dict(record, plan=json.loads(raw)))
             event(emit, 'candidate_constructed', name=name, plan_sha256=key,
                   construction_seconds=record['construction_seconds'])
+        return plan, details
 
-    add('bounded', lambda: bounded(graph, cores), required=True)
+    bounded_result = add('bounded', lambda: bounded(graph, cores), required=True)
     if cores == 1:
         return candidates, dict(features={'cores': 1}, duplicates=duplicates,
                                 construction_failures=construction_failures,
@@ -90,8 +92,24 @@ def generate_candidates(graph, cores, emit=None):
                     shared_external_input_bytes=_size(shared, view))
     # Whole-component/bounded construction is the common reference. The next
     # alternatives expose parallel work restricted by whole-component packing.
-    add('heavy-or-sink', lambda: heavy(graph, cores))
-    add('overload', lambda: overload(graph, cores))
+    sink_result = None
+    def cached_sink():
+        nonlocal sink_result
+        if sink_result is None:
+            # Store only successful constructions; the next candidate retries
+            # a failed fallback within its own add() failure boundary.
+            sink_result = sink(graph, cores, fallback_candidate=bounded_result)
+        return sink_result
+
+    def make_heavy():
+        return heavy(graph, cores, fallback_factory=cached_sink)
+
+    heavy_result = add('heavy-or-sink', make_heavy)
+    def make_overload():
+        fallback = heavy_result if heavy_result is not None else make_heavy()
+        return overload(graph, cores, fallback_candidate=fallback)
+
+    add('overload', make_overload)
     if len(view['components']) >= cores:
         if external_bytes > 524288:
             add('shared-input', lambda: shared_input(graph, cores))
@@ -170,7 +188,7 @@ def solve(graph, cores, emit=None):
             def score(plan):
                 return next(evaluator.evaluate_batch([plan], full=False, **config))
             selected, records, reason = choose(candidates, score, emit=emit)
-    diagnostics.update(algorithm_id=ALGORITHM_ID, variant='structural-five-plan-return-v2',
+    diagnostics.update(algorithm_id=ALGORITHM_ID, variant='structural-five-plan-return-cached-v3',
                        selected=selected['name'], stop_reason=reason,
                        candidates=[{k:v for k,v in c.items() if k != 'plan'} for c in candidates],
                        online_scores=records, online_score_attempts=len(records),
