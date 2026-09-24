@@ -64,24 +64,36 @@ def enqueue(state, repo, commit, feed_path, actor):
     return identity
 
 
-def discover(state, roots, actor):
+def parse_worktree_heads(output):
+    """Parse Git's NUL-delimited porcelain records, including each embedded HEAD."""
+    found=[];current=None
+    for item in output.split('\0'):
+        if item.startswith('worktree '):
+            if current and current[1]: found.append(tuple(current))
+            current=[item[9:],None]
+        elif item.startswith('HEAD ') and current:
+            current[1]=item[5:]
+    if current and current[1]: found.append(tuple(current))
+    return found
+
+
+def discover(state, roots, actor, *, known_record_ids=None):
     """Watch registered worktrees; accepted IDs prevent re-uploading historical batches."""
     state=Path(state); cursor_file=state/'watch-cursors.json'
     cursors=json.loads(cursor_file.read_bytes()) if cursor_file.exists() else {}
-    errors=[]; known=set(); accepted=state/'accepted'/'current.json'
-    if accepted.exists():
+    errors=[]; known=set(known_record_ids or ()); accepted=state/'accepted'/'current.json'
+    if known_record_ids is None and accepted.exists():
         manifest=json.loads(accepted.read_bytes())
         payload=unpack((accepted.parent/payload_name(manifest)).read_bytes(),manifest)
         known={r['id'] for r in payload['records']}
     for root in roots:
         try:
             output=git(root,'worktree','list','--porcelain','-z').decode('utf-8')
-            paths=[line[9:] for line in output.split('\0') if line.startswith('worktree ')]
+            worktrees=parse_worktree_heads(output)
         except Exception as error:
             errors.append({'repository':str(root),'error':str(error)}); continue
-        for repo in paths:
+        for repo,commit in worktrees:
             try:
-                commit=git(repo,'rev-parse','HEAD').decode().strip()
                 if cursors.get(repo)==commit: continue
                 names=git(repo,'ls-tree','-r','--name-only','-z',commit,'--','results').decode('utf-8').split('\0')
                 failed=False
