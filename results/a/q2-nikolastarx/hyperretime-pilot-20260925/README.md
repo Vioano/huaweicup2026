@@ -36,3 +36,23 @@ source and native binary against `check_e2_source`, and old per-cell plan/E0
 identity. Artifacts include gzip-compressed plans and native/E0 originals;
 compression roundtrip and raw/compressed hashes are recorded. The original
 uncompressed E0 files remain alongside their archives for direct inspection.
+
+## Frozen run outcome
+
+The single attempted batch stopped at 003/k5. The cold seed matched the saved
+old plan, and an independent pre-Step2 original COPY counter found 11,129,744
+bytes for the seed and 6,921,880 bytes for both the refined and retimed plans.
+All three plan archives decompress and the selected archive equals `plan.json`.
+The public native E2 subprocess exited 1, before any native result was returned.
+Its stderr was not preserved by the wrapper; the E2 ledger therefore remains
+`request_in_flight=true` / `uncertain_exception` with one possible E0 fallback
+reserved. The batch itself made zero separate E0 calls and no E1 calls. The
+remaining 043/k5 and 056/k5 cells were not run. This is a toolchain failure,
+not evidence of candidate Makespan or algorithm quality; there was no retry.
+
+A read-only check with the same Python 3.14 executable found that `import numpy`
+raises `ModuleNotFoundError`, while the E2 package imports numpy during module
+loading. This supports an import-stage cause but does not recover the lost E2
+stderr or resolve the uncertain ledger. See `run/batch.json`,
+`run/003-k5/e2-ledger.json`, `run/003-k5/failure-receipt.json`, and the process
+stdout/stderr receipts for the exact evidence.
