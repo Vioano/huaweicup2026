@@ -103,7 +103,8 @@ def export(run_dir, feed):
                     or run["plan_sha256"] != artifacts["plan"]["sha256"]):
                 raise ValueError("successful raw cell hash/content differs")
         status = ("ok" if success else "not_run" if run["status"] in
-                  {"deadline-before-solver", "deadline-before-e0", "not-started-after-supervision-failure"}
+                  {"deadline-before-solver", "deadline-before-e0", "not-started-after-supervision-failure",
+                   "ram-insufficient-before-cell"}
                   else "timeout" if run.get("solver", {}).get("timeout") or run.get("e0", {}).get("timeout")
                   else "failed")
         solver, e0 = run.get("solver", {}), run.get("e0", {})
@@ -129,8 +130,8 @@ def export(run_dir, feed):
         if failure and failure["elapsed_seconds"] is None:
             missing["provenance.measurement.failure.elapsed_seconds"] = "No child process wall observed."
         records.append(dict(
-            attempt_id=f"fang-q1-stage-l-20260925-044-k{cores}-r0", revision=1,
-            run_id="fang-q1-stage-l-20260925", algorithm_id="q1-shared-packet-pipeline",
+            attempt_id=f"fang-q1-stage-l-mem512-20260925-044-k{cores}-r0", revision=1,
+            run_id="fang-q1-stage-l-mem512-20260925", algorithm_id="q1-shared-packet-pipeline",
             algorithm_name="Shared-input packet pipeline", variant="graph-derived-rectangle",
             solver_commit=SOURCE,
             parameters=dict(cores=cores, capacity_bytes={"L1": 524288, "UB": 131072},
@@ -149,7 +150,7 @@ def export(run_dir, feed):
             identity=dict(graph_sha256=manifest["graph_sha256"], config_sha256=manifest["config_sha256"],
                           official_sha256=manifest["official_code_hash"],
                           plan_sha256=artifacts.get("plan", {}).get("sha256")),
-            artifacts=artifacts, runtime_id="fang-windows-q1-stage-l-20260925",
+            artifacts=artifacts, runtime_id="fang-windows-q1-stage-l-mem512-20260925",
             observed_at=run["finished_at"],
             timing=dict(solver_includes_evaluation=False,
                         evaluation_precision="Cold solver/DP and unchanged external E0 Job walls measured separately",

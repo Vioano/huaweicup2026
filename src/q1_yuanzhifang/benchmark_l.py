@@ -14,16 +14,17 @@ import subprocess
 import sys
 import time
 
-from src.q1_yuanzhifang.job_l import managed_process
+from src.q1_yuanzhifang.job_l import managed_process, JOB_MEMORY_BYTES
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = "5c64b4057cb9b2f2af5426bd1efdd579b9df5559"
 SOLVER = ROOT / "src/q1_yuanzhifang/shared_packet_model.py"
 E0 = ROOT / "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py"
 CONFIG = ROOT / "data/raw/a/official/data/config.txt"
-OUT = ROOT / "results/a/q1-yuanzhifang-stage-l/stage-l-20260925/run"
-TOKEN = "STAGE-L-20260925-START"
+OUT = ROOT / "results/a/q1-yuanzhifang-stage-l/stage-l-mem512-20260925/run"
+TOKEN = "STAGE-L-MEM512-20260925-START"
 CELLS = (3, 4)
+MIN_AVAILABLE_RAM_BYTES = 1 << 30
 
 
 def sha(path):
@@ -80,8 +81,8 @@ def preflight(graph_dir, output):
     if sha(CONFIG) != expected["data/config.txt"]:
         raise RuntimeError("official config identity differs")
     ram = available_ram()
-    if ram < 2 * (1 << 30):
-        raise RuntimeError("less than 2 GiB available RAM")
+    if ram < MIN_AVAILABLE_RAM_BYTES:
+        raise RuntimeError("less than 1 GiB available RAM")
     if shutil.disk_usage(output.parent if output.parent.exists() else ROOT).free < 1_000_000_000:
         raise RuntimeError("less than 1 GB output space")
     return dict(solver_commit=SOURCE, runner_head=git("rev-parse", "HEAD").decode(),
@@ -90,7 +91,11 @@ def preflight(graph_dir, output):
                 official_e0_sha256=sha(E0), graph_dir=str(graph_dir),
                 python=sys.version, platform=platform.platform(), cpu=platform.processor(),
                 available_ram_bytes_at_preflight=ram,
+                available_ram_min_bytes=MIN_AVAILABLE_RAM_BYTES,
+                owned_job_memory_limit_bytes=JOB_MEMORY_BYTES,
                 budget=dict(solver=2, E0=2, E1=0, E2=0, retries=0, workers=1,
+                            available_ram_min_bytes=MIN_AVAILABLE_RAM_BYTES,
+                            owned_job_memory_limit_bytes=JOB_MEMORY_BYTES,
                             solver_timeout_seconds=120, e0_timeout_seconds=90, batch_wall_seconds=300))
 
 
@@ -101,6 +106,10 @@ def run_cell(cores, graph, output, deadline, graph_sha):
     row = dict(case="044", cores=cores, graph_sha256=graph_sha, status="started",
                started_at=utc(), calls=dict(solver=0, E0=0, E1=0, E2=0))
     try:
+        row["available_ram_bytes_before_cell"] = available_ram()
+        if row["available_ram_bytes_before_cell"] < MIN_AVAILABLE_RAM_BYTES:
+            row["status"] = "ram-insufficient-before-cell"
+            return row
         left = deadline-time.monotonic()
         if left <= 0:
             row["status"] = "deadline-before-solver"
@@ -184,7 +193,8 @@ def main():
             row = run_cell(cores, graphs / "case_044.json", output, deadline, facts["graph_sha256"])
         rows.append(row)
         print(json.dumps({"cell": f"044/k{cores}", "status": row["status"]}), flush=True)
-        hard_failure |= row["status"] in {"supervision-error", "identity-failed"}
+        hard_failure |= row["status"] in {"supervision-error", "identity-failed",
+                                          "ram-insufficient-before-cell"}
     totals = {name: sum(r["calls"][name] for r in rows) for name in ("solver", "E0", "E1", "E2")}
     if totals["solver"] > 2 or totals["E0"] > 2 or totals["E1"] or totals["E2"]:
         raise AssertionError("Stage L budget exceeded")

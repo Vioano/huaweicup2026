@@ -8,6 +8,7 @@ import subprocess
 import sys
 import time
 ROOT = Path(__file__).resolve().parents[2]
+JOB_MEMORY_BYTES = 512 * (1 << 20)
 GATE_CODE = ("import os,runpy,sys,time;" "gate=os.environ['Q1_JOB_GATE'];entry=os.environ['Q1_JOB_ENTRY'];module=os.environ.get('Q1_JOB_MODULE');" "\nwhile not os.path.exists(gate): time.sleep(.01)" "\nsys.path.insert(0,os.path.dirname(entry));" "\nrunpy.run_module(module,run_name='__main__',alter_sys=True) if module else runpy.run_path(entry,run_name='__main__')")
 
 def job_api():
@@ -53,7 +54,8 @@ def job_api():
     return api, Extended, Accounting
 
 
-def managed_process(entry, args, cell_dir, label, timeout, module=None):
+def managed_process(entry, args, cell_dir, label, timeout, module=None,
+                    job_memory_bytes=JOB_MEMORY_BYTES):
     """Run one owned tree; verify Job active count is zero before returning."""
     api, Extended, Accounting = job_api()
     gate = cell_dir / f"{label}.gate"
@@ -69,7 +71,10 @@ def managed_process(entry, args, cell_dir, label, timeout, module=None):
     if not job:
         raise ctypes.WinError(ctypes.get_last_error())
     limits = Extended()
-    limits.BasicLimitInformation.LimitFlags = 0x00002000  # KILL_ON_JOB_CLOSE
+    if type(job_memory_bytes) is not int or job_memory_bytes <= 0:
+        raise ValueError("positive aggregate Job memory limit required")
+    limits.BasicLimitInformation.LimitFlags = 0x00002000 | 0x00000200  # KILL_ON_JOB_CLOSE | JOB_MEMORY
+    limits.JobMemoryLimit = job_memory_bytes
     if not api.SetInformationJobObject(job, 9, ctypes.byref(limits), ctypes.sizeof(limits)):
         error = ctypes.WinError(ctypes.get_last_error())
         api.CloseHandle(job)
@@ -77,6 +82,7 @@ def managed_process(entry, args, cell_dir, label, timeout, module=None):
     proc = None
     timed_out = False
     assigned = False
+    active_at_close = None
     try:
         with stdout.open("xb") as out, stderr.open("xb") as err:
             start = time.perf_counter()
@@ -103,6 +109,7 @@ def managed_process(entry, args, cell_dir, label, timeout, module=None):
                     if not api.QueryInformationJobObject(job, 1, ctypes.byref(accounting), ctypes.sizeof(accounting), None):
                         supervision_error = "Job active-process query failed"
                         break
+                    active_at_close = accounting.ActiveProcesses
                     if accounting.ActiveProcesses == 0:
                         break
                     if time.monotonic() >= end:
@@ -124,4 +131,6 @@ def managed_process(entry, args, cell_dir, label, timeout, module=None):
             raise RuntimeError(f"{label} supervision failure: {supervision_error}")
     return dict(command=command, pid=proc.pid, returncode=proc.returncode,
                 timeout=timed_out, wall_seconds=time.perf_counter() - start,
-                stdout=str(stdout.relative_to(cell_dir)), stderr=str(stderr.relative_to(cell_dir)))
+                stdout=str(stdout.relative_to(cell_dir)), stderr=str(stderr.relative_to(cell_dir)),
+                job_memory_limit_bytes=job_memory_bytes,
+                job_active_processes_at_close=active_at_close)
