@@ -59,3 +59,14 @@ class CalendarPolicyTests(unittest.TestCase):
              patch.object(solver, "construct") as construct:
             self.assertEqual(solver.evaluate_candidates(None, 5, Mock(), Mock()), original)
         construct.assert_not_called()
+
+    def test_single_core_identity_avoids_even_constructing_duplicate(self):
+        evaluator = Mock(return_value={"makespan": 100})
+        with patch.object(solver.expanded_solve, "evaluate_candidates", side_effect=anchor_policy), \
+             patch.object(solver, "construct") as construct:
+            winner, calls, _, selection = solver.evaluate_candidates(None, 1, evaluator, Mock())
+        construct.assert_not_called()
+        self.assertEqual(winner[0], ANCHOR)
+        self.assertEqual(calls, 1)
+        self.assertEqual(evaluator.call_count, 1)
+        self.assertEqual(selection["attention_gap_skip"], "single_core_assignment_invariant")

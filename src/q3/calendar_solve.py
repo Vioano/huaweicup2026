@@ -21,6 +21,12 @@ def evaluate_candidates(index, cores, evaluate, save):
         return winner, calls, records, selection
     if calls != 1:
         raise AssertionError("attention anchor must have exactly one E0 call")
+    if cores == 1:
+        # Both placement modes assign every op to core zero. _ready_word then
+        # depends only on that ownership and the unchanged original graph,
+        # so the submitted plans are identical without constructing both.
+        return winner, calls, records, {**selection,
+                                      "attention_gap_skip": "single_core_assignment_invariant"}
     delay = routing["attention_cross_delay_cycles"]
     proposal, metadata = construct(index, cores, cross_delay=delay,
                                    pack_ffn=True, placement_mode="gap")
