@@ -2,7 +2,7 @@
 const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let data=null,lastKey='',selection=null,history=[],busy=false;
 const names={P1:'情况 A · 等待与调度',P2:'情况 B · 搬运计算重叠',P3:'情况 C · 只读 Cache'};
-const statuses={ok:'有效',reported:'仅报告',failed:'失败',timeout:'超时',running:'报告运行中',not_run:'未接收',unsupported:'不支持',withdrawn:'已撤回'};
+const statuses={ok:'成功',reported:'仅报告',failed:'失败',timeout:'超时',running:'报告运行中',not_run:'未接收',unsupported:'不支持',withdrawn:'已撤回'};
 const fmt=(x,metric='makespan_cycles')=>x===null||x===undefined?'NA':metric==='cache_hit_rate'?(x*100).toFixed(1)+'%':metric.includes('speedup')||metric==='cache_gain'?x.toFixed(3):metric.includes('seconds')?x.toFixed(3):Number.isInteger(x)?x.toLocaleString('en-US'):String(x);
 function metrics(){return data?.metrics||{}}
 function options(id,values){const el=$(id),value=el.value;el.innerHTML='<option value="">'+(id==='#algorithm'?'历史最优组合':'所有已接收批次')+'</option>'+values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');el.value=values.includes(value)?value:'';}
