@@ -2,6 +2,7 @@
 from __future__ import annotations
 import argparse
 import json
+import os
 from pathlib import Path
 import signal
 import socket
@@ -12,6 +13,7 @@ import urllib.request
 from .engine import read_json, write_json
 from .snapshot import now, digest
 from .locking import exclusive_lock
+from .launcher import HANDOFF
 
 
 def free_port():
@@ -81,6 +83,21 @@ class Supervisor:
         self.board=None;self.worker=None;self.stopping=False
         self.logdir=self.state/'logs';self.logdir.mkdir(parents=True,exist_ok=True)
         self.children=[]
+        self.running_root=Path(__file__).resolve().parents[2]
+        self.started_at=now()
+        self.ready=False
+    def running_record(self,state='ready'):
+        manifest_path=self.running_root/'release.json'
+        manifest=read_json(manifest_path) if manifest_path.exists() else {}
+        write_json(self.software/'supervisor.json',{'pid':os.getpid(),'path':str(self.running_root),
+            'release_id':manifest.get('release_id'),'code_commit':manifest.get('code_commit'),
+            'started_at':self.started_at,'state':state,
+            'launcher_protocol':1 if os.environ.get('BENCHMARK_SYNC_LAUNCHER')=='1' else 0,
+            'board_pid':self.board.pid if self.board else None,'worker_pid':self.worker.pid if self.worker else None})
+        if state=='ready': self.ready=True
+    def needs_handoff(self,active):
+        return (os.environ.get('BENCHMARK_SYNC_LAUNCHER')=='1'
+                and Path(active['path']).resolve()!=self.running_root)
     def spawn(self,command,cwd,logname):
         with (self.logdir/logname).open('ab') as log:
             proc=subprocess.Popen(command,cwd=str(cwd),stdout=log,stderr=subprocess.STDOUT,stdin=subprocess.DEVNULL)
@@ -105,6 +122,14 @@ class Supervisor:
         port=self.config.get('port',52341)
         probe=None
         try:
+            if os.environ.get('BENCHMARK_SYNC_LAUNCHER')=='1':
+                # Import/CLI failure must be caught before stopping a good site.
+                result=subprocess.run([self.config.get('python',sys.executable),'-X','utf8','-m',
+                    'src.benchmark_sync.supervisor','--config',str(self.config_path),
+                    '--bootstrap',str(self.state/'bootstrap.json'),'--check'],
+                    cwd=desired['path'],capture_output=True,timeout=15,check=True)
+                if json.loads(result.stdout).get('handoff_protocol')!=1:
+                    raise RuntimeError('Candidate supervisor does not support controlled handoff')
             probe_port=free_port();probe=self.board_start(desired,probe_port,True)
             check_health(probe,probe_port,desired)
         finally: stop(probe)
@@ -135,18 +160,32 @@ class Supervisor:
         last_restart=0
         try:
             while not self.stopping:
+                stop_path=self.software/'supervisor-stop.json'
+                if stop_path.exists() and read_json(stop_path).get('pid')==os.getpid():
+                    break
                 desired_path=self.software/'desired.json'
                 desired=read_json(desired_path) if desired_path.exists() else active
                 if desired and (self.state/'accepted/current.json').exists():
                     if (not active or desired['release_id']!=active['release_id']) and desired['release_id'] not in rejected:
-                        try: active=self.activate(desired,active)
+                        try:
+                            active=self.activate(desired,active)
+                            if self.needs_handoff(active):
+                                self.running_record('handoff')
+                                return HANDOFF
+                            self.running_record()
                         except Exception as error:
                             rejected[desired['release_id']]={'at':now(),'error':str(error)};write_json(self.software/'rejected.json',rejected)
                     elif active and (self.board is None or self.board.poll() is not None) and time.monotonic()-last_restart>10:
                         last_restart=time.monotonic()
                         try:
                             self.board=self.board_start(active,port);check_health(self.board,port,active)
-                        except Exception as error: stop(self.board);self.record(active,'error',str(error))
+                            if self.needs_handoff(active):
+                                self.running_record('handoff')
+                                return HANDOFF
+                            self.running_record()
+                        except Exception as error:
+                            stop(self.board);self.record(active,'error',str(error))
+                            if not self.ready: raise
                 if self.worker is None or self.worker.poll() is not None:
                     time.sleep(3);self.worker=self.worker_start(active or bootstrap)
                 time.sleep(1)
@@ -154,13 +193,18 @@ class Supervisor:
             for proc in self.children: stop(proc)
             for proc in self.children:
                 if proc.poll() is not None: proc.wait()
+        return 0
 
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--config',type=Path,required=True);p.add_argument('--bootstrap',type=Path,required=True)
-    args=p.parse_args();s=Supervisor(args.config)
+    p.add_argument('--check',action='store_true')
+    args=p.parse_args()
+    if args.check:
+        print(json.dumps({'handoff_protocol':1,'module':str(Path(__file__).resolve())}));return 0
+    s=Supervisor(args.config)
     def end(*_): s.stopping=True
     signal.signal(signal.SIGTERM,end);signal.signal(signal.SIGINT,end)
-    with exclusive_lock(s.state/'supervisor.lock'): s.run(read_json(args.bootstrap))
+    with exclusive_lock(s.state/'supervisor.lock'): return s.run(read_json(args.bootstrap))
 
-if __name__=='__main__': main()
+if __name__=='__main__': sys.exit(main())
