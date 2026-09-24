@@ -190,9 +190,36 @@ startup and shutdown. The baseline and refinement call ledgers are separate.
 If a score attempt throws after possible dispatch, the refinement reports its
 actual count as unknown in `[0,1]`, rather than falsely reporting zero.
 
-Four injected controller tests and one subsequent exception-accounting test
-passed; these use fake expensive boundaries and do not run a real solver or
-evaluator. Read-only review checked baseline hash binding, failure fallback,
-single additional E1 scope and process cleanup. Real CLI operation, broader
-graph coverage and non-macOS behavior still require validation. This entry
-does not replace the existing production solver or inherit its full500 score.
+Six injected tests cover the winner guard, child and score failure fallback,
+byte-identical score skipping, strict lexicographic promotion, unknown E1
+accounting after a scorer exception, and direct-child timeout cleanup without
+opening a new process group. These use fake expensive boundaries; they do not
+run a real solver or evaluator. The separate CLI was subsequently exercised
+only in the two-cell pilot below. Broader graph coverage and non-macOS behavior
+remain unverified. This entry does not replace the production solver or inherit
+its full500 score.
+
+## Two-cell response refinement pilot
+
+The fixed pilot `run-0553` ran 084/k5 then 080/k5 with one worker, two solver
+calls, eight online E1 calls, zero new E0/E2 calls and zero retries. The solver
+limit was 300 seconds per cell; the 660-second batch limit was an admission
+threshold. The host was shared with an active P2 run, so these wall times are
+observations, not exclusive-host performance comparisons.
+
+| Cell | Selected plan | Solver wall | Prior E0 Makespan | Prior E0 scheduled / extra DDR bytes |
+| --- | --- | ---: | ---: | ---: |
+| 084/k5 | packet-DP refinement | 11.702 s | 397542 cycles | 22175850 / 8939520 |
+| 080/k5 | original fork-frontier | 0.598 s | 97383 cycles | 5443584 / 3465216 |
+
+The 084 candidate was selected after one additional E1 score; the 080 graph
+did not pass the capacity-return winner guard and received no DP child or new
+score. In both cells the selected plan bytes match an already evaluated E0 plan.
+The public pack's compressed prior results decompress byte-for-byte to those
+saved E0 results. Thus the table reuses existing E0 evidence; it is not a new
+external E0 evaluation. The package manifest records source commits, hashes,
+call counts, timings and the limited host context. This pilot covers two of
+the 500 required graph/core cells and is not a full500 result or permission to
+change the production entry.
+
+Public evidence: [`run-0553`](../../results/a/p1-response-refine-pilot-20260925/run-0553/README.md).

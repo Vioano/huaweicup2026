@@ -1,0 +1,85 @@
+{
+  "case_id": "084",
+  "cores": 5,
+  "status": "ok",
+  "graph_sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee",
+  "calls": {
+    "solver": 1,
+    "E1": 5,
+    "E0": 0,
+    "E2": 0
+  },
+  "solver": {
+    "argv": [
+      "<project>/.venv/bin/python",
+      "-B",
+      "./src/q1/response_refine.py",
+      "<verified-inputs>/case_084.json",
+      "--cores",
+      "5",
+      "--output",
+      "./results/a/p1-response-refine-pilot-20260925/run-0553/cells/084/k5/plan.json",
+      "--diagnostics",
+      "./results/a/p1-response-refine-pilot-20260925/run-0553/cells/084/k5/diagnostics.json"
+    ],
+    "cwd": ".",
+    "started_at": "2026-09-24T21:52:32.888Z",
+    "finished_at": "2026-09-24T21:52:44.590Z",
+    "wall_seconds": 11.70189287501853,
+    "timeout_seconds": 300,
+    "exit_code": 0,
+    "cleanup_confirmed": true,
+    "status": "ok",
+    "stdout": {
+      "path": "results/a/p1-response-refine-pilot-20260925/run-0553/cells/084/k5/solver.stdout.txt",
+      "sha256": "ee140dc2730f829e6d54701b76c7e6154e44554e0929dfbf8115dec40fced8c7"
+    },
+    "stderr": {
+      "path": "results/a/p1-response-refine-pilot-20260925/run-0553/cells/084/k5/solver.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "log_derivation": "UTF-8 child output with workspace and temporary input root replaced by public labels"
+  },
+  "baseline_score_worker_pids": [
+    19950,
+    19950,
+    19950,
+    19950
+  ],
+  "refinement_score_worker_pid": 20310,
+  "selected": "packet-dp-refinement",
+  "plan_sha256": "5203ed797935cbf3777586247fa82191518485da839a6d680b150efb6ed5e3f6",
+  "reused_e0": {
+    "new_e0_calls": 0,
+    "source": {
+      "plan_commit": "8685b5a867a4f66c7cacaf166d50896bd7c09a41",
+      "plan_path": "results/a/p1-response-dp-static-20260925/three/plan.json",
+      "result_source": "local prior E0 receipt",
+      "result_receipt_path": "results/a/p1-response-dp-e0-20260925/084-k5/receipt.json",
+      "result_path": "results/a/p1-response-dp-e0-20260925/084-k5/case_084_multicore_res.json"
+    },
+    "plan": {
+      "path": "results/a/p1-response-refine-pilot-20260925/run-0553/cells/084/k5/references/prior-plan.json",
+      "sha256": "5203ed797935cbf3777586247fa82191518485da839a6d680b150efb6ed5e3f6"
+    },
+    "result": {
+      "path": "results/a/p1-response-refine-pilot-20260925/run-0553/cells/084/k5/references/prior-result.json",
+      "sha256": "2858f48dba6949e79f1031f22f51295a0393540205b38ea8df9237111b7d65ec"
+    }
+  },
+  "artifacts": {
+    "plan": {
+      "path": "results/a/p1-response-refine-pilot-20260925/run-0553/cells/084/k5/plan.json",
+      "sha256": "5203ed797935cbf3777586247fa82191518485da839a6d680b150efb6ed5e3f6"
+    },
+    "diagnostics": {
+      "path": "results/a/p1-response-refine-pilot-20260925/run-0553/cells/084/k5/diagnostics.json",
+      "sha256": "803628cf8a64c94a60a1285677e35696bab466a0b5ddcfdb1f9880c582cad4e2"
+    }
+  },
+  "derived_public_copy": {
+    "original_path": "run.json",
+    "original_sha256": "da74ca5419d69bd4258c7caed47d4e05b45a185b08e49c9d7cbd7c15a7fcd586",
+    "derivation": "Only the known project absolute path prefix was replaced with <project>; numeric values are unchanged."
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "kind": "response refinement pilot shareable evidence manifest",
+  "batch_id": "run-0553",
+  "batch_public_sha256": "cfb7ffaad2d3247f7b748c9ef01523dca724de2a690c4cee1d55f9bf96c97491",
+  "cells": {
+    "084": {
+      "status": "ok",
+      "solver_wall_seconds": 11.70189287501853,
+      "selected": "packet-dp-refinement",
+      "calls": {
+        "solver": 1,
+        "E1": 5,
+        "E0": 0,
+        "E2": 0
+      },
+      "plan_sha256": "5203ed797935cbf3777586247fa82191518485da839a6d680b150efb6ed5e3f6",
+      "reuse_plan_sha256": "5203ed797935cbf3777586247fa82191518485da839a6d680b150efb6ed5e3f6",
+      "reuse_plan_matches_selected": true,
+      "reused_E0_new_calls": 0,
+      "prior_E0_quality": {
+        "makespan_cycles": 397542,
+        "scheduled_ddr_bytes": 22175850,
+        "extra_ddr_bytes": 8939520,
+        "spill_bytes": 0
+      },
+      "prior_result_sha256": "2858f48dba6949e79f1031f22f51295a0393540205b38ea8df9237111b7d65ec",
+      "prior_result_gzip_sha256": "61bea20491deba533e15238067b300a205f2916f94b57c77c4a98ae0400ac97c"
+    },
+    "080": {
+      "status": "ok",
+      "solver_wall_seconds": 0.598405625030864,
+      "selected": "fork-frontier",
+      "calls": {
+        "solver": 1,
+        "E1": 3,
+        "E0": 0,
+        "E2": 0
+      },
+      "plan_sha256": "dd58e71b12af5274bcf0c7b2d360f0617875bd7e0ea221f73fc430882c1c0bdf",
+      "reuse_plan_sha256": "dd58e71b12af5274bcf0c7b2d360f0617875bd7e0ea221f73fc430882c1c0bdf",
+      "reuse_plan_matches_selected": true,
+      "reused_E0_new_calls": 0,
+      "prior_E0_quality": {
+        "makespan_cycles": 97383,
+        "scheduled_ddr_bytes": 5443584,
+        "extra_ddr_bytes": 3465216,
+        "spill_bytes": 0
+      },
+      "prior_result_sha256": "6c3e2115023a62c82e680486b15df8b2c69efd1186898691150165a550bb0381",
+      "prior_result_gzip_sha256": "b9e008844c55893b754516c755ce2b5038e1a9960e166f8b90147a62ea284b90"
+    }
+  },
+  "shareable_candidate_sha256": {
+    "batch-public.json": "cfb7ffaad2d3247f7b748c9ef01523dca724de2a690c4cee1d55f9bf96c97491",
+    "cells/084/k5/run-public.json": "39e883118b69ccc0a3730ef7f5a61a84e12aeddfe155f5082f35816a77f5fbd6",
+    "cells/084/k5/plan.json": "5203ed797935cbf3777586247fa82191518485da839a6d680b150efb6ed5e3f6",
+    "cells/084/k5/diagnostics.json": "803628cf8a64c94a60a1285677e35696bab466a0b5ddcfdb1f9880c582cad4e2",
+    "cells/084/k5/references/prior-result.json.gz": "61bea20491deba533e15238067b300a205f2916f94b57c77c4a98ae0400ac97c",
+    "cells/084/k5/solver.stdout.txt": "ee140dc2730f829e6d54701b76c7e6154e44554e0929dfbf8115dec40fced8c7",
+    "cells/084/k5/solver.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cells/080/k5/run-public.json": "f4fdaa32c96371c5595cd28c74a7bb5f5191c644b639971f464c912bdac60d7d",
+    "cells/080/k5/plan.json": "dd58e71b12af5274bcf0c7b2d360f0617875bd7e0ea221f73fc430882c1c0bdf",
+    "cells/080/k5/diagnostics.json": "e70b1aec6cc9ecab0923c760d719984c35e06d967ec461c1b6226ecbcf694a27",
+    "cells/080/k5/references/prior-result.json.gz": "b9e008844c55893b754516c755ce2b5038e1a9960e166f8b90147a62ea284b90",
+    "cells/080/k5/solver.stdout.txt": "f2bb9a6abc6c0fd68358fb05e747abf8c6434dcf613a6459ba143c7cfbdbc42e",
+    "cells/080/k5/solver.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "README.md": "e86e478b922b0a42ff4c316b0fd636d0834cc1c4cc1cbaf6f585364ae9d52fd5"
+  },
+  "local_raw_sha256": {
+    "batch.json": "976eef5db0abf1da9e23ce7c6eabe3e3020bc68c41eca683ab3f11c8d4f4d658",
+    "cells/084/k5/run.json": "da74ca5419d69bd4258c7caed47d4e05b45a185b08e49c9d7cbd7c15a7fcd586",
+    "cells/084/k5/references/prior-result.json": "2858f48dba6949e79f1031f22f51295a0393540205b38ea8df9237111b7d65ec",
+    "cells/080/k5/run.json": "64bf80a5b1f451f4262952dfda3fe3d58679a45a4ed5f9acb81c3ddadbc3a862",
+    "cells/080/k5/references/prior-result.json": "6c3e2115023a62c82e680486b15df8b2c69efd1186898691150165a550bb0381"
+  },
+  "decompression_checks": {
+    "084": {
+      "raw_sha256": "2858f48dba6949e79f1031f22f51295a0393540205b38ea8df9237111b7d65ec",
+      "gzip_sha256": "61bea20491deba533e15238067b300a205f2916f94b57c77c4a98ae0400ac97c",
+      "gzip_decompresses_to_raw": true
+    },
+    "080": {
+      "raw_sha256": "6c3e2115023a62c82e680486b15df8b2c69efd1186898691150165a550bb0381",
+      "gzip_sha256": "b9e008844c55893b754516c755ce2b5038e1a9960e166f8b90147a62ea284b90",
+      "gzip_decompresses_to_raw": true
+    }
+  },
+  "limits_and_scope": {
+    "solver_calls": 2,
+    "E1_calls": 8,
+    "new_E0_calls": 0,
+    "E2_calls": 0,
+    "retries": 0,
+    "workers": 1,
+    "per_solver_timeout_seconds": 300,
+    "batch_admission_seconds": 660,
+    "full_matrix": false
+  },
+  "personal_path_scan": "Scanned plan.json and diagnostics.json; no /Users absolute paths found. Public batch/run copies replace the known project-root prefix only.",
+  "T0_shared_host_context": "P2 one-worker run still active per coordinator; load averages 9.33/10.91/11.02; memory free 45%; not exclusive timing."
+}

@@ -1,0 +1,84 @@
+{
+  "case_id": "080",
+  "cores": 5,
+  "status": "ok",
+  "graph_sha256": "20b2fa1e14bf879ac7c5b0321f69731c8a8102bb65bbd96d7543f54f4974f98c",
+  "calls": {
+    "solver": 1,
+    "E1": 3,
+    "E0": 0,
+    "E2": 0
+  },
+  "solver": {
+    "argv": [
+      "<project>/.venv/bin/python",
+      "-B",
+      "./src/q1/response_refine.py",
+      "<verified-inputs>/case_080.json",
+      "--cores",
+      "5",
+      "--output",
+      "./results/a/p1-response-refine-pilot-20260925/run-0553/cells/080/k5/plan.json",
+      "--diagnostics",
+      "./results/a/p1-response-refine-pilot-20260925/run-0553/cells/080/k5/diagnostics.json"
+    ],
+    "cwd": ".",
+    "started_at": "2026-09-24T21:52:44.597Z",
+    "finished_at": "2026-09-24T21:52:45.196Z",
+    "wall_seconds": 0.598405625030864,
+    "timeout_seconds": 300,
+    "exit_code": 0,
+    "cleanup_confirmed": true,
+    "status": "ok",
+    "stdout": {
+      "path": "results/a/p1-response-refine-pilot-20260925/run-0553/cells/080/k5/solver.stdout.txt",
+      "sha256": "f2bb9a6abc6c0fd68358fb05e747abf8c6434dcf613a6459ba143c7cfbdbc42e"
+    },
+    "stderr": {
+      "path": "results/a/p1-response-refine-pilot-20260925/run-0553/cells/080/k5/solver.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "log_derivation": "UTF-8 child output with workspace and temporary input root replaced by public labels"
+  },
+  "baseline_score_worker_pids": [
+    20345,
+    20345,
+    20345
+  ],
+  "refinement_score_worker_pid": null,
+  "selected": "fork-frontier",
+  "plan_sha256": "dd58e71b12af5274bcf0c7b2d360f0617875bd7e0ea221f73fc430882c1c0bdf",
+  "reused_e0": {
+    "new_e0_calls": 0,
+    "source": {
+      "commit": "0e0d7cd327c51cc6ac365e01f4b6a7d2b28f9297",
+      "feed_path": "results/a/q1-unified-v4-full500-20260925-s59/20260924T1952Z-s59ee/board-feed-500.json",
+      "plan_path": "results/a/q1-unified-v4-full500-20260925-s59/20260924T1952Z-s59ee/cells/080/k5/plan.json",
+      "result_path": "results/a/q1-unified-v4-full500-20260925-s59/20260924T1952Z-s59ee/cells/080/k5/result.json.gz",
+      "compressed_result_sha256": "45b73605660c9ae83382b496a9da8401a2179aed43adb8fe62c75a5416ed3a21"
+    },
+    "plan": {
+      "path": "results/a/p1-response-refine-pilot-20260925/run-0553/cells/080/k5/references/prior-plan.json",
+      "sha256": "dd58e71b12af5274bcf0c7b2d360f0617875bd7e0ea221f73fc430882c1c0bdf"
+    },
+    "result": {
+      "path": "results/a/p1-response-refine-pilot-20260925/run-0553/cells/080/k5/references/prior-result.json",
+      "sha256": "6c3e2115023a62c82e680486b15df8b2c69efd1186898691150165a550bb0381"
+    }
+  },
+  "artifacts": {
+    "plan": {
+      "path": "results/a/p1-response-refine-pilot-20260925/run-0553/cells/080/k5/plan.json",
+      "sha256": "dd58e71b12af5274bcf0c7b2d360f0617875bd7e0ea221f73fc430882c1c0bdf"
+    },
+    "diagnostics": {
+      "path": "results/a/p1-response-refine-pilot-20260925/run-0553/cells/080/k5/diagnostics.json",
+      "sha256": "e70b1aec6cc9ecab0923c760d719984c35e06d967ec461c1b6226ecbcf694a27"
+    }
+  },
+  "derived_public_copy": {
+    "original_path": "run.json",
+    "original_sha256": "64bf80a5b1f451f4262952dfda3fe3d58679a45a4ed5f9acb81c3ddadbc3a862",
+    "derivation": "Only the known project absolute path prefix was replaced with <project>; numeric values are unchanged."
+  }
+}
