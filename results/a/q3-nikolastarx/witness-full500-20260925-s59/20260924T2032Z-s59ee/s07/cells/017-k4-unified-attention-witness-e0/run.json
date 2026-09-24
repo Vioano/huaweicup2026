@@ -1,0 +1,216 @@
+{
+  "case_id": "017",
+  "cores": 4,
+  "variant": "unified-attention-witness-e0",
+  "solver_args": [],
+  "parameters": {
+    "structural_router": "pipeline_then_one_proxy_improving_attention_witness",
+    "candidate_limit": 3,
+    "selection": "strictly smaller official M than fresh incumbent"
+  },
+  "e0_call_limit": 3,
+  "job_key": "017-k4-unified-attention-witness-e0",
+  "stage_id": "shard-07",
+  "started_at": "2026-09-24T20:28:56.043420Z",
+  "status": "ok",
+  "calls": {
+    "solver": 1,
+    "E0": 2,
+    "E1": 0,
+    "E2": 0
+  },
+  "e0_reserved": 3,
+  "artifacts": {
+    "plan": {
+      "path": "results/a/q3-nikolastarx/witness-full500-20260925-s59/20260924T2032Z-s59ee/s07/cells/017-k4-unified-attention-witness-e0/case_017_multicore_res.json",
+      "sha256": "60339df1f0bfae38005e6e23b90870bf19cf873b5c7e9ff3b860849735289a8d"
+    },
+    "result": {
+      "path": "results/a/q3-nikolastarx/witness-full500-20260925-s59/20260924T2032Z-s59ee/s07/cells/017-k4-unified-attention-witness-e0/evidence/result.json.gz",
+      "sha256": "81ddddc56fcee44d0029b6d8289c3a74ef0328cf021278ce6436832eb685ef10"
+    },
+    "trace": {
+      "path": "results/a/q3-nikolastarx/witness-full500-20260925-s59/20260924T2032Z-s59ee/s07/cells/017-k4-unified-attention-witness-e0/evidence/receipt.json",
+      "sha256": "f37fc0646d982d12bc65b299e3f46e895dbeb6811e5946d9ce5b6ae879816915"
+    }
+  },
+  "run_path": "results/a/q3-nikolastarx/witness-full500-20260925-s59/20260924T2032Z-s59ee/s07/cells/017-k4-unified-attention-witness-e0/run.json",
+  "failure": null,
+  "solver_process": {
+    "status": "ok",
+    "reason": null,
+    "exit_code": 0,
+    "wall_seconds": 0.868710667011328,
+    "argv": [
+      "python",
+      "-B",
+      "-m",
+      "src.q3.witness_solve",
+      "data/raw/a/official/data/case_017.json",
+      "--cores",
+      "4",
+      "-o",
+      "results/a/q3-nikolastarx/witness-full500-20260925-s59/20260924T2032Z-s59ee/s07/cells/017-k4-unified-attention-witness-e0/case_017_multicore_res.json",
+      "--evidence",
+      "results/a/q3-nikolastarx/witness-full500-20260925-s59/20260924T2032Z-s59ee/s07/cells/017-k4-unified-attention-witness-e0/evidence"
+    ],
+    "process_tree_cleanup": "POSIX process group",
+    "memory": {
+      "limit_bytes": null,
+      "sampled_peak_rss_bytes": null,
+      "poll_seconds": null,
+      "scope": "sum of process-group RSS / Windows job WorkingSetSize; sampled tripwire, not OS hard limit; shared pages may be counted more than once"
+    },
+    "log_derivation": "stdout/stderr preserve bytes except repository and interpreter absolute paths replaced by markers"
+  },
+  "identity": {
+    "graph_sha256": "282c5840d8e8581fb7827a6d4c996f90384bdfe566ffa665574721568b9dc85c",
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+    "plan_sha256": "60339df1f0bfae38005e6e23b90870bf19cf873b5c7e9ff3b860849735289a8d"
+  },
+  "makespan_cycles": 32865,
+  "data_movement_bytes": {
+    "original_graph_copy_bytes": 643862,
+    "scheduled_copy_bytes": 1447614,
+    "added_copy_bytes": 803752,
+    "partition_added_copy_bytes": 803752,
+    "spill_added_copy_bytes": 0
+  },
+  "cache_stats": {
+    "copy_in_hits": 210,
+    "copy_in_misses": 408,
+    "hit_bytes": 397142,
+    "miss_bytes": 829908,
+    "hits": 210,
+    "accesses": 618,
+    "hit_rate": 0.3236559227415346
+  },
+  "solver_receipt": {
+    "strategy": "dag_join_gap_list",
+    "selected_strategy": "dag_join_gap_list",
+    "official_e0_calls": 2,
+    "candidate_limit": 3,
+    "seed_selection": {
+      "rule": "general_affine",
+      "word_declined": "requires M -> V* -> M components",
+      "general_proposal": "frozen_fang_gap_insertion",
+      "acceptance": "strictly_lower_official_makespan_than_fresh_anchor",
+      "router": {
+        "stage_request": {
+          "collector_policy": "fixed",
+          "source_count": 233,
+          "lanes_by_core": [
+            59,
+            58,
+            58,
+            58
+          ],
+          "heaviest_lane_cores": [
+            0
+          ],
+          "feature_scope": "Provisional source-count partition; lane/load meaning is confirmed only by the strict stage guard."
+        },
+        "migration_construct_attempts": 0,
+        "migration_candidate_plans": 0,
+        "stage_construct_attempts": 1,
+        "stage_candidate_plans": 0,
+        "attention_construct_attempts": 1,
+        "attention_candidate_plans": 0,
+        "guarded_policy_invocations": 0,
+        "stage_guard_reason": "requires one weak component",
+        "attention_cross_delay_cycles": 500,
+        "attention_guard_reason": "no closed attention query row matched",
+        "route": "general_gap",
+        "route_e0_limit": 2,
+        "evaluation_calls": 2,
+        "count_scope": "Router attempts only; guarded internal construction/decision records are preserved unchanged.",
+        "general_gap_policy_invocations": 1
+      }
+    },
+    "candidates": [
+      {
+        "name": "seed",
+        "strategy": "affine_eighth",
+        "status": "ok",
+        "makespan": 34968,
+        "metadata": {
+          "strategy": "affine_eighth",
+          "components": 60,
+          "eligible_ops": 1373,
+          "cores": 4
+        },
+        "artifacts": {
+          "plan": {
+            "path": "seed/plan.json",
+            "sha256": "c3da77a2922f0ec71406068f228c1463c13f8e80ace06a404aaa6259a6c42c04"
+          },
+          "result": {
+            "path": "seed/result.json.gz",
+            "sha256": "4741893ced2c4e7d1d17d0b4032954352aca5ab0eaf8a7a5e6ad822c3e0393e7"
+          }
+        }
+      },
+      {
+        "name": "gap",
+        "strategy": "dag_join_gap_list",
+        "metadata": {
+          "guard": true,
+          "selected": "dag_join_gap_list",
+          "strategy": "dag_join_gap_list",
+          "cores": 4,
+          "upstream_commit": "a37eb931a22fb7df7e0d00d193538ce5289ae045",
+          "official_e0_calls": 0,
+          "chains": 649,
+          "paired_joins": 247,
+          "operations_inserted_before_tail": 1064,
+          "modeled_compute_finish": 28017,
+          "cross_chain_edges": 227,
+          "assumption": "persistent idle calendars; no official COPY/cache/capacity simulation"
+        },
+        "makespan": 32865,
+        "certified_lower_bound_cycles": 28017,
+        "status": "ok",
+        "artifacts": {
+          "plan": {
+            "path": "gap/plan.json",
+            "sha256": "60339df1f0bfae38005e6e23b90870bf19cf873b5c7e9ff3b860849735289a8d"
+          },
+          "result": {
+            "path": "gap/result.json.gz",
+            "sha256": "81ddddc56fcee44d0029b6d8289c3a74ef0328cf021278ce6436832eb685ef10"
+          }
+        }
+      }
+    ],
+    "makespan": 32865,
+    "data_movement_bytes": {
+      "original_graph_copy_bytes": 643862,
+      "scheduled_copy_bytes": 1447614,
+      "added_copy_bytes": 803752,
+      "partition_added_copy_bytes": 803752,
+      "spill_added_copy_bytes": 0
+    },
+    "cache_stats": {
+      "copy_in_hits": 210,
+      "copy_in_misses": 408,
+      "hit_bytes": 397142,
+      "miss_bytes": 829908,
+      "hits": 210,
+      "accesses": 618,
+      "hit_rate": 0.3236559227415346
+    },
+    "graph_sha256": "282c5840d8e8581fb7827a6d4c996f90384bdfe566ffa665574721568b9dc85c",
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "plan_sha256": "60339df1f0bfae38005e6e23b90870bf19cf873b5c7e9ff3b860849735289a8d",
+    "result_sha256": "81ddddc56fcee44d0029b6d8289c3a74ef0328cf021278ce6436832eb685ef10",
+    "evaluation_seconds": 0.31024383401381783,
+    "main_until_evidence_seconds": 0.6705156250100117,
+    "timing_note": "All E0 calls are online; use outer subprocess wall for full solver cost."
+  },
+  "evaluation_ledger": {
+    "path": "results/a/q3-nikolastarx/witness-full500-20260925-s59/20260924T2032Z-s59ee/s07/cells/017-k4-unified-attention-witness-e0/evidence/evaluations.json",
+    "sha256": "e882cef7be66af507b3f4b039a00cbd83161f489a19f6ea5bf0a0a70010042ff"
+  },
+  "finished_at": "2026-09-24T20:28:57.100672Z"
+}

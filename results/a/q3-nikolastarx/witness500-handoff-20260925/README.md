@@ -1,0 +1,11 @@
+# Witness fixed algorithm full500 handoff
+
+Solver **c2d628ba0fe8dce4630e5f9c0a5c8fb810fcd41a**, entry `src.q3.witness_solve`; feedback runner is `src/q3/feedback_benchmark.py` at the same commit. No later Pro R3, COPY bound, release or island code is included. Execute in a clean sourcec2 checkout after copying these manifests verbatim. `validate_manifest` and `verify_source` must pass there; helper imports in the research worktree do not substitute source verification.
+
+Exactly100 graphs ×1..5cores, ten disjoint50-job shards, fresh500solvers, at most1500onlineE0. Resource maximum8 simultaneous shard processes/one solver each; per cell90s, shard360s, total3600s, zero retries. Stop and preserve evidence on the first failure/timeout/identity or accounting discrepancy; never patch the source and restart within this batch. The global controller must stop remaining processes on a terminal anomaly. Runtime includes all online work/output. Reuse existing100 baseline original bytes, no additional external E0, no probe-result reuse.
+
+After explicit resource release the producer s59 may schedule this fixed batch. Reserved result prefix `results/a/q3-nikolastarx/witness-full500-20260925-s59/`. Per-shard command from sourcec2: `python -B -m src.q3.feedback_benchmark <manifest-sXX.json> <unique-output/shard-XX>`; do not use one output directory for different shards. The producer may adapt its existing verified global controller but must freeze and report its actual full source SHA, invocation and receipt separately before execution; old controller SHA is not the hash of an edited copy.
+
+Root checked the prior sourcec2 three-case originals (artifact b3d7752a58bb212343da723008b6e583030c0638):066M84532→75024,082153438→139941,0717782 stays because the7896 proposal is worse. All three extra-copy/spill equal the fresh incumbent, while066/082 byte hit rates decline. The source87 pipeline mechanism reduced M/extra-copy but increased spill. These seen-data probes motivate full validation; they are not generalization or all-metric-dominance evidence.
+
+Report complete per-core arithmetic means of original baseline/M, failures, all movement/cache metrics separately, solver wall distribution and E0 counts. Do not splice prior best cells into this run. Keep sourcec2 and all later research versions distinct.
