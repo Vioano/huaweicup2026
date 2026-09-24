@@ -37,6 +37,22 @@ def read(path):
     return json.loads(path.read_bytes())
 
 
+def sanitized(value):
+    if isinstance(value, str):
+        return value.replace(str(Path.home()), '<local-home>')
+    if isinstance(value, list):
+        return [sanitized(item) for item in value]
+    if isinstance(value, dict):
+        return {key: sanitized(item) for key, item in value.items()}
+    return value
+
+
+def sanitized_receipt(raw, dest):
+    if len(raw) > 64 * 1024 * 1024:
+        raise ValueError('Raw receipt exceeds 64 MiB')
+    return archive_bytes(jbytes(sanitized(json.loads(raw))), dest)
+
+
 def source(commit, path, entrypoint):
     return {'repo': REPO, 'commit': commit, 'path': path, 'entrypoint': entrypoint}
 
@@ -165,6 +181,13 @@ def export(summary_path, manifest_path, output_root, run_id, case_start, case_en
     folder = output_root / f'cases-{case_start:03d}-{case_end:03d}'
     if folder.is_symlink():
         raise ValueError('Shard symlink forbidden')
+    snapshot_path = folder / 'snapshot.json'
+    if snapshot_path.exists():
+        prior = read(snapshot_path)
+        if (prior['cases'] != [case_start, case_end] or prior['run_id'] != run_id
+                or prior['manifest_sha256'] != sha(manifest_raw)
+                or prior['source_summary_reference'] != source_reference):
+            raise ValueError('Prior immutable snapshot differs')
     records = []
     official = read(ROOT / 'docs/a/source-manifest.json')['official_code_hash']
     for key in coordinates:
@@ -237,7 +260,9 @@ def export(summary_path, manifest_path, output_root, run_id, case_start, case_en
             raise ValueError('Runtime source hashes differ')
         if attempts and (not ledger['source_checked']
                          or ledger['source']['commit'] != E2
-                         or ledger['source']['manifest_sha256'] != old['e2_manifest']['sha256']):
+                         or ledger['source']['manifest_sha256'] != old['e2_manifest']['sha256']
+                         or ledger['source']['native_binary_sha256'] !=
+                            summary['source']['e2']['native_binary_sha256']):
             raise ValueError('E2 source readback differs')
         plan = json.loads(plan_raw)
         canonical = sha(json.dumps(plan, sort_keys=True, allow_nan=False).encode())
@@ -250,7 +275,7 @@ def export(summary_path, manifest_path, output_root, run_id, case_start, case_en
             selected_records = [a['record'] for a in attempts if a['plan_sha256'] == canonical]
             if len(selected_records) != 1 or not matching_metrics(selected_records[0], result):
                 raise ValueError('Selected E2 score differs from independent E0')
-        elif (list(plan['node_to_subgraph'].items()) != list(old_plan['node_to_subgraph'].items())
+        elif (plan['node_to_subgraph'] != old_plan['node_to_subgraph']
               or plan['core_schedules'] != old_plan['core_schedules']
               or not matching_metrics(old_truth, result)):
             raise ValueError('Zero-call plan differs from frozen baseline')
@@ -262,16 +287,23 @@ def export(summary_path, manifest_path, output_root, run_id, case_start, case_en
         base_path = ROOT / base['result']['path']
         if sha(base_path.read_bytes()) != base['result']['sha256']:
             raise ValueError('Single-core denominator artifact differs')
+        cell_raw = (cell/'cell.json').read_bytes()
+        process_raw = (cell/'solver-process/process.json').read_bytes()
+        e0_raw = (cell/'e0-process/process.json').read_bytes()
         evidence = {
-            'cell_receipt': archive_file(cell / 'cell.json', archive / 'cell.json'),
-            'solver_process': archive_file(cell / 'solver-process/process.json', archive / 'solver-process.json'),
-            'e0_process': archive_file(cell / 'e0-process/process.json', archive / 'e0-process.json'),
-            'online_ledger': archive_file(cell / 'online/solver.json', archive / 'online-ledger.json'),
+            'cell_receipt': sanitized_receipt(cell_raw, archive / 'cell.json'),
+            'solver_process': sanitized_receipt(process_raw, archive / 'solver-process.json'),
+            'e0_process': sanitized_receipt(e0_raw, archive / 'e0-process.json'),
+            'online_ledger': sanitized_receipt(ledger_raw, archive / 'online-ledger.json'),
         }
         artifacts = {
             'plan': archive_file(cell / 'plan.json', archive / 'plan.json.gz', pack=True),
             'result': archive_file(cell / 'result.json', archive / 'result.json.gz', pack=True),
-            'run': archive_bytes(jbytes({'accepted_row': row, 'raw_evidence': evidence, 'summary_sha256': sha(summary_raw)}), archive / 'run.json'),
+            'run': archive_bytes(jbytes({'accepted_row': sanitized(row), 'archived_evidence': evidence,
+                                         'original_sha256': {'cell_receipt': sha(cell_raw),
+                                                             'solver_process': sha(process_raw),
+                                                             'e0_process': sha(e0_raw),
+                                                             'online_ledger': sha(ledger_raw)}}), archive / 'run.json'),
         }
         movement = result['data_movement_bytes']
         p = process
@@ -294,7 +326,7 @@ def export(summary_path, manifest_path, output_root, run_id, case_start, case_en
                        'selected_solver_commit': None},
             'runner': {'source': source(RUNNER, 'src/q2_nikolastarx/hypergap_full500.py',
                                         'src.q2_nikolastarx.hypergap_full500.main'),
-                       'argv': process['argv'], 'working_directory': '.'},
+                       'argv': sanitized(process['argv']), 'working_directory': '.'},
             'environment': env,
             'measurement': {'started_at': p['started_at'], 'finished_at': p['finished_at'],
                             'seed': None, 'repeat_index': 0, 'cold_start': None,
@@ -344,22 +376,18 @@ def export(summary_path, manifest_path, output_root, run_id, case_start, case_en
             'provenance': provenance,
             'notes': ['One accepted hypergap cell; this case group is not a full500 result.',
                       'Online E2 is selection evidence; independent E0 is final score.',
+                      'Archived process and ledger receipts are sanitized derivatives; their original raw SHA-256 values are in run.json.',
                       'Single-core denominator is fixed 60afc38 official E0, not the old solver makespan.'],
             'source_url': task_url, 'baseline': base, 'cache_pair': None,
         }
         records.append(record)
     feed = {'schema_version': 1, 'submission_version': 1, 'records': records}
     validate_feed(feed, submission=True)
-    snapshot_path = folder / 'snapshot.json'
     snapshot = {'summary_sha256': sha(summary_raw), 'summary_status': summary['status'],
                 'accepted_cells': summary['accepted_cells'], 'cases': [case_start, case_end],
                 'source_summary_reference': source_reference,
                 'manifest_sha256': sha(manifest_raw), 'run_id': run_id}
-    if snapshot_path.exists():
-        prior = read(snapshot_path)
-        if prior['cases'] != [case_start, case_end] or prior['run_id'] != run_id or prior['manifest_sha256'] != sha(manifest_raw):
-            raise ValueError('Prior immutable snapshot differs')
-    else:
+    if not snapshot_path.exists():
         archive_bytes(jbytes(snapshot), snapshot_path)
     feed_path = folder / 'board-feed.json'
     archive_bytes(jbytes(feed), feed_path)
