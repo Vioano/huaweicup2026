@@ -1,7 +1,8 @@
-"""Frozen two-cell heavy-component suffix probe; no retries or hidden scorers.
+"""Shared heavy-component suffix probe controller; no retries or hidden scorers.
 
 Run executes only049/k5 and088/k5, one worker,30s constructor/90s E0/300s
-batch, stopping at the first failure. Export is read-only and reuses fixed
+batch by default; explicit frozen wrappers may declare other finite cells and
+batch limits. Stops at first failure. Export is read-only and reuses fixed
 bounded04 and official singlecore evidence without additional evaluation.
 """
 from collections import Counter
@@ -32,13 +33,13 @@ DEPS = [ENTRY,"src/q1/sink_peel.py","src/q1/bounded_tasks.py","src/q1/tree_front
         "src/q1_benchmarks/bounded_full4_e0.py","src/q1_benchmarks/sink_probe_e0.py","uv.lock","pyproject.toml"]
 
 
-def verify():
+def verify(extra_sources=()):
     assert sys.version_info[:2] == (3,12), "Locked Python3.12 required"
     head = h.git("rev-parse","HEAD").decode().strip()
     if h.git("diff","--name-only",head).strip():
         raise RuntimeError("Tracked source differs from frozen runner")
     receipts=[]
-    for path,commit in [(p,SOLVER) for p in DEPS]+[(HERE,head)]:
+    for path,commit in [(p,SOLVER) for p in DEPS]+[(p,head) for p in (HERE,*extra_sources)]:
         raw=(ROOT/path).read_bytes()
         if raw != h.git("show",f"{commit}:{path}"):
             raise RuntimeError(f"Source mismatch: {path}")
@@ -55,34 +56,35 @@ def verify():
     return head,manifest,files,receipts
 
 
-def run(batch):
-    start=time.perf_counter(); started_at=h.utc(); deadline=start+300
-    head,official,files,receipts=verify()
+def run(batch, *, cells=CELLS, batch_seconds=300, run_source=HERE, extra_sources=(), declaration=None, coordination=None):
+    start=time.perf_counter(); started_at=h.utc(); deadline=start+batch_seconds
+    head,official,files,receipts=verify(extra_sources)
     batch.mkdir(parents=True,exist_ok=False)
-    meta={"run_id":batch.name,"solver_commit":SOLVER,"runner_commit":head,"runner_path":HERE,"source_receipts":receipts,
+    meta={"run_id":batch.name,"solver_commit":SOLVER,"runner_commit":head,"runner_path":run_source,"source_receipts":receipts,
           "official_code_hash":official["official_code_hash"],"config_sha256":h.sha(h.OFFICIAL/"data/config.txt"),
           "input_archive_sha256":official["case_archive"]["sha256"],"environment":h.environment(),
-          "runner_argv":["python","-B",HERE,"run",batch.name],"cells":CELLS,"started_at":started_at,"finished_at":None,"status":"running",
+          "runner_argv":["python","-B",run_source,"run",batch.name],"cells":cells,"started_at":started_at,"finished_at":None,"status":"running",
           "parameters":{"dominant_percent":80,"max_rounds":64,"max_sinks":64},
-          "maximum_calls":{"solver":2,"E0":2,"E1":0,"E2":0},"timeouts_seconds":{"solver":30,"E0":90,"batch":300},
-          "resource_samples":[],"resource_coordination":"Parent confirmed P2/P3 currently0 real scores and granted049/088 window; one worker, no exclusive-host claim, no cloud/GPU",
+          "maximum_calls":{"solver":len(cells),"E0":len(cells),"E1":0,"E2":0},"timeouts_seconds":{"solver":30,"E0":90,"batch":batch_seconds},
+          "resource_samples":[],"resource_coordination":coordination or "Parent confirmed P2/P3 currently0 real scores and granted049/088 window; one worker, no exclusive-host claim, no cloud/GPU",
           "stop_policy":"First constructor/E0/source/resource/cleanup failure stops batch; no retry; retain remaining not_run",
           "comparison_source":{"commit":OLD,"feed":OLD_FEED,"scope":"Exact bounded04 same-cell plans/results and official singlecore originals; no baseline calls"}}
+    if declaration is not None: meta["declaration"]=declaration
     h.write(batch/"batch.json",meta)
     stopped=None
     def remaining(limit):
         left=deadline-time.perf_counter()
-        if left<=0: raise TimeoutError("Batch300s deadline reached")
+        if left<=0: raise TimeoutError(f"Batch{batch_seconds}s deadline reached")
         return min(limit,left)
     with tempfile.TemporaryDirectory(prefix="q1-heavy-input-") as tmp:
         inputs=Path(tmp); t0=time.perf_counter()
         with zipfile.ZipFile(ROOT/official["case_archive"]["path"]) as z:
-            for case,_ in CELLS:
+            for case,_ in cells:
                 raw=z.read(f"data/case_{case}.json")
                 assert h.digest(raw)==files[f"data/case_{case}.json"]["sha256"]
                 (inputs/f"case_{case}.json").write_bytes(raw)
         meta["input_preparation_wall_seconds"]=time.perf_counter()-t0
-        for case,cores in CELLS:
+        for case,cores in cells:
             folder=batch/"cells"/case/f"k{cores}"; folder.mkdir(parents=True)
             r={"case_id":case,"cores":cores,"status":"not_run","started_at":None,"finished_at":None,
                "graph_sha256":files[f"data/case_{case}.json"]["sha256"],"calls":{"solver":0,"E0":0,"E1":0,"E2":0},
@@ -92,7 +94,7 @@ def run(batch):
             graph=inputs/f"case_{case}.json"; plan=folder/f"case_{case}_multicore_res.json"; diag=folder/"diagnostics.json"; result=folder/"result.json"
             stage="supervisor"
             try:
-                verify(); meta["resource_samples"].append(resource_snapshot()); r["started_at"]=h.utc(); stage="solver"
+                verify(extra_sources); meta["resource_samples"].append(resource_snapshot()); r["started_at"]=h.utc(); stage="solver"
                 r["solver"]=h.process([sys.executable,"-B",ENTRY,graph,"--cores",cores,"--output",plan,"--diagnostics",diag,
                     "--dominant-percent",80,"--max-rounds",64,"--max-sinks",64],folder,"solver",remaining(30),inputs,lambda:r["calls"].__setitem__("solver",1))
                 if r["solver"]["status"]!="ok": raise h.CandidateFailure("constructor "+r["solver"]["status"])
@@ -117,8 +119,8 @@ def run(batch):
             finally:
                 r["finished_at"]=h.utc(); h.write(folder/"run.json",r)
                 print(json.dumps({"case":case,"cores":cores,"status":r["status"],"makespan":r["makespan_cycles"]}),flush=True)
-    rows=[h.read(batch/"cells"/c/f"k{k}"/"run.json") for c,k in CELLS]
-    meta.update(finished_at=h.utc(),status="stopped" if stopped else "complete",stop_reason=stopped or "two declared cells complete",
+    rows=[h.read(batch/"cells"/c/f"k{k}"/"run.json") for c,k in cells]
+    meta.update(finished_at=h.utc(),status="stopped" if stopped else "complete",stop_reason=stopped or f"{len(cells)} declared cells complete",
                 status_counts=dict(Counter(r["status"] for r in rows)),batch_wall_seconds=time.perf_counter()-start,
                 actual_calls={k:sum(r["calls"][k] for r in rows) for k in ("solver","E0","E1","E2")})
     h.write(batch/"batch.json",meta)
@@ -126,11 +128,11 @@ def run(batch):
 
 
 def export(batch):
-    meta=h.read(batch/"batch.json")
+    meta=h.read(batch/"batch.json"); cells=meta["cells"]
     if meta["status"]=="running": raise RuntimeError("Wait for execution to finish")
     old=json.loads(h.git("show",f"{OLD}:{OLD_FEED}"))
     records=[]; comparisons=[]; references=batch/"references"; references.mkdir(exist_ok=True)
-    for case,cores in CELLS:
+    for case,cores in cells:
         previous=next(x for x in old["records"] if x["case_id"]==case and x["cores"]==cores)
         assert previous["status"]=="ok"
         folder=batch/"cells"/case/f"k{cores}"; r=h.read(folder/"run.json")
@@ -146,7 +148,7 @@ def export(batch):
             algorithm_id="q1-heavy-component-suffix",algorithm_name="P1 dominant-component suffix waves",variant="dominant-pipe-suffix-waves",
             solver_commit=SOLVER,status=r["status"],metrics=metrics,observed_at=r["finished_at"])
         rec["parameters"]={"cores":cores,**meta["parameters"],"selected":r.get("diagnostics",{}).get("selected"),"constructor_timeout_seconds":30,"evaluation_timeout_seconds":90,
-            "batch_timeout_seconds":300,"candidate_limit":1,"workers":1,"stop_policy":meta["stop_policy"],"scoring_backend":"none; external E0 only"}
+            "batch_timeout_seconds":meta["timeouts_seconds"]["batch"],"candidate_limit":1,"workers":1,"stop_policy":meta["stop_policy"],"scoring_backend":"none; external E0 only"}
         rec["evaluator"]["commit"]=SOLVER
         rec["identity"]={"graph_sha256":r["graph_sha256"],"config_sha256":meta["config_sha256"],"official_sha256":meta["official_code_hash"],"plan_sha256":r.get("plan_sha256")}
         rec["artifacts"]={k:v for k,v in r["artifacts"].items() if k!="diagnostics"}; rec["artifacts"]["run"]=h.artifact(folder/"run.json")
@@ -154,7 +156,7 @@ def export(batch):
         p=rec["provenance"]
         p["solver"].update(source=h.source(SOLVER,ENTRY,"main"),method="Fixed80-percent dominant compute-pipe component trigger; bounded sink-exclusive suffix peeling; whole minor components placed in final wave; per-pipe greedy packet placement. Builds sink/bounded fallback first; no scoring/search.",
             references=[f"https://github.com/{h.REPO}/blob/{SOLVER}/docs/a/Q1_HEAVY_SUFFIX.md"],upstream=[h.source(SOLVER,x,"construct") for x in DEPS[1:5]])
-        p["runner"]={"source":h.source(meta["runner_commit"],HERE,"run"),"argv":meta["runner_argv"],"working_directory":"."}; p["environment"]=meta["environment"]
+        p["runner"]={"source":h.source(meta["runner_commit"],meta["runner_path"],"run"),"argv":meta["runner_argv"],"working_directory":"."}; p["environment"]=meta["environment"]
         p["measurement"].update(started_at=r["started_at"],finished_at=r["finished_at"],calls=r["calls"],failure=r["failure"],
             budget={"wall_seconds":30,"candidate_limit":1,"stop_reason":"direct construction complete" if r["status"]=="ok" else r.get("not_run_reason","first failure")},
             offline_costs=f"uv sync --locked and verified ZIP materialization ({meta['input_preparation_wall_seconds']} seconds); no training, online scorer or baseline rerun. Source/coverage audits and gzip/export outside constructor/E0 timers.")
@@ -165,7 +167,7 @@ def export(batch):
             for key in ("exit_code","elapsed_seconds"):
                 if r["failure"].get(key) is None: missing[f"provenance.measurement.failure.{key}"]="No completed child receipt"
         p["missing_reasons"]=missing
-        rec["notes"]=[meta["resource_coordination"],"Two preselected mechanism probes; not all-case quality or independent blind acceptance. No sink8 batch executed.",
+        rec["notes"]=[meta["resource_coordination"],f"{len(cells)} preselected mechanism probes; not all-case quality or independent blind acceptance. No sink8 batch executed.",
             "Fresh interpreter per cell, OS caches not flushed; previous bounded04 used two workers, so timings are descriptive and cannot establish controlled speedups.",
             f"Bounded04 same-cell plan/result and singlecore originals reused from {OLD}; no comparison or baseline evaluation."]
         records.append(rec)
