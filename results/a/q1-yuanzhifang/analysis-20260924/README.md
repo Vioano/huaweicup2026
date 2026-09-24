@@ -22,6 +22,8 @@
 
 更正来源：队长 `170132b127d632237a93101bea80456053f38e50` 的Q1_LOWER_BOUNDS.md所述COPY桥反例；父会话诊断64d8b66在未发布静态结果前修复为1e3b6bd，并重新生成两份输出。两批E0结果与构造器均未改变。
 
+成员本机接收另存 `member-board-readback.json`：父会话对既有52341服务进行GET只读逐ID复核，32/32记录均eligible且artifacts_checked，提交指标及冻结身份与两份feed逐字段一致。成绩台另派生baseline_speedup，不要求整个metrics对象与提交前完全相同。本回执既不生成新attempt，也不代签中央接收、重新E0或科学验收。
+
 复算只读取已有证据；输出使用不存在的新文件，不能覆盖本交付：
 
 ```text
