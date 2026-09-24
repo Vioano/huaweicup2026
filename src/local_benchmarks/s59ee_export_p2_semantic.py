@@ -81,7 +81,7 @@ def main():
             "exit_code": (child or {}).get("returncode"),
             "elapsed_seconds": (child or {}).get("wall_seconds")}
         artifacts = {"run": artifact(run_path)}
-        for name in ("plan", "result", "trace", "log", "online_ledger", "online_plan"):
+        for name in ("plan", "result", "trace", "log"):
             if name in run["artifacts"]:
                 artifacts[name] = {key: run["artifacts"][name][key] for key in ("path", "sha256")}
         missing = {"provenance.environment.threads": "per-process thread count was not sampled; BLAS/OMP/MKL configured to 1",
