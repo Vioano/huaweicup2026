@@ -43,3 +43,5 @@ core0两种窗口法M忙时均20292、V忙时均2724；旧window的MTE2忙时819
 ## 与P3协作的独立证据
 
 同机P3 session `s-3d9c78db26714786b88b987ca6f58e2b` 已独立完成044同构链按算子位置分层：P2 67339、P3 66992，固定[5f137e1原件](https://github.com/huaweibei123/huaweicup2026/tree/5f137e14f5bc73d123c53401737e2b5dc62e66d2/results/a/q3-yuanzhifang/stages-20260924)。本P2 fill较该P2结果低438 cycles（0.65%），该比较来自各自原件/收据，不是本会话对对方算法的独立复跑；其P3结果不能拿来替代本P2评价。双方实现和作者归属分开，互报固定证据以研究优先级差异。
+
+交付后通过 `git show 5f137e1:<path>` 读取对方plan/run/完整P2结果，核对所存plan/result哈希及graph/config/official身份全部一致。双方有序mapping、各核subgraph集合完全相同；全部COPY字节与零spill也相同。core0～2的MTE2都从0连续到62505；区别发生在计算/输出收尾：stages最后M结束66980、最终67339，fill最后M结束66752、最终66901。因此这438 cycles的差异并非少搬数据或重新分核，后续应比较各计算Pipe的收尾优先级与输出依赖。见结果根目录 `peer-044-comparison.json`；此审计0 solver/E0。
