@@ -17,15 +17,17 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from src.q1.bounded_tasks import construct as bounded
 from src.q1.heavy_suffix import construct as heavy
+from src.q1.sink_peel import construct as sink
 from src.q1.component_overload import construct as overload
 from src.q1.shared_input_budget import construct as shared_input, _view, _size
 from src.q1.fork_frontier import construct as fork_frontier
+from src.q1.capacity_return import construct as capacity_return
 from stub_multicore_cut_and_schedule import _build_op_adjacency, _contract_excluded_copy_nodes
 
 CONFIG = ROOT / 'data/raw/a/official/data/config.txt'
 E1_SOURCE = '5bfe53a29c1ba05167239f51ea937e602f7f85b4'
 ALGORITHM_ID = 'q1-unified-structural-guard'
-MAX_DISTINCT_CANDIDATES = 4
+MAX_DISTINCT_CANDIDATES = 6
 
 
 def event(emit, event_type, **fields):
@@ -70,8 +72,9 @@ def generate_candidates(graph, cores, emit=None):
             candidates.append(dict(record, plan=json.loads(raw)))
             event(emit, 'candidate_constructed', name=name, plan_sha256=key,
                   construction_seconds=record['construction_seconds'])
+        return plan, details
 
-    add('bounded', lambda: bounded(graph, cores), required=True)
+    bounded_result = add('bounded', lambda: bounded(graph, cores), required=True)
     if cores == 1:
         return candidates, dict(features={'cores': 1}, duplicates=duplicates,
                                 construction_failures=construction_failures,
@@ -89,8 +92,24 @@ def generate_candidates(graph, cores, emit=None):
                     shared_external_input_bytes=_size(shared, view))
     # Whole-component/bounded construction is the common reference. The next
     # alternatives expose parallel work restricted by whole-component packing.
-    add('heavy-or-sink', lambda: heavy(graph, cores))
-    add('overload', lambda: overload(graph, cores))
+    sink_result = None
+    def cached_sink():
+        nonlocal sink_result
+        if sink_result is None:
+            # Store only successful constructions; the next candidate retries
+            # a failed fallback within its own add() failure boundary.
+            sink_result = sink(graph, cores, fallback_candidate=bounded_result)
+        return sink_result
+
+    def make_heavy():
+        return heavy(graph, cores, fallback_factory=cached_sink)
+
+    heavy_result = add('heavy-or-sink', make_heavy)
+    def make_overload():
+        fallback = heavy_result if heavy_result is not None else make_heavy()
+        return overload(graph, cores, fallback_candidate=fallback)
+
+    add('overload', make_overload)
     if len(view['components']) >= cores:
         if external_bytes > 524288:
             add('shared-input', lambda: shared_input(graph, cores))
@@ -107,6 +126,26 @@ def generate_candidates(graph, cores, emit=None):
             features['additional_route'] = 'fork-frontier'
         else:
             features['additional_route'] = 'none'
+    # Necessary cheap shape check only; the candidate's strict recognizer then
+    # checks private homogeneous M -> V+ -> M chains and conservative capacity.
+    # Failed applicability retains the existing candidates. No graph IDs or
+    # recorded case results participate in this route.
+    compute_pipes = [op['pipe'] for op in view['ops'].values()]
+    if (set(compute_pipes) == {'PIPE_M', 'PIPE_V'}
+            and compute_pipes.count('PIPE_M') == 2 * len(view['components'])):
+        add('capacity-return', lambda: capacity_return(graph, cores))
+        features['return_route'] = 'strict-private-chain-check'
+    else:
+        features['return_route'] = 'inapplicable-compute-shape'
+    # Frontier packing also applies to disconnected chains and in-trees with
+    # no fork. Preserve all previous candidate attempts/order; extend the
+    # domain at the end so a failed extra score cannot suppress a prior winner.
+    # Count an earlier attempted F even if it failed or was byte-deduplicated.
+    if features['additional_route'] != 'fork-frontier':
+        add('fork-frontier', lambda: fork_frontier(graph, cores, grain=4))
+        features['frontier_route'] = 'general-multicore'
+    else:
+        features['frontier_route'] = 'existing-fork-route'
     if len(candidates) > MAX_DISTINCT_CANDIDATES:
         raise AssertionError('Structural candidate bound exceeded')
     return candidates, dict(features=features, duplicates=duplicates,
@@ -154,11 +193,11 @@ def solve(graph, cores, emit=None):
         # Local compilation and global DDR/FIFO/gates are charged online.
         with P1BatchEvaluator(graph, workers=1, cache_bytes=16 << 20,
                               timeout_seconds=60, startup_timeout_seconds=10,
-                              max_tasks_per_worker=4) as evaluator:
+                              max_tasks_per_worker=MAX_DISTINCT_CANDIDATES) as evaluator:
             def score(plan):
                 return next(evaluator.evaluate_batch([plan], full=False, **config))
             selected, records, reason = choose(candidates, score, emit=emit)
-    diagnostics.update(algorithm_id=ALGORITHM_ID, variant='structural-four-plan-guard-v1',
+    diagnostics.update(algorithm_id=ALGORITHM_ID, variant='structural-six-plan-general-frontier-v4',
                        selected=selected['name'], stop_reason=reason,
                        candidates=[{k:v for k,v in c.items() if k != 'plan'} for c in candidates],
                        online_scores=records, online_score_attempts=len(records),
