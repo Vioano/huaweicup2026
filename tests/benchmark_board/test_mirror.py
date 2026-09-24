@@ -1,9 +1,11 @@
 import copy
 import gzip
 import json
+import shutil
 import sys
 import threading
 import unittest
+from unittest.mock import patch
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from urllib.error import HTTPError
@@ -13,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src/benchmark_boar
 from core import digest, packed
 from mirror import MirrorView
 from app import make_handler
+import app
 from benchmark_sync.snapshot import read_central, publish_files, canonical, snapshot_id
 import test_ledger
 
@@ -164,10 +167,42 @@ class MirrorTests(unittest.TestCase):
         self.assertEqual(caught.exception.code, 409)
         self.assertTrue(json.load(caught.exception)['sources'][0].startswith('https://github.com/example/project/blob/'))
         caught.exception.close()
+
         with self.assertRaises(HTTPError) as caught:
             urlopen(Request(url + '/api/v1/records', data=b'{}'))
         self.assertEqual(caught.exception.code, 405)
         caught.exception.close()
+
+    def test_runtime_fingerprint_matches_served_bundle_and_sync_status(self):
+        web = self.root / 'isolated-web'
+        shutil.copytree(app.WEB, web)
+        status = self.root / 'sync-status.json'
+        status.write_text(json.dumps({'schema_version': 1, 'state': 'online',
+                                      'software': {'release_id': 'test-release', 'health': 'ok'}}), encoding='utf-8')
+        with patch.object(app, 'WEB', web):
+            server = ThreadingHTTPServer(('127.0.0.1', 0), make_handler(self.view(), status))
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            try:
+                url = 'http://127.0.0.1:' + str(server.server_port)
+                def read(path):
+                    with urlopen(url + path) as response: return response.read()
+                runtime = json.loads(read('/api/v1/runtime'))
+                html = read('/')
+                self.assertEqual(digest(html), runtime['served_html_sha256'])
+                self.assertIn(runtime['ui_asset_id'].encode(), html)
+                self.assertEqual(digest(read('/app.js')), runtime['file_hashes']['app.js'])
+                self.assertEqual(digest(read('/style.css')), runtime['file_hashes']['style.css'])
+                self.assertEqual(runtime['software']['release_id'], 'test-release')
+                self.assertEqual(json.loads(read('/api/v1/health'))['runtime']['sync']['state'], 'online')
+                with (web / 'style.css').open('ab') as stream: stream.write(b'\n/* isolated update */')
+                upgraded = json.loads(read('/api/v1/runtime'))
+                self.assertNotEqual(upgraded['ui_asset_id'], runtime['ui_asset_id'])
+                self.assertEqual(upgraded['file_hashes']['app.js'], runtime['file_hashes']['app.js'])
+                self.assertIn(upgraded['ui_asset_id'].encode(), read('/'))
+            finally:
+                server.shutdown()
+                server.server_close()
 
 
 if __name__ == '__main__': unittest.main()

@@ -4,7 +4,7 @@ import argparse, fnmatch, json, html, mimetypes, re, subprocess, threading, time
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
-from core import Ledger, now, packed, sha, safe_path, MAX_BLOB
+from core import Ledger, now, packed, sha, safe_path, MAX_BLOB, digest
 
 ROOT=Path(__file__).resolve().parents[2]
 WEB=Path(__file__).parent/'web'
@@ -53,7 +53,30 @@ def sync_once(ledger,repo,sources,on_progress=None):
         finally:
             if on_progress: on_progress()
 
-def make_handler(ledger):
+def ui_bundle():
+    files={name:(WEB/name).read_bytes() for name in ('index.html','app.js','style.css')}
+    hashes={name:digest(data) for name,data in files.items()}
+    asset_id=digest(packed(hashes).encode())
+    rendered=files['index.html'].replace(b'</head>',f'<meta name="board-assets" content="{asset_id}"></head>'.encode(),1)
+    return rendered,{'ui_asset_id':asset_id,'file_hashes':hashes,'served_html_sha256':digest(rendered)}
+
+def sync_state(path):
+    if path is None: return None
+    try:
+        with Path(path).open('rb') as stream: raw=stream.read(64*1024+1)
+        if len(raw)>64*1024: raise ValueError('Sync status too large')
+        state=json.loads(raw)
+        if not isinstance(state,dict): raise ValueError('Sync status must be an object')
+        return state
+    except (OSError,ValueError) as error:
+        return {'state':'error','error':{'stage':'status','message':type(error).__name__+': '+str(error)[:200]}}
+
+def make_handler(ledger,sync_status=None):
+    def annotate(data):
+        state=sync_state(sync_status)
+        if state is not None:
+            data.setdefault('runtime',{'mode':getattr(ledger,'mode','local_ledger')})['sync']=state
+        return data
     class Handler(BaseHTTPRequestHandler):
         def log_message(self,*args): pass
         def send(self,data,status=200,ctype='application/json; charset=utf-8',headers=None):
@@ -68,12 +91,17 @@ def make_handler(ledger):
             u=urlparse(self.path);q={k:v[-1] for k,v in parse_qs(u.query).items()};path=u.path
             try:
                 if path=='/api/v1/health':
-                    return self.send(ledger.health())
+                    return self.send(annotate(ledger.health()))
+                if path=='/api/v1/runtime':
+                    _,assets=ui_bundle();state=sync_state(sync_status)
+                    software=(state or {}).get('software',{})
+                    return self.send(dict(assets,schema_version=1,mode=getattr(ledger,'mode','local_ledger'),
+                                          software=software if isinstance(software,dict) else {},sync=state))
                 if path=='/api/v1/cells':
                     data=ledger.snapshot(q.get('algorithm'),q.get('run'),q.get('include_reported')=='true')
                     for key in ('problem','case_id','cores'):
                         if q.get(key): data['cells']=[c for c in data['cells'] if str(c[key])==q[key]]
-                    return self.send(data)
+                    return self.send(annotate(data))
                 if path=='/api/v1/events':
                     after=max(0,int(q.get('after',0)));deadline=time.monotonic()+min(25,max(0,int(q.get('wait',0))))
                     while True:
@@ -106,6 +134,7 @@ def make_handler(ledger):
                     return self.send((ledger.state/'blobs'/key).read_bytes(),ctype='application/octet-stream',headers={'Content-Disposition':'attachment; filename="'+key+'"'})
                 files={'/':'index.html','/app.js':'app.js','/style.css':'style.css','/agent':'agent.html'}
                 if path in files:
+                    if path=='/': return self.send(ui_bundle()[0],ctype='text/html; charset=utf-8')
                     f=WEB/files[path];return self.send(f.read_bytes(),ctype={'html':'text/html; charset=utf-8','js':'text/javascript; charset=utf-8','css':'text/css; charset=utf-8'}[f.suffix[1:]])
                 self.send({'error':'not found'},404)
             except (ValueError,KeyError) as e: self.send({'error':str(e)},400)
@@ -151,7 +180,7 @@ def main():
                     traceback.print_exc()
                 time.sleep(2 if args.sync_inbox else max(60,args.sync_interval))
         threading.Thread(target=worker,daemon=True).start()
-    server=ThreadingHTTPServer(('127.0.0.1',args.port),make_handler(ledger));server.daemon_threads=True
+    server=ThreadingHTTPServer(('127.0.0.1',args.port),make_handler(ledger,args.sync_status));server.daemon_threads=True
     args.state.mkdir(parents=True,exist_ok=True)
     (args.state/'service.json').write_text(packed({'url':f'http://127.0.0.1:{args.port}','started_at':now(),'mode':'central_mirror' if mirror else 'local_ledger','sources_poll_seconds':None if args.no_sync or mirror else max(60,args.sync_interval)}))
     print(f'Benchmark board: http://127.0.0.1:{args.port}',flush=True)
