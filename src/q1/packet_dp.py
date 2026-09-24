@@ -109,7 +109,7 @@ class _TaskProjection:
 
 
 def construct(graph, cores, capacity=None, bandwidth=60, gate=100,
-              max_task_compiles=5000):
+              max_task_compiles=10000, state_mode="auto"):
     if type(cores) is not int or not 2 <= cores <= 5:
         raise ValueError("packet DP requires an integer core count in 2..5")
     capacity = {"L1": 524288, "UB": 131072} if capacity is None else dict(capacity)
@@ -119,6 +119,8 @@ def construct(graph, cores, capacity=None, bandwidth=60, gate=100,
         raise ValueError("invalid gate or bandwidth")
     if type(max_task_compiles) is not int or max_task_compiles < 1:
         raise ValueError("invalid static compilation budget")
+    if state_mode not in ("three", "full", "auto"):
+        raise ValueError("state_mode must be three, full, or auto")
     began = time.perf_counter()
     view, chains, _, _, _ = author.recognize(graph)
 
@@ -140,7 +142,35 @@ def construct(graph, cores, capacity=None, bandwidth=60, gate=100,
     bins = [chains[core::cores] for core in range(cores)]
     blocks = [[line[j * packet:(j + 1) * packet] for j in range(blocks_count)]
               for line in bins]
-    states = tuple(sorted({0, packet - 1, packet}))
+    tail_task_bound = sum(bool(line[blocks_count * packet:]) for line in bins)
+
+    def estimate(states):
+        count = len(states)
+        normal_profiles = count + (blocks_count - 1) * count * count
+        drain_profiles = blocks_count * (count - 1)
+        transition_compiles = cores * (normal_profiles + drain_profiles)
+        # At most one drain after each of B normal blocks, then one tail per
+        # core with leftover chains. Final official recompilation covers every
+        # generated Task, not merely one representative per transition.
+        final_task_bound = cores * 2 * blocks_count + tail_task_bound
+        return dict(normal_profiles=normal_profiles, drain_profiles=drain_profiles,
+                    transition_task_compiles=transition_compiles,
+                    tail_task_compiles=tail_task_bound,
+                    final_plan_task_compiles_bound=final_task_bound,
+                    total_task_compiles_bound=(transition_compiles + tail_task_bound +
+                                               final_task_bound))
+
+    candidates = {"three": tuple(sorted({0, packet - 1, packet})),
+                  "full": tuple(range(packet + 1))}
+    estimates = {mode: estimate(states) for mode, states in candidates.items()}
+    chosen = ("full" if estimates["full"]["total_task_compiles_bound"] <= max_task_compiles
+              else "three") if state_mode == "auto" else state_mode
+    if estimates[chosen]["total_task_compiles_bound"] > max_task_compiles:
+        raise UnsupportedResponse(
+            f"{chosen} state Task compilation upper bound "
+            f"{estimates[chosen]['total_task_compiles_bound']} exceeds budget "
+            f"{max_task_compiles} before compilation")
+    states = candidates[chosen]
     projection = _TaskProjection(graph, view)
     compiled_count = 0
     response_cache, signatures, rejected = {}, {}, []
@@ -252,8 +282,11 @@ def construct(graph, cores, capacity=None, bandwidth=60, gate=100,
     scheduled_bytes = certificate["traffic"]["scheduled_copy_bytes"]
     if scheduled_bytes != score[1] + tail_traffic:
         raise UnsupportedResponse("full-plan boundary bytes differ from projected costs")
-    return plan, dict(algorithm_id="q1-packet-response-dp", variant="three-state-rational-v1",
+    return plan, dict(algorithm_id="q1-packet-response-dp",
+                     variant=f"{chosen}-state-rational-v2",
                      chains=len(chains), cores=cores, packet=packet, states=states,
+                     state_mode_requested=state_mode, state_mode_chosen=chosen,
+                     state_compile_estimates=estimates,
                      complete_rounds=blocks_count, actions=actions, tasks=next_task,
                      profiled_transitions=len(signatures), unique_responses=len(response_cache),
                      static_task_compiles=compiled_count, max_task_compiles=max_task_compiles,
@@ -271,11 +304,15 @@ def main():
     parser.add_argument("--cores", type=int, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--diagnostics", type=Path, required=True)
+    parser.add_argument("--state-mode", choices=("auto", "three", "full"), default="auto")
+    parser.add_argument("--max-task-compiles", type=int, default=10000)
     args = parser.parse_args()
     if args.output == args.diagnostics or args.output.exists() or args.diagnostics.exists():
         raise FileExistsError("refuse to overwrite outputs")
     started = time.perf_counter()
-    plan, details = construct(json.loads(args.graph.read_bytes()), args.cores)
+    plan, details = construct(json.loads(args.graph.read_bytes()), args.cores,
+                              max_task_compiles=args.max_task_compiles,
+                              state_mode=args.state_mode)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("x") as stream:
         stream.write(json.dumps(plan, separators=(",", ":")) + "\n")

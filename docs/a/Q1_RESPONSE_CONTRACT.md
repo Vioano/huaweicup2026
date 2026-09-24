@@ -77,11 +77,15 @@ inside the complete solver budget and retain the incumbent on a worse result.
 That would be heuristic candidate generation, not a claim of exact E0 DP
 optimality. No DP integration or extra scoring batch is released by this note.
 
-## Three-state candidate constructor
+## Pending-return candidate constructor
 
 `src/q1/packet_dp.py` now builds one candidate for private homogeneous
 M–V+–M chains on 2–5 cores. It derives the packet size from graph footprint
-and capacity, then optimizes the pending-return states `{0, Q-1, Q}`. A
+and capacity, then optimizes pending-return states. `full` uses `0..Q`,
+`three` uses `{0, Q-1, Q}`, and default `auto` chooses full only if its
+precomputed compilation-count upper bound fits the declared budget. It selects
+the smaller state set before compilation if necessary, without rerunning a
+failed full search. A
 return-only Task can drain a pending state without consuming another packet.
 The objective is lexicographic rational-model cycles, COPY bytes, and Task
 groups. The final incomplete packet is simulated explicitly.
@@ -93,11 +97,15 @@ every selected Task signature, total COPY bytes and full rational response
 must match the profiled transition path. Any mismatch rejects the candidate.
 There is no official scoring or integration with the unified solver yet.
 
-For R complete packets and K cores, at most 11 transition profiles per layer
-are considered, each compiling at most K Tasks. The shortest-path state space
-is O(R); actual cost additionally includes the official static compilation
-and response simulation, and the final whole-plan compilation. A declared
-5000-Task compilation ceiling stops with an error rather than hiding work.
+For R complete packets, S pending states and K cores, at most S squared normal
+transitions and S-1 drain transitions are considered per layer, each compiling
+at most K Tasks. DP uses O(R times S squared) transition work; actual cost
+additionally includes official static compilation and response simulation,
+and the final whole-plan compilation. The default 10000-Task compilation
+ceiling is checked before compilation using a bound including the tail and
+final plan, then checked against actual calls. This is a count limit, not a
+wall-clock or per-Task size limit; deployment also needs an outer process
+timeout. Current experiments use a 120-second constructor child limit.
 This optimizes only this accepted packet template with fixed remainder
 treatment under the rational model. It is not an optimum over all P1 plans.
 
