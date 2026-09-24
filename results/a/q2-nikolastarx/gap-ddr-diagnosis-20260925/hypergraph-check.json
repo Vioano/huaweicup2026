@@ -1,0 +1,409 @@
+{
+  "pilot_commit": "a6b09dcebf26c5ac28bcb4378dec8dbf06b0c075",
+  "manifest_sha256": "7af8890338b120e6b179fe96fbaacf746b2ab7ad34a1f2dabe2945afdd29f597",
+  "api": "candidate_ddr.mandatory_copy_work(graph,plan,60)",
+  "api_source_sha256": "a0b732ffc4ce68ab8a821f6ece096cd51198a437a4993f2e174cdea602d4cd3d",
+  "fixed_commit_checks": [
+    {
+      "case": "003",
+      "cores": 2,
+      "version": "old",
+      "sha256": {
+        "graph": "2c80acfd37edcf811ce76b7e7b1f7194c706bd4d4aa6449e6a19e9eac1028ced",
+        "plan": "6e1c18ca2db9a1a6e003a4dc65e7b947be3abdcca37b0897dee0b0ec6b1e3016",
+        "truth": "b89065df8b93d6ff27ef522aeb96319b20d65091dd5a7400f173e87139407de0"
+      },
+      "category_copy_bytes": {
+        "boundary_input": 1382534,
+        "boundary_output": 34,
+        "cross_tensor": 0,
+        "cross_direct": 0
+      },
+      "hypergraph_equals_mandatory_copy_work": true,
+      "mandatory_transfer_bytes": 1382568,
+      "E0_scheduled_copy_bytes": 1382568,
+      "zero_spill": true,
+      "cross_tensor_pair_count": 0,
+      "multi_source_tensor_count": 0
+    },
+    {
+      "case": "003",
+      "cores": 2,
+      "version": "new",
+      "sha256": {
+        "graph": "2c80acfd37edcf811ce76b7e7b1f7194c706bd4d4aa6449e6a19e9eac1028ced",
+        "plan": "f4cf0b78c41bced2d8f8e76231083e2194c9e7ebef12499a53ec3d06ec59d24a",
+        "truth": "fd3480311b0104beb3dbe6a5eee6128ae14019fec2817b3482cecefc8002f975"
+      },
+      "category_copy_bytes": {
+        "boundary_input": 1708300,
+        "boundary_output": 34,
+        "cross_tensor": 4643088,
+        "cross_direct": 0
+      },
+      "hypergraph_equals_mandatory_copy_work": true,
+      "mandatory_transfer_bytes": 6351422,
+      "E0_scheduled_copy_bytes": 6351422,
+      "zero_spill": true,
+      "cross_tensor_pair_count": 3544,
+      "multi_source_tensor_count": 0,
+      "top_cross_tensor_pairs": [
+        {
+          "tensor_id": 1000002113,
+          "src_core": 0,
+          "dst_core": 1,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        },
+        {
+          "tensor_id": 1000002114,
+          "src_core": 0,
+          "dst_core": 1,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        },
+        {
+          "tensor_id": 1000002132,
+          "src_core": 1,
+          "dst_core": 0,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        },
+        {
+          "tensor_id": 1000002133,
+          "src_core": 1,
+          "dst_core": 0,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        },
+        {
+          "tensor_id": 1000002151,
+          "src_core": 0,
+          "dst_core": 1,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        },
+        {
+          "tensor_id": 1000002152,
+          "src_core": 0,
+          "dst_core": 1,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        },
+        {
+          "tensor_id": 1000002170,
+          "src_core": 1,
+          "dst_core": 0,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        },
+        {
+          "tensor_id": 1000002171,
+          "src_core": 1,
+          "dst_core": 0,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        },
+        {
+          "tensor_id": 1000002189,
+          "src_core": 0,
+          "dst_core": 1,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        },
+        {
+          "tensor_id": 1000002190,
+          "src_core": 0,
+          "dst_core": 1,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        }
+      ]
+    },
+    {
+      "case": "005",
+      "cores": 3,
+      "version": "old",
+      "sha256": {
+        "graph": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+        "plan": "be58e78e1ffcbc28e247aa836ff2d5fb902da0c715af74ff2e17247992e707bb",
+        "truth": "f3626c16eb79f0da0e7f0a7102d9816710735b19e086629b1f927e9f96887131"
+      },
+      "category_copy_bytes": {
+        "boundary_input": 560176,
+        "boundary_output": 14592,
+        "cross_tensor": 2860032,
+        "cross_direct": 0
+      },
+      "hypergraph_equals_mandatory_copy_work": true,
+      "mandatory_transfer_bytes": 3434800,
+      "E0_scheduled_copy_bytes": 3434800,
+      "zero_spill": true,
+      "cross_tensor_pair_count": 1706,
+      "multi_source_tensor_count": 0
+    },
+    {
+      "case": "005",
+      "cores": 3,
+      "version": "new",
+      "sha256": {
+        "graph": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+        "plan": "06da4bb75b626bd1a2fcbf3987b39485e82834407af758d8e93b4d33d8509ed3",
+        "truth": "f7bdf4e1ffa903ee7140e1938b0e8709b184e3c810c24920c03fb67218e3d4c2"
+      },
+      "category_copy_bytes": {
+        "boundary_input": 623922,
+        "boundary_output": 14592,
+        "cross_tensor": 2088928,
+        "cross_direct": 0
+      },
+      "hypergraph_equals_mandatory_copy_work": true,
+      "mandatory_transfer_bytes": 2727442,
+      "E0_scheduled_copy_bytes": 2727442,
+      "zero_spill": true,
+      "cross_tensor_pair_count": 1310,
+      "multi_source_tensor_count": 0,
+      "top_cross_tensor_pairs": [
+        {
+          "tensor_id": 1000001363,
+          "src_core": 1,
+          "dst_core": 0,
+          "size_bytes": 4608,
+          "copy_transfer_bytes": 9216
+        },
+        {
+          "tensor_id": 1000001382,
+          "src_core": 0,
+          "dst_core": 2,
+          "size_bytes": 4608,
+          "copy_transfer_bytes": 9216
+        },
+        {
+          "tensor_id": 1000002767,
+          "src_core": 0,
+          "dst_core": 1,
+          "size_bytes": 4608,
+          "copy_transfer_bytes": 9216
+        },
+        {
+          "tensor_id": 1000002768,
+          "src_core": 0,
+          "dst_core": 1,
+          "size_bytes": 4608,
+          "copy_transfer_bytes": 9216
+        },
+        {
+          "tensor_id": 1000002786,
+          "src_core": 1,
+          "dst_core": 2,
+          "size_bytes": 4608,
+          "copy_transfer_bytes": 9216
+        },
+        {
+          "tensor_id": 1000002805,
+          "src_core": 2,
+          "dst_core": 1,
+          "size_bytes": 4608,
+          "copy_transfer_bytes": 9216
+        },
+        {
+          "tensor_id": 1000002824,
+          "src_core": 0,
+          "dst_core": 1,
+          "size_bytes": 4608,
+          "copy_transfer_bytes": 9216
+        },
+        {
+          "tensor_id": 1000004190,
+          "src_core": 1,
+          "dst_core": 2,
+          "size_bytes": 4608,
+          "copy_transfer_bytes": 9216
+        },
+        {
+          "tensor_id": 1000004209,
+          "src_core": 0,
+          "dst_core": 1,
+          "size_bytes": 4608,
+          "copy_transfer_bytes": 9216
+        },
+        {
+          "tensor_id": 1000004210,
+          "src_core": 0,
+          "dst_core": 1,
+          "size_bytes": 4608,
+          "copy_transfer_bytes": 9216
+        }
+      ]
+    },
+    {
+      "case": "056",
+      "cores": 5,
+      "version": "old",
+      "sha256": {
+        "graph": "fda213426382a3810afd172eadc10b9221330b906888537cb13b16369be3369d",
+        "plan": "66a57f85e29071fb8be7fb531aec89641362875b137a9c89745335d8ddfad977",
+        "truth": "93c4bb00c7dbcfe1dd107a5c49276551234f795dee3769ebddbb70e5bda92b45"
+      },
+      "category_copy_bytes": {
+        "boundary_input": 221526,
+        "boundary_output": 74,
+        "cross_tensor": 0,
+        "cross_direct": 0
+      },
+      "hypergraph_equals_mandatory_copy_work": true,
+      "mandatory_transfer_bytes": 221600,
+      "E0_scheduled_copy_bytes": 221600,
+      "zero_spill": true,
+      "cross_tensor_pair_count": 0,
+      "multi_source_tensor_count": 0
+    },
+    {
+      "case": "056",
+      "cores": 5,
+      "version": "new",
+      "sha256": {
+        "graph": "fda213426382a3810afd172eadc10b9221330b906888537cb13b16369be3369d",
+        "plan": "ae83fd8bc8b3fed7447c53962d36be0c1c4f7ef46cde698d9fcf23d42a1b4aa2",
+        "truth": "7b08d04204942e4b0b0636654b6a713f3e360da7e19574419bcd8c18b80a456b"
+      },
+      "category_copy_bytes": {
+        "boundary_input": 467954,
+        "boundary_output": 74,
+        "cross_tensor": 4616808,
+        "cross_direct": 0
+      },
+      "hypergraph_equals_mandatory_copy_work": true,
+      "mandatory_transfer_bytes": 5084836,
+      "E0_scheduled_copy_bytes": 5084836,
+      "zero_spill": true,
+      "cross_tensor_pair_count": 3000,
+      "multi_source_tensor_count": 0,
+      "top_cross_tensor_pairs": [
+        {
+          "tensor_id": 1000007767,
+          "src_core": 1,
+          "dst_core": 2,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        },
+        {
+          "tensor_id": 1000007771,
+          "src_core": 2,
+          "dst_core": 1,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        },
+        {
+          "tensor_id": 1000007775,
+          "src_core": 2,
+          "dst_core": 0,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        },
+        {
+          "tensor_id": 1000007779,
+          "src_core": 3,
+          "dst_core": 1,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        },
+        {
+          "tensor_id": 1000007783,
+          "src_core": 2,
+          "dst_core": 4,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        },
+        {
+          "tensor_id": 1000007787,
+          "src_core": 3,
+          "dst_core": 0,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        },
+        {
+          "tensor_id": 1000007846,
+          "src_core": 3,
+          "dst_core": 2,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        },
+        {
+          "tensor_id": 1000007850,
+          "src_core": 0,
+          "dst_core": 2,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        },
+        {
+          "tensor_id": 1000007854,
+          "src_core": 2,
+          "dst_core": 1,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        },
+        {
+          "tensor_id": 1000007862,
+          "src_core": 1,
+          "dst_core": 4,
+          "size_bytes": 4096,
+          "copy_transfer_bytes": 8192
+        }
+      ]
+    },
+    {
+      "case": "008",
+      "cores": 5,
+      "version": "old",
+      "sha256": {
+        "graph": "c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d",
+        "plan": "046b1caf9643b63aa2352374ac6e7c9fd11fcb278a7cd80c96402dff52f0b26f",
+        "truth": "869a9ef58ad0deae79a65b3a25681b04e5d157e2dc5e8aab496e7dd3b636bee2"
+      },
+      "category_copy_bytes": {
+        "boundary_input": 1990872,
+        "boundary_output": 663552,
+        "cross_tensor": 0,
+        "cross_direct": 0
+      },
+      "hypergraph_equals_mandatory_copy_work": true,
+      "mandatory_transfer_bytes": 2654424,
+      "E0_scheduled_copy_bytes": 2654424,
+      "zero_spill": true,
+      "cross_tensor_pair_count": 0,
+      "multi_source_tensor_count": 0
+    },
+    {
+      "case": "008",
+      "cores": 5,
+      "version": "new",
+      "sha256": {
+        "graph": "c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d",
+        "plan": "046b1caf9643b63aa2352374ac6e7c9fd11fcb278a7cd80c96402dff52f0b26f",
+        "truth": "869a9ef58ad0deae79a65b3a25681b04e5d157e2dc5e8aab496e7dd3b636bee2"
+      },
+      "category_copy_bytes": {
+        "boundary_input": 1990872,
+        "boundary_output": 663552,
+        "cross_tensor": 0,
+        "cross_direct": 0
+      },
+      "hypergraph_equals_mandatory_copy_work": true,
+      "mandatory_transfer_bytes": 2654424,
+      "E0_scheduled_copy_bytes": 2654424,
+      "zero_spill": true,
+      "cross_tensor_pair_count": 0,
+      "multi_source_tensor_count": 0
+    }
+  ],
+  "synthetic_move_identity": {
+    "seed": 20260925,
+    "trials": 2000,
+    "incident_hyperedge_checks": 6889,
+    "mismatches": 0
+  },
+  "move_identity": "For incident hyperedge t and nonempty same-core U moved a\u2192b, \u0394\u03bb=1[n_t(b)=0]\u22121[n_t(a)=|t\u2229U|]. Cost delta is weight*\u0394\u03bb for \u03bb or \u03bb\u22121 edges; fixed singleton output cost s has delta zero. Producer is included as a pin; direct edges are two-pin hyperedges.",
+  "placement_note": "Changing only within-core order preserves every op-to-core assignment and therefore all original pre-Step2 COPY bytes counted here; it does not guarantee unchanged Makespan, spill behavior, or added Step2 traffic.",
+  "scope_note": "Exact original COPY bytes before Step2; service_work is a separate abstract count, not a Makespan guarantee."
+}
