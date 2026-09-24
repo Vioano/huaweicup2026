@@ -1,6 +1,0 @@
-{
-  "status": "inconclusive",
-  "between_fixed_passes": [6470, 6472],
-  "reason": "Production advanced while paginated history was read. page.total no longer matched the initial signed record_count; the audit raised ValueError and did not write a passing replacement report.",
-  "handling": "No production freeze, import or restart. Kept the earlier fixed6470 pass and reran once on new signed6472 with stable start/end IDs. The initial expected DOM formatter used two decimals; the later code and retained6470 offline calculation use the actual three-decimal UI. No observed HTTP data was replaced."
-}
