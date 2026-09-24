@@ -24,7 +24,7 @@
 
 禁止排序 JSON mapping key、重编号或合并空核后默认等价。先冻结拟发布 JSON，再按官方读取方式解析确认；若后端消费 Python 对象，必须证明其键类型/插入顺序与该 JSON 的关系并记录，不能仅计算事后文件 hash。
 
-同一候选的 score/full/final-confirm 是不同操作；独立确认须新 operation、新额度。P2/P3 即使同一计划，也分 problem，可以另有 pair ID。重传同 operation 只查询原状态，未知不重新执行。相同有序计划在本次算法内可按预先声明策略跳过，但保留不同父节点/编辑来源；不据此合并 F。跨实验最终评分缓存和 single-flight 不属于 s55 v1 承诺。
+同一候选的 score/full/final-confirm **若分别派发**，须用不同 operation；独立确认须新 operation、新额度。预登记为 final 的唯一 E0 full 可同时提供完整输出和确认，不强制分成两次。P2/P3 即使同一计划，也分 problem，可以另有 pair ID。重传同 operation 只查询原状态，未知不重新执行。相同有序计划在本次算法内可按预先声明策略跳过，但保留不同父节点/编辑来源；不据此合并 F。跨实验最终评分缓存和 single-flight 不属于 s55 v1 承诺。
 
 ## 3. 精确接受与保留规则
 
@@ -68,6 +68,8 @@ P2 赢家可作 P3 proposal，不能凭 P2 排名硬剪 P3；P3 Cache 从官方�
 
 已向 s55 本地任务发送三项接口问题，并在 `2026-09-24T12:35:40Z` 前收到本轮静态答复：
 
+后续已全文读取其固定[后端能力交付][capabilities] `bd7f116c303709b6933e8f6b73338c29d690bed1` 的 README；第 4 节保存对应答复。这里引用其已标明的来源/校准范围，不代签其中后端或平台运行验收。
+
 1. **已对齐设计**：receipt 绑定序列化计划/原始表示、上下文、官方源码集合 hash、后端/构建/ABI、所需字段精确域、校准及准入决定、完整结果 hash、operation/终态/成本/证据缺口。E2 只进 F；P1 e1_full 仍需 E1 域准入。当前后端记录不足，收据接口待实现。
 2. **已对齐设计**：祖先许可事务同时圈存 seed/score 的最坏 fallback、独立 final、收尾 CPU/wall/内存/磁盘；收尾额度不含新评价。失败锁后仅发布此前持久确认且身份匹配的 I，不再发 final；时间不足跳候选，父 deadline 不重置，unknown 保留预留不重投。
 3. **已对齐设计**：P1 局部准备计 generator 的 Step1–3 CPU/wall/RSS；Q3 本次输入身份匹配且按 final purpose 预登记的唯一 P3 E0 full receipt 可以直接确认。实验另要求独立复核时才另开操作/额度。现代码缺共享收据/表示绑定时标 adapter 待实现，不回溯声称已经接入。
@@ -76,6 +78,7 @@ P2 赢家可作 P3 proposal，不能凭 P2 排名硬剪 P3；P3 Cache 从官方�
 
 [objectives]: https://github.com/huaweibei123/huaweicup2026/blob/1ee2c271c43bb14dd6c5de6b9ca7041b55d80916/docs/a/OFFICIAL_OBJECTIVES.md
 [infra]: https://github.com/huaweibei123/huaweicup2026/blob/abdfd31f358a035e5ecca3b0482a9d0881060ffe/docs/a/e2/CONCURRENT_EVALUATION_DESIGN.md
+[capabilities]: https://github.com/huaweibei123/huaweicup2026/blob/bd7f116c303709b6933e8f6b73338c29d690bed1/docs/a/coherent/backend-capabilities-s55-20260924/README.md
 [traffic1]: https://github.com/huaweibei123/huaweicup2026/blob/1ee2c271c43bb14dd6c5de6b9ca7041b55d80916/data/raw/a/official/code/multicore_cut_evaluate_problem_1.py#L176-L198
 [traffic2]: https://github.com/huaweibei123/huaweicup2026/blob/1ee2c271c43bb14dd6c5de6b9ca7041b55d80916/data/raw/a/official/code/multicore_cut_evaluate_problem_2.py#L248-L282
 [traffic3]: https://github.com/huaweibei123/huaweicup2026/blob/1ee2c271c43bb14dd6c5de6b9ca7041b55d80916/data/raw/a/official/code/multicore_cut_evaluate_problem_3.py#L256-L290
