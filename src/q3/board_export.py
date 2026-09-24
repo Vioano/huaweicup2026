@@ -76,7 +76,7 @@ def export_batch(batch_path, root=ROOT):
             "solver": {"source": source(sha, batch["solver_module"].replace(".", "/") + ".py", batch["solver_module"] + ".main"),
                        "authors": alg["authors"], "method": alg["method"], "references": alg["references"],
                        "upstream": alg["upstream"], "selected_algorithm_id": None, "selected_solver_commit": None},
-            "runner": {"source": source(sha, "src/q3/feedback_benchmark.py", "src.q3.feedback_benchmark.main"),
+            "runner": {"source": source(batch.get("execution", {}).get("runner_commit", sha), "src/q3/feedback_benchmark.py", "src.q3.feedback_benchmark.main"),
                        "argv": stage["runner_argv"], "working_directory": "."},
             "environment": batch["environment"],
             "measurement": {
@@ -136,10 +136,14 @@ def main():
     parser.add_argument("output", type=Path, help="new board-feed-<UTC>-<unique>.json")
     args = parser.parse_args()
     output = args.output.resolve()
-    if not output.is_relative_to(ROOT / "results/a/q3-nikolastarx"):
+    batch = read(args.batch)
+    area = batch.get("execution", {}).get("output_root", "results/a/q3-nikolastarx")
+    declared = ROOT / area
+    if (area not in ("results/a/q3-nikolastarx", "results/a/q3-verification")
+            or declared.resolve() != declared or not output.is_relative_to(declared)):
         raise ValueError("feed must stay in the Q3 result area")
     feed = export_batch(args.batch)
-    with output.open("x") as stream:
+    with output.open("x", encoding="utf-8", newline="\n") as stream:
         stream.write(json.dumps(feed, ensure_ascii=False, indent=2, allow_nan=False) + "\n")
     print(json.dumps({"records": len(feed["records"]), "feed": output.relative_to(ROOT).as_posix(), "evaluations": 0}))
 

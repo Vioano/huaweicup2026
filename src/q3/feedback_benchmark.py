@@ -22,6 +22,12 @@ import time
 
 ROOT = Path(__file__).resolve().parents[2]
 REPO = "huaweibei123/huaweicup2026"
+GUARDED_COMMIT = "6389818b1028ada74c685483dd1cd75fb8e16285"
+# Reviewed static/local imports of this frozen entrypoint, including imports in
+# main(). Official imports are covered separately by source-manifest.json.
+GUARDED_FILES = {f"src/q3/{name}.py" for name in (
+    "__init__", "guarded_solve", "safe_solve", "solve", "construct",
+    "reduction_tree", "release_tree", "capacity_tree", "pipe_bound")}
 
 
 def utc():
@@ -41,7 +47,8 @@ def write(path, value):
     """Atomically replace only this runner's own mutable receipt."""
     path = Path(path)
     temporary = path.with_name(path.name + ".tmp")
-    temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + "\n")
+    temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + "\n",
+                         encoding="utf-8", newline="\n")
     temporary.replace(path)
 
 
@@ -56,7 +63,7 @@ def artifact(path, root=ROOT):
 def validate_manifest(m):
     required = {"schema", "run_id", "stage_id", "producer_session", "task_url", "solver_commit",
                 "solver_module", "algorithm", "runtime_id", "budget", "jobs", "offline_costs"}
-    if set(m) != required or m["schema"] != "q3-feedback-benchmark-v1":
+    if set(m) not in (required, required | {"execution"}) or m["schema"] != "q3-feedback-benchmark-v1":
         raise ValueError("unexpected manifest fields or schema")
     for field in ("run_id", "stage_id", "runtime_id"):
         if not re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9._-]{0,99}", m[field]):
@@ -80,10 +87,39 @@ def validate_manifest(m):
         raise ValueError("invalid algorithm ID")
     if not m["jobs"]:
         raise ValueError("empty job list")
+    execution = m.get("execution")
+    if execution is not None:
+        if set(execution) != {"runner_commit", "output_root", "solver_files", "expected_commit",
+                              "memory_limit_bytes", "memory_poll_seconds"}:
+            raise ValueError("unexpected verification execution fields")
+        if m["solver_commit"] != GUARDED_COMMIT or m["solver_module"] != "src.q3.guarded_solve":
+            raise ValueError("separate runner identity currently covers the frozen guarded entrypoint only")
+        for key in ("runner_commit", "expected_commit"):
+            if not re.fullmatch(r"[0-9a-f]{40}", execution[key]):
+                raise ValueError(f"execution.{key} requires a full SHA")
+        if execution["output_root"] != "results/a/q3-verification":
+            raise ValueError("verification output_root must be results/a/q3-verification")
+        if set(execution["solver_files"]) != GUARDED_FILES or any(
+                not re.fullmatch(r"[0-9a-f]{64}", value) for value in execution["solver_files"].values()):
+            raise ValueError("incomplete frozen guarded dependency hashes")
+        if type(execution["memory_limit_bytes"]) is not int or execution["memory_limit_bytes"] <= 0:
+            raise ValueError("positive memory_limit_bytes required")
+        if type(execution["memory_poll_seconds"]) not in (int, float) or not 0.05 <= execution["memory_poll_seconds"] <= 1:
+            raise ValueError("memory_poll_seconds must be 0.05 to 1 second")
     seen = set()
     for j in m["jobs"]:
-        if set(j) != {"case_id", "cores", "variant", "solver_args", "parameters", "e0_call_limit"}:
+        fields = {"case_id", "cores", "variant", "solver_args", "parameters", "e0_call_limit"}
+        if set(j) != (fields | {"expected"} if execution else fields):
             raise ValueError("unexpected job fields")
+        if execution:
+            if set(j["expected"]) != {"plan", "result", "receipt"}:
+                raise ValueError("expected plan/result/receipt required for every verification job")
+            for ref in j["expected"].values():
+                if (set(ref) != {"path", "sha256"} or not isinstance(ref["path"], str)
+                        or not ref["path"].startswith("results/") or "\\" in ref["path"]
+                        or ":" in ref["path"] or ".." in ref["path"].split("/")
+                        or not re.fullmatch(r"[0-9a-f]{64}", ref["sha256"])):
+                    raise ValueError("invalid expected artifact reference")
         if not re.fullmatch(r"00[1-9]|0[1-9][0-9]|100", j["case_id"]):
             raise ValueError("invalid case")
         if type(j["cores"]) is not int or j["cores"] not in range(1, 6):
@@ -136,6 +172,90 @@ def verify_source(commit, cases, root=ROOT):
     return manifest["official_code_hash"], hashes
 
 
+def git_bytes(root, commit, path):
+    return subprocess.check_output(["git", "show", f"{commit}:{path}"], cwd=root)
+
+
+def verify_manifest_source(manifest, cases, root):
+    execution = manifest.get("execution")
+    if not execution:
+        return verify_source(manifest["solver_commit"], cases, root)
+    official, hashes = verify_source(execution["runner_commit"], cases, root)
+    for name, expected in execution["solver_files"].items():
+        frozen = hashlib.sha256(git_bytes(root, manifest["solver_commit"], name)).hexdigest()
+        if frozen != expected or digest(root / name) != expected:
+            raise RuntimeError(f"frozen algorithm dependency differs: {name}")
+    # src is a namespace package in the frozen checkout. A new initializer could
+    # execute unrelated code before the verified q3 entrypoint.
+    if (root / "src/__init__.py").exists():
+        raise RuntimeError("unexpected src package initializer")
+    for name in ("uv.lock", "pyproject.toml", "docs/a/source-manifest.json"):
+        if (root / name).read_bytes() != git_bytes(root, manifest["solver_commit"], name):
+            raise RuntimeError(f"frozen dependency/input contract differs: {name}")
+    return official, hashes
+
+
+def load_expected(manifest, root):
+    """Read all fixed control bytes before any child is dispatched; never score."""
+    execution = manifest.get("execution")
+    if not execution:
+        return {}
+    expected = {}
+    for job in manifest["jobs"]:
+        values = {}
+        for name, ref in job["expected"].items():
+            raw = git_bytes(root, execution["expected_commit"], ref["path"])
+            if hashlib.sha256(raw).hexdigest() != ref["sha256"]:
+                raise ValueError("fixed expected artifact hash differs: " + ref["path"])
+            values[name] = json.loads(gzip.decompress(raw) if ref["path"].endswith(".gz") else raw)
+        expected[job_key(job)] = values
+    return expected
+
+
+def typed_differences(left, right, path="$", limit=20):
+    """Compare decoded values and number types; only mapping order is ignored."""
+    differences = []
+    def visit(a, b, p):
+        if len(differences) >= limit:
+            return
+        if type(a) is not type(b):
+            differences.append({"path": p, "reason": "type", "expected": type(a).__name__, "actual": type(b).__name__})
+        elif isinstance(a, dict):
+            if set(a) != set(b):
+                differences.append({"path": p, "reason": "keys", "expected": sorted(a), "actual": sorted(b)})
+            for key in sorted(a.keys() & b.keys()):
+                visit(a[key], b[key], p + "." + key)
+        elif isinstance(a, list):
+            if len(a) != len(b):
+                differences.append({"path": p, "reason": "length", "expected": len(a), "actual": len(b)})
+            for i, (x, y) in enumerate(zip(a, b)):
+                visit(x, y, f"{p}[{i}]")
+        elif a != b:
+            differences.append({"path": p, "reason": "value", "expected": a, "actual": b})
+    visit(left, right, path)
+    return differences
+
+
+def compare_expected(expected, folder, result, receipt, job):
+    keys = ("official_e0_calls", "selected_strategy", "makespan")
+    candidate_keys = ("name", "strategy", "status", "makespan", "certified_lower_bound_cycles",
+                      "unscored_plan_sha256")
+    def semantics(value):
+        return {**{key: value.get(key) for key in keys}, "candidates": [
+            {key: item.get(key) for key in candidate_keys} for item in value.get("candidates", [])]}
+    comparisons = {
+        "plan": typed_differences(expected["plan"], read(folder / f"case_{job['case_id']}_multicore_res.json")),
+        "result": typed_differences(expected["result"], result),
+        "receipt_semantics": typed_differences(semantics(expected["receipt"]), semantics(receipt)),
+    }
+    # Plan bytes are part of the reproducibility contract, unlike gzip container
+    # metadata. Full decoded result values/types are compared without exclusions.
+    if digest(folder / f"case_{job['case_id']}_multicore_res.json") != job["expected"]["plan"]["sha256"]:
+        comparisons["plan"].append({"path": "$", "reason": "plan bytes SHA256 differs"})
+    return {"matched": not any(comparisons.values()), "differences": comparisons,
+            "scope": "Exact plan bytes; full decoded official JSON values/types; receipt decisions/calls, excluding wall timers and gzip container metadata."}
+
+
 def environment(root=ROOT):
     cpu = platform.processor() or platform.machine()
     if sys.platform == "darwin":
@@ -149,31 +269,200 @@ def environment(root=ROOT):
             "threads": None, "workers": 1, "peak_rss_bytes": None}
 
 
-def run_child(argv, timeout, folder, root=ROOT):
-    """Measure spawn through reaped exit, killing the process group on timeout."""
+class WindowsJob:
+    """Native job ownership: descendants cannot outlive timeout/parent cleanup.
+
+    The gated launcher is assigned before it can spawn the solver. Unsupported
+    nested-job/host policies fail closed before releasing that gate.
+    """
+    def __init__(self):
+        import ctypes as c
+        from ctypes import wintypes as w
+        self.c, self.w = c, w
+        self.api = c.WinDLL("kernel32", use_last_error=True)
+        class Basic(c.Structure):
+            _fields_ = [("process_time", c.c_int64), ("job_time", c.c_int64), ("flags", w.DWORD),
+                        ("min_ws", c.c_size_t), ("max_ws", c.c_size_t), ("active_limit", w.DWORD),
+                        ("affinity", c.c_size_t), ("priority", w.DWORD), ("scheduling", w.DWORD)]
+        class Extended(c.Structure):
+            _fields_ = [("basic", Basic), ("io", c.c_uint64 * 6), ("process_memory", c.c_size_t),
+                        ("job_memory", c.c_size_t), ("peak_process", c.c_size_t), ("peak_job", c.c_size_t)]
+        class Memory(c.Structure):
+            _fields_ = [("cb", w.DWORD), ("faults", w.DWORD), ("peak_ws", c.c_size_t),
+                        ("working_set", c.c_size_t), ("peak_paged", c.c_size_t), ("paged", c.c_size_t),
+                        ("peak_nonpaged", c.c_size_t), ("nonpaged", c.c_size_t),
+                        ("pagefile", c.c_size_t), ("peak_pagefile", c.c_size_t)]
+        self.Memory = Memory
+        signatures = {
+            "CreateJobObjectW": ([c.c_void_p, w.LPCWSTR], w.HANDLE),
+            "SetInformationJobObject": ([w.HANDLE, c.c_int, c.c_void_p, w.DWORD], w.BOOL),
+            "QueryInformationJobObject": ([w.HANDLE, c.c_int, c.c_void_p, w.DWORD, c.c_void_p], w.BOOL),
+            "AssignProcessToJobObject": ([w.HANDLE, w.HANDLE], w.BOOL),
+            "TerminateJobObject": ([w.HANDLE, w.UINT], w.BOOL),
+            "CloseHandle": ([w.HANDLE], w.BOOL),
+            "OpenProcess": ([w.DWORD, w.BOOL, w.DWORD], w.HANDLE),
+            "K32GetProcessMemoryInfo": ([w.HANDLE, c.c_void_p, w.DWORD], w.BOOL),
+        }
+        for name, (args, result) in signatures.items():
+            fn = getattr(self.api, name)
+            fn.argtypes, fn.restype = args, result
+        self.handle = self.api.CreateJobObjectW(None, None)
+        if not self.handle:
+            raise c.WinError(c.get_last_error())
+        info = Extended()
+        info.basic.flags = 0x2000  # JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+        if not self.api.SetInformationJobObject(self.handle, 9, c.byref(info), c.sizeof(info)):
+            error = c.WinError(c.get_last_error())
+            self.close()
+            raise error
+
+    def attach(self, proc):
+        if not self.api.AssignProcessToJobObject(self.handle, int(proc._handle)):
+            raise self.c.WinError(self.c.get_last_error())
+
+    def rss(self):
+        c, w = self.c, self.w
+        count = 16
+        for _ in range(5):
+            class Pids(c.Structure):
+                _fields_ = [("assigned", w.DWORD), ("count", w.DWORD), ("pids", c.c_size_t * count)]
+            info = Pids()
+            if self.api.QueryInformationJobObject(self.handle, 3, c.byref(info), c.sizeof(info), None):
+                break
+            error = c.get_last_error()
+            if error != 234:  # ERROR_MORE_DATA
+                raise c.WinError(error)
+            count = max(count * 2, info.assigned)
+        else:
+            raise RuntimeError("cannot obtain stable Windows job process list")
+        total = 0
+        for pid in info.pids[:info.count]:
+            handle = self.api.OpenProcess(0x0400 | 0x0010, False, pid)
+            if not handle:
+                if c.get_last_error() == 87:  # process exited between snapshots
+                    continue
+                raise c.WinError(c.get_last_error())
+            try:
+                memory = self.Memory()
+                memory.cb = c.sizeof(memory)
+                if not self.api.K32GetProcessMemoryInfo(handle, c.byref(memory), memory.cb):
+                    raise c.WinError(c.get_last_error())
+                total += memory.working_set
+            finally:
+                self.api.CloseHandle(handle)
+        return total
+
+    def kill(self):
+        if self.handle and not self.api.TerminateJobObject(self.handle, 1):
+            raise self.c.WinError(self.c.get_last_error())
+
+    def close(self):
+        if self.handle:
+            self.api.CloseHandle(self.handle)
+            self.handle = None
+
+
+def group_rss(pid):
+    # ps is queried by process-group ID, so subprocess descendants count too.
+    text = subprocess.check_output(["ps", "-A", "-o", "pgid=,rss="], text=True,
+                                   encoding="utf-8", timeout=2)
+    return sum(int(rss) * 1024 for group, rss in (line.split() for line in text.splitlines() if line.strip())
+               if int(group) == pid)
+
+
+def kill_tree(proc, job=None):
+    if job is not None:
+        job.kill()
+    else:
+        try:
+            os.killpg(proc.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+
+
+def run_child(argv, timeout, folder, root=ROOT, memory_limit_bytes=None, memory_poll_seconds=0.1):
+    """Full process wall; optional sampled group RSS tripwire, never a hard cap."""
     start = time.perf_counter()
-    proc = subprocess.Popen(argv, cwd=root, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                            start_new_session=True)
-    status = "ok"
+    job = None
+    proc = None
+    stdout = stderr = b""
+    status, reason, peak = "ok", None, None
+    env = dict(os.environ)
+    # Do not read stale bytecode from the algorithm checkout. -B also prevents
+    # writes; the newly reserved job directory makes this prefix initially empty.
+    cache = folder / "unused-pycache"
+    if cache.exists():
+        raise FileExistsError("bytecode isolation prefix already exists")
+    env.update(PYTHONPYCACHEPREFIX=str(cache), PYTHONUTF8="1")
     try:
-        stdout, stderr = proc.communicate(timeout=timeout)
-    except subprocess.TimeoutExpired:
-        os.killpg(proc.pid, signal.SIGKILL)
-        stdout, stderr = proc.communicate()
-        status = "timeout"
+        if os.name == "nt":
+            job = WindowsJob()
+            gate = "import subprocess,sys; token=sys.stdin.buffer.read(1); sys.exit(subprocess.call(sys.argv[1:]) if token==b'1' else 125)"
+            proc = subprocess.Popen([sys.executable, "-I", "-c", gate, *argv], cwd=root, env=env,
+                                    stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                    creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
+            job.attach(proc)
+            proc.stdin.write(b"1")
+            proc.stdin.flush()
+            proc.stdin.close()
+            proc.stdin = None
+        else:
+            proc = subprocess.Popen(argv, cwd=root, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                    start_new_session=True)
+        while True:
+            remaining = timeout - (time.perf_counter() - start)
+            if remaining <= 0:
+                status, reason = "timeout", "per-job or original batch deadline"
+                break
+            if memory_limit_bytes is not None:
+                try:
+                    rss = job.rss() if job else group_rss(proc.pid)
+                except Exception as error:
+                    status, reason = "failed", f"memory_monitor_error: {type(error).__name__}: {error}"
+                    break
+                peak = max(peak or 0, rss)
+                if rss > memory_limit_bytes:
+                    status, reason = "failed", "memory_limit_exceeded"
+                    break
+            remaining = timeout - (time.perf_counter() - start)
+            if remaining <= 0:
+                status, reason = "timeout", "per-job or original batch deadline"
+                break
+            try:
+                stdout, stderr = proc.communicate(timeout=min(remaining, memory_poll_seconds) if memory_limit_bytes else remaining)
+                if proc.returncode:
+                    status, reason = "failed", "nonzero exit"
+                break
+            except subprocess.TimeoutExpired:
+                continue
+        if status != "ok":
+            kill_tree(proc, job)
+            stdout, stderr = proc.communicate(timeout=10)
     except BaseException:
-        os.killpg(proc.pid, signal.SIGKILL)
-        proc.communicate()
+        if proc is not None:
+            # Assignment can fail before the gate opens: kill that gated process
+            # directly too, because it may not belong to the job yet.
+            try:
+                kill_tree(proc, job)
+            finally:
+                if proc.poll() is None:
+                    proc.kill()
+                stdout, stderr = proc.communicate(timeout=10)
         raise
-    elapsed = time.perf_counter() - start
-    if proc.returncode and status != "timeout":
-        status = "failed"
-    # Logs remain complete apart from explicitly disclosed local path redaction.
-    for name, raw in (("stdout.txt", stdout), ("stderr.txt", stderr)):
-        (folder / name).write_bytes(raw.replace(str(root).encode(), b"<repo>")
-                                   .replace(sys.executable.encode(), b"<python>"))
-    return {"status": status, "exit_code": proc.returncode, "wall_seconds": elapsed,
-            "argv": ["python", *map(str, argv[1:])],
+    finally:
+        if job is not None:
+            job.close()  # also removes descendants after a successful root exit
+        elif proc is not None:
+            kill_tree(proc)
+        for name, raw in (("stdout.txt", stdout), ("stderr.txt", stderr)):
+            (folder / name).write_bytes(raw.replace(str(root).encode(), b"<repo>")
+                                       .replace(sys.executable.encode(), b"<python>"))
+    return {"status": status, "reason": reason, "exit_code": proc.returncode,
+            "wall_seconds": time.perf_counter() - start, "argv": ["python", *map(str, argv[1:])],
+            "process_tree_cleanup": "Windows kill-on-close Job Object with gated launcher" if job else "POSIX process group",
+            "memory": {"limit_bytes": memory_limit_bytes, "sampled_peak_rss_bytes": peak,
+                       "poll_seconds": memory_poll_seconds if memory_limit_bytes else None,
+                       "scope": "sum of process-group RSS / Windows job WorkingSetSize; sampled tripwire, not OS hard limit; shared pages may be counted more than once"},
             "log_derivation": "stdout/stderr preserve bytes except repository and interpreter absolute paths replaced by markers"}
 
 
@@ -249,6 +538,8 @@ def same_batch(old, manifest):
                 "runtime_id", "budget", "offline_costs"):
         if old[key] != manifest[key]:
             raise ValueError(f"continuation cannot change {key}")
+    if old.get("execution") != manifest.get("execution"):
+        raise ValueError("continuation cannot change execution policy")
     if old["status"] not in ("stage_complete",):
         raise ValueError("only a completed successful stage may be explicitly continued")
     if manifest["stage_id"] in [stage["stage_id"] for stage in old["stages"]]:
@@ -261,7 +552,10 @@ def execute(manifest, output, continuing=False, root=ROOT, runner_argv=None):
     validate_manifest(manifest)
     root = Path(root).resolve()
     output = Path(output).resolve()
-    if not output.is_relative_to(root / "results/a/q3-nikolastarx"):
+    execution = manifest.get("execution", {})
+    declared_area = root / execution.get("output_root", "results/a/q3-nikolastarx")
+    write_area = declared_area.resolve()
+    if write_area != declared_area or not output.is_relative_to(write_area) or output == write_area:
         raise ValueError("batch must be in the Q3 result write area")
     meta_path = output / "batch.json"
     if continuing:
@@ -272,7 +566,8 @@ def execute(manifest, output, continuing=False, root=ROOT, runner_argv=None):
             raise FileExistsError("batch exists; no overwrite or automatic resume")
         batch = {key: value for key, value in manifest.items() if key not in ("jobs", "stage_id")}
         batch.update(started_at=utc(), status="prepared", stages=[], records=[], e0_budget_used=0)
-    code_hash, hashes = verify_source(manifest["solver_commit"], [j["case_id"] for j in manifest["jobs"]], root)
+    code_hash, hashes = verify_manifest_source(manifest, [j["case_id"] for j in manifest["jobs"]], root)
+    expected = load_expected(manifest, root)
     env = environment(root)
     if continuing and env != batch["environment"]:
         raise ValueError("continuation environment changed")
@@ -297,9 +592,19 @@ def execute(manifest, output, continuing=False, root=ROOT, runner_argv=None):
             batch["stop_reason"] = "original deadline or global E0 reservation cap reached"
             break
         # Detect concurrent code changes before every dispatch. No calls made by this check.
-        _, fresh_hashes = verify_source(manifest["solver_commit"], [job["case_id"]], root)
-        if any(fresh_hashes[k] != v for k, v in hashes.items() if k in fresh_hashes):
-            raise RuntimeError("source bytes changed between jobs")
+        try:
+            _, fresh_hashes = verify_manifest_source(manifest, [job["case_id"]], root)
+            if any(fresh_hashes[k] != v for k, v in hashes.items() if k in fresh_hashes):
+                raise RuntimeError("source bytes changed between jobs")
+        except Exception as error:
+            batch["status"] = stage["status"] = "stopped_before_dispatch"
+            batch["stop_reason"] = f"source preflight failed: {type(error).__name__}: {error}".replace(str(root), "<repo>")
+            break
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            batch["status"] = stage["status"] = "stopped_before_dispatch"
+            batch["stop_reason"] = "original deadline reached during source preflight"
+            break
         folder = output / "cells" / key
         folder.mkdir(parents=True, exist_ok=False)
         record = {**job, "job_key": key, "stage_id": manifest["stage_id"], "started_at": utc(),
@@ -319,18 +624,28 @@ def execute(manifest, output, continuing=False, root=ROOT, runner_argv=None):
                 "--evidence", relative(folder / "evidence", root), *job["solver_args"]]
         try:
             record["calls"]["solver"] = 1
-            record["solver_process"] = run_child(argv, min(remaining, batch["budget"]["per_job_seconds"]), folder, root)
+            limits = ({"memory_limit_bytes": execution["memory_limit_bytes"],
+                       "memory_poll_seconds": execution["memory_poll_seconds"]} if execution else {})
+            record["solver_process"] = run_child(argv, min(remaining, batch["budget"]["per_job_seconds"]), folder, root, **limits)
             process = record["solver_process"]
             if process["status"] != "ok":
                 record["status"] = process["status"]
-                raise RuntimeError("solver child did not complete; no retry")
-            verify_source(manifest["solver_commit"], [job["case_id"]], root)
+                raise RuntimeError("solver child did not complete; no retry; " + str(process.get("reason", "unknown")))
+            verify_manifest_source(manifest, [job["case_id"]], root)
             result, receipt, refs = validate_result(folder, job, root)
-            record.update(status="ok", artifacts=refs, makespan_cycles=result["makespan"],
+            record.update(artifacts=refs, makespan_cycles=result["makespan"],
                           data_movement_bytes=result.get("data_movement_bytes"), cache_stats=result.get("cache_stats"),
                           solver_receipt=receipt)
             record["identity"]["plan_sha256"] = refs["plan"]["sha256"]
             record["calls"]["E0"] = receipt["official_e0_calls"]
+            if execution:
+                comparison = compare_expected(expected[key], folder, result, receipt, job)
+                comparison_path = folder / "expected-comparison.json"
+                write(comparison_path, comparison)
+                record["expected_comparison"] = artifact(comparison_path, root)
+                if not comparison["matched"]:
+                    raise ValueError("fixed expected evidence differs; stop before next job")
+            record["status"] = "ok"
             # Successful receipts prove unused reservations; failures/unknowns never refund.
             batch["e0_budget_used"] -= job["e0_call_limit"] - receipt["official_e0_calls"]
             if any(c["status"] == "rejected" for c in receipt.get("candidates", [])):
