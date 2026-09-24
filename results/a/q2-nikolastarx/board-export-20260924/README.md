@@ -41,3 +41,5 @@ python3 src/benchmark_board/protocol.py results/a/q2-nikolastarx/board-export-20
 ```
 
 本次实际预检使用 `board-feed-20260924T132237Z-history13.json`，退出码 0。预检只在临时目录核对，不写中央库。协议仍由成绩台维护者单写；导出器不新增接收格式。
+
+首次 Git 暂存发现共享换行规范会将部分旧 Windows 原件 CRLF 转为 LF；本目录 `.gitattributes` 对 `joint-20260924/**` 禁止文本转换，保持原始字节。固定提交交付前再次逐文件比对全部历史 blob，并用 `--commit <完整SHA>` 预检；不能只凭工作区哈希通过就声称远端原件匹配。首次规范化的中间提交不作为交付入口。
