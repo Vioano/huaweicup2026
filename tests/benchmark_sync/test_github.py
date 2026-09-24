@@ -67,3 +67,23 @@ class GitHubTests(unittest.TestCase):
    with self.subTest(method=method,error=error),patch('src.benchmark_sync.github.urllib.request.urlopen',side_effect=error) as call,patch('src.benchmark_sync.github.time.sleep'):
     with self.assertRaises(urllib.error.URLError):r.request(method,'/test',{} if method!='GET' else None)
     self.assertEqual(call.call_count,1)
+ def test_fixed_source_tree_survives_publications_with_bounded_cache(self):
+  from collections import OrderedDict
+  import threading,types
+  r=RacingGitHub(False);r.trees=OrderedDict();r.tree_lock=threading.Lock()
+  r.tree=types.MethodType(GitHub.tree,r);original=r.request;calls=[]
+  def request(method,path,body=None,params=None):
+   if method=='GET':calls.append(path)
+   if method=='GET' and path.startswith('/git/trees/'):
+    commit=path.rsplit('/',1)[-1]
+    return {'tree':[{'path':p,'type':'blob','sha':sha,'mode':'100644','size':len(r.data[sha])} for p,sha in r.commits[commit].items()]}
+   return original(method,path,body)
+  r.request=request;source='b'*40;r.commits[source]={'source.json':r.put_blob(b'source')}
+  before=r.tree(source);source_calls=lambda:sum(p.endswith('/'+source) for p in calls)
+  self.assertEqual(source_calls(),2)
+  r.update({'channel':b'new'},expected={'channel':b'old'})
+  self.assertIs(r.tree(source),before);self.assertEqual(source_calls(),2)
+  for i in range(20):
+   commit=f'{i+100:040x}';r.commits[commit]={};r.tree(commit)
+  self.assertEqual(len(r.trees),16)
+  r.tree(source);self.assertEqual(source_calls(),4)

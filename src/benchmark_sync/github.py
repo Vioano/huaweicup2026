@@ -1,6 +1,7 @@
 """Small-branch GitHub transport. Never checks out or downloads research history."""
 from __future__ import annotations
 import base64
+from collections import OrderedDict
 import json
 import http.client
 import ssl
@@ -45,7 +46,8 @@ class GitHub:
         self.repository, self.branch, self.cache, self.gh = repository, branch, Path(cache), gh
         self.cache.mkdir(parents=True,exist_ok=True)
         self.token = subprocess.check_output([gh,'auth','token','--hostname','github.com'],stderr=subprocess.DEVNULL,text=True).strip()
-        self.trees = {}
+        self.trees = OrderedDict()
+        self.tree_lock=threading.Lock()
         self.cooldown_lock=threading.Lock()
         self.cooldown_file=self.cache/'cooldown.json'
         self.cooldown_until=json.loads(self.cooldown_file.read_bytes()).get('until',0) if self.cooldown_file.exists() else 0
@@ -95,15 +97,21 @@ class GitHub:
 
     def tree(self, commit):
         fixed_sha(commit)
-        if commit not in self.trees:
-            # A recursive Git tree is bounded; fail closed on GitHub truncation.
-            # request() intentionally accepts no arbitrary query strings.
-            meta=self.request('GET','/git/commits/'+commit)
-            obj=self.request('GET','/git/trees/'+fixed_sha(meta['tree']['sha']),params={'recursive':'1'})
-            if obj.get('truncated') or len(obj['tree'])>100000: raise ValueError('Truncated or excessive Git tree')
-            entries={item['path']:item for item in obj['tree'] if item['type']=='blob'}
+        with self.tree_lock:
+            if commit in self.trees:
+                self.trees.move_to_end(commit)
+                return self.trees[commit]
+        # Fixed Git commit trees never change. A small LRU keeps active source trees
+        # across snapshot/receipt publications without growing for every channel head.
+        meta=self.request('GET','/git/commits/'+commit)
+        obj=self.request('GET','/git/trees/'+fixed_sha(meta['tree']['sha']),params={'recursive':'1'})
+        if obj.get('truncated') or len(obj['tree'])>100000: raise ValueError('Truncated or excessive Git tree')
+        entries={item['path']:item for item in obj['tree'] if item['type']=='blob'}
+        with self.tree_lock:
             self.trees[commit]=entries
-        return self.trees[commit]
+            self.trees.move_to_end(commit)
+            while len(self.trees)>16: self.trees.popitem(last=False)
+        return entries
 
     def blob(self, sha, size=None):
         fixed_sha(sha)
@@ -156,9 +164,7 @@ class GitHub:
             try:
                 if head: self.request('PATCH','/git/refs/heads/'+self.branch,{'sha':commit,'force':False})
                 else: self.request('POST','/git/refs',{'ref':'refs/heads/'+self.branch,'sha':commit})
-                self.trees.clear()
                 return commit
             except RemoteError as e:
                 if e.status not in (409,422): raise
-                self.trees.clear()
         raise RuntimeError('Concurrent sync updates; retry on next cycle')
