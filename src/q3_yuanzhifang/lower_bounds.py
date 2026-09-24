@@ -26,6 +26,8 @@ def bound_graph(graph, cores, bandwidth):
     ops = {u: o for u, o in all_ops.items() if o['op'] not in ('COPY_IN', 'COPY_OUT')}
     tensors = {t['id']: t for t in graph['tensors']}
     producers, consumers, direct = _original_tensor_views(graph)
+    if any(len(writers) > 1 for writers in producers.values()):
+        raise ValueError('bound proof requires at most one original producer per tensor')
     pred = {u: set() for u in ops}
     for t, readers in consumers.items():
         ps = producers[t] & ops.keys()

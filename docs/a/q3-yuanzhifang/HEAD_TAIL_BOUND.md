@@ -1,5 +1,7 @@
 # 原图最早开始／最小后续长度的区间工作量界
 
+补充适用域与追溯状态见BOUND_SCOPE_REVIEW.md：新实现显式要求原tensor至多一个producer。旧100图扫描未单列该守卫，逐图补核完成前，以下500格数字按此条件引用，不由LB≤T代替条件验证。
+
 适用于冻结官方模型中非COPY的原M/V操作，时长为非负整数cycles取max(1,cycles)。每个原操作必须恰执行一次，每核每pipe一个槽。只使用官方直接op边及原tensor的eligible生产消费边；不使用未知分核的500延迟，不把COPY收缩边视为必有依赖。
 
 给每个原操作u计算head h_u：忽略资源争用的最早开始；tail t_u：该操作结束后到全部图完成至少还需的长度。原计算边u→v给h_v≥h_u+w_u、t_u≥w_v+t_v。没有原logical_tid别名时，原图输入第一次冷填充的最小COPY时间可作为消费者head起点，必需最终输出COPY时间可作为生产者tail起点；理由同LOWER_BOUNDS.md，Cache必须先完成首次miss才能被别核命中。有别名时禁用这些IO起点，只保留计算依赖。

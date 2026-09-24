@@ -115,6 +115,11 @@ def graph_points(graph, bandwidth):
     if bandwidth <= 0:
         raise ValueError('positive bandwidth required')
     producers, consumers, direct = _original_tensor_views(graph)
+    # The proof tracks each tensor through its one original definition and
+    # any official spill incarnations. Multiple writers need a separate proof
+    # about the backing selected by Step2; reject rather than extrapolate.
+    if any(len(writers) > 1 for writers in producers.values()):
+        raise ValueError('bound proof requires at most one original producer per tensor')
     pred = {u: set() for u in ops}
     for t, readers in consumers.items():
         for u in readers & ops.keys():

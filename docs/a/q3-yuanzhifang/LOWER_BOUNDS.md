@@ -1,5 +1,7 @@
 # 任意合法方案的必要界限，不是已达最优证明
 
+补充适用域与追溯状态见BOUND_SCOPE_REVIEW.md：新增原tensor至多一个producer守卫；旧100图原件保留，条件覆盖待单列补核，暂按有条件理论界引用。
+
 源码 `lower_bounds.py`。论证限定本库冻结官方P3：每个非COPY_IN/COPY_OUT的原操作恰好运行一次、普通操作时长max(1,cycles)、每核每Pipe一个槽，DDR和CACHE_READ各自分享固定总服务率，Cache初始空。原计算依赖保留；不知道分核时不向任何边擅自加500。源码来源为官方schedule_step3.py的_op_duration、PIPE_SLOTS及multicore_cut_evaluate_problem_3.py的任务构造/issue/retire，未改动。
 
 1. **管线工作**：对任一Pipe p，原操作总时长W_p必须由k个单槽资源执行，故T≥ceil(W_p/k)。复制和等待只会增加占用或停顿，不能消除原操作工作。
