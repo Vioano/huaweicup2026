@@ -8,7 +8,7 @@ import subprocess
 import sys
 import time
 
-ROOT = Path(__file__).resolve().parents[5]
+ROOT = Path(__file__).resolve().parents[4]
 sys.path.insert(0, str(ROOT))
 SOURCE = '1ff472bc60db45069c588280bef52826ed1e0385'
 
