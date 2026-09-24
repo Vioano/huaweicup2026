@@ -27,6 +27,7 @@ DATA = "results/a/local-p1-fixed64-20260924/20260924T1337Z-s59ee"
 FEED = DATA + "/board-feed-full500.json"
 BASELINES = "results/benchmark-board/official-singlecore-20260924"
 REPO_URL = "https://github.com/huaweibei123/huaweicup2026"
+FEED_BLOB = "6efc80d22e188a6c783d82be6cb9b7c0c5231bf2"
 
 
 def require(condition, message):
@@ -104,6 +105,30 @@ class Source:
         else:
             self.process.stdin.close()
             self.process.wait(timeout=10)
+
+
+class LocalFeedSource(Source):
+    """Fixed feed plus already published local frozen materials/denominators.
+
+This deliberately cannot impersonate a completed full artifact audit.
+"""
+    def __init__(self, feed):
+        self.feed = feed
+        self.items = {}
+
+    def get(self, path):
+        require(not Path(path).is_absolute() and ".." not in Path(path).parts, "unsafe path")
+        if path == FEED:
+            raw = self.feed.read_bytes()
+            if self.feed.suffix == ".gz":
+                raw = gzip.decompress(raw)
+        else:
+            raw = (ROOT / path).read_bytes()
+        self.items[path] = {"path": path, "sha256": sha(raw), "bytes": len(raw)}
+        return raw
+
+    def close(self):
+        pass
 
 
 def distribution(values):
@@ -279,7 +304,8 @@ def audit(source):
                "source_calls": {"solver": 500, "E0": 500, "E1": 0, "E2": 0},
                "new_calls_from_this_audit": {"solver": 0, "E0": 0, "E1": 0, "E2": 0},
                "static_plan_validation": "500 derive_multicore_plan + validate_task_order using hash-verified frozen helpers; no simulation replay or independent capacity/runtime validation",
-               "source_environment": records[0]["provenance"]["environment"],
+               "source_environment": {k: v for k, v in records[0]["provenance"]["environment"].items()
+                                      if k not in {"workers", "peak_rss_bytes"}},
                "source_workers_history": batch["workers_history"], "source_started_at": batch["started_at"],
                "source_finished_at": max(v["finished_at"] for v in batch["invocations"]),
                "results_over_64_mib": over64, "audit_wall_seconds": time.perf_counter() - start,
@@ -288,15 +314,126 @@ def audit(source):
     return rows, baselines, anomaly_rows, summary
 
 
+def audit_feed_table(source):
+    """Recalculate every reported cell; verify every shared denominator.
+
+Use while the large result/trace archive is in transit. Numbers from the fixed
+feed remain explicitly producer-reported until the separate full audit runs.
+"""
+    manifest, expected, cases = verify_materials(source)
+    cases.close()
+    raw = source.get(FEED)
+    require(hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\0" + raw).hexdigest() == FEED_BLOB,
+            "feed is not the blob pinned by the source commit's Git tree")
+    feed = read_json(raw)
+    records = feed["records"]
+    require(feed["schema_version"] == 1 and feed["submission_version"] == 1, "feed version")
+    require(len(records) == 500 and len({r["attempt_id"] for r in records}) == 500, "500 unique attempts required")
+    require({(r["case_id"], r["cores"]) for r in records} ==
+            {(f"{c:03d}", k) for c in range(1, 101) for k in range(1, 6)}, "complete 100x5 required")
+    require(len({r["run_id"] for r in records}) == 1 and len({r["variant"] for r in records}) == 1,
+            "mixed batch/variant")
+    rows, baselines, by_case = [], [], {}
+    for record in sorted(records, key=lambda r: (r["case_id"], r["cores"])):
+        case, cores, identity = record["case_id"], record["cores"], record["identity"]
+        require(record["algorithm_id"] == "q1-fixed64-local-finish" and record["solver_commit"] == SOLVER
+                and record["problem"] == "P1" and record["status"] == "ok" and record["evaluator"]["route"] == "E0",
+                "unexpected algorithm/status/route")
+        require(identity["graph_sha256"] == expected[f"data/case_{case}.json"]["sha256"] and
+                identity["config_sha256"] == expected["data/config.txt"]["sha256"] and
+                identity["official_sha256"] == manifest["official_code_hash"], "frozen input identity")
+        require(record["parameters"] == {"cores": cores, "kind": "fixed64", "seed": 0, "candidate_limit": 1,
+                    "solver_timeout_seconds": 120, "evaluation_timeout_seconds": 180, "batch_deadline_seconds": 7200},
+                "parameter drift")
+        baseline_ref = record["baseline"]
+        require(baseline_ref["route"] == "E0" and baseline_ref["entrypoint"] == "singlecore_evaluate.evaluate_singlecore",
+                "wrong baseline entrypoint")
+        require(all(baseline_ref[k] == identity[k] for k in ("graph_sha256", "config_sha256", "official_sha256")),
+                "baseline identity mismatch")
+        if case not in by_case:
+            run = read_json(source.get(f"{BASELINES}/{case}/run.json"))
+            require(run["status"] == "ok" and run["returncode"] == 0 and run["entrypoint"] == baseline_ref["entrypoint"],
+                    "baseline run status")
+            require(run["graph_sha256"] == identity["graph_sha256"] and run["config_sha256"] == identity["config_sha256"]
+                    and run["official_code_hash"] == identity["official_sha256"], "baseline run identity")
+            ref = run["artifacts"]["result.json"]
+            require(ref["sha256"] == baseline_ref["result"]["sha256"] and ref["path"] == baseline_ref["result"]["path"],
+                    "baseline reference mismatch")
+            raw_result = source.artifact(ref)
+            require(sha(raw_result) == ref["raw_sha256"] and len(raw_result) == ref["bytes"], "baseline raw identity")
+            result = read_json(raw_result)
+            require(result["scene"] == "A" and result["num_cores"] == 1, "baseline result type")
+            same_number(result["makespan"], run["makespan_cycles"], "baseline result cycles")
+            by_case[case] = {"case_id": case, "baseline_cycles": result["makespan"], "baseline_source_commit": BASELINE_COMMIT,
+                             "result_path": ref["path"], "result_sha256": ref["sha256"], "graph_sha256": identity["graph_sha256"],
+                             "config_sha256": identity["config_sha256"], "official_sha256": identity["official_sha256"]}
+            baselines.append(by_case[case])
+            del result, raw_result
+        require(baseline_ref["result"]["sha256"] == by_case[case]["result_sha256"], "inconsistent denominator within case")
+        metrics = record["metrics"]
+        require(number(metrics["makespan_cycles"]) and metrics["makespan_cycles"] > 0, "invalid makespan")
+        for key in ("solver_wall_seconds", "evaluation_wall_seconds", "ddr_bytes", "extra_ddr_bytes", "spill_bytes"):
+            require(number(metrics[key]) and metrics[key] >= 0, "invalid metric: " + key)
+        require(record["timing"]["solver_includes_evaluation"] is False, "timing scopes overlap")
+        require(record["provenance"]["measurement"]["calls"] == {"solver": 1, "E0": 1, "E1": 0, "E2": 0}, "call identity")
+        rows.append({"case_id": case, "problem": "P1", "cores": cores, "status": "producer_reported_ok",
+                     "verification": "fixed_feed_and_official_denominator_verified;full_plan_result_run_pending",
+                     "algorithm_id": record["algorithm_id"], "variant": record["variant"], "source_commit": COMMIT,
+                     "solver_commit": SOLVER, "makespan_cycles": metrics["makespan_cycles"],
+                     "baseline_cycles": by_case[case]["baseline_cycles"],
+                     "baseline_speedup": by_case[case]["baseline_cycles"] / metrics["makespan_cycles"],
+                     "solver_wall_seconds": metrics["solver_wall_seconds"], "evaluation_wall_seconds": metrics["evaluation_wall_seconds"],
+                     "scheduled_copy_bytes": metrics["ddr_bytes"], "extra_ddr_bytes": metrics["extra_ddr_bytes"],
+                     "spill_bytes": metrics["spill_bytes"], "source_workers": record["provenance"]["environment"]["workers"],
+                     "plan_sha256": identity["plan_sha256"], "result_sha256": record["artifacts"]["result"]["sha256"],
+                     "plan_path": record["artifacts"]["plan"]["path"], "result_path": record["artifacts"]["result"]["path"],
+                     "run_path": record["artifacts"]["run"]["path"]})
+    by_cores = {}
+    for k in range(1, 6):
+        subset = [r for r in rows if r["cores"] == k]
+        by_cores[str(k)] = {field: distribution([r[field] for r in subset]) for field in
+                           ("baseline_speedup", "solver_wall_seconds", "evaluation_wall_seconds", "extra_ddr_bytes")}
+        by_cores[str(k)]["slower_than_official_singlecore"] = sum(r["baseline_speedup"] < 1 for r in subset)
+    by_key = {(r["case_id"], r["cores"]): r for r in rows}
+    anomalies = []
+    for r in rows:
+        references = [("slower_than_official_singlecore", r["baseline_cycles"])]
+        if r["cores"] > 1:
+            references.append(("slower_than_previous_core_count", by_key[r["case_id"], r["cores"] - 1]["makespan_cycles"]))
+        for kind, value in references:
+            if r["makespan_cycles"] > value:
+                anomalies.append({"case_id": r["case_id"], "cores": r["cores"], "kind": kind,
+                                  "makespan_cycles": r["makespan_cycles"], "reference_cycles": value,
+                                  "relative_increase": r["makespan_cycles"] / value - 1})
+    summary = {"source_commit": COMMIT, "feed_git_blob": FEED_BLOB, "feed_sha256": sha(source.get(FEED)),
+               "solver_commit": SOLVER, "algorithm_id": records[0]["algorithm_id"], "variant": records[0]["variant"],
+               "run_id": records[0]["run_id"], "reported_success_cells": 500, "recalculated_cells": 500,
+               "verified_baselines": 100, "full_plan_result_run_audit": "pending;large-source-transfer-incomplete",
+               "verification_mode": "fixed-feed-plus-100-official-denominators", "by_cores": by_cores,
+               "official_curve_anchor_k1": 1.0, "k1_note": "Actual solver k1 B/M is separate from the official singlecore anchor.",
+               "all_solver_wall_seconds": distribution([r["solver_wall_seconds"] for r in rows]),
+               "all_evaluation_wall_seconds": distribution([r["evaluation_wall_seconds"] for r in rows]),
+               "source_calls_reported": {"solver": 500, "E0": 500, "E1": 0, "E2": 0},
+               "new_calls_from_this_audit": {"solver": 0, "E0": 0, "E1": 0, "E2": 0},
+               "source_environment": {k: v for k, v in records[0]["provenance"]["environment"].items()
+                                      if k not in {"workers", "peak_rss_bytes"}},
+               "source_workers_by_cell_count": {str(w): sum(r["source_workers"] == w for r in rows) for w in sorted({r["source_workers"] for r in rows})},
+               "anomaly_counts": {kind: sum(a["kind"] == kind for a in anomalies) for kind in
+                                  ("slower_than_official_singlecore", "slower_than_previous_core_count")}}
+    return rows, baselines, anomalies, summary
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-zip", type=Path, help="Optional fixed GitHub ZIP; default reads local Git objects")
+    parser.add_argument("--feed-table", type=Path, help="Compute full table from pinned feed and local verified baselines; explicitly not a full artifact audit")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     require(not args.output.exists(), "Use a new output directory; do not overwrite an earlier audit")
-    source = Source(args.source_zip)
+    require(not (args.source_zip and args.feed_table), "choose one source mode")
+    source = LocalFeedSource(args.feed_table) if args.feed_table else Source(args.source_zip)
     try:
-        rows, baselines, anomalies, summary = audit(source)
+        rows, baselines, anomalies, summary = audit_feed_table(source) if args.feed_table else audit(source)
         args.output.mkdir(parents=True)
         write_csv(args.output / "cells.csv", rows)
         write_csv(args.output / "baselines.csv", baselines)
@@ -313,11 +450,12 @@ def main():
         write_csv(args.output / "matrix_100x5.csv", matrix)
         save(args.output / "summary.json", summary)
         save(args.output / "source-audit.json", {"source_commit": COMMIT, "source_url": REPO_URL + "/tree/" + COMMIT,
-             "reader": "fixed GitHub ZIP" if args.source_zip else "git cat-file --batch",
+             "reader": "fixed feed plus local frozen inputs/denominators" if args.feed_table else "fixed GitHub ZIP" if args.source_zip else "git cat-file --batch",
              "auditor_sha256": sha(Path(__file__).read_bytes()), "python": sys.version,
              "checked_files": len(source.items), "files": sorted(source.items.values(), key=lambda v: v["path"]),
-             "scope": "All plan/result/run and referenced trace/log hashes, 100 denominators, frozen inputs, numeric fields, static plan order and aggregation. This is not an independent E0 rerun."})
-        print(json.dumps({"verified_cells": len(rows), "verified_baselines": len(baselines),
+             "scope": ("Only fixed feed identity, all 100 official denominator original bytes, frozen inputs and aggregation; full producer plan/result/run audit pending."
+                       if args.feed_table else "All plan/result/run and referenced trace/log hashes, 100 denominators, frozen inputs, numeric fields, static plan order and aggregation. This is not an independent E0 rerun.")})
+        print(json.dumps({"recalculated_cells" if args.feed_table else "verified_cells": len(rows), "verified_baselines": len(baselines),
                           "files": len(source.items), "by_cores": {k: v["baseline_speedup"]["mean"] for k, v in summary["by_cores"].items()},
                           "anomalies": summary["anomaly_counts"]}), flush=True)
     finally:
