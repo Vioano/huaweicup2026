@@ -24,6 +24,8 @@
 
 成员本机接收另存 `member-board-readback.json`：父会话对既有52341服务进行GET只读逐ID复核，32/32记录均eligible且artifacts_checked，提交指标及冻结身份与两份feed逐字段一致。成绩台另派生baseline_speedup，不要求整个metrics对象与提交前完全相同。本回执既不生成新attempt，也不代签中央接收、重新E0或科学验收。
 
+008补充时间线反馈见 `008-pipe-overlap.json`（0新评分）：各核component方案M62532/V59292，M/V重叠0；chain方案重叠8952，却新增12026880 B搬运，E0从123060升至248154。求交公式直接作用于完整官方 `per_core_timeline.ops` 的start/end，不用局部预测时刻。增加重叠仍可能被DDR/门控代价抵消；该统计不能独自证明Step1某个特定选择是唯一原因。
+
 复算只读取已有证据；输出使用不存在的新文件，不能覆盖本交付：
 
 ```text
