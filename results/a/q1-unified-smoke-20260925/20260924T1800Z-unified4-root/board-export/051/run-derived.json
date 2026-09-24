@@ -1,0 +1,166 @@
+{
+  "case_id": "051",
+  "cores": 5,
+  "status": "ok",
+  "calls": {
+    "solver": 1,
+    "external_E0": 1
+  },
+  "artifacts": {
+    "trace.json": {
+      "path": "cells/051/k5/trace.json",
+      "sha256": "d45e0aa4b9191eaae0ce6db05feb4242e69fa0dc8eab5dd0fea9af2f5b9b24e3"
+    },
+    "solver.rss.jsonl": {
+      "path": "cells/051/k5/solver.rss.jsonl",
+      "sha256": "5fe3070bf6650c4f89b31a4cc7671b38428f17d4ee4a637afefcde0388d7aa36"
+    },
+    "e0.stdout.txt": {
+      "path": "cells/051/k5/e0.stdout.txt",
+      "sha256": "5173e5870c2b91fd50da0993495cd28f05abaddeb40a3e5ab1ade3aaac38b1c8"
+    },
+    "plan.json": {
+      "path": "cells/051/k5/plan.json",
+      "sha256": "0801bd9ca275ca1a013c41bae90fda1554051dc504d5bf8f97dd031b417e3e6c"
+    },
+    "result.json": {
+      "path": "cells/051/k5/result.json",
+      "sha256": "d464715fb6e01c1d28cecc2e33efa8cf560e3a060c48d0fb1b3baf9e58d048ad"
+    },
+    "solver.stdout.txt": {
+      "path": "cells/051/k5/solver.stdout.txt",
+      "sha256": "2d94e340c5a047e62fdae0ce1421d3f833af438f89e1e861aedd448e4d53d093"
+    },
+    "solver-process.json": {
+      "path": "cells/051/k5/solver-process.json",
+      "sha256": "3b41c421a548e155c51c78dd3d30362fd7880b14fab926bf687da63a36d7a5b8"
+    },
+    "diagnostics.json": {
+      "path": "cells/051/k5/diagnostics.json",
+      "sha256": "74a388ef30683172aff8e784464bea76eaa79a906f1fdbedb082c23bac990f9e"
+    },
+    "e0-process.json": {
+      "path": "cells/051/k5/e0-process.json",
+      "sha256": "10ead373f7810e1b4988d42ba6a7418805b826645c111005906b1a8a774a7a9a"
+    },
+    "e0.stderr.txt": {
+      "path": "cells/051/k5/e0.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "official.log": {
+      "path": "cells/051/k5/official.log",
+      "sha256": "0143b033cfdf73b282450943eb134fe9c4516678dc36ee0ce430390281761761"
+    },
+    "solver.stderr.txt": {
+      "path": "cells/051/k5/solver.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e0.rss.jsonl": {
+      "path": "cells/051/k5/e0.rss.jsonl",
+      "sha256": "68cd41516db2c341ba58912228e896a485fa20fd73d0572646854a7b3a513dd0"
+    }
+  },
+  "started_at": "2026-09-24T17:59:55.259Z",
+  "graph_sha256": "884e8b12ac1f7a9b569958909680e8c2f6055966a59c9f929ffd5cee48aae43b",
+  "solver": {
+    "argv": [
+      "<local-python>",
+      "-B",
+      "src/q1/unified.py",
+      "<local-path>",
+      "--cores",
+      "5",
+      "--output",
+      "<local-path>",
+      "--diagnostics",
+      "<local-path>"
+    ],
+    "cwd": ".",
+    "started_at": "2026-09-24T17:59:56.854Z",
+    "status": "ok",
+    "pid": 87098,
+    "exit_code": 0,
+    "cleanup_confirmed": true,
+    "sampled_peak_group_rss_bytes": 103841792,
+    "rss_limit_bytes": 4294967296,
+    "sample_interval_seconds": 0.1,
+    "rss_scope": "Sum of observed owned process-group RSS; sampled, not continuous",
+    "timeout_including_cleanup_seconds": 300.0,
+    "cleanup_reserve_seconds": 2.0,
+    "process_group_id": 87098,
+    "finished_at": "2026-09-24T17:59:57.364Z",
+    "wall_seconds": 0.5096143329865299,
+    "user_cpu_seconds": 0.390653,
+    "system_cpu_seconds": 0.1025609999999999,
+    "cpu_scope": "Controller child rusage including ps sampler"
+  },
+  "online_ledger": {
+    "score_attempts_observed": 2,
+    "score_returns_observed": 2,
+    "confirmed_worker_calls_lower_bound": 2,
+    "worker_calls_upper_bound": 2,
+    "actual_e1_calls": 2,
+    "exact": true,
+    "unresolved_requests": 0
+  },
+  "evaluation": {
+    "argv": [
+      "<local-python>",
+      "-B",
+      "<local-path>",
+      "<local-path>",
+      "<local-path>",
+      "--config",
+      "<local-path>",
+      "--output",
+      "<local-path>",
+      "--trace-output",
+      "<local-path>",
+      "--log-output",
+      "<local-path>"
+    ],
+    "cwd": ".",
+    "started_at": "2026-09-24T17:59:58.939Z",
+    "status": "ok",
+    "pid": 87270,
+    "exit_code": 0,
+    "cleanup_confirmed": true,
+    "sampled_peak_group_rss_bytes": 39239680,
+    "rss_limit_bytes": 4294967296,
+    "sample_interval_seconds": 0.1,
+    "rss_scope": "Sum of observed owned process-group RSS; sampled, not continuous",
+    "timeout_including_cleanup_seconds": 120.0,
+    "cleanup_reserve_seconds": 2.0,
+    "process_group_id": 87270,
+    "finished_at": "2026-09-24T17:59:59.207Z",
+    "wall_seconds": 0.26890900000580586,
+    "user_cpu_seconds": 0.1926039999999999,
+    "system_cpu_seconds": 0.049590000000000245,
+    "cpu_scope": "Controller child rusage including ps sampler"
+  },
+  "consistency": {
+    "status": "equal",
+    "makespan": 253856,
+    "data_movement_bytes": {
+      "original_graph_copy_bytes": 393218,
+      "scheduled_copy_bytes": 9438614,
+      "added_copy_bytes": 9045396,
+      "partition_added_copy_bytes": 9045396,
+      "spill_added_copy_bytes": 0
+    }
+  },
+  "selected": "fork-frontier",
+  "makespan_cycles": 253856,
+  "data_movement_bytes": {
+    "original_graph_copy_bytes": 393218,
+    "scheduled_copy_bytes": 9438614,
+    "added_copy_bytes": 9045396,
+    "partition_added_copy_bytes": 9045396,
+    "spill_added_copy_bytes": 0
+  },
+  "finished_at": "2026-09-24T17:59:59.213Z",
+  "derivation": {
+    "original_sha256": "4cfe55da33916a55b05dc5d2ccb90a752343bc7261c056f051423ce6a0a9a296",
+    "change": "Absolute argv paths replaced with local-path tokens; artifact paths made relative to original batch. Original receipt remains in local batch directory."
+  }
+}
