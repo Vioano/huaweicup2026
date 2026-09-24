@@ -11,6 +11,7 @@ sys.path.insert(0,str(ROOT/'data/raw/a/official/code'))
 from stub_multicore_cut_and_schedule import _build_op_adjacency,_contract_excluded_copy_nodes
 SOURCE='161cdb35de11b0d174a5a0ca149aa36657af2abd'
 COMPARISON='results/a/q1-bounded-timeout-20260924/20260924T1524Z-timeout4/full500-filled-comparison.json'
+K4_FEEDS=['results/a/q1-bounded-full4-20260924/20260924T1439Z-boundedfull4-99/board-feed.json','results/a/q1-bounded-probe-20260924/20260924T1432Z-bounded014/board-feed.json']
 OUT=ROOT/'results/a/q1-input-structure-20260924/static_audit.json'
 def sha(raw):return hashlib.sha256(raw).hexdigest()
 def read(path):return json.loads((ROOT/path).read_text())
@@ -99,7 +100,11 @@ def main():
     assert sha(archive.read_bytes())==source['case_archive']['sha256']
     records=read(COMPARISON);assert len(records)==500
     runs={};oldstats=[]
+    k4refs={r['attempt_id']:r['artifacts']['run']for path in K4_FEEDS for r in read(path)['records']}
     for row in records:
+        if 'source_run'not in row:
+            assert row['cores']==4
+            row={**row,'source_run':k4refs[row['attempt_id']]}
         run=checked(row['source_run']);result=checked(run['artifacts']['result']);assert result['makespan']==row['makespan_cycles']
         assert result['data_movement_bytes']['spill_added_copy_bytes']==row['spill_bytes']
         oldstats.append({'case':row['case'],'cores':row['cores'],'makespan':result['makespan'],'spill_bytes':row['spill_bytes'],'extra_ddr_bytes':row['extra_ddr_bytes'],'run':row['source_run'],'result':run['artifacts']['result']})
@@ -109,7 +114,7 @@ def main():
         for case,(row,run)in sorted(runs.items()):
             name=f'data/case_{case}.json';raw=z.read(name);assert sha(raw)==files[name]['sha256']
             rows.append(analyze(json.loads(raw),row,run))
-    out={'analysis_source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT).decode().strip(),'read_source_commit':SOURCE,'comparison_source':COMPARISON,'comparison_sha256':sha((ROOT/COMPARISON).read_bytes()),'input_archive_sha256':sha(archive.read_bytes()),'official_code_hash':source['official_code_hash'],'actual_calls':{'solver':0,'E0':0,'E1':0,'E2':0},'all500_existing_results_verified':oldstats,'k5_graph_static_rows':rows,'scope':'Window geometry is static analysis, no plan output or solver/evaluator. Unions and payload cut sizes are neither peaks nor exact added DDR predictions.'}
+    out={'analysis_source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT).decode().strip(),'read_source_commit':SOURCE,'comparison_source':COMPARISON,'comparison_sha256':sha((ROOT/COMPARISON).read_bytes()),'k4_run_reference_sources':[{'path':p,'sha256':sha((ROOT/p).read_bytes())}for p in K4_FEEDS],'input_archive_sha256':sha(archive.read_bytes()),'official_code_hash':source['official_code_hash'],'actual_calls':{'solver':0,'E0':0,'E1':0,'E2':0},'all500_existing_results_verified':oldstats,'k5_graph_static_rows':rows,'scope':'Window geometry is static analysis, no plan output or solver/evaluator. Unions and payload cut sizes are neither peaks nor exact added DDR predictions.'}
     OUT.write_text(json.dumps(out,indent=2)+'\n')
     print(json.dumps({'graphs':len(rows),'old_results_verified':len(oldstats),'active':sum(r['static_activation']for r in rows),'new_solver_E0_E1_E2':0}))
 if __name__=='__main__':main()
