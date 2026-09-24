@@ -83,7 +83,11 @@ def load_fixed_module():
         raw = (ROOT / path).read_bytes()
         assert raw == git("show", THEORY + ":" + path), path
         hashes[path] = sha(raw)
-    manifest = json.loads((ROOT / "docs/a/source-manifest.json").read_bytes())
+    manifest_raw = (ROOT / "docs/a/source-manifest.json").read_bytes()
+    assert manifest_raw == git("show", THEORY + ":docs/a/source-manifest.json")
+    hashes["docs/a/source-manifest.json"] = sha(manifest_raw)
+    manifest = json.loads(manifest_raw)
+    official = {}
     for item in manifest["files"]:
         if item["path"].startswith("code/"):
             path = "data/raw/a/official/" + item["path"]
@@ -91,6 +95,9 @@ def load_fixed_module():
             assert sha(raw) == item["sha256"]
             assert raw == git("show", THEORY + ":" + path)
             hashes[path] = sha(raw)
+            official[item["path"]] = sha(raw)
+    assert len(official) == 10
+    assert sha("".join(p + "\t" + h + "\n" for p, h in sorted(official.items())).encode()) == manifest["official_code_hash"]
     # Import only after checking the exact author/theorem dependencies. The
     # lower_bound function does not call construct or any evaluator/compiler.
     sys.path.insert(0, str(ROOT / "src/q1_yuanzhifang"))
