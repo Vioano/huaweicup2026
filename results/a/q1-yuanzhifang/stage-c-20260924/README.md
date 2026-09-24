@@ -53,3 +53,5 @@ python -X utf8 -B src/benchmark_board/protocol.py results/a/q1-yuanzhifang/stage
 ```
 
 The first precheck was issued while the asynchronous exporter was still running and reported missing feed; no evaluator was invoked. After export completion, filesystem precheck passed valid/submission true, records 24, eligible 23; the single timeout is retained and excluded from optimum selection. Fixed Git-object precheck receipt follows in a subsequent commit. Central board intake and scientific acceptance are separate states; no central API writes were made.
+
+Fixed Git-object precheck succeeded at artifact commit `88e95e28f6b6fdfe7e4d0b91a7b124740dc5006a`: valid/submission true, 24 records, eligible 23; receipt `precheck-fixed-88e95e2.json`. Raw Windows CRLF is intentionally retained with `* -text`; ordinary diff --check reports these line endings as trailing whitespace. The same check with the per-command `core.whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol` passes; no raw output bytes were normalized.
