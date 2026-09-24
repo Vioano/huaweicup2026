@@ -7,9 +7,9 @@ class RacingGitHub(GitHub):
   self.commits={};self.trees_data={};self.data={};self.latest='a'*40;self.trees={};self.counter=1
   import threading
   self.write_lock=threading.RLock()
-  self.branch='test';self.collision=collision;self.raced=False;self.parents={};self.tree_bodies=[];self.commits[self.latest]={'channel':self.put_blob(b'old')}
+  self.branch='test';self.branches={'test':self.latest};self.collision=collision;self.raced=False;self.parents={};self.tree_bodies=[];self.commits[self.latest]={'channel':self.put_blob(b'old')}
  def new(self): self.counter+=1;return f'{self.counter:040x}'
- def head(self):return self.latest
+ def head(self,branch=None):return self.branches.get(self.branch if branch is None else branch)
  def tree(self,c):return {p:{'sha':sha,'size':len(self.data[sha])} for p,sha in self.commits[c].items()}
  def blob(self,sha,size=None):return self.data[sha]
  def put_blob(self,data):
@@ -26,11 +26,16 @@ class RacingGitHub(GitHub):
   if path=='/git/commits':
    sha=self.new();self.commits[sha]=self.trees_data[body['tree']];self.parents[sha]=body['parents'];return {'sha':sha}
   if method=='PATCH':
+   branch=path.rsplit('/heads/',1)[-1]
    if not self.raced:
-    self.raced=True;values=dict(self.commits[self.latest]);values['channel' if self.collision else 'other']=self.put_blob(b'concurrent')
-    self.latest=self.new();self.commits[self.latest]=values
-   if self.parents[body['sha']][0]!=self.latest:raise RemoteError(422)
-   self.latest=body['sha'];return {}
+    self.raced=True;latest=self.branches[branch];values=dict(self.commits[latest]);values['channel' if self.collision else 'other']=self.put_blob(b'concurrent')
+    self.latest=self.new();self.commits[self.latest]=values;self.branches[branch]=self.latest
+   if self.parents[body['sha']][0]!=self.branches[branch]:raise RemoteError(422)
+   self.latest=body['sha'];self.branches[branch]=body['sha'];return {}
+  if method=='POST' and path=='/git/refs':
+   branch=body['ref'].removeprefix('refs/heads/')
+   if branch in self.branches: raise RemoteError(422)
+   self.branches[branch]=body['sha'];self.latest=body['sha'];return {}
   raise AssertionError((method,path))
 
 class GitHubTests(unittest.TestCase):
@@ -48,6 +53,32 @@ class GitHubTests(unittest.TestCase):
   self.assertIn('submissions/a.json',entries)
   self.assertIn('receipts/b.json',entries)
   self.assertIn('other',entries)
+
+ def test_actor_submission_lanes_do_not_race_each_other_or_central_ref(self):
+  import threading
+  from concurrent.futures import ThreadPoolExecutor
+  r=RacingGitHub(False);barrier=threading.Barrier(3)
+  def write(branch,path):
+   barrier.wait(timeout=3)
+   return r.update({path:path.encode()},branch=branch)
+  with ThreadPoolExecutor(max_workers=2) as pool:
+   a=pool.submit(write,'benchmark-submissions/fang','submissions/fang/a.json')
+   b=pool.submit(write,'benchmark-submissions/nikola','submissions/nikola/b.json')
+   barrier.wait(timeout=3);a.result(timeout=5);b.result(timeout=5)
+  central=r.tree(r.head('test'));fang=r.tree(r.head('benchmark-submissions/fang'));nikola=r.tree(r.head('benchmark-submissions/nikola'))
+  self.assertIn('channel',central)
+  self.assertEqual(set(fang),{'submissions/fang/a.json'})
+  self.assertEqual(set(nikola),{'submissions/nikola/b.json'})
+
+ def test_matching_heads_reads_actor_lanes_with_one_prefix_query(self):
+  r=RacingGitHub(False);calls=[]
+  r.request=lambda method,path: calls.append((method,path)) or [
+   {'ref':'refs/heads/benchmark-submissions/fang','object':{'sha':'a'*40}},
+   {'ref':'refs/heads/benchmark-submissions/nikola','object':{'sha':'b'*40}},
+   {'ref':'refs/heads/benchmark-submissions-other/noise','object':{'sha':'c'*40}}]
+  self.assertEqual(r.matching_heads('benchmark-submissions/'),{
+   'benchmark-submissions/fang':'a'*40,'benchmark-submissions/nikola':'b'*40})
+  self.assertEqual(calls,[('GET','/git/matching-refs/heads/benchmark-submissions/')])
 
  def test_small_utf8_envelopes_are_inlined_while_binary_snapshots_use_blobs(self):
   r=RacingGitHub(False);binary=b'\x00\xff'+b'x'*70000

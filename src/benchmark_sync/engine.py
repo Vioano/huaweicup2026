@@ -16,6 +16,12 @@ from .submission import discover, references, MAX_FEED
 OUTBOX_PUBLISH_BATCH_SIZE = 16
 
 
+def submission_lane(actor):
+    if not isinstance(actor,str) or not re.fullmatch(r'[A-Za-z0-9-]{1,39}',actor):
+        raise ValueError('Invalid submission actor')
+    return 'benchmark-submissions/'+actor.lower()
+
+
 def read_json(path): return json.loads(Path(path).read_bytes())
 def write_json(path,value): atomic_write(Path(path),canonical(value)+b'\n')
 
@@ -137,16 +143,20 @@ class Engine:
         folder=self.state/'outbox'
         entries=sorted(folder.glob('*/entry.json'))
         pending={};parents=[];commit_presence={}
+        lane=submission_lane(self.actor)
+        lane_head=self.remote.head(lane) if entries else None
+        lane_tree=self.remote.tree(lane_head) if lane_head else {}
+        legacy_tree=None
         def publish_pending():
             if not pending: return
             batch=dict(pending)
             batch_parents=tuple(dict.fromkeys(parents))
             try:
-                # Submission envelopes stay individually signed and addressable;
-                # only their transport commit is shared to avoid one branch update
-                # per small feed while preserving each source commit as a parent.
+                # Each account owns a separate append-only lane. Small batches
+                # amortize Git API calls without competing with other accounts'
+                # mutable refs or the leader's central snapshot/receipt ref.
                 self.remote.update({published:canonical(envelope)
-                    for published,(_,envelope) in batch.items()},parents=batch_parents)
+                    for published,(_,envelope) in batch.items()},parents=batch_parents,branch=lane)
                 for _,(path,_) in batch.items():
                     entry=read_json(path)
                     entry.update(state='awaiting_receipt',error=None,last_attempt_at=now())
@@ -199,7 +209,11 @@ class Engine:
                         raise ValueError('Receipt identity/state mismatch')
                     entry.update(state=result['state'],receipt=result,error=None);write_json(path,entry);continue
                 published='submissions/'+self.actor+'/'+entry['id']+'.json'
-                try: existing=json.loads(self.remote.read(head,published)) if head else None
+                if legacy_tree is None: legacy_tree=self.remote.tree(head) if head else {}
+                try:
+                    if published in lane_tree: existing=json.loads(self.remote.read(lane_head,published))
+                    elif published in legacy_tree: existing=json.loads(self.remote.read(head,published))
+                    else: existing=None
                 except FileNotFoundError: existing=None
                 envelope=self.sign('submission',payload)
                 if existing:
@@ -273,8 +287,7 @@ class Engine:
     def receive_submissions(self,head,errors=None):
         if errors is None: errors=self.errors
         inbox=Path(self.config['central']['inbox'])
-        if not head: return
-        tree=self.remote.tree(head)
+        central_tree=self.remote.tree(head) if head else {}
         progress_file=self.state/'receive-progress.json'
         try:
             progress=read_json(progress_file)
@@ -285,38 +298,86 @@ class Engine:
             progress={}
         cache=progress.setdefault('verified_receipts',{})
         trust_id=digest(canonical(self.trusted))
-        groups={'pending':[], 'completed':[]}
-        for path in sorted(tree):
+        ordered=[];pending_count=0
+        # Read legacy envelopes already committed to the old shared branch while
+        # new submissions move to actor-owned lanes. This makes the ref migration
+        # rolling-upgrade safe and drains existing history without rewriting it.
+        for path in sorted(central_tree):
             if not path.startswith('submissions/') or not path.endswith('.json'): continue
+            actor=path.split('/',2)[1]
+            if actor not in self.trusted: continue
             receipt_path='receipts/'+path.removeprefix('submissions/')
-            groups['completed' if receipt_path in tree else 'pending'].append(path)
-        self.receive_status={'pending':len(groups['pending']),'budget_seconds':30 if len(groups['pending'])>4 else 8}
-        ordered=[]
-        for group,paths in groups.items():
-            cursor=progress.get(group,'')
+            group='completed' if receipt_path in central_tree else 'pending'
+            if group=='pending': pending_count+=1
+            cursor_key=actor+':legacy:'+group
+            ordered.append((actor,head,central_tree,group,cursor_key,path))
+        lane_heads=self.remote.matching_heads('benchmark-submissions/')
+        for actor in sorted(self.trusted):
+            lane_head=lane_heads.get(submission_lane(actor))
+            if not lane_head: continue
+            lane_tree=self.remote.tree(lane_head)
+            for path in sorted(lane_tree):
+                if not path.startswith(f'submissions/{actor}/') or not path.endswith('.json'): continue
+                receipt_path='receipts/'+path.removeprefix('submissions/')
+                group='completed' if receipt_path in central_tree else 'pending'
+                if group=='pending': pending_count+=1
+                cursor_key=actor+':lane:'+group
+                ordered.append((actor,lane_head,lane_tree,group,cursor_key,path))
+        self.receive_status={'pending':pending_count,'budget_seconds':30 if pending_count>4 else 8}
+        pending_buckets={};completed_buckets={}
+        for actor,lane_head,lane_tree,group,cursor_key,path in ordered:
+            cursor=progress.get(cursor_key,'')
             if not isinstance(cursor,str): cursor=''
-            ordered.extend((group,p) for p in paths if p>cursor)
-            ordered.extend((group,p) for p in paths if p<=cursor)
+            item=(actor,lane_head,lane_tree,group,cursor_key,path,path>cursor)
+            buckets=pending_buckets if group=='pending' else completed_buckets
+            buckets.setdefault(cursor_key,[]).append(item)
+        def round_robin(buckets,start):
+            keys=sorted(buckets)
+            if not keys:return [],keys
+            start%=len(keys);keys=keys[start:]+keys[:start]
+            queues={key:sorted(buckets[key],key=lambda item:(not item[6],item[5])) for key in keys}
+            ordered_items=[];active=True
+            while active:
+                active=False
+                for key in keys:
+                    if queues[key]: ordered_items.append(queues[key].pop(0));active=True
+            return ordered_items,keys
+        pending_keys=sorted(pending_buckets)
+        try: lane_rotation=progress.get('lane_rotation',0)
+        except (TypeError,ValueError): lane_rotation=0
+        if type(lane_rotation) is not int: lane_rotation=0
+        pending_items,lane_keys=round_robin(pending_buckets,lane_rotation)
+        completed_items,_=round_robin(completed_buckets,lane_rotation)
+        scheduled=pending_items+completed_items
+        if lane_keys: progress['lane_rotation']=lane_rotation%len(lane_keys)
         deadline=time.monotonic()+self.receive_status['budget_seconds']
-        for group,path in ordered:
+        seen_submissions={}
+        for actor,lane_head,lane_tree,group,cursor_key,path,_is_new in scheduled:
             if time.monotonic()>deadline: break
             receipt_path='receipts/'+path.removeprefix('submissions/')
             def blob_sha(name):
-                entry=tree.get(name)
+                entry=central_tree.get(name) if name.startswith('receipts/') else lane_tree.get(name)
                 sha=entry.get('sha') if isinstance(entry,dict) else None
                 return sha if isinstance(sha,str) and re.fullmatch('[0-9a-f]{40}',sha) else None
             submission_sha,receipt_sha=blob_sha(path),blob_sha(receipt_path)
+            if path in seen_submissions:
+                if seen_submissions[path]!=submission_sha:
+                    errors.append({'stage':'receive','message':'Conflicting copies of one submission across transport refs','submission':path})
+                continue
+            seen_submissions[path]=submission_sha
             fingerprint=[submission_sha,receipt_sha,trust_id]
             if submission_sha and receipt_sha and cache.get(path)==fingerprint: continue
-            progress[group]=path
+            progress[cursor_key]=path
+            if group=='pending' and lane_keys:
+                progress['lane_rotation']=(lane_keys.index(cursor_key)+1)%len(lane_keys)
             verified_delivery=False
             try:
-                envelope=json.loads(self.remote.read(head,path)); payload=self.verify(envelope,'submission')
+                envelope=json.loads(self.remote.read(lane_head,path)); payload=self.verify(envelope,'submission')
                 identity=digest(canonical(payload)); actor=envelope['issuer']
                 if payload.get('actor')!=actor or path!=f'submissions/{actor}/{identity}.json':
                     raise ValueError('Submission path/actor identity mismatch')
                 receipt_path=f'receipts/{actor}/{identity}.json'
-                if receipt_path in tree:
+                if receipt_path in central_tree:
                     prior=self.verify(json.loads(self.remote.read(head,receipt_path)),'receipt',central=True)
                     if prior.get('id')!=identity or prior.get('actor')!=actor or prior.get('state') not in ('accepted','rejected'):
                         raise ValueError('Receipt identity/state mismatch')
@@ -327,7 +388,8 @@ class Engine:
                     result=read_json(result_file)
                     if result.get('id')!=identity or result.get('state') not in ('accepted','rejected'): raise ValueError('Invalid board receipt')
                     result=dict(result,actor=actor,received_at=now())
-                    self.remote.update({receipt_path:canonical(self.sign('receipt',result))});continue
+                    self.remote.update({receipt_path:canonical(self.sign('receipt',result))},
+                                       expected={receipt_path:None});continue
                 if (target/'request.json').exists(): continue
                 verified_delivery=True
                 commit=fixed_sha(payload['commit']); feed_path=path_ok(payload['feed'])

@@ -14,17 +14,25 @@ from src.benchmark_sync.github import RemoteError
 
 class Remote:
     repository='test/repository'
-    def __init__(self): self.commits={};self.current=None;self.fail_path=None
-    def head(self): return self.current
+    def __init__(self): self.commits={};self.current=None;self.branches={};self.fail_path=None
+    def head(self,branch=None): return self.current if branch is None else self.branches.get(branch)
+    def matching_heads(self,prefix): return {name:sha for name,sha in self.branches.items() if name.startswith(prefix)}
     def tree(self,commit): return {p:{'sha':hashlib.sha1(b'blob '+str(len(v)).encode()+b'\0'+v).hexdigest()} for p,v in self.commits[commit].items()}
     def read(self,commit,path):
         if path==self.fail_path: raise RemoteError(503)
         if path not in self.commits[commit]: raise FileNotFoundError(path)
         return self.commits[commit][path]
-    def update(self,files,parents=(),expected=None):
-        values=dict(self.commits.get(self.current,{}));values.update(files)
-        self.current=hashlib.sha1(canonical({p:digest(v) for p,v in values.items()})).hexdigest()
-        self.commits[self.current]=values;return self.current
+    def update(self,files,parents=(),expected=None,branch=None):
+        head=self.current if branch is None else self.branches.get(branch)
+        values=dict(self.commits.get(head,{}));values.update(files)
+        for path,want in (expected or {}).items():
+            current=self.commits.get(head,{}).get(path)
+            if current!=want: raise RuntimeError('Channel changed before publication; rebuild against latest generation')
+        commit=hashlib.sha1(canonical({p:digest(v) for p,v in values.items()})).hexdigest()
+        self.commits[commit]=values
+        if branch is None:self.current=commit
+        else:self.branches[branch]=commit
+        return commit
     def request(self,method,path):
         if path.rsplit('/',1)[-1] not in self.commits: raise RemoteError(404)
         return {}
@@ -71,7 +79,7 @@ class EngineTests(unittest.TestCase):
             member.deliver_outbox(None)
         self.assertEqual([len(files) for files,_ in calls],[16,16,3])
         self.assertEqual(sum(len(files) for files,_ in calls),35)
-        tree=self.remote.tree(self.remote.head())
+        tree=self.remote.tree(self.remote.head('benchmark-submissions/member'))
         self.assertEqual(sum(p.startswith('submissions/member/') for p in tree),35)
         for entry,_ in items:self.assertEqual(read_json(entry)['state'],'awaiting_receipt')
     def test_leader_can_also_submit_and_neighbour_corruption_is_isolated(self):
@@ -79,6 +87,51 @@ class EngineTests(unittest.TestCase):
         leader=self.engines['leader'];leader.deliver_outbox(None)
         self.assertEqual(read_json(p)['state'],'awaiting_receipt');self.assertTrue((self.root/'leader'/'quarantine'/'broken').exists())
         leader.receive_submissions(self.remote.head());self.assertTrue((self.root/'inbox'/identity/'request.json').exists())
+
+    def test_leader_reads_legacy_shared_ref_while_new_writes_use_actor_lane(self):
+        entry,identity=self.queue();payload=read_json(entry)['payload']
+        legacy=f'submissions/member/{identity}.json'
+        self.remote.update({legacy:canonical(self.engines['member'].sign('submission',payload))})
+        self.engines['leader'].receive_submissions(self.remote.head())
+        self.assertTrue((self.root/'inbox'/identity/'request.json').exists())
+        self.assertIsNone(self.remote.head('benchmark-submissions/member'))
+
+    def test_same_submission_in_legacy_and_actor_lane_publishes_receipt_once(self):
+        from unittest.mock import patch
+        entry,identity=self.queue();payload=read_json(entry)['payload'];member=self.engines['member']
+        member.deliver_outbox(None)
+        legacy=f'submissions/member/{identity}.json'
+        envelope=canonical(member.sign('submission',payload))
+        self.remote.update({legacy:envelope})
+        target=self.root/'inbox'/identity
+        write_json(target/'result.json',{'schema_version':1,'id':identity,'state':'accepted','receipt':{'added':1},'error':None})
+        original=self.remote.update;published=[];expected_refs=[]
+        def record(files,**kwargs):
+            published.extend(path for path in files if path==f'receipts/member/{identity}.json')
+            expected_refs.append(kwargs.get('expected'))
+            return original(files,**kwargs)
+        with patch.object(self.remote,'update',side_effect=record):
+            self.engines['leader'].receive_submissions(self.remote.head())
+        self.assertEqual(published,[f'receipts/member/{identity}.json'])
+        self.assertEqual(expected_refs,[{f'receipts/member/{identity}.json':None}])
+        self.assertIn(f'receipts/member/{identity}.json',self.remote.tree(self.remote.head()))
+
+    def test_concurrent_existing_receipt_is_never_overwritten(self):
+        from unittest.mock import patch
+        entry,identity=self.queue();payload=read_json(entry)['payload'];member=self.engines['member']
+        member.deliver_outbox(None)
+        write_json(self.root/'inbox'/identity/'result.json',{'schema_version':1,'id':identity,'state':'accepted','receipt':{'added':1},'error':None})
+        path=f'receipts/member/{identity}.json';original=self.remote.update;existing=None
+        def race(files,**kwargs):
+            nonlocal existing
+            if path in files and existing is None:
+                competing={'id':identity,'actor':'member','state':'accepted','received_at':'2026-09-24T20:00:00Z'}
+                existing=canonical(self.engines['leader'].sign('receipt',competing))
+                original({path:existing})
+            return original(files,**kwargs)
+        with patch.object(self.remote,'update',side_effect=race):
+            self.engines['leader'].receive_submissions(self.remote.head())
+        self.assertEqual(self.remote.read(self.remote.head(),path),existing)
     def test_interrupted_download_never_exposes_partial_submission(self):
         p,identity=self.queue();self.engines['member'].deliver_outbox(None)
         self.remote.fail_path='results/plan.json';leader=self.engines['leader'];leader.receive_submissions(self.remote.head())
@@ -103,7 +156,7 @@ class EngineTests(unittest.TestCase):
                 self.remote.commits[commit]={'results/board-feed.json':raw}
                 payload={'schema_version':1,'actor':'member','commit':commit,'feed':'results/board-feed.json','feed_sha256':digest(raw),'artifacts':{}}
                 identity=digest(canonical(payload));path=f'submissions/member/{identity}.json'
-                self.remote.update({path:canonical(self.engines['member'].sign('submission',payload))})
+                self.remote.update({path:canonical(self.engines['member'].sign('submission',payload))},branch='benchmark-submissions/member')
                 leader=self.engines['leader'];leader.receive_submissions(self.remote.head());leader.receive_submissions(self.remote.head())
                 result=read_json(self.root/'inbox'/identity/'result.json')
                 self.assertEqual(result['state'],'rejected')
@@ -134,9 +187,11 @@ class EngineTests(unittest.TestCase):
             items.append((path,identity,payload))
         items.sort()
         files={p:canonical({'issuer':'member','payload':v}) for p,_,v in items}
+        receipts={}
         for _,identity,_ in items[:-1]:
-            files[f'receipts/member/{identity}.json']=canonical({'payload':{'id':identity,'actor':'member','state':'accepted'}})
-        self.remote.update(files)
+            receipts[f'receipts/member/{identity}.json']=canonical({'payload':{'id':identity,'actor':'member','state':'accepted'}})
+        self.remote.update(files,branch='benchmark-submissions/member')
+        self.remote.update(receipts)
         return items
 
     def test_completed_prefix_cannot_starve_new_submission(self):
@@ -160,7 +215,7 @@ class EngineTests(unittest.TestCase):
         p,identity=self.queue();self.engines['member'].deliver_outbox(None)
         payload=read_json(p)['payload'];other=dict(payload,nonce='second')
         other_id=digest(canonical(other))
-        self.remote.update({f'submissions/member/{other_id}.json':canonical(self.engines['member'].sign('submission',other))})
+        self.remote.update({f'submissions/member/{other_id}.json':canonical(self.engines['member'].sign('submission',other))},branch='benchmark-submissions/member')
         identities=sorted([identity,other_id]);clock=[0];visited=[]
         for expected in identities:
             leader=Engine(self.configs['leader'],self.remote,self.sign)
@@ -206,7 +261,7 @@ class EngineTests(unittest.TestCase):
         data=canonical(feed);self.remote.commits['a'*40].update({name:str(i).encode() for i,name in enumerate(refs)})
         self.remote.commits['a'*40]['results/board-feed.json']=data
         payload.update(feed_sha256=digest(data),artifacts=refs);identity=digest(canonical(payload))
-        self.remote.update({f'submissions/member/{identity}.json':canonical(self.engines['member'].sign('submission',payload))})
+        self.remote.update({f'submissions/member/{identity}.json':canonical(self.engines['member'].sign('submission',payload))},branch='benchmark-submissions/member')
         ready=threading.Event();release=threading.Event();lock=threading.Lock();counts={'active':0,'maximum':0}
         original=self.remote.read
         def slow(commit,path):
@@ -252,7 +307,7 @@ class EngineTests(unittest.TestCase):
         for nonce in range(6):
             payload={'actor':'member','nonce':nonce};identity=digest(canonical(payload));identities.append(identity)
             files[f'submissions/member/{identity}.json']=canonical({'issuer':'member','payload':payload})
-        self.remote.update(files)
+        self.remote.update(files,branch='benchmark-submissions/member')
         def verify(envelope,domain,**kwargs):clock[0]+=4;return envelope['payload']
         leader.verify=verify
         with patch('src.benchmark_sync.engine.time',SimpleNamespace(monotonic=lambda:clock[0])):
@@ -260,11 +315,33 @@ class EngineTests(unittest.TestCase):
         self.assertEqual(leader.receive_status,{'pending':6,'budget_seconds':30})
         for identity in identities:self.assertEqual(read_json(self.root/'inbox'/identity/'result.json')['state'],'rejected')
 
+    def test_member_lane_gets_a_turn_before_leader_backlog_fills_receive_budget(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        leader=self.engines['leader'];files={}
+        for actor,count in [('leader',45),('member',1)]:
+            for nonce in range(count):
+                payload={'schema_version':1,'actor':actor,'nonce':nonce}
+                identity=digest(canonical(payload));path=f'submissions/{actor}/{identity}.json'
+                files.setdefault(actor,{})[path]=canonical(self.engines[actor].sign('submission',payload))
+        self.remote.update(files['leader'],branch='benchmark-submissions/leader')
+        self.remote.update(files['member'],branch='benchmark-submissions/member')
+        clock=[0];visited=[]
+        def verify(envelope,domain,**kwargs):
+            if domain=='submission':
+                clock[0]+=1;visited.append(envelope['payload']['actor'])
+            return envelope['payload']
+        leader.verify=verify
+        with patch('src.benchmark_sync.engine.time',SimpleNamespace(monotonic=lambda:clock[0])):
+            leader.receive_submissions(self.remote.head())
+        self.assertEqual(visited[:2],['leader','member'])
+        self.assertEqual(leader.receive_status,{'pending':46,'budget_seconds':30})
+
     def test_sync_in_progress_keeps_real_durable_queue_counts(self):
         self.queue();member=self.engines['member'];observed=[];original=self.remote.head
-        def head():
+        def head(branch=None):
             if not observed:observed.append(read_json(member.state/'status.json')['upload'])
-            return original()
+            return original(branch)
         self.remote.head=head
         result=member.cycle()
         self.assertEqual(observed,[{'queued':1}])
@@ -272,11 +349,11 @@ class EngineTests(unittest.TestCase):
 
     def test_member_cycle_uses_one_fixed_remote_head_and_reports_stage_timings(self):
         member=self.engines['member'];calls=[];original=self.remote.head
-        def head():
+        def head(branch=None):
             calls.append(True)
             status=read_json(member.state/'status.json')
-            self.assertEqual(status['current_stage'],'remote_head')
-            return original()
+            if len(calls)==1:self.assertEqual(status['current_stage'],'remote_head')
+            return original(branch)
         self.remote.head=head
         result=member.cycle()
         self.assertEqual(len(calls),1)
@@ -341,7 +418,7 @@ class EngineTests(unittest.TestCase):
         def slow_receive(head,errors=None):
             entered.set()
             if not release.wait(5):raise RuntimeError('Test receive gate timed out')
-        def next_head():
+        def next_head(branch=None):
             value='a'*40 if not heads else 'b'*40
             heads.append(value);return value
         try:
