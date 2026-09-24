@@ -88,3 +88,5 @@ Stage K由同一Sol会话继续，独立codex/q1-unified-pacing-20260925从a0537
 - Stage K原8acaaa9双worker窗口START前WMI检查FreeRAM=1.71GiB，低于2GiB，0solver/Task/E0/E1，runner未启动、没有算法成绩。那条检查未记录UTC，不能补造。父随后21:29:04.8511936Z取得CIM1710186496B，21:29:05.342202Z取得冻结runner的GlobalMemoryStatusEx1764724736B，证实当时不足；未发现本线遗留q1/benchmark/protocol进程，未停止其他服务。已立即释放窗口给P2，其17b随后启动。新的K单worker/1.5GiB入口门槛/每Job1GiB提交内存上限修订由Sol准备，评分次数及120/180/2400s不扩大，未START。
 - Stage L初源d3fd2a344发现COPY桥依赖守卫缺口，5c64b4057cb9b2f2af5426bd1efdd579b9df5559已修，三合成测试通过；044重读metadata新旧字节完全一致，仍没有实图计划或评分。静态表的stages<=2候选为空，故未运行的两格从k2/k4改为有可行模型的k3/k4，避免明知Unsupported仍开cold。新runner a6e48df8884d26700c77141f16a668888334d34c固定source5c64，2cold+2E0/0E1/E2/retry、1worker、120/90/300s、RAM≥2GiB，尚无START。初c34准备被此修订替代，0调用历史保留。
 - 已向队长发实质同步Issue98#5822455828：自行取得新v4原件、K严格复用计划、L结构机制和未测范围；随后k2静态排除的改格记录在任务卡。持续目标active，未证明全自由度最优，也未声称本线已完成新100均值。
+
+2026-09-24T21:36Z：K单worker修订9220c9e057cfb326c12c7a28c6e055e7ff997313已由父读diff，solver08原字节不变；每Job总提交内存1GiB，256MiB测试限额下正常dummy成功、512MiB分配dummy以MemoryError失败、两者active=0。仅这两次监督器试验，非算法评分。P2真实17b T1=21:33:09.667184Z已交接，父向Luna发新独立START，要求通过冻结runner自身GlobalMemoryStatusEx≥1.5GiB的fresh预检后只启动一次；实际T0及结果仍待，不能把授权当作已运行。

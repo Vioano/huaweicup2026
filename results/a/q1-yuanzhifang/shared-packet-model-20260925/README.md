@@ -49,3 +49,13 @@ bridges, so ignoring them would invalidate the component-independence proof.
 Three small synthetic tests cover structural/capacity validity, shape/sharing
 mismatch, and this hidden cross-job dependency. No official evaluation is
 performed by these tests.
+
+The read-only `two-stage-union-exclusion.json` enumerates all 123 contiguous
+two-stage cuts of the first job. Even one job per packet needs at least
+543,744 B of L1 incident-tensor union on one stage (best cut 60; the other
+stage needs 491,744 B). This exceeds 524,288 B, so no two-stage partition
+satisfies this particular conservative sufficient condition. Adding jobs to
+the packet cannot decrease either union. This explains skipping the known
+unsupported k2 trial; it does **not** show physical two-core infeasibility,
+or rule out lifetime-aware capacity models, more stages per core, or other
+Task constructions. The prospective two-cell trial therefore uses k3/k4.
