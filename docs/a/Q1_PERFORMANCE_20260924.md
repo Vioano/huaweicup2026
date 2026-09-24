@@ -184,7 +184,7 @@ input为15:06:59.946Z–15:07:00.216Z；run_id中的1509Z是预分配标签，�
 `results/a/q1-input-probe-20260924/20260924T1509Z-input044/`。
 父会话按固定提交重新预检2+1条原件，均有效；方法详情见
 [Q1_SINK_PEEL.md](Q1_SINK_PEEL.md) 与 [Q1_INPUT_WINDOWS.md](Q1_INPUT_WINDOWS.md)。
-下一项验证包已固定为 `c45fc47b4f358db5097593956a411c3c2af3ae73`，入口
+下一项验证包已固定为 `4e6a5b5e6318af460005ce333952884d230e8bf6`，入口
 `results/a/q1-sink-member-package-20260924/README.md`；经成绩台owner统一安排
 005/047/064/069/075/082/085/086的k4，总预算8solver+8E0，1worker、首次失败停止。
 准备过程0真实评分，已有048/071不重复执行；Windows尚待执行者本机验证。
