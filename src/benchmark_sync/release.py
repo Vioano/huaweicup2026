@@ -37,7 +37,8 @@ def build_release(repo,commit):
             archive.writestr(info,data)
     data=stream.getvalue()
     if len(data)>MAX_RELEASE: raise ValueError('Release package too large')
-    if not DOCS.issubset(files) or 'src/benchmark_board/app.py' not in files: raise ValueError('Incomplete website release')
+    required=DOCS|{'src/benchmark_board/app.py',*(f'src/benchmark_sync/{n}' for n in ('__main__.py','supervisor.py','engine.py','crypto.mjs','bootstrap.py','install.py'))}
+    if not required.issubset(files): raise ValueError('Approved main does not yet contain the complete automatic-sync runtime')
     manifest={'schema_version':1,'release_id':digest(data),'code_commit':commit,'size':len(data),
               'files':files,'created_at':now(),'python_minimum':'3.12'}
     return manifest,data

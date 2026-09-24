@@ -25,7 +25,7 @@ def load_feed(ledger,repo,commit,path):
     if len(data)>8*1024*1024: raise ValueError('feed too large')
     return ledger.ingest(json.loads(data),lambda p:blob(repo,commit,p),{'repo':REPO,'commit':commit,'path':path,'url':f'https://github.com/{REPO}/blob/{commit}/{path}'})
 
-def sync_once(ledger,repo,sources):
+def sync_once(ledger,repo,sources,on_progress=None):
     for s in sources:
         started=now(); name=s['id']
         try:
@@ -43,10 +43,15 @@ def sync_once(ledger,repo,sources):
             paths=git(repo,'ls-tree','-r','--name-only',commit,'--',s['prefix']).decode().splitlines()
             paths=[p for p in paths if fnmatch.fnmatch(p,s['prefix'].rstrip('/')+'/**/board-feed*.json') or (p.startswith(s['prefix'].rstrip('/')+'/') and Path(p).name.startswith('board-feed') and p.endswith('.json'))]
             if len(paths)>300: raise ValueError('source feed count exceeds 300; scope review needed')
-            results=[load_feed(ledger,repo,commit,path) for path in paths]
+            results=[]
+            for path in paths:
+                if on_progress: on_progress()
+                results.append(load_feed(ledger,repo,commit,path))
             ledger.source_status(name,{'status':'ok' if paths else 'waiting_feed','ref':ref,'commit':commit,'checked_at':now(),'started_at':started,'feeds':len(paths),'added':sum(r['added'] for r in results),'message':'已接收固定数据' if paths else '分支可读，等待发布 board-feed；不等于队友未运行'})
         except Exception as e:
             ledger.source_status(name,{'status':'error','checked_at':now(),'started_at':started,'ref':s['ref'],'message':type(e).__name__+': '+str(e)[:250]})
+        finally:
+            if on_progress: on_progress()
 
 def make_handler(ledger):
     class Handler(BaseHTTPRequestHandler):
@@ -63,10 +68,7 @@ def make_handler(ledger):
             u=urlparse(self.path);q={k:v[-1] for k,v in parse_qs(u.query).items()};path=u.path
             try:
                 if path=='/api/v1/health':
-                    with ledger.connect() as db:
-                        sources={r['id']:json.loads(r['body']) for r in db.execute('SELECT * FROM sources')}
-                        count=db.execute('SELECT count(*) FROM records').fetchone()[0]
-                    return self.send({'status':'ok','time':now(),'records':count,'sources':sources,'read_only':True})
+                    return self.send(ledger.health())
                 if path=='/api/v1/cells':
                     data=ledger.snapshot(q.get('algorithm'),q.get('run'),q.get('include_reported')=='true')
                     for key in ('problem','case_id','cores'):
@@ -87,15 +89,19 @@ def make_handler(ledger):
                     rows=[r for r in ledger.records() if r['id']==path.rsplit('/',1)[-1]]
                     return self.send(rows[0] if rows else {'error':'not found'},200 if rows else 404)
                 if path=='/api/v1/catalog':
-                    return self.send(json.loads((ROOT/'docs/benchmarks/algorithm-registry.json').read_text()))
+                    if hasattr(ledger,'catalog'): return self.send(ledger.catalog())
+                    return self.send(json.loads((ROOT/'docs/benchmarks/algorithm-registry.json').read_text(encoding="utf-8")))
                 if path=='/protocol':
-                    body=(ROOT/'docs/benchmarks/SUBMISSION_PROTOCOL.md').read_text()
+                    body=(ROOT/'docs/benchmarks/SUBMISSION_PROTOCOL.md').read_text(encoding="utf-8")
                     page='<meta charset="utf-8"><title>统一交付协议 · 方案成绩台</title><link rel="stylesheet" href="/style.css"><body class="agent"><a href="/">← 方案成绩台</a><pre style="white-space:pre-wrap;overflow-wrap:anywhere">'+html.escape(body)+'</pre></body>'
                     return self.send(page.encode(),ctype='text/html; charset=utf-8')
-                if path=='/api/v1/template': return self.send(json.loads((ROOT/'docs/benchmarks/examples/submission-v1.json').read_text()))
-                if path=='/api/v1/schema': return self.send(json.loads((ROOT/'docs/benchmarks/board-feed.schema.json').read_text()))
+                if path=='/api/v1/template': return self.send(json.loads((ROOT/'docs/benchmarks/examples/submission-v1.json').read_text(encoding="utf-8")))
+                if path=='/api/v1/schema': return self.send(json.loads((ROOT/'docs/benchmarks/board-feed.schema.json').read_text(encoding="utf-8")))
                 if path.startswith('/api/v1/blobs/'):
                     key=path.rsplit('/',1)[-1]
+                    if hasattr(ledger,'blob_sources'):
+                        links=ledger.blob_sources(key) if sha(key) else []
+                        return self.send({'error':'Original bytes are not stored in the read-only mirror; use the fixed source links.','sources':links},409 if links else 404)
                     if not sha(key) or not (ledger.state/'blobs'/key).is_file(): return self.send({'error':'not found'},404)
                     return self.send((ledger.state/'blobs'/key).read_bytes(),ctype='application/octet-stream',headers={'Content-Disposition':'attachment; filename="'+key+'"'})
                 files={'/':'index.html','/app.js':'app.js','/style.css':'style.css','/agent':'agent.html'}
@@ -110,19 +116,44 @@ def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--repo',type=Path,default=ROOT);p.add_argument('--state',type=Path,default=ROOT/'output/benchmark-board');sub=p.add_subparsers(dest='command',required=True)
     i=sub.add_parser('import');i.add_argument('--commit',required=True);i.add_argument('--feed',required=True)
     s=sub.add_parser('serve');s.add_argument('--port',type=int,default=52341);s.add_argument('--sync-interval',type=int,default=120);s.add_argument('--no-sync',action='store_true')
+    s.add_argument('--mirror',type=Path,help='Read an accepted central snapshot current.json; never ingest it into the local ledger')
+    s.add_argument('--sync-status',type=Path,help='Read-only status file owned by the separate sync process')
+    s.add_argument('--sync-inbox',type=Path,help='Central mode only: receive completed local deliveries from the authenticated sync transport')
     sub.add_parser('sync');args=p.parse_args()
-    manifest=json.loads((ROOT/'docs/a/source-manifest.json').read_text())
-    admission=ROOT/'docs/benchmarks/board-calibrations.json';ledger=Ledger(args.state,manifest,json.loads(admission.read_text()) if admission.exists() else {})
-    sources=json.loads((ROOT/'docs/benchmarks/board-sources.json').read_text())
+    manifest=json.loads((ROOT/'docs/a/source-manifest.json').read_text(encoding="utf-8"))
+    mirror=args.command=='serve' and args.mirror is not None
+    if mirror and args.sync_inbox: p.error('--sync-inbox is only available in central ledger mode')
+    if mirror:
+        from mirror import MirrorView
+        ledger=MirrorView(args.mirror,manifest,args.sync_status)
+    else:
+        admission=ROOT/'docs/benchmarks/board-calibrations.json';ledger=Ledger(args.state,manifest,json.loads(admission.read_text(encoding="utf-8")) if admission.exists() else {})
+    sources=json.loads((ROOT/'docs/benchmarks/board-sources.json').read_text(encoding="utf-8"))
     if args.command=='import': print(packed(load_feed(ledger,args.repo,args.commit,args.feed)));return
     if args.command=='sync':sync_once(ledger,args.repo,sources);print(packed({'done':True}));return
-    if not args.no_sync:
+    if not mirror and (not args.no_sync or args.sync_inbox):
+        def receive():
+            if args.sync_inbox:
+                from inbox import drain_inbox
+                for result in drain_inbox(ledger,args.sync_inbox):
+                    if result['state']=='retry': print('Benchmark inbox retry: '+packed(result),flush=True)
         def worker():
+            next_sources=0
             while True:
-                sync_once(ledger,args.repo,sources);time.sleep(max(60,args.sync_interval))
+                try:
+                    receive()
+                    if not args.no_sync and time.monotonic()>=next_sources:
+                        sync_once(ledger,args.repo,sources,on_progress=receive)
+                        next_sources=time.monotonic()+max(60,args.sync_interval)
+                except Exception:
+                    # Keep retries visible and preserve batch idempotency if a
+                    # filesystem/database interruption occurs after admission.
+                    traceback.print_exc()
+                time.sleep(2 if args.sync_inbox else max(60,args.sync_interval))
         threading.Thread(target=worker,daemon=True).start()
     server=ThreadingHTTPServer(('127.0.0.1',args.port),make_handler(ledger));server.daemon_threads=True
-    (args.state/'service.json').write_text(packed({'url':f'http://127.0.0.1:{args.port}','started_at':now(),'sources_poll_seconds':None if args.no_sync else max(60,args.sync_interval)}))
+    args.state.mkdir(parents=True,exist_ok=True)
+    (args.state/'service.json').write_text(packed({'url':f'http://127.0.0.1:{args.port}','started_at':now(),'mode':'central_mirror' if mirror else 'local_ledger','sources_poll_seconds':None if args.no_sync or mirror else max(60,args.sync_interval)}))
     print(f'Benchmark board: http://127.0.0.1:{args.port}',flush=True)
     try: server.serve_forever()
     except KeyboardInterrupt: pass

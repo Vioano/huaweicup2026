@@ -8,6 +8,7 @@
 
 - **交数据**：[统一交付协议](SUBMISSION_PROTOCOL.md)第1/6节是日常导出、预检和简短通知；第2–5节是首次接入/排错的字段参考。JSON格式仍为 `board-submission-v1`，不是手填问卷。
 - **成员同步代码与全部数据**：[2697条/1500格固定重建包](https://github.com/huaweibei123/huaweicup2026/blob/36bb66b1adf755e20e495a4a210e77ce48f5abfb/results/benchmark-board/member-sync-20260924/README.md)包含13个固定feed、核对指纹及重建脚本（PR97）。这是2026-09-24固定快照；后续数据按 [来源登记](board-sources.json) 增量同步，代码更新以维护会话在原Issue给的固定提交为准。先更新接收程序再导入大结果，保留本地库/额外记录，并分别回读运行代码版本、记录数、网页显示；fetch不等于页面已更新。
+- **研发接收与比较回执**：[首轮28条研发增量](../../results/benchmark-board/receipts/20260924-rd-first/README.md)，固定来源、原件准入和入库当时赢家分别记录；更早快照与之后增量分开。
 - **查格式与来源**：[schema](board-feed.schema.json)、[未运行模板](examples/submission-v1.json)、[算法来源注册表](algorithm-registry.json)。已有产物的导出、归一化、哈希与预检由生产方完成。
 - **看官方目标**：[方案质量与求解效率](../a/OFFICIAL_OBJECTIVES.md)。Makespan、求解墙钟、外部复评耗时分别记录；不把评价核吞吐当完整算法提速。
 - **查当前任务**：原任务卡和原 Issue 是固定范围、预算与交付的依据；[会话登记](https://github.com/huaweibei123/huaweicup2026/issues/26)用于找实际负责人。网站维护任务见 [BENCHMARK-BOARD-MAINTENANCE](../../tasks/a/BENCHMARK-BOARD-MAINTENANCE.md)。
@@ -75,6 +76,16 @@ P1/P2/P3 是**问题/硬件语义场景**，不是算法名；E0/E1/E2 是评价
 
 ## 本地服务
 
+### 成员只读镜像
+
+查看中央已核的完整成绩不必先下载全部评估时间线。`serve --mirror <同步状态目录>/accepted/current.json --sync-status <同步状态目录>/status.json` 读取同步程序已接收的紧凑包；保持既有端口。镜像与本机生产 ledger 隔离，不把中央准入标记伪装成本机原件核验，不创建镜像用的 SQLite 或 blobs，不启用分支抓取线程。成员实际使用之前，先停止旧页面服务并保留原状态，再由同步程序监督同端口新服务；程序不得并发争抢端口或覆盖本机历史。
+
+快照保留全部标准化记录、修订/失败历史、算法参数、固定来源、冻结身份及来源状态，与正常账本共用最优选择器。页面标明核验发生在中央、快照时间和同步状态；来源原件按固定 Git 提交链接读取。`/api/v1/blobs/<hash>` 在镜像上返回409与原件来源链接，表示本机没有这些字节，不冒充原件下载成功。原本的中央/生产者模式不受影响。
+
+网站读取层检查压缩大小/哈希、展开上限、记录结构和冻结身份，拒绝游标回退、旧记录丢失或改写；运行中坏更新保留上一份已验证视图并显示异常，首次没有有效包时拒绝启动。同步程序负责发布者认证、跨重启的回退防护、下载和原子安装；网站不另建同步器，哈希一致不等于发布者身份已认证。`--mirror` 只能指向可信交接或同步程序验收后的本机文件。自动传输及代码更新的安装、验收由独立同步任务负责，不能把本模块测试通过写成成员已经安装成功。
+
+2026-09-24固定样例：中央序号2855、完整2855条历史/1500有效格，gzip 1,084,713字节，展开19,815,519字节；它是固定时间快照，不代表后来没有增量。对照中央相同序号的全部记录逐字段相等，56组算法/批次/报告预览组合的1500格投影相等。正常账本22项、镜像5项、快照导出6项测试通过；临时本机浏览器核对镜像标识、来源固定链接、筛选、历史及Cache面板返回。Fang机器安装、跨机双向收发、代码自动更新须另验。
+
 仅 Python 标准库，无新增安装或云服务。命令在仓库根执行，状态默认在不入 Git 的 `output/benchmark-board/`（SQLite WAL、原件内容寻址快照和接收状态）。首次导入既有固定 feed 后即可使用：
 
 ```sh
@@ -85,6 +96,14 @@ python3 src/benchmark_board/app.py --state output/benchmark-board serve --port 5
 只绑定127.0.0.1；`/api/v1/health` 核实已有服务，避免重复启动。日志、PID与 service.json 记录在本机 output。关闭窗口不停止已启动的后台进程；电脑关机/进程结束后按记录恢复，不承诺 OS 开机自启。重启沿用状态目录，不清库。数据库可从固定feed和原件重建，不能用备份回滚覆盖新历史。
 
 ## Agent 接口
+
+### 已验签传输的中央本地收件
+
+中央服务可选 `serve --sync-inbox <本机收件目录>`。它沿用同一个 Ledger 实例和单个接收 worker；`--no-sync` 仅关闭旧 Git 分支抓取，不关闭本地收件。镜像模式拒绝此参数，HTTP 仍完全只读。收件循环约每2秒检查，正在进行的旧分支下载/校验可能延后；旧来源的每个feed与每个来源之间也检查队列。传输、身份验签、代码更新由独立同步器负责；本接口不另发消息、不调用solver/evaluator、不改变算法预算。
+
+同步器先完成不可变目录 `<inbox>/<id>/`，其中 `feed.json` 为完整 `submission_version=1`，`artifacts/` 下按feed内仓库相对路径保存全部原件，最后原子发布 `request.json`。请求为 `{schema_version:1,id,feed_file:"feed.json",source:{id:"auto:<actor>:<id>",commit:"<40位SHA>",feed:"<仓库相对feed路径>",url:"https://github.com/huaweibei123/huaweicup2026/blob/<SHA>/<feed路径>"}}`；id与目录名一致，允许1–128个字母、数字、下划线和连字符。这个目录仅接收同步器已经完成身份验证和下载的交付；本模块的哈希校验不能代替身份验证。
+
+接收器检查安全路径、大小、v1结构、所有声明原件的SHA256，再走原准入逻辑，原子写 `result.json`：`{schema_version:1,id,state:"accepted"|"rejected",receipt:<原ingest结果或null>,error:<原因或null>}`。成功额外返回 `admission` 的records/eligible/reported_ok/statuses计数；**accepted表示已入库，正式入榜仍看每条eligible**。未成功、E2及证据不足记录的原有语义不变。已有结果不重复处理；固定feed和来源归一化保证入库后、回执落盘前崩溃的重试added=0。已发request之后不得原地修文件；被拒交付修正后用新id提交，原attempt的字段勘误仍遵守revision规则。
 
 网页与 Agent 同数据/同选择器，HTTP 只读，无 POST 执行入口。发现页 `/agent`，机器 schema `/api/v1/schema`。
 
