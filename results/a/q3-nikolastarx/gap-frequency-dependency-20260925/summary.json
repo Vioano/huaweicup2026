@@ -1,0 +1,89 @@
+{
+  "scope": "Immediate tight predecessors and saved E0 timing only; upstream COPY readiness and counterfactual effects not proved",
+  "source_commit_of_Task_reconstruction": "dd386a1cbd4d0c86544c7000b00bcf6ed5194439",
+  "task_builds": 2,
+  "local_step3": 2,
+  "new_multicore_E0": 0,
+  "rows": {
+    "old_forest": {
+      "core": 0,
+      "core_end": 10746146,
+      "M_busy": 10303488,
+      "first_M_start": 172,
+      "M_gap_sum": 441873,
+      "tail": 613,
+      "matched_M_ready_times": 3328,
+      "gap_cycles_by_tight_edge_kind": {
+        "memory_reuse": 373728,
+        "data": 68145
+      },
+      "memory_dependency_count": 18729,
+      "positive_gaps": 397,
+      "gap_histogram": {
+        "1224": 276,
+        "885": 77,
+        "816": 44
+      },
+      "immediate_tight_edge_counts": {
+        "memory_reuse:PIPE_V:ADD": 320,
+        "data:PIPE_MTE2:COPY_IN": 77
+      },
+      "immediate_tight_edge_cycles": {
+        "memory_reuse:PIPE_V:ADD": 373728,
+        "data:PIPE_MTE2:COPY_IN": 68145
+      }
+    },
+    "new_band_lookahead": {
+      "core": 0,
+      "core_end": 11215134,
+      "M_busy": 10303488,
+      "first_M_start": 172,
+      "M_gap_sum": 910861,
+      "tail": 613,
+      "matched_M_ready_times": 3328,
+      "gap_cycles_by_tight_edge_kind": {
+        "data": 908005,
+        "memory_reuse": 2856
+      },
+      "memory_dependency_count": 18180,
+      "positive_gaps": 1904,
+      "gap_histogram": {
+        "477": 1848,
+        "546": 42,
+        "511": 7,
+        "408": 7
+      },
+      "immediate_tight_edge_counts": {
+        "data:PIPE_MTE2:COPY_IN": 1897,
+        "memory_reuse:PIPE_V:ADD": 7
+      },
+      "immediate_tight_edge_cycles": {
+        "data:PIPE_MTE2:COPY_IN": 908005,
+        "memory_reuse:PIPE_V:ADD": 2856
+      }
+    }
+  },
+  "new_COPY_groups": [
+    {
+      "M_gap": 477,
+      "COPY_duration": 69,
+      "COPY_start_minus_previous_M_end": 408,
+      "memory_path": "DDR",
+      "count": 1848
+    },
+    {
+      "M_gap": 511,
+      "COPY_duration": 103,
+      "COPY_start_minus_previous_M_end": 408,
+      "memory_path": "DDR",
+      "count": 7
+    },
+    {
+      "M_gap": 546,
+      "COPY_duration": 138,
+      "COPY_start_minus_previous_M_end": 408,
+      "memory_path": "DDR",
+      "count": 42
+    }
+  ]
+}

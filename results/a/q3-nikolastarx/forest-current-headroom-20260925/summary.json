@@ -1,0 +1,230 @@
+{
+  "schema": "q3-current-forest-bound-v1",
+  "api_as_of": "2026-09-24T23:50:23.734037+00:00",
+  "api_cursor": 12071,
+  "api_run": "q3-forest-full500-20260925-s59",
+  "accepted_records": 500,
+  "algorithm_id": "q3-forest-memory-witness",
+  "solver_commit": "311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1",
+  "coverage_per_core": {
+    "1": 100,
+    "2": 100,
+    "3": 100,
+    "4": 100,
+    "5": 100
+  },
+  "identity_checks": {
+    "bounds_rows": 500,
+    "graph_hash_matches_all_500": true,
+    "config_hash_matches_all_500": true,
+    "official_hash_matches_all_500": true,
+    "baseline_verified_all_500": true,
+    "exact_source_run_algorithm_all_500": true
+  },
+  "formula": "delta_i=(B_i/L_i - B_i/T_i)/100; B=official single-core M, L=frozen compute-only lower bound, T=current selected forest500 P3 M. Upper slack only, not attainable guarantee.",
+  "by_cores": {
+    "1": {
+      "n": 100,
+      "current_mean_speedup": 1.1997595678587545,
+      "bound_mean_speedup": 1.2429878590954118,
+      "remaining_mean_slack": 0.04322829123665703,
+      "residual_difference": 0.04322829123665703
+    },
+    "2": {
+      "n": 100,
+      "current_mean_speedup": 2.312002295129782,
+      "bound_mean_speedup": 2.4833749027419616,
+      "remaining_mean_slack": 0.17137260761217915,
+      "residual_difference": 0.17137260761217918
+    },
+    "3": {
+      "n": 100,
+      "current_mean_speedup": 3.258687134445883,
+      "bound_mean_speedup": 3.710418375628817,
+      "remaining_mean_slack": 0.4517312411829343,
+      "residual_difference": 0.4517312411829343
+    },
+    "4": {
+      "n": 100,
+      "current_mean_speedup": 4.091503001561421,
+      "bound_mean_speedup": 4.936769214077402,
+      "remaining_mean_slack": 0.8452662125159817,
+      "residual_difference": 0.8452662125159818
+    },
+    "5": {
+      "n": 100,
+      "current_mean_speedup": 4.7576166788448955,
+      "bound_mean_speedup": 6.140526035014712,
+      "remaining_mean_slack": 1.3829093561698174,
+      "residual_difference": 1.3829093561698174
+    }
+  },
+  "core5_top10": [
+    {
+      "case_id": "044",
+      "cores": 5,
+      "B": 154407,
+      "L": 14881,
+      "T": 41205,
+      "upper_speedup": 10.376117196424971,
+      "current_speedup": 3.747287950491445,
+      "remaining_mean_increment": 0.06628829245933526,
+      "record_id": "90ef7bcd7425e2d3cbd4af5a4c82c18e507a98df4b06af8e25237eb4559d4dc3",
+      "plan_sha256": "a16abc2ce5000de286a5416080f19d21ed1d237942045e5fca10a61625094c2e",
+      "result_sha256": "83a869d41f0aa66d9b06c6b2e5dac66a1b280c7f39e0d8bb4562678c3acf0594",
+      "graph_sha256": "9abd4468a4be365e384de47431ac914ee44fd6e7b6221dffc584561f388cd57e"
+    },
+    {
+      "case_id": "071",
+      "cores": 5,
+      "B": 18919,
+      "L": 2507,
+      "T": 7782,
+      "upper_speedup": 7.546469884323893,
+      "current_speedup": 2.43112310460036,
+      "remaining_mean_increment": 0.051153467797235334,
+      "record_id": "2220b2f5a298d8e1b4534d4d0fa283cd5ddcc0df12417283c97c198502f83509",
+      "plan_sha256": "ce7f38549b9f9492b2cde7b87b593febc732c979725021ac18a9d06715aa317f",
+      "result_sha256": "7938a4d580af4e2a29632eba6a3c2dedc031a0976029126429472abdf7dc1c6c",
+      "graph_sha256": "437cc74cae9e0fc0cb89b05403c62062ceff8d5bc2224c8834c519e69524e897"
+    },
+    {
+      "case_id": "069",
+      "cores": 5,
+      "B": 25144,
+      "L": 3335,
+      "T": 9143,
+      "upper_speedup": 7.539430284857572,
+      "current_speedup": 2.7500820299682815,
+      "remaining_mean_increment": 0.047893482548892904,
+      "record_id": "a467ff0b47ec70ea79c09ce38745e4d2854c9d5f1f847e91d1b3da96c25b9b7e",
+      "plan_sha256": "b591631b1994bd80355326b15174082b2d755d0b54e0d705d92f8b37215d4fd3",
+      "result_sha256": "85c9a55cce3342644fb3febee2231a09f2aa07d7833e938b3454b7ef234d346e",
+      "graph_sha256": "9632392d98cfc04291ba0546accf1f4c3ede8ff71befd3cd0ae67caf27659e52"
+    },
+    {
+      "case_id": "005",
+      "cores": 5,
+      "B": 95618,
+      "L": 12777,
+      "T": 30642,
+      "upper_speedup": 7.483603349769116,
+      "current_speedup": 3.1204882187846747,
+      "remaining_mean_increment": 0.043631151309844414,
+      "record_id": "ef1803e63319f30ebb4ba44e5ec8469f9d00ca8d8a3435ad63049bb1f4764cce",
+      "plan_sha256": "271a969809500146111039bc4f327abe2a78f298177e99cbc9a9ecc637bb8eb6",
+      "result_sha256": "161f6c00a3c406c3e11d9aead620c9652bdce4c8999ce1039c83000dd859f631",
+      "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f"
+    },
+    {
+      "case_id": "065",
+      "cores": 5,
+      "B": 53068,
+      "L": 5904,
+      "T": 11270,
+      "upper_speedup": 8.988482384823849,
+      "current_speedup": 4.7087843833185445,
+      "remaining_mean_increment": 0.04279698001505304,
+      "record_id": "159222569e194252ad2ec2d971a286d6e9381b2f0590200d09ad615ce52f1d12",
+      "plan_sha256": "f28ed7c83d9c9b838ad6f905b7869520fd481af21a5e1972b4a4d4e75176f7be",
+      "result_sha256": "eb4f51e8e0f0982ce382357c76bae984d720e33f039d42fde2ea70ba231d172e",
+      "graph_sha256": "23342b7c3e75f58cec3d0bdaff89bf8d6f18de4930d35ec2ceade91670f0a400"
+    },
+    {
+      "case_id": "015",
+      "cores": 5,
+      "B": 177362,
+      "L": 20300,
+      "T": 38938,
+      "upper_speedup": 8.73704433497537,
+      "current_speedup": 4.554984847706611,
+      "remaining_mean_increment": 0.041820594872687585,
+      "record_id": "2560d286be23b0592c0c97f2decd89395ac312b6dd2f4bde6c0b3edabf7be56e",
+      "plan_sha256": "1b4cefad54cc39ff33d46ec9dfce56e7bd67f8663ac0441b47d630a94855c5b0",
+      "result_sha256": "33feae716d9f466c7c7782b4029738e16d90ce711a32d55c56bd0c462b4a192b",
+      "graph_sha256": "d27dfc39289fa442f29f597191ab6b05142ce6ad68b4396056b2adccb9c93253"
+    },
+    {
+      "case_id": "088",
+      "cores": 5,
+      "B": 243623,
+      "L": 34722,
+      "T": 85789,
+      "upper_speedup": 7.0163873048787515,
+      "current_speedup": 2.839792980452039,
+      "remaining_mean_increment": 0.04176594324426713,
+      "record_id": "f26d6fee730c02ce7ea4432255b2a972ad56decd93d9b4502c0c516858508745",
+      "plan_sha256": "a64aaa01bcb11624b87fb0e85c10d6654d67422d6d006975dac65a54fb5a0592",
+      "result_sha256": "85b3610c8136acd9f1f1f79653f327a9779a3f33aa42672006498dc5e166e102",
+      "graph_sha256": "2ff71575ba33875431f54823fc1f2214e018edcfc9d568edfb7c47b0f264b825"
+    },
+    {
+      "case_id": "068",
+      "cores": 5,
+      "B": 362095,
+      "L": 49821,
+      "T": 116345,
+      "upper_speedup": 7.267919150559001,
+      "current_speedup": 3.1122523529158967,
+      "remaining_mean_increment": 0.04155666797643104,
+      "record_id": "84ec7217d25c7ca33eccef55380637e712b6900fd08bb3f5d02d82f39e0a4ce7",
+      "plan_sha256": "955cfb794f0c82641b6d4c1411591c77dafc0458a2c1731184fee809aef16ff1",
+      "result_sha256": "be67f6aad45f80bb5075ac852a85fa25576655e5be1114a1bb31e35dc71a9306",
+      "graph_sha256": "dfd9a58ef9d26a8a4567026b50af8b4499d87eebb3d98f8208b909b11e963c6d"
+    },
+    {
+      "case_id": "086",
+      "cores": 5,
+      "B": 118403,
+      "L": 15837,
+      "T": 32662,
+      "upper_speedup": 7.476352844604407,
+      "current_speedup": 3.625099504010777,
+      "remaining_mean_increment": 0.0385125334059363,
+      "record_id": "f6938828556fe517bfe6d2bec5c48f1c294bb429b679b308586097aa73af7efb",
+      "plan_sha256": "d25868c0f2d4bc3becc2a4892786b88585d083df1168faf86820e53580717f6a",
+      "result_sha256": "978dcbc47485e412daaf709bd84093bfe8b20f13a4a1424b059d2730608275ce",
+      "graph_sha256": "ef91fda2692fd0add63db3c7f677e4e03c8d115d97db3cb959cffc62fff2434a"
+    },
+    {
+      "case_id": "012",
+      "cores": 5,
+      "B": 59088,
+      "L": 7115,
+      "T": 13175,
+      "upper_speedup": 8.304708362614196,
+      "current_speedup": 4.484857685009487,
+      "remaining_mean_increment": 0.03819850677604709,
+      "record_id": "b1cf183d81d98cfb67a145084578476647802a0675c8f37bcfe544f77a35b84b",
+      "plan_sha256": "20cf16ddb922b088267b4a334a486404075cf4cbcca96826b1b8a3907961c2ad",
+      "result_sha256": "1a634b910e190a23fedf7b2292811ad9eb1560a7599d09220926aed223d26748",
+      "graph_sha256": "1a07d3a4c6d1305bec2fbdc4d106fb5c0078ec098cbf09e1b8eaa5134968e079"
+    }
+  ],
+  "case097": {
+    "rank_among_100": 88,
+    "remaining_mean_increment": 0.0011022250656391819,
+    "current_speedup": 5.466290403139493,
+    "bound_speedup": 5.576512909703411
+  },
+  "top10_contribution_sum": 0.4536176204057301,
+  "cartesian_family_potential": {
+    "case_ids": [
+      "011",
+      "021",
+      "027",
+      "037",
+      "039",
+      "058",
+      "059",
+      "079",
+      "080",
+      "097"
+    ],
+    "five_core_remaining_mean_increment": 0.03661052602638349,
+    "source": "input-residency-profile-20260925/profile.json; graph hashes matched"
+  },
+  "bound_csv_sha256": "bb8a21066f228f428ca2cab3d742c2eb6247cfbf1b281b30c588029a6ba9cd86",
+  "selected_cells_snapshot_sha256": "cf6021229b57458db772920faf8cdf995c0dc35a381d8f043254aa6a99f341cb",
+  "scope_note": "Uses only the current same-run P3 best for this single fixed algorithm, not the historical per-cell winner. Saves only selected cells, not unrelated runtime/admission records; does not rehash 500 result blobs or rerun E0. Bounds are the earlier frozen compute/CP relaxation; not plan-aware and not a promise."
+}
