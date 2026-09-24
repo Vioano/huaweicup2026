@@ -45,7 +45,8 @@ class DarwinResourceGuard:
         if self.last_sample is not None and now - self.last_sample < 5:
             return None
         self.last_sample = now
-        record = {'monotonic_seconds': now, 'sample_interval_min_seconds': 5}
+        record = {'utc_epoch_seconds': time.time(), 'monotonic_seconds': now,
+                  'sample_interval_min_seconds': 5}
         try:
             pressure = subprocess.run(['sysctl', '-n', 'kern.memorystatus_vm_pressure_level'],
                                       capture_output=True, text=True, timeout=3, check=True)

@@ -83,8 +83,17 @@ class ResourceGuardTests(TestCase):
                 self.assertEqual(observed[-1], expected)
                 self.assertEqual(len((Path(temp)/'resources.jsonl').read_text().splitlines()),
                                  len(times))
+                self.assertIn('utc_epoch_seconds',
+                              json.loads((Path(temp)/'resources.jsonl').read_text().splitlines()[-1]))
         with tempfile.TemporaryDirectory() as temp, \
              mock.patch.object(runner.subprocess, 'run', side_effect=TimeoutError('sysctl')):
+            self.assertEqual(runner.DarwinResourceGuard().check(Path(temp)),
+                             'resource_sample_failed')
+        with tempfile.TemporaryDirectory() as temp, \
+             mock.patch.object(runner.subprocess, 'run',
+                               side_effect=[mock.Mock(stdout='2\n'),
+                                            mock.Mock(stdout='Mach Virtual Memory Statistics: '
+                                                     '(page size of 16384 bytes)\nPages free: 123.\n')]):
             self.assertEqual(runner.DarwinResourceGuard().check(Path(temp)),
                              'resource_sample_failed')
 
