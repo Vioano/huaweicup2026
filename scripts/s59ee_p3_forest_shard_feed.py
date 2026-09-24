@@ -11,6 +11,8 @@ sys.path.insert(0, str(ROOT))
 from src.q3.board_export import export_batch
 
 SOURCE = '311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1'
+UPSTREAM_LABEL = 'q3-witness-structure'
+UPSTREAM_PATH = 'src/q3/witness_solve.py'
 GROUP_RUN = 'q3-forest-full500-20260925-s59'
 AREA = ROOT / 'results/a/q3-nikolastarx/forest-full500-20260925-s59'
 CONTROL = ROOT / 'results/a/q3-nikolastarx/forest500-control-20260925-s59'
@@ -52,6 +54,16 @@ def main():
         raise ValueError('native call ledger outside frozen budget')
     native_sha, controller_sha = sha(native), sha(ROOT / dispatch['controller_path'])
     for record in rows:
+        if record['provenance']['solver']['upstream'] != [UPSTREAM_LABEL]:
+            raise ValueError('unexpected native upstream identity')
+        if not (ROOT / UPSTREAM_PATH).is_file():
+            raise ValueError('fixed upstream source is unavailable')
+        record['provenance']['solver']['upstream'] = [{
+            'repo': 'huaweibei123/huaweicup2026',
+            'commit': SOURCE,
+            'path': UPSTREAM_PATH,
+            'entrypoint': 'src.q3.witness_solve.evaluate_candidates',
+        }]
         record['run_id'] = GROUP_RUN
         record['parameters'].update(native_shard_run_id=source_batch['run_id'], global_max_workers=4,
                                     controller_source_sha256=controller_sha, native_shard_batch_sha256=native_sha,

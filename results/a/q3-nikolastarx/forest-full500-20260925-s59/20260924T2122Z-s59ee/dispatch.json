@@ -1,0 +1,251 @@
+{
+  "schema": "p3-ten-shard-dispatch-v2",
+  "source_commit": "311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1",
+  "control_source_commit": "311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1",
+  "runner_commit": "311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1",
+  "runner_path": "src/q3/feedback_benchmark.py",
+  "controller_path": "scripts/s59ee_p3_forest_dispatch.py",
+  "controller_sha256": "0ae462dc80789d3061f8999f2d3d193a410ecb8b214febb94e54bf0e2167cd52",
+  "started_at": "2026-09-24T21:22:01.909Z",
+  "finished_at": "2026-09-24T21:37:00.466Z",
+  "status": "complete",
+  "max_workers": 4,
+  "max_solver_calls": 500,
+  "max_E0_calls": 1500,
+  "deadline_seconds": 1800,
+  "retries": 0,
+  "pilot": [
+    [
+      "058",
+      5
+    ],
+    [
+      "079",
+      5
+    ],
+    [
+      "001",
+      1
+    ],
+    [
+      "082",
+      4
+    ]
+  ],
+  "available_bytes_at_start": 13449084928,
+  "shards": {
+    "s01": {
+      "status": "stage_complete",
+      "manifest_sha256": "9bf52b9d8cfb49e53fe9181b66cf9e0bac36d366a55c45c028108e409d265698",
+      "run_id": "q3-forest-full500-20260925-s59-s01",
+      "coordinates": 50,
+      "pid": 63834,
+      "started_at": "2026-09-24T21:22:01.916Z",
+      "available_bytes_at_launch": 13442023424,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/forest500-control-20260925-s59/manifest-s01.json",
+        "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s01"
+      ],
+      "finished_at": "2026-09-24T21:24:05.131Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 91
+    },
+    "s02": {
+      "status": "stage_complete",
+      "manifest_sha256": "e6c0b5e016a4dd85e147ee8c88d5a80e7fb709c4847581b65971392e79493de3",
+      "run_id": "q3-forest-full500-20260925-s59-s02",
+      "coordinates": 50,
+      "pid": 63836,
+      "started_at": "2026-09-24T21:22:01.923Z",
+      "available_bytes_at_launch": 13446119424,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/forest500-control-20260925-s59/manifest-s02.json",
+        "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s02"
+      ],
+      "finished_at": "2026-09-24T21:27:02.169Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 95
+    },
+    "s03": {
+      "status": "stage_complete",
+      "manifest_sha256": "cdf65a98497f5e2e36a9a97a9a8a276dbbc6b7b9af77104f54c9309afc6768e2",
+      "run_id": "q3-forest-full500-20260925-s59-s03",
+      "coordinates": 50,
+      "pid": 63838,
+      "started_at": "2026-09-24T21:22:01.930Z",
+      "available_bytes_at_launch": 13438631936,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/forest500-control-20260925-s59/manifest-s03.json",
+        "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s03"
+      ],
+      "finished_at": "2026-09-24T21:25:34.812Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 90
+    },
+    "s04": {
+      "status": "stage_complete",
+      "manifest_sha256": "ee719bef7a9c3fc3e4f0d290b945513a06860ccb80cda659a24e316a2c086837",
+      "run_id": "q3-forest-full500-20260925-s59-s04",
+      "coordinates": 50,
+      "pid": 63840,
+      "started_at": "2026-09-24T21:22:01.938Z",
+      "available_bytes_at_launch": 13386727424,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/forest500-control-20260925-s59/manifest-s04.json",
+        "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s04"
+      ],
+      "finished_at": "2026-09-24T21:24:26.498Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 93
+    },
+    "s05": {
+      "status": "stage_complete",
+      "manifest_sha256": "f8024481e3f766e06bc74a1373df255d62eb6cddfac77b5aa586a7b9126a4be4",
+      "run_id": "q3-forest-full500-20260925-s59-s05",
+      "coordinates": 50,
+      "pid": 76191,
+      "started_at": "2026-09-24T21:24:05.142Z",
+      "available_bytes_at_launch": 12865781760,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/forest500-control-20260925-s59/manifest-s05.json",
+        "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s05"
+      ],
+      "finished_at": "2026-09-24T21:27:49.851Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 110
+    },
+    "s06": {
+      "status": "stage_complete",
+      "manifest_sha256": "4bb2f6070f4748fe1589b7223d8de3f2c5b9e20e3fd58d12bfce3457c7df9920",
+      "run_id": "q3-forest-full500-20260925-s59-s06",
+      "coordinates": 50,
+      "pid": 77835,
+      "started_at": "2026-09-24T21:24:26.508Z",
+      "available_bytes_at_launch": 12889866240,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/forest500-control-20260925-s59/manifest-s06.json",
+        "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s06"
+      ],
+      "finished_at": "2026-09-24T21:28:25.525Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 97
+    },
+    "s07": {
+      "status": "stage_complete",
+      "manifest_sha256": "0bd1651cfc2784d6a29d4affa07a8015323d4752dee8e8eaf9551f7a97231f2c",
+      "run_id": "q3-forest-full500-20260925-s59-s07",
+      "coordinates": 50,
+      "pid": 85258,
+      "started_at": "2026-09-24T21:25:34.822Z",
+      "available_bytes_at_launch": 12894339072,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/forest500-control-20260925-s59/manifest-s07.json",
+        "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s07"
+      ],
+      "finished_at": "2026-09-24T21:28:43.074Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 102
+    },
+    "s08": {
+      "status": "stage_complete",
+      "manifest_sha256": "38c021a4a80a627bb110fb88914965ac7873379c009cb05d61aa50e92ab48203",
+      "run_id": "q3-forest-full500-20260925-s59-s08",
+      "coordinates": 50,
+      "pid": 94871,
+      "started_at": "2026-09-24T21:27:02.178Z",
+      "available_bytes_at_launch": 13292060672,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/forest500-control-20260925-s59/manifest-s08.json",
+        "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s08"
+      ],
+      "finished_at": "2026-09-24T21:36:59.961Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 104
+    },
+    "s09": {
+      "status": "stage_complete",
+      "manifest_sha256": "a12c7d7ff72522e97a0be9f6e6eee4875d73d69ba41c54eae5cf484810611d70",
+      "run_id": "q3-forest-full500-20260925-s59-s09",
+      "coordinates": 50,
+      "pid": 99054,
+      "started_at": "2026-09-24T21:27:49.881Z",
+      "available_bytes_at_launch": 13126057984,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/forest500-control-20260925-s59/manifest-s09.json",
+        "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s09"
+      ],
+      "finished_at": "2026-09-24T21:33:33.724Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 96
+    },
+    "s10": {
+      "status": "stage_complete",
+      "manifest_sha256": "101845b1f7e478f606698fb38eacf4078b542bf6a09df51a681d1a3369b1032a",
+      "run_id": "q3-forest-full500-20260925-s59-s10",
+      "coordinates": 50,
+      "pid": 2479,
+      "started_at": "2026-09-24T21:28:25.535Z",
+      "available_bytes_at_launch": 12288245760,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/forest500-control-20260925-s59/manifest-s10.json",
+        "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s10"
+      ],
+      "finished_at": "2026-09-24T21:33:28.082Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 95
+    }
+  },
+  "pilot_completed_at": "2026-09-24T21:22:17.957Z",
+  "stop_reason": null,
+  "queued_shards": []
+}
