@@ -4,7 +4,7 @@ import unittest
 
 from src.q2_nikolastarx.dag_direct import DAGIndex
 from src.q2_nikolastarx.direct import UnsupportedStructure, derive_multicore_plan
-from src.q2_nikolastarx import component_envelope, shared_input_wave
+from src.q2_nikolastarx import component_envelope, shared_input_wave, active_core_wave, adaptive_budget
 
 
 CONFIG = {'capacity': {'L1': 300, 'UB': 300}}
@@ -43,6 +43,30 @@ def ops_on_core(plan, core=0):
 
 
 class SharedInputWaveTests(unittest.TestCase):
+    def test_active_core_reduction_preserves_requested_plan_shape(self):
+        g = graph(3)
+        config = {'capacity': {'L1': 1000, 'UB': 1000}, 'bandwidth': 1}
+        plan, detail = active_core_wave.build_from_index(DAGIndex(g), 3, config)
+        self.assertEqual(detail['active_cores'], 1)
+        self.assertEqual(len(plan['core_schedules']), 3)
+        self.assertEqual(plan['core_schedules'][1:], [[], []])
+        derive_multicore_plan(g, plan)
+        self.assertFalse(detail['official_optimality_claim'])
+
+    def test_capacity_prevents_unsafe_core_reduction(self):
+        g = graph(3)
+        config = {'capacity': {'L1': 150, 'UB': 150}, 'bandwidth': 1}
+        _, detail = active_core_wave.build_from_index(DAGIndex(g), 3, config)
+        self.assertEqual(detail['active_cores'], 3)
+
+    def test_new_guard_preserves_existing_wave_fallback(self):
+        g = graph(3)
+        config = {'capacity': {'L1': 1000, 'UB': 1000}, 'bandwidth': 1.5}
+        expected, _ = shared_input_wave.build(g, 3, config)
+        actual, detail = adaptive_budget.wave_route(DAGIndex(g), 3, config)
+        self.assertEqual(actual, expected)
+        self.assertIn('active_core_guard_rejected', detail)
+
     def test_coverage_dependency_and_shared_use_wave(self):
         g = graph(); ix = DAGIndex(g)
         plan, detail = shared_input_wave.build_from_index(ix, 1, CONFIG)
