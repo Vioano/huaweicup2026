@@ -12,7 +12,7 @@
 <div id="batch-scope"></div><p id="batch-status" role="status">正在读取本题批次…</p>
 <button id="history-view" aria-pressed="false">探索：历史逐格最佳 · 跨批次选优</button>
 <div id="batch-results" class="batch-results" aria-label="选择本题批次"></div>
-<p class="batch-footnote">全量候选须同一批次、同一算法、求解器版本与入口覆盖本题 100 图×1–5 核。排名按所选核数的 100 图均值；运行规则和预算仍须核原件。失败、超时与未跑保留缺口，历史逐格最佳仅供探索。</p>
+<p class="batch-footnote">全量候选须同一批次、同一算法、求解器版本与入口覆盖本题 100 图×1–5 核，且每格仅一次尝试。排名按所选核数的 100 图均值；多次尝试需另核冻结的在线选择规则，运行预算仍须核原件。失败、超时与未跑保留缺口，历史逐格最佳仅供探索。</p>
 </section><div id="boards" aria-label="三问题热力成绩表"></div><aside id="detail" hidden role="dialog" aria-modal="false" aria-labelledby="detail-title"></aside></main>
 <dialog id="cache-dialog" aria-labelledby="cache-title"></dialog>
 <footer><details><summary>接收状态与数据边界 <span id="source-summary"></span></summary><div id="sources"></div><p id="polling-note">页面每 5 秒检查本地变化；指定 Git 分支每 120 秒检查已发布的数据包。收信、实际运行、数据发布、原件核对和算法验收是不同状态。没有启动任何求解器或评估器。</p><p>默认排名仅接收当前冻结图、配置、官方源码身份且原件匹配的 E0，或明确准入的 E1。E2 不参与排名。原件核对不等于重新执行或正式算法终验。</p></details><span id="freshness"></span></footer>

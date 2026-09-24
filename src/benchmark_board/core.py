@@ -1,6 +1,7 @@
 """Append-only benchmark ledger. No solver/evaluator execution, no third-party dependencies."""
 from __future__ import annotations
 import hashlib, json, math, sqlite3, re, gzip, io
+from collections import Counter
 from pathlib import PurePosixPath
 from datetime import datetime, timezone
 from contextlib import contextmanager
@@ -209,6 +210,8 @@ def batch_candidates(allrows, problem, cores, case_ids):
             groups.setdefault(r['run_id'],[]).append(r)
     candidates=[]
     for run,all_run_rows in groups.items():
+        attempts_per_cell=Counter((r['case_id'],r['cores']) for r in all_run_rows)
+        one_attempt_per_cell=all(count==1 for count in attempts_per_cell.values())
         sources={(r['algorithm_id'],r.get('solver_commit')) for r in all_run_rows}
         entrypoints=set()
         for r in all_run_rows:
@@ -241,10 +244,10 @@ def batch_candidates(allrows, problem, cores, case_ids):
                         if core==k and r.get('baseline_verified') and number(r['metrics'].get('baseline_speedup'),True)]
                      for k in range(1,6)}
         full_scored=sum(map(len,full_ratios.values()))
-        full_complete=len(full_best)==500 and single and fixed_entrypoint
+        full_complete=len(full_best)==500 and single and fixed_entrypoint and one_attempt_per_cell
         candidates.append({'run_id':run,'algorithm_ids':sorted({a for a,_ in sources}),
             'solver_commits':sorted({c for _,c in sources if c}), 'single_source':single,
-            'fixed_entrypoint':fixed_entrypoint,
+            'fixed_entrypoint':fixed_entrypoint,'one_attempt_per_cell':one_attempt_per_cell,
             'valid_count':len(best),'scored_count':len(ratios),'target_count':len(cases),
             'mean_speedup':sum(ratios)/len(ratios) if ratios else None,
             'mean_solver_seconds':sum(walls)/len(walls) if walls else None,'solver_count':len(walls),
@@ -254,15 +257,15 @@ def batch_candidates(allrows, problem, cores, case_ids):
             'full_mean_speedup':sum(full_ratios[cores])/100 if len(full_ratios[cores])==100 else None,
             'record_count':len(all_run_rows),'scope_attempts':len(rows),
             'status_counts':{status:sum(r['status']==status for r in rows) for status in sorted({r['status'] for r in rows})}})
-    full=sorted((r for r in candidates if r['full_complete']),
+    full_all=sorted((r for r in candidates if r['full_complete']),
                 key=lambda r:(r['full_mean_speedup'] is None,-(r['full_mean_speedup'] or 0),r['run_id']))
     complete=sorted((r for r in candidates if r['complete']),key=lambda r:(-r['mean_speedup'],r['run_id']))
     partial=sorted((r for r in candidates if not r['complete']),key=lambda r:(-r['scored_count'],-r['valid_count'],r['run_id']))
     return {'problem':problem,'cores':cores,'case_ids':sorted(cases),'target_count':len(cases),
-            'full_complete_count':len(full),'full':full[:3],
+            'full_complete_count':len(full_all),'full':full_all[:3],
             'complete_count':len(complete),'partial_count':len(partial),'complete':complete[:3],'partial':partial[:3],
-            'batches':full+[r for r in complete+partial if not r['full_complete']],
-            'ranking':'主成绩须同一批次、同一算法和求解器提交在本题100图×1–5核均已核；逐核均值为逐例算术平均。筛选子集只作预览，历史逐格最佳不参与。'}
+            'batches':full_all+[r for r in complete+partial if not r['full_complete']],
+            'ranking':'主成绩候选须同一批次、同一算法和求解器提交在本题100图×1–5核均已核，每格仅一次尝试；多次尝试须另核在线选择规则。逐核均值为逐例算术平均。筛选子集只作预览，历史逐格最佳不参与。'}
 
 def project_records(allrows, manifest, cursor, sources, algorithm=None, run=None, include_reported=False):
     """Shared selection for local original checking and central read-only mirrors."""
