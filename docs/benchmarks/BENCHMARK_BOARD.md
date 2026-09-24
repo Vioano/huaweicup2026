@@ -103,7 +103,7 @@ python3 src/benchmark_board/app.py --state output/benchmark-board serve --port 5
 
 ### 已验签传输的中央本地收件
 
-中央服务可选 `serve --sync-inbox <本机收件目录>`。它沿用同一个 Ledger 实例和单个接收 worker；`--no-sync` 仅关闭旧 Git 分支抓取，不关闭本地收件。镜像模式拒绝此参数，HTTP 仍完全只读。收件 worker 空闲时约每0.25秒检查本机已完成交付；正在校验或入库其他feed时仍须等待该次处理完成，旧来源的每个feed与每个来源之间也检查队列。传输、身份验签、代码更新由独立同步器负责；本接口不另发消息、不调用solver/evaluator、不改变算法预算。
+中央服务可选 `serve --sync-inbox <本机收件目录>`。本地收件和旧 Git 分支抓取各用一个 worker，共享同一 Ledger；账本写入由进程锁和 SQLite 事务串行化，原件 blob 写入也加锁。`--no-sync` 仅关闭旧 Git 分支抓取，不关闭本地收件。镜像模式拒绝此参数，HTTP 仍完全只读。收件 worker 空闲时约每0.25秒检查本机已完成交付，不再等待远端 `ls-remote`、`fetch` 或 `git show` 返回；若自身正在校验或入库其他feed，仍须等待该次处理完成。这不是所有批次从 request 到 result 的固定时延保证。传输、身份验签、代码更新由独立同步器负责；本接口不另发消息、不调用solver/evaluator、不改变算法预算。
 
 同步器先完成不可变目录 `<inbox>/<id>/`，其中 `feed.json` 为完整 `submission_version=1`，`artifacts/` 下按feed内仓库相对路径保存全部原件，最后原子发布 `request.json`。请求为 `{schema_version:1,id,feed_file:"feed.json",source:{id:"auto:<actor>:<id>",commit:"<40位SHA>",feed:"<仓库相对feed路径>",url:"https://github.com/huaweibei123/huaweicup2026/blob/<SHA>/<feed路径>"}}`；id与目录名一致，允许1–128个字母、数字、下划线和连字符。这个目录仅接收同步器已经完成身份验证和下载的交付；本模块的哈希校验不能代替身份验证。
 

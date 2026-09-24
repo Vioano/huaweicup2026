@@ -47,6 +47,8 @@ class Ledger:
         self.manifest = manifest; self.calibrations = calibrations or {}
         self.expected = {f['path']: f['sha256'] for f in manifest['files']}
         self._records_lock = threading.RLock()
+        self._blob_lock = threading.RLock()
+        self._writer_lock = threading.RLock()
         self._records_cache_seq = None
         self._records_cache = ()
         with self.connect() as db:
@@ -67,8 +69,9 @@ class Ledger:
         path = safe_path(spec.get('path')); data = loader(path)
         if len(data) > MAX_BLOB or digest(data) != spec['sha256']: raise ValueError('artifact bytes/hash mismatch: ' + path)
         target = self.state / 'blobs' / spec['sha256']
-        if not target.exists():
-            temp = target.with_suffix('.tmp'); temp.write_bytes(data); temp.replace(target)
+        with self._blob_lock:
+            if not target.exists():
+                temp = target.with_suffix('.tmp'); temp.write_bytes(data); temp.replace(target)
         # Verify every reference's bytes. Only the paired denominator may use
         # this one-object cache; retaining every full timeline would use GiB.
         if parsed is not None and spec['sha256'] in parsed:
@@ -165,27 +168,29 @@ class Ledger:
         rows=[]; pair_cache={}
         for raw in feed['records']:
             rid=digest(packed(raw).encode()); r=self.validate(raw,loader,source,pair_cache); r['id']=rid; rows.append(r)
-        with self.connect() as db:
-            # Another importer may have committed this batch during byte validation.
-            db.execute('BEGIN IMMEDIATE')
-            if db.execute('SELECT 1 FROM batches WHERE id=?',(batch,)).fetchone():
-                return {'duplicate':True,'added':0}
-            count=0
-            for r in rows:
-                old=db.execute('SELECT id FROM records WHERE attempt=? AND revision=?',(r['attempt_id'],r['revision'])).fetchone()
-                if old:
-                    if old['id']!=r['id']: raise ValueError('同 attempt/revision 内容冲突：必须追加新 revision，禁止覆盖')
-                    continue
-                previous=db.execute('SELECT body FROM records WHERE attempt=? ORDER BY revision DESC LIMIT 1',(r['attempt_id'],)).fetchone()
-                if previous:
-                    oldr=json.loads(previous['body'])
-                    if any(oldr[f]!=r[f] for f in ('problem','case_id','cores','algorithm_id','run_id','solver_commit')): raise ValueError('attempt identity cannot change')
-                db.execute('INSERT INTO records(id,attempt,revision,body) VALUES(?,?,?,?)',(r['id'],r['attempt_id'],r['revision'],packed(r)))
-                db.execute('INSERT INTO events(kind,body,time) VALUES(?,?,?)',('record',packed({'id':r['id'],'problem':r['problem'],'case_id':r['case_id'],'cores':r['cores'],'eligible':r['eligible']}),now()));count+=1
-            db.execute('INSERT INTO batches VALUES(?,?,?,?)',(batch,packed(source),now(),count))
+        with self._writer_lock:
+            with self.connect() as db:
+                # Another importer may have committed this batch during byte validation.
+                db.execute('BEGIN IMMEDIATE')
+                if db.execute('SELECT 1 FROM batches WHERE id=?',(batch,)).fetchone():
+                    return {'duplicate':True,'added':0}
+                count=0
+                for r in rows:
+                    old=db.execute('SELECT id FROM records WHERE attempt=? AND revision=?',(r['attempt_id'],r['revision'])).fetchone()
+                    if old:
+                        if old['id']!=r['id']: raise ValueError('同 attempt/revision 内容冲突：必须追加新 revision，禁止覆盖')
+                        continue
+                    previous=db.execute('SELECT body FROM records WHERE attempt=? ORDER BY revision DESC LIMIT 1',(r['attempt_id'],)).fetchone()
+                    if previous:
+                        oldr=json.loads(previous['body'])
+                        if any(oldr[f]!=r[f] for f in ('problem','case_id','cores','algorithm_id','run_id','solver_commit')): raise ValueError('attempt identity cannot change')
+                    db.execute('INSERT INTO records(id,attempt,revision,body) VALUES(?,?,?,?)',(r['id'],r['attempt_id'],r['revision'],packed(r)))
+                    db.execute('INSERT INTO events(kind,body,time) VALUES(?,?,?)',('record',packed({'id':r['id'],'problem':r['problem'],'case_id':r['case_id'],'cores':r['cores'],'eligible':r['eligible']}),now()));count+=1
+                db.execute('INSERT INTO batches VALUES(?,?,?,?)',(batch,packed(source),now(),count))
         return {'added':count,'batch':batch}
     def source_status(self, name, data):
-        with self.connect() as db: db.execute('INSERT OR REPLACE INTO sources VALUES(?,?)',(name,packed(data)))
+        with self._writer_lock:
+            with self.connect() as db: db.execute('INSERT OR REPLACE INTO sources VALUES(?,?)',(name,packed(data)))
     def _cached_records(self, db):
         # Browser tabs poll every second. Reuse immutable normalized rows until
         # the append-only record cursor advances; SQLite reads remain consistent.

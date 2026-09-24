@@ -94,4 +94,22 @@ class LedgerTests(unittest.TestCase):
         self.assertEqual(sorted(x['added'] for x in results),[0,1])
         self.assertEqual(len(self.l.records()),1)
         self.assertEqual(len(self.l.events(0)),1)
+    def test_parallel_ingests_share_blob_without_corrupting_ledger(self):
+        from concurrent.futures import ThreadPoolExecutor
+        from threading import Barrier
+        a=self.record('parallel-a');b=self.record('parallel-b')
+        b['artifacts']['plan']=a['artifacts']['plan']
+        b['identity']['plan_sha256']=a['identity']['plan_sha256']
+        shared=a['artifacts']['plan']['path'];barrier=Barrier(2)
+        def loader(path):
+            if path==shared:barrier.wait(timeout=5)
+            return self.blobs[path]
+        def ingest(row):
+            return self.l.ingest({'schema_version':1,'records':[row]},loader,self.source)
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            results=list(pool.map(ingest,(a,b)))
+        self.assertEqual([r['added'] for r in results],[1,1])
+        self.assertEqual(len(self.l.records()),2)
+        self.assertEqual(len(self.l.events(0)),2)
+        self.assertTrue((self.l.state/'blobs'/a['artifacts']['plan']['sha256']).is_file())
 if __name__=='__main__':unittest.main()

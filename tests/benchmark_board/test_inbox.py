@@ -1,12 +1,15 @@
 import json
 import subprocess
 import sys
+import threading
 import time
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src/benchmark_board'))
 from core import packed
+from app import start_ingest_workers
 from inbox import consume, drain_inbox, REPO
 from protocol import ROOT
 import test_ledger
@@ -103,6 +106,37 @@ class InboxTests(unittest.TestCase):
         finally:
             process.terminate()
             process.communicate(timeout=5)
+
+    def test_completed_delivery_does_not_wait_for_slow_git_poll(self):
+        (self.delivery / 'request.json').unlink()
+        entered = threading.Event()
+        release = threading.Event()
+        stop = threading.Event()
+        def slow_git(repo, *args, **kwargs):
+            if args[0] == 'ls-remote':
+                entered.set()
+                release.wait(timeout=5)
+                return b''
+            self.fail('Unexpected Git command during blocked source poll')
+        source = {'id': 'slow-source', 'ref': 'codex/slow-source', 'prefix': 'results/slow-source'}
+        with patch('app.git', side_effect=slow_git):
+            workers = start_ingest_workers(self.fixture.l, ROOT, [source], self.root,
+                                           sync_enabled=True, stop=stop)
+            try:
+                self.assertTrue(entered.wait(timeout=2))
+                self.write()  # Publish the complete request while Git is blocked.
+                result_file = self.delivery / 'result.json'
+                deadline = time.monotonic() + 2
+                while not result_file.exists() and time.monotonic() < deadline:
+                    time.sleep(.02)
+                self.assertTrue(result_file.exists(), 'Local delivery waited for remote Git')
+                self.assertFalse(release.is_set())
+                self.assertEqual(json.loads(result_file.read_text())['state'], 'accepted')
+                self.assertEqual(len(self.fixture.l.records()), 1)
+            finally:
+                release.set()
+                stop.set()
+                for worker in workers: worker.join(timeout=2)
 
 
 if __name__ == '__main__': unittest.main()
