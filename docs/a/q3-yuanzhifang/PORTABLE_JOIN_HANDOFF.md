@@ -55,8 +55,18 @@
 
    本轮包准备只做静态语法/配置与 `--check-only`，零solver/E0；Mac/Linux实际运行、超时树清理、环境探测以及四图新输出尚未实测，不能把“代码包含分支”称为跨平台验证通过。包由根会话审阅后，交 owner 容量核对、排队。
 
-   实际批次验收：冻结字节预检通过；所有实际调用记账，无补跑；官方容量、依赖、spill/额外DDR/按字节Cache原样保留；069/071与固定Windows质量原件逐项比较，差异调查不覆盖；005/086保留正负收益和与现有中央原件的比较。冷solver与外部E0分别报告。标准feed固定提交预检通过只表明格式和可用字节，不代表独立复跑、盲审或算法最终验收。
+   实际批次验收：冻结字节预检通过；所有实际调用记账，无补跑；官方容量、依赖、spill/额外DDR/按字节Cache原样保留；069/071与固定Windows质量原件逐项比较，差异调查不覆盖。跨平台原计划的换行可能不同，保留各自真实字节hash，另外比较解析后的两字段内容，不能改写原件去凑相同hash；本批每图的P2/P3必须引用同一个实际plan。005/086保留正负收益和与现有中央原件的比较。冷solver与外部E0分别报告。标准feed固定提交预检通过只表明格式和可用字节，不代表独立复跑、盲审或算法最终验收。
 
 6. **截止时间**
 
    未另设运行日程；由 owner 在可用容量与评分窗口确认后安排，并记录实际UTC T0/T1。此交接不自动启动任务或扩大预算，也不替代全100图/1–5核研究。
+
+## 包准备验证记录
+
+代码冻结提交 `60477a382514cb6e97bfd8ea1bb560fda1594c06`。本成员在 Windows/Python 3.12 环境执行静态 AST 语法与 preflight 调用检查，并仅运行以下只读命令：
+
+```text
+.venv/Scripts/python.exe -X utf8 -B src/q3_yuanzhifang/portable_join_benchmark.py --producer-session yuanzhifang30-sudo/s-3d9c78db26714786b88b987ca6f58e2b --run-label portable-check-only-20260925 --output results/a/q3-yuanzhifang/portable-preflight-only-20260925 --graph-dir ../huaweicup2026/data/raw/a/official-cases/data --check-only
+```
+
+返回 `verified_files=15`（四图、配置、10份官方代码），四个既有单核基准及固定实现/依赖/模板核验通过，`calls_executed=0`。核实上述输出目录没有被创建；没有新plan、result、feed或测量时间。环境采集延后至真正执行host，Mac/Linux运行和树清理分支未实测。本记录中的成员session只描述已完成的只读检查，接收方实际运行必须使用自己的session与新label。
