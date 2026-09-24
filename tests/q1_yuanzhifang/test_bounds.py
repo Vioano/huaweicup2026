@@ -27,6 +27,28 @@ class BoundTests(unittest.TestCase):
         self.assertEqual(b["task_gate_lower_bound_cycles"], 7)
         self.assertEqual(b["global_pipe_work_lower_bound_cycles"], 4)
 
+    def test_copy_bridge_is_removed_inside_task_but_gates_separate_tasks(self):
+        graph = {"ops": [{"id": 0, "op": "X", "pipe": "PIPE_M", "cycles": 100},
+                         {"id": 1, "op": "COPY_IN", "pipe": "PIPE_MTE2", "cycles": 1},
+                         {"id": 2, "op": "X", "pipe": "PIPE_V", "cycles": 100}],
+                 "tensors": [{"id": 10, "pos": "UB", "size": 60},
+                             {"id": 11, "pos": "UB", "size": 60}],
+                 "edges": [{"source": 0, "target": 10}, {"source": 10, "target": 1},
+                           {"source": 1, "target": 11}, {"source": 11, "target": 2}]}
+        waits = {"task_same_core_wait_cycles": 100, "task_cross_core_wait_cycles": 1000}
+        for mapping, schedules, expected in (({0: 0, 2: 0}, [[0]], 100),
+                                             ({0: 0, 2: 1}, [[0], [1]], 1200)):
+            b = lower_bounds(graph, {"node_to_subgraph": mapping, "core_schedules": schedules}, waits)
+            self.assertEqual(b["task_gate_lower_bound_cycles"], expected)
+
+    def test_zero_cycle_compute_still_takes_one_cycle(self):
+        graph = self.graph()
+        for op in graph["ops"]:
+            op["cycles"] = 0
+        b = lower_bounds(graph, {"node_to_subgraph": {0: 0, 1: 0}, "core_schedules": [[0]]},
+                         {"task_same_core_wait_cycles": 100, "task_cross_core_wait_cycles": 1000})
+        self.assertEqual(b["task_gate_lower_bound_cycles"], 2)
+
 
 if __name__ == "__main__":
     unittest.main()

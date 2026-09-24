@@ -10,7 +10,7 @@ from collections import defaultdict
 import json
 from pathlib import Path
 
-from construct import OFFICIAL, topo, _build_op_adjacency, _contract_excluded_copy_nodes
+from construct import OFFICIAL, topo, _build_op_adjacency
 from stub_multicore_cut_and_schedule import derive_multicore_plan
 from evaluation_validation import validate_task_order
 from multicore_cut_evaluate_problem_1 import read_scene_a_config
@@ -20,12 +20,17 @@ def lower_bounds(graph, plan, waits):
     view = derive_multicore_plan(graph, plan)
     validate_task_order(view)
     ops = {o["id"]: o for o in graph["ops"] if o["op"] not in {"COPY_IN", "COPY_OUT"}}
-    _, full = _build_op_adjacency(graph)
-    pred, succ = _contract_excluded_copy_nodes(sorted(ops), full)
+    # Task dependencies follow the official contracted graph in `view`, but
+    # within a rebuilt Task an original COPY bridge is removed, not retained.
+    # Use only original direct/tensor compute edges for its local critical path.
+    # Counterexample and source: captain Q1_LOWER_BOUNDS.md @ 170132b127d6.
+    full_pred, full_succ = _build_op_adjacency(graph)
+    pred = {u: full_pred[u] & ops.keys() for u in ops}
+    succ = {u: full_succ[u] & ops.keys() for u in ops}
     mapping = view["mapping"]
     local_path, loads, global_loads = {}, defaultdict(lambda: defaultdict(int)), defaultdict(int)
     for u in topo(ops, succ):
-        task, cost, pipe = mapping[u], ops[u]["cycles"], ops[u]["pipe"]
+        task, cost, pipe = mapping[u], max(1, ops[u]["cycles"]), ops[u]["pipe"]
         local_path[u] = cost + max((local_path[p] for p in pred[u] if mapping[p] == task), default=0)
         loads[task][pipe] += cost
         global_loads[pipe] += cost
