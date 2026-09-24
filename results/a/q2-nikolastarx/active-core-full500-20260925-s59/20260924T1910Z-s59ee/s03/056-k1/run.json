@@ -1,0 +1,188 @@
+{
+  "case": "056",
+  "cores": 1,
+  "status": "ok",
+  "started_at": "2026-09-24T19:19:35.741553Z",
+  "calls": {
+    "solver": 1,
+    "E0": 1,
+    "E1": 0,
+    "E2": 0
+  },
+  "phase": "complete",
+  "solver_mode": "direct",
+  "solver": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "-m",
+      "src.q2_nikolastarx.adaptive_budget",
+      "data/raw/a/official/data/case_056.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "--cores",
+      "1",
+      "--output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/056-k1/plan.json",
+      "--evidence",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/056-k1/online",
+      "--wall",
+      "25"
+    ],
+    "started_at": "2026-09-24T19:19:35.741995Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 63389696,
+    "rss_samples": 4,
+    "cleanup_killed_pids": [],
+    "pid": 78731,
+    "observer_inclusive_peak_rss_bytes": 162611200,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:19:36.169480Z",
+    "wall_seconds": 0.4275552499748301
+  },
+  "online": {
+    "status": "ok",
+    "calls": {
+      "E0": 0,
+      "E1": 0,
+      "E2": 0
+    },
+    "attempts": [
+      {
+        "name": "adaptive_budget",
+        "status": "constructed",
+        "detail": {
+          "selected_strategy": "component_envelope",
+          "eligible_ops": 7678,
+          "components": 19,
+          "cores": 1,
+          "capacity_bytes": {
+            "L1": 524288,
+            "UB": 131072
+          },
+          "per_core": [
+            {
+              "core": 0,
+              "components": 19,
+              "shared_tensors": 0,
+              "cohorts": [
+                {
+                  "components": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11,
+                    12,
+                    13,
+                    14,
+                    15,
+                    16,
+                    17,
+                    18
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 0,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 108128,
+                    "UB": 116082
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 108128,
+                    "UB": 116082
+                  },
+                  "within_capacity": true
+                }
+              ],
+              "max_open_components_bound": 19,
+              "all_raw_envelopes_fit": true
+            }
+          ],
+          "certificate_scope": "raw tensor priority-prefix envelope and component open-count only",
+          "zero_spill_claim": false,
+          "limitations": [
+            "shared input residency spans cohorts and is retained in reserves",
+            "oversized singleton cohorts are emitted without a memory certificate",
+            "no Step2/Step3 or global runtime feasibility guarantee"
+          ],
+          "component_pressure": {
+            "largest_component_pipe_work": {
+              "PIPE_M": 125808,
+              "PIPE_V": 238272
+            },
+            "balanced_pipe_work_lower_bound": {
+              "PIPE_M": 131016,
+              "PIPE_V": 245953
+            },
+            "component_exceeds_balanced_pipe_work": false,
+            "shared_external_bytes": {},
+            "shared_external_exceeds_capacity": false
+          },
+          "adaptive_route": "component_envelope",
+          "index_constructions": 1,
+          "base_construct_calls": 1,
+          "repair_construct_calls": 0,
+          "repair_trigger": {
+            "recognized": false,
+            "large_crossings": 0,
+            "large_crossing_bytes": 0,
+            "reason": "vector lanes: all eligible ops must use PIPE_V"
+          },
+          "route_limitations": "unchanged general plan; no official feasibility/score/zero-spill certificate"
+        },
+        "plan_sha256": "4cfd09a0f7ce8295662038065351f881317b04bcec8c95760b244d84b4aaad6e"
+      }
+    ],
+    "started_at": "2026-09-24T19:19:35.812062+00:00",
+    "validation_scope": "official structural validation only; no E0/Step2/Step3 certificate",
+    "selected": "adaptive_budget",
+    "plan_sha256": "4cfd09a0f7ce8295662038065351f881317b04bcec8c95760b244d84b4aaad6e",
+    "stop_reason": "single_structural_route_completed",
+    "finished_at": "2026-09-24T19:19:35.984282+00:00",
+    "internal_wall_seconds": 0.17233304199180566
+  },
+  "final_reserved": true,
+  "final": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "data/raw/a/official/code/multicore_cut_evaluate_problem_2.py",
+      "data/raw/a/official/data/case_056.json",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/056-k1/plan.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "-o",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/056-k1/final/result.json",
+      "--trace-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/056-k1/final/trace.json",
+      "--log-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/056-k1/final/official.log"
+    ],
+    "started_at": "2026-09-24T19:19:36.172887Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 139542528,
+    "rss_samples": 19,
+    "cleanup_killed_pids": [],
+    "pid": 78802,
+    "observer_inclusive_peak_rss_bytes": 218988544,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:19:37.899562Z",
+    "wall_seconds": 1.7267067909997422
+  },
+  "full_online_result_equal": null,
+  "makespan_cycles": 260878,
+  "finished_at": "2026-09-24T19:19:37.909820Z"
+}

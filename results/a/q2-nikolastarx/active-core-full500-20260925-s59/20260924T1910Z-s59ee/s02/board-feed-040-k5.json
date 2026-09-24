@@ -1,0 +1,257 @@
+{
+  "schema_version": 1,
+  "submission_version": 1,
+  "records": [
+    {
+      "attempt_id": "q2-activecore-full500-20260925-s59-s02-p2-040-k5",
+      "revision": 1,
+      "run_id": "q2-activecore-full500-20260925-s59-s02",
+      "algorithm_id": "q2-adaptive-budget",
+      "algorithm_name": "P2 structural frontier with guarded active-core choice",
+      "variant": "frozen-active-core-wave-v2-no-balance-split",
+      "solver_commit": "2794ceba93acc1f7fc119154f61082511843d4b3",
+      "parameters": {
+        "protocol": {
+          "schema_version": 1,
+          "run_id": "q2-activecore-full500-20260925-s59-s02",
+          "session": "nikolastarx/s-59ee5b053e1c48af8a64bc9ddb6ed5bc",
+          "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/33",
+          "cases": [
+            "026",
+            "027",
+            "028",
+            "029",
+            "030",
+            "031",
+            "032",
+            "033",
+            "034",
+            "035",
+            "036",
+            "037",
+            "038",
+            "039",
+            "040",
+            "041",
+            "042",
+            "043",
+            "044",
+            "045",
+            "046",
+            "047",
+            "048",
+            "049",
+            "050"
+          ],
+          "cores": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "methods": [
+            "adaptive_budget"
+          ],
+          "solver_mode": "direct",
+          "solver_module": "src.q2_nikolastarx.adaptive_budget",
+          "source_files": [
+            "src/q2_nikolastarx/adaptive_frontier.py",
+            "src/q2_nikolastarx/adaptive_semantic.py",
+            "src/q2_nikolastarx/component_envelope.py",
+            "src/q2_nikolastarx/shared_input_wave.py",
+            "src/q2_nikolastarx/dag_direct.py",
+            "src/q2_nikolastarx/direct.py",
+            "src/q2_nikolastarx/baseline.py",
+            "src/q2_nikolastarx/tree_frontier.py",
+            "src/q2_nikolastarx/tree_packets_first.py",
+            "src/q2_nikolastarx/tree_paired_leaves.py",
+            "src/q2_nikolastarx/vector_lanes.py",
+            "src/q2_nikolastarx/vector_arrival.py",
+            "src/q2_nikolastarx/active_core_wave.py",
+            "src/q2_nikolastarx/adaptive_budget.py"
+          ],
+          "algorithm_id": "q2-adaptive-budget",
+          "algorithm_name": "P2 structural frontier with guarded active-core choice",
+          "variant": "frozen-active-core-wave-v2-no-balance-split",
+          "method_description": "One structural wave plan with guarded active-core choice; component fallback defers balance-only splitting. No stored scores or online evaluation.",
+          "output_prefix": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02",
+          "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+          "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+          "max_E0": 125,
+          "max_internal_per_cell": 0,
+          "max_E1": 0,
+          "max_E2": 0,
+          "evaluation_timeout_seconds": 60,
+          "solver_wall_seconds": 25,
+          "batch_wall_seconds": 1800,
+          "rss_observation_stop_bytes": 943718400,
+          "workers": 1,
+          "retries": 0,
+          "case_selection": "Fixed shard 2 covers cases 026-050 at every core 1-5; no historical selection.",
+          "failure_policy": "First failed or unverified cell writes shared stop marker; other shards stop before their next cell; no retry.",
+          "resources": "Four independent one-worker shards; each driver process tree sampled at 900 MiB, sum of caps <4 GiB; shared-host timing not exclusive.",
+          "offline_costs": "Earlier 044/k4 pilot remains independent; this fixed full500 batch reruns all cells from cold process.",
+          "authors": [
+            "NikolaStarx"
+          ],
+          "references": [
+            "docs/a/q2-nikolastarx/ACTIVE_CORE_WAVE.md"
+          ],
+          "comparison": "Against fixed ee1 pilot00b7065e: 044/k4 M66901, extra DDR2791200B, spill0. Fang fixed4-core-budget result44234 used2activecores; a reference not a source of plan selection.",
+          "global_stop_file": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/global-stop.json",
+          "cell_wall_seconds": 95
+        },
+        "selected": "adaptive_budget",
+        "selected_strategy": "component_envelope",
+        "online_evaluation_in_solver_wall": false
+      },
+      "problem": "P2",
+      "case_id": "040",
+      "cores": 5,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 104200,
+        "solver_wall_seconds": 0.31832579197362065,
+        "evaluation_wall_seconds": 0.5754844170005526,
+        "ddr_bytes": 977286,
+        "extra_ddr_bytes": 66048,
+        "spill_bytes": 0,
+        "cache_hit_rate": null
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "2794ceba93acc1f7fc119154f61082511843d4b3",
+        "entrypoint": "data/raw/a/official/code/multicore_cut_evaluate_problem_2.py"
+      },
+      "identity": {
+        "graph_sha256": "7d595de282221534f949ab7ffae0ff026d5c7652b9110c18c0031aa78400cc57",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "139b02bdfb83c33c0020cfeea1caf7902a309789eb4ae50ee9aae9e3c7b10a33"
+      },
+      "artifacts": {
+        "run": {
+          "path": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/040-k5/run.json",
+          "sha256": "4baee1c1336c8613e86d013599b4751fe88283285344c97f05ee70c10a8d0cc3"
+        },
+        "manifest": {
+          "path": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/040-k5/manifest.json",
+          "sha256": "af7b87504189a873674083dca02e290c44e84fa451afbf1bb19eaa7b3c83ee65"
+        },
+        "plan": {
+          "path": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/040-k5/plan.json",
+          "sha256": "139b02bdfb83c33c0020cfeea1caf7902a309789eb4ae50ee9aae9e3c7b10a33"
+        },
+        "result": {
+          "path": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/040-k5/final/result.json.gz",
+          "sha256": "5bc5ed2bf23cdb9d23bd9e62a5276e4bcd3c4aeba1449ef0aaef750e6f8011d6"
+        }
+      },
+      "runtime_id": "q2-activecore-full500-20260925-s59-s02-runtime",
+      "observed_at": "2026-09-24T19:21:03.965792Z",
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "perf_counter seconds; ps observer and cleanup overhead included",
+        "utc": "UTC"
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-59ee5b053e1c48af8a64bc9ddb6ed5bc",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/33",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "2794ceba93acc1f7fc119154f61082511843d4b3",
+            "path": "src/q2_nikolastarx/adaptive_budget.py",
+            "entrypoint": "main"
+          },
+          "authors": [
+            "NikolaStarx"
+          ],
+          "method": "One structural wave plan with guarded active-core choice; component fallback defers balance-only splitting. No stored scores or online evaluation.",
+          "references": [
+            "docs/a/q2-nikolastarx/ACTIVE_CORE_WAVE.md"
+          ],
+          "upstream": [],
+          "selected_algorithm_id": "component_envelope",
+          "selected_solver_commit": "2794ceba93acc1f7fc119154f61082511843d4b3"
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "7483614f356099a2a8c89967241b8e9ebdb77c08",
+            "path": "src/q2_nikolastarx/evaluate_matrix.py",
+            "entrypoint": "main"
+          },
+          "argv": [
+            ".venv/bin/python",
+            "-B",
+            "-m",
+            "src.q2_nikolastarx.evaluate_matrix",
+            "run",
+            "--protocol",
+            "results/a/q2-nikolastarx/active-core-full500-20260925-s59/protocol-s02.json",
+            "--source-commit",
+            "2794ceba93acc1f7fc119154f61082511843d4b3",
+            "--runner-commit",
+            "7483614f356099a2a8c89967241b8e9ebdb77c08"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS-27.0-arm64-arm-64bit-Mach-O",
+          "cpu": "Apple M5 Pro",
+          "gpu": "not used; CPU-only Python solver and official evaluator",
+          "ram_bytes": 51539607552,
+          "python": "3.14.5",
+          "dependencies": "uv.lock sha256=7b03fee57044ac272d8895533cbdca6d70a29d2da955f98a5552e72ef944fdc4; uv sync --locked prepared before this run; no compilation/training",
+          "threads": 1,
+          "workers": 1,
+          "peak_rss_bytes": 62275584
+        },
+        "measurement": {
+          "started_at": "2026-09-24T19:21:03.965792Z",
+          "finished_at": "2026-09-24T19:21:04.867510Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": true,
+          "solver_scope": "Fresh Python process launch through observed exit and owned-descendant cleanup; input, construction and any online scoring included. OS caches not flushed; concurrent machine load not isolated.",
+          "evaluation_scope": "Zero online E0. The reported evaluation_wall_seconds is the separate final E0 outside solver wall; no online result exists to compare.",
+          "budget": {
+            "wall_seconds": 25,
+            "candidate_limit": 1,
+            "stop_reason": "single_structural_route_completed"
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 1,
+            "E1": 0,
+            "E2": 0
+          },
+          "offline_costs": "Earlier 044/k4 pilot remains independent; this fixed full500 batch reruns all cells from cold process.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.measurement.seed": "Deterministic solver, no random seed."
+        }
+      },
+      "notes": [
+        "Producer evidence and format checks are not central import or scientific acceptance.",
+        "Subprocess/RSS observations can miss short peaks. All dispatched failures remain in the journal; no automatic retry.",
+        "Direct mode uses zero online E0; independently reported final E0 is outside solver wall."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/33",
+      "baseline": {
+        "graph_sha256": "7d595de282221534f949ab7ffae0ff026d5c7652b9110c18c0031aa78400cc57",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/benchmark-board/official-singlecore-20260924/040/result.json.gz",
+          "sha256": "b2df4357e74547401079de3ee1798601ad868b4cc7f6201785932a05e56f3836"
+        }
+      }
+    }
+  ]
+}

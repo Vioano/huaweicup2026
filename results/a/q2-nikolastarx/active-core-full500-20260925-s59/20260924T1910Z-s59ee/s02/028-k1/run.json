@@ -1,0 +1,165 @@
+{
+  "case": "028",
+  "cores": 1,
+  "status": "ok",
+  "started_at": "2026-09-24T19:18:36.008915Z",
+  "calls": {
+    "solver": 1,
+    "E0": 1,
+    "E1": 0,
+    "E2": 0
+  },
+  "phase": "complete",
+  "solver_mode": "direct",
+  "solver": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "-m",
+      "src.q2_nikolastarx.adaptive_budget",
+      "data/raw/a/official/data/case_028.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "--cores",
+      "1",
+      "--output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/028-k1/plan.json",
+      "--evidence",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/028-k1/online",
+      "--wall",
+      "25"
+    ],
+    "started_at": "2026-09-24T19:18:36.009260Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 139558912,
+    "rss_samples": 10,
+    "cleanup_killed_pids": [],
+    "pid": 65001,
+    "observer_inclusive_peak_rss_bytes": 192200704,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:18:36.897245Z",
+    "wall_seconds": 0.8880402499926277
+  },
+  "online": {
+    "status": "ok",
+    "calls": {
+      "E0": 0,
+      "E1": 0,
+      "E2": 0
+    },
+    "attempts": [
+      {
+        "name": "adaptive_budget",
+        "status": "constructed",
+        "detail": {
+          "selected_strategy": "active_core_shared_wave",
+          "components": 153,
+          "cores": 1,
+          "shared_external_inputs": 54,
+          "shared_external_bytes": 2148480,
+          "raw_priority_peak_bytes": [
+            {
+              "L1": 5653128,
+              "UB": 0
+            }
+          ],
+          "raw_peaks_fit_capacity": false,
+          "zero_spill_claim": false,
+          "limitations": [
+            "raw touch intervals omit official COPY/spill and Step2/Step3 reorder",
+            "fixed whole-component assignment; activation frontier may grow with component count"
+          ],
+          "requested_cores": 1,
+          "active_cores": 1,
+          "per_job_pipe_work": {
+            "PIPE_M": 254736,
+            "PIPE_V": 12912
+          },
+          "shared_input_bytes": 2148480,
+          "private_input_bytes": 1880064,
+          "raw_private_peak_max": {
+            "L1": 49152,
+            "UB": 0
+          },
+          "raw_shared_wave_max": {
+            "L1": 165888
+          },
+          "raw_capacity_jobs_per_core_bound": 7,
+          "core_choice": {
+            "capacity_guard": "no certified reduction; retain requested cores"
+          },
+          "official_optimality_claim": false,
+          "component_pressure": {
+            "largest_component_pipe_work": {
+              "PIPE_M": 254736,
+              "PIPE_V": 12912
+            },
+            "balanced_pipe_work_lower_bound": {
+              "PIPE_M": 38974608,
+              "PIPE_V": 1975536
+            },
+            "component_exceeds_balanced_pipe_work": false,
+            "shared_external_bytes": {
+              "L1": 2148480
+            },
+            "shared_external_exceeds_capacity": true
+          },
+          "adaptive_route": "active_core_shared_wave",
+          "index_constructions": 1,
+          "base_construct_calls": 1,
+          "repair_construct_calls": 0,
+          "repair_trigger": {
+            "recognized": false,
+            "large_crossings": 0,
+            "large_crossing_bytes": 0,
+            "reason": "vector lanes: all eligible ops must use PIPE_V"
+          },
+          "route_limitations": "unchanged general plan; no official feasibility/score/zero-spill certificate"
+        },
+        "plan_sha256": "77fdcc50979ac3aa1a219efc48ff6b4ede76738d7b084bf0a3af5a1cf64983e1"
+      }
+    ],
+    "started_at": "2026-09-24T19:18:36.068224+00:00",
+    "validation_scope": "official structural validation only; no E0/Step2/Step3 certificate",
+    "selected": "adaptive_budget",
+    "plan_sha256": "77fdcc50979ac3aa1a219efc48ff6b4ede76738d7b084bf0a3af5a1cf64983e1",
+    "stop_reason": "single_structural_route_completed",
+    "finished_at": "2026-09-24T19:18:36.708150+00:00",
+    "internal_wall_seconds": 0.6400235000182875
+  },
+  "final_reserved": true,
+  "final": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "data/raw/a/official/code/multicore_cut_evaluate_problem_2.py",
+      "data/raw/a/official/data/case_028.json",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/028-k1/plan.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "-o",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/028-k1/final/result.json",
+      "--trace-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/028-k1/final/trace.json",
+      "--log-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/028-k1/final/official.log"
+    ],
+    "started_at": "2026-09-24T19:18:36.902132Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 567885824,
+    "rss_samples": 64,
+    "cleanup_killed_pids": [],
+    "pid": 65218,
+    "observer_inclusive_peak_rss_bytes": 608976896,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:18:42.227136Z",
+    "wall_seconds": 5.325024249992566
+  },
+  "full_online_result_equal": null,
+  "makespan_cycles": 40612073,
+  "finished_at": "2026-09-24T19:18:42.264551Z"
+}
