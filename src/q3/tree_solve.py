@@ -23,6 +23,7 @@ from .solve import publish_new, select
 def prepare(index, cores, method):
     builder = {"balanced": balanced_construct, "capacity": capacity_construct,
                "fragment": fragment_construct, "stage": stage_construct,
+               "stage-rotate": lambda i, k: stage_construct(i, k, collector_policy="rotate_heavy"),
                "release-order": release_construct,
                "release-place": lambda i, k: release_construct(i, k, place=True)}[method]
     try:
@@ -40,7 +41,7 @@ def main():
     parser.add_argument("graph", type=Path)
     parser.add_argument("--cores", type=int, default=4)
     parser.add_argument("--tree-method", choices=("balanced", "capacity", "fragment",
-                                                "release-order", "release-place", "stage"), required=True)
+                                                "release-order", "release-place", "stage", "stage-rotate"), required=True)
     parser.add_argument("-o", "--output", type=Path, required=True)
     parser.add_argument("--evidence", type=Path, required=True)
     args = parser.parse_args()

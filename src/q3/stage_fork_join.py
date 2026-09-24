@@ -1,8 +1,9 @@
 """Repeated vector-lane stages with the original scalar reduction tree.
 
 Immutable input tensor IDs fix lane/core affinity. Original ADDs wholly inside
-one owner stay local; mixed ADDs return to a fixed collector. No vector chain
-is split, and every leaf-to-root gather path crosses cores at most once.
+one owner stay local; mixed ADDs return to a fixed collector by default. An
+explicit rotate_heavy policy alternates exactly two most-loaded lane cores.
+No vector chain is split; every gather path crosses cores at most once.
 This is a restricted direct constructor, not a full memory-feasibility proof.
 """
 from .construct import UnsupportedStructure, derive_multicore_plan
@@ -120,15 +121,25 @@ def recognize(index):
     return {'lane_ids':lane_ids,'signature':expected_signature,'stages':stages}
 
 
-def construct(index,cores):
+def construct(index,cores,*,collector_policy="fixed"):
     if type(cores)is not int or cores<1:raise ValueError('positive integer cores required')
+    if collector_policy not in {"fixed", "rotate_heavy"}:
+        raise ValueError('collector_policy must be fixed or rotate_heavy')
     rec=recognize(index); lanes=rec['lane_ids'];q=len(lanes)
     lane_core={lane:min(cores-1,j*cores//q) for j,lane in enumerate(lanes)}
     # A less-loaded lane core absorbs mixed scalar ADDs; this is fixed, not online EFT.
     lane_load=[sum(rec['signature'][1])*sum(lane_core[l]==c for l in lanes) for c in range(cores)]
     active=set(lane_core.values());collector=min(active,key=lambda c:(lane_load[c],c))
+    collector_cycle=[collector]
+    if collector_policy == "rotate_heavy":
+        collector_cycle=sorted(c for c in active if lane_load[c]==max(lane_load))
+        if len(collector_cycle)!=2:
+            raise UnsupportedStructure('rotate_heavy requires exactly two most-loaded lane cores')
     owner={};global_order=[];stage_meta=[]
-    for stage in rec['stages']:
+    for stage_index,stage in enumerate(rec['stages']):
+        # Distinct preceding/current heavy roots each pay one remote leg;
+        # lighter lane cores may hide both legs. This is not an E0 bound.
+        collector=collector_cycle[stage_index % len(collector_cycle)]
         for lane in lanes:
             chain=stage['chains'][lane];global_order.extend(chain)
             owner.update((u,lane_core[lane]) for u in chain)
@@ -143,12 +154,17 @@ def construct(index,cores):
             for u in stage['chains'][lane]:work[owner[u]]+=index.duration(u)
         for u in stage['join_order']:work[owner[u]]+=index.duration(u)
         stage_meta.append({'root':stage['root'],'work_by_core':work,'pure_adds':len(pure),'mixed_adds':len(mixed)})
+        if collector_policy == 'rotate_heavy':
+            stage_meta[-1]['collector_core']=collector
     position={u:i for i,u in enumerate(global_order)}
     if len(position)!=len(index.ops) or any(position[u]>=position[v] for u in index.ops for v in index.succ[u]):raise AssertionError('constructed global order is not a compute linear extension')
     mapping={str(u):j for j,u in enumerate(index.order)};schedules=[[] for _ in range(cores)]
     for u in global_order:schedules[owner[u]].append(mapping[str(u)])
     plan={'node_to_subgraph':mapping,'core_schedules':schedules}
     derive_multicore_plan(index.graph,plan)
-    metadata={'strategy':'stage_fork_join','guard':'constant-input homogeneous vector-lane chains + unchanged binary scalar ADD tree + scalar broadcast stage chain','lane_count':q,'stage_count':len(rec['stages']),'chain_signature':rec['signature'],'lane_core':lane_core,'collector_core':collector,'stage_diagnostics':stage_meta,'total_work_by_core':[sum(s['work_by_core'][c] for s in stage_meta) for c in range(cores)],'cross_core_compute_edges':sum(owner[u]!=owner[v] for u in index.ops for v in index.succ[u]),'order':'per stage: full original lane chains, pure-local original ADDs, mixed original ADDs on fixed collector','official_e0_calls':0,'legality':'compute/plan static validation only, no memory or full official feasibility claim'}
+    metadata={'strategy':'stage_fork_join','guard':'constant-input homogeneous vector-lane chains + unchanged binary scalar ADD tree + scalar broadcast stage chain','lane_count':q,'stage_count':len(rec['stages']),'chain_signature':rec['signature'],'lane_core':lane_core,'collector_core':collector if collector_policy=='fixed' else None,'stage_diagnostics':stage_meta,'total_work_by_core':[sum(s['work_by_core'][c] for s in stage_meta) for c in range(cores)],'cross_core_compute_edges':sum(owner[u]!=owner[v] for u in index.ops for v in index.succ[u]),'order':'per stage: full original lane chains, pure-local original ADDs, mixed original ADDs on fixed collector','official_e0_calls':0,'legality':'compute/plan static validation only, no memory or full official feasibility claim'}
+    if collector_policy == 'rotate_heavy':
+        metadata.update(collector_policy=collector_policy,collector_cycle=collector_cycle)
+        metadata['order']='per stage: full original lane chains, pure-local original ADDs, mixed ADDs on alternating heavy collector'
     return plan,metadata
 

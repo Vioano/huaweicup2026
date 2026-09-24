@@ -4,6 +4,7 @@ import unittest
 
 from src.q3.construct import Index, UnsupportedStructure, derive_multicore_plan, topo
 from src.q3.stage_fork_join import construct, recognize
+from src.q3.pipe_bound import analyze
 
 
 def stage_graph(lanes=2, stages=2):
@@ -79,6 +80,7 @@ class StageForkJoinTests(unittest.TestCase):
         for cores in (1, 2, 5):
             plan, meta = construct(index, cores)
             self.assertEqual((plan, meta), construct(index, cores))
+            self.assertEqual((plan, meta), construct(index, cores, collector_policy="fixed"))
             self.assertEqual(meta["strategy"], "stage_fork_join")
             self.assertEqual(set(plan), {"node_to_subgraph", "core_schedules"})
             self.assertEqual(set(map(int, plan["node_to_subgraph"])), set(index.ops))
@@ -153,6 +155,65 @@ class StageForkJoinTests(unittest.TestCase):
         # graph stays acyclic, but this is no longer a uniquely produced lane.
         with self.assertRaisesRegex(UnsupportedStructure, "producer|one output tensor"):
             construct(Index(graph), 2)
+
+
+    def test_rotate_heavy_keeps_lanes_and_original_tree_on_each_stage(self):
+        graph, layout = stage_graph(lanes=8, stages=4)
+        before = json.dumps(graph, sort_keys=True)
+        index = Index(graph)
+        rec = recognize(index)
+        plan, meta = construct(index, 3, collector_policy="rotate_heavy")
+        self.assertEqual((plan, meta), construct(index, 3, collector_policy="rotate_heavy"))
+        self.assertEqual(meta["collector_cycle"], [0, 1])
+        self.assertIsNone(meta["collector_core"])
+        self.assertEqual(set(plan), {"node_to_subgraph", "core_schedules"})
+        owner = op_owners(plan)
+        self.assertEqual(set(owner), set(index.ops))
+        for lane in range(8):
+            all_ops = [u for stage in layout["stages"] for u in stage["chains"][lane]]
+            self.assertEqual(len({owner[u] for u in all_ops}), 1)
+        for i, stage in enumerate(rec["stages"]):
+            collector = i % 2
+            self.assertEqual(owner[stage["root"]], collector)
+            self.assertEqual(meta["stage_diagnostics"][i]["collector_core"], collector)
+            for u in stage["join_order"]:
+                lane_owners = {owner[stage["chains"][lane][-1]]
+                               for lane in stage["descendants"][u]}
+                expected = next(iter(lane_owners)) if len(lane_owners) == 1 else collector
+                self.assertEqual(owner[u], expected)
+            for chain in stage["chains"].values():
+                u, hops = chain[-1], 0
+                while u != stage["root"]:
+                    v = next(iter(index.succ[u]))
+                    hops += owner[u] != owner[v]
+                    u = v
+                self.assertLessEqual(hops, 1)
+        derive_multicore_plan(graph, plan)
+        analyze(graph, plan, 50)  # Independently reject any induced pipe-FIFO cycle.
+        self.assertEqual(json.dumps(graph, sort_keys=True), before)
+
+    def test_alternating_two_roots_hides_one_remote_leg(self):
+        graph, _ = stage_graph(lanes=2, stages=4)
+        index = Index(graph)
+        fixed, _ = construct(index, 2)
+        rotated, _ = construct(index, 2, collector_policy="rotate_heavy")
+        # Lane work C=40, original scalar join a=1, remote delta=50.
+        # Fixed: first C+delta+a, later C+2delta+a; rotated: C+delta+a.
+        fixed_bound = analyze(graph, fixed, 50)["with_cross_core_delay"]["lower_bound_cycles"]
+        rotated_bound = analyze(graph, rotated, 50)["with_cross_core_delay"]["lower_bound_cycles"]
+        self.assertEqual(fixed_bound, 91 + 3 * 141)
+        self.assertEqual(rotated_bound, 4 * 91)
+        self.assertEqual(fixed_bound - rotated_bound, 3 * 50)
+
+    def test_rotate_heavy_rejects_other_load_patterns_without_fallback(self):
+        graph, _ = stage_graph(lanes=8)
+        index = Index(graph)
+        for cores in (1, 4, 5):
+            with self.subTest(cores=cores):
+                with self.assertRaisesRegex(UnsupportedStructure, "exactly two most-loaded"):
+                    construct(index, cores, collector_policy="rotate_heavy")
+        with self.assertRaisesRegex(ValueError, "collector_policy"):
+            construct(index, 3, collector_policy="unknown")
 
 
 if __name__ == "__main__":
