@@ -205,18 +205,18 @@ def batch_candidates(allrows, problem, cores, case_ids):
             latest[r['attempt_id']]=r
     groups={}
     for r in latest.values():
-        if r['problem']==problem and r['cores']==cores and r['case_id'] in cases:
+        if r['problem']==problem:
             groups.setdefault(r['run_id'],[]).append(r)
     candidates=[]
-    for run,rows in groups.items():
-        sources={(r['algorithm_id'],r.get('solver_commit')) for r in rows}
+    for run,all_run_rows in groups.items():
+        sources={(r['algorithm_id'],r.get('solver_commit')) for r in all_run_rows}
+        rows=[r for r in all_run_rows if r['cores']==cores and r['case_id'] in cases]
         best={}
         for r in rows:
             if r['status']!='ok' or not r['eligible']: continue
             old=best.get(r['case_id'])
             if old is None or (r['metrics']['makespan_cycles'],r['id'])<(old['metrics']['makespan_cycles'],old['id']):
                 best[r['case_id']]=r
-        if not best: continue
         def values(metric, baseline=False):
             return [r['metrics'][metric] for r in best.values()
                     if (not baseline or r.get('baseline_verified')) and number(r['metrics'].get(metric),baseline)]
@@ -229,11 +229,14 @@ def batch_candidates(allrows, problem, cores, case_ids):
             'valid_count':len(best),'scored_count':len(ratios),'target_count':len(cases),
             'mean_speedup':sum(ratios)/len(ratios) if ratios else None,
             'mean_solver_seconds':sum(walls)/len(walls) if walls else None,'solver_count':len(walls),
-            'complete':complete,'missing_cases':sorted(cases-set(best))})
+            'complete':complete,'missing_cases':sorted(cases-set(best)),
+            'record_count':len(all_run_rows),'scope_attempts':len(rows),
+            'status_counts':{status:sum(r['status']==status for r in rows) for status in sorted({r['status'] for r in rows})}})
     complete=sorted((r for r in candidates if r['complete']),key=lambda r:(-r['mean_speedup'],r['run_id']))
     partial=sorted((r for r in candidates if not r['complete']),key=lambda r:(-r['scored_count'],-r['valid_count'],r['run_id']))
     return {'problem':problem,'cores':cores,'case_ids':sorted(cases),'target_count':len(cases),
             'complete_count':len(complete),'partial_count':len(partial),'complete':complete[:3],'partial':partial[:3],
+            'batches':complete+partial,
             'ranking':'逐例官方单核加速比的算术平均；只排名覆盖当前全部算例、来源单一的真实批次。缺例不补值，跨批次不合并。'}
 
 def project_records(allrows, manifest, cursor, sources, algorithm=None, run=None, include_reported=False):

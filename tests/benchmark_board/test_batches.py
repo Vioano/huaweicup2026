@@ -10,7 +10,7 @@ from urllib.error import HTTPError
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'src/benchmark_board'))
 from core import batch_candidates
-from app import make_handler
+from app import make_handler, ui_bundle
 
 
 def record(run,case,ratio=2,**changes):
@@ -43,7 +43,8 @@ class BatchTests(unittest.TestCase):
               record('core','001',100,cores=4),record('right','001',2)]
         result=batch_candidates(rows,'P1',5,['001'])
         self.assertEqual([r['run_id'] for r in result['complete']],['right'])
-        self.assertEqual(result['partial'],[])
+        self.assertEqual({r['run_id'] for r in result['batches']},{'withdrawn','report','core','right'})
+        self.assertTrue(all(r['valid_count']==0 for r in result['partial']))
 
     def test_missing_baseline_does_not_substitute_a_worse_plan(self):
         best=record('run','001',3,baseline_verified=False)
@@ -66,6 +67,25 @@ class BatchTests(unittest.TestCase):
         self.assertEqual(result['complete_count'],5)
         self.assertEqual([r['run_id'] for r in result['complete']],['4','3','2'])
         self.assertEqual(result['case_ids'],['002'])
+        self.assertEqual(len(result['batches']),5)
+
+    def test_all_problem_batches_remain_discoverable_without_selected_core_results(self):
+        rows=[record('other-core','002',cores=2),record('failed','001',status='failed',eligible=False),
+              record('outside-cases','050'),record('other-problem','001',problem='P3')]
+        result=batch_candidates(rows,'P1',5,['001'])
+        self.assertEqual({r['run_id'] for r in result['batches']},{'other-core','failed','outside-cases'})
+        self.assertEqual(result['complete'],[])
+        failed=next(r for r in result['batches'] if r['run_id']=='failed')
+        self.assertEqual(failed['status_counts'],{'failed':1})
+        self.assertEqual(failed['valid_count'],0)
+
+    def test_focus_page_layout_scope_is_present_before_scripts_run(self):
+        for problem in ('P1','P2','P3'):
+            page,assets=ui_bundle(problem)
+            self.assertIn(f'data-problem="{problem}"'.encode(),page)
+            self.assertEqual(assets['ui_asset_id'],ui_bundle()[1]['ui_asset_id'])
+            self.assertNotIn(b'<script>',page)
+        self.assertNotIn(b'data-problem=',ui_bundle('P9')[0])
 
     def test_http_uses_common_read_only_record_contract_and_validates_scope(self):
         rows=[record('a','001')]

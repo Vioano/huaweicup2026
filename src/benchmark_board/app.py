@@ -53,11 +53,13 @@ def sync_once(ledger,repo,sources,on_progress=None):
         finally:
             if on_progress: on_progress()
 
-def ui_bundle():
+def ui_bundle(problem=None):
     files={name:(WEB/name).read_bytes() for name in ('index.html','app.js','style.css')}
     hashes={name:digest(data) for name,data in files.items()}
     asset_id=digest(packed(hashes).encode())
     rendered=files['index.html'].replace(b'</head>',f'<meta name="board-assets" content="{asset_id}"></head>'.encode(),1)
+    if problem in ('P1','P2','P3'):
+        rendered=rendered.replace(b'<html lang="zh-CN">',f'<html lang="zh-CN" data-problem="{problem}">'.encode(),1)
     return rendered,{'ui_asset_id':asset_id,'file_hashes':hashes,'served_html_sha256':digest(rendered)}
 
 def sync_state(path):
@@ -137,7 +139,7 @@ def make_handler(ledger,sync_status=None):
                     return self.send((ledger.state/'blobs'/key).read_bytes(),ctype='application/octet-stream',headers={'Content-Disposition':'attachment; filename="'+key+'"'})
                 files={'/':'index.html','/app.js':'app.js','/style.css':'style.css','/agent':'agent.html'}
                 if path in files:
-                    if path=='/': return self.send(ui_bundle()[0],ctype='text/html; charset=utf-8')
+                    if path=='/': return self.send(ui_bundle(q.get('problem'))[0],ctype='text/html; charset=utf-8')
                     f=WEB/files[path];return self.send(f.read_bytes(),ctype={'html':'text/html; charset=utf-8','js':'text/javascript; charset=utf-8','css':'text/css; charset=utf-8'}[f.suffix[1:]])
                 self.send({'error':'not found'},404)
             except (ValueError,KeyError) as e: self.send({'error':str(e)},400)
