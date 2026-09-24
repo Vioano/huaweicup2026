@@ -10,6 +10,8 @@ F 调度搬运15,599,090 B在60 B/cycle容量下的必要时间至少259985周�
 
 原件与比较见 [run/comparison.csv](run/comparison.csv)、[run/ddr-analysis.json](run/ddr-analysis.json)、[run/copy-delta-analysis.json](run/copy-delta-analysis.json)。标准 feed 为 [board-feed-20260924T171730Z-stage-f.json](board-feed-20260924T171730Z-stage-f.json)。[本地预检](precheck-local.json) `valid=true, eligible=1`；科学验收、维护者接收与实际上台不由格式预检代签。复现及范围说明见 [REPORT.md](REPORT.md)。
 
+原件固定提交 `d18529b4189d4b6091fea0cb1ddcb10865745f4c` 的 [Git 字节预检](precheck-fixed-d18529b.json) 同样 `valid=true, eligible=1`；未调用 solver/E0 或中央服务。
+
 ## 原准备记录（保留）
 
 算法 `q1-guarded-split-chain-star / twelve-four-fixed-tail-v1`，作者源码固定 `916a19e57c041ca5dc4aa1f3748e23726464b762`。任务与完整预算见 `tasks/a/q1-yuanzhifang-stage-f.md`。
