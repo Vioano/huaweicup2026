@@ -83,8 +83,15 @@ def load_fixed_module():
         raw = (ROOT / path).read_bytes()
         assert raw == git("show", THEORY + ":" + path), path
         hashes[path] = sha(raw)
-    manifest_raw = (ROOT / "docs/a/source-manifest.json").read_bytes()
-    assert manifest_raw == git("show", THEORY + ":docs/a/source-manifest.json")
+    manifest_local = (ROOT / "docs/a/source-manifest.json").read_bytes()
+    manifest_raw = git("show", THEORY + ":docs/a/source-manifest.json")
+    # The manifest is a text index, not an official input. Read its fixed Git
+    # blob; permit and record only CRLF checkout conversion in the local copy.
+    assert manifest_local.replace(b"\r\n", b"\n") == manifest_raw
+    manifest_identity = {"fixed_git_sha256": sha(manifest_raw), "local_sha256": sha(manifest_local),
+                         "fixed_git_bytes": len(manifest_raw), "local_bytes": len(manifest_local),
+                         "difference": "identical" if manifest_local == manifest_raw else "CRLF checkout only",
+                         "authority": THEORY + ":docs/a/source-manifest.json"}
     hashes["docs/a/source-manifest.json"] = sha(manifest_raw)
     manifest = json.loads(manifest_raw)
     official = {}
@@ -102,7 +109,7 @@ def load_fixed_module():
     # lower_bound function does not call construct or any evaluator/compiler.
     sys.path.insert(0, str(ROOT / "src/q1_yuanzhifang"))
     import barrier_bound
-    return barrier_bound, hashes, manifest
+    return barrier_bound, hashes, manifest, manifest_identity
 
 
 def graph(edges, pipes=("PIPE_V",) * 4, weights=(0, 3, 2, 4)):
@@ -194,7 +201,7 @@ def compact(bound):
             "full_recomputable_bound_sha256": sha(json.dumps(bound, sort_keys=True, separators=(",", ":")).encode())}
 
 
-def audit(args, module, source_hashes, manifest):
+def audit(args, module, source_hashes, manifest, manifest_identity):
     started, tick = utc(), time.perf_counter()
     out = ROOT / OUTPUT; out.mkdir(parents=True, exist_ok=False)
     config_raw = (args.graphs / "config.txt").read_bytes()
@@ -276,6 +283,7 @@ def audit(args, module, source_hashes, manifest):
         writer = csv.DictWriter(f, fieldnames=list(compared[0]), lineterminator="\n"); writer.writeheader(); writer.writerows(compared)
     evidence = {"theorem_commit": THEORY, "audit_commit": git("rev-parse", "HEAD").decode().strip(), "source_sha256": source_hashes,
                 "config_sha256": sha(config_raw), "official_code_hash": manifest["official_code_hash"], "input_sha256": input_hashes,
+                "manifest_identity": manifest_identity,
                 "feeds": feeds, "artifacts": artifacts,
                 "calls": {"solver": 0, "E0": 0, "E1": 0, "E2": 0, "task_compiler": 0},
                 "comparisons": 160, "successful_multicore": 60, "official_singlecore": 100, "failed_not_numeric": 1,
@@ -293,7 +301,7 @@ def main():
     p.add_argument("--graphs", type=Path)
     mode = p.add_mutually_exclusive_group(required=True); mode.add_argument("--smoke", action="store_true"); mode.add_argument("--full", action="store_true")
     args = p.parse_args()
-    module, hashes, manifest = load_fixed_module()
+    module, hashes, manifest, manifest_identity = load_fixed_module()
     if args.smoke:
         print(json.dumps({"checks": smoke(module), "calls": {"solver": 0, "E0": 0, "E1": 0, "E2": 0}}))
         return
@@ -302,7 +310,7 @@ def main():
     own_path = "src/q1_yuanzhifang/audit_barrier.py"
     assert (ROOT / own_path).read_bytes() == git("show", "HEAD:" + own_path)
     hashes[own_path] = sha((ROOT / own_path).read_bytes())
-    audit(args, module, hashes, manifest)
+    audit(args, module, hashes, manifest, manifest_identity)
 
 
 if __name__ == "__main__":
