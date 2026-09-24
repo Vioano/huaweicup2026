@@ -83,9 +83,10 @@ def build(index, cores, bandwidth, delay, capacity):
         raise ValueError('nonnegative integer L1 and UB capacity required')
     plan, original = index.build_tensor_plan(cores, bandwidth, delay)
     if original['selected'] == 'shared_cohorts':
-        target = {p: (sum(w[p] for w in index.work) + cores - 1) // cores for p in PIPES}
+        total_peak = max(sum(w[p] for w in index.work) for p in PIPES)
+        target = (total_peak + cores - 1) // cores
         heavy = [j for j, work in enumerate(index.work)
-                 if any(work[p] > target[p] for p in PIPES)]
+                 if max(work.values()) > target]
         if heavy:
             # A few small repeated components must not prevent the existing
             # packet decomposition from exposing a dominant component's DAG.
