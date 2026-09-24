@@ -86,11 +86,15 @@ def verify(commit, folder):
         pids.append(receipt["pid"])
     assert len(set(pids)) == 6
     release = data("resource-release.json")
-    assert release["all_owned_child_groups_exited"] and release["pids"] == pids and release["E0_calls"] == 6
+    # The release receipt enumerates the filesystem, whereas rows preserve
+    # dispatch order. PID membership must match; enumeration order need not.
+    assert release["all_owned_child_groups_exited"] and len(release["pids"]) == 6
+    assert set(release["pids"]) == set(pids) and release["E0_calls"] == 6
     return {"data_commit": commit, "source_commit": source, "runner_commit": batch["runner_commit"],
             "checks": "passed", "synthetic_cells": 6, "artifact_references": len(checked),
             "artifact_reference_bytes": sum(checked.values()), "source_files": len(manifest["source_files"]),
             "official_files": len(manifest["official_files"]), "new_solver_or_E0_calls": 0,
+            "verification_script_sha256": digest(Path(__file__).read_bytes()),
             "boundary": "Fixed Git integrity and recorded assertions verified; not an independent rerun or formal-board admission"}
 
 
