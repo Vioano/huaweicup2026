@@ -1,0 +1,634 @@
+{
+  "schema": "q3-feedback-benchmark-v1",
+  "run_id": "q3-forest-full500-20260925-s59-s08",
+  "stage_id": "shard-08",
+  "producer_session": "nikolastarx/s-59ee5b053e1c48af8a64bc9ddb6ed5bc",
+  "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+  "solver_commit": "311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1",
+  "solver_module": "src.q3.forest_solve",
+  "algorithm": {
+    "id": "q3-forest-memory-witness",
+    "name": "P3 fresh witness plus bounded reduction-forest memory order",
+    "authors": [
+      "NikolaStarx",
+      "yuanzhifang30-sudo"
+    ],
+    "method": "Fresh witness incumbent, then at most one graph-derived reduction-forest order if total online E0 calls remain below three; accept only strict official Makespan improvement. No per-case lookup or historical plan reuse.",
+    "references": [
+      "https://github.com/huaweibei123/huaweicup2026/issues/51",
+      "https://github.com/huaweibei123/huaweicup2026/blob/311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1/src/q3/forest_solve.py"
+    ],
+    "upstream": [
+      "q3-witness-structure"
+    ]
+  },
+  "runtime_id": "q3-central-forest-20260925",
+  "budget": {
+    "max_e0_calls": 150,
+    "total_wall_seconds": 1800,
+    "per_job_seconds": 90
+  },
+  "offline_costs": "Fresh witness full500 and its same-plan no-L2 pair were separate earlier experiments. Forest two-graph mechanism test used two constructors and four external official E0; no previous result substitutes any cell here. Fixed source has 184 passed tests, one explicit E0 opt-in skipped, and ten relevant tests passed after the final guard.",
+  "jobs": [
+    {
+      "case_id": "070",
+      "cores": 4,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "070",
+      "cores": 5,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "071",
+      "cores": 1,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "071",
+      "cores": 2,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "071",
+      "cores": 3,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "071",
+      "cores": 4,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "071",
+      "cores": 5,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "072",
+      "cores": 1,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "072",
+      "cores": 2,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "072",
+      "cores": 3,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "072",
+      "cores": 4,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "072",
+      "cores": 5,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "073",
+      "cores": 1,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "073",
+      "cores": 2,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "073",
+      "cores": 3,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "073",
+      "cores": 4,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "073",
+      "cores": 5,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "074",
+      "cores": 1,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "074",
+      "cores": 2,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "074",
+      "cores": 3,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "074",
+      "cores": 4,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "074",
+      "cores": 5,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "075",
+      "cores": 1,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "075",
+      "cores": 2,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "075",
+      "cores": 3,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "075",
+      "cores": 4,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "075",
+      "cores": 5,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "076",
+      "cores": 1,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "076",
+      "cores": 2,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "076",
+      "cores": 3,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "076",
+      "cores": 4,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "076",
+      "cores": 5,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "077",
+      "cores": 1,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "077",
+      "cores": 2,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "077",
+      "cores": 3,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "077",
+      "cores": 4,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "077",
+      "cores": 5,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "078",
+      "cores": 1,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "078",
+      "cores": 2,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "078",
+      "cores": 3,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "078",
+      "cores": 4,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "078",
+      "cores": 5,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "079",
+      "cores": 1,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "079",
+      "cores": 2,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "079",
+      "cores": 3,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "079",
+      "cores": 4,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "080",
+      "cores": 1,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "080",
+      "cores": 2,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "080",
+      "cores": 3,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "080",
+      "cores": 4,
+      "variant": "unified-forest-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "forest_candidate_limit": 1,
+        "selection": "strictly smaller official Makespan than fresh witness incumbent"
+      },
+      "e0_call_limit": 3
+    }
+  ]
+}
