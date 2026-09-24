@@ -336,7 +336,7 @@ def export(summary_path, manifest_path, output_root, run_id, case_start, case_en
                                        'stop_reason': 'completed'},
                             'calls': {'solver': 1, 'E0': 1, 'E1': 0,
                                       'E2': ledger['calls']['E2_api_attempted']},
-                            'offline_costs': 'none', 'failure': None},
+                            'offline_costs': 'No offline work specific to this case; uses the prebuilt pinned E2 native binary. Earlier compilation/calibration wall is not measured in this run.', 'failure': None},
             'missing_reasons': {
                 'provenance.environment.cpu': 'Per-run CPU model was not recorded.',
                 'provenance.environment.gpu': 'GPU presence was not recorded.',
@@ -376,6 +376,7 @@ def export(summary_path, manifest_path, output_root, run_id, case_start, case_en
             'provenance': provenance,
             'notes': ['One accepted hypergap cell; this case group is not a full500 result.',
                       'Online E2 is selection evidence; independent E0 is final score.',
+                      'runner.argv records the actual solver child launched by the frozen batch runner, with local home paths replaced; it is not the batch-launch argv.',
                       'Archived process and ledger receipts are sanitized derivatives; their original raw SHA-256 values are in run.json.',
                       'Single-core denominator is fixed 60afc38 official E0, not the old solver makespan.'],
             'source_url': task_url, 'baseline': base, 'cache_pair': None,
