@@ -87,6 +87,65 @@ class GuardedComponentTests(unittest.TestCase):
         self.assertEqual(guard['reason'], 'candidate_lower_bound_strictly_worse')
         self.assertEqual(guard['oracle_requests'], 1)
 
+    def test_mandatory_ddr_strict_rejection_after_pipe_screen(self):
+        index = imbalanced()
+        base, _ = adaptive_budget.component_route(index, 2, config())
+        calls = []
+        def oracle(candidate):
+            calls.append(candidate)
+            return {'status': 'ok', 'makespan': 22000, 'added_copy_bytes': 100}
+        counter = {'service_work': 22001, 'transfer_bytes': 60000,
+                   'copy_count': 3, 'categories': {'cross_tensor': {'copy_count': 2}}}
+        with patch.object(guarded_component, 'mandatory_copy_work', return_value=counter) as count:
+            chosen, detail = guarded_component.guarded_component_route(
+                index, 2, config(), oracle=oracle)
+        guard = detail['guarded_component']
+        self.assertEqual(chosen, base)
+        self.assertEqual(calls, [base])
+        self.assertEqual(guard['oracle_requests'], 1)
+        self.assertEqual(guard['reason'], 'candidate_mandatory_ddr_strictly_worse')
+        self.assertEqual(guard['candidate_mandatory_ddr'], counter)
+        self.assertIn('P2 Scene B', guard['candidate_mandatory_ddr_model'])
+        count.assert_called_once()
+
+    def test_equal_ddr_work_still_scores_candidate_for_bytes(self):
+        index = imbalanced()
+        base, _ = adaptive_budget.component_route(index, 2, config())
+        dag, _ = index.build(2, bandwidth=60, cross_core_delay=500)
+        calls = []
+        def oracle(candidate):
+            calls.append(candidate)
+            return {'status': 'ok', 'makespan': 22000,
+                    'added_copy_bytes': 900 if candidate == base else 800}
+        with patch.object(guarded_component, 'mandatory_copy_work',
+                          return_value={'service_work': 22000}):
+            chosen, detail = guarded_component.guarded_component_route(
+                index, 2, config(), oracle=oracle)
+        self.assertEqual(chosen, dag)
+        self.assertEqual(calls, [base, dag])
+        self.assertEqual(detail['guarded_component']['oracle_requests'], 2)
+
+    def test_unknown_counter_keeps_complete_comparison(self):
+        index = imbalanced()
+        base, _ = adaptive_budget.component_route(index, 2, config())
+        dag, _ = index.build(2, bandwidth=60, cross_core_delay=500)
+        for result in (ValueError('unsupported'), None):
+            calls = []
+            def oracle(candidate):
+                calls.append(candidate)
+                return {'status': 'ok', 'makespan': 22000 if candidate == base else 21000,
+                        'added_copy_bytes': 100}
+            with patch.object(guarded_component, 'mandatory_copy_work',
+                              side_effect=result if isinstance(result, Exception) else None,
+                              return_value=result):
+                chosen, detail = guarded_component.guarded_component_route(
+                    index, 2, config(), oracle=oracle)
+            self.assertEqual(chosen, dag)
+            self.assertEqual(calls, [base, dag])
+            self.assertEqual(detail['guarded_component']['oracle_requests'], 2)
+            self.assertEqual(detail['guarded_component']['candidate_mandatory_ddr']['status'],
+                             'unknown')
+
     def test_candidate_construction_failure_and_callback(self):
         index = imbalanced()
         base, _ = adaptive_budget.component_route(index, 2, config())

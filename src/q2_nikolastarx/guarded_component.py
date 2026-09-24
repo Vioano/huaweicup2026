@@ -10,6 +10,7 @@ from typing import Any
 
 from . import adaptive_budget
 from . import vector_lanes
+from .candidate_ddr import mandatory_copy_work
 from .direct import UnsupportedStructure
 
 
@@ -92,6 +93,26 @@ def guarded_component_route(index, cores, config, *, oracle: Oracle):
     if lower_bound > base_score[0]:
         guard['reason'] = 'candidate_lower_bound_strictly_worse'
         return base, detail
+
+    guard['candidate_mandatory_ddr_model'] = (
+        'P2 Scene B original mandatory COPY shared-DDR service work; '
+        'excludes Step2 spills; finite supported numeric domain; '
+        'abstract lower bound, not a bit-level simulator proof'
+    )
+    try:
+        ddr = mandatory_copy_work(index.graph, dag, config['bandwidth'])
+        if not isinstance(ddr, Mapping) or type(ddr.get('service_work')) is not int \
+                or ddr['service_work'] < 0:
+            raise ValueError('invalid mandatory COPY counter result')
+        ddr_rejects = ddr['service_work'] > base_score[0]
+    except Exception as error:
+        guard['candidate_mandatory_ddr'] = {
+            'status': 'unknown', 'error': repr(error)}
+    else:
+        guard['candidate_mandatory_ddr'] = ddr
+        if ddr_rejects:
+            guard['reason'] = 'candidate_mandatory_ddr_strictly_worse'
+            return base, detail
 
     guard['oracle_requests'] += 1
     try:
