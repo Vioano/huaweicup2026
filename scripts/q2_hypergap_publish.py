@@ -136,7 +136,7 @@ def run(args):
         if group_commit(folder) != step['commit']:
             raise ValueError('Group commit drift')
         if 'push_utc' not in step:
-            cmd(['git','push','origin','HEAD:refs/heads/'+BRANCH]);step['push_utc']=now()
+            cmd(['git','push','origin',step['commit']+':refs/heads/'+BRANCH]);step['push_utc']=now()
             write_journal(args.journal,state)
         if 'delivery_id' not in step:
             delivery=cmd([str(args.sync_python),'-m','src.benchmark_sync','--config',str(args.sync_config),
@@ -159,7 +159,7 @@ def main():
     p.add_argument('--existing-first',action='store_true')
     a=p.parse_args()
     for name in ('summary','manifest','output_root','journal','sync_root','sync_python','sync_config'):
-        setattr(a,name,getattr(a,name).resolve())
+        setattr(a,name,getattr(a,name).absolute() if name == 'sync_python' else getattr(a,name).resolve())
     if a.publish:
         if not a.journal.is_relative_to(ROOT/'output'):
             raise ValueError('Journal must remain under output/')
