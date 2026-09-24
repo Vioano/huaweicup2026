@@ -28,6 +28,12 @@ epoch有不可变父计划与父结果引用、有序清单hash、revision和封
 from-graph显式parent=null。完成交付、成本证明、原序前缀确认是不同状态。
 strict模式不会因为主机有空槽就突破1在途；可借用槽位必须同时符合声明cap、投机窗口和预算。
 
+Q3在[5e8726e审阅](https://github.com/huaweibei123/huaweicup2026/blob/5e8726e646a711691a4f60f9a0ecc826f17ab536/docs/a/q3/CONCURRENT_DESIGN_REVIEW.md)
+进一步指出结果字典也需按operation_id，P2/P3配对不能覆盖；当前设计已改。
+同生成提议可关联两个problem候选，原序窗口按proposal计、执行并发按evaluation计，
+K−1个越过提议可能有更多E0，必须按操作费用求和；Q3单候选直接official_full可用，
+不强制native预评分。epoch同时冻结objective/tie-break/决策模式。
+
 ## 数学和官方目标表述
 
 - 原brief“成本约束部分理想”更正为**价格加权部分理想（代理最小割）**。

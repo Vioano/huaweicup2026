@@ -91,7 +91,7 @@ handle = client.submit(
     engine_ref=pinned_engine, output="score", oracle_policy="reserve_one",
 )
 for record in client.completed(handles):  # 完成即返
-    results[record.candidate_id] = record
+    results[record.operation_id] = record  # 同candidate的score/full不覆盖
 winner = algorithm.select_when_round_ready(results)  # 原proposal序号tie-break，不按完成先后
 # 只有独立已声明的官方复核额度允许才提交 official_full。
 ```
@@ -106,8 +106,11 @@ winner = algorithm.select_when_round_ready(results)  # 原proposal序号tie-brea
   identity conflict；不同操作的独立复核必须新计预算，不能用旧score响应当新E0。
 - 例如同候选C可以有native score操作S和official_full操作F；S重传不重跑，F重传不重跑，
   S与F独立执行/计费，保持同一plan关联。P2/P3分别有problem身份，以pair_id关联而非混用。
+  同一生成提议的P2/P3候选可分别命名C_P2/C_P3并共用proposal_id/pair_id；它们是两个评价
+  场景，不能覆盖成一条分数。客户端按operation_id收结果，再按purpose/problem投影给算法。
 - epoch manifest绑定不可变parent_plan_hash、parent_result_ref、候选有序清单hash、
-  proposal_seq→candidate_id映射、是否封闭。开放轮次只允许带revision的追加，不能重排、
+  proposal_seq→proposal/candidate映射、objective/tie-break、决策与失败模式、是否封闭。
+  开放轮次只允许带revision的追加，不能重排、
   更换父状态或回改已派发前缀；每请求固定manifest revision/hash，封闭后才完成轮次选优。
   单步自适应更新父状态须建立下一epoch；算法spec不用全塞进服务，但声明元数据原样冻结/回传。
 
@@ -123,6 +126,8 @@ budget_exhausted、cancelled_before_start 和执行成本未知；native 不支�
 
 `score`、将来的 `native_diagnostic`、`official_full` 必须是不同能力。
 现 P2/P3 `full=True` 确实调用 E0，绝不是免费 native 诊断开关。
+Q3当前单候选允许直接提交一个official_full操作、消耗已圈存final额度后发布；不强制先native
+score再多做一次E0。需先筛选的流程才注册score操作和随后独立final操作。
 只读能力探测声明支持的 problem/输出/拒绝回退能力，不靠正式样本试探可用性。
 
 Python 原始对象与官方 JSON 分别标 `representation`。官方 JSON 数字 key 变字符串不能用于
@@ -151,6 +156,9 @@ P2 不作为 P3 的无条件硬筛，已有 080 的排名反转依据见 Q3 画�
   按去重后预声明有序候选列表计数，不用可能跳号的proposal_seq数值差。
   它不是简单的max_inflight。否则一个早期慢候选失败前，后续快候选会不断补发，额外调用
   数可能远超K。窗口把相对该顺序首失败后越过的候选限制在至多K−1个，仍需预算全额预留。
+  这里明确计数单位为生成提议proposal；一个提议可有P2/P3等多个必需评价操作，只有manifest
+  声明的必需操作全部确认才能推进它的前缀。**K−1提议不等于K−1 E0**：费用上界为所有已派发
+  操作的max_oracle_calls之和，同时另限制evaluation在途数。final复核有单独阶段和圈存额度。
   这是吞吐与停止一致性的明确取舍；本实验窗口堵塞时调度可服务其他实验。
 - 第一条意外失败被确认时，在协调者事务内标该epoch失败并停派发；queued项确认取消后退
   额度，已started项按清理策略终止或有限排空，记录实际/未知成本且不重投。
