@@ -11,6 +11,7 @@ import hashlib
 import json
 from pathlib import Path
 import platform
+import re
 import subprocess
 import sys
 import time
@@ -25,6 +26,69 @@ LIMITS = {'cells': 500, 'workers': 4, 'E2_api': 1500,
           'E0_fallback_reserved': 1500, 'E0_independent': 500,
           'solver_seconds': 60, 'e0_seconds': 60, 'batch_seconds': 7200,
           'rss_bytes_per_cell': 4 << 30, 'retries': 0}
+
+
+class DarwinResourceGuard:
+    """Read-only host sampling before dispatch; uncertainty stops dispatch."""
+
+    def __init__(self):
+        self.last_sample = None
+        self.low_start = None
+        self.low_count = 0
+        self.swap_start = None
+        self.swap_count = 0
+        self.previous_swapouts = None
+        self.previous_time = None
+
+    def check(self, output):
+        now = time.monotonic()
+        if self.last_sample is not None and now - self.last_sample < 5:
+            return None
+        self.last_sample = now
+        record = {'monotonic_seconds': now, 'sample_interval_min_seconds': 5}
+        try:
+            pressure = subprocess.run(['sysctl', '-n', 'kern.memorystatus_vm_pressure_level'],
+                                      capture_output=True, text=True, timeout=3, check=True)
+            vm = subprocess.run(['vm_stat'], capture_output=True, text=True,
+                                timeout=3, check=True)
+            level = int(pressure.stdout.strip())
+            match = re.search(r'page size of (\d+) bytes', vm.stdout)
+            if match is None:
+                raise ValueError('vm_stat page size missing')
+            page_size = int(match.group(1))
+            fields = {name.strip(): int(value) for name, value in
+                      re.findall(r'^([^:\n]+):\s*(\d+)\.?$', vm.stdout, re.MULTILINE)}
+            unused = (fields['Pages free'] + fields['Pages speculative']) * page_size
+            swapouts = fields['Swapouts']
+            if level not in (1, 2, 4) or page_size <= 0 or unused < 0 or swapouts < 0:
+                raise ValueError('invalid host resource sample')
+            record.update(pressure_level=level, physical_unused_bytes=unused,
+                          swapouts=swapouts, page_size=page_size)
+            if unused < 512 * 1024 * 1024:
+                if self.low_count == 0:
+                    self.low_start = now
+                self.low_count += 1
+            else:
+                self.low_count, self.low_start = 0, None
+            if self.previous_swapouts is not None and swapouts > self.previous_swapouts:
+                if self.swap_count == 0:
+                    self.swap_start = self.previous_time
+                self.swap_count += 1
+            else:
+                self.swap_count, self.swap_start = 0, None
+            self.previous_swapouts, self.previous_time = swapouts, now
+            reason = ('pressure_level_4' if level == 4 else
+                      'low_physical_unused_3_samples_30s' if
+                      self.low_count >= 3 and now - self.low_start >= 30 else
+                      'swapouts_growth_3_samples_30s' if
+                      self.swap_count >= 3 and now - self.swap_start >= 30 else None)
+        except Exception as error:
+            reason = 'resource_sample_failed'
+            record['error'] = repr(error)
+        record['stop_reason'] = reason
+        with (output / 'resources.jsonl').open('a') as stream:
+            stream.write(json.dumps(record, allow_nan=False) + '\n')
+        return reason
 
 
 def digest(raw):
@@ -324,7 +388,8 @@ def compact(entry):
     return {k: v for k, v in entry.items() if k not in ('solver_process_in_flight', 'independent_e0_in_flight')}
 
 
-def run(doc, old, identity, manifest, raw_root, e2_root, python, output, runner_commit, started):
+def run(doc, old, identity, manifest, raw_root, e2_root, python, output,
+        runner_commit, started, guard=None):
     if platform.system() != 'Darwin' or platform.machine() != 'arm64':
         raise ValueError('Pinned E2 binary requires macOS arm64')
     if output.exists():
@@ -350,6 +415,14 @@ def run(doc, old, identity, manifest, raw_root, e2_root, python, output, runner_
         while next_index < len(old['rows']) or running:
             while (not stop and next_index < len(old['rows'])
                    and len(running) < limits['workers'] and time.perf_counter() < deadline):
+                reason = ('STOP_REQUESTED' if (output / 'STOP_REQUESTED').exists() else
+                          guard.check(output) if guard is not None else None)
+                if reason:
+                    stop = True
+                    summary['status'] = 'stopped_resource_guard'
+                    summary['resource_guard_reason'] = reason
+                    save(output / 'summary.json', summary)
+                    break
                 row = old['rows'][next_index]
                 next_index += 1
                 key = f"{row['case']}-k{row['cores']}"
@@ -427,7 +500,8 @@ def main():
     if args.output is None:
         raise ValueError('Run requires a new --output directory')
     summary = run(doc, old, identity, manifest, raw_root, e2_root, python,
-                  args.output.absolute(), args.runner_commit, started)
+                  args.output.absolute(), args.runner_commit, started,
+                  guard=DarwinResourceGuard())
     if summary['status'] != 'completed':
         raise SystemExit(1)
 

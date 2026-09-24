@@ -38,7 +38,7 @@ is created.
 ```
 
 After review and explicit scheduling release, `run` additionally requires the
-full `--runner-commit` and a fresh `--output`. The runner uses four monitored
+full `--runner-commit` and a fresh `--output`. The runner uses the selected manifest's monitored
 workers. Per cell, the solver (including at most three public native E2
 requests) gets 60 seconds, then exactly one independent official E0 gets 60
 seconds. Each monitored cell has a 4 GiB observed process-tree RSS limit; the
@@ -48,6 +48,14 @@ fallback calls. First fallback, unknown request, source mismatch, unexpected
 construction error, missing score evidence, E2/E0 mismatch, timeout, or other
 failure stops new scheduling. Already-running cells finish safely and keep
 receipts. The stopped directory is never resumed or overwritten.
+
+Before each dispatch, `STOP_REQUESTED` in the run output stops new work.
+Darwin pressure and `vm_stat` are sampled at least five seconds apart and
+appended to `resources.jsonl`. Pressure level 4, three unused-memory samples
+below 512 MiB spanning at least 30 seconds, three rising swapout intervals
+spanning at least 30 seconds, or a failed sample stops dispatch. In-flight
+cells finish and retain their receipts; these guards do not change the frozen
+solver or scoring budget.
 
 Each cell directory keeps the full selected plan, online ledger, process
 receipts, official result, trace, and log. `summary.json` stores only scalar
