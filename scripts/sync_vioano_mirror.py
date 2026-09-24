@@ -10,6 +10,16 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = "huaweibei123/huaweicup2026"
 TARGET = "Vioano/huaweicup2026"
+# Signed sync channels and submission/delivery refs are transport state, not
+# research material. Their frequent updates must not starve or inflate the mirror.
+EXCLUDED_SOURCE_REFS = {"refs/heads/benchmark-fast-v1",
+                        "refs/heads/benchmark-sync-v1"}
+EXCLUDED_SOURCE_PREFIXES = ("refs/heads/benchmark-submissions/",
+                            "refs/heads/benchmark-delivery/")
+
+
+def excluded_transport(ref):
+    return ref in EXCLUDED_SOURCE_REFS or ref.startswith(EXCLUDED_SOURCE_PREFIXES)
 
 
 def run(argv, env=None):
@@ -72,8 +82,15 @@ def main():
 
         git(["fetch", "--no-tags", "origin",
              "refs/heads/*:refs/remotes/origin/*",
+             "^refs/heads/benchmark-fast-v1",
+             "^refs/heads/benchmark-sync-v1",
+             "^refs/heads/benchmark-submissions/*",
+             "^refs/heads/benchmark-delivery/*",
              "refs/tags/*:refs/mirror-source-tags/*"], source_env)
-        source = refs("origin", source_env)
+        source_all = refs("origin", source_env)
+        excluded = sorted(ref for ref in source_all if excluded_transport(ref))
+        source = {ref: sha for ref, sha in source_all.items()
+                  if not excluded_transport(ref)}
         before = refs("vioano", target_env)
         refspecs = []
         for ref, sha in sorted(source.items()):
@@ -102,6 +119,7 @@ def main():
             "source": SOURCE, "target": TARGET, "target_private": metadata["private"],
             "target_visibility": metadata["visibility"],
             "push_requested": args.push, "all_source_refs_match": matched,
+            "excluded_transport_refs": excluded,
             "changed_refs": changed,
             "extra_target_refs_preserved": sorted(set(after) - set(source)),
             "source_snapshot": source, "target_snapshot": after,
