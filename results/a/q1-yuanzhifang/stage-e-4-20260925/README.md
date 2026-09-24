@@ -34,7 +34,15 @@ P95 uses linear interpolation at `(n-1)*p`. Timeout wall can slightly exceed its
 
 Windows 11 build 26200, AMD Ryzen 5 5600H, 12 logical CPUs, RAM 17,024,741,376 bytes, Python 3.12.14, no GPU. The interpreter was reused from the parent's locked environment; 14 installed packages passed `uv pip check`. The lock hash is `7b03fee57044ac272d8895533cbdca6d70a29d2da955f98a5552e72ef944fdc4`. OMP/OpenBLAS/MKL caps were 1. Actual process thread count and peak RSS were not sampled. No M5 Pro/Windows wall-time ratio is presented as solver speedup.
 
-The machine was not exclusive. During this batch the user separately authorized parallel P2 production. The parent supplied a confirmed P2 5C interval `17:08:26.29728Z–17:08:34.117251Z`, stopped on its own ledger `os.replace` WinError5 (reported not OOM). That interval overlaps E4 case076's E0 for 7.819971 s. P2 k1 was also reported in flight, but its exact interval and later continuation windows were not supplied when this report was frozen. Thus the known eight-second interval is not all P2 sharing, and cases076/079/091 cannot be described as exclusive. In particular, cases014/041 timed out before the new parallel work; no timeout is causally attributed to another job. No P2 live ledger was read. See [coordination.json](coordination.json) and all 115 new child-process intervals in [resource-overlap.csv](resource-overlap.csv).
+The machine was not exclusive. During this batch the user separately authorized parallel P2 production. The parent ultimately supplied the following actual intervals from P2 task reports, all on 2026-09-24 UTC:
+
+| Other workload | Actual T0 | Actual T1 | Reported calls |
+| --- | --- | --- | --- |
+| P2 5C | 17:08:26.29728Z | 17:08:34.117251Z | stopped on its own ledger `os.replace` WinError5; reported not OOM |
+| P2 k1 r6a | 17:08:56.910088Z | 17:14:11.239460Z | 33 solver + 33 E0 |
+| P2 k2 r7a | 17:11:51.384154Z | 17:15:48.533995Z | 33 solver + 33 E0 |
+
+These intervals intersect the E4 batch for a union of 321.235642 s, including 138.941605 s with two reported P2 workers while E4 retained one worker. Twenty-nine E4 child processes have confirmed overlap; the overlapping E0 timeout cases are 076/079/091. The first five E0 timeouts, including014/041, precede the supplied new parallel windows. No timeout is causally attributed to another job and no wall time is corrected. No P2 live ledger was read. The original [coordination.json](coordination.json) and [resource-overlap.csv](resource-overlap.csv) preserve the earlier incomplete timing information; the authoritative timing addendum is [coordination-addendum.json](coordination-addendum.json), with all 115 E4 child processes crossed against the three reported windows in [resource-overlap-confirmed.csv](resource-overlap-confirmed.csv). These reported batch windows do not constitute exhaustive host monitoring or a peak-RSS measurement.
 
 ## Observed quality and every changed result
 
