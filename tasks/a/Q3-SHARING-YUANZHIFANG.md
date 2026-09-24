@@ -12,3 +12,7 @@ session: yuanzhifang30-sudo/s-3d9c78db26714786b88b987ca6f58e2b
 登记：https://github.com/huaweibei123/huaweicup2026/issues/26#issuecomment-5815486452 。原任务通道Issue51；不接管src/q3和中央成绩台/Atlas写权。
 
 交付进度（2026-09-24）：首批实际12cold/16E0全部成功，P3无改善，16条成绩与负例原件通过固定Git预检；第二独立阶段按STAGE_ALIGNMENT.md预算实际1cold/2E0，044/4核P3改善4.65%，spill归零，2条成绩通过固定Git预检。两阶段累计13cold/18E0、0重试/E1/E2/云；未使用封存余额。Draft PR104、FEEDBACK.md与两份REPORT.md包含实现、结果、局限和论文段落。未完成全100图/1–5核泛化、独立复核及中央最终验收。
+
+持续目标的第三至第六独立阶段已各自按冻结spec完成，不改上述旧账：active1cold/2E0、DAG2/4、pipeline1/2、join2/4。本分支累计19cold/30E0，全部成功、零重试/E1/E2/云。044/k4 P3=40927（初始70261），069/k5=15221（冻结控制24009），071/k5=11613（18205）。每项质量、搬运、Cache、solver与外评原件都保留；pipeline比active构造更慢，未用事后多方法最佳伪装单次求解。
+
+新增两种必要界及零E0全100图分析：普通工作/路径/必需IO界；head-tail区间工作量界在493/500格更强。全部与冻结控制身份、原官方单核分母及LB≤T核对通过，但没有全局最优证明。详见HEAD_TAIL_BOUND.md、TRACE_FEEDBACK.md及各独立结果目录。下一阶段是可移交的固定一般DAG候选包，由成绩台owner核容量后排跨平台和规模验证；本卡不自动授权无限调用或重跑旧原件。
