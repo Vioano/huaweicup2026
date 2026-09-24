@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from contextlib import contextmanager
 
 MAX_BLOB = 64 * 1024 * 1024
+MAX_EXPANDED_JSON = 128 * 1024 * 1024  # Complete official timelines can exceed 64 MiB.
 METRICS = {'makespan_cycles': ('Makespan', '周期', False), 'baseline_speedup': ('相对官方单核', '×', True), 'solver_wall_seconds': ('求解耗时', '秒', False), 'evaluation_wall_seconds': ('外部复评耗时', '秒', False), 'ddr_bytes': ('调度搬运', '字节', False), 'spill_bytes': ('溢出搬运', '字节', False), 'extra_ddr_bytes': ('额外搬运', '字节', False), 'cache_gain': ('Cache 加速比', '×', True), 'cache_hit_rate': ('Cache 字节命中率', '%', True)}
 
 def now(): return datetime.now(timezone.utc).isoformat()
@@ -28,8 +29,8 @@ def safe_path(path):
 
 def read_json_blob(data, path):
     if path.endswith('.gz'):
-        with gzip.GzipFile(fileobj=io.BytesIO(data)) as stream: data = stream.read(MAX_BLOB + 1)
-    if len(data) > MAX_BLOB: raise ValueError('artifact too large')
+        with gzip.GzipFile(fileobj=io.BytesIO(data)) as stream: data = stream.read(MAX_EXPANDED_JSON + 1)
+    if len(data) > MAX_EXPANDED_JSON: raise ValueError('expanded artifact too large')
     return json.loads(data)
 
 class Ledger:
