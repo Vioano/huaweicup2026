@@ -14,13 +14,16 @@ from .construct import Index, ROOT, UnsupportedStructure
 from .capacity_tree import construct as capacity_construct
 from .reduction_tree import construct as balanced_construct
 from .fragment_tree import construct as fragment_construct
+from .release_tree import construct as release_construct
 from .safe_solve import encoded
 from .solve import publish_new, select
 
 
 def prepare(index, cores, method):
     builder = {"balanced": balanced_construct, "capacity": capacity_construct,
-               "fragment": fragment_construct}[method]
+               "fragment": fragment_construct,
+               "release-order": release_construct,
+               "release-place": lambda i, k: release_construct(i, k, place=True)}[method]
     try:
         plan, metadata = builder(index, cores)
         return plan, metadata, {"rule": "guarded_direct_tree", "method": method}
@@ -35,7 +38,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("graph", type=Path)
     parser.add_argument("--cores", type=int, default=4)
-    parser.add_argument("--tree-method", choices=("balanced", "capacity", "fragment"), required=True)
+    parser.add_argument("--tree-method", choices=("balanced", "capacity", "fragment",
+                                                "release-order", "release-place"), required=True)
     parser.add_argument("-o", "--output", type=Path, required=True)
     parser.add_argument("--evidence", type=Path, required=True)
     args = parser.parse_args()
