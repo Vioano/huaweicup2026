@@ -152,8 +152,9 @@ def export(folder):
         row["artifacts"] = {name: spec(ref) for name, ref in e["artifacts"].items()}
         if c:
             row["artifacts"]["plan"] = spec(c["plan"])
-        row["artifacts"].update(run=artifact(run_path), manifest=spec(manifest_archive),
-                                call_ledger=spec(ledger_archive))
+        # The board schema allows run/manifest, not a top-level call_ledger key.
+        # The immutable ledger remains hash-linked from both run and manifest.
+        row["artifacts"].update(run=artifact(run_path), manifest=spec(manifest_archive))
         p = row["provenance"]
         p["solver"].update(source=source(SOLVER_COMMIT,
             "src/q3_yuanzhifang/pipeline_stages.py", "main"),
