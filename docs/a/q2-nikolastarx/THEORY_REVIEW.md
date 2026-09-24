@@ -18,7 +18,14 @@ D3 experimental budget. The six-case protocol is independently frozen.
 3. **Official lower bound.** A successful four-core solution must execute every
    original M/V operation. Sum of cycles of each such pipe divided by four is a
    valid resource lower bound (schedule_step3 PIPE_SLOTS=1 and _op_duration).
-   The compute-only critical path is another relaxation. Step3 local_makespan
+   A compute-only critical path is another relaxation only when its timing
+   dependencies survive the P2 builder. The 2026-09-24 audit found that contracting
+   paths through removed original COPY nodes is not safe on arbitrary inputs;
+   use retained eligible edges and the single-producer scope described in
+   `OPTIMALITY_BOUNDS.md`. All 100 frozen graphs satisfy that scope and have zero
+   additional contracted-only edges, so their previously archived numbers stay
+   unchanged. This is a scope correction, not a new E0 performance run.
+   Step3 local_makespan
    is not a valid general global lower bound. The provided graphs use integer
    durations, permitting an integer ceiling of the total-work bound.
 4. **Coverage.** Our fresh 100-graph static scan matched the guarded resource-word
@@ -36,6 +43,13 @@ The six development examples and board selection are deliberately exposed;
 future coverage tests must identify their different role instead of calling
 these six a holdout. Existing 008 evidence being near its resource bound means
 transfer and lower solver cost are more promising than tuning 008 indefinitely.
+
+The newer global certificates additionally use indivisible pipe loads and
+head/tail workload windows. They concern all admissible assignments, whereas
+`assigned_pipe_lower_bound()` concerns one candidate and cannot prove a graph's
+global optimum. The latter pruning proof is unaffected by the COPY scope
+correction. See `OPTIMALITY_BOUNDS.md` for proofs, abstention rules and the exact
+meaning of an attained lower bound.
 
 Reproduction (static, zero evaluators):
 
