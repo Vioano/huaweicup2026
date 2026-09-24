@@ -10,3 +10,7 @@ Run T0: `2026-09-24T22:07:52.148724Z`. Run T1: `2026-09-24T22:08:08.851017Z`; ba
 | 044/k4 | 82,479 | 2,957,344 | 1,981,888 | 0 | 7.7344650 | 0.9378048 |
 
 Both cells succeeded. Raw plans, diagnostics, online events, stdout/stderr, E0 results/traces/logs, receipt and manifest are retained under `run/`. Submission-v1 feed: `board-feed.json`. These are two diagnostic cells, not a full P1 average.
+
+## Comparison with the fixed v4 same-cell E0 reference
+
+The approved v4 full500 feed at commit `9c5f87548cc7588465a638e032993969b5cac891` reports 044/k3 and 044/k4 at 64,624 cycles each (scheduled DDR 2,026,944 B; extra DDR 1,051,488 B). Stage L is worse on both cells: k3 is +19,417 cycles (+30.05%) and +905,056 scheduled/extra DDR bytes; k4 is +17,855 cycles (+27.63%) and +930,400 scheduled/extra DDR bytes. Treat these as negative diagnostic results; no causal claim is made beyond the same graph/core/config/E0 comparison. No further scoring or retries were run.
