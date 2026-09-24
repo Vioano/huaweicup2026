@@ -1,0 +1,87 @@
+{
+  "elapsed_seconds": 15.578,
+  "graphs_checked": 100,
+  "coordinates_checked": 50,
+  "receipts_available": 500,
+  "recognition_pass": 10,
+  "construct_pass": 34,
+  "eligible_with_remaining_call": 33,
+  "different_from_forest500_winner": 34,
+  "reason_counts": {
+    "recognize: all external inputs must be reused across components": 90,
+    "construct: axis partition does not reduce mandatory input COPY bytes": 16
+  },
+  "e0_calls_made": 0,
+  "solver_runs_made": 0,
+  "scope": "read-only structural coverage, not new algorithm full-500 score or solver wall time",
+  "recognized_cases": [
+    "011",
+    "021",
+    "027",
+    "037",
+    "039",
+    "058",
+    "059",
+    "079",
+    "080",
+    "097"
+  ],
+  "eligible_coordinates": [
+    "011-k3",
+    "011-k5",
+    "021-k2",
+    "021-k3",
+    "021-k4",
+    "021-k5",
+    "027-k2",
+    "027-k3",
+    "027-k4",
+    "027-k5",
+    "037-k3",
+    "037-k5",
+    "039-k2",
+    "039-k3",
+    "039-k4",
+    "039-k5",
+    "058-k2",
+    "058-k3",
+    "058-k4",
+    "058-k5",
+    "059-k3",
+    "059-k5",
+    "079-k2",
+    "079-k3",
+    "079-k4",
+    "079-k5",
+    "080-k2",
+    "080-k3",
+    "080-k4",
+    "097-k2",
+    "097-k3",
+    "097-k4",
+    "097-k5"
+  ],
+  "eligible_by_core": {
+    "2": 7,
+    "3": 10,
+    "4": 7,
+    "5": 9
+  },
+  "construct_pass_by_core": {
+    "2": 7,
+    "3": 10,
+    "4": 7,
+    "5": 10
+  },
+  "eligible_copy_floor_reduction_bytes": {
+    "minimum": 368640,
+    "maximum": 13787136
+  },
+  "construct_seconds": {
+    "minimum": 0.010585,
+    "median": 0.10896,
+    "maximum": 0.948355
+  },
+  "raw_graph_receipt_sha256_mismatches": 0,
+  "interpretation": "33 existing baseline coordinates have a remaining call and distinct plan. COPY-floor reduction is a proxy; two observed official k5 results have opposite signs. Targeted E0 sample before any full500 fixed-algorithm run."
+}

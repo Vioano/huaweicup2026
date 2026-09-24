@@ -1,0 +1,7 @@
+079 static read-only correction (2026-09-25)
+
+The frozen cross-core copy delay is 500 cycles (see data/raw/a/official/data/config.txt, multicore_scene_b). Recomputed pipe_bound.analyze on old and reuse-grid plans at both delay=0 and delay=500 returns LB=5,926,152; cross_core_dependency_edges=0 and critical path remains core 0, so the configured delay contributes zero here.
+
+First differing common compute op by op_id: 1188 MATMUL. Old plan owns it on core 1/subgraph 65; P3 timeline starts it at 860 and ends 3,956. New plan owns it on core 0/subgraph 65; timeline starts 103,028 and ends 106,124. Its new COPY_IN for tensor 1000000003 completes at 94,493, leaving 8,535 cycles before op start; old plan has COPY_IN completions at 345 and 860 and starts op immediately at 860. Thus this op is not delayed by its observed input COPY completion alone; the ownership/order change substantially changes placement on the core timeline. Static results do not expose a per-op stall reason or all allocation readiness causes, so cannot attribute the 8,535 cycles specifically to compute FIFO versus COPY/allocator constraints.
+
+Verified scope: saved P3 gz timelines and plans only; no evaluator/solver invoked and no worktree files changed. M/V pipe-work lower bound is unchanged, but this does not prove the actual slowdown is caused by compute FIFO. P2 also degrades similarly, consistent with a plan/order effect rather than a cache-only effect.

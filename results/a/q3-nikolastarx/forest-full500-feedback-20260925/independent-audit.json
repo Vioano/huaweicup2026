@@ -1,0 +1,125 @@
+{
+  "audit": "read-only independent forest full500 acceptance",
+  "dispatch": {
+    "status": "complete",
+    "finished_at": "2026-09-24T21:37:00.466Z",
+    "solver_commit": "311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1",
+    "runner_commit": "311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1",
+    "controller_sha256": "0ae462dc80789d3061f8999f2d3d193a410ecb8b214febb94e54bf0e2167cd52",
+    "max_workers": 4,
+    "shards": [
+      [
+        "s01",
+        91
+      ],
+      [
+        "s02",
+        95
+      ],
+      [
+        "s03",
+        90
+      ],
+      [
+        "s04",
+        93
+      ],
+      [
+        "s05",
+        110
+      ],
+      [
+        "s06",
+        97
+      ],
+      [
+        "s07",
+        102
+      ],
+      [
+        "s08",
+        104
+      ],
+      [
+        "s09",
+        96
+      ],
+      [
+        "s10",
+        95
+      ]
+    ]
+  },
+  "coverage": {
+    "cells": 500,
+    "unique": 500,
+    "exact_100x1_to5": true,
+    "source_input_hash_entries_checked": 601,
+    "unique_source_files_hashed": 149,
+    "call_ledger": {
+      "solver": 500,
+      "E0": 973,
+      "E1": 0,
+      "E2": 0
+    },
+    "retries": 0
+  },
+  "result_checks": {
+    "validate_result_passed": 500,
+    "plan_result_receipt_graph_config_hashes_and_candidate_selection": "all 500 passed existing read-only validator",
+    "solver_and_e0_records": "all successful",
+    "paired_c2_records": 500,
+    "paired_c2_source": "c2d628ba0fe8dce4630e5f9c0a5c8fb810fcd41a"
+  },
+  "forest_vs_c2_counts": {
+    "makespan_cycles": {
+      "better": 24,
+      "equal": 476,
+      "worse": 0,
+      "delta_sum": -1024652
+    },
+    "added_copy_bytes": {
+      "better": 18,
+      "equal": 479,
+      "worse": 3,
+      "delta_sum": -413450240
+    },
+    "spill_added_copy_bytes": {
+      "better": 18,
+      "equal": 479,
+      "worse": 3,
+      "delta_sum": -413450240
+    },
+    "hit_bytes": {
+      "better": 9,
+      "equal": 482,
+      "worse": 9,
+      "delta_sum": 169984
+    }
+  },
+  "forest_vs_official_singlecore_arithmetic_mean_B_over_M": {
+    "1": 1.1997595678587545,
+    "2": 2.312002295129782,
+    "3": 3.258687134445883,
+    "4": 4.091503001561421,
+    "5": 4.7576166788448955
+  },
+  "solver_wall_seconds": {
+    "mean": 4.400830468402244,
+    "median": 1.6156325209885836,
+    "p95_nearest_rank": 20.008882166002877,
+    "max": 51.3352958339965,
+    "min": 0.24929408298339695,
+    "shared_host_note": "4 workers concurrently; shared-host subprocess walls, not exclusive hardware throughput"
+  },
+  "limitations": "No solver/E0 run. Candidate legality is supported by preserved successful official E0 results and receipts; not independently rescored.",
+  "additional_checks": [
+    "Additional raw-pair verification: all 500 c2 plan and official result files match their feed hashes and fixed source identity; all 500 official single-core baseline result files match their hashes and the paired graph/config/official E0 identity (num_cores=1).",
+    "Frozen control commit verification: ec9015df5541f65a529c367afbb20f0241ea5ed1 resolves; its dispatcher source hashes to 0ae462dc80789d3061f8999f2d3d193a410ecb8b214febb94e54bf0e2167cd52, exactly matching dispatch.json and the working copy. All ten live frozen manifests are byte-for-byte equal to the manifests in that control commit."
+  ],
+  "artifact_commits": [
+    "a35a2cd72ca732b924115ceac13838bad4ffc48b",
+    "f067fa8712fc4b249030703fc675fb88f9927173",
+    "bff88a66cd76ceb2d75242bf99d34bfe8b1879d4"
+  ]
+}

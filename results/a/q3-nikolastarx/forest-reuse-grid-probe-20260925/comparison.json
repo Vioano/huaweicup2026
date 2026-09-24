@@ -1,0 +1,98 @@
+{
+  "validation": "fixed source/input SHA stable; two-field plan and static official derive validation; every original compute tree stays on one core; plan and P2/P3 bytes bind run; independent cache event replay",
+  "scope": "two seen development graphs, not full500 or held-out evidence",
+  "source_commit": "92d454913ac4330646800cf51309a8b21842fa4f",
+  "calls": {
+    "constructor": 2,
+    "E0": 4
+  },
+  "shared_host": "P2 one scoring worker continued; this run one worker; no exclusive/cold OS-cache claim",
+  "rows": [
+    {
+      "case_id": "058",
+      "cores": 5,
+      "old_p3_makespan": 1004819,
+      "new_p3_makespan": 948039,
+      "makespan_reduction_fraction": 0.05650768944456663,
+      "new_p2_makespan": 948121,
+      "same_plan_cache_gain": 1.0000864943319843,
+      "old_movement": {
+        "original_graph_copy_bytes": 7667712,
+        "scheduled_copy_bytes": 39772160,
+        "added_copy_bytes": 32104448,
+        "partition_added_copy_bytes": 18382848,
+        "spill_added_copy_bytes": 13721600
+      },
+      "new_movement": {
+        "original_graph_copy_bytes": 7667712,
+        "scheduled_copy_bytes": 37810176,
+        "added_copy_bytes": 30142464,
+        "partition_added_copy_bytes": 9191424,
+        "spill_added_copy_bytes": 20951040
+      },
+      "old_hit_rate": 0.0,
+      "new_hit_rate": 0.008912655971479501,
+      "constructor_wall_seconds": 0.7413313339930028,
+      "cache_replay_audit": {
+        "hit_bytes": 327680,
+        "oversize_bytes": 0,
+        "first_access_bytes": 6623232,
+        "miss_in_flight_bytes": 0,
+        "after_eviction_bytes": 29814784,
+        "hit_count": 80,
+        "oversize_count": 0,
+        "first_access_count": 1056,
+        "miss_in_flight_count": 0,
+        "after_eviction_count": 7147,
+        "fifo_evictions": 7947,
+        "fifo_reinsertions": 7147,
+        "distinct_read_keys": 1056,
+        "distinct_inserted_keys": 1056,
+        "zero_insert_binding_unavailable_count": 0
+      }
+    },
+    {
+      "case_id": "079",
+      "cores": 5,
+      "old_p3_makespan": 6075472,
+      "new_p3_makespan": 6215466,
+      "makespan_reduction_fraction": -0.02304248953826149,
+      "new_p2_makespan": 6215599,
+      "same_plan_cache_gain": 1.0000213982346617,
+      "old_movement": {
+        "original_graph_copy_bytes": 9351168,
+        "scheduled_copy_bytes": 57028608,
+        "added_copy_bytes": 47677440,
+        "partition_added_copy_bytes": 23248896,
+        "spill_added_copy_bytes": 24428544
+      },
+      "new_movement": {
+        "original_graph_copy_bytes": 9351168,
+        "scheduled_copy_bytes": 43241472,
+        "added_copy_bytes": 33890304,
+        "partition_added_copy_bytes": 9461760,
+        "spill_added_copy_bytes": 24428544
+      },
+      "old_hit_rate": 0.2441611149398882,
+      "new_hit_rate": 0.03291034767357887,
+      "constructor_wall_seconds": 0.708662707998883,
+      "cache_replay_audit": {
+        "hit_bytes": 1306624,
+        "oversize_bytes": 0,
+        "first_access_bytes": 5812224,
+        "miss_in_flight_bytes": 0,
+        "after_eviction_bytes": 32583680,
+        "hit_count": 319,
+        "oversize_count": 0,
+        "first_access_count": 1122,
+        "miss_in_flight_count": 0,
+        "after_eviction_count": 7889,
+        "fifo_evictions": 8755,
+        "fifo_reinsertions": 7889,
+        "distinct_read_keys": 1122,
+        "distinct_inserted_keys": 1122,
+        "zero_insert_binding_unavailable_count": 0
+      }
+    }
+  ]
+}
