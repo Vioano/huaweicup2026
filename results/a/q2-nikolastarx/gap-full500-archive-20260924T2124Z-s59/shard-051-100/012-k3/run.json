@@ -1,0 +1,549 @@
+{
+  "accepted_row": {
+    "case": "012",
+    "cores": 3,
+    "solver_process_in_flight": false,
+    "solver_process": {
+      "argv": [
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/.venv/bin/python",
+        "-B",
+        "-m",
+        "src.q2_nikolastarx.adaptive_gap_guarded",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/data/raw/a/official/data/case_012.json",
+        "--config",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/data/raw/a/official/data/config.txt",
+        "--cores",
+        "3",
+        "--output",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/output/p2-gap-full500-20260925-s59/20260924T2124Z-s59ee/012-k3/plan.json",
+        "--evidence",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/output/p2-gap-full500-20260925-s59/20260924T2124Z-s59ee/012-k3/online",
+        "--e2-root",
+        "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/output/q2-e2-paircheck-603b-s8ee",
+        "--wall",
+        "60"
+      ],
+      "started_at": "2026-09-24T21:28:07.941436Z",
+      "status": "ok",
+      "sample_interval_seconds": 0.05,
+      "observed_peak_rss_bytes": 91029504,
+      "rss_samples": 14,
+      "cleanup_killed_pids": [],
+      "pid": 787,
+      "observer_inclusive_peak_rss_bytes": 223133696,
+      "exit_code": 0,
+      "surviving_pids": [],
+      "finished_at": "2026-09-24T21:28:09.280849Z",
+      "wall_seconds": 1.3394114580005407
+    },
+    "solver_ledger": {
+      "status": "ok",
+      "started_at": "2026-09-24T21:28:08.047526+00:00",
+      "calls": {
+        "E0": 0,
+        "E1": 0,
+        "E2": 2,
+        "E2_api_attempted": 2,
+        "native_returns": 2,
+        "E0_fallback": 0
+      },
+      "attempts": [
+        {
+          "plan_sha256": "7e78e01b6f7785208e6bad6bdc0cf2c9d37406759c87f28ec1bdc441b566d0c8",
+          "started_at": "2026-09-24T21:28:08.258818+00:00",
+          "status": "native",
+          "record": {
+            "status": "ok",
+            "makespan": 17351,
+            "data_movement_bytes": {
+              "original_graph_copy_bytes": 554898,
+              "scheduled_copy_bytes": 593490,
+              "added_copy_bytes": 38592,
+              "partition_added_copy_bytes": 38592,
+              "spill_added_copy_bytes": 0
+            },
+            "cross_task_traffic": 0,
+            "route": "native",
+            "execution": "native_replayed",
+            "numeric_kind": "computed",
+            "replay_iterations": 1249,
+            "preparation_seconds": 0.07266870903549716,
+            "replay_seconds": 0.00021362502593547106,
+            "compilation_cache_hit": false,
+            "engine": "p2-e2-native-search-v1",
+            "problem": 2,
+            "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+            "wall_seconds": 0.07380129199009389,
+            "cpu_seconds": 0.068687,
+            "cache": {
+              "hits": 0,
+              "misses": 1,
+              "evictions": 0,
+              "bypasses": 0,
+              "native_calls": 1,
+              "fallback_calls": 0,
+              "full_calls": 0,
+              "accounted_bytes": 102398,
+              "limit_bytes": 16777216,
+              "entries": 1,
+              "max_entries": 32
+            }
+          },
+          "wall_seconds": 0.3930777079658583
+        },
+        {
+          "plan_sha256": "ef852f47364c22d030005b9da6c9eebf240e7533c67f039db579aad535051632",
+          "started_at": "2026-09-24T21:28:08.653164+00:00",
+          "status": "native",
+          "record": {
+            "status": "ok",
+            "makespan": 16286,
+            "data_movement_bytes": {
+              "original_graph_copy_bytes": 554898,
+              "scheduled_copy_bytes": 902312,
+              "added_copy_bytes": 347414,
+              "partition_added_copy_bytes": 347414,
+              "spill_added_copy_bytes": 0
+            },
+            "cross_task_traffic": 76356,
+            "route": "native",
+            "execution": "native_replayed",
+            "numeric_kind": "computed",
+            "replay_iterations": 1594,
+            "preparation_seconds": 0.09360108303371817,
+            "replay_seconds": 0.0003070419770665467,
+            "compilation_cache_hit": false,
+            "engine": "p2-e2-native-search-v1",
+            "problem": 2,
+            "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+            "wall_seconds": 0.09485483402386308,
+            "cpu_seconds": 0.090256,
+            "cache": {
+              "hits": 0,
+              "misses": 1,
+              "evictions": 0,
+              "bypasses": 0,
+              "native_calls": 1,
+              "fallback_calls": 0,
+              "full_calls": 0,
+              "accounted_bytes": 124165,
+              "limit_bytes": 16777216,
+              "entries": 1,
+              "max_entries": 32
+            }
+          },
+          "wall_seconds": 0.4239594580139965
+        }
+      ],
+      "source_checked": true,
+      "possible_E0_fallback_calls": 0,
+      "request_in_flight": false,
+      "runtime": {
+        "python": "3.12.13",
+        "platform": "macOS-27.0-arm64-arm-64bit"
+      },
+      "validation_scope": "official structural check; no final E0/P2 feasibility certificate",
+      "graph_sha256": "1a07d3a4c6d1305bec2fbdc4d106fb5c0078ec098cbf09e1b8eaa5134968e079",
+      "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+      "cores": 3,
+      "solver_checkout_commit": "9db8247f9a864a3279f3bd315aa09d8ad7dd5206",
+      "solver_source_sha256": {
+        "active_core_wave.py": "cc22791bd693b7f8385b90fff7aa344ec774054a12e6edcde65e8fa71309322a",
+        "adaptive_budget.py": "710b0c7b023584f6e44d345c9b0e2317b1c6050201bb2f2a1f9d0d524d09c185",
+        "adaptive_direct.py": "93674a572ca731fb642d20ddbcfe67dd3d3e1e5ff1b341418e9307ebc084ce3f",
+        "adaptive_frontier.py": "1f251246d2efff661e3808c6c0ff21bb1da9f71f9dbc07b9cbba71a32ebb266a",
+        "adaptive_gap_guarded.py": "e893d530e04d3b80d179d7cba6764ca8eda9df66958ec0c02b505cc19bcac777",
+        "adaptive_guarded.py": "1646e78c10205e4348f48378b3d6de3eb3f9f24c747db0a1ecd82a60a24007d9",
+        "adaptive_semantic.py": "1a29898358343ae269e69618a09fa3a680c448b585797ac3fcfd17def886197a",
+        "baseline.py": "1820b2119c650e875c219f3b23f1c0ade413f19ae8df9f320f071acc6d68b7e4",
+        "bounds.py": "65a68fcc8a3e83bc2af980898bda8afbd8269f69f61eafe06fe51632de4034aa",
+        "candidate_ddr.py": "a0b732ffc4ce68ab8a821f6ece096cd51198a437a4993f2e174cdea602d4cd3d",
+        "chain_packets.py": "59c5b9d0cab785b55a56c031f414538a7c2595a489214dd6539626ea5812ed0f",
+        "chain_pilot.py": "d55a474d86b9f47d32b4b8b5e420ead723bfe7b91ca061f37b27f2533ff08a4a",
+        "compare_matrix.py": "44dd031bdf5892b8d97176538e38b9aec0b43db5a547ccfe7aa1b53172c4aaae",
+        "component_envelope.py": "245ba6623f122420d99b77270609add13057261ecdd917a46c6a29d7b9541793",
+        "dag_direct.py": "f7033c454cd9861e8ea396850abcbfa970877f709239ec9e8ab220040bb0cccb",
+        "direct.py": "256a120bb8e6aa9a5cf57e11ce1b76f902599c82873352d01261448d7e002df3",
+        "direct_solve.py": "0189c6c295fbcd22218456ef9238f935b7ee3f384ea1662dd750a2c1c6eafcc6",
+        "e2_plan_pairs.py": "6b37e2e20834b33328548f9df1059adaa3551e8b45d79957ce6a120403a84995",
+        "evaluate_feedback.py": "9b9dbbf1b43423cafb1492285af3d9e7ec55d7201539a65c56c12f5f0edc4849",
+        "evaluate_matrix.py": "69046f2458d51ca0e7d004f2185c56bb530304bad0d151c3f9f27032ac46539e",
+        "evaluate_pruned.py": "af1719b279e6b829adfec7e412b70f28c9bbf87e27311828c21255f0183c88c8",
+        "export_board.py": "db60e5444f3ba1a4646b2adf7d2e9c7a26b2d25ded2bb414f49e19b50e342b1e",
+        "fifo_bound.py": "729a6c7a08f36a626c9089c21cfcf410269cff65ae41cbad88115632f63eea8c",
+        "gap_calendar.py": "203ebf550396bd86e2b4fc86678197ed0f5360765dce13862aca82bda5c1fc47",
+        "gap_candidate.py": "7057a35abde3aa528d4d0bc85aa217697c4219356dd2d46939d75e165311879d",
+        "gap_full500.py": "4e5349bf45d179d209947e13b269b78bcc11cda72988b886758b4e39bd2ea404",
+        "gap_solver_pilot.py": "3e6c4198a817fb525c277ae1fca059026ab12c6c577ee62646d8930702304f49",
+        "global_bounds.py": "5862e1a2a6a884f3162d445219b7b2a7b1b5b8d162b374a78f12fd45a420c0c3",
+        "guarded_component.py": "e3f3478f54d31c1a7b723c787a9cee7504b3539822724c2b0ed0ebf70f47b81d",
+        "packets.py": "1912077608b008c1d846e4511eacca7c7a87d3556dab181a3bdd40c5e259068e",
+        "shared_input_wave.py": "6a66278e6264312f4c983b6b4efe0320d17bb49806ca62071be441cc7805caa3",
+        "solve.py": "251ecff4455782e032e24ca529c69c4efed112380be9ab0384041a42dd5b1d38",
+        "static_analysis.py": "fa9ea51ac0670ca39ab217c4c2cd60a35735167a99cdf5c0739ef120fc6da255",
+        "tree_frontier.py": "0ea6976bc0d29cab898a40d040077cf6bfc07c7584d5141769a616a62f5a8ed2",
+        "tree_packets_first.py": "8cd41b9b27ef160f3ee75f70b4d5c38a115bd757421fddd8729e2d9a60e524f4",
+        "tree_paired_leaves.py": "ee100436c7c9e79d458eb8d0fc4af9a649b7dafb3837c5cb6d50ba5b0e7da485",
+        "vector_arrival.py": "f552ad98836095bc4e6bce8eb6503be928fe66a14dff0a3a640833279ea37242",
+        "vector_lanes.py": "1dbccbc915c78f491d74faa57aceff3038e0d4667d1bd65ba7c30243aec5c3ec",
+        "vector_split.py": "1896dfbdeea6eda92a3da8559fca4131a6209db47baba9a8cd15fb3f2d225e54",
+        "windows_gate.py": "6726911ca0b27c5aac6abb19a0c3f3ee85970c29784608d07b61cde2eb3a71ae",
+        "windows_process.py": "e0b4ebe7f369f666d1fa29ab0bac58bfe95e95a71d7f56c459ea6fbe42271c40"
+      },
+      "source_check_wall_seconds": 0.028418625006452203,
+      "source": {
+        "commit": "603b0741e21c449d3db652ebd67c94f2dc014cc9",
+        "manifest_sha256": "9ee379269c0c4f25b64f9d0aeaf1e397e85e48c2103b08637db356d3c9595387",
+        "native_binary_sha256": "0f765b7b1229ea221881ff8e017ba7d37b64461eded6afb7f48e9cf61bfd4e94",
+        "root": "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/output/q2-e2-paircheck-603b-s8ee"
+      },
+      "detail": {
+        "selected_strategy": "join_gap_candidate",
+        "baseline_detail": {
+          "selected_strategy": "component_envelope",
+          "eligible_ops": 972,
+          "components": 50,
+          "cores": 3,
+          "capacity_bytes": {
+            "L1": 524288,
+            "UB": 131072
+          },
+          "per_core": [
+            {
+              "core": 0,
+              "components": 14,
+              "shared_tensors": 3,
+              "cohorts": [
+                {
+                  "components": [
+                    6,
+                    8,
+                    14,
+                    15,
+                    17,
+                    19,
+                    24,
+                    26,
+                    27,
+                    28,
+                    29,
+                    31,
+                    37,
+                    49
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 3456,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 53888,
+                    "UB": 71494
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 57344,
+                    "UB": 71494
+                  },
+                  "within_capacity": true
+                }
+              ],
+              "max_open_components_bound": 14,
+              "all_raw_envelopes_fit": true
+            },
+            {
+              "core": 1,
+              "components": 19,
+              "shared_tensors": 9,
+              "cohorts": [
+                {
+                  "components": [
+                    0,
+                    2,
+                    4,
+                    7,
+                    9,
+                    11,
+                    16,
+                    20,
+                    22
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 576,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 80512,
+                    "UB": 124012
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 81088,
+                    "UB": 124012
+                  },
+                  "within_capacity": true
+                },
+                {
+                  "components": [
+                    25,
+                    30,
+                    35,
+                    36,
+                    39,
+                    40,
+                    42,
+                    45,
+                    46,
+                    48
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 9216,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 69888,
+                    "UB": 20884
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 79104,
+                    "UB": 20884
+                  },
+                  "within_capacity": true
+                }
+              ],
+              "max_open_components_bound": 10,
+              "all_raw_envelopes_fit": true
+            },
+            {
+              "core": 2,
+              "components": 17,
+              "shared_tensors": 10,
+              "cohorts": [
+                {
+                  "components": [
+                    1,
+                    3,
+                    5,
+                    10,
+                    12,
+                    13,
+                    18,
+                    21
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 5184,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 62976,
+                    "UB": 129106
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 68160,
+                    "UB": 129106
+                  },
+                  "within_capacity": true
+                },
+                {
+                  "components": [
+                    23,
+                    32,
+                    33,
+                    34,
+                    38,
+                    41,
+                    43,
+                    44,
+                    47
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 10368,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 60160,
+                    "UB": 16784
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 70528,
+                    "UB": 16784
+                  },
+                  "within_capacity": true
+                }
+              ],
+              "max_open_components_bound": 9,
+              "all_raw_envelopes_fit": true
+            }
+          ],
+          "certificate_scope": "raw tensor priority-prefix envelope and component open-count only",
+          "zero_spill_claim": false,
+          "limitations": [
+            "shared input residency spans cohorts and is retained in reserves",
+            "oversized singleton cohorts are emitted without a memory certificate",
+            "no Step2/Step3 or global runtime feasibility guarantee"
+          ],
+          "component_pressure": {
+            "largest_component_pipe_work": {
+              "PIPE_M": 10480,
+              "PIPE_V": 4026
+            },
+            "balanced_pipe_work_lower_bound": {
+              "PIPE_M": 11858,
+              "PIPE_V": 10746
+            },
+            "component_exceeds_balanced_pipe_work": false,
+            "shared_external_bytes": {
+              "L1": 29376
+            },
+            "shared_external_exceeds_capacity": false
+          },
+          "adaptive_route": "component_envelope",
+          "index_constructions": 1,
+          "base_construct_calls": 1,
+          "repair_construct_calls": 0,
+          "repair_trigger": {
+            "recognized": false,
+            "large_crossings": 0,
+            "large_crossing_bytes": 0,
+            "reason": "vector lanes: all eligible ops must use PIPE_V"
+          },
+          "route_limitations": "unchanged general plan; no official feasibility/score/zero-spill certificate"
+        },
+        "candidate_detail": {
+          "selected": "join_gap_candidate",
+          "chains": 479,
+          "paired_joins": 182,
+          "operations_inserted_before_tail": 640,
+          "arithmetic_placement_choices": 1983,
+          "choice_bound": 4311,
+          "modeled_compute_finish": 12106,
+          "online_E0_calls": 0,
+          "scope": "Static communication/compute calendar; no capacity, COPY contention, or optimality claim."
+        },
+        "constructed_plans": 2,
+        "oracle_requests": 2,
+        "selected": "candidate",
+        "score_scope": "complete final plans returned by both constructors; no downstream repair",
+        "score_evidence": "injected_oracle_complete_plan_scores",
+        "baseline_score": [
+          17351,
+          38592
+        ],
+        "candidate_score": [
+          16286,
+          347414
+        ],
+        "reason": "strict_lexicographic_improvement"
+      },
+      "plan_sha256": "f520975d9f42a159901fc239f5ce28ec2100632e0d9f385912a65fa5bdc99dff",
+      "stop_reason": "single_structural_route_completed",
+      "finished_at": "2026-09-24T21:28:09.089531+00:00",
+      "internal_wall_seconds": 1.0421655409736559
+    },
+    "selected_comparison": {
+      "kind": "selected_native",
+      "record": {
+        "status": "ok",
+        "makespan": 16286,
+        "data_movement_bytes": {
+          "original_graph_copy_bytes": 554898,
+          "scheduled_copy_bytes": 902312,
+          "added_copy_bytes": 347414,
+          "partition_added_copy_bytes": 347414,
+          "spill_added_copy_bytes": 0
+        },
+        "cross_task_traffic": 76356,
+        "route": "native",
+        "execution": "native_replayed",
+        "numeric_kind": "computed",
+        "replay_iterations": 1594,
+        "preparation_seconds": 0.09360108303371817,
+        "replay_seconds": 0.0003070419770665467,
+        "compilation_cache_hit": false,
+        "engine": "p2-e2-native-search-v1",
+        "problem": 2,
+        "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "wall_seconds": 0.09485483402386308,
+        "cpu_seconds": 0.090256,
+        "cache": {
+          "hits": 0,
+          "misses": 1,
+          "evictions": 0,
+          "bypasses": 0,
+          "native_calls": 1,
+          "fallback_calls": 0,
+          "full_calls": 0,
+          "accounted_bytes": 124165,
+          "limit_bytes": 16777216,
+          "entries": 1,
+          "max_entries": 32
+        }
+      },
+      "plan_canonical_sha256": "ef852f47364c22d030005b9da6c9eebf240e7533c67f039db579aad535051632"
+    },
+    "independent_e0_in_flight": false,
+    "e0_process": {
+      "argv": [
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/.venv/bin/python",
+        "-B",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/data/raw/a/official/code/multicore_cut_evaluate_problem_2.py",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/data/raw/a/official/data/case_012.json",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/output/p2-gap-full500-20260925-s59/20260924T2124Z-s59ee/012-k3/plan.json",
+        "--config",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/data/raw/a/official/data/config.txt",
+        "--output",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/output/p2-gap-full500-20260925-s59/20260924T2124Z-s59ee/012-k3/result.json",
+        "--trace-output",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/output/p2-gap-full500-20260925-s59/20260924T2124Z-s59ee/012-k3/trace.json",
+        "--log-output",
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/output/p2-gap-full500-20260925-s59/20260924T2124Z-s59ee/012-k3/official.log"
+      ],
+      "started_at": "2026-09-24T21:28:09.741481Z",
+      "status": "ok",
+      "sample_interval_seconds": 0.05,
+      "observed_peak_rss_bytes": 42074112,
+      "rss_samples": 3,
+      "cleanup_killed_pids": [],
+      "pid": 952,
+      "observer_inclusive_peak_rss_bytes": 180420608,
+      "exit_code": 0,
+      "surviving_pids": [],
+      "finished_at": "2026-09-24T21:28:10.145784Z",
+      "wall_seconds": 0.404308165947441
+    },
+    "result": {
+      "makespan": 16286,
+      "movement": {
+        "original_graph_copy_bytes": 554898,
+        "scheduled_copy_bytes": 902312,
+        "added_copy_bytes": 347414,
+        "partition_added_copy_bytes": 347414,
+        "spill_added_copy_bytes": 0
+      },
+      "cross_task_traffic": 76356,
+      "result_sha256": "355eefe9f03d2864a70fd008ff0215feb8d8bab2c800063df77eabb3e8a95090"
+    },
+    "baseline_m": 17351,
+    "makespan_delta": -1065,
+    "old_new": {
+      "old_makespan": 17351,
+      "new_makespan": 16286,
+      "old_added_ddr_bytes": 38592,
+      "new_added_ddr_bytes": 347414,
+      "outer_solver_wall_seconds": 1.3394114580005407,
+      "outer_e0_wall_seconds": 0.404308165947441
+    },
+    "status": "accepted"
+  },
+  "raw_evidence": {
+    "solver_process": {
+      "path": "results/a/q2-nikolastarx/gap-full500-archive-20260924T2124Z-s59/shard-051-100/012-k3/solver-process.json",
+      "sha256": "15cd3ff8e961f49d45ee801f5574b2eb677137e494c6f6e3a71160b01daa131d"
+    },
+    "e0_process": {
+      "path": "results/a/q2-nikolastarx/gap-full500-archive-20260924T2124Z-s59/shard-051-100/012-k3/e0-process.json",
+      "sha256": "7d93644f1405117ebaa0dc0898efc0a82c130688503413af8b1eac3ad2ee8bd2"
+    },
+    "online_ledger": {
+      "path": "results/a/q2-nikolastarx/gap-full500-archive-20260924T2124Z-s59/shard-051-100/012-k3/online-ledger.json",
+      "sha256": "5b154e3ac3d0b5846e0488989cd3227e8c03947e894caf6769d8513654de8842"
+    }
+  }
+}
