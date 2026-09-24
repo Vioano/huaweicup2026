@@ -1,0 +1,245 @@
+{
+  "schema": "q3-leaf-lookahead-audit-v1",
+  "source_commit": "c2e3f5665cab31b943133679ab0c024a0b3db920",
+  "status": "complete",
+  "official_code_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+  "source_inputs_all_match": true,
+  "evaluations": 7,
+  "new_p3": 4,
+  "new_p2": 3,
+  "solver_calls": 0,
+  "elapsed_seconds": 27.268460125022102,
+  "outputs": [
+    {
+      "case_id": "058",
+      "variant": "forest",
+      "problem": 3,
+      "plan_sha256": "732a8cf5237f26e578e96211d984a5e35a4d00818cfd50f0e1fa9eac7dfc35b0",
+      "result_sha256": "2745782eef0f8aa873000a4274b9a36db7da02fd3e702b5b8435e15a4f34e9f5",
+      "M": 1031313
+    },
+    {
+      "case_id": "058",
+      "variant": "band_pair",
+      "problem": 3,
+      "plan_sha256": "947a29890d9e6c4f38a16f23636ef1ebbae8a813a83fa532874bac1f558e5b85",
+      "result_sha256": "86506fad908ba9a737ec715d0f7ab96d1fc0adb0d22e01abb8f644242c97e0f7",
+      "M": 897619
+    },
+    {
+      "case_id": "058",
+      "variant": "band_pair",
+      "problem": 2,
+      "plan_sha256": "947a29890d9e6c4f38a16f23636ef1ebbae8a813a83fa532874bac1f558e5b85",
+      "result_sha256": "cc246e6dc76abbae789787f6986df0205cae8b8488a3e7d8a94877a94ea8ccf3",
+      "M": 899997
+    },
+    {
+      "case_id": "079",
+      "variant": "forest",
+      "problem": 3,
+      "plan_sha256": "1351bb75ccae955231404b4042ea14edec3cfa731ddaae821d0af3886a72b233",
+      "result_sha256": "bc5b3202803b373fb45d08049f630974bf36507a127bd55bc63d8296a3115fdf",
+      "M": 5984184
+    },
+    {
+      "case_id": "079",
+      "variant": "forest",
+      "problem": 2,
+      "plan_sha256": "1351bb75ccae955231404b4042ea14edec3cfa731ddaae821d0af3886a72b233",
+      "result_sha256": "40161b1532389bfc205ebcc0986658955937a26d78262b27cbd199272abfe59a",
+      "M": 5984609
+    },
+    {
+      "case_id": "079",
+      "variant": "band_pair",
+      "problem": 3,
+      "plan_sha256": "3ce3fc2527fb2d07a8ebe0bd734e4b506d19f6b3032a41ac945b65c2cb329c79",
+      "result_sha256": "e1838d7494aab28bbb325a0e584a4d4e3b671ad5123f48058a0ed10d14b5cfcf",
+      "M": 6006541
+    },
+    {
+      "case_id": "079",
+      "variant": "band_pair",
+      "problem": 2,
+      "plan_sha256": "3ce3fc2527fb2d07a8ebe0bd734e4b506d19f6b3032a41ac945b65c2cb329c79",
+      "result_sha256": "e365d3e7cee6963295a70b68f422d2adf4995a039cb7f83abcd772489a136dcf",
+      "M": 6008549
+    }
+  ],
+  "baseline_deltas_P3": [
+    {
+      "case_id": "058",
+      "variant": "forest",
+      "delta_P3_M": 26494,
+      "delta_extra_bytes": 348160,
+      "delta_spill_bytes": 348160,
+      "delta_hit_bytes": 0
+    },
+    {
+      "case_id": "058",
+      "variant": "band_pair",
+      "delta_P3_M": -27894,
+      "delta_extra_bytes": 126976,
+      "delta_spill_bytes": 126976,
+      "delta_hit_bytes": -618496
+    },
+    {
+      "case_id": "079",
+      "variant": "forest",
+      "delta_P3_M": -91288,
+      "delta_extra_bytes": 184320,
+      "delta_spill_bytes": 184320,
+      "delta_hit_bytes": -12288
+    },
+    {
+      "case_id": "079",
+      "variant": "band_pair",
+      "delta_P3_M": -159077,
+      "delta_extra_bytes": 409600,
+      "delta_spill_bytes": 409600,
+      "delta_hit_bytes": 212992
+    }
+  ],
+  "static_projection": [
+    {
+      "case_id": "058",
+      "variant": "forest",
+      "owner_equal": true,
+      "MV_projection_equal": true,
+      "candidate_MV_by_core": [
+        {
+          "PIPE_M": 1683,
+          "PIPE_V": 1632
+        },
+        {
+          "PIPE_M": 1683,
+          "PIPE_V": 1632
+        },
+        {
+          "PIPE_M": 1683,
+          "PIPE_V": 1632
+        },
+        {
+          "PIPE_M": 1683,
+          "PIPE_V": 1632
+        },
+        {
+          "PIPE_M": 1683,
+          "PIPE_V": 1632
+        }
+      ]
+    },
+    {
+      "case_id": "058",
+      "variant": "band_pair",
+      "owner_equal": true,
+      "MV_projection_equal": true,
+      "candidate_MV_by_core": [
+        {
+          "PIPE_M": 1683,
+          "PIPE_V": 1632
+        },
+        {
+          "PIPE_M": 1683,
+          "PIPE_V": 1632
+        },
+        {
+          "PIPE_M": 1683,
+          "PIPE_V": 1632
+        },
+        {
+          "PIPE_M": 1683,
+          "PIPE_V": 1632
+        },
+        {
+          "PIPE_M": 1683,
+          "PIPE_V": 1632
+        }
+      ]
+    },
+    {
+      "case_id": "079",
+      "variant": "forest",
+      "owner_equal": true,
+      "MV_projection_equal": true,
+      "candidate_MV_by_core": [
+        {
+          "PIPE_M": 1914,
+          "PIPE_V": 1856
+        },
+        {
+          "PIPE_M": 1914,
+          "PIPE_V": 1856
+        },
+        {
+          "PIPE_M": 1914,
+          "PIPE_V": 1856
+        },
+        {
+          "PIPE_M": 1881,
+          "PIPE_V": 1824
+        },
+        {
+          "PIPE_M": 1881,
+          "PIPE_V": 1824
+        }
+      ]
+    },
+    {
+      "case_id": "079",
+      "variant": "band_pair",
+      "owner_equal": true,
+      "MV_projection_equal": true,
+      "candidate_MV_by_core": [
+        {
+          "PIPE_M": 1914,
+          "PIPE_V": 1856
+        },
+        {
+          "PIPE_M": 1914,
+          "PIPE_V": 1856
+        },
+        {
+          "PIPE_M": 1914,
+          "PIPE_V": 1856
+        },
+        {
+          "PIPE_M": 1881,
+          "PIPE_V": 1824
+        },
+        {
+          "PIPE_M": 1881,
+          "PIPE_V": 1824
+        }
+      ]
+    }
+  ],
+  "same_plan_P2_P3": [
+    {
+      "case_id": "058",
+      "variant": "band_pair",
+      "plan_sha256": "947a29890d9e6c4f38a16f23636ef1ebbae8a813a83fa532874bac1f558e5b85",
+      "P2_M": 899997,
+      "P3_M": 897619,
+      "CacheGain": 1.0026492309097734
+    },
+    {
+      "case_id": "079",
+      "variant": "forest",
+      "plan_sha256": "1351bb75ccae955231404b4042ea14edec3cfa731ddaae821d0af3886a72b233",
+      "P2_M": 5984609,
+      "P3_M": 5984184,
+      "CacheGain": 1.000071020543486
+    },
+    {
+      "case_id": "079",
+      "variant": "band_pair",
+      "plan_sha256": "3ce3fc2527fb2d07a8ebe0bd734e4b506d19f6b3032a41ac945b65c2cb329c79",
+      "P2_M": 6008549,
+      "P3_M": 6006541,
+      "CacheGain": 1.000334302221528
+    }
+  ],
+  "scope": "Raw evidence rehashed; fixed baseline plan/result hashes independently read from forest/band artifact commits. Static M/V counts derived from graph ops and core schedules; no evaluator or Step3 run."
+}

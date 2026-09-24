@@ -1,0 +1,79 @@
+"""Compare one band-DP plus leaf-lookahead plan within the three-E0 budget."""
+import hashlib
+
+from . import forest_solve
+from .construct import ROOT, UnsupportedStructure
+from .band_lookahead import construct
+from .pipe_bound import UnsupportedBound, analyze
+from .safe_solve import encoded, main as run_solver
+from evaluation_validation import EvaluationValidationError, read_required_settings
+
+
+def evaluate_candidates(index, cores, evaluate, save):
+    winner, calls, records, selection = forest_solve.evaluate_candidates(
+        index, cores, evaluate, save)
+    policy = {
+        'total_e0_limit': 3,
+        'evaluation_calls': calls,
+        'acceptance': 'strictly_lower_official_makespan_than_fresh_forest_incumbent',
+    }
+    if calls >= 3:
+        policy.update(status='skip', skip_reason='three_call_budget_already_used',
+                      strategy='band_pair_one_leaf_lookahead')
+        return winner, calls, records, {**selection, 'band_lookahead_policy': policy}
+
+    try:
+        proposal, metadata = construct(index, cores)
+    except UnsupportedStructure as error:
+        policy.update(status='skip', skip_reason=str(error),
+                      strategy='band_pair_one_leaf_lookahead')
+        return winner, calls, records, {**selection, 'band_lookahead_policy': policy}
+
+    policy.update(status='constructed', strategy=metadata['strategy'])
+    record = {'name': 'band_pair_one_leaf_lookahead',
+              'strategy': metadata['strategy'], 'metadata': metadata,
+              'makespan': None}
+    selection = {**selection, 'band_lookahead_policy': policy}
+    if encoded(proposal) == encoded(winner[0]):
+        policy['status'] = 'duplicate'
+        return winner, calls, records + [{**record, 'status': 'duplicate'}], selection
+
+    config = ROOT / 'data/raw/a/official/data/config.txt'
+    delay = read_required_settings(
+        config, 'multicore_scene_b', ('cross_core_copy_delay_cycles',)
+    )['cross_core_copy_delay_cycles']
+    try:
+        lower = analyze(index.graph, proposal, delay)[
+            'with_cross_core_delay']['lower_bound_cycles']
+        record['certified_lower_bound_cycles'] = lower
+        if lower >= winner[1]['makespan']:
+            record.update(status='bound_pruned', unscored_plan=proposal,
+                          unscored_plan_sha256=hashlib.sha256(encoded(proposal)).hexdigest())
+            policy.update(status='bound_pruned', lower_bound_cycles=lower)
+            return winner, calls, records + [record], selection
+    except UnsupportedBound as error:
+        record['bound_unavailable'] = str(error)
+
+    calls += 1
+    policy.update(status='evaluating', evaluation_calls=calls)
+    try:
+        result = evaluate(proposal)
+    except EvaluationValidationError as error:
+        record.update(status='rejected', reason=str(error))
+        policy['status'] = 'rejected'
+        return winner, calls, records + [record], selection
+    artifacts = save('band_pair_one_leaf_lookahead', proposal, result) or {}
+    record.update(status='ok', makespan=result['makespan'], artifacts=artifacts)
+    policy['status'] = 'evaluated'
+    if result['makespan'] < winner[1]['makespan']:
+        winner = proposal, result, metadata['strategy']
+        policy['status'] = 'accepted'
+    return winner, calls, records + [record], selection
+
+
+def main():
+    return run_solver(policy=evaluate_candidates, candidate_limit=3)
+
+
+if __name__ == '__main__':
+    main()
