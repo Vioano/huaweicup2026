@@ -1,0 +1,215 @@
+{
+  "case_id": "038",
+  "cores": 2,
+  "variant": "unified-general-gap-e0",
+  "solver_args": [],
+  "parameters": {
+    "structural_router": "stage_then_attention_then_gap_vs_anchor_else_guarded",
+    "candidate_limit": 2,
+    "selection": "strictly smaller official makespan than the fresh structural anchor"
+  },
+  "e0_call_limit": 2,
+  "job_key": "038-k2-unified-general-gap-e0",
+  "stage_id": "shard-10",
+  "started_at": "2026-09-24T18:41:10.053356Z",
+  "status": "ok",
+  "calls": {
+    "solver": 1,
+    "E0": 2,
+    "E1": 0,
+    "E2": 0
+  },
+  "e0_reserved": 2,
+  "artifacts": {
+    "plan": {
+      "path": "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s10/cells/038-k2-unified-general-gap-e0/case_038_multicore_res.json",
+      "sha256": "b4ec2480c5f9ddefbfc595750894b0c975fe7b2577e3bb076b7bf1be0fb83461"
+    },
+    "result": {
+      "path": "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s10/cells/038-k2-unified-general-gap-e0/evidence/result.json.gz",
+      "sha256": "e0d639cc54cbeea6d2735309fd22e8413fcaaf4da5fe879d69cf9be5fc7a5028"
+    },
+    "trace": {
+      "path": "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s10/cells/038-k2-unified-general-gap-e0/evidence/receipt.json",
+      "sha256": "d59d2d56fc4c6ffceeecb38055c610004a4ca5c24e4b5d7d88181c484f774748"
+    }
+  },
+  "run_path": "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s10/cells/038-k2-unified-general-gap-e0/run.json",
+  "failure": null,
+  "solver_process": {
+    "status": "ok",
+    "reason": null,
+    "exit_code": 0,
+    "wall_seconds": 2.7818387909792364,
+    "argv": [
+      "python",
+      "-B",
+      "-m",
+      "src.q3.expanded_solve",
+      "data/raw/a/official/data/case_038.json",
+      "--cores",
+      "2",
+      "-o",
+      "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s10/cells/038-k2-unified-general-gap-e0/case_038_multicore_res.json",
+      "--evidence",
+      "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s10/cells/038-k2-unified-general-gap-e0/evidence"
+    ],
+    "process_tree_cleanup": "POSIX process group",
+    "memory": {
+      "limit_bytes": null,
+      "sampled_peak_rss_bytes": null,
+      "poll_seconds": null,
+      "scope": "sum of process-group RSS / Windows job WorkingSetSize; sampled tripwire, not OS hard limit; shared pages may be counted more than once"
+    },
+    "log_derivation": "stdout/stderr preserve bytes except repository and interpreter absolute paths replaced by markers"
+  },
+  "identity": {
+    "graph_sha256": "69575019d0670552c74f386508042357a94419ed2f49d18a382a71a8cf39e5ac",
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+    "plan_sha256": "b4ec2480c5f9ddefbfc595750894b0c975fe7b2577e3bb076b7bf1be0fb83461"
+  },
+  "makespan_cycles": 666804,
+  "data_movement_bytes": {
+    "original_graph_copy_bytes": 2802950,
+    "scheduled_copy_bytes": 8359174,
+    "added_copy_bytes": 5556224,
+    "partition_added_copy_bytes": 5218304,
+    "spill_added_copy_bytes": 337920
+  },
+  "cache_stats": {
+    "copy_in_hits": 36,
+    "copy_in_misses": 1780,
+    "hit_bytes": 177664,
+    "miss_bytes": 5483786,
+    "hits": 36,
+    "accesses": 1816,
+    "hit_rate": 0.031381359898965816
+  },
+  "solver_receipt": {
+    "strategy": "dag_join_gap_list",
+    "selected_strategy": "dag_join_gap_list",
+    "official_e0_calls": 2,
+    "candidate_limit": 2,
+    "seed_selection": {
+      "rule": "general_affine",
+      "word_declined": "requires M -> V* -> M components",
+      "general_proposal": "frozen_fang_gap_insertion",
+      "acceptance": "strictly_lower_official_makespan_than_fresh_anchor",
+      "router": {
+        "stage_request": {
+          "collector_policy": "rotate_heavy",
+          "source_count": 2594,
+          "lanes_by_core": [
+            1297,
+            1297
+          ],
+          "heaviest_lane_cores": [
+            0,
+            1
+          ],
+          "feature_scope": "Provisional source-count partition; lane/load meaning is confirmed only by the strict stage guard."
+        },
+        "migration_construct_attempts": 0,
+        "migration_candidate_plans": 0,
+        "stage_construct_attempts": 1,
+        "stage_candidate_plans": 0,
+        "attention_construct_attempts": 1,
+        "attention_candidate_plans": 0,
+        "guarded_policy_invocations": 0,
+        "stage_guard_reason": "requires one weak component",
+        "attention_cross_delay_cycles": 500,
+        "attention_guard_reason": "no closed attention query row matched",
+        "route": "general_gap",
+        "route_e0_limit": 2,
+        "evaluation_calls": 2,
+        "count_scope": "Router attempts only; guarded internal construction/decision records are preserved unchanged.",
+        "general_gap_policy_invocations": 1
+      }
+    },
+    "candidates": [
+      {
+        "name": "seed",
+        "strategy": "affine_eighth",
+        "status": "ok",
+        "makespan": 669439,
+        "metadata": {
+          "strategy": "affine_eighth",
+          "components": 130,
+          "eligible_ops": 5907,
+          "cores": 2
+        },
+        "artifacts": {
+          "plan": {
+            "path": "seed/plan.json",
+            "sha256": "3c6f96bec235f325ffebbb20a5c0e6e97af1f3dc73e72603ca622cbc02942d47"
+          },
+          "result": {
+            "path": "seed/result.json.gz",
+            "sha256": "c2d810a8dd2527bced5e4843cf89bfc8162d79f8d6fc1b43397305932ed52a62"
+          }
+        }
+      },
+      {
+        "name": "gap",
+        "strategy": "dag_join_gap_list",
+        "metadata": {
+          "guard": true,
+          "selected": "dag_join_gap_list",
+          "strategy": "dag_join_gap_list",
+          "cores": 2,
+          "upstream_commit": "a37eb931a22fb7df7e0d00d193538ce5289ae045",
+          "official_e0_calls": 0,
+          "chains": 5224,
+          "paired_joins": 1931,
+          "operations_inserted_before_tail": 1589,
+          "modeled_compute_finish": 663779,
+          "cross_chain_edges": 932,
+          "assumption": "persistent idle calendars; no official COPY/cache/capacity simulation"
+        },
+        "makespan": 666804,
+        "certified_lower_bound_cycles": 663709,
+        "status": "ok",
+        "artifacts": {
+          "plan": {
+            "path": "gap/plan.json",
+            "sha256": "b4ec2480c5f9ddefbfc595750894b0c975fe7b2577e3bb076b7bf1be0fb83461"
+          },
+          "result": {
+            "path": "gap/result.json.gz",
+            "sha256": "e0d639cc54cbeea6d2735309fd22e8413fcaaf4da5fe879d69cf9be5fc7a5028"
+          }
+        }
+      }
+    ],
+    "makespan": 666804,
+    "data_movement_bytes": {
+      "original_graph_copy_bytes": 2802950,
+      "scheduled_copy_bytes": 8359174,
+      "added_copy_bytes": 5556224,
+      "partition_added_copy_bytes": 5218304,
+      "spill_added_copy_bytes": 337920
+    },
+    "cache_stats": {
+      "copy_in_hits": 36,
+      "copy_in_misses": 1780,
+      "hit_bytes": 177664,
+      "miss_bytes": 5483786,
+      "hits": 36,
+      "accesses": 1816,
+      "hit_rate": 0.031381359898965816
+    },
+    "graph_sha256": "69575019d0670552c74f386508042357a94419ed2f49d18a382a71a8cf39e5ac",
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "plan_sha256": "b4ec2480c5f9ddefbfc595750894b0c975fe7b2577e3bb076b7bf1be0fb83461",
+    "result_sha256": "e0d639cc54cbeea6d2735309fd22e8413fcaaf4da5fe879d69cf9be5fc7a5028",
+    "evaluation_seconds": 1.7937197930004913,
+    "main_until_evidence_seconds": 2.6450319579744246,
+    "timing_note": "All E0 calls are online; use outer subprocess wall for full solver cost."
+  },
+  "evaluation_ledger": {
+    "path": "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s10/cells/038-k2-unified-general-gap-e0/evidence/evaluations.json",
+    "sha256": "55120c493cd25ea1c5b72f1b65e770fad291a5658e2069fb57d4c514a345a34f"
+  },
+  "finished_at": "2026-09-24T18:41:12.938680Z"
+}

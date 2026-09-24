@@ -1,0 +1,213 @@
+{
+  "case_id": "081",
+  "cores": 1,
+  "variant": "unified-general-gap-e0",
+  "solver_args": [],
+  "parameters": {
+    "structural_router": "stage_then_attention_then_gap_vs_anchor_else_guarded",
+    "candidate_limit": 2,
+    "selection": "strictly smaller official makespan than the fresh structural anchor"
+  },
+  "e0_call_limit": 2,
+  "job_key": "081-k1-unified-general-gap-e0",
+  "stage_id": "shard-02",
+  "started_at": "2026-09-24T18:39:29.115257Z",
+  "status": "ok",
+  "calls": {
+    "solver": 1,
+    "E0": 2,
+    "E1": 0,
+    "E2": 0
+  },
+  "e0_reserved": 2,
+  "artifacts": {
+    "plan": {
+      "path": "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s02/cells/081-k1-unified-general-gap-e0/case_081_multicore_res.json",
+      "sha256": "026937095879b4415df200a791d05e882a4278f4376d66ed5ec8f9a572bf3f43"
+    },
+    "result": {
+      "path": "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s02/cells/081-k1-unified-general-gap-e0/evidence/result.json.gz",
+      "sha256": "b4efe857300555ef1dac04632684caf17f3a6e187d56e06cf484a6d9e9de6130"
+    },
+    "trace": {
+      "path": "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s02/cells/081-k1-unified-general-gap-e0/evidence/receipt.json",
+      "sha256": "10af629892e892fc1f16508593fd8377a070b765f222ea558b619ee145e645fa"
+    }
+  },
+  "run_path": "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s02/cells/081-k1-unified-general-gap-e0/run.json",
+  "failure": null,
+  "solver_process": {
+    "status": "ok",
+    "reason": null,
+    "exit_code": 0,
+    "wall_seconds": 1.4397947079851292,
+    "argv": [
+      "python",
+      "-B",
+      "-m",
+      "src.q3.expanded_solve",
+      "data/raw/a/official/data/case_081.json",
+      "--cores",
+      "1",
+      "-o",
+      "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s02/cells/081-k1-unified-general-gap-e0/case_081_multicore_res.json",
+      "--evidence",
+      "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s02/cells/081-k1-unified-general-gap-e0/evidence"
+    ],
+    "process_tree_cleanup": "POSIX process group",
+    "memory": {
+      "limit_bytes": null,
+      "sampled_peak_rss_bytes": null,
+      "poll_seconds": null,
+      "scope": "sum of process-group RSS / Windows job WorkingSetSize; sampled tripwire, not OS hard limit; shared pages may be counted more than once"
+    },
+    "log_derivation": "stdout/stderr preserve bytes except repository and interpreter absolute paths replaced by markers"
+  },
+  "identity": {
+    "graph_sha256": "7c642799a54f8083f56c74d1e260ec010e3a83c37702770c862d722408c7a41e",
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+    "plan_sha256": "026937095879b4415df200a791d05e882a4278f4376d66ed5ec8f9a572bf3f43"
+  },
+  "makespan_cycles": 151795,
+  "data_movement_bytes": {
+    "original_graph_copy_bytes": 1741140,
+    "scheduled_copy_bytes": 1741140,
+    "added_copy_bytes": 0,
+    "partition_added_copy_bytes": 0,
+    "spill_added_copy_bytes": 0
+  },
+  "cache_stats": {
+    "copy_in_hits": 0,
+    "copy_in_misses": 680,
+    "hit_bytes": 0,
+    "miss_bytes": 1044820,
+    "hits": 0,
+    "accesses": 680,
+    "hit_rate": 0.0
+  },
+  "solver_receipt": {
+    "strategy": "affine_eighth",
+    "selected_strategy": "affine_eighth",
+    "official_e0_calls": 2,
+    "candidate_limit": 2,
+    "seed_selection": {
+      "rule": "general_affine",
+      "word_declined": "requires M -> V* -> M components",
+      "general_proposal": "frozen_fang_gap_insertion",
+      "acceptance": "strictly_lower_official_makespan_than_fresh_anchor",
+      "router": {
+        "stage_request": {
+          "collector_policy": "fixed",
+          "source_count": 680,
+          "lanes_by_core": [
+            680
+          ],
+          "heaviest_lane_cores": [
+            0
+          ],
+          "feature_scope": "Provisional source-count partition; lane/load meaning is confirmed only by the strict stage guard."
+        },
+        "migration_construct_attempts": 0,
+        "migration_candidate_plans": 0,
+        "stage_construct_attempts": 1,
+        "stage_candidate_plans": 0,
+        "attention_construct_attempts": 1,
+        "attention_candidate_plans": 0,
+        "guarded_policy_invocations": 0,
+        "stage_guard_reason": "requires one weak component",
+        "attention_cross_delay_cycles": 500,
+        "attention_guard_reason": "no closed attention query row matched",
+        "route": "general_gap",
+        "route_e0_limit": 2,
+        "evaluation_calls": 2,
+        "count_scope": "Router attempts only; guarded internal construction/decision records are preserved unchanged.",
+        "general_gap_policy_invocations": 1
+      }
+    },
+    "candidates": [
+      {
+        "name": "seed",
+        "strategy": "affine_eighth",
+        "status": "ok",
+        "makespan": 151795,
+        "metadata": {
+          "strategy": "affine_eighth",
+          "components": 85,
+          "eligible_ops": 3485,
+          "cores": 1
+        },
+        "artifacts": {
+          "plan": {
+            "path": "seed/plan.json",
+            "sha256": "026937095879b4415df200a791d05e882a4278f4376d66ed5ec8f9a572bf3f43"
+          },
+          "result": {
+            "path": "seed/result.json.gz",
+            "sha256": "b4efe857300555ef1dac04632684caf17f3a6e187d56e06cf484a6d9e9de6130"
+          }
+        }
+      },
+      {
+        "name": "gap",
+        "strategy": "dag_join_gap_list",
+        "metadata": {
+          "guard": true,
+          "selected": "dag_join_gap_list",
+          "strategy": "dag_join_gap_list",
+          "cores": 1,
+          "upstream_commit": "a37eb931a22fb7df7e0d00d193538ce5289ae045",
+          "official_e0_calls": 0,
+          "chains": 2040,
+          "paired_joins": 765,
+          "operations_inserted_before_tail": 0,
+          "modeled_compute_finish": 151725,
+          "cross_chain_edges": 0,
+          "assumption": "persistent idle calendars; no official COPY/cache/capacity simulation"
+        },
+        "makespan": 151795,
+        "certified_lower_bound_cycles": 151725,
+        "status": "ok",
+        "artifacts": {
+          "plan": {
+            "path": "gap/plan.json",
+            "sha256": "74cffff62b9c723caec05f7fb41dd0428c20262ef0444275fa40f655cc7914a1"
+          },
+          "result": {
+            "path": "gap/result.json.gz",
+            "sha256": "fa10dfcd2438a539e12b0d033c1202579f1757d0ccfaa0d5d9379d9165c2512d"
+          }
+        }
+      }
+    ],
+    "makespan": 151795,
+    "data_movement_bytes": {
+      "original_graph_copy_bytes": 1741140,
+      "scheduled_copy_bytes": 1741140,
+      "added_copy_bytes": 0,
+      "partition_added_copy_bytes": 0,
+      "spill_added_copy_bytes": 0
+    },
+    "cache_stats": {
+      "copy_in_hits": 0,
+      "copy_in_misses": 680,
+      "hit_bytes": 0,
+      "miss_bytes": 1044820,
+      "hits": 0,
+      "accesses": 680,
+      "hit_rate": 0.0
+    },
+    "graph_sha256": "7c642799a54f8083f56c74d1e260ec010e3a83c37702770c862d722408c7a41e",
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "plan_sha256": "026937095879b4415df200a791d05e882a4278f4376d66ed5ec8f9a572bf3f43",
+    "result_sha256": "b4efe857300555ef1dac04632684caf17f3a6e187d56e06cf484a6d9e9de6130",
+    "evaluation_seconds": 0.9340241669851821,
+    "main_until_evidence_seconds": 1.2844969159923494,
+    "timing_note": "All E0 calls are online; use outer subprocess wall for full solver cost."
+  },
+  "evaluation_ledger": {
+    "path": "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s02/cells/081-k1-unified-general-gap-e0/evidence/evaluations.json",
+    "sha256": "8dcd3f3004c2f623f874c46cd0e8a0cc5a22cd78835b3b2331087f32a8176c97"
+  },
+  "finished_at": "2026-09-24T18:39:30.755729Z"
+}
