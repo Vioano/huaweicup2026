@@ -1,26 +1,30 @@
 # 方案成绩台：benchmark 统一交付协议
 
-版本：`board-submission-v1`，2026-09-24。正式名称为 **方案成绩台**。
+版本：`board-submission-v1`，2026-09-24。正式名称为 **方案成绩台**。本次仅精简操作说明和通知模板；JSON格式、校验器与入榜要求不变，已有导出器无需迁移。
 
 维护与接收：`nikolastarx/s-7c98eab1093e485291eacb04fd7c59ff`（@NikolaStarx），[会话登记](https://github.com/huaweibei123/huaweicup2026/issues/26#issuecomment-5813828246)。原调度 `s-a5bdb19389ee43d686b7976d3bcdf766` 已交出网站代码、协议、中央导入与运行服务的写权，继续负责公共分工、Atlas、科学验收和主线整合。公共职责已合入 [主线1ee2c271](https://github.com/huaweibei123/huaweicup2026/commit/1ee2c271c43bb14dd6c5de6b9ca7041b55d80916)。数据生产、接收、上台、独立复跑、算法验收是不同状态。
 
 **两位队友的 Agent 以后将 benchmark 统一交给本维护 session；我检查固定提交、格式与证据后更新方案成绩台。** farmer 沿 Issue14，LYX 沿 Issue15。原 runner/聚合/算法写区和预算不变；只导出现有结果，不为本协议重启、补跑、增加候选或改变超时。固定算法版本的任务卡仍决定实验范围。
 
-## 1. 最短交付流程
+## 1. 日常交付：导出 → 预检 → 通知
 
-1. 在本人原结果目录导出 `board-feed-<UTC时间>-<唯一后缀>.json`，引用同一提交内的原始 plan/result/run；保留原 CSV、日志及失败记录。
-2. 顶层使用 `{"schema_version":1,"submission_version":1,"records":[...]}`。每次图/问题/核数/种子/重复实验分别一条，复制[未运行模板](examples/submission-v1.json)。模板不是成绩，替换示例ID和资料，不提交示意数值。
-3. 仓库根运行下面的**只读预检**；它在系统临时目录验证，不写中央库，不执行 solver/E0/E1/E2，不连接网络：
+**生产方 Agent 负责导出、归一化、计算哈希及预检；维护者负责接收、校验和上台。** 第2–5节是首次编写导出器或排查错误时的字段参考，不是每次交付都要手填的问卷。
 
-   ```sh
-   python3 src/benchmark_board/protocol.py results/你的目录/board-feed-唯一快照.json --submission
-   ```
+1. **脚本导出**：在本人结果目录生成新的 `board-feed-<UTC时间>-<唯一后缀>.json`，顶层为 `{"schema_version":1,"submission_version":1,"records":[...]}`；需入榜的成功记录引用同一提交内的最终 plan/result/run 原件。每次图/问题/核数/种子/重复实验一条，保留失败、超时和旧尝试。可从[未运行模板](examples/submission-v1.json)实现映射，但不逐格人工复制填写。
+2. **只读预检**：在仓库根运行下方命令，按输出字段路径修复格式问题，并查看未入榜原因；不修改官方原结果来凑格式。
+3. **提交并通知**：将 feed 与引用原件 push 到本人分支，按第6节发送固定提交和 feed 路径。算法、环境、覆盖、缺口等已在 feed/原件中记录的内容，无需在 Issue 再抄一遍。
 
-   Windows 可把 `python3` 换成项目 Python 的 `python`。`valid:true` 仅表示格式/现有字节检查通过；查看 `eligible` 与每条 `reported_or_failed.reasons`，证据缺失也可作为待核报告提交。退出码1表示结构错误，按字段路径修正；不得修改官方原结果以凑格式。
-4. 将 feed 和引用原件提交到本人分支并 push。数据提交SHA可以晚于求解器SHA；二者各司其职。附固定提交/PR，按第6节在原 Issue 发一条实质交付。
-5. 我读取同一固定提交，反馈接收条数、入榜/待核/失败数和原因；新增来源由我登记。网站现有服务每120秒发现允许分支的新feed，网页每5秒更新；运行服务停机时不承诺自动收取。队友不需要访问队长的localhost，也不向网页POST、传登录凭据或私钥。
+```sh
+python3 src/benchmark_board/protocol.py results/你的目录/board-feed-唯一快照.json --submission
+```
 
-首次格式适配有困难，可先交现有原件的固定索引与缺口，我在维护目录做适配；不能把协调成本转成重跑实验。旧 `schema_version:1` 数据继续留存，新增标准包声明 `submission_version:1`；旧feed不编辑覆盖。
+Windows 可使用项目 Python 的 `python`。预检只在系统临时目录检查格式和现有字节，不写中央库、不执行 solver/E0/E1/E2、不连接网络。退出码1表示结构错误；`valid:true` 不等于可入榜，仍须查看 `eligible` 和 `reported_or_failed.reasons`。缺证据可以如实提交报告，不能把未知填成0或猜测值。
+
+**重复工作在生产端自动化**：导出器对同一批次的算法来源、运行环境等公共信息配置一次，再展开到各条记录；逐例差异从原收据读取。同原因的未知项可由脚本生成对应 `missing_reasons`，但须逐项核实缺口，不能统一标未知来省略已有事实。实际 solver/runner/evaluator 版本不能用导出时 HEAD 代替。换了实际方法、版本或环境仍按第3节区分批次与尝试。
+
+只需上传用于本次成绩的最终原件；逐候选大件、完整 trace 和诊断日志不作为每次上台的必交项，生产方仍按原实验任务保全。补证使用原 attempt 的新 revision，重新运行使用新 attempt；不为协议重跑实验。已接收的旧格式快照及适配回执继续保留，后续常规导出由生产方完成；具体映射有疑问时给出字段和来源样例，由维护者澄清规则。
+
+维护者反馈接收条数、入榜/待核/失败数和原因，并登记新来源。运行服务每120秒发现允许分支的新 feed，网页每5秒更新；未登记分支或停机时不承诺自动收取。无需访问队长 localhost 或向网页 POST。旧 `schema_version:1` 数据兼容留存，新包声明 `submission_version:1`，不覆盖旧 feed。
 
 ## 2. 文件与编码
 
@@ -131,9 +135,9 @@ baseline必须为冻结官方单核A结果，不能用stub或优化solver k=1代
 - 维护回执列 `固定SHA / feed / 收到行数 / 新增与重复 / eligible / 待核及失败 / 拒收原因 / 页面可见范围`。Git送达、格式通过、网页可见、原件一致、独立复跑、算法终验逐项说明，不互相代签。
 - 该协议只收可共享结果；不收账号凭据、个人机器绝对路径或原始题面重复副本，不改变Actions停用规则。
 
-## 6. 队友Agent的发送模板
+## 6. 队友Agent的简短发送模板
 
-复制到本人原Issue（farmer #14，LYX #15），数据先push，再发固定链接：
+数据先 push，再发到本人原 Issue（farmer #14，LYX #15）。沿用 session/to/task 路由，只报告交付入口、实际预检和本次变化；不另做一份与 feed 重复的算法/环境/覆盖清单：
 
 ```text
 @NikolaStarx
@@ -141,16 +145,9 @@ session: <你的实际session>
 to: nikolastarx/s-7c98eab1093e485291eacb04fd7c59ff
 task: a-benchmark-board-maintenance / <原benchmark任务ID>
 
-交付方案成绩台：board-submission-v1
-固定数据提交: <40位SHA与组织主库链接>
-分支 / feed: <分支> / <仓库相对路径>
-算法: <algorithm_id / variant / solver_commit，多个分别列>
-runner / 评价后端: <各自入口及实际SHA>
-覆盖: <P/图/核数，新增/修订条数，成功/失败/超时/未运行>
-预检: <实际命令、退出码及输出>
-证据: <plan/result/run原件入口，缺口与原因>
-在途: <现有批次状态；本次仅导出，无新增计算>
-PR: <如有>
+数据: board-submission-v1；<分支> @ <40位SHA与组织主库链接>；feed=<仓库相对路径>
+预检: <实际命令、退出码；输出可附文件路径/固定链接>
+说明: <新增结果/补证/更正/撤回，以及未在feed记录的异常；无则写无>
 ```
 
 不另发空ACK；在下一次实质交付带实际已读协议版本和影响即可。此通知不证明队友Agent已经读取或采用；我按实际回执跟进。
