@@ -1,5 +1,6 @@
 from __future__ import annotations
 import argparse
+from datetime import datetime, timezone
 import json
 from pathlib import Path
 import random
@@ -18,6 +19,16 @@ def poll_delay(config,status,failures,cooldown_until):
     if config['role']=='leader' and status['state']=='online' and status.get('receive',{}).get('pending',0):
         delay=min(delay,2)
     return max(delay,cooldown_until-time.time(),status.get('error',{}).get('retry_after',0) if status.get('error') else 0)
+
+def runtime_stage(state,status,name,operation):
+    started=time.monotonic();timings=status.setdefault('runtime_stage_timings_ms',{})
+    status['runtime_stage']=name;status['runtime_stage_started_at']=datetime.now(timezone.utc).isoformat()
+    write_json(state/'status.json',status)
+    try: return operation()
+    finally:
+        timings[name]=round((time.monotonic()-started)*1000,1)
+        status['runtime_stage']=None;status['runtime_stage_started_at']=None
+        write_json(state/'status.json',status)
 
 
 def main():
@@ -50,26 +61,38 @@ def main():
             print(json.dumps(publish_release(e,args.repo,args.commit),ensure_ascii=False));return
         failures=0;last_release_check=0;last_main_sha=None
         while True:
+            iteration_started=time.monotonic()
             fresh=read_json(args.config)
             e.trusted=fresh['trusted_keys']
             e.config['poll_seconds']=min(max(fresh.get('poll_seconds',2),2),2)
             status=e.cycle()
             try:
-                if config.get('receive_releases',True) and remote.head(): receive_release(e,remote.head())
+                def receive_available_release():
+                    release_head=remote.head()
+                    if release_head: receive_release(e,release_head)
+                if config.get('receive_releases',True):
+                    runtime_stage(state,status,'receive_release',receive_available_release)
                 if config['role']=='leader' and config.get('release_repository') and time.monotonic()-last_release_check>5:
                     last_release_check=time.monotonic()
-                    repo=config['release_repository']
-                    # Approved main only; never change a working tree or accept a research branch as software.
-                    sha=subprocess.check_output(['git','-C',repo,'ls-remote','origin','refs/heads/main'],text=True,timeout=30).split()[0]
-                    if sha!=last_main_sha:
-                        subprocess.run(['git','-C',repo,'fetch','--no-tags','origin',sha],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=60)
-                        publish_release(e,repo,sha)
-                        last_main_sha=sha
+                    def check_approved_main():
+                        nonlocal last_main_sha
+                        repo=config['release_repository']
+                        # Approved main only; never change a working tree or accept a research branch as software.
+                        sha=subprocess.check_output(['git','-C',repo,'ls-remote','origin','refs/heads/main'],text=True,timeout=30).split()[0]
+                        if sha!=last_main_sha:
+                            subprocess.run(['git','-C',repo,'fetch','--no-tags','origin',sha],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=60)
+                            publish_release(e,repo,sha)
+                            last_main_sha=sha
+                    runtime_stage(state,status,'check_approved_main',check_approved_main)
             except Exception as error:
                 status['error']={'stage':'release','message':str(error)};status['state']='error';write_json(state/'status.json',status)
             if args.command=='once': print(json.dumps(status,ensure_ascii=False));return
             failures=failures+1 if status['state']=='offline' else 0
             delay=poll_delay(config,status,failures,getattr(remote,'cooldown_until',0))
-            time.sleep(delay+random.random()*min(3,delay/5))
+            # Keep the data poll cadence anchored to loop start when healthy. A slow
+            # stage should trigger the next poll immediately, not add another full delay.
+            elapsed=time.monotonic()-iteration_started
+            remaining=max(0,delay-elapsed) if status['state']=='online' else delay
+            time.sleep(remaining+random.random()*min(.1,delay/20))
 
 if __name__=='__main__': main()

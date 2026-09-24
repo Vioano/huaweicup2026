@@ -25,6 +25,8 @@ class Engine:
         self.trusted=config['trusted_keys']; self.key=Path(config['private_key'])
         self.errors=[]
         self.receive_status={}
+        self._accepted_cache_key=None
+        self._accepted_payload_cache=None
 
     def sign(self,domain,payload): return self.signatures.sign(domain,self.actor,payload,self.key)
     def verify(self,envelope,domain,*,central=False):
@@ -38,6 +40,21 @@ class Engine:
         if type(payload.get('generation')) is not int or payload['generation']<1: raise ValueError('Invalid channel generation')
         return payload,envelope
 
+    def accepted_payload(self,manifest):
+        path=self.state/'accepted'/payload_name(manifest)
+        data=path.read_bytes()
+        # The signed compressed hash is checked on every cycle. Once this exact
+        # immutable snapshot has been fully unpacked and validated in this process,
+        # retain its parsed value instead of repeatedly inflating and JSON-decoding it.
+        if len(data)!=manifest.get('payload_size') or digest(data)!=manifest.get('payload_sha256'):
+            raise ValueError('Snapshot compressed bytes/hash mismatch')
+        key=(manifest.get('payload_sha256'),manifest.get('payload_size'),manifest.get('snapshot_id'))
+        if self._accepted_cache_key==key and self._accepted_payload_cache is not None:
+            return self._accepted_payload_cache
+        payload=unpack(data,manifest)
+        self._accepted_cache_key=key;self._accepted_payload_cache=payload
+        return payload
+
     def accept_snapshot(self,head):
         channel,envelope=self.channel(head,'central','snapshot')
         if channel is None: return
@@ -45,20 +62,29 @@ class Engine:
         previous=read_json(current) if current.exists() else None
         if previous and '_channel' in previous:
             prior=self.verify(previous['_channel'],'snapshot',central=True)
+            if previous!=dict(prior['manifest'],_channel=previous['_channel'],verified_at=previous.get('verified_at')):
+                raise ValueError('Accepted snapshot metadata does not match its signed channel')
             if channel['generation']<prior['generation']: raise ValueError('Signed snapshot generation rollback')
             if channel['generation']==prior['generation']:
                 if channel!=prior: raise ValueError('Snapshot generation reused for different content')
-                # Still verify disk bytes on each startup/cycle; never bless a damaged cache.
-                unpack((output/payload_name(previous)).read_bytes(),previous)
+                # The signed compressed hash/size is still checked every cycle;
+                # decompression and full semantic validation happen once per process.
+                self.accepted_payload(prior['manifest'])
                 return
         manifest=channel['manifest']; path=path_ok(channel['object'])
         if path!='objects/'+manifest['payload_sha256']: raise ValueError('Snapshot object identity mismatch')
         data=self.remote.read(head,path); payload=unpack(data,manifest)
         if payload['publisher']['actor']!=self.leader: raise ValueError('Wrong snapshot authority')
         if previous:
-            reject_history_regression(unpack((output/payload_name(previous)).read_bytes(),previous),payload)
+            if '_channel' in previous:
+                prior=self.verify(previous['_channel'],'snapshot',central=True)
+                reject_history_regression(self.accepted_payload(prior['manifest']),payload)
+            else:
+                reject_history_regression(unpack((output/payload_name(previous)).read_bytes(),previous),payload)
         atomic_write(output/payload_name(manifest),data)
         write_json(current,dict(manifest,_channel=envelope,verified_at=now()))
+        self._accepted_cache_key=(manifest.get('payload_sha256'),manifest.get('payload_size'),manifest.get('snapshot_id'))
+        self._accepted_payload_cache=payload
 
     def publish_snapshot(self,head):
         previous,envelope=self.channel(head,'central','snapshot') if head else (None,None)
@@ -73,7 +99,16 @@ class Engine:
             frozen_manifest=material('docs/a/source-manifest.json'),
             algorithms=material('docs/benchmarks/algorithm-registry.json'),code_commit=commit)
         if previous:
-            old=unpack(self.remote.read(head,previous['object']),previous['manifest'])
+            prior_path=path_ok(previous.get('object'))
+            if prior_path!='objects/'+previous['manifest'].get('payload_sha256',''):
+                raise ValueError('Snapshot object identity mismatch')
+            accepted=self.state/'accepted'/'current.json'
+            try: accepted_manifest=read_json(accepted)
+            except (OSError,ValueError,TypeError): accepted_manifest=None
+            if accepted_manifest and accepted_manifest.get('snapshot_id')==previous['manifest'].get('snapshot_id'):
+                old=self.accepted_payload(previous['manifest'])
+            else:
+                old=unpack(self.remote.read(head,previous['object']),previous['manifest'])
             reject_history_regression(old,payload)
             if old['snapshot_id']==payload['snapshot_id']: return
         manifest=publish_files(payload,self.state/'published')
@@ -261,28 +296,46 @@ class Engine:
     def cycle(self):
         self.errors=[]; status_path=self.state/'status.json'
         previous=read_json(status_path) if status_path.exists() else {}
+        cycle_started=time.monotonic(); timings={}
         status={'schema_version':1,'role':self.role,'state':'syncing','last_attempt_at':now(),
                 'last_success_at':previous.get('last_success_at'),'error':None,'data':previous.get('data',{}),
                 'software':previous.get('software',{}),'upload':self.outbox_counts(),
-                'transport':{'backend':'github-api','poll_seconds':self.config.get('poll_seconds',2)}}
+                'transport':{'backend':'github-api','poll_seconds':self.config.get('poll_seconds',2)},
+                'current_stage':None,'stage_started_at':None,'stage_timings_ms':{},
+                'runtime_stage':previous.get('runtime_stage'),'runtime_stage_started_at':previous.get('runtime_stage_started_at'),
+                'runtime_stage_timings_ms':previous.get('runtime_stage_timings_ms',{})}
         write_json(status_path,status)
+        def stage(name,operation):
+            started=time.monotonic()
+            status['current_stage']=name;status['stage_started_at']=now()
+            status['stage_timings_ms']=dict(timings);write_json(status_path,status)
+            try: return operation()
+            finally:
+                timings[name]=round((time.monotonic()-started)*1000,1)
+                status['stage_timings_ms']=dict(timings)
+                status['current_stage']=None;status['stage_started_at']=None
+                status['cycle_elapsed_ms']=round((time.monotonic()-cycle_started)*1000,1)
+                write_json(status_path,status)
         try:
-            head=self.remote.head()
-            if head: self.accept_snapshot(head)
+            head=stage('remote_head',self.remote.head)
+            if head: stage('accept_snapshot',lambda:self.accept_snapshot(head))
             if self.role=='leader':
-                self.receive_submissions(head)
+                stage('receive_submissions',lambda:self.receive_submissions(head))
                 status['receive']=self.receive_status
-                self.publish_snapshot(self.remote.head())
+                stage('publish_snapshot',lambda:self.publish_snapshot(head))
             if self.config.get('watch_repositories'):
-                self.errors.extend({'stage':'watch','message':e['error']} for e in discover(self.state,self.config['watch_repositories'],self.actor))
-            self.deliver_outbox(self.remote.head())
-            head=self.remote.head()
-            if head: self.accept_snapshot(head)
+                stage('discover',lambda:self.errors.extend(
+                    {'stage':'watch','message':e['error']} for e in discover(self.state,self.config['watch_repositories'],self.actor)))
+            stage('deliver_outbox',lambda:self.deliver_outbox(head))
             status['last_success_at']=now()
             status['state']='online' if not self.errors else 'error'
         except Exception as error:
             self.errors.append({'stage':'transport','message':str(error),'retry_after':getattr(error,'retry_after',0)})
             status['state']='offline'
+        status['cycle_finished_at']=now()
+        status['cycle_elapsed_ms']=round((time.monotonic()-cycle_started)*1000,1)
+        status['stage_timings_ms']=dict(timings)
+        status['current_stage']=None;status['stage_started_at']=None
         if self.errors: status['error']=self.errors[0]; status['errors']=self.errors[:20]
         current=self.state/'accepted'/'current.json'
         if current.exists():

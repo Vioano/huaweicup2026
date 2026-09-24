@@ -7,6 +7,7 @@ import tempfile
 import unittest
 from src.benchmark_sync.engine import Engine, write_json, read_json
 from src.benchmark_sync.snapshot import canonical, digest
+from src.benchmark_sync.snapshot import publish_files, read_central
 from src.benchmark_sync.signing import Signatures
 from src.benchmark_sync.github import RemoteError
 
@@ -251,3 +252,41 @@ class EngineTests(unittest.TestCase):
         result=member.cycle()
         self.assertEqual(observed,[{'queued':1}])
         self.assertEqual(result['upload'],{'awaiting_receipt':1})
+
+    def test_member_cycle_uses_one_fixed_remote_head_and_reports_stage_timings(self):
+        member=self.engines['member'];calls=[];original=self.remote.head
+        def head():
+            calls.append(True)
+            status=read_json(member.state/'status.json')
+            self.assertEqual(status['current_stage'],'remote_head')
+            return original()
+        self.remote.head=head
+        result=member.cycle()
+        self.assertEqual(len(calls),1)
+        self.assertEqual(result['state'],'online')
+        self.assertIsNone(result['current_stage'])
+        self.assertIsNone(result['stage_started_at'])
+        self.assertEqual(set(result['stage_timings_ms']),{'remote_head','deliver_outbox'})
+        self.assertGreaterEqual(result['cycle_elapsed_ms'],0)
+        persisted=read_json(member.state/'status.json')
+        self.assertEqual(persisted['stage_timings_ms'],result['stage_timings_ms'])
+
+    def test_accepted_snapshot_cache_rechecks_signed_bytes_without_reunpacking(self):
+        from unittest.mock import patch
+        import src.benchmark_sync.engine as engine_module
+        state=self.engines['member'].state/'accepted'
+        db_path=self.root/'ledger.sqlite3'
+        with closing(sqlite3.connect(db_path)) as db, db:
+            db.executescript('CREATE TABLE records(seq INTEGER,id TEXT,body TEXT); CREATE TABLE events(seq INTEGER,kind TEXT,body TEXT); CREATE TABLE sources(id TEXT,body TEXT);')
+        payload=read_central(db_path,frozen_manifest={},algorithms={},code_commit='a'*40)
+        manifest=publish_files(payload,state)
+        original=engine_module.unpack
+        with patch('src.benchmark_sync.engine.unpack',wraps=original) as unpack_mock:
+            cached=self.engines['member'].accepted_payload(manifest)
+            again=self.engines['member'].accepted_payload(manifest)
+            self.assertIs(cached,again)
+            self.assertEqual(unpack_mock.call_count,1)
+            file=state/manifest['payload_file']
+            file.write_bytes(file.read_bytes()+b'x')
+            with self.assertRaisesRegex(ValueError,'compressed bytes/hash'):
+                self.engines['member'].accepted_payload(manifest)
