@@ -158,5 +158,63 @@
     "E1": 0,
     "E2": 0
   },
-  "platform_scope": "Windows-compatible standard-library design; not executed on Windows during preparation"
+  "platform_scope": "Windows-compatible standard-library design; not executed on Windows during preparation",
+  "manual_memory_policy": {
+    "minimum_recommended_available_bytes": 4294967296,
+    "automatic_enforcement": false,
+    "checkpoints": [
+      "before run",
+      "continuous human observation during run",
+      "snapshot after each printed completed cell",
+      "immediately on contention or pressure"
+    ],
+    "pre_cell_check_guaranteed": false,
+    "observation_artifact": "resource-observations.json",
+    "observation_fields": [
+      "observed_at_utc",
+      "case_or_phase",
+      "available_bytes_or_null",
+      "proxy_bytes_or_null",
+      "method_and_unit",
+      "observed_or_unobserved",
+      "decision",
+      "reason"
+    ],
+    "before_start_action": "If below threshold or available memory unknown, do not invoke run; preserve observations and request owner scheduling",
+    "during_run_action": "If observed below threshold or resource conflict, send one Ctrl-C, wait and inspect cleanup/failure/not_run/batch end; no retry",
+    "limits": "Manual policy only, not OS hard cap or peak guarantee. Existing runner does not pause or enforce a RAM check before every cell. Unseen checkpoints must be unobserved, not fabricated passes.",
+    "macos_proxy": "free+inactive+speculative pages times page size is a reclaimable proxy only; owner must accept that measurement method explicitly",
+    "abnormal_shutdown": "If finished_at missing, cleanup unconfirmed, supervisor_failure or calls/status inconsistent, retain full directory for owner evidence recovery; no claim of ordinary valid export"
+  },
+  "producer_precheck": {
+    "required_actor": "assigned production agent, not receiving owner",
+    "protocol_version": "board-submission-v1",
+    "verified_pr": "https://github.com/huaweibei123/huaweicup2026/pull/113",
+    "tool_commit": "bb7d04369112f164034664c52107127cb87e35a6",
+    "entrypoint": "src/benchmark_board/protocol.py",
+    "checkout": "independent full tool worktree; retain schema/core/app/source-manifest/calibrations",
+    "argv_template": [
+      "uv",
+      "run",
+      "python",
+      "-B",
+      "../q1-board-preflight-pr113/src/benchmark_board/protocol.py",
+      "results/a/q1-sink-member-runs/RUN_ID/board-feed.json",
+      "--repo",
+      ".",
+      "--commit",
+      "FULL_RESULT_SHA",
+      "--submission"
+    ],
+    "retain": [
+      "stdout",
+      "exit_code",
+      "tool_commit",
+      "result_commit",
+      "actual_argv"
+    ],
+    "scope": "format and fixed Git originals only; zero solver/evaluator; no central write",
+    "status": "not_run because this candidate package has no new science execution/feed"
+  },
+  "revision_note": "Documentation/manifest clarification only; algorithm/runner bytes, matrix and8solver/8E0 budget unchanged. Use the new complete package SHA as expected-runner-commit."
 }
