@@ -691,6 +691,40 @@ class EngineTests(unittest.TestCase):
         self.assertEqual(status['error']['stage'],'git_fast_snapshot')
         self.assertEqual(read_json(member.state/'accepted/current.json')['snapshot_id'],target['snapshot_id'])
 
+    def test_git_fast_offline_member_fetches_missing_base_from_rest(self):
+        from unittest.mock import patch
+        leader=self.engines['leader'];member=self.engines['member']
+        bare=self.root/'recovery-fast.git'
+        subprocess.run(['git','init','--bare','-q',str(bare)],check=True)
+        writer=GitFastLane(self.root/'recovery-writer','test/repository')
+        reader=GitFastLane(self.root/'recovery-reader','test/repository')
+        writer._run(['remote','set-url','origin',str(bare)])
+        reader._run(['remote','set-url','origin',str(bare)])
+        leader._git_fast_lane=writer;member._git_fast_lane=reader
+        member.config['git_fast_enabled']=True
+        first=snapshot_payload(1);first_manifest=publish_files(first,self.root/'recovery-first')
+        first_object='objects/'+first_manifest['payload_sha256']
+        self.remote.update({first_object:(self.root/'recovery-first'/first_manifest['payload_file']).read_bytes(),
+                            'channels/central.json':canonical(leader.sign('snapshot',
+                                {'generation':1,'manifest':first_manifest,'object':first_object}))})
+        member.accept_snapshot(self.remote.head())
+        base=snapshot_payload(2);base_manifest=publish_files(base,self.root/'recovery-base')
+        base_object='objects/'+base_manifest['payload_sha256']
+        base_channel={'generation':2,'manifest':base_manifest,'object':base_object}
+        self.remote.update({base_object:(self.root/'recovery-base'/base_manifest['payload_file']).read_bytes(),
+                            'channels/central.json':canonical(leader.sign('snapshot',base_channel))})
+        rest_head=self.remote.head()
+        target=snapshot_payload(3);target_manifest=publish_files(target,self.root/'recovery-target')
+        leader.publish_git_fast_delta(base_channel,target,target_manifest,pack_delta(base,target))
+        original_read=self.remote.read
+        def read_only_rest_head(commit,path):
+            self.assertEqual(commit,rest_head)
+            return original_read(commit,path)
+        with patch.object(self.remote,'read',side_effect=read_only_rest_head):
+            status=member.cycle()
+        self.assertEqual(status['state'],'online')
+        self.assertEqual(read_json(member.state/'accepted/current.json')['snapshot_id'],target['snapshot_id'])
+
     def test_fast_snapshot_rejects_tampered_delta_without_changing_current(self):
         leader=self.engines['leader'];member=self.engines['member']
         base=snapshot_payload(1);base_manifest=publish_files(base,self.root/'base-published')

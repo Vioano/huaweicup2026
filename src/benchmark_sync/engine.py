@@ -195,10 +195,14 @@ class Engine:
         elif base_path.exists():
             try: base=unpack(base_path.read_bytes(),base_manifest)
             except ValueError:
+                if source is not self.remote and base_head is None:
+                    raise FileNotFoundError('REST base snapshot is not cached yet')
                 data=self.remote.read_path(base_head or head,base_object)
                 base=unpack(data,base_manifest)
                 atomic_write(base_path,data)
         else:
+            if source is not self.remote and base_head is None:
+                raise FileNotFoundError('REST base snapshot is not cached yet')
             data=self.remote.read_path(base_head or head,base_object)
             base=unpack(data,base_manifest)
             atomic_write(base_path,data)
