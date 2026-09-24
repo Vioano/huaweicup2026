@@ -1,0 +1,443 @@
+{
+  "case": "027",
+  "cores": 1,
+  "status": "ok",
+  "started_at": "2026-09-24T19:18:30.348817Z",
+  "calls": {
+    "solver": 1,
+    "E0": 1,
+    "E1": 0,
+    "E2": 0
+  },
+  "phase": "complete",
+  "solver_mode": "direct",
+  "solver": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "-m",
+      "src.q2_nikolastarx.adaptive_budget",
+      "data/raw/a/official/data/case_027.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "--cores",
+      "1",
+      "--output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/027-k1/plan.json",
+      "--evidence",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/027-k1/online",
+      "--wall",
+      "25"
+    ],
+    "started_at": "2026-09-24T19:18:30.349168Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 35995648,
+    "rss_samples": 2,
+    "cleanup_killed_pids": [],
+    "pid": 63206,
+    "observer_inclusive_peak_rss_bytes": 84033536,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:18:30.596463Z",
+    "wall_seconds": 0.24734112501027994
+  },
+  "online": {
+    "status": "ok",
+    "calls": {
+      "E0": 0,
+      "E1": 0,
+      "E2": 0
+    },
+    "attempts": [
+      {
+        "name": "adaptive_budget",
+        "status": "constructed",
+        "detail": {
+          "selected_strategy": "component_envelope",
+          "eligible_ops": 1424,
+          "components": 16,
+          "cores": 1,
+          "capacity_bytes": {
+            "L1": 524288,
+            "UB": 131072
+          },
+          "per_core": [
+            {
+              "core": 0,
+              "components": 16,
+              "shared_tensors": 360,
+              "cohorts": [
+                {
+                  "components": [
+                    0
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 460800,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 36864,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 497664,
+                    "UB": 0
+                  },
+                  "within_capacity": true
+                },
+                {
+                  "components": [
+                    1
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 645120,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 36864,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 681984,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    2
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 829440,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 36864,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 866304,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    3
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 1013760,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 36864,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 1050624,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    4
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 1013760,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 36864,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 1050624,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    5
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 1013760,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 36864,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 1050624,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    6
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 1013760,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 36864,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 1050624,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    7
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 1013760,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 36864,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 1050624,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    8
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 1013760,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 36864,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 1050624,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    9
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 1013760,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 36864,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 1050624,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    10
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 1013760,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 36864,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 1050624,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    11
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 1013760,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 36864,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 1050624,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    12
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 1013760,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 36864,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 1050624,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    13
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 829440,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 36864,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 866304,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    14
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 645120,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 36864,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 681984,
+                    "UB": 0
+                  },
+                  "within_capacity": false
+                },
+                {
+                  "components": [
+                    15
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 460800,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 36864,
+                    "UB": 0
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 497664,
+                    "UB": 0
+                  },
+                  "within_capacity": true
+                }
+              ],
+              "max_open_components_bound": 1,
+              "all_raw_envelopes_fit": false
+            }
+          ],
+          "certificate_scope": "raw tensor priority-prefix envelope and component open-count only",
+          "zero_spill_claim": false,
+          "limitations": [
+            "shared input residency spans cohorts and is retained in reserves",
+            "oversized singleton cohorts are emitted without a memory certificate",
+            "no Step2/Step3 or global runtime feasibility guarantee"
+          ],
+          "component_pressure": {
+            "largest_component_pipe_work": {
+              "PIPE_M": 139320,
+              "PIPE_V": 17952
+            },
+            "balanced_pipe_work_lower_bound": {
+              "PIPE_M": 2229120,
+              "PIPE_V": 287232
+            },
+            "component_exceeds_balanced_pipe_work": false,
+            "shared_external_bytes": {
+              "L1": 1843200
+            },
+            "shared_external_exceeds_capacity": true,
+            "wave_rejected": "requires at least two external inputs shared by every component"
+          },
+          "adaptive_route": "component_envelope",
+          "index_constructions": 1,
+          "base_construct_calls": 1,
+          "repair_construct_calls": 0,
+          "repair_trigger": {
+            "recognized": false,
+            "large_crossings": 0,
+            "large_crossing_bytes": 0,
+            "reason": "vector lanes: all eligible ops must use PIPE_V"
+          },
+          "route_limitations": "unchanged general plan; no official feasibility/score/zero-spill certificate"
+        },
+        "plan_sha256": "49c01a9082b2fc9657172a023bec727d0b9d2c6c26fb0522bdc690c211162f47"
+      }
+    ],
+    "started_at": "2026-09-24T19:18:30.413425+00:00",
+    "validation_scope": "official structural validation only; no E0/Step2/Step3 certificate",
+    "selected": "adaptive_budget",
+    "plan_sha256": "49c01a9082b2fc9657172a023bec727d0b9d2c6c26fb0522bdc690c211162f47",
+    "stop_reason": "single_structural_route_completed",
+    "finished_at": "2026-09-24T19:18:30.443571+00:00",
+    "internal_wall_seconds": 0.03027504202327691
+  },
+  "final_reserved": true,
+  "final": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "data/raw/a/official/code/multicore_cut_evaluate_problem_2.py",
+      "data/raw/a/official/data/case_027.json",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/027-k1/plan.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "-o",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/027-k1/final/result.json",
+      "--trace-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/027-k1/final/trace.json",
+      "--log-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/027-k1/final/official.log"
+    ],
+    "started_at": "2026-09-24T19:18:30.598815Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 50757632,
+    "rss_samples": 4,
+    "cleanup_killed_pids": [],
+    "pid": 63262,
+    "observer_inclusive_peak_rss_bytes": 98795520,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:18:31.003716Z",
+    "wall_seconds": 0.4049772090220358
+  },
+  "full_online_result_equal": null,
+  "makespan_cycles": 2363952,
+  "finished_at": "2026-09-24T19:18:31.007573Z"
+}

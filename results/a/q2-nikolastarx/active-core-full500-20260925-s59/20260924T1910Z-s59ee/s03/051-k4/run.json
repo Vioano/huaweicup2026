@@ -1,0 +1,137 @@
+{
+  "case": "051",
+  "cores": 4,
+  "status": "ok",
+  "started_at": "2026-09-24T19:18:29.104651Z",
+  "calls": {
+    "solver": 1,
+    "E0": 1,
+    "E1": 0,
+    "E2": 0
+  },
+  "phase": "complete",
+  "solver_mode": "direct",
+  "solver": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "-m",
+      "src.q2_nikolastarx.adaptive_budget",
+      "data/raw/a/official/data/case_051.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "--cores",
+      "4",
+      "--output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/051-k4/plan.json",
+      "--evidence",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/051-k4/online",
+      "--wall",
+      "25"
+    ],
+    "started_at": "2026-09-24T19:18:29.105096Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 31784960,
+    "rss_samples": 2,
+    "cleanup_killed_pids": [],
+    "pid": 62850,
+    "observer_inclusive_peak_rss_bytes": 108920832,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:18:29.354960Z",
+    "wall_seconds": 0.24993095902027562
+  },
+  "online": {
+    "status": "ok",
+    "calls": {
+      "E0": 0,
+      "E1": 0,
+      "E2": 0
+    },
+    "attempts": [
+      {
+        "name": "adaptive_budget",
+        "status": "constructed",
+        "detail": {
+          "strategy": "tensor_dag_eft",
+          "eligible_ops": 1416,
+          "components": 1,
+          "cores": 4,
+          "bandwidth": 60,
+          "cross_core_delay": 500,
+          "predicted_finish_cycles": 178882,
+          "predicted_ddr_bytes_without_spill": {
+            "external_input_bytes": 917504,
+            "cross_core_bytes": 1216,
+            "output_bytes": 2
+          },
+          "predicted_cross_core_pairs": 304,
+          "compute_load_by_core": [
+            151354,
+            151315,
+            152147,
+            152264
+          ],
+          "model_limitations": [
+            "isolated COPY bandwidth; shared DDR contention omitted",
+            "spill, memory reuse dependencies and Step3 reorder omitted",
+            "predicted times are not bounds or official scores"
+          ],
+          "selected_strategy": "dag_eft",
+          "adaptive_route": "dag_eft",
+          "index_constructions": 1,
+          "base_construct_calls": 1,
+          "repair_construct_calls": 0,
+          "repair_trigger": {
+            "recognized": true,
+            "large_crossings": 0,
+            "large_crossing_bytes": 0
+          },
+          "route_limitations": "unchanged general plan; no official feasibility/score/zero-spill certificate"
+        },
+        "plan_sha256": "86232f6eb7292c5f72100b31f43dc25594983e9b9bb641ef549cd19f308a7e18"
+      }
+    ],
+    "started_at": "2026-09-24T19:18:29.168696+00:00",
+    "validation_scope": "official structural validation only; no E0/Step2/Step3 certificate",
+    "selected": "adaptive_budget",
+    "plan_sha256": "86232f6eb7292c5f72100b31f43dc25594983e9b9bb641ef549cd19f308a7e18",
+    "stop_reason": "single_structural_route_completed",
+    "finished_at": "2026-09-24T19:18:29.209340+00:00",
+    "internal_wall_seconds": 0.04073966699070297
+  },
+  "final_reserved": true,
+  "final": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "data/raw/a/official/code/multicore_cut_evaluate_problem_2.py",
+      "data/raw/a/official/data/case_051.json",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/051-k4/plan.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "-o",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/051-k4/final/result.json",
+      "--trace-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/051-k4/final/trace.json",
+      "--log-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/051-k4/final/official.log"
+    ],
+    "started_at": "2026-09-24T19:18:29.357325Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 45023232,
+    "rss_samples": 4,
+    "cleanup_killed_pids": [],
+    "pid": 62952,
+    "observer_inclusive_peak_rss_bytes": 104972288,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:18:29.747944Z",
+    "wall_seconds": 0.3906203749938868
+  },
+  "full_online_result_equal": null,
+  "makespan_cycles": 185899,
+  "finished_at": "2026-09-24T19:18:29.751381Z"
+}

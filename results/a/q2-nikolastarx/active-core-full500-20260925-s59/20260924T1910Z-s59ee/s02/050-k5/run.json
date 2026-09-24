@@ -1,0 +1,299 @@
+{
+  "case": "050",
+  "cores": 5,
+  "status": "ok",
+  "started_at": "2026-09-24T19:23:27.725490Z",
+  "calls": {
+    "solver": 1,
+    "E0": 1,
+    "E1": 0,
+    "E2": 0
+  },
+  "phase": "complete",
+  "solver_mode": "direct",
+  "solver": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "-m",
+      "src.q2_nikolastarx.adaptive_budget",
+      "data/raw/a/official/data/case_050.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "--cores",
+      "5",
+      "--output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/050-k5/plan.json",
+      "--evidence",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/050-k5/online",
+      "--wall",
+      "25"
+    ],
+    "started_at": "2026-09-24T19:23:27.725731Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 43057152,
+    "rss_samples": 3,
+    "cleanup_killed_pids": [],
+    "pid": 25098,
+    "observer_inclusive_peak_rss_bytes": 125927424,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:23:28.033860Z",
+    "wall_seconds": 0.30814829099108465
+  },
+  "online": {
+    "status": "ok",
+    "calls": {
+      "E0": 0,
+      "E1": 0,
+      "E2": 0
+    },
+    "attempts": [
+      {
+        "name": "adaptive_budget",
+        "status": "constructed",
+        "detail": {
+          "selected_strategy": "component_envelope",
+          "eligible_ops": 4555,
+          "components": 23,
+          "cores": 5,
+          "capacity_bytes": {
+            "L1": 524288,
+            "UB": 131072
+          },
+          "per_core": [
+            {
+              "core": 0,
+              "components": 1,
+              "shared_tensors": 0,
+              "cohorts": [
+                {
+                  "components": [
+                    0
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 0,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 25952,
+                    "UB": 49170
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 25952,
+                    "UB": 49170
+                  },
+                  "within_capacity": true
+                }
+              ],
+              "max_open_components_bound": 1,
+              "all_raw_envelopes_fit": true
+            },
+            {
+              "core": 1,
+              "components": 3,
+              "shared_tensors": 0,
+              "cohorts": [
+                {
+                  "components": [
+                    9,
+                    15,
+                    18
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 0,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 5760,
+                    "UB": 122888
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 5760,
+                    "UB": 122888
+                  },
+                  "within_capacity": true
+                }
+              ],
+              "max_open_components_bound": 3,
+              "all_raw_envelopes_fit": true
+            },
+            {
+              "core": 2,
+              "components": 6,
+              "shared_tensors": 3,
+              "cohorts": [
+                {
+                  "components": [
+                    3,
+                    4,
+                    8,
+                    12,
+                    16,
+                    21
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 3456,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 18944,
+                    "UB": 98524
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 22400,
+                    "UB": 98524
+                  },
+                  "within_capacity": true
+                }
+              ],
+              "max_open_components_bound": 6,
+              "all_raw_envelopes_fit": true
+            },
+            {
+              "core": 3,
+              "components": 7,
+              "shared_tensors": 3,
+              "cohorts": [
+                {
+                  "components": [
+                    1,
+                    6,
+                    7,
+                    10,
+                    11,
+                    14,
+                    20
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 3456,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 29312,
+                    "UB": 98578
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 32768,
+                    "UB": 98578
+                  },
+                  "within_capacity": true
+                }
+              ],
+              "max_open_components_bound": 7,
+              "all_raw_envelopes_fit": true
+            },
+            {
+              "core": 4,
+              "components": 6,
+              "shared_tensors": 3,
+              "cohorts": [
+                {
+                  "components": [
+                    2,
+                    5,
+                    13,
+                    17,
+                    19,
+                    22
+                  ],
+                  "shared_reserve_bytes": {
+                    "L1": 3456,
+                    "UB": 0
+                  },
+                  "private_peak_sum_bytes": {
+                    "L1": 20096,
+                    "UB": 104916
+                  },
+                  "raw_priority_envelope_bytes": {
+                    "L1": 23552,
+                    "UB": 104916
+                  },
+                  "within_capacity": true
+                }
+              ],
+              "max_open_components_bound": 6,
+              "all_raw_envelopes_fit": true
+            }
+          ],
+          "certificate_scope": "raw tensor priority-prefix envelope and component open-count only",
+          "zero_spill_claim": false,
+          "limitations": [
+            "shared input residency spans cohorts and is retained in reserves",
+            "oversized singleton cohorts are emitted without a memory certificate",
+            "no Step2/Step3 or global runtime feasibility guarantee"
+          ],
+          "component_pressure": {
+            "largest_component_pipe_work": {
+              "PIPE_M": 45392,
+              "PIPE_V": 95739
+            },
+            "balanced_pipe_work_lower_bound": {
+              "PIPE_M": 10394,
+              "PIPE_V": 26683
+            },
+            "component_exceeds_balanced_pipe_work": true,
+            "shared_external_bytes": {
+              "L1": 3456
+            },
+            "shared_external_exceeds_capacity": false,
+            "component_split_deferred": "compute imbalance alone omits COPY and memory costs"
+          },
+          "adaptive_route": "component_envelope",
+          "index_constructions": 1,
+          "base_construct_calls": 1,
+          "repair_construct_calls": 0,
+          "repair_trigger": {
+            "recognized": false,
+            "large_crossings": 0,
+            "large_crossing_bytes": 0,
+            "reason": "vector lanes: all eligible ops must use PIPE_V"
+          },
+          "route_limitations": "unchanged general plan; no official feasibility/score/zero-spill certificate"
+        },
+        "plan_sha256": "c659768f571e34311b0cace87d519741de26a620ef9c2fa04efba8ae4ec9140f"
+      }
+    ],
+    "started_at": "2026-09-24T19:23:27.779894+00:00",
+    "validation_scope": "official structural validation only; no E0/Step2/Step3 certificate",
+    "selected": "adaptive_budget",
+    "plan_sha256": "c659768f571e34311b0cace87d519741de26a620ef9c2fa04efba8ae4ec9140f",
+    "stop_reason": "single_structural_route_completed",
+    "finished_at": "2026-09-24T19:23:27.868939+00:00",
+    "internal_wall_seconds": 0.08919475000584498
+  },
+  "final_reserved": true,
+  "final": {
+    "argv": [
+      ".venv/bin/python",
+      "-B",
+      "data/raw/a/official/code/multicore_cut_evaluate_problem_2.py",
+      "data/raw/a/official/data/case_050.json",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/050-k5/plan.json",
+      "--config",
+      "data/raw/a/official/data/config.txt",
+      "-o",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/050-k5/final/result.json",
+      "--trace-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/050-k5/final/trace.json",
+      "--log-output",
+      "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s02/050-k5/final/official.log"
+    ],
+    "started_at": "2026-09-24T19:23:28.036108Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 80052224,
+    "rss_samples": 9,
+    "cleanup_killed_pids": [],
+    "pid": 25154,
+    "observer_inclusive_peak_rss_bytes": 156549120,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-24T19:23:28.842464Z",
+    "wall_seconds": 0.8063642909983173
+  },
+  "full_online_result_equal": null,
+  "makespan_cycles": 103125,
+  "finished_at": "2026-09-24T19:23:28.849679Z"
+}
