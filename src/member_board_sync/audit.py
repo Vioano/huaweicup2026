@@ -135,6 +135,17 @@ def read_database(path):
         return list(db.execute('SELECT seq,id,attempt,revision,body FROM records ORDER BY seq'))
 
 
+def verify_extension(previous, current):
+    require(current['sequence'] >= previous['sequence'], 'snapshot cursor rollback')
+    current_rows = {r['id']: canonical(r) for r in current['records']}
+    for row in previous['records']:
+        require(current_rows.get(row['id']) == canonical(row), 'central history dropped or rewritten')
+    return dict(previous_snapshot_id=previous['snapshot_id'],
+                previous_records=len(previous['records']),
+                added_records=len(current['records']) - len(previous['records']),
+                all_previous_records_preserved=True)
+
+
 def audit(args):
     root = args.bootstrap
     manifest = json.loads((root / 'central/current.json').read_bytes())
@@ -150,6 +161,15 @@ def audit(args):
               'key_sha256': args.key_sha256, 'generation': envelope['payload']['generation'],
               'snapshot': public_manifest, 'checks': {}}
     checks = report['checks']
+    if args.previous_report:
+        previous = json.loads(args.previous_report.read_bytes())
+        previous_manifest = previous['snapshot']
+        require(re.fullmatch(r'snapshot-[0-9a-f]{64}\.json\.gz', previous_manifest['payload_file']),
+                'unsafe previous payload name')
+        previous_payload = verify_snapshot(previous_manifest,
+            (root / 'central' / previous_manifest['payload_file']).read_bytes())
+        require(report['generation'] >= previous['generation'], 'signed generation rollback')
+        checks['central_history_extension'] = verify_extension(previous_payload, payload)
     requests = 0
     def get(path, query=None, raw=False):
         nonlocal requests
@@ -286,6 +306,7 @@ def main():
     parser.add_argument('--url', required=True)
     parser.add_argument('--key-sha256', required=True, help='PEM SHA256 pinned from authenticated captain message')
     parser.add_argument('--browser-observation', type=Path, help='Read-only CUA DOM observation for this exact snapshot')
+    parser.add_argument('--previous-report', type=Path, help='Previously verified report; old compressed payload must remain available')
     args = parser.parse_args()
     result = audit(args)
     args.output.parent.mkdir(parents=True, exist_ok=True)

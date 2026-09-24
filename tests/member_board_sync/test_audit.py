@@ -7,7 +7,7 @@ from pathlib import Path
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
-from member_board_sync.audit import canonical, digest, expected_cells, verify_envelope, verify_snapshot
+from member_board_sync.audit import canonical, digest, expected_cells, verify_envelope, verify_snapshot, verify_extension
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
@@ -55,6 +55,16 @@ class SelectionTests(unittest.TestCase):
 
 
 class IntegrityTests(unittest.TestCase):
+    def test_snapshot_extension_rejects_dropped_rewritten_or_rolled_back_history(self):
+        previous = dict(sequence=1, snapshot_id='prior', records=[dict(row('old'), sequence=1)])
+        current = dict(sequence=2, records=previous['records'] + [dict(row('new'), sequence=2)])
+        self.assertEqual(verify_extension(previous, current)['added_records'], 1)
+        for bad in (dict(current, records=current['records'][1:]),
+                    dict(current, sequence=0),
+                    dict(current, records=[dict(previous['records'][0], eligible=False)])):
+            with self.assertRaises(ValueError):
+                verify_extension(previous, bad)
+
     def test_signature_tampering_and_wrong_signer_rejected(self):
         key = Ed25519PrivateKey.generate()
         pem = key.public_key().public_bytes(serialization.Encoding.PEM,
