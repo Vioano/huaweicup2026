@@ -2,6 +2,7 @@
 import copy
 import itertools
 import unittest
+from src.q1.bounded_tasks import construct as bounded
 from src.q1.component_pack import construct as component
 from src.q1.sink_peel import construct, peel_packets, PeelBudgetExceeded
 from tests.q1.test_component_pack import graph
@@ -51,7 +52,7 @@ class SinkPeelTests(unittest.TestCase):
         g = graph([(i, 'V', 10) for i in range(1, 4)], [(1, 2), (1, 3)])
         for kwargs in ({'max_rounds': 1}, {'max_sinks': 1}):
             plan, d = construct(g, 2, **kwargs)
-            self.assertEqual(d['selected'], 'component-pack')
+            self.assertEqual(d['selected'], 'bounded04')
             self.assertEqual(plan, component(g, 2)[0])
         single = graph([(i, 'V', 10) for i in range(1, 5)],
                        [(1, 2), (1, 3), (2, 4), (3, 4)])
@@ -62,6 +63,13 @@ class SinkPeelTests(unittest.TestCase):
         p, s = adjacency(2, [(0, 1), (1, 0)])
         with self.assertRaises(ValueError):
             peel_packets(range(2), p, s)
+
+    def test_existing_in_tree_plan_is_retained(self):
+        g = graph([(u, 'V', 100) for u in range(1, 6)],
+                  [(1, 5), (2, 5), (3, 5), (4, 5)])
+        plan, d = construct(g, 4)
+        self.assertEqual(plan, bounded(g, 4)[0])
+        self.assertEqual(d['selected'], 'bounded04')
 
     def test_all_five_vertex_ordered_dags_have_monotone_cross_packet_edges(self):
         # Exhaustive structural proof witness, not candidate/evaluator search.
