@@ -105,8 +105,12 @@ class Ledger:
             r['eligible']=True; r['evidence']='artifacts_checked'
             r['admission_notes'].append('已核对固定提交的方案/结果/过程原件及冻结身份；不是重新执行或算法终验')
         except (ValueError,KeyError,TypeError,FileNotFoundError,json.JSONDecodeError) as error:
-            r['admission_notes'].append(str(error)); return r
+            r['admission_notes'].append(str(error))
         for field in ('baseline','cache_pair'):
+            # A verified denominator can accompany a reported E0 numerator.
+            # This only enables the explicit report preview, never admission.
+            if not r['eligible'] and (field != 'baseline' or ev.get('route') != 'E0' or not self.compatible(r)):
+                continue
             pair=r.get(field)
             if not pair: continue
             try:
@@ -118,6 +122,8 @@ class Ledger:
                 if field=='baseline':
                     if pair.get('entrypoint')!='singlecore_evaluate.evaluate_singlecore' or result.get('num_cores')!=1 or result.get('scene')!='A': raise ValueError('not official singlecore baseline')
                     metrics['baseline_speedup']=cycles/metrics['makespan_cycles']; r['baseline_verified']=True
+                    if not r['eligible']:
+                        r['admission_notes'].append('单核分母原件已核；加速比的多核分子仍为作者报告，仅用于报告预览')
                 else:
                     if p!='P3' or pair.get('plan_sha256')!=identity.get('plan_sha256') or pair.get('cores')!=k or result.get('scene')!='B' or result.get('num_cores')!=k: raise ValueError('Cache 必须同计划、同核数 P2/P3 配对')
                     metrics['cache_gain']=cycles/metrics['makespan_cycles']; r['cache_pair_verified']=True

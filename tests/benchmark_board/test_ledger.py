@@ -52,4 +52,14 @@ class LedgerTests(unittest.TestCase):
         a=self.record();b=self.record('report',1);b['artifacts']={};self.put(a,b)
         c=next(c for c in self.l.snapshot(include_reported=True)['cells'] if c['problem']=='P3' and c['case_id']=='002' and c['cores']==4)
         self.assertEqual(c['best']['metrics']['makespan_cycles'],100)
+    def test_reported_numerator_with_verified_baseline_is_not_admitted(self):
+        r=self.record();r['artifacts']={}
+        r['baseline']=dict(r['identity'],route='E0',entrypoint='singlecore_evaluate.evaluate_singlecore',result=self.artifact('single.json',{'scene':'A','num_cores':1,'makespan':250}))
+        self.put(r);row=self.l.records()[0]
+        self.assertEqual(row['metrics']['baseline_speedup'],2.5)
+        self.assertTrue(row['baseline_verified']);self.assertFalse(row['eligible']);self.assertIsNone(self.best())
+        r['revision']=2;r['identity']['config_sha256']='f'*64;self.put(r)
+        self.assertIsNone(self.l.records()[-1]['metrics'].get('baseline_speedup'))
+        r['revision']=3;r['identity']['config_sha256']='b'*64;r['evaluator']['route']='E2';self.put(r)
+        self.assertIsNone(self.l.records()[-1]['metrics'].get('baseline_speedup'))
 if __name__=='__main__':unittest.main()
