@@ -87,3 +87,19 @@ class GitHubTests(unittest.TestCase):
    commit=f'{i+100:040x}';r.commits[commit]={};r.tree(commit)
   self.assertEqual(len(r.trees),16)
   r.tree(source);self.assertEqual(source_calls(),4)
+ def test_existing_local_git_objects_avoid_network_without_reading_worktree(self):
+  import tempfile,subprocess
+  from pathlib import Path
+  with tempfile.TemporaryDirectory() as tmp:
+   root=Path(tmp);repo=root/'repo';repo.mkdir()
+   subprocess.run(['git','init','-q',str(repo)],check=True)
+   raw=b'committed artifact bytes'
+   sha=subprocess.check_output(['git','-C',str(repo),'hash-object','-w','--stdin'],input=raw).decode().strip()
+   (repo/'artifact.json').write_bytes(b'changed uncommitted bytes')
+   r=GitHub.__new__(GitHub);r.local_repository=repo;r.cache=root/'cache';r.cache.mkdir();calls=[]
+   def network(*a,**k):calls.append(a);return b'fallback bytes'
+   r.request=network
+   self.assertEqual(r.blob(sha,len(raw)),raw);self.assertEqual(calls,[])
+   missing=hashlib.sha1(b'blob 14\0fallback bytes').hexdigest()
+   self.assertEqual(r.blob(missing,14),b'fallback bytes');self.assertEqual(len(calls),1)
+   self.assertEqual((repo/'artifact.json').read_bytes(),b'changed uncommitted bytes')

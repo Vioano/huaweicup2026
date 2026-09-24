@@ -39,13 +39,14 @@ class RemoteError(RuntimeError):
 
 
 class GitHub:
-    def __init__(self, repository, branch, cache, *, actor, gh='gh'):
+    def __init__(self, repository, branch, cache, *, actor, gh='gh', local_repository=None):
         if not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+', repository):
             raise ValueError('Invalid GitHub repository')
         if not re.fullmatch(r'[A-Za-z0-9_/-]+',branch): raise ValueError('Invalid transport branch')
         self.repository, self.branch, self.cache, self.gh = repository, branch, Path(cache), gh
         self.cache.mkdir(parents=True,exist_ok=True)
         self.token = subprocess.check_output([gh,'auth','token','--hostname','github.com'],stderr=subprocess.DEVNULL,text=True).strip()
+        self.local_repository=Path(local_repository) if local_repository else None
         self.trees = OrderedDict()
         self.tree_lock=threading.Lock()
         self.cooldown_lock=threading.Lock()
@@ -113,11 +114,24 @@ class GitHub:
             while len(self.trees)>16: self.trees.popitem(last=False)
         return entries
 
+    def local_blob(self,sha):
+        repo=getattr(self,'local_repository',None)
+        if repo is None: return None
+        # Reuse only the exact object ID already obtained from the remote fixed tree.
+        # Never read working files, fetch branches, or change any repository state.
+        try:
+            size=int(subprocess.check_output(['git','-C',str(repo),'cat-file','-s',sha],stderr=subprocess.DEVNULL,timeout=15))
+            if size>MAX_FILE: return None
+            return subprocess.check_output(['git','-C',str(repo),'cat-file','blob',sha],stderr=subprocess.DEVNULL,timeout=15)
+        except (subprocess.CalledProcessError,subprocess.TimeoutExpired,OSError,ValueError):
+            return None
+
     def blob(self, sha, size=None):
         fixed_sha(sha)
         if size is not None and size>MAX_FILE: raise ValueError('Git blob too large')
         target=self.cache/sha
-        data=target.read_bytes() if target.exists() else self.request('GET','/git/blobs/'+sha,raw=True)
+        data=target.read_bytes() if target.exists() else self.local_blob(sha)
+        if data is None: data=self.request('GET','/git/blobs/'+sha,raw=True)
         import hashlib
         actual=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
         if len(data)>MAX_FILE or actual!=sha or (size is not None and len(data)!=size):
