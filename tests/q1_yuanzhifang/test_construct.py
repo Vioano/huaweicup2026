@@ -73,6 +73,14 @@ class PackingTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 mod.construct(graph_from_edges(2, [(0, 1)]), cores)
 
+    def test_switch_uses_graph_parallelism_without_scoring(self):
+        # Four components suffice for four cores; a connected fan-in does not.
+        for graph, chosen in ((graph_from_edges(8, [(0, 1), (2, 3), (4, 5), (6, 7)]), "component-pack"),
+                              (graph_from_edges(5, [(0, 2), (1, 2), (2, 3), (3, 4)]), "chain-wave")):
+            plan, diagnostic = mod.construct(graph, 4, "structural-switch")
+            self.assertEqual(diagnostic["selected_variant"], chosen)
+            self.assertEqual(plan, mod.construct(graph, 4, chosen)[0])
+
     def test_joint_cycle_guard_does_not_skip_empty_core(self):
         graph = graph_from_edges(4, [(0, 1), (2, 3)])
         # 0->1 and 2->3 data; core-order 1->2 and 3->0 closes a ring.
