@@ -63,6 +63,8 @@ def main():
         for ext in ("png", "pdf", "svg"):
             path = args.figures / f"quality-cost.{ext}"
             fig.savefig(path, dpi=180)
+            if ext == "svg":
+                path.write_text("\n".join(line.rstrip() for line in path.read_text().splitlines()) + "\n")
             outputs[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
         plt.close(fig)
         manifest = {"batch_sha256": hashlib.sha256(args.batch.read_bytes()).hexdigest(),
