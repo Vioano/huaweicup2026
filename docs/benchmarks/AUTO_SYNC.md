@@ -15,7 +15,7 @@ Fang 各研发 worktree ─┘                              └─ 签名全历�
 
 研究过程仍按 `SUBMISSION_PROTOCOL.md` 写 `board-feed*.json`，包含算法来源、实际固定代码版本、E0或已获准E1、端到端求解墙钟、外部评价墙钟和原件hash。自动发现只监看配置的本人仓库及其已登记 worktrees 中 `results/**/board-feed*.json` 的**已提交 Git 版本**，要求每条 `provenance.producer_session` 属于本人。原有正式历史ID全在快照中则跳过。未提交/临时写到一半的数据不发布；科研程序仍须按团队流程完成原件及 Git 提交。不自动运行求解器或修改研究分支。
 
-提交完成后普通程序自动发现、校验完整字节、保留持久 outbox，必要时将固定提交非强制推到本人的唯一 `benchmark-delivery/<actor>/<id>` 引用，再将签名描述发布到 `benchmark-sync-v1`。原件路径先从固定提交树分组解析，再用 `git cat-file --batch` 有界分批读 blob 并逐项核对长度和 SHA-256，避免一个feed的每个原件都单独启动 `git show`；成员系统会检查实际队友仓库版本上的批量性能。其他用户分支和工作区不改。主库已存在的固定提交不重复推送研究历史。也可明确入队：
+提交完成后普通程序自动发现、校验完整字节、保留持久 outbox，必要时将固定提交非强制推到本人的唯一 `benchmark-delivery/<actor>/<id>` 引用，再将签名描述发布到 `benchmark-sync-v1`。已有工作树用上次处理的固定 HEAD 与当前 HEAD 的结果目录树差异，只检查新增或修改的 feed；首次发现或旧提交不可用时仍全量扫描，失败不前移游标，删除的旧 feed 不当作新提交。原件路径先从固定提交树分组解析，再用 `git cat-file --batch` 有界分批读 blob 并逐项核对长度和 SHA-256，避免一个feed的每个原件都单独启动 `git show`；成员系统会检查实际队友仓库版本上的批量性能。其他用户分支和工作区不改。主库已存在的固定提交不重复推送研究历史。也可明确入队：
 
 ```sh
 python -X utf8 -m src.benchmark_sync --config /outside-git/config.json enqueue --repo /research/repo --commit FULL_SHA --feed results/.../board-feed.json

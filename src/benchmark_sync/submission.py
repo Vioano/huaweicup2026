@@ -153,8 +153,21 @@ def discover(state, roots, actor, *, known_record_ids=None):
             errors.append({'repository':str(root),'error':str(error)}); continue
         for repo,commit in worktrees:
             try:
-                if cursors.get(repo)==commit: continue
-                names=git(repo,'ls-tree','-r','--name-only','-z',commit,'--','results').decode('utf-8').split('\0')
+                previous=cursors.get(repo)
+                if previous==commit: continue
+                # A cursor means every feed at that tree was handled. Reading all
+                # historical feed blobs again on each HEAD change delays new work
+                # as the repository grows; inspect only additions/modifications.
+                # A missing/pruned cursor falls back to the complete first scan.
+                if previous:
+                    try:
+                        names=git(repo,'diff','--no-ext-diff','--no-renames',
+                                  '--diff-filter=ACMRT','--name-only','-z',previous,commit,
+                                  '--','results').decode('utf-8').split('\0')
+                    except subprocess.CalledProcessError:
+                        names=git(repo,'ls-tree','-r','--name-only','-z',commit,'--','results').decode('utf-8').split('\0')
+                else:
+                    names=git(repo,'ls-tree','-r','--name-only','-z',commit,'--','results').decode('utf-8').split('\0')
                 failed=False
                 for name in names:
                     if not (Path(name).name.startswith('board-feed') and name.endswith('.json')): continue
