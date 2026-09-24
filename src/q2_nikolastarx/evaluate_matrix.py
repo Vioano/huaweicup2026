@@ -107,6 +107,13 @@ def validate_protocol(p):
     for path in p['source_files']:
         repo_path(path, 'src/q2_nikolastarx')
     repo_path(p['output_prefix'], 'results/a/q2-nikolastarx')
+    if 'global_stop_file' in p:
+        stop_file = repo_path(p['global_stop_file'], 'results/a/q2-nikolastarx')
+        if stop_file.suffix != '.json' or stop_file.parent != repo_path(p['output_prefix']).parent:
+            raise ValueError('Global stop file must share the shard output parent')
+    if 'cell_wall_seconds' in p and (type(p['cell_wall_seconds']) not in (int, float)
+                                    or not 0 < p['cell_wall_seconds'] < float('inf')):
+        raise ValueError('Invalid per-cell wall limit')
     for name in ('max_E0', 'max_internal_per_cell', 'max_E1', 'max_E2', 'workers', 'retries'):
         if type(p[name]) is not int or p[name] < 0:
             raise ValueError('Invalid integer budget: ' + name)
@@ -441,8 +448,12 @@ def main():
     print(json.dumps({'raw_stdout_backup': str(backup)}), flush=True)
     batch_start = time.perf_counter()
     deadline = batch_start + p['batch_wall_seconds']
+    global_stop = repo_path(p['global_stop_file']) if p.get('global_stop_file') else None
     for case, cores in cells:
         key = f'{case}-k{cores}'
+        if global_stop is not None and global_stop.exists():
+            journal.data['stop_reason'] = 'global_first_failure_or_budget'
+            break
         if time.perf_counter() >= deadline:
             journal.data['stop_reason'] = 'batch_wall_budget'
             break
@@ -451,7 +462,8 @@ def main():
             journal.data['stop_reason'] = 'e0_reservation_budget'
             break
         folder = output / key
-        row = execute_cell(p, case, cores, folder, deadline)
+        cell_deadline = min(deadline, time.perf_counter() + p.get('cell_wall_seconds', p['batch_wall_seconds']))
+        row = execute_cell(p, case, cores, folder, cell_deadline)
         journal.finish(key, row)
         archive_cell(folder, backup / key)
         write_manifest(folder)
@@ -468,6 +480,14 @@ def main():
         reason = stop_dispatch_reason(row)
         if reason:
             journal.data['stop_reason'] = reason
+            if global_stop is not None:
+                try:
+                    with global_stop.open('x') as marker:
+                        json.dump({'case': case, 'cores': cores, 'reason': reason,
+                                   'time': common.utc()}, marker)
+                        marker.write('\n')
+                except FileExistsError:
+                    pass
             break
     journal.data['finished_at'] = common.utc()
     journal.data['execution_wall_seconds'] = time.perf_counter() - batch_start
