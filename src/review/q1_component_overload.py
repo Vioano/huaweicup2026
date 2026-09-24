@@ -60,6 +60,8 @@ def main():
             assert result['makespan'] == old['makespan_cycles']
             assert result['data_movement_bytes']['spill_added_copy_bytes'] == old['spill_bytes']
             ops = {o['id']:o for o in g['ops'] if o['op'] not in {'COPY_IN','COPY_OUT'}}
+            original_copy_out_ids={o['id'] for o in g['ops'] if o['op']=='COPY_OUT'}
+            original_export_tensors={e['source'] for e in g['edges'] if e['target'] in original_copy_out_ids}
             tensors = {t['id']:t for t in g['tensors']}
             producers, consumers = defaultdict(set), defaultdict(set)
             for e in g['edges']:
@@ -156,10 +158,11 @@ def main():
                     if any(cs-{p} for p in ps):
                         payload+=tensors[t]['size']
                         packet_in+=len(cs-ps)*tensors[t]['size']
-                        packet_out+=sum(bool(cs-{p}) for p in ps)*tensors[t]['size']
+                        already_exported=t in original_export_tensors
+                        packet_out+=(sum(already_exported or bool(cs-{p}) for p in ps)-already_exported)*tensors[t]['size']
                         pws={p[0] for p in ps};cws={p[0] for p in cs}
                         wave_in+=len(cws-pws)*tensors[t]['size']
-                        wave_out+=sum(bool(cws-{p}) for p in pws)*tensors[t]['size']
+                        wave_out+=(sum(already_exported or bool(cws-{p}) for p in pws)-already_exported)*tensors[t]['size']
                 largest=max(max(w.values()) for w in packet_work.values())
                 data.update(peel_status='ok',wave_count=len(waves),parallel_wave_count=sum(len(w)>1 for w in waves),
                     widths=[len(w) for w in waves],packet_count=len(packets),max_packet_ops=max(len(ns) for _,_,ns in packets),
@@ -168,7 +171,8 @@ def main():
                     cut_internal_payload_bytes_once=payload,packet_input_boundary_bytes=packet_in,
                     packet_output_boundary_bytes=packet_out,wave_input_boundary_bytes=wave_in,wave_output_boundary_bytes=wave_out,
                     external_wave_repeat_bytes=ext_wave_repeat,external_packet_repeat_bytes=ext_packet_repeat,
-                    stage_partition_added_copy_proxy_range=[ext_wave_repeat+wave_in+wave_out,ext_packet_repeat+packet_in+packet_out],
+                    added_copy_proxy_by_granularity={'coalesced_wave':ext_wave_repeat+wave_in+wave_out,
+                        'separate_packets':ext_packet_repeat+packet_in+packet_out},
                     static_serial_pressure_reduction_room=max(0,max(w.values())-max(graph_floor,largest,max(packet_cp.values()))),
                     waves=wave_details)
                 comps.append(data)
@@ -192,6 +196,16 @@ def main():
         'budgets':{'cores':K,'max_rounds':ROUNDS,'max_sinks':SINKS},'official_files_verified_before_after':protected,
         'input_zip_sha256':manifest['case_archive']['sha256'],'rows':results,
         'scope':'No submitted plan, core assignment or scientific scoring. Packet-chain and stage-copy metrics are conditional static proxies; they do not include spill or prove improvement.'}
+    layers={
+        'any_pipe_overload':lambda r,c:True,
+        'at_least_K_components':lambda r,c:r['components']>=K,
+        'enough_components_and_parallel_peel':lambda r,c:r['components']>=K and c.get('parallel_wave_count',0)>0,
+        'new_vs_old_guard_and_parallel_peel':lambda r,c:r['components']>=K and c.get('parallel_wave_count',0)>0 and not c['selected_by_old_heavy_guard'],
+        'new_parallel_positive_static_room':lambda r,c:r['components']>=K and c.get('parallel_wave_count',0)>0 and not c['selected_by_old_heavy_guard'] and c['static_serial_pressure_reduction_room']>0,
+    }
+    out['coverage_layers']={name:{'components':len(pairs),'graphs':len({r['case'] for r,c in pairs}),
+        'cases':sorted({r['case'] for r,c in pairs})} for name,test in layers.items()
+        for pairs in [[(r,c)for r in results for c in r['overloaded_components']if test(r,c)]]}
     OUT.write_text(json.dumps(out,indent=2)+'\n')
     print(json.dumps({'graphs':len(results),'overloaded_components':out['pure_peel_calls'],
         'budget_declined':sum(c['peel_status']!='ok' for r in results for c in r['overloaded_components']),
