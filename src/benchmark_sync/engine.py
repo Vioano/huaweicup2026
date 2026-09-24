@@ -55,6 +55,12 @@ class Engine:
         self._accepted_cache_key=key;self._accepted_payload_cache=payload
         return payload
 
+    def accepted_record_ids(self):
+        current=self.state/'accepted'/'current.json'
+        if not current.exists(): return None
+        payload=self.accepted_payload(read_json(current))
+        return {record['id'] for record in payload['records']}
+
     def accept_snapshot(self,head):
         channel,envelope=self.channel(head,'central','snapshot')
         if channel is None: return
@@ -324,8 +330,11 @@ class Engine:
                 status['receive']=self.receive_status
                 stage('publish_snapshot',lambda:self.publish_snapshot(head))
             if self.config.get('watch_repositories'):
-                stage('discover',lambda:self.errors.extend(
-                    {'stage':'watch','message':e['error']} for e in discover(self.state,self.config['watch_repositories'],self.actor)))
+                def scan_committed_feeds():
+                    known=self.accepted_record_ids()
+                    self.errors.extend({'stage':'watch','message':e['error']} for e in discover(
+                        self.state,self.config['watch_repositories'],self.actor,known_record_ids=known))
+                stage('discover',scan_committed_feeds)
             stage('deliver_outbox',lambda:self.deliver_outbox(head))
             status['last_success_at']=now()
             status['state']='online' if not self.errors else 'error'
