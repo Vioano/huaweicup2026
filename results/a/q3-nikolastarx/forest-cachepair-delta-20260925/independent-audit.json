@@ -1,0 +1,112 @@
+{
+  "schema": "forest-cachepair500-audit-v1",
+  "sources": {
+    "manifest_path": "results/a/q3-nikolastarx/forest-cachepair-delta-20260925/20260924T2205Z-s3172/manifest.json",
+    "manifest_sha256": "3c2f7854c88d4d1eb83e47c1b6058394bbc95a550f0cd797612817855116bba8",
+    "run_json_path": "results/a/q3-nikolastarx/forest-cachepair-delta-20260925/20260924T2205Z-s3172/run.json",
+    "forest_run_id": "q3-forest-full500-20260925-s59",
+    "reuse_manifest": "results/a/q3-nikolastarx/forest-cachepair-delta-20260925/manifest.json"
+  },
+  "audit_scope": "24 new P2 raw results individually SHA/plan/graph/scene B/cores/result M bound; 476 reused P2 cells referenced from prior manifest whose P2 result hashes were verified in earlier audit; all 500 forest P3 per-cell metrics read from unchanged batch evidence. No E0 rerun.",
+  "validation": {
+    "delta_status": "complete",
+    "execution_head": "ca933100544bcb3c634fd205c29049aa46adf58d",
+    "controller_sha256": "3b5a7e6dfa3cd6ecf89d78fe09993c451a19b61c01499baa3834530026bfdaeb",
+    "manifest_hash_bound": true,
+    "new_p2_calls_started": 24,
+    "new_p2_calls_succeeded": 24,
+    "solver_calls": 0,
+    "p3_e0_calls": 0,
+    "retries": 0,
+    "new_results_checked": 24,
+    "same_plan_reuse": 476,
+    "all_500_coordinates": true
+  },
+  "timing": {
+    "e0_wall_seconds_sum_24": 24.639875500113703,
+    "preflight_seconds": 62.23362741700839,
+    "forest_solver_wall_sum_500": 2200.415234201122,
+    "note": "24外部E0调用wall sum与批次total wall分列；两者都不是solver wall。Forest solver wall是P3端到端单格solver时间求和，4 worker共享主机，不能当独占性能。",
+    "e0_total_wall_seconds_24_batch": 87.15132333402289
+  },
+  "per_core": {
+    "1": {
+      "cells": 100,
+      "mean_p2_over_p3": 1.0023396456088587,
+      "mean_P2_M": 2923093.7,
+      "mean_P3_M": 2909698.98,
+      "P3_byte_hit_rate_weighted": 0.09954928154013913,
+      "P3_cells_with_hit_bytes": 54,
+      "P2_byte_hit_rate": null
+    },
+    "2": {
+      "cells": 100,
+      "mean_p2_over_p3": 1.0079236454663982,
+      "mean_P2_M": 1495592.67,
+      "mean_P3_M": 1466288.43,
+      "P3_byte_hit_rate_weighted": 0.36416490860758244,
+      "P3_cells_with_hit_bytes": 74,
+      "P2_byte_hit_rate": null
+    },
+    "3": {
+      "cells": 100,
+      "mean_p2_over_p3": 1.0313799262555163,
+      "mean_P2_M": 1021461.02,
+      "mean_P3_M": 992368.02,
+      "P3_byte_hit_rate_weighted": 0.41238711020460556,
+      "P3_cells_with_hit_bytes": 80,
+      "P2_byte_hit_rate": null
+    },
+    "4": {
+      "cells": 100,
+      "mean_p2_over_p3": 1.0512016361351884,
+      "mean_P2_M": 775264.74,
+      "mean_P3_M": 748991.63,
+      "P3_byte_hit_rate_weighted": 0.42439589297377345,
+      "P3_cells_with_hit_bytes": 74,
+      "P2_byte_hit_rate": null
+    },
+    "5": {
+      "cells": 100,
+      "mean_p2_over_p3": 1.082917172693062,
+      "mean_P2_M": 644851.4,
+      "mean_P3_M": 611419.65,
+      "P3_byte_hit_rate_weighted": 0.47445902400474377,
+      "P3_cells_with_hit_bytes": 81,
+      "P2_byte_hit_rate": null
+    }
+  },
+  "negative_gain_cells": [
+    {
+      "case_id": "021",
+      "cores": 3,
+      "p2_m": 2140720,
+      "p3_m": 2140863,
+      "ratio": 0.9999332045067807
+    },
+    {
+      "case_id": "038",
+      "cores": 2,
+      "p2_m": 666725,
+      "p3_m": 666804,
+      "ratio": 0.9998815244059723
+    },
+    {
+      "case_id": "079",
+      "cores": 3,
+      "p2_m": 9971329,
+      "p3_m": 9971923,
+      "ratio": 0.9999404327530407
+    },
+    {
+      "case_id": "092",
+      "cores": 4,
+      "p2_m": 991610,
+      "p3_m": 991644,
+      "ratio": 0.9999657135020229
+    }
+  ],
+  "overall_P3_weighted_byte_hit_rate": 0.34982341916915305,
+  "P2_byte_hit_rate": null,
+  "P2_cache_stat_note": "P2 has no L2 and exports no Cache hit-rate field; not applicable, not a measured zero."
+}
