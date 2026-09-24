@@ -1,0 +1,377 @@
+{
+  "data_commit": "60afc38b327680fbda0ff10182e3e05a01edd72d",
+  "calls": {
+    "solver": 0,
+    "Step1": 0,
+    "Step2": 0,
+    "Step3": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "script_sha256": "e11ef79931748ffb07af5963073cc7c3c7ef0edbe290af1f6cb46784b82c3ab8",
+  "rows": [
+    {
+      "case": "003",
+      "plan": {
+        "path": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s01/003-k5/plan.json",
+        "sha256": "cb008b26b1b4b0c101032a0d60293f075a7bd65d9b4bbe5ca97f1d80cb8e94b6"
+      },
+      "graph_sha256": "2c80acfd37edcf811ce76b7e7b1f7194c706bd4d4aa6449e6a19e9eac1028ced",
+      "compute_ops": 13455,
+      "components": 10,
+      "giant_ops": 13194,
+      "giant_max_topological_layer_width": 324,
+      "giant_pipe_work": {
+        "PIPE_M": 383172,
+        "PIPE_V": 304201
+      },
+      "giant_core_pipe_work": {
+        "0": {
+          "PIPE_M": 383172,
+          "PIPE_V": 304201
+        }
+      },
+      "giant_active_cores": 1,
+      "cross_contracted_precedence_edges": 0,
+      "strict_same_pipe_single_op_diamonds": 0,
+      "mandatory_copy": {
+        "copy_count": 227,
+        "transfer_bytes": 1677480,
+        "service_work": 28129,
+        "categories": {
+          "boundary_input": {
+            "copy_count": 210,
+            "transfer_bytes": 1677446,
+            "service_work": 28112
+          },
+          "boundary_output": {
+            "copy_count": 17,
+            "transfer_bytes": 34,
+            "service_work": 17
+          },
+          "cross_tensor": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          },
+          "cross_direct": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          }
+        },
+        "scope": "P2 Scene B original mandatory COPYs before Step2 spills"
+      },
+      "existing_E0_M": 515736,
+      "interpretation_limit": "Layer width is structural, not a feasible capacity-aware concurrency certificate. No macro-region coverage has been checked."
+    },
+    {
+      "case": "005",
+      "plan": {
+        "path": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s01/005-k5/plan.json",
+        "sha256": "9d39d0655845a95b264bc4f7ded3a9ca8511c81579a8b7b08a068ec8df0732f4"
+      },
+      "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+      "compute_ops": 4113,
+      "components": 1,
+      "giant_ops": 4113,
+      "giant_max_topological_layer_width": 196,
+      "giant_pipe_work": {
+        "PIPE_M": 63882,
+        "PIPE_V": 60930
+      },
+      "giant_core_pipe_work": {
+        "2": {
+          "PIPE_M": 11922,
+          "PIPE_V": 11298
+        },
+        "1": {
+          "PIPE_M": 12072,
+          "PIPE_V": 12105
+        },
+        "0": {
+          "PIPE_V": 12786,
+          "PIPE_M": 13680
+        },
+        "3": {
+          "PIPE_V": 12628,
+          "PIPE_M": 13638
+        },
+        "4": {
+          "PIPE_V": 12113,
+          "PIPE_M": 12570
+        }
+      },
+      "giant_active_cores": 5,
+      "cross_contracted_precedence_edges": 2067,
+      "strict_same_pipe_single_op_diamonds": 0,
+      "mandatory_copy": {
+        "copy_count": 3528,
+        "transfer_bytes": 3430330,
+        "service_work": 59022,
+        "categories": {
+          "boundary_input": {
+            "copy_count": 211,
+            "transfer_bytes": 693146,
+            "service_work": 11669
+          },
+          "boundary_output": {
+            "copy_count": 7,
+            "transfer_bytes": 14592,
+            "service_work": 247
+          },
+          "cross_tensor": {
+            "copy_count": 3310,
+            "transfer_bytes": 2722592,
+            "service_work": 47106
+          },
+          "cross_direct": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          }
+        },
+        "scope": "P2 Scene B original mandatory COPYs before Step2 spills"
+      },
+      "existing_E0_M": 66385,
+      "interpretation_limit": "Layer width is structural, not a feasible capacity-aware concurrency certificate. No macro-region coverage has been checked."
+    },
+    {
+      "case": "056",
+      "plan": {
+        "path": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/056-k5/plan.json",
+        "sha256": "66a57f85e29071fb8be7fb531aec89641362875b137a9c89745335d8ddfad977"
+      },
+      "graph_sha256": "fda213426382a3810afd172eadc10b9221330b906888537cb13b16369be3369d",
+      "compute_ops": 7678,
+      "components": 19,
+      "giant_ops": 7464,
+      "giant_max_topological_layer_width": 162,
+      "giant_pipe_work": {
+        "PIPE_M": 125808,
+        "PIPE_V": 238272
+      },
+      "giant_core_pipe_work": {
+        "0": {
+          "PIPE_M": 125808,
+          "PIPE_V": 238272
+        }
+      },
+      "giant_active_cores": 1,
+      "cross_contracted_precedence_edges": 0,
+      "strict_same_pipe_single_op_diamonds": 0,
+      "mandatory_copy": {
+        "copy_count": 258,
+        "transfer_bytes": 221600,
+        "service_work": 3872,
+        "categories": {
+          "boundary_input": {
+            "copy_count": 221,
+            "transfer_bytes": 221526,
+            "service_work": 3835
+          },
+          "boundary_output": {
+            "copy_count": 37,
+            "transfer_bytes": 74,
+            "service_work": 37
+          },
+          "cross_tensor": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          },
+          "cross_direct": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          }
+        },
+        "scope": "P2 Scene B original mandatory COPYs before Step2 spills"
+      },
+      "existing_E0_M": 253392,
+      "interpretation_limit": "Layer width is structural, not a feasible capacity-aware concurrency certificate. No macro-region coverage has been checked."
+    },
+    {
+      "case": "068",
+      "plan": {
+        "path": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/068-k5/plan.json",
+        "sha256": "ac8ae8f652ad6c962ae2f076ebf5d3a4561966ceabcd54c22ae1cf3c96e9fa0e"
+      },
+      "graph_sha256": "dfd9a58ef9d26a8a4567026b50af8b4499d87eebb3d98f8208b909b11e963c6d",
+      "compute_ops": 5351,
+      "components": 32,
+      "giant_ops": 4176,
+      "giant_max_topological_layer_width": 96,
+      "giant_pipe_work": {
+        "PIPE_M": 235728,
+        "PIPE_V": 105184
+      },
+      "giant_core_pipe_work": {
+        "0": {
+          "PIPE_M": 235728,
+          "PIPE_V": 105184
+        }
+      },
+      "giant_active_cores": 1,
+      "cross_contracted_precedence_edges": 0,
+      "strict_same_pipe_single_op_diamonds": 0,
+      "mandatory_copy": {
+        "copy_count": 505,
+        "transfer_bytes": 2773194,
+        "service_work": 46604,
+        "categories": {
+          "boundary_input": {
+            "copy_count": 410,
+            "transfer_bytes": 2741918,
+            "service_work": 45996
+          },
+          "boundary_output": {
+            "copy_count": 95,
+            "transfer_bytes": 31276,
+            "service_work": 608
+          },
+          "cross_tensor": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          },
+          "cross_direct": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          }
+        },
+        "scope": "P2 Scene B original mandatory COPYs before Step2 spills"
+      },
+      "existing_E0_M": 295114,
+      "interpretation_limit": "Layer width is structural, not a feasible capacity-aware concurrency certificate. No macro-region coverage has been checked."
+    },
+    {
+      "case": "086",
+      "plan": {
+        "path": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s04/086-k5/plan.json",
+        "sha256": "7226f52f92f50cce6af2609906f09069cc8896aa68ca6d12c70f7bf622edb2f3"
+      },
+      "graph_sha256": "ef91fda2692fd0add63db3c7f677e4e03c8d115d97db3cb959cffc62fff2434a",
+      "compute_ops": 5274,
+      "components": 1,
+      "giant_ops": 5274,
+      "giant_max_topological_layer_width": 256,
+      "giant_pipe_work": {
+        "PIPE_M": 79182,
+        "PIPE_V": 78060
+      },
+      "giant_core_pipe_work": {
+        "3": {
+          "PIPE_M": 15360,
+          "PIPE_V": 14743
+        },
+        "2": {
+          "PIPE_M": 16080,
+          "PIPE_V": 15448
+        },
+        "1": {
+          "PIPE_M": 16140,
+          "PIPE_V": 18067
+        },
+        "0": {
+          "PIPE_V": 14514,
+          "PIPE_M": 15768
+        },
+        "4": {
+          "PIPE_V": 15288,
+          "PIPE_M": 15834
+        }
+      },
+      "giant_active_cores": 5,
+      "cross_contracted_precedence_edges": 3483,
+      "strict_same_pipe_single_op_diamonds": 0,
+      "mandatory_copy": {
+        "copy_count": 5841,
+        "transfer_bytes": 5226778,
+        "service_work": 90161,
+        "categories": {
+          "boundary_input": {
+            "copy_count": 225,
+            "transfer_bytes": 757754,
+            "service_work": 12753
+          },
+          "boundary_output": {
+            "copy_count": 8,
+            "transfer_bytes": 16896,
+            "service_work": 286
+          },
+          "cross_tensor": {
+            "copy_count": 5608,
+            "transfer_bytes": 4452128,
+            "service_work": 77122
+          },
+          "cross_direct": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          }
+        },
+        "scope": "P2 Scene B original mandatory COPYs before Step2 spills"
+      },
+      "existing_E0_M": 102180,
+      "interpretation_limit": "Layer width is structural, not a feasible capacity-aware concurrency certificate. No macro-region coverage has been checked."
+    },
+    {
+      "case": "088",
+      "plan": {
+        "path": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s04/088-k5/plan.json",
+        "sha256": "e8af68440e9585653c7a887ae6a9ba8af45de95f7435a7c9b97da7b66b5a990b"
+      },
+      "graph_sha256": "2ff71575ba33875431f54823fc1f2214e018edcfc9d568edfb7c47b0f264b825",
+      "compute_ops": 3309,
+      "components": 31,
+      "giant_ops": 2798,
+      "giant_max_topological_layer_width": 96,
+      "giant_pipe_work": {
+        "PIPE_M": 157240,
+        "PIPE_V": 70457
+      },
+      "giant_core_pipe_work": {
+        "0": {
+          "PIPE_M": 157240,
+          "PIPE_V": 70457
+        }
+      },
+      "giant_active_cores": 1,
+      "cross_contracted_precedence_edges": 0,
+      "strict_same_pipe_single_op_diamonds": 0,
+      "mandatory_copy": {
+        "copy_count": 274,
+        "transfer_bytes": 1977254,
+        "service_work": 33141,
+        "categories": {
+          "boundary_input": {
+            "copy_count": 240,
+            "transfer_bytes": 1977186,
+            "service_work": 33107
+          },
+          "boundary_output": {
+            "copy_count": 34,
+            "transfer_bytes": 68,
+            "service_work": 34
+          },
+          "cross_tensor": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          },
+          "cross_direct": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          }
+        },
+        "scope": "P2 Scene B original mandatory COPYs before Step2 spills"
+      },
+      "existing_E0_M": 200888,
+      "interpretation_limit": "Layer width is structural, not a feasible capacity-aware concurrency certificate. No macro-region coverage has been checked."
+    }
+  ]
+}
