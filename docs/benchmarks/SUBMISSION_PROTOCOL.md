@@ -151,3 +151,9 @@ task: a-benchmark-board-maintenance / <原benchmark任务ID>
 ```
 
 不另发空ACK；在下一次实质交付带实际已读协议版本和影响即可。此通知不证明队友Agent已经读取或采用；我按实际回执跟进。
+
+## 批次与分片的简明口径
+
+沿用现有字段，不新增表格。一个run是预先声明的方法、固定实现、预算、评价后端及运行环境下的一组实验；case、cores、seed、repeat是该实验预声明的矩阵轴，按既定矩阵变化不另造run。算法/实现SHA、候选预算、评价后端或机器条件改变则分新run；workers分阶段调整须在既有runtime/provenance中记录真实阶段，不能将其称为相同资源条件的计时比较。
+
+first10/full500或分卷是同一run的交付快照，不是新算法或新实验；补交原件保留attempt并递增revision，真实重跑新增attempt。来源显示保留run_id、算法/variant/SHA及机器信息，禁止把latest/best/test等无来源名称或“历史最优组合”当单一方法批次。旧记录不因命名美化强制改名，生产端负责现有字段的正确导出。

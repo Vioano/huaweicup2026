@@ -148,6 +148,10 @@ class Ledger:
         for raw in feed['records']:
             rid=digest(packed(raw).encode()); r=self.validate(raw,loader,source); r['id']=rid; rows.append(r)
         with self.connect() as db:
+            # Another importer may have committed this batch during byte validation.
+            db.execute('BEGIN IMMEDIATE')
+            if db.execute('SELECT 1 FROM batches WHERE id=?',(batch,)).fetchone():
+                return {'duplicate':True,'added':0}
             count=0
             for r in rows:
                 old=db.execute('SELECT id FROM records WHERE attempt=? AND revision=?',(r['attempt_id'],r['revision'])).fetchone()
