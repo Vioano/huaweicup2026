@@ -45,3 +45,24 @@ validity. The prototype still estimates isolated COPY timing and omits shared
 DDR contention, spills and memory-reuse dependencies. No new measured Makespan
 or solver timing is reported. Mostly short packets leave substantial fork/join
 structure unaddressed; a small scored pilot must precede any wider batch.
+
+## Closed-region coverage
+
+`closed_regions.py` computes immediate postdominators of the contracted compute
+DAG, visits the region between each fork and its immediate common join, and
+explicitly rejects interior nodes with external incoming or outgoing edges.
+It then counts weakly disconnected nonempty arms between the endpoints.
+The recorded `closed-regions.json` has only 3 qualifying regions in 003 (largest
+interior 33 operations), 3 in 088 (largest 7), and none in 005/056/068/086.
+Regions may nest; counts and sizes must not be added as disjoint coverage.
+Entry/exit nodes may have external dependencies, and the check does not include
+memory-credit or COPY scheduling. These counts do not certify the Pro timing
+theorem's full assumptions.
+
+The postdominator tree was independently checked against set-intersection
+postdominators for 100 seeded 12-node random DAGs (1,200 nodes), plus a closed
+diamond and an otherwise identical graph with an external incoming edge.
+Both boundary fixtures behaved as intended; no evaluator was invoked.
+The limited coverage is evidence against directly expanding that narrow theorem
+into a general solution for these graphs. Multi-input regions and resource
+idle gaps remain relevant next targets.

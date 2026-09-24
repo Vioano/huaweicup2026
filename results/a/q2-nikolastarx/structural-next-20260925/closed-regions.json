@@ -1,0 +1,206 @@
+{
+  "script_sha256": "de44d63d89e11409bab2859dd8161229862c5e9e1cb4fa28ccb3eb5967bebe12",
+  "scope": "Original contracted compute DAG only. Regions may nest; do not sum their sizes as coverage. No memory/DDR timing or applicability of a single-pipe theorem is inferred.",
+  "calls": {
+    "solver": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "rows": [
+    {
+      "case": "003",
+      "graph_sha256": "2c80acfd37edcf811ce76b7e7b1f7194c706bd4d4aa6449e6a19e9eac1028ced",
+      "closed_parallel_regions": 3,
+      "same_single_pipe_regions": 3,
+      "largest_interior": 33,
+      "rejections": {
+        "no_real_common_postdominator": 333,
+        "branches_connected_before_exit": 172,
+        "outside_incoming_edge": 3132
+      },
+      "regions": [
+        {
+          "entry": 13398,
+          "exit": 13432,
+          "interior_ops": 33,
+          "arms": 2,
+          "arm_sizes": [
+            19,
+            14
+          ],
+          "arm_pipe_work": [
+            {
+              "PIPE_V": 1255
+            },
+            {
+              "PIPE_V": 938
+            }
+          ],
+          "same_single_compute_pipe": true
+        },
+        {
+          "entry": 13444,
+          "exit": 13478,
+          "interior_ops": 33,
+          "arms": 2,
+          "arm_sizes": [
+            19,
+            14
+          ],
+          "arm_pipe_work": [
+            {
+              "PIPE_V": 1255
+            },
+            {
+              "PIPE_V": 938
+            }
+          ],
+          "same_single_compute_pipe": true
+        },
+        {
+          "entry": 13490,
+          "exit": 13524,
+          "interior_ops": 33,
+          "arms": 2,
+          "arm_sizes": [
+            19,
+            14
+          ],
+          "arm_pipe_work": [
+            {
+              "PIPE_V": 1255
+            },
+            {
+              "PIPE_V": 938
+            }
+          ],
+          "same_single_compute_pipe": true
+        }
+      ]
+    },
+    {
+      "case": "005",
+      "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+      "closed_parallel_regions": 0,
+      "same_single_pipe_regions": 0,
+      "largest_interior": 0,
+      "rejections": {
+        "no_real_common_postdominator": 137,
+        "branches_connected_before_exit": 63,
+        "outside_incoming_edge": 966
+      },
+      "regions": []
+    },
+    {
+      "case": "056",
+      "graph_sha256": "fda213426382a3810afd172eadc10b9221330b906888537cb13b16369be3369d",
+      "closed_parallel_regions": 0,
+      "same_single_pipe_regions": 0,
+      "largest_interior": 0,
+      "rejections": {
+        "no_real_common_postdominator": 247,
+        "branches_connected_before_exit": 202,
+        "outside_incoming_edge": 1620
+      },
+      "regions": []
+    },
+    {
+      "case": "068",
+      "graph_sha256": "dfd9a58ef9d26a8a4567026b50af8b4499d87eebb3d98f8208b909b11e963c6d",
+      "closed_parallel_regions": 0,
+      "same_single_pipe_regions": 0,
+      "largest_interior": 0,
+      "rejections": {
+        "no_real_common_postdominator": 226,
+        "branches_connected_before_exit": 93,
+        "outside_incoming_edge": 1000
+      },
+      "regions": []
+    },
+    {
+      "case": "086",
+      "graph_sha256": "ef91fda2692fd0add63db3c7f677e4e03c8d115d97db3cb959cffc62fff2434a",
+      "closed_parallel_regions": 0,
+      "same_single_pipe_regions": 0,
+      "largest_interior": 0,
+      "rejections": {
+        "no_real_common_postdominator": 154,
+        "branches_connected_before_exit": 72,
+        "outside_incoming_edge": 1248
+      },
+      "regions": []
+    },
+    {
+      "case": "088",
+      "graph_sha256": "2ff71575ba33875431f54823fc1f2214e018edcfc9d568edfb7c47b0f264b825",
+      "closed_parallel_regions": 3,
+      "same_single_pipe_regions": 3,
+      "largest_interior": 7,
+      "rejections": {
+        "branches_connected_before_exit": 99,
+        "no_real_common_postdominator": 136,
+        "outside_incoming_edge": 682
+      },
+      "regions": [
+        {
+          "entry": 6225,
+          "exit": 6241,
+          "interior_ops": 7,
+          "arms": 2,
+          "arm_sizes": [
+            6,
+            1
+          ],
+          "arm_pipe_work": [
+            {
+              "PIPE_V": 456
+            },
+            {
+              "PIPE_V": 76
+            }
+          ],
+          "same_single_compute_pipe": true
+        },
+        {
+          "entry": 6318,
+          "exit": 6334,
+          "interior_ops": 7,
+          "arms": 2,
+          "arm_sizes": [
+            6,
+            1
+          ],
+          "arm_pipe_work": [
+            {
+              "PIPE_V": 456
+            },
+            {
+              "PIPE_V": 76
+            }
+          ],
+          "same_single_compute_pipe": true
+        },
+        {
+          "entry": 6411,
+          "exit": 6427,
+          "interior_ops": 7,
+          "arms": 2,
+          "arm_sizes": [
+            6,
+            1
+          ],
+          "arm_pipe_work": [
+            {
+              "PIPE_V": 456
+            },
+            {
+              "PIPE_V": 76
+            }
+          ],
+          "same_single_compute_pipe": true
+        }
+      ]
+    }
+  ]
+}

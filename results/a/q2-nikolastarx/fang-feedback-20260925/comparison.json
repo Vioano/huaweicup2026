@@ -1,0 +1,122 @@
+{
+  "own_source": {
+    "commit": "ee4fe0282ca2ff5d73bb23d54b1c213909e1401c",
+    "path": "results/a/q2-nikolastarx/active500-audit-20260925/paired.csv",
+    "sha256": "1bf300c7dbc2cb9f417a0943ab81fef79ce63f121a37321f13584f714793bd5f"
+  },
+  "new_evaluator_calls": 0,
+  "comparisons": [
+    {
+      "family": "all500",
+      "source": {
+        "commit": "71616ac7c4c7fca56e37e2d3245dd13725316d82",
+        "path": "results/a/q2-yuanzhifang/feedback-20260924/full-coverage/all500/per-cell.csv",
+        "sha256": "554cf090aaf0460465d07b8d52640e098447a3b00cc7b89f4371feb4f2c048d6"
+      },
+      "rows": [
+        {
+          "cores": 1,
+          "n": 100,
+          "fang_mean": 1.056973403815406,
+          "our_mean": 1.1085967079439594,
+          "our_wins_losses_ties": [
+            55,
+            23,
+            22
+          ],
+          "fang_extra_ddr_bytes": 768205968,
+          "our_extra_ddr_bytes": 537732528
+        },
+        {
+          "cores": 2,
+          "n": 100,
+          "fang_mean": 1.9381260191446121,
+          "our_mean": 2.0504834568791193,
+          "our_wins_losses_ties": [
+            55,
+            33,
+            12
+          ],
+          "fang_extra_ddr_bytes": 745765098,
+          "our_extra_ddr_bytes": 559346844
+        },
+        {
+          "cores": 3,
+          "n": 100,
+          "fang_mean": 2.6734799838192393,
+          "our_mean": 2.8156652591507116,
+          "our_wins_losses_ties": [
+            51,
+            37,
+            12
+          ],
+          "fang_extra_ddr_bytes": 781275174,
+          "our_extra_ddr_bytes": 607815314
+        },
+        {
+          "cores": 4,
+          "n": 100,
+          "fang_mean": 3.330228459391533,
+          "our_mean": 3.476781241903971,
+          "our_wins_losses_ties": [
+            46,
+            39,
+            15
+          ],
+          "fang_extra_ddr_bytes": 799888080,
+          "our_extra_ddr_bytes": 633605250
+        },
+        {
+          "cores": 5,
+          "n": 100,
+          "fang_mean": 3.89603690404328,
+          "our_mean": 4.0140941745651695,
+          "our_wins_losses_ties": [
+            40,
+            47,
+            13
+          ],
+          "fang_extra_ddr_bytes": 848393614,
+          "our_extra_ddr_bytes": 705360480
+        }
+      ]
+    },
+    {
+      "family": "gap-k2k3-200",
+      "source": {
+        "commit": "71616ac7c4c7fca56e37e2d3245dd13725316d82",
+        "path": "results/a/q2-yuanzhifang/feedback-20260924/full-coverage/gap-k2k3-200/per-cell.csv",
+        "sha256": "469f7697d0906ab77f1c900a07ab2b80b121e275a7eee3586799774a6d575500"
+      },
+      "rows": [
+        {
+          "cores": 2,
+          "n": 100,
+          "fang_mean": 2.20011035809806,
+          "our_mean": 2.0504834568791193,
+          "our_wins_losses_ties": [
+            24,
+            69,
+            7
+          ],
+          "fang_extra_ddr_bytes": 1407272704,
+          "our_extra_ddr_bytes": 559346844
+        },
+        {
+          "cores": 3,
+          "n": 100,
+          "fang_mean": 2.9396762544858785,
+          "our_mean": 2.8156652591507116,
+          "our_wins_losses_ties": [
+            37,
+            55,
+            8
+          ],
+          "fang_extra_ddr_bytes": 1617287626,
+          "our_extra_ddr_bytes": 607815314
+        }
+      ]
+    }
+  ],
+  "scope": "Fixed CSV arithmetic and equal baseline values only; not a new independent audit of all Fang plan/result identities. No historical per-cell portfolio is constructed. Different hardware prevents direct solver-time comparisons."
+}

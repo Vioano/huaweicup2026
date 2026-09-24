@@ -163,7 +163,7 @@ def build_guarded(graph, cores, config, oracle):
         component_builder=guarded_component.make_component_builder(oracle))
 
 
-def main(argv=None):
+def main(argv=None, *, constructor=build_guarded):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('graph', type=Path)
     parser.add_argument('--config', type=Path, default=ROOT/'data/raw/a/official/data/config.txt')
@@ -217,9 +217,9 @@ def main(argv=None):
         def evaluate(plan):
             return native_e2(source['root'], graph, args.config.resolve(), plan,
                              remaining())
-        plan, detail = build_guarded(graph, args.cores, config,
-                                     score_adapter(evaluate, ledger, ledger_path,
-                                                   prepare=prepare, remaining_wall=remaining))
+        plan, detail = constructor(graph, args.cores, config,
+                                   score_adapter(evaluate, ledger, ledger_path,
+                                                 prepare=prepare, remaining_wall=remaining))
         if set(plan) != {'node_to_subgraph', 'core_schedules'}:
             raise ValueError('plan must have exactly the two submission keys')
         if len(plan['core_schedules']) != args.cores:

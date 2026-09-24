@@ -23,7 +23,7 @@ python3 -m src.q2_nikolastarx.chain_pilot preflight \
 
 The future `run` mode requires a **full committed runner SHA** containing the
 unchanged runner and manifest, and an output directory that does not exist.
-This package has only been preflighted; no run is authorized or reported here.
+This package has only been preflighted; no evaluation has been dispatched.
 When scheduled within the reserved resource window, run one batch with
 `--runner-commit <full SHA> --output <new directory>`. It processes cases in
 manifest order, one monitored worker at a time. Each worker requests public
@@ -42,3 +42,8 @@ Each case has its own immutable output directory and call ledger. These are
 fixed-candidate evaluations, not a 100×1–5-core result for a single frozen
 solver. Constructor time was not recorded in the earlier preflight and is
 reported as unavailable; evaluation and pilot preflight wall times are separate.
+
+Frozen runner, manifest and monitor: `9e84fc880aaf48129ef3c0ab5414c52b48ba7a29`.
+Root preflight with that exact SHA passed, 6 cases and 0 calls. The resource
+owner subsequently prioritized a P3 full500 batch; this P2 run remains pending
+explicit window release. No replacement run or larger budget was started.
