@@ -308,9 +308,25 @@ class NativeJob:
         for name, handle in (('TerminateJobObject', self.job),
                              ('TerminateProcess', self.process if not self.assigned else None)):
             if handle is not None:
+                if name == 'TerminateProcess':
+                    try:
+                        if self.exited(handle):
+                            continue
+                    except Exception as error:
+                        errors.append(repr(error))
+                        continue  # Failed exit observation is not a termination race.
                 try:
                     self.call(name, handle, FORCED_EXIT)
                 except Exception as error:
+                    # ERROR_ACCESS_DENIED also names an already-exited process.
+                    # Only a fresh wait on this same held handle proves that race.
+                    if name == 'TerminateProcess' and isinstance(error, OSError) and (getattr(error, 'winerror', None) or error.errno) == 5:
+                        try:
+                            if self.exited(handle):
+                                self.events.append({'terminate_exit_race': True, 'error': repr(error), 'held_handle_signaled': True})
+                                continue
+                        except Exception as observation_error:
+                            errors.append(repr(observation_error))
                     errors.append(repr(error))
         if errors:
             raise RuntimeError('Termination failure: ' + repr(errors))
@@ -356,9 +372,11 @@ def monitored(argv, folder, deadline, rss_limit, *, cwd=ROOT, env=None,
         'pid': None, 'exit_code': None, 'sample_interval_seconds': sample_interval,
         'observed_peak_rss_bytes': None, 'observer_inclusive_peak_rss_bytes': None,
         'rss_samples': 0, 'surviving_pids': None, 'cleanup_killed_pids': [],
-        'creation_attempted': False, 'created': False, 'resumed': False, 'assigned_before_resume': False,
+        'creation_reserved': False, 'creation_reservation_persisted': False,
+        'creation_attempted': False, 'created': False, 'resume_attempted': False, 'resumed': False, 'assigned_before_resume': False,
         'target_entry_entered': 'unknown; no target instrumentation',
-        'cleanup_verified': False, 'stop_dispatch': False,
+        'process_exit_observed': False, 'cleanup_verified': False, 'stop_dispatch': False,
+        'work_deadline': deadline, 'work_within_budget': None, 'cleanup_within_budget': None, 'within_budget': None,
         'env_sha256': hashlib.sha256(json.dumps(environment, sort_keys=True).encode()).hexdigest(),
         'containment': 'suspended creation -> Job assignment -> one resume; KILL_ON_JOB_CLOSE; no breakaway flags',
         'rss_scope': 'sampled sum of Job-member working sets plus separate observer; not a hard RSS cap'}
@@ -371,7 +389,7 @@ def monitored(argv, folder, deadline, rss_limit, *, cwd=ROOT, env=None,
         with (folder / 'stdout.txt').open('xb') as stdout, (folder / 'stderr.txt').open('xb') as stderr:
             try:
                 if _clock() >= deadline:
-                    receipt.update(status='timeout', target_entry_entered=False)
+                    receipt.update(status='timeout', target_entry_entered=False, work_within_budget=False, stop_dispatch=True)
                 else:
                     backend = _backend_factory()
                     backend.prepare()
@@ -379,19 +397,25 @@ def monitored(argv, folder, deadline, rss_limit, *, cwd=ROOT, env=None,
                     def before_create():
                         if _clock() >= deadline:
                             raise TimeoutError('Deadline before native process creation')
-                        receipt['creation_attempted'] = True
+                        receipt['creation_reserved'] = True
                         _save(path, receipt)
+                        receipt['creation_reservation_persisted'] = True
+                        if _clock() >= deadline:
+                            raise TimeoutError('Deadline after reservation persistence; no native creation attempted')
 
                     backend.create(argv, cwd, environment, stdout, stderr, before_create)
                     receipt.update(pid=backend.pid, created=True, assigned_before_resume=backend.assigned)
                     _save(path, receipt)  # Real OS creation, even if resume fails next.
                     if _clock() >= deadline:
-                        receipt.update(status='timeout', target_entry_entered=False)
+                        receipt.update(status='timeout', target_entry_entered=False, work_within_budget=False, stop_dispatch=True)
                     else:
                         backend.resume()
                         receipt.update(resumed=backend.resumed, status='running')
                         _save(path, receipt)
                         while True:
+                            if _clock() >= deadline:
+                                receipt.update(status='timeout', work_within_budget=False, stop_dispatch=True)
+                                break
                             sample = backend.sample()
                             receipt['rss_samples'] += 1
                             for metric, value in (('observed_peak_rss_bytes', sample['rss_bytes']),
@@ -399,6 +423,14 @@ def monitored(argv, folder, deadline, rss_limit, *, cwd=ROOT, env=None,
                                 receipt[metric] = max(receipt[metric] or 0, value)
                             receipt['last_sample'] = {**sample, 'elapsed_seconds': _clock() - start}
                             code = backend.poll()
+                            observed = _clock()
+                            if code is not None:
+                                receipt.update(exit_code=code, process_exit_observed=True, exit_observed_elapsed_seconds=observed-start)
+                            if observed >= deadline:
+                                receipt.update(status='timeout', work_within_budget=False, stop_dispatch=True,
+                                               deadline_reason='Work completion not observed before deadline')
+                                break
+                            receipt['work_within_budget'] = True
                             if receipt['observer_inclusive_peak_rss_bytes'] > rss_limit:
                                 receipt['status'] = 'rss_limit'
                                 receipt['stop_dispatch'] = True
@@ -406,22 +438,21 @@ def monitored(argv, folder, deadline, rss_limit, *, cwd=ROOT, env=None,
                             if code is not None:
                                 receipt.update(status='ok' if code == 0 else 'failed', exit_code=code)
                                 break
-                            if _clock() >= deadline:
-                                receipt['status'] = 'timeout'
-                                break
                             _sleep(min(sample_interval, max(0, deadline - _clock())))
             except BaseException as error:
                 cause = error
-                receipt.update(status='runner_error', error=repr(error), stop_dispatch=True)
+                receipt.update(status='runner_error', error=repr(error), stop_dispatch=True,
+                               work_within_budget=_clock() < deadline)
             finally:
                 if backend is not None:
                     receipt.update(pid=backend.pid, created=backend.pid is not None,
-                                   resumed=backend.resumed, assigned_before_resume=backend.assigned)
-                    receipt['creation_attempted'] |= backend.creation_attempted
+                                   resume_attempted=backend.resume_attempted, resumed=backend.resumed, assigned_before_resume=backend.assigned)
+                    receipt['creation_attempted'] = backend.creation_attempted
                     if not backend.resume_attempted:
                         receipt['target_entry_entered'] = False
                     try:
-                        cleanup_end = _clock() + cleanup_timeout
+                        cleanup_end = min(_clock() + cleanup_timeout, deadline + cleanup_timeout)
+                        receipt['cleanup_deadline'] = cleanup_end
                         if backend.pid is not None and not backend.assigned:
                             # Assign may fail after successful creation: the held
                             # suspended process handle is still our responsibility.
@@ -436,14 +467,20 @@ def monitored(argv, folder, deadline, rss_limit, *, cwd=ROOT, env=None,
                                 accounting = backend.accounting()
                                 receipt['cleanup_last_accounting'] = {**accounting, 'elapsed_seconds': _clock() - start}
                                 code = backend.poll()
+                                observed = _clock()
                                 if accounting['active_processes'] == 0 and (backend.pid is None or code is not None):
-                                    receipt.update(cleanup_verified=True, surviving_pids=[], exit_code=code)
+                                    receipt.update(cleanup_verified=True, surviving_pids=[], exit_code=code,
+                                                   process_exit_observed=code is not None, cleanup_within_budget=observed < cleanup_end)
+                                    if observed >= cleanup_end:
+                                        receipt.update(status='timeout' if receipt['status'] in ('ok', 'failed', 'timeout') else receipt['status'],
+                                                       stop_dispatch=True, deadline_reason='Cleanup verified only after its deadline')
                                     break
-                                if _clock() >= cleanup_end:
+                                if observed >= cleanup_end:
+                                    receipt['cleanup_within_budget'] = False
                                     raise TimeoutError('No observed ActiveProcesses=0 and signaled direct child before cleanup deadline')
                                 _sleep(min(sample_interval, max(0, cleanup_end - _clock())))
                         elif backend.pid is None:
-                            receipt.update(cleanup_verified=True, surviving_pids=[])
+                            receipt.update(cleanup_verified=True, surviving_pids=[], cleanup_within_budget=_clock() < cleanup_end)
                     except BaseException as error:
                         receipt.update(status='runner_error', cleanup_error=repr(error),
                                        cleanup_verified=False, surviving_pids=None, stop_dispatch=True)
@@ -453,11 +490,29 @@ def monitored(argv, folder, deadline, rss_limit, *, cwd=ROOT, env=None,
                         except BaseException as error:
                             receipt.update(status='runner_error', close_error=repr(error), stop_dispatch=True)
                         receipt['handle_events'] = backend.events
+                        closed_at = _clock()
+                        receipt['close_finished_elapsed_seconds'] = closed_at-start
+                        if closed_at >= receipt.get('cleanup_deadline', deadline + cleanup_timeout):
+                            receipt.update(cleanup_within_budget=False, stop_dispatch=True,
+                                           deadline_reason='Cleanup/handle close not observed before its deadline')
+                            if receipt['status'] in ('ok', 'failed', 'timeout'):
+                                receipt['status'] = 'timeout'
                 else:
                     # Native layer never existed, so no child was created.
-                    receipt.update(cleanup_verified=True, surviving_pids=[], target_entry_entered=False)
+                    receipt.update(cleanup_verified=True, surviving_pids=[], target_entry_entered=False,
+                                   cleanup_within_budget=_clock() < deadline + cleanup_timeout)
     finally:
-        receipt.update(finished_at=_utc(), wall_seconds=_clock() - start)
+        finished = _clock()  # Includes closing the parent's stdout/stderr streams.
+        if finished >= receipt.get('cleanup_deadline', deadline + cleanup_timeout):
+            receipt['cleanup_within_budget'] = False
+            receipt['deadline_reason'] = 'Cleanup and stream closure not observed before deadline'
+            if receipt['status'] in ('ok', 'failed', 'timeout'):
+                receipt['status'] = 'timeout'
+        receipt['within_budget'] = receipt['work_within_budget'] is True and receipt['cleanup_within_budget'] is True
+        receipt['deadline_status'] = 'within_budget' if receipt['within_budget'] else 'deadline_unverified'
+        if not receipt['within_budget']:
+            receipt['stop_dispatch'] = True
+        receipt.update(finished_at=_utc(), wall_seconds=finished - start)
         _save(path, receipt)
     if cause is not None and not isinstance(cause, Exception):
         raise cause

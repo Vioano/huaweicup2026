@@ -219,6 +219,101 @@ class MonitorTests(unittest.TestCase):
         self.assertIsNone(result['pid'])
         self.assertTrue(result['cleanup_verified'])
 
+    def run_backend(self, backend):
+        return win.monitored(['python.exe'], self.folder, 100.08, 1000,
+            cleanup_timeout=.08, _backend_factory=lambda: backend,
+            _clock=self.clock, _sleep=self.clock.sleep)
+
+    def test_sample_returning_after_deadline_cannot_accept_success(self):
+        backend = FakeJob()
+        sample = backend.sample
+        def late():
+            self.clock.value = 100.09
+            return sample()
+        backend.sample = late
+        result = self.run_backend(backend)
+        self.assertEqual(result['status'], 'timeout')
+        self.assertEqual(result['exit_code'], 0)
+        self.assertTrue(result['process_exit_observed'])
+        self.assertFalse(result['work_within_budget'])
+        self.assertTrue(result['stop_dispatch'])
+
+    def test_poll_returning_exit_after_deadline_keeps_fact_but_times_out(self):
+        backend = FakeJob()
+        poll = backend.poll
+        calls = []
+        def late():
+            calls.append(1)
+            if len(calls) == 1:
+                self.clock.value = 100.09
+            return poll()
+        backend.poll = late
+        result = self.run_backend(backend)
+        self.assertEqual(result['status'], 'timeout')
+        self.assertTrue(result['cleanup_verified'])
+        self.assertFalse(result['within_budget'])
+        self.assertEqual(result['deadline_status'], 'deadline_unverified')
+
+    def test_cleanup_active_zero_only_after_deadline_is_not_timely_success(self):
+        backend = FakeJob()
+        accounting = backend.accounting
+        calls = []
+        def late():
+            calls.append(1)
+            if len(calls) == 2:
+                self.clock.value = 100.3
+            return accounting()
+        backend.accounting = late
+        result = self.run_backend(backend)
+        self.assertEqual(result['status'], 'timeout')
+        self.assertTrue(result['cleanup_verified'])
+        self.assertEqual(result['surviving_pids'], [])
+        self.assertFalse(result['cleanup_within_budget'])
+        self.assertTrue(result['stop_dispatch'])
+
+    def test_close_crossing_cleanup_deadline_is_not_timely_success(self):
+        backend = FakeJob()
+        close = backend.close
+        def late():
+            close(); self.clock.value = 100.3
+        backend.close = late
+        result = self.run_backend(backend)
+        self.assertEqual(result['status'], 'timeout')
+        self.assertTrue(result['cleanup_verified'])
+        self.assertFalse(result['within_budget'])
+
+    def test_persisted_reservation_crossing_deadline_is_not_native_attempt(self):
+        backend = FakeJob()
+        save = win._save
+        def slow_save(path, receipt):
+            save(path, receipt)
+            if receipt['creation_reserved'] and not receipt['creation_reservation_persisted']:
+                self.clock.value = 100.2
+        with patch.object(win, '_save', side_effect=slow_save):
+            result = self.run_backend(backend)
+        self.assertTrue(result['creation_reserved'])
+        self.assertTrue(result['creation_reservation_persisted'])
+        self.assertFalse(result['creation_attempted'])
+        self.assertFalse(result['created'])
+        self.assertFalse(result['resume_attempted'])
+        self.assertFalse(result['target_entry_entered'])
+
+    def test_failed_reservation_persistence_is_not_native_attempt(self):
+        backend = FakeJob()
+        save = win._save
+        failed = []
+        def bad_save(path, receipt):
+            if receipt['creation_reserved'] and not failed:
+                failed.append(1)
+                raise OSError('synthetic persistence failure')
+            save(path, receipt)
+        with patch.object(win, '_save', side_effect=bad_save):
+            result = self.run_backend(backend)
+        self.assertTrue(result['creation_reserved'])
+        self.assertFalse(result['creation_reservation_persisted'])
+        self.assertFalse(result['creation_attempted'])
+        self.assertFalse(result['created'])
+
     @unittest.skipIf(os.name == 'nt', 'Host import guard only; not a native Windows test')
     def test_native_backend_rejects_non_windows_without_loading_dll(self):
         with self.assertRaisesRegex(OSError, 'Windows only'):
@@ -241,6 +336,7 @@ class ABITests(unittest.TestCase):
     def test_unassigned_process_termination_does_not_depend_on_job_membership(self):
         native = object.__new__(win.NativeJob)
         native.job, native.process, native.assigned = 11, 22, False
+        native.exited = lambda handle: False
         calls = []
         native.call = lambda *args: calls.append(args)
         native.terminate()
@@ -249,6 +345,7 @@ class ABITests(unittest.TestCase):
     def test_failed_job_termination_still_attempts_unassigned_process(self):
         native = object.__new__(win.NativeJob)
         native.job, native.process, native.assigned = 11, 22, False
+        native.exited = lambda handle: False
         calls = []
 
         def fail_job(*args):
@@ -260,6 +357,43 @@ class ABITests(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             native.terminate()
         self.assertEqual(len(calls), 2)
+
+    def test_access_denied_on_live_held_process_is_not_swallowed(self):
+        native = object.__new__(win.NativeJob)
+        native.job, native.process, native.assigned, native.events = None, 22, False, []
+        native.exited = lambda handle: False
+        native.call = lambda *args: (_ for _ in ()).throw(OSError(5, 'synthetic access denied'))
+        with self.assertRaisesRegex(RuntimeError, 'access denied'):
+            native.terminate()
+
+    def test_access_denied_race_requires_same_handle_exit_readback(self):
+        native = object.__new__(win.NativeJob)
+        native.job, native.process, native.assigned, native.events = None, 22, False, []
+        states, handles = iter((False, True)), []
+        def exited(handle):
+            handles.append(handle)
+            return next(states)
+        native.exited = exited
+        native.call = lambda *args: (_ for _ in ()).throw(OSError(5, 'synthetic exit race'))
+        native.terminate()
+        self.assertEqual(handles, [22, 22])
+        self.assertTrue(native.events[0]['held_handle_signaled'])
+
+    def test_failed_exit_observation_is_not_swallowed_as_termination_race(self):
+        native = object.__new__(win.NativeJob)
+        native.job, native.process, native.assigned, native.events = None, 22, False, []
+        polls, calls = [], []
+        def exited(handle):
+            polls.append(handle)
+            if len(polls) == 1:
+                raise OSError(5, 'synthetic wait observation failure')
+            return True
+        native.exited = exited
+        native.call = lambda *args: calls.append(args)
+        with self.assertRaisesRegex(RuntimeError, 'wait observation failure'):
+            native.terminate()
+        self.assertEqual(polls, [22])
+        self.assertEqual(calls, [])
 
 
 class KernelSubstitute:
@@ -296,6 +430,8 @@ class KernelSubstitute:
                 return 0
             elif name == 'IsProcessInJob':
                 args[-1]._obj.value = 1
+            elif name == 'WaitForSingleObject':
+                return 258
             return 1
         return invoke
 

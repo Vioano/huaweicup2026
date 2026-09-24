@@ -17,6 +17,16 @@ from tests.q2_nikolastarx import test_matrix_runner as fixtures
 protocol = fixtures.protocol
 
 
+def complete_windows_fixture(folder):
+    result = matrix.read(folder/'result.json')
+    result.update(bandwidth_bytes_per_cycle=60, capacity_bytes={}, memory_peak_by_core={}, step3_by_core={},
+                  cross_core_copy_delay_cycles=500, cross_task_traffic=0, task_count=2,
+                  task_dependencies=[], cross_core_transfers=[], per_core_timeline=[{}, {}],
+                  input_graph='case_002.json', input_plan='plan.json')
+    result['data_movement_bytes'].update(original_graph_copy_bytes=100, partition_added_copy_bytes=0)
+    matrix.save(folder/'result.json', result)
+
+
 class PlatformTests(unittest.TestCase):
     def test_windows_route_has_explicit_environment_copy_and_no_posix_call(self):
         expected = {'status': 'synthetic-only'}
@@ -65,7 +75,7 @@ class PlatformTests(unittest.TestCase):
         self.assertEqual(common.observed_rss_peak({'solver': {'observed_peak_rss_bytes': 0}}), 0)
 
     def test_cleanup_unknown_stops_dispatch_even_if_status_is_wrongly_ok(self):
-        for extra in ({'cleanup_verified': False}, {'surviving_pids': None}, {'stop_dispatch': True}):
+        for extra in ({'cleanup_verified': False}, {'surviving_pids': None}, {'stop_dispatch': True}, {'within_budget': False}):
             row = {'calls': {'solver': 1, 'E0': 0}, 'solver': {'status': 'ok', **extra}}
             self.assertIsNotNone(matrix.stop_dispatch_reason(row))
 
@@ -150,6 +160,106 @@ class NullableFeedTests(unittest.TestCase):
         self.assertEqual(row['status'], 'failed')
         self.assertEqual(len(self.argv), 1)
         self.assertEqual(row['calls']['E0'], 0)
+
+    def windows_final_monitor(self, *, resumed, complete=False, raise_after=False):
+        normal = self.fake_monitor()
+        def monitor(*args):
+            receipt = normal(*args)
+            if '-m' in args[0]:
+                return receipt
+            folder = args[1]
+            if not complete:
+                (folder/'result.json').unlink()
+            else:
+                complete_windows_fixture(folder)
+            receipt.update(status='ok' if complete else 'runner_error', created=True,
+                           creation_reserved=True, creation_attempted=True, resume_attempted=resumed,
+                           resumed=resumed, target_entry_entered='unknown' if resumed else False,
+                           finished_at='2026-09-25T00:00:00Z', cleanup_verified=True, surviving_pids=[])
+            matrix.save(folder/'process.json', receipt)
+            if raise_after:
+                raise RuntimeError('synthetic monitor escape after receipt')
+            return receipt
+        return monitor
+
+    def test_suspended_final_creation_is_zero_e0_in_normal_and_exception_paths(self):
+        for raises in (False, True):
+            row = matrix.execute_cell(protocol(), '002', 2, self.root/f'unresumed-{raises}', 10**12,
+                                      self.windows_final_monitor(resumed=False, raise_after=raises))
+            self.assertEqual(row['os_processes_created']['final'], 1)
+            self.assertEqual(row['final_E0_calls'], 0)
+            self.assertEqual(row['calls']['E0'], 0)
+            self.assertEqual(row['reserved_E0_upper_bound'], 1)
+
+    def test_resumed_final_without_entry_evidence_is_unknown_and_charged(self):
+        for raises in (False, True):
+            row = matrix.execute_cell(protocol(), '002', 2, self.root/f'unknown-{raises}', 10**12,
+                                      self.windows_final_monitor(resumed=True, raise_after=raises))
+            self.assertEqual(row['os_processes_created']['final'], 1)
+            self.assertIsNone(row['calls']['E0'])
+            self.assertIsNone(row['final_E0_calls'])
+            self.assertIsNotNone(matrix.stop_dispatch_reason(row))
+            journal = matrix.Journal(self.root/f'journal-{raises}.json', {}, [('002', 2)], 1)
+            self.assertTrue(journal.reserve('002-k2', 1))
+            journal.finish('002-k2', row)
+            self.assertEqual(journal.data['cells']['002-k2']['charged_E0'], 1)
+
+    def test_full_final_result_confirms_one_e0_even_after_monitor_exception(self):
+        for raises in (False, True):
+            row = matrix.execute_cell(protocol(), '002', 2, self.root/f'complete-{raises}', 10**12,
+                                      self.windows_final_monitor(resumed=True, complete=True, raise_after=raises))
+            self.assertEqual(row['calls']['E0'], 1)
+            self.assertTrue(row['final_completion_confirmed'])
+            self.assertEqual(row['status'], 'failed' if raises else 'ok')
+
+    def test_unresumed_solver_has_created_process_but_zero_online_calls(self):
+        def monitor(argv, folder, deadline, rss_limit):
+            receipt = {'pid': 1234, 'created': True, 'status': 'runner_error', 'target_entry_entered': False,
+                       'resume_attempted': False, 'finished_at': '2026-09-25T00:00:00Z'}
+            matrix.save(folder/'process.json', receipt)
+            return receipt
+        row = matrix.execute_cell(protocol(), '002', 2, self.root/'solver-unresumed', 10**12, monitor)
+        self.assertEqual(row['calls']['solver'], 1)
+        self.assertEqual(row['calls']['E0'], 0)
+        self.assertNotIn('final', row)
+        self.assertIn('OS process creation', row['call_count_semantics'])
+
+    def test_incomplete_reserved_receipt_does_not_prove_zero_created_or_zero_e0(self):
+        def monitor(argv, folder, deadline, rss_limit):
+            receipt = {'pid': None, 'created': False, 'status': 'starting', 'creation_reserved': True,
+                       'target_entry_entered': 'unknown', 'creation_attempted': False}
+            matrix.save(folder/'process.json', receipt)
+            raise RuntimeError('synthetic interrupted controller')
+        row = matrix.execute_cell(protocol(), '002', 2, self.root/'reserved-only', 10**12, monitor)
+        self.assertIsNone(row['calls']['solver'])
+        self.assertIsNone(row['calls']['E0'])
+        self.assertIsNotNone(matrix.stop_dispatch_reason(row))
+
+    def test_complete_result_with_incomplete_process_receipt_still_stops_dispatch(self):
+        normal = self.fake_monitor()
+        def monitor(*args):
+            receipt = normal(*args)
+            if '-m' not in args[0]:
+                complete_windows_fixture(args[1])
+                receipt.update(status='running', target_entry_entered='unknown', creation_reserved=True)
+                matrix.save(args[1]/'process.json', receipt)
+                raise RuntimeError('synthetic controller interrupted after output, before cleanup')
+            return receipt
+        row = matrix.execute_cell(protocol(), '002', 2, self.root/'output-but-no-cleanup', 10**12, monitor)
+        self.assertEqual(row['calls']['E0'], 1)
+        self.assertEqual(matrix.stop_dispatch_reason(row), 'final_receipt_incomplete')
+
+    def test_score_only_fragment_does_not_confirm_windows_e0_completion(self):
+        normal = self.fake_monitor()
+        def monitor(*args):
+            receipt = normal(*args)
+            if '-m' not in args[0]:
+                receipt.update(target_entry_entered='unknown', finished_at='2026-09-25T00:00:00Z')
+            return receipt
+        row = matrix.execute_cell(protocol(), '002', 2, self.root/'score-fragment', 10**12, monitor)
+        self.assertIsNone(row['calls']['E0'])
+        self.assertFalse(row['final_completion_confirmed'])
+        self.assertIn('Incomplete frozen P2 result structure', row['final_result_validation_error'])
 
 
 if __name__ == '__main__':

@@ -7,6 +7,7 @@ import unittest
 from unittest.mock import patch
 
 from src.q2_nikolastarx import windows_gate as gate
+from tests.q2_nikolastarx import test_windows_process as process_fixtures
 
 
 class GateTests(unittest.TestCase):
@@ -139,6 +140,73 @@ class GateTests(unittest.TestCase):
         with self.assertRaises(FileExistsError):
             self.execute()
         self.assertEqual(self.dispatched, [])
+
+
+class NativeGateCloseTests(unittest.TestCase):
+    """Run the real GateJob.close and NativeJob termination methods on fake APIs."""
+    def test_assign_failure_monitor_cleanup_is_not_followed_by_second_termination(self):
+        class Kernel(process_fixtures.KernelSubstitute):
+            signaled = False
+            limits = (0, 0, 0)
+            def __getattr__(self, name):
+                base = super().__getattr__(name)
+                def invoke(*args):
+                    result = base(*args)
+                    if name == 'SetInformationJobObject':
+                        v = args[2]._obj
+                        self.limits = v.basic.flags, v.basic.active_limit, v.job_memory
+                    elif name == 'QueryInformationJobObject' and args[1] == 9:
+                        v = args[2]._obj
+                        v.basic.flags, v.basic.active_limit, v.job_memory = self.limits
+                    elif name == 'QueryInformationJobObject' and args[1] == 1:
+                        args[2]._obj.active = 0  # Suspended direct child never entered Job.
+                    elif name == 'WaitForSingleObject':
+                        return 0 if self.signaled else 258
+                    elif name == 'TerminateProcess':
+                        if self.signaled:
+                            self.error = 5
+                            return 0
+                        self.signaled = True
+                    elif name == 'GetExitCodeProcess':
+                        args[1]._obj.value = gate.wp.FORCED_EXIT
+                    return result
+                return invoke
+        kernel = Kernel()
+        template = process_fixtures.NativeCreationSubstituteTests().native(kernel)
+        backend = object.__new__(gate.GateJob)
+        backend.__dict__.update(template.__dict__)
+        backend.case, backend.outer_deadline = 'assign_failure', 100.5
+        backend.cleanup_fault_armed, backend.witness = False, {'verified': False}
+        clock = process_fixtures.Clock()
+        with tempfile.TemporaryDirectory() as directory, \
+             patch.object(gate.ct, 'get_last_error', lambda: kernel.error, create=True), \
+             patch.object(gate, 'time', SimpleNamespace(perf_counter=clock, sleep=clock.sleep)):
+            receipt = gate.wp.monitored(['python.exe'], Path(directory)/'process', 100.3, 10**8,
+                cleanup_timeout=.1, _backend_factory=lambda: backend, _clock=clock, _sleep=clock.sleep)
+        names = [name for name, args in kernel.calls]
+        self.assertEqual(names.count('TerminateProcess'), 1)
+        self.assertNotIn('ResumeThread', names)
+        self.assertNotIn('close_error', receipt)
+        self.assertTrue(receipt['cleanup_verified'])
+        self.assertTrue(backend.witness['verified'])
+        self.assertTrue(backend.witness['within_budget'])
+
+    def test_gate_witness_late_active_zero_keeps_fact_but_does_not_pass(self):
+        backend = object.__new__(gate.GateJob)
+        backend.job, backend.pid, backend.process, backend.assigned = 10, 20, 30, True
+        backend.outer_deadline, backend.handles, backend.witness = 100.1, [], {'verified': False}
+        clock = process_fixtures.Clock()
+        def accounting(_self):
+            clock.value = 100.2
+            return {'active_processes': 0, 'total_processes': 1}
+        with patch.object(gate.wp.NativeJob, 'accounting', accounting), \
+             patch.object(gate.wp.NativeJob, 'poll', return_value=0), \
+             patch.object(gate, 'time', SimpleNamespace(perf_counter=clock, sleep=clock.sleep)):
+            with self.assertRaises(TimeoutError):
+                backend.close()
+        self.assertTrue(backend.witness['verified'])
+        self.assertFalse(backend.witness['within_budget'])
+        self.assertFalse(gate.expected('normal', {}, Path('unused'), backend.witness))
 
 
 if __name__ == '__main__':

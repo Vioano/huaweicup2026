@@ -127,7 +127,7 @@ class GateJob(wp.NativeJob):
             else:
                 # Direct base calls bypass only this case's injected accounting
                 # error. Any real native error still fails the independent witness.
-                if self.pid is not None and not self.assigned:
+                if self.pid is not None and not self.assigned and not wp.NativeJob.exited(self, self.process):
                     wp.NativeJob.terminate(self)
                 accounting = wp.NativeJob.accounting(self)
                 if accounting['active_processes']:
@@ -135,23 +135,29 @@ class GateJob(wp.NativeJob):
                 while True:
                     accounting = wp.NativeJob.accounting(self)
                     code = wp.NativeJob.poll(self)
+                    observed = time.perf_counter()
                     self.witness = {'verified': False, 'accounting': accounting,
-                                    'exit_code': code, 'observed_at': wp._utc()}
+                                    'exit_code': code, 'observed_at': wp._utc(), 'within_budget': observed < end}
                     if accounting['active_processes'] == 0 and (self.pid is None or code is not None):
                         self.witness['verified'] = True
+                        if observed >= end:
+                            raise TimeoutError('Independent cleanup proven only after witness deadline')
                         break
-                    if time.perf_counter() >= end:
+                    if observed >= end:
                         raise TimeoutError('Independent cleanup witness deadline')
                     time.sleep(.01)
         except BaseException as error:
-            self.witness.update(verified=False, error=repr(error))
+            self.witness.update(error=repr(error))
             raise
         finally:
             super().close()  # KILL_ON_JOB_CLOSE fallback is not itself proof.
+            if time.perf_counter() >= end:
+                self.witness.update(within_budget=False, error='Independent cleanup/close crossed witness deadline')
+                raise TimeoutError('Independent cleanup/close crossed witness deadline')
 
 
 def expected(case, receipt, folder, witness):
-    if not witness.get('verified') or receipt.get('close_error'):
+    if not witness.get('verified') or witness.get('within_budget') is False or witness.get('error') or receipt.get('close_error'):
         return False
     if case != 'cleanup_unknown' and receipt.get('cleanup_error'):
         return False

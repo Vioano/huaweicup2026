@@ -29,9 +29,9 @@ receipt = monitored(
 调用方仍负责固定源码/输入、预算预留、实际评价入口计数与发布收尾。进程模块不导入官方代码、不选择算法、不增加候选、不自动重试或写中央台。当前集成处理以下差异：
 
 1. 判断 `status == 'runner_error'` **或** `stop_dispatch` 即停止新派发；不能仅检查 `surviving_pids` 是否为非空列表。清理未知时该字段是 `null`，不是虚构的空列表。
-2. `pid` 非空意味着 CreateProcess 实际成功，即使 Assign/Resume 后来失败；`creation_attempted` 只是请求尝试。未创建不填假 PID，也不自动记 E0=1。评价函数体进入与否仍需目标入口证据；`target_entry_entered` 在首次恢复尝试前为 false，恢复尝试后保守为 unknown。OS 进程数不等于 E0 次数。
+2. `pid` 非空意味着 CreateProcess 实际成功，即使 Assign/Resume 后来失败。`creation_reserved` 与 `creation_reservation_persisted` 分别记录预留和落盘返回，`creation_attempted` 仅从 native backend 的实际 API 尝试标志取得，不能把落盘前的预留 OR 成 API 已调用；后续另记 `created/resume_attempted/resumed/target_entry_entered`。终态收据确认未恢复线程则 E0=0；恢复后缺少入口证据与完整输出则 E0=null，不把 PID 当 E0。成功解析完整的冻结 P2 CLI 输出结构和输入身份可确认一次 E0，即使后续清理失败；该次仍作为失败行。solver 计数明确表示 OS 进程创建，另列 `os_processes_created`，未恢复 solver 的在线 E0 为 0。在途未完成收据不能据假初值断言未创建/未运行。实际计数与 `reserved_E0_upper_bound` 分开，未知保留预算占用并停止派发。
 3. 尚未取得有效 RSS 样本时，两个 peak 字段是 `null`。board 导出须保留未知及原因，不能用 0 补齐，也不能直接对含 null 的峰值列表 `max()`。
-4. `deadline` 是工作阶段绝对 perf_counter 截止，清理最多另留 `cleanup_timeout` 秒，实际 wall 包含准备、创建、工作、关闭输出和清理。外层协议必须预留该清理时间；不能在批次截止后仍声称严格未超窗。同步原生 API 本身没有独立硬中断保证，外部 watchdog 仍由执行端负责。
+4. `deadline` 是工作阶段绝对 perf_counter 截止，清理最多另留 `cleanup_timeout` 秒，实际 wall 包含准备、创建、工作、关闭输出和清理（终态收据自身序列化在测量后）。清理截止取“清理开始+grace”和“工作截止+grace”的较小者，超时 API 不得顺延总上限。sample/poll 返回后重新读钟；晚到退出保留 exit_code/退出事实，status 为 timeout。ActiveProcesses=0 仅晚到时仍可 `cleanup_verified=true`，但 `cleanup_within_budget/within_budget=false`、`deadline_status=deadline_unverified`、`stop_dispatch=true`。close 与父输出流关闭后也复核时点。外层协议必须预留清理时间；同步原生 API 本身没有独立硬中断保证，外部 watchdog 仍由执行端负责。
 5. `evaluate_feedback.monitored` 在 Windows 路由至本层，POSIX 保留原监测函数。Windows CPU 读注册表，RAM 读 `GlobalMemoryStatusEx`；失败保留 null 和具体原因，不调用 sysctl 或猜测配置。matrix 优先使用协议显式 `python`，Windows 默认当前 `sys.executable`，POSIX 默认仍为 `.venv/bin/python`。新冻结清单包含适配层；JSON 明确按 UTF-8 落盘，Windows 子进程设置 `PYTHONUTF8=1`。此模块没有修改算法。
 6. matrix 的 Windows 工作 deadline 从阶段墙钟和剩余批次墙钟中扣除 `process_cleanup_grace_seconds`（默认 5 秒），cleanup 仍计入实测 wall。grace 必须小于 solver 和 final 的阶段限额。未知清理在 final 评分之前即截断；后续格式预检同样不再启动。正常路径上的 Windows 格式预检是独立记录的 Job 子进程，最多工作 10 秒加同样 grace，受剩余批次时间约束；它不计 E0。POSIX 预检保持旧实现。真实派发以 PID/创建收据计数；计划、预算预留、CreateProcess 尝试都不伪装成实际评价调用。
 
@@ -41,7 +41,9 @@ receipt = monitored(
 
 Job 先创建、设定并回读 `KILL_ON_JOB_CLOSE`，不启用两种 breakaway 标志。CreateProcess 挂起创建；成功后立即接管 PID/两个句柄，在 Assign 和成员关系回读成功后才首次放行。Assign 失败时，进程尚未运行，但已实际创建，必须对持有的 process handle 调用 TerminateProcess 并观察退出；不能依赖空 Job 的终止来回收它。没有无 Job fallback。
 
-保证的边界是“首线程放行前已归属 Job”，不是“OS 创建前就归属”。父程序在 CreateProcess 成功与 Assign 成功之间被强制杀死的极短窗口，没有在本模块内建立独立外部回收者；该进程仍挂起，但可能需要外部 owner 收尾。父进程突然退出后的 Job 自动回收，从成功分配以后成立。当前实现不是恶意代码沙箱，也不能把经 WMI/外部服务创建的进程声称为受控后代。
+调用 TerminateProcess 前先查询同一持有句柄是否已 signaled。微软 [TerminateProcess 文档](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminateprocess)明确已退出进程再次终止可能返回 ERROR_ACCESS_DENIED(5)；只有即时复查同一句柄已 signaled 才记录为退出竞态。仍存活或无法观察时保留原错误，不能普遍忽略错误 5。GateJob.close 同样先检查，不在 monitor 已完成清退后无条件再终止一次。
+
+保证的边界是“首线程放行前已归属 Job”，不是“OS 创建前就归属”。父程序在 CreateProcess 成功与 Assign 成功之间被强制杀死的窗口，没有在本模块内建立独立外部回收者；成功 PID 也可能尚未持久化。该进程仍挂起，但可能需要外部 owner 收尾；本次不声称关闭了该窗口。父进程突然退出后的 Job 自动回收，从成功分配以后成立。当前实现不是恶意代码沙箱，也不能把经 WMI/外部服务创建的进程声称为受控后代。
 
 每个样本查询 Job PID 列表，打开成员句柄并确认仍属于该 Job，读取当前工作集求和，再加观察进程当前工作集用于阈值判定。成员在列表读取与打开句柄之间退出的有限竞态，只有新的完整 Job 列表已排除它才允许忽略；其他观察异常停止派发。共享页可被多个进程重复计入，短峰可能漏采，故是观察阈值而非内核硬 RSS 上限。
 
@@ -74,7 +76,9 @@ python -B -m src.q2_nikolastarx.windows_gate run --execute-native --runner-commi
 .venv/bin/python -B -m unittest tests.q2_nikolastarx.test_windows_gate tests.q2_nikolastarx.test_windows_runner_integration tests.q2_nikolastarx.test_matrix_runner tests.q2_nikolastarx.test_windows_process -q
 ```
 
-2026-09-25 本机 macOS：**53 项通过，0.092 秒**，其中原适配层 21 项、既有 matrix 12 项、平台集成 12 项、门禁控制器 8 项。全部是替身/静态/内存内格式检查；测试本身未派发新子进程、Windows DLL、solver 或 E0/E1/E2。使用假单调钟/假 PID 的收据仅为临时单元测试数据，不能作性能结果或导入成绩台。测试开始前的一次平台替身测试因 mock 意外截获 `platform.platform()` 的 macOS 查询而失败，修正替身隔离后通过；没有因此启动或补跑任何评价器。
+初版在 2026-09-25 本机 macOS 有 53 项替身检查通过，仍被 s55 对固定 `131d` 的独立复核发现三项实质缺陷：重复终止已退出的未分配进程、把创建 PID 等同 E0、API 跨截止返回成功。初版通过不代表这三项当时已验证。修正版增加实际 GateJob.close 方法链上的 ctypes 参数替身、调用计数/异常恢复/预算占用与晚到 API 假钟回归；当前 **71 项通过**，其中适配层 30 项、既有 matrix 12 项、平台集成 19 项、门禁控制器 10 项。
+
+全部是替身/静态/内存内格式检查；测试本身未派发新子进程、Windows DLL、solver 或 E0/E1/E2。假单调钟/假 PID 收据仅为临时测试数据，不能作性能结果或导入成绩台。最初一次平台替身测试曾因 mock 意外截获 `platform.platform()` 的 macOS 查询而失败；本轮替身首次复测也暴露旧 Kernel substitute 未模拟新增的 Wait 调用，补齐实际返回值语义后通过。没有因此启动或补跑任何评价器。
 
 检查覆盖：x64 ctypes 大小、原生参数替身上的 Job/创建/Assign/唯一 Resume 顺序与三份 stdio 白名单、成功和非零退出、超时后模拟孙进程清退、RSS 超限、Job 创建失败、CreateProcess 返回失败、成功创建后的 Assign 失败、Resume 失败、RSS/等待观察失败、Job 清理查询失败、终止返回成功但 Active 仍非零、句柄关闭失败、过期 deadline、拒绝旧目录重复派发、macOS 导入后拒绝构造原生后端。
 

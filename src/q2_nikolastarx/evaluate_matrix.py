@@ -215,6 +215,68 @@ def recovery_status(path):
             'warning': 'Read-only recovery plan. Check orphan processes before a separately authorized continuation; no automatic resume.'}
 
 
+def windows_receipt(receipt):
+    return 'target_entry_entered' in receipt or 'creation_reserved' in receipt
+
+
+def created_processes(receipt):
+    if receipt.get('pid') is not None:
+        return 1
+    if windows_receipt(receipt) and not receipt.get('finished_at'):
+        return None  # A durable reservation is not proof CreateProcess never ran.
+    return 0
+
+
+def entry_known_impossible(receipt):
+    return bool(receipt.get('finished_at')) and receipt.get('target_entry_entered') is False
+
+
+def unconfirmed_online_calls(receipt):
+    return 0 if entry_known_impossible(receipt) or created_processes(receipt) == 0 else None
+
+
+def account_final(row, folder, cores):
+    """OS creation and entry are different; complete fresh E0 output proves entry."""
+    receipt = row['final']
+    result = None
+    try:
+        result = common.valid_result(folder / 'final/result.json', cores)
+        if windows_receipt(receipt):
+            # Required outer fields of the frozen P2 CLI result, not a score-only
+            # fragment. This is completion evidence, not an independent replay.
+            kinds = {'bandwidth_bytes_per_cycle': (int, float), 'capacity_bytes': (dict,),
+                     'memory_peak_by_core': (dict,), 'step3_by_core': (dict,),
+                     'cross_core_copy_delay_cycles': (int, float), 'cross_task_traffic': (int, float),
+                     'data_movement_bytes': (dict,), 'task_count': (int,), 'task_dependencies': (list,),
+                     'cross_core_transfers': (list,), 'per_core_timeline': (list,),
+                     'input_graph': (str,), 'input_plan': (str,)}
+            if any(type(result.get(key)) not in types for key, types in kinds.items()):
+                raise ValueError('Incomplete frozen P2 result structure')
+            if result['input_graph'] != f"case_{row['case']}.json" or result['input_plan'] != 'plan.json' or result['task_count'] != cores:
+                raise ValueError('Completed P2 result input/task identity mismatch')
+            movement_fields = {'added_copy_bytes', 'original_graph_copy_bytes', 'partition_added_copy_bytes',
+                               'scheduled_copy_bytes', 'spill_added_copy_bytes'}
+            if not movement_fields <= result['data_movement_bytes'].keys():
+                raise ValueError('Incomplete P2 movement result')
+    except Exception as error:
+        result = None
+        row['final_result_validation_error'] = str(error).replace(str(ROOT), '${REPO_ROOT}')
+    row['final_completion_confirmed'] = result is not None
+    row.setdefault('os_processes_created', {})['final'] = created_processes(receipt)
+    if not windows_receipt(receipt):
+        count = created_processes(receipt)  # Preserve existing POSIX launch accounting.
+    elif entry_known_impossible(receipt):
+        count = 0 if result is None else None  # Conflicting evidence is not promoted.
+    elif result is not None or receipt.get('target_entry_entered') is True:
+        count = 1
+    else:
+        count = 0 if created_processes(receipt) == 0 else None
+    row['final_E0_calls'] = count
+    online = row['online_E0_calls']
+    row['calls']['E0'] = online + count if online is not None and count is not None else None
+    return result
+
+
 def execute_cell(p, case, cores, folder, deadline, monitor=None):
     grace = cleanup_grace(p)
     if monitor is None:
@@ -224,7 +286,9 @@ def execute_cell(p, case, cores, folder, deadline, monitor=None):
     rel = relative(folder)
     row = {'case': case, 'cores': cores, 'status': 'failed', 'started_at': common.utc(),
            'calls': {'solver': 0, 'E0': 0, 'E1': 0, 'E2': 0}, 'phase': 'solver_dispatch',
-           'solver_mode': p['solver_mode']}
+           'solver_mode': p['solver_mode'], 'reserved_E0_upper_bound': p['max_internal_per_cell'] + 1,
+           'os_processes_created': {},
+           'call_count_semantics': 'calls.solver counts OS process creation, including suspended children; Windows E0 counts require entry/output evidence, never just PID. POSIX launch accounting is unchanged.'}
     python = python_command(p)
     argv = [python, '-B', '-m', p['solver_module'], f'data/raw/a/official/data/case_{case}.json',
             '--config', str(common.CONFIG), '--cores', str(cores), '--output', rel + '/plan.json',
@@ -237,8 +301,9 @@ def execute_cell(p, case, cores, folder, deadline, monitor=None):
         row['solver'] = monitor(argv, folder / 'solver-process',
                                 min(deadline, time.perf_counter() + p['solver_wall_seconds']) - grace,
                                 p['rss_observation_stop_bytes'])
-        row['calls']['solver'] = 1 if row['solver'].get('pid') is not None else 0
-        row['calls']['E0'] = None if row['calls']['solver'] else 0
+        row['calls']['solver'] = created_processes(row['solver'])
+        row['os_processes_created']['solver'] = row['calls']['solver']
+        row['calls']['E0'] = unconfirmed_online_calls(row['solver'])
         ledger = read(folder / 'online/solver.json') if (folder / 'online/solver.json').exists() else None
         row['online'] = ledger
         if ledger is not None:
@@ -270,6 +335,7 @@ def execute_cell(p, case, cores, folder, deadline, monitor=None):
             raise ValueError('Batch deadline before independent final E0')
         row['phase'] = 'final_dispatch'
         row['final_reserved'] = True
+        row['online_E0_calls'] = row['calls']['E0']
         save(folder / 'run.json', row)
         final_argv = [python, '-B', str(common.ENTRY), f'data/raw/a/official/data/case_{case}.json',
                       rel + '/plan.json', '--config', str(common.CONFIG), '-o', rel + '/final/result.json',
@@ -277,13 +343,14 @@ def execute_cell(p, case, cores, folder, deadline, monitor=None):
         row['final'] = monitor(final_argv, folder / 'final',
                                min(deadline, time.perf_counter() + p['evaluation_timeout_seconds']) - grace,
                                p['rss_observation_stop_bytes'])
-        row['calls']['E0'] += 1 if row['final'].get('pid') is not None else 0
+        result = account_final(row, folder, cores)
         if row['final']['status'] != 'ok':
             row['status'] = 'timeout' if row['final']['status'] == 'timeout' else 'failed'
             raise ValueError('Independent final E0 failed')
         if stop_dispatch_reason(row):
             raise ValueError('Final process observation or cleanup is not verified')
-        result = common.valid_result(folder / 'final/result.json', cores)
+        if result is None:
+            raise ValueError('Independent final result invalid: ' + row['final_result_validation_error'])
         row['full_online_result_equal'] = None
         if p['solver_mode'] == 'portfolio':
             selected = (folder / 'online' / ledger['selected_result']).resolve()
@@ -301,12 +368,12 @@ def execute_cell(p, case, cores, folder, deadline, monitor=None):
             process_path = folder / ('solver-process' if phase == 'solver' else 'final') / 'process.json'
             if process_path.exists():
                 row[phase] = read(process_path)
-                spawned = row[phase].get('pid') is not None
                 if phase == 'solver':
-                    row['calls']['solver'] = int(spawned)
-                    row['calls']['E0'] = None if spawned else 0
-                elif row['calls']['E0'] is not None:
-                    row['calls']['E0'] += int(spawned)
+                    row['calls']['solver'] = created_processes(row[phase])
+                    row['os_processes_created']['solver'] = row['calls']['solver']
+                    row['calls']['E0'] = unconfirmed_online_calls(row[phase])
+                else:
+                    account_final(row, folder, cores)
             else:
                 row['calls']['E0'] = None
                 if phase == 'solver':
@@ -427,12 +494,16 @@ def stop_dispatch_reason(row):
         return 'unknown_dispatch_or_call_count'
     for stage in ('solver', 'final'):
         receipt = row.get(stage, {})
+        if windows_receipt(receipt) and not receipt.get('finished_at'):
+            return stage + '_receipt_incomplete'
         if receipt.get('status') in ('rss_limit', 'runner_error'):
             return stage + '_' + receipt['status']
         if receipt.get('surviving_pids'):
             return stage + '_owned_processes_still_live'
         if receipt.get('stop_dispatch') or receipt.get('cleanup_verified') is False:
             return stage + '_cleanup_or_observation_not_verified'
+        if receipt.get('within_budget') is False:
+            return stage + '_deadline_not_verified'
         if 'surviving_pids' in receipt and receipt['surviving_pids'] is None:
             return stage + '_survivors_unknown'
     return None
