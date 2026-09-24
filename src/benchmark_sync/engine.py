@@ -332,6 +332,7 @@ class Engine:
         # Visit newly appended envelopes before cycling back over older transient failures.
         scheduled.sort(key=lambda item:(item[3]!='pending',item[4],not item[6],item[5]))
         deadline=time.monotonic()+self.receive_status['budget_seconds']
+        seen_submissions={}
         for actor,lane_head,lane_tree,group,cursor_key,path,_is_new in scheduled:
             if time.monotonic()>deadline: break
             receipt_path='receipts/'+path.removeprefix('submissions/')
@@ -340,6 +341,11 @@ class Engine:
                 sha=entry.get('sha') if isinstance(entry,dict) else None
                 return sha if isinstance(sha,str) and re.fullmatch('[0-9a-f]{40}',sha) else None
             submission_sha,receipt_sha=blob_sha(path),blob_sha(receipt_path)
+            if path in seen_submissions:
+                if seen_submissions[path]!=submission_sha:
+                    errors.append({'stage':'receive','message':'Conflicting copies of one submission across transport refs','submission':path})
+                continue
+            seen_submissions[path]=submission_sha
             fingerprint=[submission_sha,receipt_sha,trust_id]
             if submission_sha and receipt_sha and cache.get(path)==fingerprint: continue
             progress[cursor_key]=path

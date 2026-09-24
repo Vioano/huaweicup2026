@@ -92,6 +92,24 @@ class EngineTests(unittest.TestCase):
         self.engines['leader'].receive_submissions(self.remote.head())
         self.assertTrue((self.root/'inbox'/identity/'request.json').exists())
         self.assertIsNone(self.remote.head('benchmark-submissions/member'))
+
+    def test_same_submission_in_legacy_and_actor_lane_publishes_receipt_once(self):
+        from unittest.mock import patch
+        entry,identity=self.queue();payload=read_json(entry)['payload'];member=self.engines['member']
+        member.deliver_outbox(None)
+        legacy=f'submissions/member/{identity}.json'
+        envelope=canonical(member.sign('submission',payload))
+        self.remote.update({legacy:envelope})
+        target=self.root/'inbox'/identity
+        write_json(target/'result.json',{'schema_version':1,'id':identity,'state':'accepted','receipt':{'added':1},'error':None})
+        original=self.remote.update;published=[]
+        def record(files,**kwargs):
+            published.extend(path for path in files if path==f'receipts/member/{identity}.json')
+            return original(files,**kwargs)
+        with patch.object(self.remote,'update',side_effect=record):
+            self.engines['leader'].receive_submissions(self.remote.head())
+        self.assertEqual(published,[f'receipts/member/{identity}.json'])
+        self.assertIn(f'receipts/member/{identity}.json',self.remote.tree(self.remote.head()))
     def test_interrupted_download_never_exposes_partial_submission(self):
         p,identity=self.queue();self.engines['member'].deliver_outbox(None)
         self.remote.fail_path='results/plan.json';leader=self.engines['leader'];leader.receive_submissions(self.remote.head())
