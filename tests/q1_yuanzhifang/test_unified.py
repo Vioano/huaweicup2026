@@ -64,6 +64,34 @@ class UnifiedControllerTest(unittest.TestCase):
         self.assertEqual(info["stop_reason"], "first-score-failure")
         self.assertEqual(info["online_score_attempts"], 3)
 
+    def test_worker_accounting_distinguishes_confirmed_and_unknown(self):
+        class FakeEvaluator:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *_):
+                return None
+
+            def evaluate_batch(self, plans, **_):
+                value = plans[0]["node_to_subgraph"]["n"]
+                if value == 0:
+                    yield {"status": "ok", "worker_pid": 1234, "makespan": 7,
+                           "data_movement_bytes": {"scheduled_copy_bytes": 0}}
+                else:
+                    raise RuntimeError("injected startup failure")
+
+        events = []
+        with patch.object(unified.captain, "generate_candidates", return_value=base(2)), \
+             patch("src.q1_yuanzhifang.capacity_return.construct", return_value=(candidate("duplicate", 0)["plan"], {})), \
+             patch("src.eval_exact.P1BatchEvaluator", return_value=FakeEvaluator()), \
+             patch("src.eval_exact.read_config", return_value={}):
+            _, info = unified.solve({}, 2, emit=events.append)
+        self.assertEqual(info["e1_interface_attempts"], 2)
+        self.assertEqual(info["actual_e1_calls"], 1)
+        self.assertEqual(info["e1_worker_execution_unknown_attempts"], 1)
+        self.assertEqual([e["event"] for e in events if e["event"] == "e1_interface_attempt_started"],
+                         ["e1_interface_attempt_started"] * 2)
+
     def test_one_core_has_no_extra_candidate_or_scoring(self):
         with patch.object(unified.captain, "generate_candidates", return_value=base(1)), \
              patch("src.q1_yuanzhifang.capacity_return.construct") as capacity:

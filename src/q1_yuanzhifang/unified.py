@@ -104,7 +104,7 @@ def solve(graph, cores, emit=None, score=None):
     began = time.perf_counter()
     candidates, diagnostics = generate_candidates(graph, cores, emit=emit)
     score_started = time.perf_counter()
-    e1_calls = 0
+    e1_interface_attempts = 0
     scoring_parameters = dict(workers=1, cache_bytes=16 << 20,
                               timeout_seconds=60, startup_timeout_seconds=10,
                               max_tasks_per_worker=5)
@@ -117,15 +117,30 @@ def solve(graph, cores, emit=None, score=None):
         config = read_config(captain.CONFIG)
         with P1BatchEvaluator(graph, **scoring_parameters) as evaluator:
             def online_score(plan):
-                nonlocal e1_calls
-                e1_calls += 1
-                return next(evaluator.evaluate_batch([plan], full=False, **config))
+                nonlocal e1_interface_attempts
+                e1_interface_attempts += 1
+                captain.event(emit, "e1_interface_attempt_started", attempt=e1_interface_attempts)
+                try:
+                    result = next(evaluator.evaluate_batch([plan], full=False, **config))
+                except Exception as error:
+                    captain.event(emit, "e1_interface_attempt_failed", attempt=e1_interface_attempts,
+                                  error_type=type(error).__name__, message=str(error))
+                    raise
+                captain.event(emit, "e1_interface_attempt_returned", attempt=e1_interface_attempts,
+                              worker_pid=result.get("worker_pid"), status=result.get("status"))
+                return result
             selected, records, reason = captain.choose(candidates, online_score, emit=emit)
+    confirmed_worker_calls = sum(r.get("worker_pid") is not None for r in records) if score is None else 0
+    unknown_worker_execution = e1_interface_attempts - confirmed_worker_calls
     diagnostics.update(algorithm_id=ALGORITHM_ID, variant="base-four-plus-one-v1",
                        selected=selected["name"], stop_reason=reason,
                        candidates=[{k: v for k, v in c.items() if k != "plan"} for c in candidates],
                        online_scores=records, online_score_attempts=len(records),
-                       actual_e1_calls=e1_calls, scoring_parameters=scoring_parameters,
+                       e1_interface_attempts=e1_interface_attempts,
+                       actual_e1_calls=confirmed_worker_calls,
+                       e1_worker_execution_unknown_attempts=unknown_worker_execution,
+                       e1_call_accounting="actual_e1_calls counts returned worker_pid only; unknown attempts are charged to budget",
+                       scoring_parameters=scoring_parameters,
                        e1_source_commit=captain.E1_SOURCE,
                        online_scoring_seconds=time.perf_counter() - score_started,
                        solve_function_seconds=time.perf_counter() - began,
@@ -143,13 +158,16 @@ def main():
     if args.output == args.diagnostics or args.output.exists() or args.diagnostics.exists():
         raise FileExistsError("Refuse to overwrite solver artifacts")
     started = time.perf_counter()
-    captain.event(lambda row: print(json.dumps(row), flush=True), "solver_input_started", cores=args.cores)
-    plan, diagnostics = solve(json.loads(args.graph.read_bytes()), args.cores)
+    def emit(row):
+        print(json.dumps(row), flush=True)
+    captain.event(emit, "solver_input_started", cores=args.cores)
+    plan, diagnostics = solve(json.loads(args.graph.read_bytes()), args.cores, emit=emit)
     for path in (args.output, args.diagnostics):
         path.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("xb") as out:
         out.write(captain.plan_bytes(plan))
-    diagnostics["cold_solver_wall_seconds"] = time.perf_counter() - started
+    diagnostics["cli_body_through_plan_wall_seconds"] = time.perf_counter() - started
+    diagnostics["cli_body_scope"] = "Starts after CLI parsing; ends after plan close; excludes imports, diagnostics write and process exit. External runner owns full cold wall."
     with args.diagnostics.open("x", encoding="utf-8") as out:
         json.dump(diagnostics, out, indent=2)
         out.write("\n")
