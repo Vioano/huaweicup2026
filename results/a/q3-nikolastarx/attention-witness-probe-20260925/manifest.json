@@ -1,0 +1,68 @@
+{
+  "schema": "q3-feedback-benchmark-v1",
+  "run_id": "q3-attention-witness-probe-20260925",
+  "stage_id": "three",
+  "producer_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+  "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+  "solver_commit": "c2d628ba0fe8dce4630e5f9c0a5c8fb810fcd41a",
+  "solver_module": "src.q3.witness_solve",
+  "algorithm": {
+    "id": "q3-witness-structure",
+    "name": "统一结构算法加Attention日历次序保留",
+    "authors": [
+      "NikolaStarx",
+      "yuanzhifang30-sudo"
+    ],
+    "method": "Fresh pipeline/calendar incumbent;only if committed gap placement proxy is strictly below ready proxy, propose the same-owner chronological placement word. At most3onlineE0,total includes incumbent;exact official M selection,duplicate/bound skips. Reuse compressed final result only on exact raw SHA match.",
+    "references": [
+      "https://github.com/huaweibei123/huaweicup2026/issues/51",
+      "https://github.com/huaweibei123/huaweicup2026/blob/c2d628ba0fe8dce4630e5f9c0a5c8fb810fcd41a/docs/a/q3/ATTENTION_WITNESS.md"
+    ],
+    "upstream": []
+  },
+  "runtime_id": "q3-local-attention-witness-probe-20260925",
+  "budget": {
+    "max_e0_calls": 9,
+    "total_wall_seconds": 120,
+    "per_job_seconds": 30
+  },
+  "offline_costs": "Source831 full500 receipts show47/108 gap placements have strictly smaller witness proxy than ready reranking; this is seen-data mechanism feedback.60 synthetic timing-witness checks,3real-graph exact old-default parity checks;149tests148pass1explicitE0skip. Fake-evaluator compression reuse checks only,no measured end-to-end speedup. No training/history-score lookup; current run recomputes incumbent and proposal fresh.",
+  "jobs": [
+    {
+      "case_id": "066",
+      "cores": 5,
+      "variant": "unified-attention-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "structural_router": "pipeline_then_one_proxy_improving_attention_witness",
+        "candidate_limit": 3,
+        "selection": "strictly smaller official makespan than fresh incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "082",
+      "cores": 5,
+      "variant": "unified-attention-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "structural_router": "pipeline_then_one_proxy_improving_attention_witness",
+        "candidate_limit": 3,
+        "selection": "strictly smaller official makespan than fresh incumbent"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "071",
+      "cores": 5,
+      "variant": "unified-attention-witness-e0",
+      "solver_args": [],
+      "parameters": {
+        "structural_router": "pipeline_then_one_proxy_improving_attention_witness",
+        "candidate_limit": 3,
+        "selection": "strictly smaller official makespan than fresh incumbent"
+      },
+      "e0_call_limit": 3
+    }
+  ]
+}
