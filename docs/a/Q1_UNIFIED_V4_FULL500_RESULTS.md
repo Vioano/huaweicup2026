@@ -36,5 +36,7 @@ stopped at that coordinate under a 180 s E0 cap after 149 valid cells, and a
 separate one-cell diagnostic finished in 378.595 s. Both remain historical
 experiments; neither contributes to this 500-cell score. The 5-core gain over
 v1 is small, so retain both complete candidates when comparing solution
-quality against measured solver time. Shared-host concurrent timings are not
-isolated-hardware speed ratios.
+quality against measured solver time. At 5 cores, added DDR-copy bytes rise
+for 7 cases, fall for 4, and tie for 89 versus v1; the Makespan result does
+not imply improvement on every secondary metric. Shared-host concurrent
+timings are not isolated-hardware speed ratios.
