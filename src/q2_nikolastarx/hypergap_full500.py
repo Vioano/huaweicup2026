@@ -130,6 +130,10 @@ def preflight(manifest, raw_root, e2_root, python, runner_commit=None, frozen=Fa
         raw = path.read_bytes()
         if digest(raw) != files[rel]['sha256'] or len(raw) != files[rel]['bytes']:
             raise ValueError('Official raw mismatch: ' + rel)
+        if rel.startswith('code/'):
+            local = (ROOT / 'data/raw/a/official' / rel).read_bytes()
+            if local != raw:
+                raise ValueError('Imported official code differs from --raw-root: ' + rel)
     if old['config']['sha256'] != files['data/config.txt']['sha256']:
         raise ValueError('Official config identity mismatch')
     feed = pinned(old['baseline_feed'])['records']
@@ -160,7 +164,7 @@ def preflight(manifest, raw_root, e2_root, python, runner_commit=None, frozen=Fa
                       'baseline_manifest_sha256': digest(old_raw)}
 
 
-def inspect_solver(folder, row, process, baseline):
+def inspect_solver(folder, row, process, baseline, e2_identity):
     ledger_path = folder / 'online/solver.json'
     if not ledger_path.exists():
         raise ValueError('Solver ledger missing; calls unknown')
@@ -176,6 +180,11 @@ def inspect_solver(folder, row, process, baseline):
                    or a['record'].get('status') != 'ok' or a['record'].get('problem') != 2
                    for a in attempts)):
         raise ValueError('Fallback, unknown or excess E2 request')
+    if attempts and (ledger.get('source_checked') is not True
+                     or not isinstance(ledger.get('source'), dict)
+                     or any(ledger['source'].get(key) != e2_identity[key]
+                            for key in ('commit', 'manifest_sha256', 'native_binary_sha256'))):
+        raise ValueError('Online E2 source readback differs from preflight')
     detail = ledger.get('detail')
     if (not isinstance(detail, dict) or detail.get('score_evidence') == 'unknown'
             or (attempts and detail.get('score_evidence') !=
@@ -218,7 +227,7 @@ def inspect_solver(folder, row, process, baseline):
                     'selected_plan_canonical_sha256': key, 'plan_sha256': digest(raw)}
 
 
-def cell(row, doc, old, raw_root, e2_root, python, output, deadline):
+def cell(row, doc, old, identity, raw_root, e2_root, python, output, deadline):
     from .evaluate_feedback import monitored
     folder = output / f"{row['case']}-k{row['cores']}"
     folder.mkdir(exist_ok=False)
@@ -264,7 +273,7 @@ def cell(row, doc, old, raw_root, e2_root, python, output, deadline):
         else:
             receipt['call_count_complete'] = False
         save(folder / 'cell.json', receipt)
-        score_ledger, comparison = inspect_solver(folder, row, process, old)
+        score_ledger, comparison = inspect_solver(folder, row, process, old, identity['e2'])
         receipt['selected_comparison_kind'] = comparison['kind']
         receipt['plan_sha256'] = comparison['plan_sha256']
         receipt['selected_plan_canonical_sha256'] = comparison['selected_plan_canonical_sha256']
@@ -340,7 +349,8 @@ def run(doc, old, identity, manifest, raw_root, e2_root, python, output, runner_
                 summary['in_flight'].append(key)
                 summary['calls']['solver_started'] += 1
                 save(output / 'summary.json', summary)
-                running[pool.submit(cell, row, doc, old, raw_root, e2_root, python, output, deadline)] = key
+                running[pool.submit(cell, row, doc, old, identity, raw_root, e2_root,
+                                    python, output, deadline)] = key
             if not running:
                 if not stop and next_index < len(old['rows']):
                     stop = True
