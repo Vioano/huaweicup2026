@@ -1,0 +1,408 @@
+{
+  "kind": "static-real-projection-not-E0",
+  "case": "008",
+  "cores": 5,
+  "input_sha256": "c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d",
+  "source_hashes": {
+    "src/q1/compiled_memory_response.py": "3ef7a50ebb2192b071522ed8f0e7189f434e34c8231151467a3f6eb8f8ebbe93",
+    "src/q1/variable_packet.py": "65c1260714ddebe0dc8a4e3bd809a00fe19ac91fb93eb2a92367dcd6b9ec7d4c",
+    "src/q1/packet_dp.py": "ab03da60a7bfc3abcc57a8bad875fcb762ad99ca3637c116a8808f8e57f357a1"
+  },
+  "capacity": {
+    "L1": 524288,
+    "UB": 131072
+  },
+  "bandwidth": 60,
+  "declared_profiles": [
+    [
+      0,
+      2,
+      0
+    ],
+    [
+      0,
+      2,
+      2
+    ],
+    [
+      1,
+      2,
+      2
+    ]
+  ],
+  "max_task_compiles": 3,
+  "task_compiles": 3,
+  "calls": {
+    "solver": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "rows": [
+    {
+      "r": 0,
+      "q": 2,
+      "s": 0,
+      "nodes": [
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        64,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72
+      ],
+      "conservative_footprint": {
+        "L1": 86016,
+        "UB": 148228
+      },
+      "conservative_fits": false,
+      "status": "compiled",
+      "signature_sha256": "f1e0f076629d72e8ab106261ba9297c3f75f105577d590c8c10f1f058b48e56f",
+      "tasks": {
+        "0": {
+          "core_id": 0,
+          "footprint": {
+            "L1": 86016,
+            "UB": 148228
+          },
+          "memory_peak": {
+            "L1": 36864,
+            "UB": 37056
+          },
+          "memory_dependencies": [
+            {
+              "source": 6,
+              "target": 71,
+              "kind": "WAR",
+              "positions": [
+                "UB"
+              ],
+              "reused_bytes": 2,
+              "previous_tensor_ids": [
+                1000000008
+              ]
+            },
+            {
+              "source": 7,
+              "target": 71,
+              "kind": "WAR",
+              "positions": [
+                "UB"
+              ],
+              "reused_bytes": 17154,
+              "previous_tensor_ids": [
+                1000000009
+              ]
+            },
+            {
+              "source": 8,
+              "target": 71,
+              "kind": "WAR",
+              "positions": [
+                "UB"
+              ],
+              "reused_bytes": 17154,
+              "previous_tensor_ids": [
+                1000000009
+              ]
+            }
+          ],
+          "memory_edge_pairs": [
+            [
+              6,
+              71
+            ],
+            [
+              7,
+              71
+            ],
+            [
+              8,
+              71
+            ]
+          ],
+          "op_count": 26,
+          "execution_contract_validated": true
+        }
+      },
+      "traffic": {
+        "original_graph_copy_bytes": 0,
+        "scheduled_copy_bytes": 49156,
+        "added_copy_bytes": 49156,
+        "partition_added_copy_bytes": 49156,
+        "spill_added_copy_bytes": 0
+      },
+      "certificate": "r0-q2-s0-certificate.json",
+      "wall_seconds": 0.002782625029794872
+    },
+    {
+      "r": 0,
+      "q": 2,
+      "s": 2,
+      "nodes": [
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        64,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71
+      ],
+      "conservative_footprint": {
+        "L1": 61440,
+        "UB": 148228
+      },
+      "conservative_fits": false,
+      "status": "compiled",
+      "signature_sha256": "e77b817cc8053dc7d3785183c9cbebaf622a1610393e06506a7e71f7a0b2c607",
+      "tasks": {
+        "0": {
+          "core_id": 0,
+          "footprint": {
+            "L1": 61440,
+            "UB": 148228
+          },
+          "memory_peak": {
+            "L1": 30720,
+            "UB": 37058
+          },
+          "memory_dependencies": [
+            {
+              "source": 6,
+              "target": 71,
+              "kind": "WAR",
+              "positions": [
+                "UB"
+              ],
+              "reused_bytes": 2,
+              "previous_tensor_ids": [
+                1000000008
+              ]
+            },
+            {
+              "source": 7,
+              "target": 71,
+              "kind": "WAR",
+              "positions": [
+                "UB"
+              ],
+              "reused_bytes": 17154,
+              "previous_tensor_ids": [
+                1000000009
+              ]
+            },
+            {
+              "source": 8,
+              "target": 71,
+              "kind": "WAR",
+              "positions": [
+                "UB"
+              ],
+              "reused_bytes": 17154,
+              "previous_tensor_ids": [
+                1000000009
+              ]
+            }
+          ],
+          "memory_edge_pairs": [
+            [
+              6,
+              71
+            ],
+            [
+              7,
+              71
+            ],
+            [
+              8,
+              71
+            ]
+          ],
+          "op_count": 22,
+          "execution_contract_validated": true
+        }
+      },
+      "traffic": {
+        "original_graph_copy_bytes": 0,
+        "scheduled_copy_bytes": 61444,
+        "added_copy_bytes": 61444,
+        "partition_added_copy_bytes": 61444,
+        "spill_added_copy_bytes": 0
+      },
+      "certificate": "r0-q2-s2-certificate.json",
+      "wall_seconds": 0.0014809590065851808
+    },
+    {
+      "r": 1,
+      "q": 2,
+      "s": 2,
+      "nodes": [
+        12,
+        64,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        124,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131
+      ],
+      "conservative_footprint": {
+        "L1": 73728,
+        "UB": 166660
+      },
+      "conservative_fits": false,
+      "status": "compiled",
+      "signature_sha256": "b701540b4eed485b6535bda7beb889e5a70cd17bc99ed14ee9606d598664f879",
+      "tasks": {
+        "0": {
+          "core_id": 0,
+          "footprint": {
+            "L1": 73728,
+            "UB": 166660
+          },
+          "memory_peak": {
+            "L1": 30720,
+            "UB": 55488
+          },
+          "memory_dependencies": [
+            {
+              "source": 66,
+              "target": 131,
+              "kind": "WAR",
+              "positions": [
+                "UB"
+              ],
+              "reused_bytes": 2,
+              "previous_tensor_ids": [
+                1000000088
+              ]
+            },
+            {
+              "source": 67,
+              "target": 131,
+              "kind": "WAR",
+              "positions": [
+                "UB"
+              ],
+              "reused_bytes": 17154,
+              "previous_tensor_ids": [
+                1000000089
+              ]
+            },
+            {
+              "source": 67,
+              "target": 133,
+              "kind": "WAR",
+              "positions": [
+                "UB"
+              ],
+              "reused_bytes": 1278,
+              "previous_tensor_ids": [
+                1000000089
+              ]
+            },
+            {
+              "source": 68,
+              "target": 131,
+              "kind": "WAR",
+              "positions": [
+                "UB"
+              ],
+              "reused_bytes": 17154,
+              "previous_tensor_ids": [
+                1000000089
+              ]
+            },
+            {
+              "source": 68,
+              "target": 133,
+              "kind": "WAR",
+              "positions": [
+                "UB"
+              ],
+              "reused_bytes": 1470,
+              "previous_tensor_ids": [
+                1000000089,
+                1000000090
+              ]
+            },
+            {
+              "source": 69,
+              "target": 133,
+              "kind": "WAR",
+              "positions": [
+                "UB"
+              ],
+              "reused_bytes": 16962,
+              "previous_tensor_ids": [
+                1000000091
+              ]
+            }
+          ],
+          "memory_edge_pairs": [
+            [
+              66,
+              131
+            ],
+            [
+              67,
+              131
+            ],
+            [
+              67,
+              133
+            ],
+            [
+              68,
+              131
+            ],
+            [
+              68,
+              133
+            ],
+            [
+              69,
+              133
+            ]
+          ],
+          "op_count": 26,
+          "execution_contract_validated": true
+        }
+      },
+      "traffic": {
+        "original_graph_copy_bytes": 0,
+        "scheduled_copy_bytes": 92164,
+        "added_copy_bytes": 92164,
+        "partition_added_copy_bytes": 92164,
+        "spill_added_copy_bytes": 0
+      },
+      "certificate": "r1-q2-s2-certificate.json",
+      "wall_seconds": 0.0019107499974779785
+    }
+  ],
+  "wall_seconds": 0.007038374955300242
+}

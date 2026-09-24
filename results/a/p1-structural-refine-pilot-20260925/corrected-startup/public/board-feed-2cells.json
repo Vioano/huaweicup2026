@@ -1,0 +1,329 @@
+{
+  "schema_version": 1,
+  "submission_version": 1,
+  "records": [
+    {
+      "attempt_id": "nikolastarx-20260925-structural-refine-051-k5-r0",
+      "revision": 1,
+      "run_id": "20260924T2324Z-s6607-structural-refine-pilot",
+      "algorithm_id": "q1-structural-refine-experimental",
+      "algorithm_name": "Variable parent with guarded intact refinement",
+      "variant": "variable-parent-then-intact-two-v1",
+      "solver_commit": "a11c8ccac48cffc8905b7c9f75950823f9eb83fb",
+      "parameters": {
+        "cores": 5,
+        "solver_calls": 1,
+        "E1_calls": 4,
+        "E0_calls": 0,
+        "E2_calls": 0,
+        "retry_calls": 0,
+        "workers": 1,
+        "max_additional_e1_calls": 2
+      },
+      "problem": "P1",
+      "case_id": "051",
+      "cores": 5,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 231551,
+        "solver_wall_seconds": 0.6456607920117676,
+        "evaluation_wall_seconds": null,
+        "ddr_bytes": 9437954,
+        "extra_ddr_bytes": 9044736,
+        "spill_bytes": 0
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": null,
+        "entrypoint": "multicore_cut_evaluate_problem_1.py CLI"
+      },
+      "identity": {
+        "graph_sha256": "884e8b12ac1f7a9b569958909680e8c2f6055966a59c9f929ffd5cee48aae43b",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "d7de42f7eea7ca83787244b2307448d6d34b5b61045fd902fb2a97540b8ed5e2"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/p1-structural-refine-pilot-20260925/corrected-startup/public/051-k5/plan.json",
+          "sha256": "d7de42f7eea7ca83787244b2307448d6d34b5b61045fd902fb2a97540b8ed5e2"
+        },
+        "result": {
+          "path": "results/a/p1-structural-refine-pilot-20260925/corrected-startup/public/051-k5/e0-result.json.gz",
+          "sha256": "5b11b882d9628481766f96894cabf893bd4e5c2f9c3ba38d86654cf6baa925a6"
+        },
+        "run": {
+          "path": "results/a/p1-structural-refine-pilot-20260925/corrected-startup/public/051-k5/run-public.json",
+          "sha256": "b8fbdf79a66b6ffb4c75afec9a63b2093b2a2650e0968ff0cbcda4c775852ce6"
+        }
+      },
+      "runtime_id": "macOS-27.0-arm64-arm-64bit",
+      "observed_at": "2026-09-24T23:24:30.078Z",
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "reused official E0 result; no E0 run in this pilot",
+        "utc": "UTC",
+        "solver_includes_online_E1": true
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-6607cb2735304751b36662035723372b",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "a11c8ccac48cffc8905b7c9f75950823f9eb83fb",
+            "path": "src/q1/structural_refine.py",
+            "entrypoint": "main"
+          },
+          "authors": [
+            "nikolastarx"
+          ],
+          "method": "Run variable packet parent; when parent score is available, recognize strict intact graph structure and evaluate up to two guarded intact candidates online with E1. One pilot cell only; no full-matrix claim.",
+          "references": [],
+          "upstream": [],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": null,
+          "argv": [
+            "<python-3.12>",
+            "-B",
+            "-m",
+            "src.q1.structural_refine",
+            "<case graph>",
+            "--cores",
+            "5",
+            "--output",
+            "<plan>",
+            "--diagnostics",
+            "<diagnostics>"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS-27.0-arm64-arm-64bit",
+          "cpu": null,
+          "gpu": "none",
+          "ram_bytes": null,
+          "python": "3.12.13",
+          "dependencies": null,
+          "threads": 1,
+          "workers": 1,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": "2026-09-24T23:24:30.078Z",
+          "finished_at": "2026-09-24T23:24:30.724Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": "CLI process from input read through plan and diagnostics writes; all online E1 calls are included in solver wall; external E0 is excluded.",
+          "evaluation_scope": "No E0 invocation in this pilot; inherited quality result only after exact plan-byte match.",
+          "budget": {
+            "wall_seconds": 120,
+            "candidate_limit": null,
+            "stop_reason": "CLI exit 0"
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 0,
+            "E1": 4,
+            "E2": 0
+          },
+          "offline_costs": "none reported",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.runner.source": "Outer pilot runner is a local orchestration file, not a frozen tracked driver.",
+          "provenance.environment.cpu": "Not recorded.",
+          "provenance.environment.ram_bytes": "Not recorded.",
+          "provenance.environment.dependencies": "Not recorded.",
+          "provenance.environment.peak_rss_bytes": "Not recorded.",
+          "provenance.measurement.seed": "No seed recorded.",
+          "provenance.measurement.cold_start": "OS cache state not measured.",
+          "provenance.measurement.budget.candidate_limit": "No candidate limit recorded.",
+          "evaluator.commit": "The fixed Fang H run receipt preserves the E0 command and result, but does not record evaluator source commit; the official source identity is recorded separately by SHA-256."
+        }
+      },
+      "notes": [
+        "Pilot used one constructor CLI and 4 E1 calls; no E0/E2/retry. Plan exactly matches the cited prior E0 plan bytes; E0 result reused and not rerun.",
+        "Makespan and DDR values are from the exact-plan prior E0; current solver wall is 0.645660792012 s. evaluation_wall_seconds=null because no E0 ran in this pilot."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+      "baseline": {
+        "graph_sha256": "884e8b12ac1f7a9b569958909680e8c2f6055966a59c9f929ffd5cee48aae43b",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/p1-structural-refine-pilot-20260925/corrected-startup/public/051-k5/baseline-051-singlecore.json.gz",
+          "sha256": "9c62a3dec13b1628b296c4847691f252e716a475677f807c80b0b06ef5c58c3f"
+        }
+      },
+      "cache_pair": null
+    },
+    {
+      "attempt_id": "nikolastarx-20260925-structural-refine-084-k5-r0",
+      "revision": 1,
+      "run_id": "20260924T2324Z-s6607-structural-refine-pilot",
+      "algorithm_id": "q1-structural-refine-experimental",
+      "algorithm_name": "Variable parent with guarded intact refinement",
+      "variant": "variable-parent-then-intact-two-v1",
+      "solver_commit": "a11c8ccac48cffc8905b7c9f75950823f9eb83fb",
+      "parameters": {
+        "cores": 5,
+        "solver_calls": 1,
+        "E1_calls": 5,
+        "E0_calls": 0,
+        "E2_calls": 0,
+        "retry_calls": 0,
+        "workers": 1,
+        "max_additional_e1_calls": 2
+      },
+      "problem": "P1",
+      "case_id": "084",
+      "cores": 5,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 390425,
+        "solver_wall_seconds": 9.112931415962521,
+        "evaluation_wall_seconds": null,
+        "ddr_bytes": 22268010,
+        "extra_ddr_bytes": 9031680,
+        "spill_bytes": 0
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "8685b5a867a4f66c7cacaf166d50896bd7c09a41",
+        "entrypoint": "multicore_cut_evaluate_problem_1.py CLI"
+      },
+      "identity": {
+        "graph_sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "bd30e21f6fb8a2c12e149902e90173acad7af377d9d06babe20619d56c6b1796"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/p1-structural-refine-pilot-20260925/corrected-startup/public/084-k5/plan.json",
+          "sha256": "bd30e21f6fb8a2c12e149902e90173acad7af377d9d06babe20619d56c6b1796"
+        },
+        "result": {
+          "path": "results/a/p1-structural-refine-pilot-20260925/corrected-startup/public/084-k5/e0-result.json.gz",
+          "sha256": "111feafed19414e9cf379dc363d3cc07900982a7ac50f0d0597a9e0a7ef1fa10"
+        },
+        "run": {
+          "path": "results/a/p1-structural-refine-pilot-20260925/corrected-startup/public/084-k5/run-public.json",
+          "sha256": "fccb3ac5fd479e718a257d9c2571b80fd3d84fdf84eb106b7b10d5624218e72a"
+        }
+      },
+      "runtime_id": "macOS-27.0-arm64-arm-64bit",
+      "observed_at": "2026-09-24T23:24:30.728Z",
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "reused official E0 result; no E0 run in this pilot",
+        "utc": "UTC",
+        "solver_includes_online_E1": true
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-6607cb2735304751b36662035723372b",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "a11c8ccac48cffc8905b7c9f75950823f9eb83fb",
+            "path": "src/q1/structural_refine.py",
+            "entrypoint": "main"
+          },
+          "authors": [
+            "nikolastarx"
+          ],
+          "method": "Run variable packet parent; when parent score is available, recognize strict intact graph structure and evaluate up to two guarded intact candidates online with E1. One pilot cell only; no full-matrix claim.",
+          "references": [],
+          "upstream": [],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": null,
+          "argv": [
+            "<python-3.12>",
+            "-B",
+            "-m",
+            "src.q1.structural_refine",
+            "<case graph>",
+            "--cores",
+            "5",
+            "--output",
+            "<plan>",
+            "--diagnostics",
+            "<diagnostics>"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS-27.0-arm64-arm-64bit",
+          "cpu": null,
+          "gpu": "none",
+          "ram_bytes": null,
+          "python": "3.12.13",
+          "dependencies": null,
+          "threads": 1,
+          "workers": 1,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": "2026-09-24T23:24:30.728Z",
+          "finished_at": "2026-09-24T23:24:39.841Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": "CLI process from input read through plan and diagnostics writes; all online E1 calls are included in solver wall; external E0 is excluded.",
+          "evaluation_scope": "No E0 invocation in this pilot; inherited quality result only after exact plan-byte match.",
+          "budget": {
+            "wall_seconds": 120,
+            "candidate_limit": null,
+            "stop_reason": "CLI exit 0"
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 0,
+            "E1": 5,
+            "E2": 0
+          },
+          "offline_costs": "none reported",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.runner.source": "Outer pilot runner is a local orchestration file, not a frozen tracked driver.",
+          "provenance.environment.cpu": "Not recorded.",
+          "provenance.environment.ram_bytes": "Not recorded.",
+          "provenance.environment.dependencies": "Not recorded.",
+          "provenance.environment.peak_rss_bytes": "Not recorded.",
+          "provenance.measurement.seed": "No seed recorded.",
+          "provenance.measurement.cold_start": "OS cache state not measured.",
+          "provenance.measurement.budget.candidate_limit": "No candidate limit recorded."
+        }
+      },
+      "notes": [
+        "Pilot used one constructor CLI and 5 E1 calls; no E0/E2/retry. Plan exactly matches the cited prior E0 plan bytes; E0 result reused and not rerun.",
+        "Makespan and DDR values are from the exact-plan prior E0; current solver wall is 9.112931415963 s. evaluation_wall_seconds=null because no E0 ran in this pilot."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+      "baseline": {
+        "graph_sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/p1-structural-refine-pilot-20260925/corrected-startup/public/084-k5/baseline-084-singlecore.json.gz",
+          "sha256": "3cdf79e5f0cfb89108c8e763e855538e6d702c54e02c657aded96bc229d837d4"
+        }
+      },
+      "cache_pair": null
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+# Structural refinement pilot (two cells)
+
+This is a two-cell experimental pilot for `q1-structural-refine-experimental`, variant `variable-parent-then-intact-two-v1`, source `a11c8ccac48cffc8905b7c9f75950823f9eb83fb`. It is not a full-matrix result. The corrected run used one solver process per cell and completed in 9.777948 s aggregate monotonic wall: 051/K5 0.645661 s (4 E1 calls), 084/K5 9.112932 s (5 E1 calls). Total 2 solver calls, 9 E1, 0 new E0, 0 E2, 0 retries. The initial runner attempt is retained separately in the parent package and failed before child spawn (0 calls).
+
+Both generated plans match their cited E0-evaluated plans byte-for-byte. Their E0 result artifacts are reused evidence, not new evaluations: 051 references Fang H result from commit `1c9b654223b663f6e624fc413913c076c843ed56`; 084 references the prior local E0 result. No E0 is timed as part of this pilot; feed evaluation wall is null. Reference E0 makespans are 231551 (051) and 390425 (084).
+
+Each per-case directory contains the plan, diagnostics, public run record, reused official result gzip and the case-matched official v4 single-core baseline gzip. Baselines were extracted from commit `0e0d7cd327c51cc6ac365e01f4b6a7d2b28f9297`; graph/config/official identities are asserted against each feed record. The feed is only a proposal for board intake; protocol preflight checks format and available bytes, not result semantics or independent reruns. See `manifest.json` for hashes and provenance.
+
+
+Publication correction: this derived package uses run ID `20260924T2324Z-s6607-structural-refine-pilot`, matching both cells’ actual UTC date; the earlier draft used the next calendar day. Solver wall includes the online E1 calls listed per cell; the `solver_includes_evaluation=false` field means external E0 was not included, and no new E0 was run. For 051 the historic H receipt records the E0 command/result but not its evaluator commit, so that commit is null; 084 uses the commit identified by its public E0 receipt.
