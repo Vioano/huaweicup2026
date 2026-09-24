@@ -37,8 +37,14 @@ def main():
         for name in ("src/benchmark_board/protocol.py", "src/benchmark_board/core.py",
                      "docs/benchmarks/board-feed.schema.json", "src/q1_yuanzhifang/reuse_e.py"):
             raw = blobs.read(args.commit, name)
-            require(raw == (ROOT / name).read_bytes(), "Changed validator source/schema")
-            verified[name] = hashlib.sha256(raw).hexdigest()
+            materialized = (ROOT / name).read_bytes()
+            # Shared board files permit Git's text checkout conversion. Admit
+            # only CRLF/LF differences in validator code/schema, never in any
+            # measured or reused evidence loaded below.
+            require(raw.replace(b"\r\n", b"\n") == materialized.replace(b"\r\n", b"\n"), "Changed validator source/schema")
+            verified[name] = {"fixed_git_sha256": hashlib.sha256(raw).hexdigest(),
+                              "materialized_sha256": hashlib.sha256(materialized).hexdigest(),
+                              "comparison": "exact bytes" if raw == materialized else "CRLF/LF only; no evidence normalization"}
         sys.path.insert(0, str(ROOT / "src/benchmark_board"))
         from protocol import validate_feed
         from core import Ledger, safe_path, MAX_BLOB
