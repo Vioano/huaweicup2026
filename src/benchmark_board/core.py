@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from contextlib import contextmanager
 
 MAX_BLOB = 64 * 1024 * 1024
-METRICS = {'makespan_cycles': ('Makespan', '周期', False), 'baseline_speedup': ('相对官方单核', '×', True), 'solver_wall_seconds': ('求解耗时', '秒', False), 'evaluation_wall_seconds': ('外部复评耗时', '秒', False), 'ddr_bytes': ('调度搬运', '字节', False), 'spill_bytes': ('溢出搬运', '字节', False), 'cache_gain': ('Cache 加速比', '×', True), 'cache_hit_rate': ('Cache 字节命中率', '%', True)}
+METRICS = {'makespan_cycles': ('Makespan', '周期', False), 'baseline_speedup': ('相对官方单核', '×', True), 'solver_wall_seconds': ('求解耗时', '秒', False), 'evaluation_wall_seconds': ('外部复评耗时', '秒', False), 'ddr_bytes': ('调度搬运', '字节', False), 'spill_bytes': ('溢出搬运', '字节', False), 'extra_ddr_bytes': ('额外搬运', '字节', False), 'cache_gain': ('Cache 加速比', '×', True), 'cache_hit_rate': ('Cache 字节命中率', '%', True)}
 
 def now(): return datetime.now(timezone.utc).isoformat()
 def packed(obj): return json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(',', ':'), allow_nan=False)
@@ -58,7 +58,7 @@ class Ledger:
         if p not in ('P1','P2','P3') or case not in [f'{n:03d}' for n in range(1,101)] or type(k) is not int or k not in range(1,6): raise ValueError('invalid problem/case/cores')
         for field in ('attempt_id','run_id','algorithm_id','algorithm_name'):
             if not isinstance(r.get(field),str) or not r[field] or len(r[field])>200: raise ValueError('missing/invalid ' + field)
-        if not sha(r.get('solver_commit'),40): raise ValueError('solver full commit required')
+        if r.get('solver_commit') is not None and not sha(r.get('solver_commit'),40): raise ValueError('solver full commit required')
         if type(r.get('revision',1)) is not int or r.get('revision',1)<1: raise ValueError('positive revision required')
         r.setdefault('revision',1)
         if r.get('status') not in ('ok','failed','timeout','running','not_run','unsupported','withdrawn'): raise ValueError('unknown status')
@@ -72,10 +72,12 @@ class Ledger:
         r['eligible']=False; r['evidence']='reported'; r['admission_notes']=[]
         r['source']=source; r['imported_at']=now(); r['baseline_verified']=False; r['cache_pair_verified']=False
         if r['status'] != 'ok':
-            for name in METRICS: metrics[name]=None
+            for name in METRICS:
+                if name not in ('solver_wall_seconds','evaluation_wall_seconds'): metrics[name]=None
             r['admission_notes'].append('未成功的尝试不参与最优选择'); return r
         if not number(metrics.get('makespan_cycles'),True): raise ValueError('successful record requires makespan')
         try:
+            if not sha(r.get('solver_commit'),40): raise ValueError('求解器版本未知，保留报告但不入榜')
             if ev.get('route') == 'E2': raise ValueError('E2 不进入正式成绩')
             if ev.get('route') not in ('E0','E1'): raise ValueError('评价源未明确')
             if not sha(ev.get('commit'),40) or not ev.get('entrypoint'): raise ValueError('评价器固定版本/入口缺失')
@@ -95,8 +97,9 @@ class Ledger:
             movement=result.get('data_movement_bytes',{})
             metrics['ddr_bytes']=movement.get('scheduled_copy_bytes')
             metrics['spill_bytes']=movement.get('spill_added_copy_bytes')
+            metrics['extra_ddr_bytes']=movement.get('added_copy_bytes')
             metrics['cache_hit_rate']=result.get('cache_stats',{}).get('hit_rate') if p=='P3' else None
-            for m in ('ddr_bytes','spill_bytes','cache_hit_rate'):
+            for m in ('ddr_bytes','spill_bytes','extra_ddr_bytes','cache_hit_rate'):
                 if metrics[m] is not None and not number(metrics[m]): raise ValueError('invalid official metric')
             if metrics['cache_hit_rate'] is not None and metrics['cache_hit_rate']>1: raise ValueError('invalid official hit rate')
             r['eligible']=True; r['evidence']='artifacts_checked'
@@ -121,6 +124,9 @@ class Ledger:
             except (ValueError,KeyError,TypeError,FileNotFoundError,json.JSONDecodeError) as error: r['admission_notes'].append(field+': '+str(error))
         return r
     def ingest(self, feed, loader, source):
+        if feed.get('submission_version') is not None:
+            from protocol import validate_feed
+            validate_feed(feed, submission=True)
         if feed.get('schema_version')!=1 or not isinstance(feed.get('records'),list) or len(feed['records'])>5000: raise ValueError('expected schema_version=1, <=5000 records')
         batch=digest(packed({'feed':feed,'source':source}).encode())
         with self.connect() as db:
@@ -150,6 +156,9 @@ class Ledger:
         for key,value in (filters or {}).items():
             if value not in (None,'','all'): rows=[r for r in rows if str(r.get(key))==str(value)]
         return rows
+    def compatible(self, r):
+        ident=r.get('identity',{})
+        return ident.get('official_sha256')==self.manifest['official_code_hash'] and ident.get('config_sha256')==self.expected.get('data/config.txt') and ident.get('graph_sha256')==self.expected.get('data/case_'+r['case_id']+'.json')
     def snapshot(self, algorithm=None, run=None, include_reported=False):
         allrows=self.records(); latest={}
         for r in allrows:
@@ -164,15 +173,15 @@ class Ledger:
             for n in range(1,101):
                 for k in range(1,6):
                     rows=groups.get((p,f'{n:03d}',k),[])
-                    candidates=[r for r in rows if r['status']=='ok' and (r['eligible'] or (include_reported and r.get('evaluator',{}).get('route')=='E0'))]
+                    candidates=[r for r in rows if r['status']=='ok' and (r['eligible'] or (include_reported and r.get('evaluator',{}).get('route')=='E0' and self.compatible(r)))]
                     # Prefer admitted records; reports are preview only and never displace admitted best.
                     candidates.sort(key=lambda r:(not r['eligible'],r['metrics']['makespan_cycles'],r['id']))
                     best=candidates[0] if candidates else None
-                    cells.append({'problem':p,'case_id':f'{n:03d}','cores':k,'best':best,'attempts':len(rows),'status':('ok' if best and best['eligible'] else 'reported' if best else rows[-1]['status'] if rows else 'not_run')})
+                    cells.append({'problem':p,'case_id':f'{n:03d}','cores':k,'best':best,'attempts':len(rows),'status':('ok' if best and best['eligible'] else 'reported' if best else ('reported' if rows[-1]['status']=='ok' else rows[-1]['status']) if rows else 'not_run')})
         with self.connect() as db:
             cursor=db.execute('SELECT COALESCE(MAX(seq),0) FROM events').fetchone()[0]
             sources={x['id']:json.loads(x['body']) for x in db.execute('SELECT * FROM sources')}
-        return {'schema_version':1,'cursor':cursor,'as_of':now(),'cells':cells,'sources':sources,'record_count':len(allrows),'algorithms':sorted({r['algorithm_id'] for r in allrows}),'runs':sorted({r['run_id'] for r in allrows}),'metrics':METRICS,'selection':'历史最优组合：仅同问题/图/核数/冻结配置；不是单一算法的全量实验成绩。切换指标不会换赢家。'}
+        return {'schema_version':1,'cursor':cursor,'as_of':now(),'cells':cells,'sources':sources,'latest_imported_at':max((r['imported_at'] for r in allrows),default=None),'latest_observed_at':max((r.get('observed_at') for r in allrows if r.get('observed_at')),default=None),'record_count':len(allrows),'algorithms':sorted({r['algorithm_id'] for r in allrows}),'runs':sorted({r['run_id'] for r in allrows}),'metrics':METRICS,'selection':'历史最优组合：仅同问题/图/核数/冻结配置；不是单一算法的全量实验成绩。切换指标不会换赢家。'}
     def events(self, after, limit=200):
         with self.connect() as db: rows=db.execute('SELECT * FROM events WHERE seq>? ORDER BY seq LIMIT ?',(after,min(limit,1000))).fetchall()
         return [{'cursor':x['seq'],'type':x['kind'],'time':x['time'],'data':json.loads(x['body'])} for x in rows]

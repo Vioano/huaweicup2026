@@ -1,211 +1,1142 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Benchmark board immutable feed v1",
+  "title": "Benchmark board feed v1; submission_version=1 for complete handoff",
   "type": "object",
-  "required": [
-    "schema_version",
-    "records"
-  ],
   "properties": {
     "schema_version": {
+      "const": 1
+    },
+    "submission_version": {
       "const": 1
     },
     "records": {
       "type": "array",
       "maxItems": 5000,
       "items": {
-        "type": "object",
-        "required": [
-          "attempt_id",
-          "revision",
-          "run_id",
-          "algorithm_id",
-          "algorithm_name",
-          "solver_commit",
-          "problem",
-          "case_id",
-          "cores",
-          "status",
-          "metrics",
-          "evaluator",
-          "identity",
-          "artifacts"
-        ],
-        "properties": {
-          "attempt_id": {
-            "type": "string"
+        "$ref": "#/$defs/record"
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "records"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^(results|docs|data|tasks)/[^\\\\:]+$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "code_source": {
+      "type": "object",
+      "properties": {
+        "repo": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "entrypoint": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "repo",
+        "commit",
+        "path",
+        "entrypoint"
+      ],
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "producer_session": {
+          "type": "string",
+          "minLength": 1
+        },
+        "task_url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "solver": {
+          "type": "object",
+          "properties": {
+            "source": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/code_source"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "authors": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "method": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "references": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "upstream": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/code_source"
+              }
+            },
+            "selected_algorithm_id": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "selected_solver_commit": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
           },
-          "run_id": {
-            "type": "string"
+          "required": [
+            "source",
+            "authors",
+            "method",
+            "references",
+            "upstream",
+            "selected_algorithm_id",
+            "selected_solver_commit"
+          ],
+          "additionalProperties": false
+        },
+        "runner": {
+          "type": "object",
+          "properties": {
+            "source": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/code_source"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "argv": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "working_directory": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
           },
-          "algorithm_id": {
-            "type": "string"
+          "required": [
+            "source",
+            "argv",
+            "working_directory"
+          ],
+          "additionalProperties": false
+        },
+        "environment": {
+          "type": "object",
+          "properties": {
+            "os": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "cpu": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "gpu": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "ram_bytes": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "python": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "dependencies": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "threads": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "workers": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "peak_rss_bytes": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
           },
-          "algorithm_name": {
-            "type": "string"
+          "required": [
+            "os",
+            "cpu",
+            "gpu",
+            "ram_bytes",
+            "python",
+            "dependencies",
+            "threads",
+            "workers",
+            "peak_rss_bytes"
+          ],
+          "additionalProperties": false
+        },
+        "measurement": {
+          "type": "object",
+          "properties": {
+            "started_at": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?Z$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "finished_at": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?Z$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "seed": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "repeat_index": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "cold_start": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "solver_scope": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "evaluation_scope": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "budget": {
+              "type": "object",
+              "properties": {
+                "wall_seconds": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "candidate_limit": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "stop_reason": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "wall_seconds",
+                "candidate_limit",
+                "stop_reason"
+              ],
+              "additionalProperties": false
+            },
+            "calls": {
+              "type": "object",
+              "properties": {
+                "solver": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "E0": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "E1": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "E2": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "solver",
+                "E0",
+                "E1",
+                "E2"
+              ],
+              "additionalProperties": false
+            },
+            "offline_costs": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "failure": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "stage": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "reason": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "exit_code": {
+                      "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "elapsed_seconds": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "stage",
+                    "reason",
+                    "exit_code",
+                    "elapsed_seconds"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
           },
-          "variant": {
-            "type": "string"
-          },
-          "runtime_id": {
-            "type": "string"
-          },
-          "revision": {
-            "type": "integer",
-            "minimum": 1
-          },
-          "solver_commit": {
+          "required": [
+            "started_at",
+            "finished_at",
+            "seed",
+            "repeat_index",
+            "cold_start",
+            "solver_scope",
+            "evaluation_scope",
+            "budget",
+            "calls",
+            "offline_costs",
+            "failure"
+          ],
+          "additionalProperties": false
+        },
+        "missing_reasons": {
+          "type": "object",
+          "additionalProperties": {
             "type": "string",
-            "pattern": "^[0-9a-f]{40}$"
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "producer_session",
+        "task_url",
+        "solver",
+        "runner",
+        "environment",
+        "measurement",
+        "missing_reasons"
+      ],
+      "additionalProperties": false
+    },
+    "record": {
+      "type": "object",
+      "properties": {
+        "attempt_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "algorithm_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "algorithm_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "variant": {
+          "type": "string",
+          "minLength": 1
+        },
+        "solver_commit": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "parameters": {
+          "type": "object"
+        },
+        "problem": {
+          "enum": [
+            "P1",
+            "P2",
+            "P3"
+          ]
+        },
+        "case_id": {
+          "type": "string",
+          "pattern": "^(00[1-9]|0[1-9][0-9]|100)$"
+        },
+        "cores": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "status": {
+          "enum": [
+            "ok",
+            "failed",
+            "timeout",
+            "running",
+            "not_run",
+            "unsupported",
+            "withdrawn"
+          ]
+        },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "solver_wall_seconds": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "evaluation_wall_seconds": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "ddr_bytes": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "spill_bytes": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "extra_ddr_bytes": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "baseline_speedup": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "cache_gain": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "makespan_cycles": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "cache_hit_rate": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
           },
-          "problem": {
-            "enum": [
-              "P1",
-              "P2",
-              "P3"
-            ]
+          "required": [],
+          "additionalProperties": false
+        },
+        "evaluator": {
+          "type": "object",
+          "properties": {
+            "route": {
+              "enum": [
+                "E0",
+                "E1",
+                "E2"
+              ]
+            },
+            "commit": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "entrypoint": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "calibration_id": {
+              "type": "string",
+              "minLength": 1
+            }
           },
-          "case_id": {
+          "required": [
+            "route",
+            "commit",
+            "entrypoint"
+          ],
+          "additionalProperties": false
+        },
+        "identity": {
+          "type": "object",
+          "properties": {
+            "graph_sha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "config_sha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "official_sha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "plan_sha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "artifacts": {
+          "type": "object",
+          "properties": {
+            "plan": {
+              "$ref": "#/$defs/artifact"
+            },
+            "result": {
+              "$ref": "#/$defs/artifact"
+            },
+            "run": {
+              "$ref": "#/$defs/artifact"
+            },
+            "trace": {
+              "$ref": "#/$defs/artifact"
+            },
+            "log": {
+              "$ref": "#/$defs/artifact"
+            },
+            "manifest": {
+              "$ref": "#/$defs/artifact"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "runtime_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observed_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reported_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "timing": {
+          "type": "object",
+          "properties": {
+            "solver_includes_evaluation": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "evaluation_precision": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "utc": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [],
+          "additionalProperties": true
+        },
+        "baseline": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "graph_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "config_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "official_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "route": {
+                  "const": "E0"
+                },
+                "result": {
+                  "$ref": "#/$defs/artifact"
+                },
+                "entrypoint": {
+                  "const": "singlecore_evaluate.evaluate_singlecore"
+                }
+              },
+              "required": [
+                "graph_sha256",
+                "config_sha256",
+                "official_sha256",
+                "route",
+                "result",
+                "entrypoint"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cache_pair": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "graph_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "config_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "official_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "route": {
+                  "const": "E0"
+                },
+                "result": {
+                  "$ref": "#/$defs/artifact"
+                },
+                "cores": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                "plan_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "graph_sha256",
+                "config_sha256",
+                "official_sha256",
+                "route",
+                "result",
+                "cores",
+                "plan_sha256"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        },
+        "notes": {
+          "type": "array",
+          "items": {
             "type": "string",
-            "pattern": "^(00[1-9]|0[1-9][0-9]|100)$"
-          },
-          "cores": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 5
-          },
-          "status": {
-            "enum": [
-              "ok",
-              "failed",
-              "timeout",
-              "running",
-              "not_run",
-              "unsupported",
-              "withdrawn"
-            ]
-          },
-          "parameters": {
-            "type": "object"
-          },
-          "metrics": {
-            "type": "object",
-            "description": "makespan_cycles positive numeric preserving int/float type; times in seconds; null for missing. Ratios recomputed, not trusted."
-          },
-          "evaluator": {
-            "type": "object",
-            "required": [
-              "route",
-              "commit",
-              "entrypoint"
-            ],
-            "properties": {
-              "route": {
-                "enum": [
-                  "E0",
-                  "E1",
-                  "E2"
-                ]
-              },
-              "commit": {
-                "type": "string",
-                "pattern": "^[0-9a-f]{40}$"
-              },
-              "entrypoint": {
-                "type": "string"
-              },
-              "calibration_id": {
-                "type": "string"
-              }
+            "minLength": 1
+          }
+        },
+        "source_url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reported_baseline_cycles": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
             }
-          },
-          "identity": {
-            "type": "object",
-            "properties": {
-              "graph_sha256": {
-                "type": "string",
-                "pattern": "^[0-9a-f]{64}$"
-              },
-              "config_sha256": {
-                "type": "string",
-                "pattern": "^[0-9a-f]{64}$"
-              },
-              "official_sha256": {
-                "type": "string",
-                "pattern": "^[0-9a-f]{64}$"
-              },
-              "plan_sha256": {
-                "type": "string",
-                "pattern": "^[0-9a-f]{64}$"
-              }
+          ]
+        },
+        "reported_cache_ratio": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
             }
-          },
-          "artifacts": {
-            "type": "object",
-            "properties": {
-              "plan": {
-                "type": "object",
-                "required": [
-                  "path",
-                  "sha256"
-                ],
-                "properties": {
-                  "path": {
-                    "type": "string"
-                  },
-                  "sha256": {
-                    "type": "string",
-                    "pattern": "^[0-9a-f]{64}$"
-                  }
-                }
-              },
-              "result": {
-                "type": "object",
-                "required": [
-                  "path",
-                  "sha256"
-                ],
-                "properties": {
-                  "path": {
-                    "type": "string"
-                  },
-                  "sha256": {
-                    "type": "string",
-                    "pattern": "^[0-9a-f]{64}$"
-                  }
-                }
-              },
-              "run": {
-                "type": "object",
-                "required": [
-                  "path",
-                  "sha256"
-                ],
-                "properties": {
-                  "path": {
-                    "type": "string"
-                  },
-                  "sha256": {
-                    "type": "string",
-                    "pattern": "^[0-9a-f]{64}$"
-                  }
-                }
-              }
+          ]
+        }
+      },
+      "required": [
+        "attempt_id",
+        "revision",
+        "run_id",
+        "algorithm_id",
+        "algorithm_name",
+        "solver_commit",
+        "problem",
+        "case_id",
+        "cores",
+        "status",
+        "metrics",
+        "evaluator",
+        "identity",
+        "artifacts"
+      ],
+      "additionalProperties": true
+    }
+  },
+  "if": {
+    "required": [
+      "submission_version"
+    ],
+    "properties": {
+      "submission_version": {
+        "const": 1
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "records": {
+        "items": {
+          "required": [
+            "variant",
+            "parameters",
+            "runtime_id",
+            "observed_at",
+            "timing",
+            "provenance",
+            "notes",
+            "source_url"
+          ],
+          "properties": {
+            "identity": {
+              "required": [
+                "graph_sha256",
+                "config_sha256",
+                "official_sha256",
+                "plan_sha256"
+              ]
+            },
+            "timing": {
+              "required": [
+                "solver_includes_evaluation"
+              ]
+            },
+            "metrics": {
+              "required": [
+                "makespan_cycles",
+                "solver_wall_seconds",
+                "evaluation_wall_seconds"
+              ]
             }
-          },
-          "baseline": {
-            "type": [
-              "object",
-              "null"
-            ],
-            "description": "E0 official singlecore only. graph/config/official hashes + entrypoint singlecore_evaluate.evaluate_singlecore + result artifact."
-          },
-          "cache_pair": {
-            "type": [
-              "object",
-              "null"
-            ],
-            "description": "E0 P2 result with same graph/config/official/plan hashes, same cores; compared to this P3."
           }
         }
       }

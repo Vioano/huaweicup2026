@@ -1,6 +1,6 @@
 """Local read-only HTTP/Agent interface; import published data only, never run benchmarks."""
 from __future__ import annotations
-import argparse, fnmatch, json, mimetypes, re, subprocess, threading, time, traceback
+import argparse, fnmatch, json, html, mimetypes, re, subprocess, threading, time, traceback
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
@@ -88,6 +88,11 @@ def make_handler(ledger):
                     return self.send(rows[0] if rows else {'error':'not found'},200 if rows else 404)
                 if path=='/api/v1/catalog':
                     return self.send(json.loads((ROOT/'docs/benchmarks/algorithm-registry.json').read_text()))
+                if path=='/protocol':
+                    body=(ROOT/'docs/benchmarks/SUBMISSION_PROTOCOL.md').read_text()
+                    page='<meta charset="utf-8"><title>统一交付协议 · 方案成绩台</title><link rel="stylesheet" href="/style.css"><body class="agent"><a href="/">← 方案成绩台</a><pre style="white-space:pre-wrap;overflow-wrap:anywhere">'+html.escape(body)+'</pre></body>'
+                    return self.send(page.encode(),ctype='text/html; charset=utf-8')
+                if path=='/api/v1/template': return self.send(json.loads((ROOT/'docs/benchmarks/examples/submission-v1.json').read_text()))
                 if path=='/api/v1/schema': return self.send(json.loads((ROOT/'docs/benchmarks/board-feed.schema.json').read_text()))
                 if path.startswith('/api/v1/blobs/'):
                     key=path.rsplit('/',1)[-1]
