@@ -1,6 +1,7 @@
 """Non-LLM durable bidirectional synchronization. The board remains the sole ledger writer."""
 from __future__ import annotations
 import json
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -90,6 +91,18 @@ class Engine:
                 if not isinstance(entry,dict) or entry.get('id')!=path.parent.name or digest(canonical(entry['payload']))!=entry['id']:
                     raise ValueError('Malformed outbox identity')
                 payload=entry['payload']
+                if not isinstance(payload,dict): raise ValueError('Outbox payload must be an object')
+                if not isinstance(entry.get('state'),str) or entry['state'] not in {'queued','publishing','awaiting_receipt','accepted','rejected'}:
+                    raise ValueError('Outbox state missing or invalid')
+                if not isinstance(entry.get('repo'),str) or not entry['repo']: raise ValueError('Outbox repository missing')
+                if payload.get('schema_version')!=1: raise ValueError('Invalid outbox schema')
+                fixed_sha(payload.get('commit'));path_ok(payload.get('feed'))
+                if not isinstance(payload.get('feed_sha256'),str) or not re.fullmatch('[0-9a-f]{64}',payload['feed_sha256']):
+                    raise ValueError('Outbox feed hash invalid')
+                if not isinstance(payload.get('artifacts'),dict): raise ValueError('Outbox artifact map missing')
+                for artifact,sha in payload['artifacts'].items():
+                    path_ok(artifact)
+                    if not isinstance(sha,str) or not re.fullmatch('[0-9a-f]{64}',sha): raise ValueError('Outbox artifact hash invalid')
                 if payload['actor']!=self.actor: raise ValueError('Outbox belongs to another actor')
             except (ValueError,KeyError,TypeError) as error:
                 # Independent quarantine: one bad entry never stops valid neighbours.

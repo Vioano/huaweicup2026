@@ -37,12 +37,17 @@ def check_health(proc,port,release,timeout=20):
                 sha=manifest['files']['src/benchmark_board/web/'+name]['sha256']
                 if digest(get(f'http://127.0.0.1:{port}'+endpoint))!=sha: raise ValueError('Served UI bytes differ from release')
             html=get(f'http://127.0.0.1:{port}/')
-            expected=manifest['files']['src/benchmark_board/web/index.html']['sha256']
-            if digest(html)!=expected:
-                runtime=json.loads(get(f'http://127.0.0.1:{port}/api/v1/runtime'))
-                files={name:manifest['files']['src/benchmark_board/web/'+name]['sha256'] for name in ('index.html','app.js','style.css')}
+            original=(Path(release['path'])/'src/benchmark_board/web/index.html').read_bytes()
+            if digest(original)!=manifest['files']['src/benchmark_board/web/index.html']['sha256']:
+                raise ValueError('Trusted original HTML bytes changed')
+            if html!=original:
                 from .snapshot import canonical
-                if runtime.get('ui_asset_id')!=digest(canonical(files)) or runtime.get('file_hashes')!=files or runtime.get('served_html_sha256')!=digest(html):
+                files={name:manifest['files']['src/benchmark_board/web/'+name]['sha256'] for name in ('index.html','app.js','style.css')}
+                identity=digest(canonical(files))
+                expected=original.replace(b'</head>',f'<meta name="board-assets" content="{identity}"></head>'.encode(),1)
+                if html!=expected: raise ValueError('Served HTML differs from trusted deterministic rendering')
+                runtime=json.loads(get(f'http://127.0.0.1:{port}/api/v1/runtime'))
+                if runtime.get('ui_asset_id')!=identity or runtime.get('file_hashes')!=files or runtime.get('served_html_sha256')!=digest(expected):
                     raise ValueError('Served HTML/runtime fingerprint differs from release')
             return health
         except Exception as error: last=str(error);time.sleep(.25)

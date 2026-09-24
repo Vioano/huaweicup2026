@@ -11,6 +11,7 @@ MAX_FEED=8*1024*1024
 
 
 def references(feed):
+    if not isinstance(feed,dict): raise ValueError('Benchmark feed must be an object')
     if feed.get('schema_version')!=1 or not isinstance(feed.get('records'),list) or not 0<len(feed['records'])<=5000:
         raise ValueError('Expected nonempty standard benchmark feed (at most 5000 records)')
     refs={}
@@ -28,6 +29,10 @@ def references(feed):
             for v in value: visit(v)
     # Only actual admission artifacts, not arbitrary provenance dictionaries.
     for record in feed['records']:
+        if not isinstance(record,dict): raise ValueError('Benchmark record must be an object')
+        provenance=record.get('provenance',{})
+        if not isinstance(provenance,dict): raise ValueError('Benchmark provenance must be an object')
+        if not isinstance(provenance.get('producer_session',''),str): raise ValueError('Benchmark producer_session must be a string')
         visit(record.get('artifacts',{}))
         visit(record.get('baseline'))
         visit(record.get('cache_pair'))

@@ -75,6 +75,31 @@ class EngineTests(unittest.TestCase):
         leader.receive_submissions(self.remote.head());self.engines['member'].deliver_outbox(self.remote.head())
         self.assertEqual(read_json(p)['state'],'rejected')
 
+    def test_signed_json_structure_errors_get_durable_rejection(self):
+        cases=[[], None, 1, {'schema_version':1,'records':[None]},
+               {'schema_version':1,'records':[{'provenance':[]}]},
+               {'schema_version':1,'records':[{'provenance':{'producer_session':None}}]}]
+        for feed in cases:
+            with self.subTest(feed=feed):
+                raw=canonical(feed);commit='a'*40
+                self.remote.commits[commit]={'results/board-feed.json':raw}
+                payload={'schema_version':1,'actor':'member','commit':commit,'feed':'results/board-feed.json','feed_sha256':digest(raw),'artifacts':{}}
+                identity=digest(canonical(payload));path=f'submissions/member/{identity}.json'
+                self.remote.update({path:canonical(self.engines['member'].sign('submission',payload))})
+                leader=self.engines['leader'];leader.receive_submissions(self.remote.head());leader.receive_submissions(self.remote.head())
+                result=read_json(self.root/'inbox'/identity/'result.json')
+                self.assertEqual(result['state'],'rejected')
+                self.assertIn(f'receipts/member/{identity}.json',self.remote.tree(self.remote.head()))
+
+    def test_missing_state_is_quarantined_without_blocking_valid_neighbour(self):
+        good,_=self.queue();bad=read_json(good);del bad['state']
+        bad['payload']=dict(bad['payload'],feed='results/bad-feed.json')
+        bad['id']=digest(canonical(bad['payload']))
+        path=self.root/'member'/'outbox'/bad['id']/'entry.json';write_json(path,bad)
+        self.engines['member'].deliver_outbox(None)
+        self.assertTrue((self.root/'member'/'quarantine'/bad['id']).exists())
+        self.assertEqual(read_json(good)['state'],'awaiting_receipt')
+
     def test_untrusted_submitter_never_reaches_ledger(self):
         p,identity=self.queue();self.engines['member'].deliver_outbox(None)
         self.engines['leader'].trusted={'leader':self.keys['leader']}
