@@ -104,14 +104,17 @@ def native_e2(e2_root, graph, config_path, plan, timeout):
     return json.loads(completed.stdout)
 
 
-def score_adapter(evaluator, ledger, ledger_path, *, prepare=None, remaining_wall=None):
+def score_adapter(evaluator, ledger, ledger_path, *, prepare=None, remaining_wall=None,
+                  max_requests=2):
     """Reserve and persist a request before crossing the evaluator boundary."""
+    if max_requests not in (2, 3):
+        raise ValueError('only fixed two- or three-request routes are supported')
     def oracle(plan):
         calls = ledger['calls']
         if ledger['request_in_flight']:
             raise RuntimeError('uncertain E2 request blocks further scoring')
-        if calls['E2_api_attempted'] >= 2:
-            raise RuntimeError('two-request E2 cap reached')
+        if calls['E2_api_attempted'] >= max_requests:
+            raise RuntimeError(f'{max_requests}-request E2 cap reached')
         if prepare is not None:
             prepare()
         if remaining_wall is not None and remaining_wall() <= 0:
@@ -163,7 +166,7 @@ def build_guarded(graph, cores, config, oracle):
         component_builder=guarded_component.make_component_builder(oracle))
 
 
-def main(argv=None, *, constructor=build_guarded):
+def main(argv=None, *, constructor=build_guarded, oracle_request_limit=2):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('graph', type=Path)
     parser.add_argument('--config', type=Path, default=ROOT/'data/raw/a/official/data/config.txt')
@@ -219,7 +222,8 @@ def main(argv=None, *, constructor=build_guarded):
                              remaining())
         plan, detail = constructor(graph, args.cores, config,
                                    score_adapter(evaluate, ledger, ledger_path,
-                                                 prepare=prepare, remaining_wall=remaining))
+                                                 prepare=prepare, remaining_wall=remaining,
+                                                 max_requests=oracle_request_limit))
         if set(plan) != {'node_to_subgraph', 'core_schedules'}:
             raise ValueError('plan must have exactly the two submission keys')
         if len(plan['core_schedules']) != args.cores:
