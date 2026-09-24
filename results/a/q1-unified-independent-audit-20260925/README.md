@@ -35,3 +35,14 @@ No global optimality or full-domain E1 equivalence is claimed. The production
 owner publishes immutable raw evidence and a standard feed separately; this
 small audit is not a substitute for those originals. CPU rusage differences
 under concurrent execution are not used as per-cell CPU timing.
+
+## Published production evidence
+
+Data commit `a765899917cbb068c84aeedcf6aca174443f435f` contains the
+[full500 standard feed](https://github.com/huaweibei123/huaweicup2026/blob/a765899917cbb068c84aeedcf6aca174443f435f/results/a/q1-unified-full500-20260925-s59/20260924T1810Z-s59ee/board-feed-500.json).
+Root independently matched all500 feed makespans and solver/external-E0 wall
+times to the audited originals, checked all records use the fixed48fa source,
+and recomputed the feed SHA256. See `formal-feed-receipt.json`.
+The board owner reported accepted records500/eligible500/added500 and full
+coverage under batch594ec9ed…, with five-core mean3.9875190662504423. That
+central admission is reported by the board owner, not a second scoring run.
