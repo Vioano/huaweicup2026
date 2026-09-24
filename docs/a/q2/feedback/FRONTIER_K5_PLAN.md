@@ -27,4 +27,3 @@
 首次非法输出、源码漂移、监督故障即按runner停止；每个已完成批次另检查是否存在capacity_certified=true但官方spill>0，若存在停止后续批次和推广。负M、正spill、solver变慢本身仍作为已测结果保存，不按成绩剔除。未测格和失败没有Makespan，不填0或1。
 
 仅在100个唯一case/k5全部成功、七份source hashes/args/官方配置/基线一致时公布完整k5算术平均（逐case的官方单核M/F1 M）。逐格对固定gap与旧tensor计算胜平负、总额外DDR/spill，保留失败和所有执行资源；与队长仅比较相同官方语义的质量，不跨硬件比较单次wall。k1/k2/k4仍为未测，k3仍仅5格，不能称F1完整500。
-
