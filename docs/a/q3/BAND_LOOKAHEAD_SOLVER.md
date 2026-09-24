@@ -8,7 +8,7 @@ The lookahead preserves the node-to-subgraph map, operation owner, and each core
 
 The bounded record motivating this candidate reported:
 
-| Case / prior plan | Prior M | Band-pair + lookahead M | Change |
+| Case / prior plan | Prior M | Same owner + one-leaf lookahead M | Change |
 |---|---:|---:|---:|
 | 058, band-pair | 925,513 | 897,619 | −27,894 |
 | 079, band-pair | 6,165,618 | 6,006,541 | −159,077 |

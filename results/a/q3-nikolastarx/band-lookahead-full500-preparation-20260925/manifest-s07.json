@@ -1,0 +1,731 @@
+{
+  "schema": "q3-feedback-benchmark-v1",
+  "run_id": "q3-band-lookahead-full500-20260925-s3172-s07",
+  "stage_id": "shard-07",
+  "producer_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+  "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+  "solver_commit": "7773fed30433f0b1487f34962a4034224d5796cf",
+  "solver_module": "src.q3.band_lookahead_solve",
+  "algorithm": {
+    "id": "q3-band-lookahead-structure",
+    "name": "Fresh forest incumbent with one band-DP and single-leaf lookahead",
+    "authors": [
+      "NikolaStarx"
+    ],
+    "method": "For each input, obtain a fresh forest incumbent; then construct at most one input-structure-derived band-DP plus single-leaf-lookahead plan. Evaluate only within the fixed three-E0 ceiling and accept only a strictly lower official Makespan. No case table, prior score or plan selection. Failed, duplicate, pruned, timed-out and unevaluated candidate states remain in the solver receipt.",
+    "references": [
+      "https://github.com/huaweibei123/huaweicup2026/issues/51",
+      "https://github.com/huaweibei123/huaweicup2026/blob/7773fed30433f0b1487f34962a4034224d5796cf/docs/a/q3/BAND_LOOKAHEAD_SOLVER.md"
+    ],
+    "upstream": []
+  },
+  "runtime_id": "q3-local-owner-pending-resource-admission",
+  "budget": {
+    "max_e0_calls": 150,
+    "total_wall_seconds": 900,
+    "per_job_seconds": 90
+  },
+  "jobs": [
+    {
+      "case_id": "061",
+      "cores": 1,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "061",
+      "cores": 2,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "061",
+      "cores": 3,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "061",
+      "cores": 4,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "061",
+      "cores": 5,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "062",
+      "cores": 1,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "062",
+      "cores": 2,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "062",
+      "cores": 3,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "062",
+      "cores": 4,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "062",
+      "cores": 5,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "063",
+      "cores": 1,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "063",
+      "cores": 2,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "063",
+      "cores": 3,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "063",
+      "cores": 4,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "063",
+      "cores": 5,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "064",
+      "cores": 1,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "064",
+      "cores": 2,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "064",
+      "cores": 3,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "064",
+      "cores": 4,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "064",
+      "cores": 5,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "065",
+      "cores": 1,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "065",
+      "cores": 2,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "065",
+      "cores": 3,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "065",
+      "cores": 4,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "065",
+      "cores": 5,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "066",
+      "cores": 1,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "066",
+      "cores": 2,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "066",
+      "cores": 3,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "066",
+      "cores": 4,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "066",
+      "cores": 5,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "067",
+      "cores": 1,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "067",
+      "cores": 2,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "067",
+      "cores": 3,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "067",
+      "cores": 4,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "067",
+      "cores": 5,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "068",
+      "cores": 1,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "068",
+      "cores": 2,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "068",
+      "cores": 3,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "068",
+      "cores": 4,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "068",
+      "cores": 5,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "069",
+      "cores": 1,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "069",
+      "cores": 2,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "069",
+      "cores": 3,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "069",
+      "cores": 4,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "069",
+      "cores": 5,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "070",
+      "cores": 1,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "070",
+      "cores": 2,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "070",
+      "cores": 3,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "070",
+      "cores": 4,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "070",
+      "cores": 5,
+      "variant": "fresh-forest-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_policy": "fresh_forest_incumbent_then_at_most_one_band_dp_plus_single_leaf_lookahead",
+        "candidate_limit": 3,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "case_lookup": false,
+        "result_reuse": false
+      },
+      "e0_call_limit": 3
+    }
+  ],
+  "offline_costs": "Preparation record: prior offline evidence reported by coordinator is 7 E0 single-leaf mechanism evidence, 45 new E0 plus 2 exact historical reuses for a complete 50-family, and 6 policy/static checks. Root session separately has up to 5 fresh smoke cases / 15 E0 pending aggregation; these are not claimed as passed here and are excluded from these 500 fresh solver jobs. This batch is a single frozen algorithm, with fresh solver and incumbent for every coordinate; no old score or plan is spliced. Ten-shard aggregate caps: 1500 E0 and 3600 seconds global wall, zero retries. Parallelism up to 4 is a suggestion pending resource admission, not authorization or a verified capacity claim."
+}

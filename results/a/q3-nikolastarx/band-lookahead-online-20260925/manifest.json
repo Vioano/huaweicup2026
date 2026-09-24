@@ -1,0 +1,92 @@
+{
+  "schema": "q3-feedback-benchmark-v1",
+  "run_id": "q3-band-lookahead-online-20260925-s3172",
+  "stage_id": "five-controls",
+  "producer_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+  "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+  "solver_commit": "7773fed30433f0b1487f34962a4034224d5796cf",
+  "solver_module": "src.q3.band_lookahead_solve",
+  "algorithm": {
+    "id": "q3-band-lookahead-structure",
+    "name": "统一结构构造加分带单叶前瞻",
+    "authors": [
+      "NikolaStarx",
+      "yuanzhifang30-sudo"
+    ],
+    "method": "Fresh forest incumbent, at most one fixed band DP+pair-cache tree word+one-leaf candidate in remaining total three online E0 calls. Skip duplicates and certified non-improving bounds; strict official M improvement only, no case lookup or depth sweep.",
+    "references": [
+      "https://github.com/huaweibei123/huaweicup2026/issues/51",
+      "https://github.com/huaweibei123/huaweicup2026/blob/a37eb931a22fb7df7e0d00d193538ce5289ae045/src/q3_yuanzhifang/gap_list.py"
+    ],
+    "upstream": []
+  },
+  "runtime_id": "q3-local-band-lookahead-20260925",
+  "budget": {
+    "max_e0_calls": 15,
+    "total_wall_seconds": 240,
+    "per_job_seconds": 90
+  },
+  "offline_costs": "Fixed source7773; leaf mechanism7newE0 then complete recognized family45newE0+2exacthistorical reuse, no solver. Six injected/static policy tests pass. This five-cell integration check is not full500, not held-out or strict cold-OS-cache evidence. 1worker, zero retry; no E1/E2. Original graph/config/code unchanged.",
+  "jobs": [
+    {
+      "case_id": "001",
+      "cores": 5,
+      "variant": "unified-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "reason": "non-Cartesian fallback",
+        "selection": "strict_lower_official_M"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "011",
+      "cores": 5,
+      "variant": "unified-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "reason": "static-bound pruned proposal",
+        "selection": "strict_lower_official_M"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "021",
+      "cores": 2,
+      "variant": "unified-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "reason": "improves M despite extra/spill regression",
+        "selection": "strict_lower_official_M"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "058",
+      "cores": 5,
+      "variant": "unified-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "reason": "band-lookahead positive",
+        "selection": "strict_lower_official_M"
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "079",
+      "cores": 1,
+      "variant": "unified-band-lookahead-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 3,
+        "reason": "large single-core whole plan",
+        "selection": "strict_lower_official_M"
+      },
+      "e0_call_limit": 3
+    }
+  ]
+}
