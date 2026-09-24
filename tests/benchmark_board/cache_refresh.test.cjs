@@ -32,7 +32,7 @@ function harness(mode='cache_gain'){
     esc:String,fmt:String,render(){mainCursor=vm.runInContext('data.cursor',context);},
     fetch:async()=>{requests++;if(fail)throw Error('offline');return {ok:true,json:async()=>next};},
   });
-  vm.runInContext('let data=null,lastKey="",selection=null,busy=false;'+functions,context);
+  vm.runInContext('let data=null,lastKey="",selection=null,busy=false,refreshQueued=false;'+functions,context);
   const snapshot=(cursor,makespan=100,id='s'+cursor)=>({cursor,runtime:{snapshot_id:id},algorithms:[],runs:[],cells:[{
     problem:'P3',case_id:'001',cores:2,best:{id:'r'+cursor,eligible:true,cache_pair_verified:true,
       metrics:{makespan_cycles:makespan,cache_gain:2,cache_hit_rate:0.5}}
@@ -83,4 +83,22 @@ test('offline refresh retains the last visible Cache results',async()=>{
   const h=harness();h.next(h.snapshot(1));await h.refresh();h.open();
   const before=h.html;h.fail();await h.refresh();assert.equal(h.html,before);
   assert.equal(h.dialog.open,true);assert.match(h.connection.textContent,/连接中断/);
+});
+
+test('a batch picked during an older request is fetched and old results are never rendered',async()=>{
+  let filter='old',resolveOld;
+  const requests=[],rendered=[];
+  const response=cursor=>({ok:true,json:async()=>({cursor,algorithms:[],runs:[]})});
+  const context=vm.createContext({
+    state:()=>filter,$:s=>s==='#connection'?{style:{}}:s==='#cache-dialog'?{open:false}:null,
+    options(){},sources(){},restoreView(){},
+    render(){rendered.push(vm.runInContext('data.cursor',context));},
+    fetch:url=>{requests.push(url);return requests.length===1?new Promise(resolve=>{resolveOld=resolve;}):Promise.resolve(response(2));}
+  });
+  vm.runInContext('let data=null,lastKey="",selection=null,busy=false,refreshQueued=false;'+between('async function refresh(','function visibleCase('),context);
+  const old=vm.runInContext('refresh()',context);
+  filter='new';await vm.runInContext('refresh(true)',context);
+  resolveOld(response(1));await old;await new Promise(resolve=>setImmediate(resolve));
+  assert.deepEqual(requests,['/api/v1/cells?old','/api/v1/cells?new']);
+  assert.deepEqual(rendered,[2]);
 });

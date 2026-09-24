@@ -13,9 +13,10 @@ function summarizeCells(cells, metric, cores) {
     mean: values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null};
 }
 const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let data=null,lastKey='',selection=null,history=[],busy=false,mainMetric='baseline_speedup';
+let data=null,lastKey='',selection=null,history=[],busy=false,refreshQueued=false,mainMetric='baseline_speedup';
 const restoreKey='benchmark-board-ui-state';
 let pendingRestore=null,versionBusy=false,reloading=false;
+let batchRequest=0,batchQuery='',batchRows=[];
 const loadedAssets=document.querySelector('meta[name="board-assets"]')?.content;
 try{
   const saved=JSON.parse(sessionStorage.getItem(restoreKey)||'null');
@@ -37,6 +38,11 @@ function restoreView(){
     const table=$('#cache-dialog .cache-table-scroll');if(table&&Number.isFinite(saved.cacheScroll))table.scrollTop=Math.max(0,saved.cacheScroll);
   }
   if(Number.isFinite(saved.windowScroll))window.scrollTo(0,Math.max(0,saved.windowScroll));
+  if(saved.batchOpen){
+    if(['P1','P2','P3'].includes(saved.batchProblem))$('#batch-problem').value=saved.batchProblem;
+    if(['1','2','3','4','5'].includes(saved.batchCores))$('#batch-cores').value=saved.batchCores;
+    setBatchOpen(true,saved.batchScroll);
+  }
 }
 async function checkVersion(){
   if(versionBusy||reloading||!data)return;versionBusy=true;
@@ -49,7 +55,9 @@ async function checkVersion(){
       algorithm:$('#algorithm').value,run:$('#run').value,search:$('#search').value,reported:$('#reported').checked,
       scrolls:[...document.querySelectorAll('.board-scroll')].map(x=>x.scrollTop),detailScroll:$('#detail').scrollTop,
       windowScroll:window.scrollY,cacheMode:dialog.open?dialog.dataset.mode:null,
-      cacheScroll:$('#cache-dialog .cache-table-scroll')?.scrollTop||0}));
+      cacheScroll:$('#cache-dialog .cache-table-scroll')?.scrollTop||0,
+      batchOpen:!$('#batch-panel').hidden,batchProblem:$('#batch-problem').value,batchCores:$('#batch-cores').value,
+      batchScroll:$('#batch-results').scrollTop}));
     reloading=true;location.reload();
   }catch(_){/* A failed version request never discards the current usable page. */}
   finally{versionBusy=false;}
@@ -61,8 +69,67 @@ const fmt=(x,metric='makespan_cycles')=>x===null||x===undefined?'NA':metric==='c
 function metrics(){return data?.metrics||{}}
 function options(id,values){const el=$(id),value=pendingRestore?(pendingRestore[id==='#algorithm'?'algorithm':'run']||''):el.value;el.innerHTML='<option value="">'+(id==='#algorithm'?'历史最优组合':'所有已接收批次')+'</option>'+values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');el.value=values.includes(value)?value:'';}
 function state(){return new URLSearchParams({algorithm:pendingRestore?.algorithm||$('#algorithm').value,run:pendingRestore?.run||$('#run').value,include_reported:$('#reported').checked});}
-async function refresh(force=false){if(busy)return;busy=true;try{const response=await fetch('/api/v1/cells?'+state());if(!response.ok)throw Error(response.status);const next=await response.json();data=next;$('#connection').textContent='● 本地服务在线';$('#connection').style.color='';const key=next.cursor+'|'+(next.runtime?.snapshot_id||'')+'|'+state();if(force||key!==lastKey){lastKey=key;options('#algorithm',next.algorithms);options('#run',next.runs);render();const cache=$('#cache-dialog');if(cache.open)openCache(cache.dataset.mode);if(selection)await detail(false);}sources();restoreView();}catch(e){$('#connection').textContent='连接中断 · 保留上次数据';$('#connection').style.color='var(--fail)';}finally{busy=false;}}
+async function refresh(force=false){
+  if(busy){if(force)refreshQueued=true;return;}
+  busy=true;const query=state().toString();
+  try{
+    const response=await fetch('/api/v1/cells?'+query);if(!response.ok)throw Error(response.status);
+    const next=await response.json();
+    if(query!==state().toString()){refreshQueued=true;return;}
+    data=next;$('#connection').textContent='● 本地服务在线';$('#connection').style.color='';
+    const key=next.cursor+'|'+(next.runtime?.snapshot_id||'')+'|'+query;
+    if(force||key!==lastKey){
+      lastKey=key;options('#algorithm',next.algorithms);options('#run',next.runs);render();
+      const cache=$('#cache-dialog');if(cache.open)openCache(cache.dataset.mode);
+      if($('#batch-panel')&&!$('#batch-panel').hidden)loadBatches();
+      if(selection)await detail(false);
+    }
+    sources();restoreView();
+  }catch(e){$('#connection').textContent='连接中断 · 保留上次数据';$('#connection').style.color='var(--fail)';}
+  finally{busy=false;if(refreshQueued){refreshQueued=false;refresh(true);}}
+}
 function visibleCase(c){const s=$('#search').value.trim();if(!s)return true;const range=s.match(/^(\d+)\s*[-–~]\s*(\d+)$/);return range?+c>=+range[1]&&+c<=+range[2]:c.includes(s.padStart(3,'0'));}
+function setBatchOpen(open,scroll){
+  $('#batch-panel').hidden=!open;$('#batch-toggle').setAttribute('aria-expanded',String(open));
+  if(open)loadBatches(scroll);else{batchRequest++;$('#batch-toggle').focus();}
+}
+async function loadBatches(restoreScroll){
+  const request=++batchRequest;
+  const cases=Array.from({length:100},(_,i)=>String(i+1).padStart(3,'0')).filter(visibleCase);
+  const query=new URLSearchParams({problem:$('#batch-problem').value,cores:$('#batch-cores').value,cases:cases.join(',')}).toString();
+  const changed=query!==batchQuery;batchQuery=query;
+  if(changed){$('#batch-results').innerHTML='';batchRows=[];}
+  $('#batch-scope').textContent=`当前算例筛选：${cases.length} / 100 例 · 按平均加速比排名`;
+  if(!cases.length){$('#batch-status').textContent='当前算例筛选为空，请调整上方算例范围。';return;}
+  $('#batch-status').textContent='正在读取已核批次…';
+  try{
+    const response=await fetch('/api/v1/batches?'+query);if(!response.ok)throw Error(response.status);
+    const result=await response.json();if(request!==batchRequest||$('#batch-panel').hidden)return;
+    const scroll=Number.isFinite(restoreScroll)?restoreScroll:$('#batch-results').scrollTop;
+    const focus=document.activeElement?.dataset?.batchRun;
+    batchRows=[...result.complete,...result.partial];
+    const row=(r,rank)=>`<tr aria-current="${$('#run').value===r.run_id}"><td><b>${rank?`完整候选 ${rank} · `:''}${esc(r.run_id)}</b><small>${esc(r.algorithm_ids.join(' / '))} · ${r.solver_commits.map(s=>esc(s.slice(0,8))).join(' / ')}</small>${r.single_source?'':'<small class="batch-warning">多算法 / 多版本或来源未完整，不参与排名</small>'}</td><td>${r.scored_count}/${r.target_count}<small>有效格 ${r.valid_count}/${r.target_count}</small></td><td><strong>${r.mean_speedup===null?'NA':r.mean_speedup.toFixed(3)+'×'}</strong>${r.complete?'':'<small>已测子集均值，不与完整批次混排</small>'}</td><td>${r.mean_solver_seconds===null?'NA':r.mean_solver_seconds.toFixed(3)+' s'}<small>已测 ${r.solver_count}/${r.target_count}</small></td><td><button data-batch-run="${esc(r.run_id)}">${$('#run').value===r.run_id?'当前批次':'查看批次'}</button></td></tr>`;
+    $('#batch-results').innerHTML=batchRows.length?`<table><thead><tr><th>真实批次 / 算法来源</th><th>可比样本</th><th>平均加速比 ↑</th><th>求解均时</th><th>操作</th></tr></thead><tbody>${result.complete.map((r,i)=>row(r,i+1)).join('')}${result.partial.length?`<tr class="batch-section"><th colspan="5">待补齐 / 来源待确认的候选 · 按覆盖数展示，不排名</th></tr>${result.partial.map(r=>row(r,0)).join('')}`:''}</tbody></table>`:'';
+    $('#batch-status').textContent=result.complete_count?`完整覆盖的批次 ${result.complete_count} 个，展示前 ${result.complete.length} 个；其他候选 ${result.partial_count} 个。`:`当前范围没有可排名的完整批次${result.partial_count?'；以下候选保留缺项，不补成完整成绩。':'。'}`;
+    $('#batch-results').scrollTop=scroll;
+    if(focus)[...document.querySelectorAll('[data-batch-run]')].find(b=>b.dataset.batchRun===focus)?.focus({preventScroll:true});
+  }catch(e){if(request===batchRequest)$('#batch-status').textContent='候选更新失败，请点“更新候选”重试；主成绩表仍可使用。';}
+}
+$('#batch-toggle').onclick=()=>setBatchOpen($('#batch-panel').hidden);
+$('#batch-close').onclick=()=>setBatchOpen(false);
+$('#batch-retry').onclick=()=>loadBatches();
+for(const id of ['#batch-problem','#batch-cores'])$(id).onchange=()=>loadBatches();
+$('#batch-results').onclick=e=>{
+  const button=e.target.closest('[data-batch-run]');if(!button)return;
+  const row=batchRows.find(r=>r.run_id===button.dataset.batchRun);if(!row)return;
+  const algorithm=row.algorithm_ids.length===1?row.algorithm_ids[0]:'';
+  for(const [id,value] of [['#run',row.run_id],['#algorithm',algorithm]]){
+    if(![...$(id).options].some(o=>o.value===value))$(id).add(new Option(value,value));
+    $(id).value=value;
+  }
+  $('#reported').checked=false;refresh(true);
+};
+$('#history-view').onclick=()=>{$('#algorithm').value='';$('#run').value='';$('#reported').checked=false;refresh(true);};
 // Stable absolute scales for ratios; relative positions never change the colors.
 function mixColor(a,b,t){return a.map((v,i)=>Math.round(v+(b[i]-v)*t));}
 function inkFor(rgb){const lum=rgb.map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;}).reduce((s,v,i)=>s+v*[.2126,.7152,.0722][i],0);return lum>.179?'#000000':'#ffffff';}
@@ -78,6 +145,9 @@ function absoluteColor(value,metric,low,high){
 }
 function relativePosition(value,values){if(values.length<2)return null;const less=values.filter(x=>x<value).length,equal=values.filter(x=>x===value).length;return (less+(equal-1)/2)/(values.length-1);}
 function render(){if(!data)return;const metric=$('#metric').value;const values=data.cells.filter(c=>c.best&&c.best.eligible).map(c=>c.best.metrics[metric]).filter(x=>x!==null&&x!==undefined);const low=values.length?Math.min(...values):null,high=values.length?Math.max(...values):null;
+const selectedRun=$('#run').value,selectedAlgorithm=$('#algorithm').value;
+$('#algorithm').options[0].textContent=selectedRun?'所有算法（本批次）':'历史最优组合';
+$('#selection-note').textContent=(selectedRun?`当前批次：${selectedRun}。只展示该批次已交记录，缺例保持空缺。`:selectedAlgorithm?'当前算法：跨已接收批次逐格选优，可能来自该算法的不同版本。':'历史最优组合：每格从所有已核记录挑选最低 Makespan，可来自不同算法和批次，不代表某一算法的完整成绩。')+' 切换指标仍展示同一方案；列均值按当前筛选逐例算术平均，仅计原件已核且指标完整的样本。';
 const ratio=metric==='baseline_speedup'||metric==='cache_gain';
 $('#metric-label').textContent=(metrics()[metric]?.[0]||metric)+' / '+(metrics()[metric]?.[1]||'');
 const ticks=ratio?[.5,1,2,4,8]:metric==='cache_hit_rate'?[0,.25,.5,.75,1]:[low,low===null?null:Math.expm1((Math.log1p(low)+Math.log1p(high))/2),high];
@@ -140,7 +210,7 @@ $('#close-detail').onclick=()=>{selection=null;$('#detail').hidden=true;window.h
 }
 function pair(r){if(r.problem!=='P3')return '';if(!r.cache_pair_verified)return '<h4>Cache 收益</h4><p>缺少同计划、同核数配对原件，暂不计算收益。</p>';let withCache=r.metrics.makespan_cycles,noCache=withCache*r.metrics.cache_gain,max=Math.max(withCache,noCache);return `<h4>同计划 Cache 对照 · ${fmt(r.metrics.cache_gain,'cache_gain')}×</h4><div class="pair"><span>无 Cache</span><i style="width:${130*noCache/max}px"></i><em>${fmt(noCache)}</em></div><div class="pair"><span>有 Cache</span><i style="width:${130*withCache/max}px"></i><em>${fmt(withCache)}</em></div>`;}
 $('#boards').addEventListener('click',e=>{const b=e.target.closest('[data-case]');if(b){selection={problem:b.dataset.p,case_id:b.dataset.case,cores:+b.dataset.k};detail();}});
-for(const id of ['#algorithm','#run','#reported'])$(id).addEventListener('change',()=>refresh(true));$('#metric').onchange=()=>{const chosen=$('#metric').value;if(chosen==='cache_gain'||chosen==='cache_hit_rate'){$('#metric').value=mainMetric;openCache(chosen);return;}mainMetric=chosen;render();if(selection)detail(false);};$('#search').oninput=render;$('#refresh').onclick=()=>refresh(true);$('#theme').onclick=()=>{document.body.classList.toggle('light');localStorage.setItem('board-theme',document.body.classList.contains('light')?'light':'dark');};if(localStorage.getItem('board-theme')==='light')document.body.classList.add('light');
+for(const id of ['#algorithm','#run','#reported'])$(id).addEventListener('change',()=>refresh(true));$('#metric').onchange=()=>{const chosen=$('#metric').value;if(chosen==='cache_gain'||chosen==='cache_hit_rate'){$('#metric').value=mainMetric;openCache(chosen);return;}mainMetric=chosen;render();if(selection)detail(false);};$('#search').oninput=()=>{render();if(!$('#batch-panel').hidden)loadBatches();};$('#refresh').onclick=()=>refresh(true);$('#theme').onclick=()=>{document.body.classList.toggle('light');localStorage.setItem('board-theme',document.body.classList.contains('light')?'light':'dark');};if(localStorage.getItem('board-theme')==='light')document.body.classList.add('light');
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&selection&&!$('#cache-dialog').open)$('#close-detail')?.click();});
 const hash=new URLSearchParams(location.hash.slice(1));if(['P1','P2','P3'].includes(hash.get('problem'))&&/^\d{3}$/.test(hash.get('case_id')||'')&&+hash.get('cores')>=1&&+hash.get('cores')<=5)selection={problem:hash.get('problem'),case_id:hash.get('case_id'),cores:+hash.get('cores')};
 refresh(true);setInterval(()=>{refresh();checkVersion();},5000);

@@ -192,6 +192,50 @@ class Ledger:
         with self.connect() as db: rows=db.execute('SELECT * FROM events WHERE seq>? ORDER BY seq LIMIT ?',(after,min(limit,1000))).fetchall()
         return [{'cursor':x['seq'],'type':x['kind'],'time':x['time'],'data':json.loads(x['body'])} for x in rows]
 
+def batch_candidates(allrows, problem, cores, case_ids):
+    """Rank real runs on an identical case set; never fill gaps from other runs."""
+    if problem not in ('P1','P2','P3') or cores not in range(1,6):
+        raise ValueError('invalid problem or core count')
+    cases=set(case_ids)
+    if not cases or not cases <= {f'{n:03d}' for n in range(1,101)}:
+        raise ValueError('cases must be official case IDs 001–100')
+    latest={}
+    for r in allrows:
+        if r['attempt_id'] not in latest or r['revision']>latest[r['attempt_id']]['revision']:
+            latest[r['attempt_id']]=r
+    groups={}
+    for r in latest.values():
+        if r['problem']==problem and r['cores']==cores and r['case_id'] in cases:
+            groups.setdefault(r['run_id'],[]).append(r)
+    candidates=[]
+    for run,rows in groups.items():
+        sources={(r['algorithm_id'],r.get('solver_commit')) for r in rows}
+        best={}
+        for r in rows:
+            if r['status']!='ok' or not r['eligible']: continue
+            old=best.get(r['case_id'])
+            if old is None or (r['metrics']['makespan_cycles'],r['id'])<(old['metrics']['makespan_cycles'],old['id']):
+                best[r['case_id']]=r
+        if not best: continue
+        def values(metric, baseline=False):
+            return [r['metrics'][metric] for r in best.values()
+                    if (not baseline or r.get('baseline_verified')) and number(r['metrics'].get(metric),baseline)]
+        ratios=values('baseline_speedup',True)
+        walls=values('solver_wall_seconds')
+        single=len(sources)==1 and all(sha(commit,40) for _,commit in sources)
+        complete=len(ratios)==len(cases) and single
+        candidates.append({'run_id':run,'algorithm_ids':sorted({a for a,_ in sources}),
+            'solver_commits':sorted({c for _,c in sources if c}), 'single_source':single,
+            'valid_count':len(best),'scored_count':len(ratios),'target_count':len(cases),
+            'mean_speedup':sum(ratios)/len(ratios) if ratios else None,
+            'mean_solver_seconds':sum(walls)/len(walls) if walls else None,'solver_count':len(walls),
+            'complete':complete,'missing_cases':sorted(cases-set(best))})
+    complete=sorted((r for r in candidates if r['complete']),key=lambda r:(-r['mean_speedup'],r['run_id']))
+    partial=sorted((r for r in candidates if not r['complete']),key=lambda r:(-r['scored_count'],-r['valid_count'],r['run_id']))
+    return {'problem':problem,'cores':cores,'case_ids':sorted(cases),'target_count':len(cases),
+            'complete_count':len(complete),'partial_count':len(partial),'complete':complete[:3],'partial':partial[:3],
+            'ranking':'逐例官方单核加速比的算术平均；只排名覆盖当前全部算例、来源单一的真实批次。缺例不补值，跨批次不合并。'}
+
 def project_records(allrows, manifest, cursor, sources, algorithm=None, run=None, include_reported=False):
     """Shared selection for local original checking and central read-only mirrors."""
     expected={f["path"]:f["sha256"] for f in manifest["files"]}

@@ -4,7 +4,7 @@ import argparse, fnmatch, json, html, mimetypes, re, subprocess, threading, time
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
-from core import Ledger, now, packed, sha, safe_path, MAX_BLOB, digest
+from core import Ledger, now, packed, sha, safe_path, MAX_BLOB, digest, batch_candidates
 
 ROOT=Path(__file__).resolve().parents[2]
 WEB=Path(__file__).parent/'web'
@@ -102,6 +102,9 @@ def make_handler(ledger,sync_status=None):
                     for key in ('problem','case_id','cores'):
                         if q.get(key): data['cells']=[c for c in data['cells'] if str(c[key])==q[key]]
                     return self.send(annotate(data))
+                if path=='/api/v1/batches':
+                    cases=q['cases'].split(',') if 'cases' in q else [f'{n:03d}' for n in range(1,101)]
+                    return self.send(batch_candidates(ledger.records(),q.get('problem','P1'),int(q.get('cores',5)),cases))
                 if path=='/api/v1/events':
                     after=max(0,int(q.get('after',0)));deadline=time.monotonic()+min(25,max(0,int(q.get('wait',0))))
                     while True:
