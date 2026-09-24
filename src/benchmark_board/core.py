@@ -5,6 +5,7 @@ from collections import Counter
 from pathlib import PurePosixPath
 from datetime import datetime, timezone
 from contextlib import contextmanager
+from composites import COMPOSITES, member_row, verified as composite_verified
 
 MAX_BLOB = 64 * 1024 * 1024
 MAX_EXPANDED_JSON = 128 * 1024 * 1024  # Complete official timelines can exceed 64 MiB.
@@ -193,8 +194,8 @@ class Ledger:
         with self.connect() as db: rows=db.execute('SELECT * FROM events WHERE seq>? ORDER BY seq LIMIT ?',(after,min(limit,1000))).fetchall()
         return [{'cursor':x['seq'],'type':x['kind'],'time':x['time'],'data':json.loads(x['body'])} for x in rows]
 
-def batch_candidates(allrows, problem, cores, case_ids):
-    """Rank real runs on an identical case set; never fill gaps from other runs."""
+def batch_candidates(allrows, problem, cores, case_ids, composites=COMPOSITES):
+    """Rank real runs or explicitly fingerprinted collections on one case set."""
     if problem not in ('P1','P2','P3') or cores not in range(1,6):
         raise ValueError('invalid problem or core count')
     cases=set(case_ids)
@@ -208,8 +209,17 @@ def batch_candidates(allrows, problem, cores, case_ids):
     for r in latest.values():
         if r['problem']==problem:
             groups.setdefault(r['run_id'],[]).append(r)
+    composite_specs={}
+    for spec in composites:
+        if spec['problem']!=problem: continue
+        rows=[r for r in latest.values() if member_row(r,spec)]
+        if rows:
+            groups[spec['id']]=rows
+            composite_specs[spec['id']]=spec
     candidates=[]
     for run,all_run_rows in groups.items():
+        spec=composite_specs.get(run)
+        collection_verified=composite_verified(all_run_rows,spec) if spec else None
         attempts_per_cell=Counter((r['case_id'],r['cores']) for r in all_run_rows)
         one_attempt_per_cell=all(count==1 for count in attempts_per_cell.values())
         sources={(r['algorithm_id'],r.get('solver_commit')) for r in all_run_rows}
@@ -239,13 +249,17 @@ def batch_candidates(allrows, problem, cores, case_ids):
         ratios=values('baseline_speedup',True)
         walls=values('solver_wall_seconds')
         single=len(sources)==1 and all(sha(commit,40) for _,commit in sources)
-        complete=len(ratios)==len(cases) and single
+        complete=len(ratios)==len(cases) and single and (not spec or collection_verified)
         full_ratios={k:[r['metrics'].get('baseline_speedup') for (case,core),r in full_best.items()
                         if core==k and r.get('baseline_verified') and number(r['metrics'].get('baseline_speedup'),True)]
                      for k in range(1,6)}
         full_scored=sum(map(len,full_ratios.values()))
-        full_complete=len(full_best)==500 and single and fixed_entrypoint and one_attempt_per_cell
+        full_complete=len(full_best)==500 and single and fixed_entrypoint and one_attempt_per_cell and (not spec or collection_verified)
         candidates.append({'run_id':run,'algorithm_ids':sorted({a for a,_ in sources}),
+            'composite':bool(spec),'composite_verified':collection_verified,
+            'composite_label':spec['label'] if spec else None,
+            'component_runs':[member[0] for member in spec['members']] if spec else [],
+            'manifest_url':('https://github.com/huaweibei123/huaweicup2026/blob/'+spec['source_commit']+'/'+spec['manifest_path']) if spec else None,
             'solver_commits':sorted({c for _,c in sources if c}), 'single_source':single,
             'fixed_entrypoint':fixed_entrypoint,'one_attempt_per_cell':one_attempt_per_cell,
             'valid_count':len(best),'scored_count':len(ratios),'target_count':len(cases),
@@ -265,9 +279,9 @@ def batch_candidates(allrows, problem, cores, case_ids):
             'full_complete_count':len(full_all),'full':full_all[:3],
             'complete_count':len(complete),'partial_count':len(partial),'complete':complete[:3],'partial':partial[:3],
             'batches':full_all+[r for r in complete+partial if not r['full_complete']],
-            'ranking':'主成绩候选须同一批次、同一算法和求解器提交在本题100图×1–5核均已核，每格仅一次尝试；多次尝试须另核在线选择规则。逐核均值为逐例算术平均。筛选子集只作预览，历史逐格最佳不参与。'}
+            'ranking':'主成绩候选须同一批次，或有固定清单及原始记录指纹的复合批次；同一算法和求解器提交在本题100图×1–5核均已核，每格仅一次尝试。逐核均值为逐例算术平均。筛选子集只作预览，历史逐格最佳不参与。'}
 
-def project_records(allrows, manifest, cursor, sources, algorithm=None, run=None, include_reported=False):
+def project_records(allrows, manifest, cursor, sources, algorithm=None, run=None, include_reported=False, composites=COMPOSITES):
     """Shared selection for local original checking and central read-only mirrors."""
     expected={f["path"]:f["sha256"] for f in manifest["files"]}
     def compatible(r):
@@ -276,10 +290,11 @@ def project_records(allrows, manifest, cursor, sources, algorithm=None, run=None
     latest={}
     for r in allrows:
         if r['attempt_id'] not in latest or r['revision']>latest[r['attempt_id']]['revision']: latest[r['attempt_id']]=r
+    selected_composite=next((spec for spec in composites if spec['id']==run),None)
     groups={}
     for r in latest.values():
         if algorithm and r['algorithm_id']!=algorithm: continue
-        if run and r['run_id']!=run: continue
+        if run and not (member_row(r,selected_composite) if selected_composite else r['run_id']==run): continue
         groups.setdefault((r['problem'],r['case_id'],r['cores']),[]).append(r)
     cells=[]
     for p in ('P1','P2','P3'):
@@ -293,4 +308,6 @@ def project_records(allrows, manifest, cursor, sources, algorithm=None, run=None
                 latest_report=next((r for r in reversed(rows) if r['status']=='ok' and not r['eligible']),None)
                 missing=[a for a in ('plan','result','run') if not latest_report.get('artifacts',{}).get(a)] if latest_report else []
                 cells.append({'problem':p,'case_id':f'{n:03d}','cores':k,'best':best,'attempts':len(rows),'missing_artifacts':missing,'status':('ok' if best and best['eligible'] else 'reported' if best else ('reported' if rows[-1]['status']=='ok' else rows[-1]['status']) if rows else 'not_run')})
-    return {'schema_version':1,'cursor':cursor,'as_of':now(),'cells':cells,'sources':sources,'latest_imported_at':max((r['imported_at'] for r in allrows),default=None),'latest_observed_at':max((r.get('observed_at') for r in allrows if r.get('observed_at')),default=None),'record_count':len(allrows),'algorithms':sorted({r['algorithm_id'] for r in allrows}),'runs':sorted({r['run_id'] for r in allrows}),'metrics':METRICS,'selection':'历史最优组合：仅同问题/图/核数/冻结配置；不是单一算法的全量实验成绩。切换指标不会换赢家。'}
+    runs={r['run_id'] for r in allrows}
+    runs.update(spec['id'] for spec in composites if any(member_row(r,spec) for r in latest.values()))
+    return {'schema_version':1,'cursor':cursor,'as_of':now(),'cells':cells,'sources':sources,'latest_imported_at':max((r['imported_at'] for r in allrows),default=None),'latest_observed_at':max((r.get('observed_at') for r in allrows if r.get('observed_at')),default=None),'record_count':len(allrows),'algorithms':sorted({r['algorithm_id'] for r in allrows}),'runs':sorted(runs),'metrics':METRICS,'selection':'历史最优组合：仅同问题/图/核数/冻结配置；不是单一算法的全量实验成绩。切换指标不会换赢家。'}

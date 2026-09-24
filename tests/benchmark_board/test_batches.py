@@ -9,7 +9,8 @@ from urllib.request import urlopen
 from urllib.error import HTTPError
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'src/benchmark_board'))
-from core import batch_candidates
+from core import batch_candidates, project_records
+from composites import record_ids_digest
 from app import make_handler, ui_bundle
 
 
@@ -24,6 +25,48 @@ def record(run,case,ratio=2,**changes):
 
 
 class BatchTests(unittest.TestCase):
+    def test_fixed_composite_uses_original_attempts_and_rejects_changed_bytes(self):
+        members=tuple((f'fixed-s{i}',1+25*(i-1),25*i) for i in range(1,5))
+        rows=[]
+        for run,first,last in members:
+            for n in range(first,last+1):
+                case=f'{n:03d}'
+                for core in range(1,6):
+                    rows.append(record(run,case,id=f'id-{case}-{core}',
+                        attempt_id=f'{run}-p2-{case}-k{core}',problem='P2',cores=core,
+                        algorithm_id='fixed-solver',solver_commit='b'*40,
+                        evaluator={'route':'E0'},baseline={'route':'E0'},
+                        imported_at='2026-09-25T00:00:00+00:00'))
+        spec={'id':'composite:fixed','label':'fixed collection','problem':'P2',
+              'algorithm_id':'fixed-solver','solver_commit':'b'*40,
+              'source_commit':'c'*40,'manifest_path':'results/fixed/manifest.json',
+              'record_ids_sha256':record_ids_digest(rows),'members':members}
+        result=batch_candidates(rows,'P2',5,['001'],composites=(spec,))
+        candidate=next(r for r in result['batches'] if r['run_id']==spec['id'])
+        self.assertTrue(candidate['full_complete'])
+        self.assertTrue(candidate['composite_verified'])
+        self.assertEqual(candidate['full_valid_count'],500)
+        self.assertEqual(candidate['component_runs'],[m[0] for m in members])
+        selected=project_records(rows,{'official_code_hash':'x','files':[]},1,{},run=spec['id'],composites=(spec,))
+        cell=next(c for c in selected['cells'] if (c['problem'],c['case_id'],c['cores'])==('P2','001',1))
+        self.assertEqual(cell['best']['run_id'],'fixed-s1')
+        self.assertEqual(cell['best']['attempt_id'],'fixed-s1-p2-001-k1')
+        self.assertIn(spec['id'],selected['runs'])
+
+        changed=copy.deepcopy(rows);changed[0]['id']='different-original-bytes'
+        invalid=batch_candidates(changed,'P2',5,['001'],composites=(spec,))
+        candidate=next(r for r in invalid['batches'] if r['run_id']==spec['id'])
+        self.assertFalse(candidate['composite_verified'])
+        self.assertFalse(candidate['full_complete'])
+        self.assertFalse(candidate['complete'])
+        self.assertEqual(candidate['full_valid_count'],500)
+
+        revised=copy.deepcopy(rows);revised.append(dict(rows[0],id='revision-two',revision=2))
+        invalid=batch_candidates(revised,'P2',5,['001'],composites=(spec,))
+        candidate=next(r for r in invalid['batches'] if r['run_id']==spec['id'])
+        self.assertEqual(candidate['full_valid_count'],499)
+        self.assertFalse(candidate['full_complete'])
+
     def test_partial_cherry_picked_batch_cannot_outrank_full_batch(self):
         rows=[record('full','001',1),record('full','002',3),record('partial','001',50)]
         result=batch_candidates(rows,'P1',5,['001','002'])
