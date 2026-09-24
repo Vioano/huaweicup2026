@@ -1,0 +1,4879 @@
+{
+  "kind": "retrospective idle-core Makespan envelope; potential estimate only",
+  "source": {
+    "commit": "0e0d7cd327c51cc6ac365e01f4b6a7d2b28f9297",
+    "feed_path": "results/a/q1-unified-v4-full500-20260925-s59/20260924T1952Z-s59ee/board-feed-500.json",
+    "feed_sha256": "4cd79828999ad56dc00d34a79cc0dcd921fff783e5aaf793b0c84924b0f10764",
+    "schema_version": 1,
+    "submission_version": 1
+  },
+  "method": {
+    "cell_metric": "records[].metrics.makespan_cycles",
+    "formula": "for each graph and K, min of the already saved Makespan values at k=1..K",
+    "means": "arithmetic mean across the 100 graphs separately for each K",
+    "improvement": "original Makespan at K minus that graph K envelope; positive means lower Makespan in the envelope",
+    "assumption": "an already saved lower-core plan could be run with the remaining cores idle without changing its semantics or score",
+    "status": "No plan was transformed or evaluated. This envelope is not a new unified-algorithm score."
+  },
+  "coverage": {
+    "graphs": 100,
+    "cores": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "successful_cells": 500
+  },
+  "per_core_summary": {
+    "1": {
+      "original_makespan_arithmetic_mean_cycles": 3099940.34,
+      "idle_core_envelope_arithmetic_mean_cycles": 3099940.34,
+      "mean_reduction_cycles": 0.0,
+      "mean_reduction_percent_of_original_mean": 0.0,
+      "improved_graph_cells": 0,
+      "graph_cells": 100
+    },
+    "2": {
+      "original_makespan_arithmetic_mean_cycles": 1524484.38,
+      "idle_core_envelope_arithmetic_mean_cycles": 1524484.38,
+      "mean_reduction_cycles": 0.0,
+      "mean_reduction_percent_of_original_mean": 0.0,
+      "improved_graph_cells": 0,
+      "graph_cells": 100
+    },
+    "3": {
+      "original_makespan_arithmetic_mean_cycles": 1038554.84,
+      "idle_core_envelope_arithmetic_mean_cycles": 1038554.84,
+      "mean_reduction_cycles": 0.0,
+      "mean_reduction_percent_of_original_mean": 0.0,
+      "improved_graph_cells": 0,
+      "graph_cells": 100
+    },
+    "4": {
+      "original_makespan_arithmetic_mean_cycles": 793556.04,
+      "idle_core_envelope_arithmetic_mean_cycles": 793547.58,
+      "mean_reduction_cycles": 8.46,
+      "mean_reduction_percent_of_original_mean": 0.0010660872797338926,
+      "improved_graph_cells": 2,
+      "graph_cells": 100
+    },
+    "5": {
+      "original_makespan_arithmetic_mean_cycles": 660987.68,
+      "idle_core_envelope_arithmetic_mean_cycles": 660757.32,
+      "mean_reduction_cycles": 230.36,
+      "mean_reduction_percent_of_original_mean": 0.03485087649440002,
+      "improved_graph_cells": 14,
+      "graph_cells": 100
+    }
+  },
+  "official_primary_metric_summary": {
+    "1": {
+      "original_arithmetic_mean_case_speedup": 1.0020968223600535,
+      "idle_core_envelope_arithmetic_mean_case_speedup": 1.0020968223600535,
+      "mean_speedup_increment": 0.0,
+      "largest_increment_contributor": {
+        "case_id": "100",
+        "speedup_increment": 0.0,
+        "baseline_makespan_cycles": 151223,
+        "original_makespan_cycles": 151223,
+        "envelope_makespan_cycles": 151223,
+        "envelope_source_cores": 1
+      }
+    },
+    "2": {
+      "original_arithmetic_mean_case_speedup": 1.9475131728149822,
+      "idle_core_envelope_arithmetic_mean_case_speedup": 1.9475131728149822,
+      "mean_speedup_increment": 0.0,
+      "largest_increment_contributor": {
+        "case_id": "100",
+        "speedup_increment": 0.0,
+        "baseline_makespan_cycles": 151223,
+        "original_makespan_cycles": 88721,
+        "envelope_makespan_cycles": 88721,
+        "envelope_source_cores": 2
+      }
+    },
+    "3": {
+      "original_arithmetic_mean_case_speedup": 2.7390465568603655,
+      "idle_core_envelope_arithmetic_mean_case_speedup": 2.7390465568603655,
+      "mean_speedup_increment": 0.0,
+      "largest_increment_contributor": {
+        "case_id": "100",
+        "speedup_increment": 0.0,
+        "baseline_makespan_cycles": 151223,
+        "original_makespan_cycles": 57811,
+        "envelope_makespan_cycles": 57811,
+        "envelope_source_cores": 3
+      }
+    },
+    "4": {
+      "original_arithmetic_mean_case_speedup": 3.4530397551189473,
+      "idle_core_envelope_arithmetic_mean_case_speedup": 3.4534856402761864,
+      "mean_speedup_increment": 0.0004458851572392142,
+      "largest_increment_contributor": {
+        "case_id": "026",
+        "speedup_increment": 0.0322042976466701,
+        "baseline_makespan_cycles": 99203,
+        "original_makespan_cycles": 42226,
+        "envelope_makespan_cycles": 41655,
+        "envelope_source_cores": 3
+      }
+    },
+    "5": {
+      "original_arithmetic_mean_case_speedup": 4.025907473836023,
+      "idle_core_envelope_arithmetic_mean_case_speedup": 4.036858344737649,
+      "mean_speedup_increment": 0.010950870901624879,
+      "largest_increment_contributor": {
+        "case_id": "086",
+        "speedup_increment": 0.30327238953189983,
+        "baseline_makespan_cycles": 118403,
+        "original_makespan_cycles": 48800,
+        "envelope_makespan_cycles": 43378,
+        "envelope_source_cores": 4
+      }
+    }
+  },
+  "baseline_source": {
+    "reference": "each record.baseline.result, deduplicated to one result per graph",
+    "sha256_check": "verified the compressed bytes against each feed reference before gzip decompression",
+    "unique_results_read": 100,
+    "speedup_formula": "per graph, baseline single-core Makespan / multi-core Makespan; arithmetic mean of 100 per-graph ratios for each K"
+  },
+  "improved_cells_by_K": {
+    "1": 0,
+    "2": 0,
+    "3": 0,
+    "4": 2,
+    "5": 14
+  },
+  "improved_cells_total_across_K": 16,
+  "largest_improvement_any_K": {
+    "case_id": "080",
+    "cores_k": 5,
+    "original_makespan_cycles": 97383,
+    "envelope_makespan_cycles": 91774,
+    "improvement_cycles": 5609,
+    "envelope_source_cores": 4,
+    "improvement_percent_of_original": 5.7597321914502535
+  },
+  "largest_improvement_at_K5": {
+    "case_id": "080",
+    "cores_k": 5,
+    "original_makespan_cycles": 97383,
+    "envelope_makespan_cycles": 91774,
+    "improvement_cycles": 5609,
+    "envelope_source_cores": 4,
+    "improvement_percent_of_original": 5.7597321914502535
+  },
+  "envelope_source_core_distribution_over_all_500_cells": {
+    "1": 100,
+    "2": 103,
+    "3": 103,
+    "4": 112,
+    "5": 82
+  },
+  "per_graph_cells": {
+    "001": {
+      "1": {
+        "case_id": "001",
+        "cores_k": 1,
+        "original_makespan_cycles": 233110,
+        "envelope_makespan_cycles": 233110,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "001",
+        "cores_k": 2,
+        "original_makespan_cycles": 116868,
+        "envelope_makespan_cycles": 116868,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "001",
+        "cores_k": 3,
+        "original_makespan_cycles": 78545,
+        "envelope_makespan_cycles": 78545,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "001",
+        "cores_k": 4,
+        "original_makespan_cycles": 58984,
+        "envelope_makespan_cycles": 58984,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "001",
+        "cores_k": 5,
+        "original_makespan_cycles": 47502,
+        "envelope_makespan_cycles": 47502,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "002": {
+      "1": {
+        "case_id": "002",
+        "cores_k": 1,
+        "original_makespan_cycles": 261945,
+        "envelope_makespan_cycles": 261945,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "002",
+        "cores_k": 2,
+        "original_makespan_cycles": 135690,
+        "envelope_makespan_cycles": 135690,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "002",
+        "cores_k": 3,
+        "original_makespan_cycles": 93963,
+        "envelope_makespan_cycles": 93963,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "002",
+        "cores_k": 4,
+        "original_makespan_cycles": 73544,
+        "envelope_makespan_cycles": 73544,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "002",
+        "cores_k": 5,
+        "original_makespan_cycles": 55067,
+        "envelope_makespan_cycles": 55067,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "003": {
+      "1": {
+        "case_id": "003",
+        "cores_k": 1,
+        "original_makespan_cycles": 602382,
+        "envelope_makespan_cycles": 602382,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "003",
+        "cores_k": 2,
+        "original_makespan_cycles": 340580,
+        "envelope_makespan_cycles": 340580,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "003",
+        "cores_k": 3,
+        "original_makespan_cycles": 225604,
+        "envelope_makespan_cycles": 225604,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "003",
+        "cores_k": 4,
+        "original_makespan_cycles": 206064,
+        "envelope_makespan_cycles": 206064,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "003",
+        "cores_k": 5,
+        "original_makespan_cycles": 165184,
+        "envelope_makespan_cycles": 165184,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "004": {
+      "1": {
+        "case_id": "004",
+        "cores_k": 1,
+        "original_makespan_cycles": 392357,
+        "envelope_makespan_cycles": 392357,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "004",
+        "cores_k": 2,
+        "original_makespan_cycles": 199074,
+        "envelope_makespan_cycles": 199074,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "004",
+        "cores_k": 3,
+        "original_makespan_cycles": 134043,
+        "envelope_makespan_cycles": 134043,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "004",
+        "cores_k": 4,
+        "original_makespan_cycles": 104188,
+        "envelope_makespan_cycles": 104188,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "004",
+        "cores_k": 5,
+        "original_makespan_cycles": 88341,
+        "envelope_makespan_cycles": 88341,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "005": {
+      "1": {
+        "case_id": "005",
+        "cores_k": 1,
+        "original_makespan_cycles": 95618,
+        "envelope_makespan_cycles": 95618,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "005",
+        "cores_k": 2,
+        "original_makespan_cycles": 60186,
+        "envelope_makespan_cycles": 60186,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "005",
+        "cores_k": 3,
+        "original_makespan_cycles": 47601,
+        "envelope_makespan_cycles": 47601,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "005",
+        "cores_k": 4,
+        "original_makespan_cycles": 42167,
+        "envelope_makespan_cycles": 42167,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "005",
+        "cores_k": 5,
+        "original_makespan_cycles": 42487,
+        "envelope_makespan_cycles": 42167,
+        "improvement_cycles": 320,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.7531715583590275
+      }
+    },
+    "006": {
+      "1": {
+        "case_id": "006",
+        "cores_k": 1,
+        "original_makespan_cycles": 82837,
+        "envelope_makespan_cycles": 82837,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "006",
+        "cores_k": 2,
+        "original_makespan_cycles": 43425,
+        "envelope_makespan_cycles": 43425,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "006",
+        "cores_k": 3,
+        "original_makespan_cycles": 31153,
+        "envelope_makespan_cycles": 31153,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "006",
+        "cores_k": 4,
+        "original_makespan_cycles": 30204,
+        "envelope_makespan_cycles": 30204,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "006",
+        "cores_k": 5,
+        "original_makespan_cycles": 31153,
+        "envelope_makespan_cycles": 30204,
+        "improvement_cycles": 949,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 3.0462555773119764
+      }
+    },
+    "007": {
+      "1": {
+        "case_id": "007",
+        "cores_k": 1,
+        "original_makespan_cycles": 1012562,
+        "envelope_makespan_cycles": 1012562,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "007",
+        "cores_k": 2,
+        "original_makespan_cycles": 507494,
+        "envelope_makespan_cycles": 507494,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "007",
+        "cores_k": 3,
+        "original_makespan_cycles": 338094,
+        "envelope_makespan_cycles": 338094,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "007",
+        "cores_k": 4,
+        "original_makespan_cycles": 254398,
+        "envelope_makespan_cycles": 254398,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "007",
+        "cores_k": 5,
+        "original_makespan_cycles": 203834,
+        "envelope_makespan_cycles": 203834,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "008": {
+      "1": {
+        "case_id": "008",
+        "cores_k": 1,
+        "original_makespan_cycles": 487605,
+        "envelope_makespan_cycles": 487605,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "008",
+        "cores_k": 2,
+        "original_makespan_cycles": 194956,
+        "envelope_makespan_cycles": 194956,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "008",
+        "cores_k": 3,
+        "original_makespan_cycles": 137062,
+        "envelope_makespan_cycles": 137062,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "008",
+        "cores_k": 4,
+        "original_makespan_cycles": 117710,
+        "envelope_makespan_cycles": 117710,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "008",
+        "cores_k": 5,
+        "original_makespan_cycles": 100603,
+        "envelope_makespan_cycles": 100603,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "009": {
+      "1": {
+        "case_id": "009",
+        "cores_k": 1,
+        "original_makespan_cycles": 153397,
+        "envelope_makespan_cycles": 153397,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "009",
+        "cores_k": 2,
+        "original_makespan_cycles": 92011,
+        "envelope_makespan_cycles": 92011,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "009",
+        "cores_k": 3,
+        "original_makespan_cycles": 69982,
+        "envelope_makespan_cycles": 69982,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "009",
+        "cores_k": 4,
+        "original_makespan_cycles": 57707,
+        "envelope_makespan_cycles": 57707,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "009",
+        "cores_k": 5,
+        "original_makespan_cycles": 50248,
+        "envelope_makespan_cycles": 50248,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "010": {
+      "1": {
+        "case_id": "010",
+        "cores_k": 1,
+        "original_makespan_cycles": 86969,
+        "envelope_makespan_cycles": 86969,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "010",
+        "cores_k": 2,
+        "original_makespan_cycles": 45626,
+        "envelope_makespan_cycles": 45626,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "010",
+        "cores_k": 3,
+        "original_makespan_cycles": 30856,
+        "envelope_makespan_cycles": 30856,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "010",
+        "cores_k": 4,
+        "original_makespan_cycles": 29856,
+        "envelope_makespan_cycles": 29856,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "010",
+        "cores_k": 5,
+        "original_makespan_cycles": 29434,
+        "envelope_makespan_cycles": 29434,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "011": {
+      "1": {
+        "case_id": "011",
+        "cores_k": 1,
+        "original_makespan_cycles": 184697,
+        "envelope_makespan_cycles": 184697,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "011",
+        "cores_k": 2,
+        "original_makespan_cycles": 92646,
+        "envelope_makespan_cycles": 92646,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "011",
+        "cores_k": 3,
+        "original_makespan_cycles": 69625,
+        "envelope_makespan_cycles": 69625,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "011",
+        "cores_k": 4,
+        "original_makespan_cycles": 46880,
+        "envelope_makespan_cycles": 46880,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "011",
+        "cores_k": 5,
+        "original_makespan_cycles": 46880,
+        "envelope_makespan_cycles": 46880,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "012": {
+      "1": {
+        "case_id": "012",
+        "cores_k": 1,
+        "original_makespan_cycles": 59088,
+        "envelope_makespan_cycles": 59088,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "012",
+        "cores_k": 2,
+        "original_makespan_cycles": 30094,
+        "envelope_makespan_cycles": 30094,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "012",
+        "cores_k": 3,
+        "original_makespan_cycles": 21894,
+        "envelope_makespan_cycles": 21894,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "012",
+        "cores_k": 4,
+        "original_makespan_cycles": 17253,
+        "envelope_makespan_cycles": 17253,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "012",
+        "cores_k": 5,
+        "original_makespan_cycles": 14300,
+        "envelope_makespan_cycles": 14300,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "013": {
+      "1": {
+        "case_id": "013",
+        "cores_k": 1,
+        "original_makespan_cycles": 263949,
+        "envelope_makespan_cycles": 263949,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "013",
+        "cores_k": 2,
+        "original_makespan_cycles": 132198,
+        "envelope_makespan_cycles": 132198,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "013",
+        "cores_k": 3,
+        "original_makespan_cycles": 88351,
+        "envelope_makespan_cycles": 88351,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "013",
+        "cores_k": 4,
+        "original_makespan_cycles": 66982,
+        "envelope_makespan_cycles": 66982,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "013",
+        "cores_k": 5,
+        "original_makespan_cycles": 54363,
+        "envelope_makespan_cycles": 54363,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "014": {
+      "1": {
+        "case_id": "014",
+        "cores_k": 1,
+        "original_makespan_cycles": 17579821,
+        "envelope_makespan_cycles": 17579821,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "014",
+        "cores_k": 2,
+        "original_makespan_cycles": 8752017,
+        "envelope_makespan_cycles": 8752017,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "014",
+        "cores_k": 3,
+        "original_makespan_cycles": 5882800,
+        "envelope_makespan_cycles": 5882800,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "014",
+        "cores_k": 4,
+        "original_makespan_cycles": 4500863,
+        "envelope_makespan_cycles": 4500863,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "014",
+        "cores_k": 5,
+        "original_makespan_cycles": 3642307,
+        "envelope_makespan_cycles": 3642307,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "015": {
+      "1": {
+        "case_id": "015",
+        "cores_k": 1,
+        "original_makespan_cycles": 177362,
+        "envelope_makespan_cycles": 177362,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "015",
+        "cores_k": 2,
+        "original_makespan_cycles": 92810,
+        "envelope_makespan_cycles": 92810,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "015",
+        "cores_k": 3,
+        "original_makespan_cycles": 61224,
+        "envelope_makespan_cycles": 61224,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "015",
+        "cores_k": 4,
+        "original_makespan_cycles": 53474,
+        "envelope_makespan_cycles": 53474,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "015",
+        "cores_k": 5,
+        "original_makespan_cycles": 43411,
+        "envelope_makespan_cycles": 43411,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "016": {
+      "1": {
+        "case_id": "016",
+        "cores_k": 1,
+        "original_makespan_cycles": 7715523,
+        "envelope_makespan_cycles": 7715523,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "016",
+        "cores_k": 2,
+        "original_makespan_cycles": 4550194,
+        "envelope_makespan_cycles": 4550194,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "016",
+        "cores_k": 3,
+        "original_makespan_cycles": 3712678,
+        "envelope_makespan_cycles": 3712678,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "016",
+        "cores_k": 4,
+        "original_makespan_cycles": 3241338,
+        "envelope_makespan_cycles": 3241338,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "016",
+        "cores_k": 5,
+        "original_makespan_cycles": 3223183,
+        "envelope_makespan_cycles": 3223183,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "017": {
+      "1": {
+        "case_id": "017",
+        "cores_k": 1,
+        "original_makespan_cycles": 162810,
+        "envelope_makespan_cycles": 162810,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "017",
+        "cores_k": 2,
+        "original_makespan_cycles": 82005,
+        "envelope_makespan_cycles": 82005,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "017",
+        "cores_k": 3,
+        "original_makespan_cycles": 58579,
+        "envelope_makespan_cycles": 58579,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "017",
+        "cores_k": 4,
+        "original_makespan_cycles": 42384,
+        "envelope_makespan_cycles": 42384,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "017",
+        "cores_k": 5,
+        "original_makespan_cycles": 35496,
+        "envelope_makespan_cycles": 35496,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "018": {
+      "1": {
+        "case_id": "018",
+        "cores_k": 1,
+        "original_makespan_cycles": 1004367,
+        "envelope_makespan_cycles": 1004367,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "018",
+        "cores_k": 2,
+        "original_makespan_cycles": 504468,
+        "envelope_makespan_cycles": 504468,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "018",
+        "cores_k": 3,
+        "original_makespan_cycles": 339838,
+        "envelope_makespan_cycles": 339838,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "018",
+        "cores_k": 4,
+        "original_makespan_cycles": 258063,
+        "envelope_makespan_cycles": 258063,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "018",
+        "cores_k": 5,
+        "original_makespan_cycles": 205917,
+        "envelope_makespan_cycles": 205917,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "019": {
+      "1": {
+        "case_id": "019",
+        "cores_k": 1,
+        "original_makespan_cycles": 81144,
+        "envelope_makespan_cycles": 81144,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "019",
+        "cores_k": 2,
+        "original_makespan_cycles": 43224,
+        "envelope_makespan_cycles": 43224,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "019",
+        "cores_k": 3,
+        "original_makespan_cycles": 28986,
+        "envelope_makespan_cycles": 28986,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "019",
+        "cores_k": 4,
+        "original_makespan_cycles": 24099,
+        "envelope_makespan_cycles": 24099,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "019",
+        "cores_k": 5,
+        "original_makespan_cycles": 24169,
+        "envelope_makespan_cycles": 24099,
+        "improvement_cycles": 70,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.2896272084074641
+      }
+    },
+    "020": {
+      "1": {
+        "case_id": "020",
+        "cores_k": 1,
+        "original_makespan_cycles": 534174,
+        "envelope_makespan_cycles": 534174,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "020",
+        "cores_k": 2,
+        "original_makespan_cycles": 266580,
+        "envelope_makespan_cycles": 266580,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "020",
+        "cores_k": 3,
+        "original_makespan_cycles": 177950,
+        "envelope_makespan_cycles": 177950,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "020",
+        "cores_k": 4,
+        "original_makespan_cycles": 133704,
+        "envelope_makespan_cycles": 133704,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "020",
+        "cores_k": 5,
+        "original_makespan_cycles": 107650,
+        "envelope_makespan_cycles": 107650,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "021": {
+      "1": {
+        "case_id": "021",
+        "cores_k": 1,
+        "original_makespan_cycles": 6567937,
+        "envelope_makespan_cycles": 6567937,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "021",
+        "cores_k": 2,
+        "original_makespan_cycles": 3194570,
+        "envelope_makespan_cycles": 3194570,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "021",
+        "cores_k": 3,
+        "original_makespan_cycles": 2132763,
+        "envelope_makespan_cycles": 2132763,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "021",
+        "cores_k": 4,
+        "original_makespan_cycles": 1550324,
+        "envelope_makespan_cycles": 1550324,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "021",
+        "cores_k": 5,
+        "original_makespan_cycles": 1250168,
+        "envelope_makespan_cycles": 1250168,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "022": {
+      "1": {
+        "case_id": "022",
+        "cores_k": 1,
+        "original_makespan_cycles": 56780,
+        "envelope_makespan_cycles": 56780,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "022",
+        "cores_k": 2,
+        "original_makespan_cycles": 28415,
+        "envelope_makespan_cycles": 28415,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "022",
+        "cores_k": 3,
+        "original_makespan_cycles": 19197,
+        "envelope_makespan_cycles": 19197,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "022",
+        "cores_k": 4,
+        "original_makespan_cycles": 14654,
+        "envelope_makespan_cycles": 14654,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "022",
+        "cores_k": 5,
+        "original_makespan_cycles": 11828,
+        "envelope_makespan_cycles": 11828,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "023": {
+      "1": {
+        "case_id": "023",
+        "cores_k": 1,
+        "original_makespan_cycles": 122614,
+        "envelope_makespan_cycles": 122614,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "023",
+        "cores_k": 2,
+        "original_makespan_cycles": 61829,
+        "envelope_makespan_cycles": 61829,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "023",
+        "cores_k": 3,
+        "original_makespan_cycles": 41488,
+        "envelope_makespan_cycles": 41488,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "023",
+        "cores_k": 4,
+        "original_makespan_cycles": 31518,
+        "envelope_makespan_cycles": 31518,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "023",
+        "cores_k": 5,
+        "original_makespan_cycles": 24940,
+        "envelope_makespan_cycles": 24940,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "024": {
+      "1": {
+        "case_id": "024",
+        "cores_k": 1,
+        "original_makespan_cycles": 2555343,
+        "envelope_makespan_cycles": 2555343,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "024",
+        "cores_k": 2,
+        "original_makespan_cycles": 1506718,
+        "envelope_makespan_cycles": 1506718,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "024",
+        "cores_k": 3,
+        "original_makespan_cycles": 1228774,
+        "envelope_makespan_cycles": 1228774,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "024",
+        "cores_k": 4,
+        "original_makespan_cycles": 1072818,
+        "envelope_makespan_cycles": 1072818,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "024",
+        "cores_k": 5,
+        "original_makespan_cycles": 1067515,
+        "envelope_makespan_cycles": 1067515,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "025": {
+      "1": {
+        "case_id": "025",
+        "cores_k": 1,
+        "original_makespan_cycles": 4869182,
+        "envelope_makespan_cycles": 4869182,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "025",
+        "cores_k": 2,
+        "original_makespan_cycles": 2436772,
+        "envelope_makespan_cycles": 2436772,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "025",
+        "cores_k": 3,
+        "original_makespan_cycles": 1626688,
+        "envelope_makespan_cycles": 1626688,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "025",
+        "cores_k": 4,
+        "original_makespan_cycles": 1221396,
+        "envelope_makespan_cycles": 1221396,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "025",
+        "cores_k": 5,
+        "original_makespan_cycles": 975282,
+        "envelope_makespan_cycles": 975282,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "026": {
+      "1": {
+        "case_id": "026",
+        "cores_k": 1,
+        "original_makespan_cycles": 99203,
+        "envelope_makespan_cycles": 99203,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "026",
+        "cores_k": 2,
+        "original_makespan_cycles": 58112,
+        "envelope_makespan_cycles": 58112,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "026",
+        "cores_k": 3,
+        "original_makespan_cycles": 41655,
+        "envelope_makespan_cycles": 41655,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "026",
+        "cores_k": 4,
+        "original_makespan_cycles": 42226,
+        "envelope_makespan_cycles": 41655,
+        "improvement_cycles": 571,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 1.3522474304930612
+      },
+      "5": {
+        "case_id": "026",
+        "cores_k": 5,
+        "original_makespan_cycles": 44114,
+        "envelope_makespan_cycles": 41655,
+        "improvement_cycles": 2459,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 5.574194133381693
+      }
+    },
+    "027": {
+      "1": {
+        "case_id": "027",
+        "cores_k": 1,
+        "original_makespan_cycles": 2363952,
+        "envelope_makespan_cycles": 2363952,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "027",
+        "cores_k": 2,
+        "original_makespan_cycles": 1120962,
+        "envelope_makespan_cycles": 1120962,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "027",
+        "cores_k": 3,
+        "original_makespan_cycles": 837049,
+        "envelope_makespan_cycles": 837049,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "027",
+        "cores_k": 4,
+        "original_makespan_cycles": 559196,
+        "envelope_makespan_cycles": 559196,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "027",
+        "cores_k": 5,
+        "original_makespan_cycles": 508076,
+        "envelope_makespan_cycles": 508076,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "028": {
+      "1": {
+        "case_id": "028",
+        "cores_k": 1,
+        "original_makespan_cycles": 43896686,
+        "envelope_makespan_cycles": 43896686,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "028",
+        "cores_k": 2,
+        "original_makespan_cycles": 20304493,
+        "envelope_makespan_cycles": 20304493,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "028",
+        "cores_k": 3,
+        "original_makespan_cycles": 13802319,
+        "envelope_makespan_cycles": 13802319,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "028",
+        "cores_k": 4,
+        "original_makespan_cycles": 10263317,
+        "envelope_makespan_cycles": 10263317,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "028",
+        "cores_k": 5,
+        "original_makespan_cycles": 8279736,
+        "envelope_makespan_cycles": 8279736,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "029": {
+      "1": {
+        "case_id": "029",
+        "cores_k": 1,
+        "original_makespan_cycles": 37555,
+        "envelope_makespan_cycles": 37555,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "029",
+        "cores_k": 2,
+        "original_makespan_cycles": 19740,
+        "envelope_makespan_cycles": 19740,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "029",
+        "cores_k": 3,
+        "original_makespan_cycles": 12743,
+        "envelope_makespan_cycles": 12743,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "029",
+        "cores_k": 4,
+        "original_makespan_cycles": 11028,
+        "envelope_makespan_cycles": 11028,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "029",
+        "cores_k": 5,
+        "original_makespan_cycles": 9383,
+        "envelope_makespan_cycles": 9383,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "030": {
+      "1": {
+        "case_id": "030",
+        "cores_k": 1,
+        "original_makespan_cycles": 2792105,
+        "envelope_makespan_cycles": 2792105,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "030",
+        "cores_k": 2,
+        "original_makespan_cycles": 1398487,
+        "envelope_makespan_cycles": 1398487,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "030",
+        "cores_k": 3,
+        "original_makespan_cycles": 933857,
+        "envelope_makespan_cycles": 933857,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "030",
+        "cores_k": 4,
+        "original_makespan_cycles": 700342,
+        "envelope_makespan_cycles": 700342,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "030",
+        "cores_k": 5,
+        "original_makespan_cycles": 561102,
+        "envelope_makespan_cycles": 561102,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "031": {
+      "1": {
+        "case_id": "031",
+        "cores_k": 1,
+        "original_makespan_cycles": 1405775,
+        "envelope_makespan_cycles": 1405775,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "031",
+        "cores_k": 2,
+        "original_makespan_cycles": 737122,
+        "envelope_makespan_cycles": 737122,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "031",
+        "cores_k": 3,
+        "original_makespan_cycles": 485202,
+        "envelope_makespan_cycles": 485202,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "031",
+        "cores_k": 4,
+        "original_makespan_cycles": 390498,
+        "envelope_makespan_cycles": 390498,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "031",
+        "cores_k": 5,
+        "original_makespan_cycles": 306213,
+        "envelope_makespan_cycles": 306213,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "032": {
+      "1": {
+        "case_id": "032",
+        "cores_k": 1,
+        "original_makespan_cycles": 41443,
+        "envelope_makespan_cycles": 41443,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "032",
+        "cores_k": 2,
+        "original_makespan_cycles": 21880,
+        "envelope_makespan_cycles": 21880,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "032",
+        "cores_k": 3,
+        "original_makespan_cycles": 15402,
+        "envelope_makespan_cycles": 15402,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "032",
+        "cores_k": 4,
+        "original_makespan_cycles": 14274,
+        "envelope_makespan_cycles": 14274,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "032",
+        "cores_k": 5,
+        "original_makespan_cycles": 10415,
+        "envelope_makespan_cycles": 10415,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "033": {
+      "1": {
+        "case_id": "033",
+        "cores_k": 1,
+        "original_makespan_cycles": 1774196,
+        "envelope_makespan_cycles": 1774196,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "033",
+        "cores_k": 2,
+        "original_makespan_cycles": 900424,
+        "envelope_makespan_cycles": 900424,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "033",
+        "cores_k": 3,
+        "original_makespan_cycles": 602774,
+        "envelope_makespan_cycles": 602774,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "033",
+        "cores_k": 4,
+        "original_makespan_cycles": 457426,
+        "envelope_makespan_cycles": 457426,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "033",
+        "cores_k": 5,
+        "original_makespan_cycles": 373638,
+        "envelope_makespan_cycles": 373638,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "034": {
+      "1": {
+        "case_id": "034",
+        "cores_k": 1,
+        "original_makespan_cycles": 842996,
+        "envelope_makespan_cycles": 842996,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "034",
+        "cores_k": 2,
+        "original_makespan_cycles": 419315,
+        "envelope_makespan_cycles": 419315,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "034",
+        "cores_k": 3,
+        "original_makespan_cycles": 279005,
+        "envelope_makespan_cycles": 279005,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "034",
+        "cores_k": 4,
+        "original_makespan_cycles": 211980,
+        "envelope_makespan_cycles": 211980,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "034",
+        "cores_k": 5,
+        "original_makespan_cycles": 178384,
+        "envelope_makespan_cycles": 178384,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "035": {
+      "1": {
+        "case_id": "035",
+        "cores_k": 1,
+        "original_makespan_cycles": 169571,
+        "envelope_makespan_cycles": 169571,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "035",
+        "cores_k": 2,
+        "original_makespan_cycles": 95406,
+        "envelope_makespan_cycles": 95406,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "035",
+        "cores_k": 3,
+        "original_makespan_cycles": 76666,
+        "envelope_makespan_cycles": 76666,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "035",
+        "cores_k": 4,
+        "original_makespan_cycles": 63590,
+        "envelope_makespan_cycles": 63590,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "035",
+        "cores_k": 5,
+        "original_makespan_cycles": 55444,
+        "envelope_makespan_cycles": 55444,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "036": {
+      "1": {
+        "case_id": "036",
+        "cores_k": 1,
+        "original_makespan_cycles": 931510,
+        "envelope_makespan_cycles": 931510,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "036",
+        "cores_k": 2,
+        "original_makespan_cycles": 466068,
+        "envelope_makespan_cycles": 466068,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "036",
+        "cores_k": 3,
+        "original_makespan_cycles": 311345,
+        "envelope_makespan_cycles": 311345,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "036",
+        "cores_k": 4,
+        "original_makespan_cycles": 233584,
+        "envelope_makespan_cycles": 233584,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "036",
+        "cores_k": 5,
+        "original_makespan_cycles": 187182,
+        "envelope_makespan_cycles": 187182,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "037": {
+      "1": {
+        "case_id": "037",
+        "cores_k": 1,
+        "original_makespan_cycles": 210001,
+        "envelope_makespan_cycles": 210001,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "037",
+        "cores_k": 2,
+        "original_makespan_cycles": 105374,
+        "envelope_makespan_cycles": 105374,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "037",
+        "cores_k": 3,
+        "original_makespan_cycles": 74038,
+        "envelope_makespan_cycles": 74038,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "037",
+        "cores_k": 4,
+        "original_makespan_cycles": 53320,
+        "envelope_makespan_cycles": 53320,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "037",
+        "cores_k": 5,
+        "original_makespan_cycles": 43013,
+        "envelope_makespan_cycles": 43013,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "038": {
+      "1": {
+        "case_id": "038",
+        "cores_k": 1,
+        "original_makespan_cycles": 1349031,
+        "envelope_makespan_cycles": 1349031,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "038",
+        "cores_k": 2,
+        "original_makespan_cycles": 681518,
+        "envelope_makespan_cycles": 681518,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "038",
+        "cores_k": 3,
+        "original_makespan_cycles": 462369,
+        "envelope_makespan_cycles": 462369,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "038",
+        "cores_k": 4,
+        "original_makespan_cycles": 345206,
+        "envelope_makespan_cycles": 345206,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "038",
+        "cores_k": 5,
+        "original_makespan_cycles": 283932,
+        "envelope_makespan_cycles": 283932,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "039": {
+      "1": {
+        "case_id": "039",
+        "cores_k": 1,
+        "original_makespan_cycles": 1408153,
+        "envelope_makespan_cycles": 1408153,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "039",
+        "cores_k": 2,
+        "original_makespan_cycles": 708430,
+        "envelope_makespan_cycles": 708430,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "039",
+        "cores_k": 3,
+        "original_makespan_cycles": 478013,
+        "envelope_makespan_cycles": 478013,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "039",
+        "cores_k": 4,
+        "original_makespan_cycles": 368961,
+        "envelope_makespan_cycles": 368961,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "039",
+        "cores_k": 5,
+        "original_makespan_cycles": 347811,
+        "envelope_makespan_cycles": 347811,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "040": {
+      "1": {
+        "case_id": "040",
+        "cores_k": 1,
+        "original_makespan_cycles": 253454,
+        "envelope_makespan_cycles": 253454,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "040",
+        "cores_k": 2,
+        "original_makespan_cycles": 143799,
+        "envelope_makespan_cycles": 143799,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "040",
+        "cores_k": 3,
+        "original_makespan_cycles": 97215,
+        "envelope_makespan_cycles": 97215,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "040",
+        "cores_k": 4,
+        "original_makespan_cycles": 94410,
+        "envelope_makespan_cycles": 94410,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "040",
+        "cores_k": 5,
+        "original_makespan_cycles": 94410,
+        "envelope_makespan_cycles": 94410,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "041": {
+      "1": {
+        "case_id": "041",
+        "cores_k": 1,
+        "original_makespan_cycles": 5963927,
+        "envelope_makespan_cycles": 5963927,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "041",
+        "cores_k": 2,
+        "original_makespan_cycles": 2973041,
+        "envelope_makespan_cycles": 2973041,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "041",
+        "cores_k": 3,
+        "original_makespan_cycles": 1999093,
+        "envelope_makespan_cycles": 1999093,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "041",
+        "cores_k": 4,
+        "original_makespan_cycles": 1493783,
+        "envelope_makespan_cycles": 1493783,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "041",
+        "cores_k": 5,
+        "original_makespan_cycles": 1196379,
+        "envelope_makespan_cycles": 1196379,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "042": {
+      "1": {
+        "case_id": "042",
+        "cores_k": 1,
+        "original_makespan_cycles": 1673390,
+        "envelope_makespan_cycles": 1673390,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "042",
+        "cores_k": 2,
+        "original_makespan_cycles": 840111,
+        "envelope_makespan_cycles": 840111,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "042",
+        "cores_k": 3,
+        "original_makespan_cycles": 571947,
+        "envelope_makespan_cycles": 571947,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "042",
+        "cores_k": 4,
+        "original_makespan_cycles": 444745,
+        "envelope_makespan_cycles": 444745,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "042",
+        "cores_k": 5,
+        "original_makespan_cycles": 370832,
+        "envelope_makespan_cycles": 370832,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "043": {
+      "1": {
+        "case_id": "043",
+        "cores_k": 1,
+        "original_makespan_cycles": 677890,
+        "envelope_makespan_cycles": 677890,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "043",
+        "cores_k": 2,
+        "original_makespan_cycles": 355922,
+        "envelope_makespan_cycles": 355922,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "043",
+        "cores_k": 3,
+        "original_makespan_cycles": 261380,
+        "envelope_makespan_cycles": 261380,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "043",
+        "cores_k": 4,
+        "original_makespan_cycles": 190343,
+        "envelope_makespan_cycles": 190343,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "043",
+        "cores_k": 5,
+        "original_makespan_cycles": 178035,
+        "envelope_makespan_cycles": 178035,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "044": {
+      "1": {
+        "case_id": "044",
+        "cores_k": 1,
+        "original_makespan_cycles": 154407,
+        "envelope_makespan_cycles": 154407,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "044",
+        "cores_k": 2,
+        "original_makespan_cycles": 64624,
+        "envelope_makespan_cycles": 64624,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "044",
+        "cores_k": 3,
+        "original_makespan_cycles": 64624,
+        "envelope_makespan_cycles": 64624,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "044",
+        "cores_k": 4,
+        "original_makespan_cycles": 64624,
+        "envelope_makespan_cycles": 64624,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "044",
+        "cores_k": 5,
+        "original_makespan_cycles": 64624,
+        "envelope_makespan_cycles": 64624,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "045": {
+      "1": {
+        "case_id": "045",
+        "cores_k": 1,
+        "original_makespan_cycles": 125614,
+        "envelope_makespan_cycles": 125614,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "045",
+        "cores_k": 2,
+        "original_makespan_cycles": 63059,
+        "envelope_makespan_cycles": 63059,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "045",
+        "cores_k": 3,
+        "original_makespan_cycles": 42601,
+        "envelope_makespan_cycles": 42601,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "045",
+        "cores_k": 4,
+        "original_makespan_cycles": 31878,
+        "envelope_makespan_cycles": 31878,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "045",
+        "cores_k": 5,
+        "original_makespan_cycles": 26164,
+        "envelope_makespan_cycles": 26164,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "046": {
+      "1": {
+        "case_id": "046",
+        "cores_k": 1,
+        "original_makespan_cycles": 276455,
+        "envelope_makespan_cycles": 276455,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "046",
+        "cores_k": 2,
+        "original_makespan_cycles": 133856,
+        "envelope_makespan_cycles": 133856,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "046",
+        "cores_k": 3,
+        "original_makespan_cycles": 110311,
+        "envelope_makespan_cycles": 110311,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "046",
+        "cores_k": 4,
+        "original_makespan_cycles": 103846,
+        "envelope_makespan_cycles": 103846,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "046",
+        "cores_k": 5,
+        "original_makespan_cycles": 103846,
+        "envelope_makespan_cycles": 103846,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "047": {
+      "1": {
+        "case_id": "047",
+        "cores_k": 1,
+        "original_makespan_cycles": 326508,
+        "envelope_makespan_cycles": 326508,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "047",
+        "cores_k": 2,
+        "original_makespan_cycles": 207016,
+        "envelope_makespan_cycles": 207016,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "047",
+        "cores_k": 3,
+        "original_makespan_cycles": 158686,
+        "envelope_makespan_cycles": 158686,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "047",
+        "cores_k": 4,
+        "original_makespan_cycles": 123184,
+        "envelope_makespan_cycles": 123184,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "047",
+        "cores_k": 5,
+        "original_makespan_cycles": 126217,
+        "envelope_makespan_cycles": 123184,
+        "improvement_cycles": 3033,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 2.4030043496517903
+      }
+    },
+    "048": {
+      "1": {
+        "case_id": "048",
+        "cores_k": 1,
+        "original_makespan_cycles": 222220,
+        "envelope_makespan_cycles": 222220,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "048",
+        "cores_k": 2,
+        "original_makespan_cycles": 147475,
+        "envelope_makespan_cycles": 147475,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "048",
+        "cores_k": 3,
+        "original_makespan_cycles": 120628,
+        "envelope_makespan_cycles": 120628,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "048",
+        "cores_k": 4,
+        "original_makespan_cycles": 116460,
+        "envelope_makespan_cycles": 116460,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "048",
+        "cores_k": 5,
+        "original_makespan_cycles": 117606,
+        "envelope_makespan_cycles": 116460,
+        "improvement_cycles": 1146,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.9744400795877761
+      }
+    },
+    "049": {
+      "1": {
+        "case_id": "049",
+        "cores_k": 1,
+        "original_makespan_cycles": 196483,
+        "envelope_makespan_cycles": 196483,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "049",
+        "cores_k": 2,
+        "original_makespan_cycles": 110741,
+        "envelope_makespan_cycles": 110741,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "049",
+        "cores_k": 3,
+        "original_makespan_cycles": 82595,
+        "envelope_makespan_cycles": 82595,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "049",
+        "cores_k": 4,
+        "original_makespan_cycles": 64043,
+        "envelope_makespan_cycles": 64043,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "049",
+        "cores_k": 5,
+        "original_makespan_cycles": 57111,
+        "envelope_makespan_cycles": 57111,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "050": {
+      "1": {
+        "case_id": "050",
+        "cores_k": 1,
+        "original_makespan_cycles": 149860,
+        "envelope_makespan_cycles": 149860,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "050",
+        "cores_k": 2,
+        "original_makespan_cycles": 84123,
+        "envelope_makespan_cycles": 84123,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "050",
+        "cores_k": 3,
+        "original_makespan_cycles": 61092,
+        "envelope_makespan_cycles": 61092,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "050",
+        "cores_k": 4,
+        "original_makespan_cycles": 48585,
+        "envelope_makespan_cycles": 48585,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "050",
+        "cores_k": 5,
+        "original_makespan_cycles": 42597,
+        "envelope_makespan_cycles": 42597,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "051": {
+      "1": {
+        "case_id": "051",
+        "cores_k": 1,
+        "original_makespan_cycles": 607628,
+        "envelope_makespan_cycles": 607628,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "051",
+        "cores_k": 2,
+        "original_makespan_cycles": 357955,
+        "envelope_makespan_cycles": 357955,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "051",
+        "cores_k": 3,
+        "original_makespan_cycles": 291222,
+        "envelope_makespan_cycles": 291222,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "051",
+        "cores_k": 4,
+        "original_makespan_cycles": 254308,
+        "envelope_makespan_cycles": 254308,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "051",
+        "cores_k": 5,
+        "original_makespan_cycles": 253856,
+        "envelope_makespan_cycles": 253856,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "052": {
+      "1": {
+        "case_id": "052",
+        "cores_k": 1,
+        "original_makespan_cycles": 180301,
+        "envelope_makespan_cycles": 180301,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "052",
+        "cores_k": 2,
+        "original_makespan_cycles": 91267,
+        "envelope_makespan_cycles": 91267,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "052",
+        "cores_k": 3,
+        "original_makespan_cycles": 63144,
+        "envelope_makespan_cycles": 63144,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "052",
+        "cores_k": 4,
+        "original_makespan_cycles": 47938,
+        "envelope_makespan_cycles": 47938,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "052",
+        "cores_k": 5,
+        "original_makespan_cycles": 48793,
+        "envelope_makespan_cycles": 47938,
+        "improvement_cycles": 855,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 1.752300534912795
+      }
+    },
+    "053": {
+      "1": {
+        "case_id": "053",
+        "cores_k": 1,
+        "original_makespan_cycles": 1476736,
+        "envelope_makespan_cycles": 1476736,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "053",
+        "cores_k": 2,
+        "original_makespan_cycles": 772652,
+        "envelope_makespan_cycles": 772652,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "053",
+        "cores_k": 3,
+        "original_makespan_cycles": 546659,
+        "envelope_makespan_cycles": 546659,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "053",
+        "cores_k": 4,
+        "original_makespan_cycles": 486261,
+        "envelope_makespan_cycles": 486261,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "053",
+        "cores_k": 5,
+        "original_makespan_cycles": 417165,
+        "envelope_makespan_cycles": 417165,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "054": {
+      "1": {
+        "case_id": "054",
+        "cores_k": 1,
+        "original_makespan_cycles": 815523,
+        "envelope_makespan_cycles": 815523,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "054",
+        "cores_k": 2,
+        "original_makespan_cycles": 443792,
+        "envelope_makespan_cycles": 443792,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "054",
+        "cores_k": 3,
+        "original_makespan_cycles": 305592,
+        "envelope_makespan_cycles": 305592,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "054",
+        "cores_k": 4,
+        "original_makespan_cycles": 244120,
+        "envelope_makespan_cycles": 244120,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "054",
+        "cores_k": 5,
+        "original_makespan_cycles": 211904,
+        "envelope_makespan_cycles": 211904,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "055": {
+      "1": {
+        "case_id": "055",
+        "cores_k": 1,
+        "original_makespan_cycles": 118835,
+        "envelope_makespan_cycles": 118835,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "055",
+        "cores_k": 2,
+        "original_makespan_cycles": 64056,
+        "envelope_makespan_cycles": 64056,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "055",
+        "cores_k": 3,
+        "original_makespan_cycles": 43674,
+        "envelope_makespan_cycles": 43674,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "055",
+        "cores_k": 4,
+        "original_makespan_cycles": 31367,
+        "envelope_makespan_cycles": 31367,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "055",
+        "cores_k": 5,
+        "original_makespan_cycles": 26781,
+        "envelope_makespan_cycles": 26781,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "056": {
+      "1": {
+        "case_id": "056",
+        "cores_k": 1,
+        "original_makespan_cycles": 277588,
+        "envelope_makespan_cycles": 277588,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "056",
+        "cores_k": 2,
+        "original_makespan_cycles": 155158,
+        "envelope_makespan_cycles": 155158,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "056",
+        "cores_k": 3,
+        "original_makespan_cycles": 107614,
+        "envelope_makespan_cycles": 107614,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "056",
+        "cores_k": 4,
+        "original_makespan_cycles": 87414,
+        "envelope_makespan_cycles": 87414,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "056",
+        "cores_k": 5,
+        "original_makespan_cycles": 77253,
+        "envelope_makespan_cycles": 77253,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "057": {
+      "1": {
+        "case_id": "057",
+        "cores_k": 1,
+        "original_makespan_cycles": 59726,
+        "envelope_makespan_cycles": 59726,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "057",
+        "cores_k": 2,
+        "original_makespan_cycles": 33730,
+        "envelope_makespan_cycles": 33730,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "057",
+        "cores_k": 3,
+        "original_makespan_cycles": 25250,
+        "envelope_makespan_cycles": 25250,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "057",
+        "cores_k": 4,
+        "original_makespan_cycles": 19009,
+        "envelope_makespan_cycles": 19009,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "057",
+        "cores_k": 5,
+        "original_makespan_cycles": 16538,
+        "envelope_makespan_cycles": 16538,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "058": {
+      "1": {
+        "case_id": "058",
+        "cores_k": 1,
+        "original_makespan_cycles": 4365891,
+        "envelope_makespan_cycles": 4365891,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "058",
+        "cores_k": 2,
+        "original_makespan_cycles": 2194055,
+        "envelope_makespan_cycles": 2194055,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "058",
+        "cores_k": 3,
+        "original_makespan_cycles": 1538256,
+        "envelope_makespan_cycles": 1538256,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "058",
+        "cores_k": 4,
+        "original_makespan_cycles": 1141935,
+        "envelope_makespan_cycles": 1141935,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "058",
+        "cores_k": 5,
+        "original_makespan_cycles": 1004819,
+        "envelope_makespan_cycles": 1004819,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "059": {
+      "1": {
+        "case_id": "059",
+        "cores_k": 1,
+        "original_makespan_cycles": 829473,
+        "envelope_makespan_cycles": 829473,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "059",
+        "cores_k": 2,
+        "original_makespan_cycles": 369318,
+        "envelope_makespan_cycles": 369318,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "059",
+        "cores_k": 3,
+        "original_makespan_cycles": 254073,
+        "envelope_makespan_cycles": 254073,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "059",
+        "cores_k": 4,
+        "original_makespan_cycles": 185216,
+        "envelope_makespan_cycles": 185216,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "059",
+        "cores_k": 5,
+        "original_makespan_cycles": 150782,
+        "envelope_makespan_cycles": 150782,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "060": {
+      "1": {
+        "case_id": "060",
+        "cores_k": 1,
+        "original_makespan_cycles": 871518,
+        "envelope_makespan_cycles": 871518,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "060",
+        "cores_k": 2,
+        "original_makespan_cycles": 461979,
+        "envelope_makespan_cycles": 461979,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "060",
+        "cores_k": 3,
+        "original_makespan_cycles": 331607,
+        "envelope_makespan_cycles": 331607,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "060",
+        "cores_k": 4,
+        "original_makespan_cycles": 231814,
+        "envelope_makespan_cycles": 231814,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "060",
+        "cores_k": 5,
+        "original_makespan_cycles": 183430,
+        "envelope_makespan_cycles": 183430,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "061": {
+      "1": {
+        "case_id": "061",
+        "cores_k": 1,
+        "original_makespan_cycles": 77191,
+        "envelope_makespan_cycles": 77191,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "061",
+        "cores_k": 2,
+        "original_makespan_cycles": 39298,
+        "envelope_makespan_cycles": 39298,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "061",
+        "cores_k": 3,
+        "original_makespan_cycles": 28342,
+        "envelope_makespan_cycles": 28342,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "061",
+        "cores_k": 4,
+        "original_makespan_cycles": 27170,
+        "envelope_makespan_cycles": 27170,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "061",
+        "cores_k": 5,
+        "original_makespan_cycles": 22283,
+        "envelope_makespan_cycles": 22283,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "062": {
+      "1": {
+        "case_id": "062",
+        "cores_k": 1,
+        "original_makespan_cycles": 2854809,
+        "envelope_makespan_cycles": 2854809,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "062",
+        "cores_k": 2,
+        "original_makespan_cycles": 1514274,
+        "envelope_makespan_cycles": 1514274,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "062",
+        "cores_k": 3,
+        "original_makespan_cycles": 1007281,
+        "envelope_makespan_cycles": 1007281,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "062",
+        "cores_k": 4,
+        "original_makespan_cycles": 838616,
+        "envelope_makespan_cycles": 838616,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "062",
+        "cores_k": 5,
+        "original_makespan_cycles": 589173,
+        "envelope_makespan_cycles": 589173,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "063": {
+      "1": {
+        "case_id": "063",
+        "cores_k": 1,
+        "original_makespan_cycles": 1070397,
+        "envelope_makespan_cycles": 1070397,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "063",
+        "cores_k": 2,
+        "original_makespan_cycles": 567330,
+        "envelope_makespan_cycles": 567330,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "063",
+        "cores_k": 3,
+        "original_makespan_cycles": 400009,
+        "envelope_makespan_cycles": 400009,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "063",
+        "cores_k": 4,
+        "original_makespan_cycles": 294704,
+        "envelope_makespan_cycles": 294704,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "063",
+        "cores_k": 5,
+        "original_makespan_cycles": 233223,
+        "envelope_makespan_cycles": 233223,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "064": {
+      "1": {
+        "case_id": "064",
+        "cores_k": 1,
+        "original_makespan_cycles": 19116,
+        "envelope_makespan_cycles": 19116,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "064",
+        "cores_k": 2,
+        "original_makespan_cycles": 17551,
+        "envelope_makespan_cycles": 17551,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "064",
+        "cores_k": 3,
+        "original_makespan_cycles": 16262,
+        "envelope_makespan_cycles": 16262,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "064",
+        "cores_k": 4,
+        "original_makespan_cycles": 12982,
+        "envelope_makespan_cycles": 12982,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "064",
+        "cores_k": 5,
+        "original_makespan_cycles": 13028,
+        "envelope_makespan_cycles": 12982,
+        "improvement_cycles": 46,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.3530856616518268
+      }
+    },
+    "065": {
+      "1": {
+        "case_id": "065",
+        "cores_k": 1,
+        "original_makespan_cycles": 53068,
+        "envelope_makespan_cycles": 53068,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "065",
+        "cores_k": 2,
+        "original_makespan_cycles": 26928,
+        "envelope_makespan_cycles": 26928,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "065",
+        "cores_k": 3,
+        "original_makespan_cycles": 18135,
+        "envelope_makespan_cycles": 18135,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "065",
+        "cores_k": 4,
+        "original_makespan_cycles": 14617,
+        "envelope_makespan_cycles": 14617,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "065",
+        "cores_k": 5,
+        "original_makespan_cycles": 12169,
+        "envelope_makespan_cycles": 12169,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "066": {
+      "1": {
+        "case_id": "066",
+        "cores_k": 1,
+        "original_makespan_cycles": 359505,
+        "envelope_makespan_cycles": 359505,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "066",
+        "cores_k": 2,
+        "original_makespan_cycles": 192974,
+        "envelope_makespan_cycles": 192974,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "066",
+        "cores_k": 3,
+        "original_makespan_cycles": 142595,
+        "envelope_makespan_cycles": 142595,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "066",
+        "cores_k": 4,
+        "original_makespan_cycles": 110219,
+        "envelope_makespan_cycles": 110219,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "066",
+        "cores_k": 5,
+        "original_makespan_cycles": 99777,
+        "envelope_makespan_cycles": 99777,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "067": {
+      "1": {
+        "case_id": "067",
+        "cores_k": 1,
+        "original_makespan_cycles": 63950466,
+        "envelope_makespan_cycles": 63950466,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "067",
+        "cores_k": 2,
+        "original_makespan_cycles": 31349962,
+        "envelope_makespan_cycles": 31349962,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "067",
+        "cores_k": 3,
+        "original_makespan_cycles": 20677204,
+        "envelope_makespan_cycles": 20677204,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "067",
+        "cores_k": 4,
+        "original_makespan_cycles": 15594873,
+        "envelope_makespan_cycles": 15594873,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "067",
+        "cores_k": 5,
+        "original_makespan_cycles": 12908390,
+        "envelope_makespan_cycles": 12908390,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "068": {
+      "1": {
+        "case_id": "068",
+        "cores_k": 1,
+        "original_makespan_cycles": 362138,
+        "envelope_makespan_cycles": 362138,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "068",
+        "cores_k": 2,
+        "original_makespan_cycles": 208664,
+        "envelope_makespan_cycles": 208664,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "068",
+        "cores_k": 3,
+        "original_makespan_cycles": 167136,
+        "envelope_makespan_cycles": 167136,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "068",
+        "cores_k": 4,
+        "original_makespan_cycles": 132506,
+        "envelope_makespan_cycles": 132506,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "068",
+        "cores_k": 5,
+        "original_makespan_cycles": 131234,
+        "envelope_makespan_cycles": 131234,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "069": {
+      "1": {
+        "case_id": "069",
+        "cores_k": 1,
+        "original_makespan_cycles": 25144,
+        "envelope_makespan_cycles": 25144,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "069",
+        "cores_k": 2,
+        "original_makespan_cycles": 16769,
+        "envelope_makespan_cycles": 16769,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "069",
+        "cores_k": 3,
+        "original_makespan_cycles": 14021,
+        "envelope_makespan_cycles": 14021,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "069",
+        "cores_k": 4,
+        "original_makespan_cycles": 13107,
+        "envelope_makespan_cycles": 13107,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "069",
+        "cores_k": 5,
+        "original_makespan_cycles": 14135,
+        "envelope_makespan_cycles": 13107,
+        "improvement_cycles": 1028,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 7.2727272727272725
+      }
+    },
+    "070": {
+      "1": {
+        "case_id": "070",
+        "cores_k": 1,
+        "original_makespan_cycles": 117300,
+        "envelope_makespan_cycles": 117300,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "070",
+        "cores_k": 2,
+        "original_makespan_cycles": 58498,
+        "envelope_makespan_cycles": 58498,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "070",
+        "cores_k": 3,
+        "original_makespan_cycles": 45660,
+        "envelope_makespan_cycles": 45660,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "070",
+        "cores_k": 4,
+        "original_makespan_cycles": 36336,
+        "envelope_makespan_cycles": 36336,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "070",
+        "cores_k": 5,
+        "original_makespan_cycles": 26669,
+        "envelope_makespan_cycles": 26669,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "071": {
+      "1": {
+        "case_id": "071",
+        "cores_k": 1,
+        "original_makespan_cycles": 18919,
+        "envelope_makespan_cycles": 18919,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "071",
+        "cores_k": 2,
+        "original_makespan_cycles": 14501,
+        "envelope_makespan_cycles": 14501,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "071",
+        "cores_k": 3,
+        "original_makespan_cycles": 12080,
+        "envelope_makespan_cycles": 12080,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "071",
+        "cores_k": 4,
+        "original_makespan_cycles": 12078,
+        "envelope_makespan_cycles": 12078,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "071",
+        "cores_k": 5,
+        "original_makespan_cycles": 10760,
+        "envelope_makespan_cycles": 10760,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "072": {
+      "1": {
+        "case_id": "072",
+        "cores_k": 1,
+        "original_makespan_cycles": 23616371,
+        "envelope_makespan_cycles": 23616371,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "072",
+        "cores_k": 2,
+        "original_makespan_cycles": 11768616,
+        "envelope_makespan_cycles": 11768616,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "072",
+        "cores_k": 3,
+        "original_makespan_cycles": 7919200,
+        "envelope_makespan_cycles": 7919200,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "072",
+        "cores_k": 4,
+        "original_makespan_cycles": 5897473,
+        "envelope_makespan_cycles": 5897473,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "072",
+        "cores_k": 5,
+        "original_makespan_cycles": 4764999,
+        "envelope_makespan_cycles": 4764999,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "073": {
+      "1": {
+        "case_id": "073",
+        "cores_k": 1,
+        "original_makespan_cycles": 10133074,
+        "envelope_makespan_cycles": 10133074,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "073",
+        "cores_k": 2,
+        "original_makespan_cycles": 4417545,
+        "envelope_makespan_cycles": 4417545,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "073",
+        "cores_k": 3,
+        "original_makespan_cycles": 2994137,
+        "envelope_makespan_cycles": 2994137,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "073",
+        "cores_k": 4,
+        "original_makespan_cycles": 2347408,
+        "envelope_makespan_cycles": 2347408,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "073",
+        "cores_k": 5,
+        "original_makespan_cycles": 1974363,
+        "envelope_makespan_cycles": 1974363,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "074": {
+      "1": {
+        "case_id": "074",
+        "cores_k": 1,
+        "original_makespan_cycles": 1682239,
+        "envelope_makespan_cycles": 1682239,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "074",
+        "cores_k": 2,
+        "original_makespan_cycles": 826889,
+        "envelope_makespan_cycles": 826889,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "074",
+        "cores_k": 3,
+        "original_makespan_cycles": 548347,
+        "envelope_makespan_cycles": 548347,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "074",
+        "cores_k": 4,
+        "original_makespan_cycles": 424418,
+        "envelope_makespan_cycles": 424418,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "074",
+        "cores_k": 5,
+        "original_makespan_cycles": 345470,
+        "envelope_makespan_cycles": 345470,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "075": {
+      "1": {
+        "case_id": "075",
+        "cores_k": 1,
+        "original_makespan_cycles": 1441809,
+        "envelope_makespan_cycles": 1441809,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "075",
+        "cores_k": 2,
+        "original_makespan_cycles": 784026,
+        "envelope_makespan_cycles": 784026,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "075",
+        "cores_k": 3,
+        "original_makespan_cycles": 669164,
+        "envelope_makespan_cycles": 669164,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "075",
+        "cores_k": 4,
+        "original_makespan_cycles": 464500,
+        "envelope_makespan_cycles": 464500,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "075",
+        "cores_k": 5,
+        "original_makespan_cycles": 378832,
+        "envelope_makespan_cycles": 378832,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "076": {
+      "1": {
+        "case_id": "076",
+        "cores_k": 1,
+        "original_makespan_cycles": 6084070,
+        "envelope_makespan_cycles": 6084070,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "076",
+        "cores_k": 2,
+        "original_makespan_cycles": 3041124,
+        "envelope_makespan_cycles": 3041124,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "076",
+        "cores_k": 3,
+        "original_makespan_cycles": 2028575,
+        "envelope_makespan_cycles": 2028575,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "076",
+        "cores_k": 4,
+        "original_makespan_cycles": 1523838,
+        "envelope_makespan_cycles": 1523838,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "076",
+        "cores_k": 5,
+        "original_makespan_cycles": 1231527,
+        "envelope_makespan_cycles": 1231527,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "077": {
+      "1": {
+        "case_id": "077",
+        "cores_k": 1,
+        "original_makespan_cycles": 495604,
+        "envelope_makespan_cycles": 495604,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "077",
+        "cores_k": 2,
+        "original_makespan_cycles": 250735,
+        "envelope_makespan_cycles": 250735,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "077",
+        "cores_k": 3,
+        "original_makespan_cycles": 178739,
+        "envelope_makespan_cycles": 178739,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "077",
+        "cores_k": 4,
+        "original_makespan_cycles": 144734,
+        "envelope_makespan_cycles": 144734,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "077",
+        "cores_k": 5,
+        "original_makespan_cycles": 121081,
+        "envelope_makespan_cycles": 121081,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "078": {
+      "1": {
+        "case_id": "078",
+        "cores_k": 1,
+        "original_makespan_cycles": 2296143,
+        "envelope_makespan_cycles": 2296143,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "078",
+        "cores_k": 2,
+        "original_makespan_cycles": 1110808,
+        "envelope_makespan_cycles": 1110808,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "078",
+        "cores_k": 3,
+        "original_makespan_cycles": 847980,
+        "envelope_makespan_cycles": 847980,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "078",
+        "cores_k": 4,
+        "original_makespan_cycles": 643992,
+        "envelope_makespan_cycles": 643992,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "078",
+        "cores_k": 5,
+        "original_makespan_cycles": 599211,
+        "envelope_makespan_cycles": 599211,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "079": {
+      "1": {
+        "case_id": "079",
+        "cores_k": 1,
+        "original_makespan_cycles": 29441984,
+        "envelope_makespan_cycles": 29441984,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "079",
+        "cores_k": 2,
+        "original_makespan_cycles": 15048600,
+        "envelope_makespan_cycles": 15048600,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "079",
+        "cores_k": 3,
+        "original_makespan_cycles": 9819501,
+        "envelope_makespan_cycles": 9819501,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "079",
+        "cores_k": 4,
+        "original_makespan_cycles": 7559556,
+        "envelope_makespan_cycles": 7559556,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "079",
+        "cores_k": 5,
+        "original_makespan_cycles": 6063040,
+        "envelope_makespan_cycles": 6063040,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "080": {
+      "1": {
+        "case_id": "080",
+        "cores_k": 1,
+        "original_makespan_cycles": 292138,
+        "envelope_makespan_cycles": 292138,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "080",
+        "cores_k": 2,
+        "original_makespan_cycles": 145825,
+        "envelope_makespan_cycles": 145825,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "080",
+        "cores_k": 3,
+        "original_makespan_cycles": 100325,
+        "envelope_makespan_cycles": 100325,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "080",
+        "cores_k": 4,
+        "original_makespan_cycles": 91774,
+        "envelope_makespan_cycles": 91774,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "080",
+        "cores_k": 5,
+        "original_makespan_cycles": 97383,
+        "envelope_makespan_cycles": 91774,
+        "improvement_cycles": 5609,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 5.7597321914502535
+      }
+    },
+    "081": {
+      "1": {
+        "case_id": "081",
+        "cores_k": 1,
+        "original_makespan_cycles": 151795,
+        "envelope_makespan_cycles": 151795,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "081",
+        "cores_k": 2,
+        "original_makespan_cycles": 76860,
+        "envelope_makespan_cycles": 76860,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "081",
+        "cores_k": 3,
+        "original_makespan_cycles": 51943,
+        "envelope_makespan_cycles": 51943,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "081",
+        "cores_k": 4,
+        "original_makespan_cycles": 39588,
+        "envelope_makespan_cycles": 39588,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "081",
+        "cores_k": 5,
+        "original_makespan_cycles": 30943,
+        "envelope_makespan_cycles": 30943,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "082": {
+      "1": {
+        "case_id": "082",
+        "cores_k": 1,
+        "original_makespan_cycles": 721041,
+        "envelope_makespan_cycles": 721041,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "082",
+        "cores_k": 2,
+        "original_makespan_cycles": 380215,
+        "envelope_makespan_cycles": 380215,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "082",
+        "cores_k": 3,
+        "original_makespan_cycles": 270269,
+        "envelope_makespan_cycles": 270269,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "082",
+        "cores_k": 4,
+        "original_makespan_cycles": 232100,
+        "envelope_makespan_cycles": 232100,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "082",
+        "cores_k": 5,
+        "original_makespan_cycles": 228535,
+        "envelope_makespan_cycles": 228535,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "083": {
+      "1": {
+        "case_id": "083",
+        "cores_k": 1,
+        "original_makespan_cycles": 1057993,
+        "envelope_makespan_cycles": 1057993,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "083",
+        "cores_k": 2,
+        "original_makespan_cycles": 450094,
+        "envelope_makespan_cycles": 450094,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "083",
+        "cores_k": 3,
+        "original_makespan_cycles": 323229,
+        "envelope_makespan_cycles": 323229,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "083",
+        "cores_k": 4,
+        "original_makespan_cycles": 272906,
+        "envelope_makespan_cycles": 272906,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "083",
+        "cores_k": 5,
+        "original_makespan_cycles": 247686,
+        "envelope_makespan_cycles": 247686,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "084": {
+      "1": {
+        "case_id": "084",
+        "cores_k": 1,
+        "original_makespan_cycles": 2509460,
+        "envelope_makespan_cycles": 2509460,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "084",
+        "cores_k": 2,
+        "original_makespan_cycles": 792218,
+        "envelope_makespan_cycles": 792218,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "084",
+        "cores_k": 3,
+        "original_makespan_cycles": 560475,
+        "envelope_makespan_cycles": 560475,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "084",
+        "cores_k": 4,
+        "original_makespan_cycles": 446068,
+        "envelope_makespan_cycles": 446068,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "084",
+        "cores_k": 5,
+        "original_makespan_cycles": 399121,
+        "envelope_makespan_cycles": 399121,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "085": {
+      "1": {
+        "case_id": "085",
+        "cores_k": 1,
+        "original_makespan_cycles": 3187899,
+        "envelope_makespan_cycles": 3187899,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "085",
+        "cores_k": 2,
+        "original_makespan_cycles": 1639782,
+        "envelope_makespan_cycles": 1639782,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "085",
+        "cores_k": 3,
+        "original_makespan_cycles": 1149298,
+        "envelope_makespan_cycles": 1149298,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "085",
+        "cores_k": 4,
+        "original_makespan_cycles": 900325,
+        "envelope_makespan_cycles": 900325,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "085",
+        "cores_k": 5,
+        "original_makespan_cycles": 783703,
+        "envelope_makespan_cycles": 783703,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "086": {
+      "1": {
+        "case_id": "086",
+        "cores_k": 1,
+        "original_makespan_cycles": 118403,
+        "envelope_makespan_cycles": 118403,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "086",
+        "cores_k": 2,
+        "original_makespan_cycles": 69001,
+        "envelope_makespan_cycles": 69001,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "086",
+        "cores_k": 3,
+        "original_makespan_cycles": 55741,
+        "envelope_makespan_cycles": 55741,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "086",
+        "cores_k": 4,
+        "original_makespan_cycles": 43378,
+        "envelope_makespan_cycles": 43378,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "086",
+        "cores_k": 5,
+        "original_makespan_cycles": 48800,
+        "envelope_makespan_cycles": 43378,
+        "improvement_cycles": 5422,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 11.110655737704919
+      }
+    },
+    "087": {
+      "1": {
+        "case_id": "087",
+        "cores_k": 1,
+        "original_makespan_cycles": 3948695,
+        "envelope_makespan_cycles": 3948695,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "087",
+        "cores_k": 2,
+        "original_makespan_cycles": 1975773,
+        "envelope_makespan_cycles": 1975773,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "087",
+        "cores_k": 3,
+        "original_makespan_cycles": 1378740,
+        "envelope_makespan_cycles": 1378740,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "087",
+        "cores_k": 4,
+        "original_makespan_cycles": 1046678,
+        "envelope_makespan_cycles": 1046678,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "087",
+        "cores_k": 5,
+        "original_makespan_cycles": 869315,
+        "envelope_makespan_cycles": 869315,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "088": {
+      "1": {
+        "case_id": "088",
+        "cores_k": 1,
+        "original_makespan_cycles": 243623,
+        "envelope_makespan_cycles": 243623,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "088",
+        "cores_k": 2,
+        "original_makespan_cycles": 139970,
+        "envelope_makespan_cycles": 139970,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "088",
+        "cores_k": 3,
+        "original_makespan_cycles": 112172,
+        "envelope_makespan_cycles": 112172,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "088",
+        "cores_k": 4,
+        "original_makespan_cycles": 89713,
+        "envelope_makespan_cycles": 89713,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "088",
+        "cores_k": 5,
+        "original_makespan_cycles": 91469,
+        "envelope_makespan_cycles": 89713,
+        "improvement_cycles": 1756,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 1.9197760990062207
+      }
+    },
+    "089": {
+      "1": {
+        "case_id": "089",
+        "cores_k": 1,
+        "original_makespan_cycles": 694660,
+        "envelope_makespan_cycles": 694660,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "089",
+        "cores_k": 2,
+        "original_makespan_cycles": 330406,
+        "envelope_makespan_cycles": 330406,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "089",
+        "cores_k": 3,
+        "original_makespan_cycles": 232396,
+        "envelope_makespan_cycles": 232396,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "089",
+        "cores_k": 4,
+        "original_makespan_cycles": 178160,
+        "envelope_makespan_cycles": 178160,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "089",
+        "cores_k": 5,
+        "original_makespan_cycles": 147432,
+        "envelope_makespan_cycles": 147432,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "090": {
+      "1": {
+        "case_id": "090",
+        "cores_k": 1,
+        "original_makespan_cycles": 1178363,
+        "envelope_makespan_cycles": 1178363,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "090",
+        "cores_k": 2,
+        "original_makespan_cycles": 512913,
+        "envelope_makespan_cycles": 512913,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "090",
+        "cores_k": 3,
+        "original_makespan_cycles": 403245,
+        "envelope_makespan_cycles": 403245,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "090",
+        "cores_k": 4,
+        "original_makespan_cycles": 354097,
+        "envelope_makespan_cycles": 354097,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "090",
+        "cores_k": 5,
+        "original_makespan_cycles": 319844,
+        "envelope_makespan_cycles": 319844,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "091": {
+      "1": {
+        "case_id": "091",
+        "cores_k": 1,
+        "original_makespan_cycles": 9094590,
+        "envelope_makespan_cycles": 9094590,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "091",
+        "cores_k": 2,
+        "original_makespan_cycles": 4540779,
+        "envelope_makespan_cycles": 4540779,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "091",
+        "cores_k": 3,
+        "original_makespan_cycles": 3038706,
+        "envelope_makespan_cycles": 3038706,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "091",
+        "cores_k": 4,
+        "original_makespan_cycles": 2293515,
+        "envelope_makespan_cycles": 2293515,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "091",
+        "cores_k": 5,
+        "original_makespan_cycles": 1861803,
+        "envelope_makespan_cycles": 1861803,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "092": {
+      "1": {
+        "case_id": "092",
+        "cores_k": 1,
+        "original_makespan_cycles": 4912704,
+        "envelope_makespan_cycles": 4912704,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "092",
+        "cores_k": 2,
+        "original_makespan_cycles": 1955568,
+        "envelope_makespan_cycles": 1955568,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "092",
+        "cores_k": 3,
+        "original_makespan_cycles": 1343229,
+        "envelope_makespan_cycles": 1343229,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "092",
+        "cores_k": 4,
+        "original_makespan_cycles": 1045928,
+        "envelope_makespan_cycles": 1045928,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "092",
+        "cores_k": 5,
+        "original_makespan_cycles": 888151,
+        "envelope_makespan_cycles": 888151,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "093": {
+      "1": {
+        "case_id": "093",
+        "cores_k": 1,
+        "original_makespan_cycles": 74205,
+        "envelope_makespan_cycles": 74205,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "093",
+        "cores_k": 2,
+        "original_makespan_cycles": 37827,
+        "envelope_makespan_cycles": 37827,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "093",
+        "cores_k": 3,
+        "original_makespan_cycles": 25103,
+        "envelope_makespan_cycles": 25103,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "093",
+        "cores_k": 4,
+        "original_makespan_cycles": 19779,
+        "envelope_makespan_cycles": 19779,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "093",
+        "cores_k": 5,
+        "original_makespan_cycles": 15876,
+        "envelope_makespan_cycles": 15876,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "094": {
+      "1": {
+        "case_id": "094",
+        "cores_k": 1,
+        "original_makespan_cycles": 94892,
+        "envelope_makespan_cycles": 94892,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "094",
+        "cores_k": 2,
+        "original_makespan_cycles": 53135,
+        "envelope_makespan_cycles": 53135,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "094",
+        "cores_k": 3,
+        "original_makespan_cycles": 39889,
+        "envelope_makespan_cycles": 39889,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "094",
+        "cores_k": 4,
+        "original_makespan_cycles": 29962,
+        "envelope_makespan_cycles": 29962,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "094",
+        "cores_k": 5,
+        "original_makespan_cycles": 24943,
+        "envelope_makespan_cycles": 24943,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "095": {
+      "1": {
+        "case_id": "095",
+        "cores_k": 1,
+        "original_makespan_cycles": 2084853,
+        "envelope_makespan_cycles": 2084853,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "095",
+        "cores_k": 2,
+        "original_makespan_cycles": 822952,
+        "envelope_makespan_cycles": 822952,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "095",
+        "cores_k": 3,
+        "original_makespan_cycles": 695775,
+        "envelope_makespan_cycles": 695775,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "095",
+        "cores_k": 4,
+        "original_makespan_cycles": 524422,
+        "envelope_makespan_cycles": 524422,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "095",
+        "cores_k": 5,
+        "original_makespan_cycles": 420852,
+        "envelope_makespan_cycles": 420852,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "096": {
+      "1": {
+        "case_id": "096",
+        "cores_k": 1,
+        "original_makespan_cycles": 84194,
+        "envelope_makespan_cycles": 84194,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "096",
+        "cores_k": 2,
+        "original_makespan_cycles": 47196,
+        "envelope_makespan_cycles": 47196,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "096",
+        "cores_k": 3,
+        "original_makespan_cycles": 33662,
+        "envelope_makespan_cycles": 33662,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "096",
+        "cores_k": 4,
+        "original_makespan_cycles": 26984,
+        "envelope_makespan_cycles": 26984,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "096",
+        "cores_k": 5,
+        "original_makespan_cycles": 27053,
+        "envelope_makespan_cycles": 26984,
+        "improvement_cycles": 69,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.25505489224854916
+      }
+    },
+    "097": {
+      "1": {
+        "case_id": "097",
+        "cores_k": 1,
+        "original_makespan_cycles": 11215101,
+        "envelope_makespan_cycles": 11215101,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "097",
+        "cores_k": 2,
+        "original_makespan_cycles": 5617602,
+        "envelope_makespan_cycles": 5617602,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "097",
+        "cores_k": 3,
+        "original_makespan_cycles": 3660459,
+        "envelope_makespan_cycles": 3660459,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "097",
+        "cores_k": 4,
+        "original_makespan_cycles": 2626908,
+        "envelope_makespan_cycles": 2626908,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "097",
+        "cores_k": 5,
+        "original_makespan_cycles": 2102348,
+        "envelope_makespan_cycles": 2102348,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "098": {
+      "1": {
+        "case_id": "098",
+        "cores_k": 1,
+        "original_makespan_cycles": 177430,
+        "envelope_makespan_cycles": 177430,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "098",
+        "cores_k": 2,
+        "original_makespan_cycles": 89756,
+        "envelope_makespan_cycles": 89756,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "098",
+        "cores_k": 3,
+        "original_makespan_cycles": 76808,
+        "envelope_makespan_cycles": 76808,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "098",
+        "cores_k": 4,
+        "original_makespan_cycles": 65648,
+        "envelope_makespan_cycles": 65648,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "098",
+        "cores_k": 5,
+        "original_makespan_cycles": 60140,
+        "envelope_makespan_cycles": 60140,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "099": {
+      "1": {
+        "case_id": "099",
+        "cores_k": 1,
+        "original_makespan_cycles": 1612248,
+        "envelope_makespan_cycles": 1612248,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "099",
+        "cores_k": 2,
+        "original_makespan_cycles": 811243,
+        "envelope_makespan_cycles": 811243,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "099",
+        "cores_k": 3,
+        "original_makespan_cycles": 544403,
+        "envelope_makespan_cycles": 544403,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "099",
+        "cores_k": 4,
+        "original_makespan_cycles": 405655,
+        "envelope_makespan_cycles": 405655,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 4,
+        "improvement_percent_of_original": 0.0
+      },
+      "5": {
+        "case_id": "099",
+        "cores_k": 5,
+        "original_makespan_cycles": 337075,
+        "envelope_makespan_cycles": 337075,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 5,
+        "improvement_percent_of_original": 0.0
+      }
+    },
+    "100": {
+      "1": {
+        "case_id": "100",
+        "cores_k": 1,
+        "original_makespan_cycles": 151223,
+        "envelope_makespan_cycles": 151223,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 1,
+        "improvement_percent_of_original": 0.0
+      },
+      "2": {
+        "case_id": "100",
+        "cores_k": 2,
+        "original_makespan_cycles": 88721,
+        "envelope_makespan_cycles": 88721,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 2,
+        "improvement_percent_of_original": 0.0
+      },
+      "3": {
+        "case_id": "100",
+        "cores_k": 3,
+        "original_makespan_cycles": 57811,
+        "envelope_makespan_cycles": 57811,
+        "improvement_cycles": 0,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.0
+      },
+      "4": {
+        "case_id": "100",
+        "cores_k": 4,
+        "original_makespan_cycles": 58086,
+        "envelope_makespan_cycles": 57811,
+        "improvement_cycles": 275,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.47343593981338017
+      },
+      "5": {
+        "case_id": "100",
+        "cores_k": 5,
+        "original_makespan_cycles": 58085,
+        "envelope_makespan_cycles": 57811,
+        "improvement_cycles": 274,
+        "envelope_source_cores": 3,
+        "improvement_percent_of_original": 0.4717224756821899
+      }
+    }
+  }
+}

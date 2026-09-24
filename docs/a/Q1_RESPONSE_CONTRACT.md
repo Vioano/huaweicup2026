@@ -170,3 +170,29 @@ Reference: complete Pro R2 and qualified reviews at fixed commit
 `d6e640a337001e333108f592e6876ac6bd0a2561`, stable directory
 `AI chats/P1多Pipe链构造证明/`. The archive's model experiments and conditional
 335819 lower bound for084 remain separate from local official performance.
+
+## Experimental guarded unified entry
+
+`python -m src.q1.response_refine INPUT --cores K --output PLAN --diagnostics DIAG`
+is a separate experimental entry around the unchanged v4 `unified.solve`.
+Only an actually selected `capacity-return` winner with its own successful
+online score and matching plan SHA triggers one packet-DP child. The child
+uses automatic state-budget selection and ordered-graph proposal caching.
+A byte-identical plan needs no new score; a distinct legal plan receives at
+most one E1 call. Only a strict `(Makespan, scheduled COPY bytes)` improvement
+replaces the baseline. Child, validation or scoring failure retains the baseline.
+No case identifier, saved plan or score table participates in this policy.
+
+The 120-second child timeout is a termination trigger, not a hard total wall
+limit; process cleanup and temporary-file work remain charged. CLI completion
+reports through both output fsyncs; an external runner must also include process
+startup and shutdown. The baseline and refinement call ledgers are separate.
+If a score attempt throws after possible dispatch, the refinement reports its
+actual count as unknown in `[0,1]`, rather than falsely reporting zero.
+
+Four injected controller tests and one subsequent exception-accounting test
+passed; these use fake expensive boundaries and do not run a real solver or
+evaluator. Read-only review checked baseline hash binding, failure fallback,
+single additional E1 scope and process cleanup. Real CLI operation, broader
+graph coverage and non-macOS behavior still require validation. This entry
+does not replace the existing production solver or inherit its full500 score.
