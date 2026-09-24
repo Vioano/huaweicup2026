@@ -36,3 +36,34 @@ class GitHubTests(unittest.TestCase):
   r=RacingGitHub(True)
   with self.assertRaisesRegex(RuntimeError,'Channel changed'):r.update({'channel':b'new'},expected={'channel':b'old'})
   self.assertEqual(r.blob(r.tree(r.head())['channel']['sha']),b'concurrent')
+ def test_concurrent_rate_limits_keep_longest_durable_cooldown(self):
+  import json,tempfile,threading,urllib.error
+  from pathlib import Path
+  from concurrent.futures import ThreadPoolExecutor
+  from unittest.mock import patch
+  with tempfile.TemporaryDirectory() as tmp:
+   r=GitHub.__new__(GitHub);r.repository='test/repo';r.token='test-only'
+   r.cooldown_until=0;r.cooldown_lock=threading.Lock();r.cooldown_file=Path(tmp)/'cooldown.json'
+   barrier=threading.Barrier(2)
+   def limited(request,timeout):
+    barrier.wait(timeout=3)
+    retry='120' if request.full_url.endswith('/long') else '60'
+    raise urllib.error.HTTPError(request.full_url,429,'limited',{'Retry-After':retry},None)
+   with patch('src.benchmark_sync.github.urllib.request.urlopen',side_effect=limited),patch('src.benchmark_sync.github.time.time',return_value=100):
+    with ThreadPoolExecutor(max_workers=2) as pool:
+     jobs=[pool.submit(r.request,'GET','/'+name) for name in ('long','short')]
+     for job in jobs:
+      with self.assertRaises(RemoteError):job.result(timeout=5)
+   self.assertEqual(r.cooldown_until,220)
+   self.assertEqual(json.loads(r.cooldown_file.read_text())['until'],220)
+ def test_only_safe_get_disconnects_retry_and_tls_verification_stays_strict(self):
+  import io,json,ssl,urllib.error
+  from unittest.mock import patch
+  r=GitHub.__new__(GitHub);r.repository='test/repo';r.token='test-only';r.cooldown_until=0
+  eof=urllib.error.URLError(ssl.SSLEOFError('test EOF'))
+  with patch('src.benchmark_sync.github.urllib.request.urlopen',side_effect=[eof,eof,io.BytesIO(b'{"ok":true}')]) as call,patch('src.benchmark_sync.github.time.sleep'):
+   self.assertEqual(r.request('GET','/test'),{'ok':True});self.assertEqual(call.call_count,3)
+  for method,error in [('POST',eof),('PATCH',eof),('GET',urllib.error.URLError(ssl.SSLCertVerificationError('test certificate'))),('GET',urllib.error.URLError(TimeoutError('test timeout')))]:
+   with self.subTest(method=method,error=error),patch('src.benchmark_sync.github.urllib.request.urlopen',side_effect=error) as call,patch('src.benchmark_sync.github.time.sleep'):
+    with self.assertRaises(urllib.error.URLError):r.request(method,'/test',{} if method!='GET' else None)
+    self.assertEqual(call.call_count,1)

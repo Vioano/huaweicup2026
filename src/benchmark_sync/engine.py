@@ -6,6 +6,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import time
+from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
 from .github import fixed_sha, path_ok, RemoteError
 from .snapshot import (atomic_write, canonical, digest, now, read_central, publish_files,
                        unpack, reject_history_regression, payload_name, git_json)
@@ -141,6 +142,30 @@ class Engine:
                 entry.update(error=str(error),last_attempt_at=now());write_json(path,entry)
                 self.errors.append({'stage':'upload','message':str(error)})
 
+    def download_artifacts(self,commit,refs,target,deadline):
+        missing=[]
+        for name,sha in refs.items():
+            dest=target/'artifacts'/name
+            if not dest.exists() or digest(dest.read_bytes())!=sha: missing.append((name,sha,dest))
+        def download(item):
+            name,sha,dest=item
+            value=self.remote.read(commit,name)
+            if digest(value)!=sha: raise ValueError('Artifact content hash mismatch: '+name)
+            atomic_write(dest,value)
+        # Only artifact GETs run concurrently; all signatures, Git writes, cursor updates
+        # and final request publication remain on the owning thread. At most four
+        # bounded reads are in flight and each verified file is durable across retries.
+        index=0
+        with ThreadPoolExecutor(max_workers=4,thread_name_prefix='benchmark-artifact') as pool:
+            running=set()
+            while running or index<len(missing):
+                while len(running)<4 and index<len(missing) and time.monotonic()<=deadline:
+                    running.add(pool.submit(download,missing[index]));index+=1
+                if not running: break
+                done,running=wait(running,return_when=FIRST_COMPLETED)
+                for future in done: future.result()
+        return index==len(missing)
+
     def receive_submissions(self,head):
         inbox=Path(self.config['central']['inbox'])
         if not head: return
@@ -207,13 +232,7 @@ class Engine:
                 producers={r.get('provenance',{}).get('producer_session','').split('/')[0].lower() for r in feed['records']}
                 if producers!={actor}: raise ValueError('Feed producer session does not match signed uploader')
                 # Retry-safe individual files; request.json is the sole visibility/commit marker.
-                for name,sha in refs.items():
-                    if time.monotonic()>deadline: return
-                    dest=target/'artifacts'/name
-                    if dest.exists() and digest(dest.read_bytes())==sha: continue
-                    value=self.remote.read(commit,name)
-                    if digest(value)!=sha: raise ValueError('Artifact content hash mismatch')
-                    atomic_write(dest,value)
+                if not self.download_artifacts(commit,refs,target,deadline): return
                 atomic_write(target/'feed.json',data)
                 source={'id':f'auto:{actor}:{identity}','repo':self.remote.repository,'commit':commit,
                         'feed':feed_path,'path':feed_path,'url':f'https://github.com/{self.remote.repository}/blob/{commit}/{feed_path}'}
