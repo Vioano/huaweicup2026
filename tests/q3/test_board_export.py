@@ -186,6 +186,39 @@ class FeedbackTests(unittest.TestCase):
         self.assertEqual(feed["records"][0]["metrics"]["makespan_cycles"], 7.25)
         self.assertIn("tree candidate rejected", " ".join(feed["records"][0]["notes"]))
 
+    def test_pruned_candidate_is_not_scored_or_charged_as_e0(self):
+        def pruned(argv, timeout, folder, root):
+            answer = self.child(argv, timeout, folder, root)
+            evidence = folder / "evidence"
+            receipt = bench.read(evidence / "receipt.json")
+            (evidence / "seed").mkdir()
+            plan = next(folder.glob("*multicore_res.json"))
+            (evidence / "seed/plan.json").write_bytes(plan.read_bytes())
+            (evidence / "seed/result.json.gz").write_bytes((evidence / "result.json.gz").read_bytes())
+            receipt.update(selected_strategy="seed-test", candidates=[
+                {"name": "seed", "strategy": "seed-test", "status": "ok", "makespan": 7.25,
+                 "artifacts": {"plan": {"path": "seed/plan.json", "sha256": receipt["plan_sha256"]},
+                               "result": {"path": "seed/result.json.gz", "sha256": receipt["result_sha256"]}}},
+                {"name": "release", "status": "bound_pruned", "makespan": None,
+                 "certified_lower_bound_cycles": 8,
+                 "unscored_plan": bench.read(plan),
+                 "unscored_plan_sha256": __import__('hashlib').sha256(
+                     (json.dumps(bench.read(plan), separators=(",", ":")) + "\n").encode()).hexdigest()}])
+            bench.write(evidence / "receipt.json", receipt)
+            bench.write(evidence / "evaluations.json", [{"status": "ok"}])
+            return answer
+        with patch.object(bench, "run_child", side_effect=pruned):
+            result = bench.execute(manifest(), self.output, root=self.root)
+        self.assertEqual(result["e0_budget_used"], 1)
+        row = export_batch(self.output / "batch.json", self.root)["records"][0]
+        self.assertEqual(row["metrics"]["makespan_cycles"], 7.25)
+        folder = self.root / result["records"][0]["artifacts"]["trace"]["path"]
+        receipt = bench.read(folder)
+        receipt["candidates"][-1]["certified_lower_bound_cycles"] = 7
+        bench.write(folder, receipt)
+        with self.assertRaisesRegex(ValueError, "adequate lower bound"):
+            bench.validate_result(folder.parent.parent, manifest()["jobs"][0], self.root)
+
 
 if __name__ == "__main__":
     unittest.main()

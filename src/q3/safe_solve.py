@@ -63,7 +63,7 @@ def evaluate_candidates(index, cores, evaluate, save):
     return winner, calls, records, selection
 
 
-def main():
+def main(policy=evaluate_candidates):
     start = time.perf_counter()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("graph", type=Path)
@@ -117,7 +117,7 @@ def main():
                                "sha256": hashlib.sha256(data).hexdigest()}
         return artifacts
 
-    (plan, result, strategy), calls, candidates, selection = evaluate_candidates(
+    (plan, result, strategy), calls, candidates, selection = policy(
         index, args.cores, evaluate, save)
     payload = encoded(plan)
     full = gzip.compress(encoded(result), mtime=0)

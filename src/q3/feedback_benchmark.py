@@ -204,8 +204,18 @@ def validate_result(folder, job, root=ROOT):
         successful = []
         for candidate in receipt["candidates"]:
             if candidate["status"] != "ok":
-                if candidate["status"] not in {"unsupported", "duplicate", "rejected"} or candidate["makespan"] is not None:
+                if candidate["status"] not in {"unsupported", "duplicate", "rejected", "bound_pruned"} or candidate["makespan"] is not None:
                     raise ValueError("unrecognized candidate status or fabricated failed score")
+                if candidate["status"] == "bound_pruned":
+                    lower = candidate.get("certified_lower_bound_cycles")
+                    if type(lower) is not int or lower < receipt["makespan"]:
+                        raise ValueError("pruned candidate lacks an adequate lower bound")
+                    unscored = candidate.get("unscored_plan")
+                    if not isinstance(unscored, dict):
+                        raise ValueError("pruned candidate lacks its unscored plan")
+                    payload = (json.dumps(unscored, separators=(",", ":")) + "\n").encode()
+                    if hashlib.sha256(payload).hexdigest() != candidate.get("unscored_plan_sha256"):
+                        raise ValueError("pruned candidate plan hash differs")
                 continue
             refs = candidate["artifacts"]
             for ref in refs.values():
