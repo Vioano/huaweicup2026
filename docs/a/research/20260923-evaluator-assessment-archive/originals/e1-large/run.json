@@ -1,0 +1,55 @@
+{
+  "scope": "in-memory full result; excludes JSON/Trace serialization and process startup",
+  "cases": [
+    "case_003.json"
+  ],
+  "seed": 2026,
+  "cores": 4,
+  "warmup": 1,
+  "repeats": 3,
+  "subgraph_size": [
+    50,
+    100
+  ],
+  "official_problem1_sha256": "2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f",
+  "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+  "candidate_implementation": {
+    "id": "eval-exact-indexed-boundary-schema-copy-v2",
+    "delivery_lf_sha256": {
+      "src/eval_exact/_official.py": "65e7ec150e533cfc794901d7de13bc94ef391f3402b9d90e601797d8f4ecd77f",
+      "src/eval_exact/problem1.py": "d2b0fd7956dcc82516a54fb4d5cd74a9f9b7fec2282e25d26e063d01b7b4dcbd"
+    }
+  },
+  "benchmark_delivery_lf_sha256": "ea7ef33f14bb146c72af79af1195be98cfb84601543119930f092c96654f947d",
+  "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+  "input_sha256": {
+    "case_003.json": "2c80acfd37edcf811ce76b7e7b1f7194c706bd4d4aa6449e6a19e9eac1028ced"
+  },
+  "plan_sha256": {
+    "case_003.json": "d61f921b73ba682f888a0b2b08fa53f810d11b17ecb3a5eb8498ed22a6119f3e"
+  },
+  "python": "3.12.13",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "processor": "arm",
+  "logical_cpus": 18,
+  "summaries": [
+    {
+      "case": "case_003.json",
+      "oracle_median_seconds": 2.347770625,
+      "exact_median_seconds": 1.881789791,
+      "oracle_p95_seconds": 2.424826166,
+      "exact_p95_seconds": 1.924284875,
+      "speedup": 1.2476264013274156,
+      "paired_speedup_geomean": 1.2519098499433357,
+      "paired_fraction_at_least_0_8x": 1.0
+    }
+  ],
+  "comparisons": [
+    {
+      "case": "case_003.json",
+      "equal": true,
+      "first_difference": null,
+      "makespan": 758098
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "scope": "Diagnostic only, uses E0 local durations and an optimally fitted scale on the same development labels. Neither is a deployable or held-out E2 result. No implementation altered.",
+  "exact_local_duration_in_coarse_global": {
+    "median_relative_error": 0.057615475339910696,
+    "p95_relative_error": 0.09221109668498294,
+    "maximum": 0.09768853305785125
+  },
+  "best_possible_positive_constant_scale_for_this_pool_p95": {
+    "scale": 0.8027455906181397,
+    "median_relative_error": 0.01736705141052758,
+    "p95_relative_error": 0.041913650170276595,
+    "maximum": 0.05622118535301046,
+    "definition": "Minimize nearest-rank P95 over 64 by choosing shortest relative-width contiguous block of 61 sorted E2/E0 ratios; scale = 2/(min+max)."
+  },
+  "e1_stage_shares": [
+    {
+      "case": "case_001",
+      "boundary_index": 0.007899809715127378,
+      "schema_copy": 0.03953399242410347,
+      "step3_inclusive": 0.3594540159188532,
+      "after_task_build": 0.41315397788828795
+    },
+    {
+      "case": "case_019",
+      "boundary_index": 0.006819965675853567,
+      "schema_copy": 0.03752669725591783,
+      "step3_inclusive": 0.35249922068808104,
+      "after_task_build": 0.40728117120593677
+    },
+    {
+      "case": "case_080",
+      "boundary_index": 0.005572016055790524,
+      "schema_copy": 0.03532579733147237,
+      "step3_inclusive": 0.3254185450326697,
+      "after_task_build": 0.48360027000290895
+    }
+  ]
+}
