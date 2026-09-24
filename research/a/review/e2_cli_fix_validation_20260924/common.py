@@ -3,6 +3,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import sys
 import tempfile
 import time
 
@@ -65,6 +66,7 @@ def matrix():
 def gated_request():
     """Only controlled children can reach target imports/launches."""
     require(contract()["execution_blockers"] == [], "unresolved driver execution blockers")
+    require(sys.flags.utf8_mode == 1 and sys.dont_write_bytecode, "explicit UTF-8/no-bytecode policy")
     case = Path(os.environ["E2_CASE_DIR"]).resolve()
     request = read(case / "request.private.json")
     require(case == Path(request["case_directory"]).resolve(), "case directory")
@@ -74,7 +76,8 @@ def gated_request():
     require(request["bundle"] == manifest["driver_bundle_sha256"], "request bundle")
     approval = read(Path(request["run_directory"]) / "approval.json")
     require(approval.get("approved") is True and
-            approval.get("execution_enabled") is True, "execution unapproved")
+            approval.get("execution_enabled") is True and
+            approval.get("runtime_review_closed") is True, "execution unapproved")
     require(approval["driver_bundle_sha256"] == request["bundle"], "approval bundle")
     require(digest(HERE / "sources.json") == approval["sources_sha256"], "approval source manifest")
     return case, request

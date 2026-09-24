@@ -4,6 +4,12 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+
+_DRIVER_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(_DRIVER_DIR))
+import common as _common
+if Path(_common.__file__).resolve() != _DRIVER_DIR / "common.py":
+    raise RuntimeError("unexpected common module origin")
 from common import ROOT, gated_request, require, save, digest, fake_argv
 from win_support import API
 
@@ -42,12 +48,23 @@ def main():
         require(not missing.exists(), "startup failure executable exists")
         helper.sys.executable = str(missing)
     attempts = []
+    expected_tokens = [helper.sys.executable,
+                       str(fake_dir / f"multicore_cut_evaluate_problem_{row['problem']}.py"),
+                       *fake_argv(row)]
 
     def audit(event, args):
         if event == "subprocess.Popen":
             require(not attempts, "second helper creation request forbidden")
             require(subprocess.run is genuine_run, "subprocess replaced")
-            attempts.append({"executable": args[0], "argv": list(args[1]),
+            require(isinstance(args[1], str), "expected Windows audit command-line string")
+            # CPython's Windows path leaves executable=None when that keyword
+            # is omitted; CreateProcess derives the image from command_line.
+            require(args[0] is None and
+                    args[1] == subprocess.list2cmdline(expected_tokens), "audit command line differs from fixed tokens")
+            attempts.append({"raw_executable": args[0], "raw_executable_type": type(args[0]).__name__,
+                             "expected_image_token": expected_tokens[0], "command_line": args[1],
+                             "command_line_type": type(args[1]).__name__,
+                             "expected_tokens": expected_tokens,
                              "cwd": args[2], "env_is_none": args[3] is None})
             save(case / "helper-create-attempt.json", attempts, exclusive=True)
 

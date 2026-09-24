@@ -14,9 +14,6 @@
     "debug_evaluations": 0,
     "parent_launches": 1,
     "logical_create_requests_including_failed_attempt": 43,
-    "per_logical_chain_OS_processes_assumption": 3,
-    "conditional_OS_successful_process_budget_including_controller": 126,
-    "conditional_Job_OS_cumulative_total": 123,
     "active_process_cap_per_job": 14,
     "job_commit_memory_bytes": 2147483648,
     "process_commit_memory_bytes": 536870912,
@@ -30,8 +27,14 @@
     "cleanup_reserve_seconds": 10,
     "evidence_publication_target_seconds": 1200,
     "final_receipt_target_seconds": 1500,
-    "whole_window_hard_seconds": 1800
+    "whole_window_hard_seconds": 1800,
+    "controller_OS_cumulative_policy": 3,
+    "case_OS_cumulative_policy_sum": 123,
+    "whole_window_OS_cumulative_policy": 126,
+    "preparation_external_process_requests": 0
   },
-  "note": "Preparation authorization is not execution authorization; contract blockers cannot be overridden by this file.",
-  "sources_sha256": "UNSET_NOT_APPROVED"
+  "note": "Static revision only. False switches must remain unchanged in repository. A separately authorized external approval must bind final driver commit, bundle, sources, static evidence and approved index bytes; no runtime approval is implied.",
+  "sources_sha256": "UNSET_NOT_APPROVED",
+  "git_index_sha256": "UNSET_NOT_APPROVED",
+  "static_checks_sha256": "UNSET_NOT_APPROVED"
 }

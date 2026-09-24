@@ -1,59 +1,46 @@
-# Windows 完整 CLI 独立驱动：首个静态检查点
+# Windows full CLI 驱动：静态修订检查点
 
-**本交付是不可执行验收的准备检查点，尚有一个明确静态阻断 B1。** 15 行驱动路径、接缝和控制结构已写出，文本/AST/JSON/哈希检查不替代其运行。`contract.json` 保留非空 `execution_blockers`，外层和控制器都会拒绝进入窗口；即使另写 approved=true 也不能越过。不得把本 Draft PR 当可运行验收版。
+## 1. 任务与状态
 
-## 1. 目标、授权与时间
+执行会话 `yuanzhifang30-sudo/s-b4329d86154348de9401afcbe48b34ce`，同一 Draft PR70。依据 [静态修订授权](https://github.com/huaweibei123/huaweicup2026/issues/15#issuecomment-5806846650)，仅修改本 validation 目录。本轮接手 UTC 2026-09-24 03:17:21.8214834，约30分钟交固定检查点后停。本版是 R1/R2/B1/R3 的待复审实现，**不是运行准入或 E2 终验**。contract 与批准模板 approved / execution_enabled / runtime_review_closed 均 false；外部批准须绑定最终提交、bundle、sources、STATIC_CHECKS 和 index 哈希。
 
-session=`yuanzhifang30-sudo/s-b4329d86154348de9401afcbe48b34ce`，continue。
-[准备阶段授权](https://github.com/huaweibei123/huaweicup2026/issues/15#issuecomment-5806444428) 实际作者 yuanzhifang30-sudo / 281850557，已全文读。
-实际接手 UTC `2026-09-24T02:37:26.6038619+00:00`，约30分钟检查点 `03:07:26Z`；这是静态任务时刻，没有新实验 T0。
-分支 `codex/e2-cli-driver-prep-yuanzhifang` 从 `53c151ecaef2636bcf0eb1946c112f19f8cec739` 建立；仅写本目录，保留 PR68、生产补丁和旧门禁/结果。
+原准备检查点 [e3607fed01cc2cf39f9ad8f5a96d5922a37f36f5](https://github.com/huaweibei123/huaweicup2026/tree/e3607fed01cc2cf39f9ad8f5a96d5922a37f36f5/research/a/review/e2_cli_fix_validation_20260924) 保留。此次清空的是已具体修订的 B1 已知静态问题，不代表协调已复审通过；检查点仍需独立审阅及新的首次运行批准。
 
-## 2. 固定输入与来源
+## 2. 固定输入与边界
 
-- 计划：`53c151e` 的 `research/a/review/e2_cli_fix_static_20260924/`，15例、8潜在E0、43逻辑创建请求、123/126条件OS模型。
-- 生产：`a21f7ef7111933d309f3d616b9a3f2e7e861129d`，helper SHA `fb33ab3d120479ff70dbea87a730a08b16b90af44996cf78746d7880351b091b`。
-- 只复制旧 `569c65f2673d6fc2a99507f151ca04b814e1dc68` 的单个 `gate_helper.py` 原语文件，SHA `e5af8da2e6cc4288d7066769bb246c68f51da8bc3c2d6da2f4acc45698c88621`；没有复制旧树或改旧文件。
-- `sources.json` 列出 driver 文件、driver bundle 及5485项解释器/标准库/既有 NumPy 与相关依赖、项目源码、冻结文件、计划输入的静态字节身份。只记录逻辑相对定位与 SHA，不上传个人目录。runtime home 从已锁 pyvenv.cfg 推导；原配置本身只存 hash。
-- 旧3进程仅是已有 venv 入口的 ready 集观测，未记录完整 launcher 映像归属；本阶段没有探测实际启动链。仅允许已锁 venv python.exe / runtime python.exe 映像路径，未知路径/虚拟化别名失败关闭。
+- 生产 helper 固定 a21f7ef7111933d309f3d616b9a3f2e7e861129d，SHA256 fb33ab3d120479ff70dbea87a730a08b16b90af44996cf78746d7880351b091b；未修改生产、E0 或旧结果。
+- 静态计划固定 53c151ecaef2636bcf0eb1946c112f19f8cec739，本目录只覆盖其中逐链假设；旧计划文件不改。
+- gate_helper.py 原语固定 569c65f2673d6fc2a99507f151ca04b814e1dc68，SHA256 e5af8da2e6cc4288d7066769bb246c68f51da8bc3c2d6da2f4acc45698c88621，逐字节保留。
+- 15例仍为 F0/F1/F2/F7/F255/F-startfail/F-cancel，以及 P2/P3 valid/invalid 的 direct/adapter。潜在E0保留8、逻辑创建请求43（含失败尝试）、parent启动1、pool workers/formal/debug=0，均为未批准的新窗口提案。
+- 旧潜在15、余2和旧T0封存；Q2休息，LYX独立范围不动，Actions不启用，无Atlas签写、子任务或目标进程在途。
 
-## 3. 已实现的可审阅代码
+## 3. 修改与静态处置
 
-| 文件 | 责任 |
+| 问题 | 本版实现与证据边界 |
 | --- | --- |
-| `launch_once.ps1` | 原外层 UTC/QPC、批准/commit/bundle/manifest核对；PowerShell拥有独立root Job；CreateProcess suspended后赋Job并仅resume一次；无继承句柄；root active17=控制器3+案例14、2.25GiB聚合政策；256MiB控制器监测；90/660/670截止与kill-on-close。P/Invoke声明通过Reflection.Emit写出，没有编译器子进程；本阶段没有调用它 |
-| `controller.py` | 8真实CLI与7假目标串行调度；创建前持久预留43逻辑请求/8费用上限；新case唯一目录；ACK前禁止目标；明确预计非零与首次意外失败；完整文件比较和有限路径/路线规范化；Job收尾与原始退出码 |
-| `bootstrap.py` | exact Job/nonce/bundle/完整PID ACK；每case仅一次真实Popen；文件或并发排空PIPE，有限输出，显式Popen句柄关闭；不导入evaluator |
-| `seam.py` | 加载真实helper字节，保留真实verify和真实subprocess；只改目标目录，F-startfail额外改专用进程sys.executable为不存在exe；审计唯一启动尝试；SystemExit/OSError证据后重抛 |
-| `fixture.py` | 空/Unicode/引号/反斜线参数、stdin/cwd/env；具名事件控制等待；0/1/2/7/255（2用argparse拒绝）；PIPE各256KiB；取消项唯一孙进程，验证之前不释放事件 |
-| `win_support.py` | 新的cap14、2GiB Job/512MiB进程限额回读；PID/父PID/创建FILETIME/映像/非继承观察句柄；累计、采样峰值下界、精确峰值unknown分列；内存和原始DWORD |
-| `common.py` | 原子证据/账本写入、source identity、批准门禁、固定输入规则；无目标自动运行 |
+| R1 隔离入口 | controller/bootstrap/seam 在本地模块导入前，以自身文件路径只加入被外层manifest锁定的driver目录，并检查common来源；三条启动命令保留 -I -B，显式增加 -X utf8。-I下的PYTHON环境变量不作为编码生效证据；非隔离的生产CLI/假目标仍继承受控环境。 |
+| R2 Windows审计 | 保留原始command_line及str类型、固定expected_tokens、expected_image_token；另核对目标实际sys.argv。Windows省略executable关键字时审计raw_executable是None，单独保存类型；不把命令行拆成字符或假设该字段是映像路径。空token、空格、引号、尾反斜杠均在固定token列表。F-startfail检查缺失exe命令行与真实OSError，明确无target argv。 |
+| B1 模型修订 | contract.aggregate_policy 明确替代逐逻辑链≤3假设。逐case原数值作为直接累计政策：普通fake9、startfail6、cancel12、direct6、adapter9，合计123；控制器独立≤3，根Job合计≤126。外层在case开始前取得完整PID集、累计数、FILETIME/映像及非继承观察句柄，确认launcher/实际controller均在集后才ACK。每例记录实测TotalProcesses，保留已知launcher/ready与创建时间关联；最终根Job累计数必须等于控制器实测数+各case实测数。未知内部父子边不推定，exact peak仍unknown。 |
+| R3 外部进程与截止 | 删除运行期两次Git启动。共同T0之后直接读HEAD/ref、批准index指纹、workspace_files与namespace_inventories；sources与STATIC_CHECKS另由外部批准固定哈希。所有文件读取属于90秒准备段，无metadata子进程。bootstrap在结果写入前记work_finished_tick，35秒工作后最多3秒等bootstrap/Job全部退出；失败保持单个10秒清理额度，且受670秒总截止约束。 |
 
-实际P2/P3使用固定 `-m` 入口或冻结直调，不通过假目标接缝。两种真实路径都按同一控制环境设置 `PYTHONDONTWRITEBYTECODE=1`、`PYTHONIOENCODING=utf-8:strict`、`PYTHONUTF8=1`；后两项是把比较用的编码输入显式固定，不声称已覆盖任意默认codepage。真实产物在返回时一次读取，缺件失败，不轮询补洞；共享计划和输入仍按原hash读取，不手改旧证据。
+R2依据是本机已锁定CPython 3.12.14的Lib/subprocess.py文本：Windows将tokens经list2cmdline转换后调用审计事件，未指定executable时其值仍为None；没有导入或运行该目标代码。
 
-失败采集由单个只读daemon线程执行，控制器最多等待100ms，慢API不能推迟发出终止；收集未完记录incomplete、不得通过。线程不拥有Job变更权；退出时内核关闭残余观察句柄。固定原语的失败launch清理与控制器finally共用保守10s总截止，不叠加5+10；新launcher创建最多5s。外层catch也有独立10s截止且不超过原T0+670。所有同步内核调用本身的实际延迟仍未实测。
+单case active14 / Job2GiB / 单进程512MiB；根Job active17 / 2.25GiB；controller256MiB；available≥3GiB，均保留。累计政策由运行期监测、最终会计和下一例准入检查执行，不声称Windows存在原生累计创建次数硬限制。短命进程若漏观察、映像未知、计数不符、采样超时、句柄退出不闭合则停止，不重试或增cap。
 
-## 4. 静态结论、阻断与未验证
+## 4. 产物与验证
 
-**B1：真实 adapter→official 的逐逻辑启动链归属尚未闭合。** 当前代码有完整PID/父PID/创建时间/映像尝试、Job总数/active限制与源代码身份，但没有可靠地把未插桩真实CLI的每个venv/包装器层归到各次逻辑创建，因而不能证明或逐链执行“每次最多3层”。总数≤9/12不等于每条链≤3；即便程序路径只含一次subprocess也不能替代OS链证据。必须补出可审阅的归属算法，或由协调明确修订该条件模型与准入规则，然后才能移除硬阻断。没有因为赶检查点把未知标通过。
+驱动为7个Python文件及launch_once.ps1，契约与批准模板进入10项bundle。sources.json保存原5485项环境/输入身份（来自上一轮纯文件hash，未因本轮改代码重测环境），新增工作区固定字节清单与相关目录即时子项清单。workspace_files覆盖本版本所有tracked文件，sources/STATIC_CHECKS为避免自引用分别由批准文件固定；目录清单覆盖tracked父目录、repo环境文件父目录及本地site-packages入口。新增未跟踪命名空间文件会导致库存不符；排除.git和__pycache__。这不是对排除缓存、未列外部目录或竞态的完整git-status替代证明。
 
-其他未验证：Reflection.Emit/Win32结构和句柄调用、嵌套Job兼容、PIPE、退出码、取消、实际峰值/内存、5485项预检能否在90秒完成、实际虚拟化路径别名、PID快进快出采样完整性，均未运行。采样漏进程会因累计数与观察句柄数不等而失败；不会自动提升通过。当前说明是实现意图与静态观察，不保证该初稿没有其他缺陷。POSIX仍平台/负责人未定、未实现窗口。
+STATIC_CHECKS记录本轮实际AST、PowerShell Parser、JSON、哈希与差异检查。**驱动/目标 import、执行、--help、假目标、探针、测试、worker、编译、E0/E1/E2、安装、云调用全部0**。允许的普通Python静态处理进程只运行内联标准库文件读写/AST；没有导入任何新驱动。一次静态文本读取曾因系统默认GBK失败，随后显式UTF-8读取，未触发目标。
 
-实际只做标准库 `ast.parse`、PowerShell Parser.ParseFile（不执行脚本）、JSON/哈希、Git字节/diff和限定目录扫描。**本阶段目标import/执行、--help、假目标/探针/测试、worker、构建、E0/E1/E2、依赖安装、云调用全为0**。文件读hash用了普通Python进程；没有import任何新驱动模块。运行中的静态hash进程在交付前已结束，不是后台测试。
+本轮仍未验证：Win32结构/Reflection.Emit、隔离入口实际兼容、嵌套Job、PIPE、退出传播、取消、快进快出观察完整性、真实内存、完整预检能否在90秒完成、单次文件/OS调用迟滞及路径别名。AST通过不证明以上行为。POSIX仍未排负责人或运行窗口。
 
-## 5. 命令、账本与验收边界
+## 5. 运行与验收契约
 
-以下是将来解除静态阻断、固定新提交并再次明确批准后的入口形式；本检查点不会执行成功，也从未调用：
+未来另行批准后的入口形式仍是 launch_once.ps1 -ApprovalPath <仓库外批准文件> -EvidenceName <新的唯一名称>；本阶段从未调用。批准者在最终固定提交上提供具体index指纹，运行期从共同T0重新核对；任何index变化也会保守失败。启动前读取失败时不启动controller。运行窗口无Git/gh/编译器子进程，43只称矩阵Python逻辑请求；PowerShell宿主已存在，实际OS进程数另测并对账。
 
-```powershell
-# ApprovalPath 为仓库外的真实批准文件；不能拿 false 模板改名当批准。
-& ./research/a/review/e2_cli_fix_validation_20260924/launch_once.ps1 `
-  -ApprovalPath <private-approved-json> -EvidenceName <fresh-approved-run-name>
-```
+共享T0的准备90、执行660、清理670、证据发布目标1200、最终回执目标1500、总窗1800保持不变。后3项仍由交付流程沿同一QPC记账，驱动不自动发信/发布，不将它们误称已实现的后台计时服务。35/3/10为工作、正常退出及失败清理边界，不能在660后新开工作。
 
-真实命令tokens在固定计划matrix，controller只代入已锁ROOT/PY/INPUT/CASE；所有15项唯一输出，input和config来源不变。新预算、cap、内存、1800s全部仍是提案；外层累计90/660/670，发布1200/1500/1800由后续证据流程沿原QPC记录，当前未实现自动发布。发布Git/gh/PowerShell宿主不混入43目标程序请求。静态manifest的大清单是约0.7MB的hash元数据，不是复制依赖二进制。
+## 6. 交接与下一步
 
-## 6. 检查点、停止和下一步
-
-本阶段按授权交具体阻断检查点及独立Draft PR，不宣称驱动准备全部完成。交付固定SHA/远端PR/Issue回读后停止；等待协调审查B1及其他静态问题。代码同时保留 approved/execution_enabled=false 默认模板与不可由批准模板覆盖的B1阻断。
-旧潜在15、余2、旧T0保持封存；没有申请或使用新运行额度。生产helper/原测试文件未改，Actions不启用，Q2休息，Atlas未写；无子任务/目标进程在途。旧E2失败仍未完整验收。
+本轮固定SHA、bundle/sources/static hashes、Draft PR70和Issue回读交协调复审后停写本范围。协调复审须逐项核对R1/R2/B1/R3后再决定是否批准一个新运行窗口；模板默认false，不借时间到或队长催促自行开测。E2旧CLI问题依然等待实际验证与验收。

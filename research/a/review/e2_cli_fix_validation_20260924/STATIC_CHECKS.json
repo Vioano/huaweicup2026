@@ -1,25 +1,26 @@
 {
-  "utc": "2026-09-24T03:02:18.481616+00:00",
+  "utc": "2026-09-24T03:37:55.114536+00:00",
   "session": "yuanzhifang30-sudo/s-b4329d86154348de9401afcbe48b34ce",
-  "phase": "driver_preparation_checkpoint",
-  "base_commit": "53c151ecaef2636bcf0eb1946c112f19f8cec739",
-  "source_bundle": "7122c5c9406e9919c2614d3ad3ab9f55731641d540eed3f2710d7597b69dc5fa",
-  "sources_file_sha256": "ac02736a29696a720e0576c488902da8d5b7e3e241290ac6daa76d46d1b04b01",
+  "phase": "static_revision_pending_independent_review",
+  "prior_checkpoint": "e3607fed01cc2cf39f9ad8f5a96d5922a37f36f5",
+  "revision_authority": "https://github.com/huaweibei123/huaweicup2026/issues/15#issuecomment-5806846650",
+  "source_bundle": "c808f159954ebe292b0267ab5960b00077ad5663f476f33a0fd96b5d58c1bc81",
+  "sources_file_sha256": "33ad1ddcde9f5a5e183650249ea928fd0debbc9c24be5aa0c3617bab30bb8289",
   "ast_parse_only": [
     {
       "file": "bootstrap.py",
-      "lines": 92,
-      "ast_nodes": 917
+      "lines": 99,
+      "ast_nodes": 977
     },
     {
       "file": "common.py",
-      "lines": 103,
-      "ast_nodes": 688
+      "lines": 106,
+      "ast_nodes": 719
     },
     {
       "file": "controller.py",
-      "lines": 379,
-      "ast_nodes": 4015
+      "lines": 450,
+      "ast_nodes": 4979
     },
     {
       "file": "fixture.py",
@@ -33,32 +34,42 @@
     },
     {
       "file": "seam.py",
-      "lines": 74,
-      "ast_nodes": 667
+      "lines": 91,
+      "ast_nodes": 825
     },
     {
       "file": "win_support.py",
       "lines": 171,
-      "ast_nodes": 1730
+      "ast_nodes": 1726
     }
   ],
+  "R1_entry_import_order_checked": true,
+  "R2_evidence": "Read pinned CPython Windows _execute_child text: audit executable None; command_line str after list2cmdline. Raw/expected/actual fields statically traced; never executed.",
+  "B1_policy": "15 case ceilings unchanged numerically; sum123, independent controller<=3, root<=126 with measured final reconciliation. No per-chain claim.",
+  "R3": "No runtime Git/metadata subprocess invocation; direct HEAD/index/files/names checks after T0. Normal close 3000ms from work completion, within global cutoff.",
   "gate_primitive_bytes_equal": true,
-  "limits_and_15_case_8_E0_43_request_ledger_equal": true,
-  "approval_defaults_false": true,
-  "static_blockers_enforced_outer_controller_child": true,
-  "execution_blockers": [
-    {
-      "id": "B1",
-      "detail": "Per-logical-launch <=3 attribution is not yet implemented for unmodified real adapter -> official chains. Total Job cap/accounting and allowed-image checks are implemented, but do not prove each chain bound. Must close statically with an explicit attribution algorithm or obtain a reviewed revision of the conditional admission rule before execution."
-    }
-  ],
+  "limits_15_cases_8_E0_43_requests_equal": true,
+  "approval_defaults_all_false": true,
+  "PowerShell_AST": "Parser.ParseFile passed 2026-09-24T03:36:06Z; no execution",
   "environment_hash_entries": 5485,
-  "environment_profile_method": "file reads and SHA-256 only; no interpreter/launcher probe; public logical paths only",
-  "PowerShell_AST": "Parser.ParseFile passed after final edits; no script execution",
-  "metadata_scan": "no AppleDouble/DS_Store/__MACOSX in new directory; dot_clean unavailable on Windows",
-  "sensitive_path_marker_scan": "passed; does not claim general credential audit",
+  "environment_hashes_this_revision": "Preserved from prior static preparation; coordinator had rehashed all5485 in 5806846650. No new compatibility claim.",
+  "workspace_hash_entries": 698,
+  "namespace_inventory_count": 233,
+  "metadata_scan": {
+    "residuals": [],
+    "dot_clean": "unavailable on Windows; no cleanup command run"
+  },
+  "sensitive_path_marker_scan": "no known private path or local coordinator task ID; not a general credential audit",
   "target_imports": 0,
   "target_runs": 0,
-  "tests_probes_workers_builds_evaluators_cloud": 0,
-  "execution_ready": false
+  "tests_probes_workers_builds_evaluators_installs_cloud": 0,
+  "execution_ready": false,
+  "known_static_blockers": [],
+  "independent_review_required": true,
+  "limitations": [
+    "Win32 and Reflection.Emit unexecuted",
+    "Hash preflight timing and OS-call stalls unverified",
+    "Short-lived process census completeness unverified; incomplete observation fails closed",
+    "All ceilings are policy proposals, not observed usage"
+  ]
 }

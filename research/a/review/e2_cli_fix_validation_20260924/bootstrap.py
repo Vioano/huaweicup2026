@@ -6,6 +6,12 @@ import subprocess
 import sys
 import threading
 import time
+
+_DRIVER_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(_DRIVER_DIR))
+import common as _common
+if Path(_common.__file__).resolve() != _DRIVER_DIR / "common.py":
+    raise RuntimeError("unexpected common module origin")
 from common import HERE, ROOT, gated_request, require, save, wait_record, expected_stdin
 from win_support import API
 
@@ -24,7 +30,7 @@ def run():
     require(os.getpid() in ack["complete_ready_pids"], "ACK PID coverage")
     row = request["case"]
     fake = row["kind"] == "fake_contract"
-    argv = ([sys.executable, "-I", "-B", str(HERE / "seam.py")] if fake else request["argv"])
+    argv = ([sys.executable, "-I", "-B", "-X", "utf8", str(HERE / "seam.py")] if fake else request["argv"])
     cwd = str(case / "工作 空间") if fake else str(ROOT)
     require(api.tick() < request["work_deadline_tick"], "case deadline before launch")
     save(case / "case-create-reservation.json", {"requests": 1, "argv": argv, "cwd": cwd}, exclusive=True)
@@ -79,6 +85,7 @@ def run():
     require(process._handle.closed, "Popen handle close")
     save(case / "bootstrap.result.json", {"returncode": process.returncode,
          "launcher_pid": process.pid, "start_qpc": start, "end_qpc": api.qpc(),
+         "work_finished_tick": api.tick(),
          "stdio": row["stdio"], "drain_errors": errors, "Popen_handle_closed": True}, exclusive=True)
 
 

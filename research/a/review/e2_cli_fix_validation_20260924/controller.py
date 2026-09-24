@@ -5,10 +5,18 @@ import json
 import os
 from pathlib import Path
 import secrets
+import subprocess
 import sys
 import threading
 import time
-from common import HERE, ROOT, PLAN, SCHEMA, read, save, require, digest, contract, matrix, source_identity, expected_stdin, route_line
+
+# -I removes the script directory. Bind only this already hash-pinned directory.
+_DRIVER_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(_DRIVER_DIR))
+import common as _common
+if Path(_common.__file__).resolve() != _DRIVER_DIR / "common.py":
+    raise RuntimeError("unexpected common module origin")
+from common import HERE, ROOT, PLAN, SCHEMA, read, save, require, digest, contract, matrix, source_identity, expected_stdin, route_line, fake_argv, wait_record
 from win_support import API, Census
 from gate_helper import OwnedHandle, close_all
 
@@ -80,6 +88,14 @@ def validate_result(row, case, run, census):
         attempts = read(case / "helper-create-attempt.json")
         require(len(attempts) == 1 and attempts[0]["env_is_none"]
                 and attempts[0]["cwd"] is None, "helper launch semantics")
+        executable = str(case / "missing interpreter.exe") if row["id"] == "F-startfail" else str(ROOT / ".venv/Scripts/python.exe")
+        expected_tokens = [executable, str(case / "目标 空间" /
+                           f"multicore_cut_evaluate_problem_{row['problem']}.py"), *fake_argv(row)]
+        require(attempts[0]["raw_executable"] is None and attempts[0]["raw_executable_type"] == "NoneType" and
+                attempts[0]["expected_image_token"] == expected_tokens[0] and
+                attempts[0]["expected_tokens"] == expected_tokens and
+                attempts[0]["command_line_type"] == "str" and
+                attempts[0]["command_line"] == subprocess.list2cmdline(expected_tokens), "raw Windows command line")
         if row["id"] == "F-startfail":
             error = read(case / "wrapper.start_error.json")
             require(rc != 0 and error["create_attempts"] == 1 and error["winerror"] in (2, 3),
@@ -90,6 +106,7 @@ def validate_result(row, case, run, census):
             require(rc == expected, "wrapper ordinary code")
             require(read(case / "wrapper.exit.json")["SystemExit_code"] == expected, "SystemExit evidence")
             target = read(case / "target.ready.json")
+            require(target["argv"] == expected_tokens[1:], "actual target argv tokens")
             observed = census.rows[target["pid"]]
             require(observed.get("signaled") and observed["raw_exit_dword"] == expected,
                     "real target raw exit status")
@@ -176,7 +193,7 @@ def one_case(row, run, approval, manifest, api, outer, python, allowed_images):
         try:
             # Conservative single cleanup allowance: fixed primitive's failed-
             # launch wait and our finally share this deadline, never 5s + 10s.
-            process = api.launch_assigned(python, ["-I", "-B", HERE / "bootstrap.py"], env, case, job,
+            process = api.launch_assigned(python, ["-I", "-B", "-X", "utf8", HERE / "bootstrap.py"], env, case, job,
                                          receipt, api.tick() + 10000, time.monotonic_ns() + 5000000000)
         except BaseException:
             shared_cleanup_end = launch_started + 10
@@ -187,8 +204,8 @@ def one_case(row, run, approval, manifest, api, outer, python, allowed_images):
         while api.tick() < deadline and elapsed(api, outer) < 660:
             listing = census.sample()
             accounting = api.accounting(job)
-            require(accounting["TotalProcesses"] <= row["process_model"]["conditional_peak_and_cumulative_OS_max"],
-                    "conditional process count exceeded")
+            require(accounting["TotalProcesses"] <= contract()["aggregate_policy"]["case_cumulative_limits"][row["id"]],
+                    "case aggregate process policy exceeded")
             ready_path = case / "bootstrap.ready.json"
             if not acked and ready_path.is_file():
                 boot = read(ready_path)
@@ -236,12 +253,24 @@ def one_case(row, run, approval, manifest, api, outer, python, allowed_images):
                                            "withheld_release_wait_timeout_ms": 50, "qpc": api.qpc()}
                 api.check(api.k.SetEvent(event.value))
                 released = True
-            if api.exited(process):
+            if (case / "bootstrap.result.json").is_file() or api.exited(process):
                 require(acked, "bootstrap exited before admission")
                 break
             time.sleep(0.005)
-        require(cancelled or api.exited(process), "case/global deadline")
+        require(cancelled or (case / "bootstrap.result.json").is_file(), "case/global work deadline")
         if not cancelled:
+            work_result = read(case / "bootstrap.result.json")
+            require(work_result["work_finished_tick"] <= deadline, "work exceeded 35 seconds")
+            close_deadline = min(work_result["work_finished_tick"] + 3000,
+                                 start_tick + 38000,
+                                 api.tick() + int(max(0, 660 - elapsed(api, outer)) * 1000))
+            while api.tick() < close_deadline:
+                census.sample()
+                if api.exited(process) and api.accounting(job)["ActiveProcesses"] == 0:
+                    break
+                time.sleep(0.005)
+            record["normal_close_seconds"] = (api.tick() - work_result["work_finished_tick"]) / 1000
+            require(0 <= record["normal_close_seconds"] <= 3 and api.exited(process), "normal close deadline")
             require(api.exit_code(process) == 0, "bootstrap failed")
             require(api.accounting(job)["ActiveProcesses"] == 0, "normal completion left descendants")
             census.final()
@@ -276,6 +305,20 @@ def one_case(row, run, approval, manifest, api, outer, python, allowed_images):
                     record["census"] = census.final()
                     require(all(r.get("signaled") for r in census.rows.values()), "cleanup handle unsignaled")
                     require(len(census.handles) == api.accounting(job)["TotalProcesses"], "missing lifecycle identity")
+                    require(api.accounting(job)["TotalProcesses"] <= contract()["aggregate_policy"]["case_cumulative_limits"][row["id"]],
+                            "final case aggregate policy")
+                    known = {"bootstrap_launcher": receipt["launcher_pid"]}
+                    if (case / "bootstrap.ready.json").exists():
+                        known["bootstrap_actual"] = read(case / "bootstrap.ready.json")["pid"]
+                    if (case / "case-launcher.json").exists():
+                        known["case_launcher"] = read(case / "case-launcher.json")["pid"]
+                    for name in ("wrapper", "target", "grandchild"):
+                        if (case / (name + ".ready.json")).exists():
+                            known[name + "_actual"] = read(case / (name + ".ready.json"))["pid"]
+                    require(all(pid in census.rows for pid in known.values()), "known PID association incomplete")
+                    record["known_identity_associations"] = [
+                        {"role": role, "pid": pid, "creation_filetime": census.rows[pid]["creation_filetime"]}
+                        for role, pid in known.items()]
                 if record.get("planned_cancel_observed") and record["error"] is None:
                     require(record["forced_cleanup"] and not record.get("failure_capture_error"), "cancel cleanup proof")
                     record["passed"] = True
@@ -320,7 +363,8 @@ def main():
     manifest = source_identity()
     require(approval["driver_bundle_sha256"] == manifest["driver_bundle_sha256"], "approved bundle")
     require(digest(HERE / "sources.json") == approval["sources_sha256"], "approved source manifest")
-    require(sys.flags.isolated and sys.dont_write_bytecode and os.name == "nt", "Windows -I -B required")
+    require(sys.flags.isolated and sys.dont_write_bytecode and sys.flags.utf8_mode == 1 and os.name == "nt",
+            "Windows -I -B -X utf8 required")
     api = API()
     outer = read(run / "outer.json")
     require(outer["driver_commit"] == approval["driver_commit"], "outer commit")
@@ -332,6 +376,7 @@ def main():
     cfg = dict(line.split(" = ", 1) for line in (ROOT / ".venv/pyvenv.cfg").read_text().splitlines() if " = " in line)
     runtime_home = Path(cfg["home"]).resolve()
     for label, expected in manifest["environment_files"].items():
+        require(elapsed(api, outer) < 90, "preparation cutoff during environment reads")
         require(digest(locate(label, runtime_home)) == expected, "pinned environment: " + label)
     official = ROOT / "data/raw/a/official/code"
     official_rows = "".join(f"code/{path.name}\t{digest(path)}\n" for path in
@@ -345,15 +390,26 @@ def main():
     try:
         info = api.identity(os.getpid(), me, os.getppid())
         require(api.memory(me)["private_bytes"] <= 256 * 1024**2, "controller memory budget")
-        save(run / "controller.boot.json", info, exclusive=True)
+        save(run / "controller.boot.json", {**info, "outer_nonce": outer["outer_nonce"]}, exclusive=True)
     finally:
         me.close()
     require(elapsed(api, outer) < 90, "preparation cutoff after identities")
+    ack_deadline = api.tick() + int(max(0, 90 - elapsed(api, outer)) * 1000)
+    outer_ack = wait_record(run / "controller.ack.private.json", ack_deadline, api)
+    require(outer_ack["outer_nonce"] == outer["outer_nonce"] and outer_ack["controller_pid"] == os.getpid()
+            and outer_ack["driver_bundle_sha256"] == manifest["driver_bundle_sha256"], "controller admission ACK")
+    controller_count = outer_ack["controller_os_count"]
+    require(1 <= controller_count <= 3 and len(set(outer_ack["complete_pids"])) == controller_count
+            and os.getpid() in outer_ack["complete_pids"], "independent controller <=3 policy")
     (run / "cases").mkdir()
-    ledger = {"logical_reserved": 1, "potential_e0_reserved": 0, "cases": [], "state": "running"}
+    ledger = {"logical_reserved": 1, "potential_e0_reserved": 0, "cases": [], "state": "running",
+              "controller_OS_count": controller_count, "case_OS_total": 0, "case_OS_accounting_complete": True}
     save(run / "ledger.json", ledger, exclusive=True)
     for row in matrix()["cases"]:
         require(elapsed(api, outer) + 35 + 3 + 10 <= 670, "no complete case budget left")
+        require(controller_count + ledger["case_OS_total"] +
+                settings["aggregate_policy"]["case_cumulative_limits"][row["id"]] <= 126,
+                "whole-window cumulative admission policy")
         ledger["logical_reserved"] += row["process_model"]["logical_create_requests"]
         ledger["potential_e0_reserved"] += row["potential_e0_reserved"]
         require(ledger["logical_reserved"] <= 43 and ledger["potential_e0_reserved"] <= 8, "reservation cap")
@@ -361,12 +417,27 @@ def main():
         save(run / "ledger.json", ledger)
         result = one_case(row, run, approval, manifest, api, outer, python, allowed_images)
         ledger["cases"][-1]["state"] = "passed" if result["passed"] else "stopped"
+        counted = result.get("census", {}).get("accounting", {}).get("TotalProcesses")
+        ledger["cases"][-1]["actual_OS_cumulative"] = counted
+        if counted is None:
+            ledger["case_OS_accounting_complete"] = False
+        else:
+            ledger["case_OS_total"] += counted
+        require(ledger["case_OS_total"] <= 123, "case cumulative total policy")
         ledger["state"] = "running" if result["passed"] else "stopped"
         save(run / "ledger.json", ledger)
+        save(run / "final.accounting.json", {"controller_os_count": controller_count,
+             "case_OS_total": ledger["case_OS_total"], "case_records": ledger["cases"],
+             "complete": ledger["case_OS_accounting_complete"], "state": ledger["state"],
+             "exact_peak_active": None})
         if not result["passed"]:
             return 1
     ledger["state"] = "matrix_passed_pending_evidence_review"
     save(run / "ledger.json", ledger)
+    save(run / "final.accounting.json", {"controller_os_count": controller_count,
+         "case_OS_total": ledger["case_OS_total"], "case_records": ledger["cases"],
+         "complete": ledger["case_OS_accounting_complete"], "state": ledger["state"],
+         "exact_peak_active": None})
     return 0
 
 

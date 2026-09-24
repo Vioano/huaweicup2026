@@ -107,6 +107,7 @@ class API(WinAPI):
         name = ct.create_unicode_buffer(size.value)
         self.check(self.k.QueryFullProcessImageNameW(handle.value, 0, name, ct.byref(size)))
         return {"pid": pid, "parent_pid": parent, "parent_source": "Toolhelp32",
+                "internal_parent_edge_status": "unknown" if parent is None else "reported_not_creation_bound",
                 "creation_filetime": (times[0].dwHighDateTime << 32) | times[0].dwLowDateTime,
                 "image": name.value, "observed_qpc": self.qpc(), "handle_inheritable": False}
 
@@ -148,7 +149,6 @@ class Census:
                 self.handles[pid] = handle
                 row = self.api.identity(pid, handle, parents.get(pid))
                 self.rows[pid] = row
-                require(row["parent_pid"] is not None, "missing parent identity")
                 require(row["image"].casefold() in self.allowed, "unidentified process image")
         return listing
 
