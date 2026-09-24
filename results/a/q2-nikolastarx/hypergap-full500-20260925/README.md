@@ -10,7 +10,13 @@ not an input, forced per-cell winner, or a new score for this algorithm.
 
 The [manifest](manifest.json) pins the solver source commit, all 47 solver
 `.py` hashes, the old baseline manifest SHA, and the 500-cell budget. The
-runner file is auxiliary: at launch, `--runner-commit` freezes its exact bytes,
+separate `manifest-workers1.json` and `manifest-workers2.json` retain those
+identities and every evaluation/time limit, changing only the frozen runtime
+worker count. Pick one manifest after resource coordination; worker count is
+recorded in the run summary, and wall times from different worker counts are
+different runtime conditions. None of these variants has been run.
+
+The runner file is auxiliary: at launch, `--runner-commit` freezes its exact bytes,
 this manifest, and process-monitor helpers. Runtime solver readback includes
 both the solver set and runner. Official input must be supplied with
 `--raw-root` pointing to a directory containing `code/` and `data/`; this
@@ -36,7 +42,8 @@ full `--runner-commit` and a fresh `--output`. The runner uses four monitored
 workers. Per cell, the solver (including at most three public native E2
 requests) gets 60 seconds, then exactly one independent official E0 gets 60
 seconds. Each monitored cell has a 4 GiB observed process-tree RSS limit; the
-batch has 7,200 seconds and zero retries. It reserves at most 1,500 possible
+batch has 7,200 seconds and zero retries. The selected manifest limits workers
+to 1, 2, or 4. It reserves at most 1,500 possible
 fallback calls. First fallback, unknown request, source mismatch, unexpected
 construction error, missing score evidence, E2/E0 mismatch, timeout, or other
 failure stops new scheduling. Already-running cells finish safely and keep

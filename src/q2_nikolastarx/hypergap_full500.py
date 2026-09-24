@@ -1,4 +1,4 @@
-"""Four-worker frozen P2 hypergap batch. Preflight never constructs or scores.
+"""Manifest-worker frozen P2 hypergap batch. Preflight never scores.
 
 Run requires a separately frozen manifest and explicit scheduling release. Every
 cell keeps full originals; summary.json contains only compact receipts.
@@ -75,9 +75,10 @@ def source_preflight(doc, runner_commit, frozen):
         raise ValueError('Full solver and runner commits required')
     own = Path(__file__).relative_to(ROOT).as_posix()
     if frozen:
+        manifest_path = doc['_manifest_path'].relative_to(ROOT).as_posix()
         for relative in (own, 'src/q2_nikolastarx/evaluate_feedback.py',
                          'src/q2_nikolastarx/chain_pilot.py',
-                         'results/a/q2-nikolastarx/hypergap-full500-20260925/manifest.json'):
+                         manifest_path):
             if (ROOT / relative).read_bytes() != git_bytes(runner_commit, relative):
                 raise ValueError('Runner/manifest/monitor drift: ' + relative)
     paths = subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', commit,
@@ -98,9 +99,14 @@ def source_preflight(doc, runner_commit, frozen):
 
 def preflight(manifest, raw_root, e2_root, python, runner_commit=None, frozen=False):
     doc = json.loads(manifest.read_bytes())
-    if (doc.get('schema') != 'hypergap_full500_v1' or doc.get('limits') != LIMITS
+    limits = doc.get('limits')
+    if (doc.get('schema') != 'hypergap_full500_v1' or not isinstance(limits, dict)
+            or type(limits.get('workers')) is not int or limits['workers'] not in (1, 2, 4)
+            or {k: v for k, v in limits.items() if k != 'workers'} !=
+               {k: v for k, v in LIMITS.items() if k != 'workers'}
             or doc.get('solver_module') != 'src.q2_nikolastarx.adaptive_hypergap_guarded'):
         raise ValueError('Unexpected algorithm, schema or batch budget')
+    doc['_manifest_path'] = manifest
     if not python.is_file() or Path(sys.executable).absolute() != python.absolute():
         raise ValueError('Parent must use requested venv Python entry, without resolving symlink')
     source_preflight(doc, runner_commit, frozen)
@@ -325,11 +331,12 @@ def run(doc, old, identity, manifest, raw_root, e2_root, python, output, runner_
         raise ValueError('Output exists; no overwrite/resume/retry')
     old['_new_sources'] = doc['solver_sources']
     old['_runner_source_hash'] = digest(Path(__file__).read_bytes())
-    deadline = started + LIMITS['batch_seconds']
+    limits = doc['limits']
+    deadline = started + limits['batch_seconds']
     output.mkdir(parents=True, exist_ok=False)
     summary = {'status': 'running', 'runner_commit': runner_commit,
                'solver_commit': doc['solver_commit'], 'manifest_sha256': digest(manifest.read_bytes()),
-               'source': identity, 'limits': LIMITS, 'accepted_cells': 0,
+               'source': identity, 'limits': limits, 'accepted_cells': 0,
                'rows': [], 'in_flight': [], 'calls': {'solver_started': 0,
                'E2_api_attempted': 0, 'native_returns': 0, 'E0_fallback_confirmed': 0,
                'E0_fallback_possible': 0, 'E0_independent_started': 0},
@@ -339,10 +346,10 @@ def run(doc, old, identity, manifest, raw_root, e2_root, python, output, runner_
     next_index = 0
     running = {}
     stop = False
-    with ThreadPoolExecutor(max_workers=LIMITS['workers']) as pool:
+    with ThreadPoolExecutor(max_workers=limits['workers']) as pool:
         while next_index < len(old['rows']) or running:
             while (not stop and next_index < len(old['rows'])
-                   and len(running) < LIMITS['workers'] and time.perf_counter() < deadline):
+                   and len(running) < limits['workers'] and time.perf_counter() < deadline):
                 row = old['rows'][next_index]
                 next_index += 1
                 key = f"{row['case']}-k{row['cores']}"
