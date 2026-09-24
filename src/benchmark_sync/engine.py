@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 import shutil
 import subprocess
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
 from .github import fixed_sha, path_ok, RemoteError
@@ -27,6 +28,8 @@ class Engine:
         self.receive_status={}
         self._accepted_cache_key=None
         self._accepted_payload_cache=None
+        self._upload_thread=None
+        self._upload_status={'stage':'idle','started_at':None,'finished_at':None,'errors':[]}
 
     def sign(self,domain,payload): return self.signatures.sign(domain,self.actor,payload,self.key)
     def verify(self,envelope,domain,*,central=False):
@@ -125,7 +128,8 @@ class Engine:
                             'channels/central.json':canonical(self.sign('snapshot',channel))},
                            expected={'channels/central.json':canonical(envelope) if envelope else None})
 
-    def deliver_outbox(self,head):
+    def deliver_outbox(self,head,errors=None):
+        if errors is None: errors=self.errors
         folder=self.state/'outbox'
         entries=sorted(folder.glob('*/entry.json'))
         for path in entries:
@@ -153,7 +157,7 @@ class Engine:
                 dest.parent.mkdir(parents=True,exist_ok=True)
                 if dest.exists(): dest=dest.with_name(dest.name+'-'+str(time.time_ns()))
                 shutil.move(str(path.parent),dest)
-                self.errors.append({'stage':'outbox','message':str(error)});continue
+                errors.append({'stage':'outbox','message':str(error)});continue
             if entry['state'] in ('accepted','rejected'): continue
             try:
                 receipt_path='receipts/'+self.actor+'/'+entry['id']+'.json'
@@ -182,7 +186,27 @@ class Engine:
                 entry.update(state='awaiting_receipt',error=None,last_attempt_at=now());write_json(path,entry)
             except Exception as error:
                 entry.update(error=str(error),last_attempt_at=now());write_json(path,entry)
-                self.errors.append({'stage':'upload','message':str(error)})
+                errors.append({'stage':'upload','message':str(error)})
+
+    def upload_pass(self,known_record_ids):
+        """Run one durable, single-writer local discovery and submission pass."""
+        errors=[]
+        def mark(stage):
+            self._upload_status={'stage':stage,'started_at':self._upload_status['started_at'],
+                                 'finished_at':None,'errors':self._upload_status['errors']}
+        self._upload_status={'stage':'discover','started_at':now(),'finished_at':None,
+                             'errors':self._upload_status['errors']}
+        try:
+            if self.config.get('watch_repositories'):
+                errors.extend({'stage':'watch','message':e['error']} for e in discover(
+                    self.state,self.config['watch_repositories'],self.actor,known_record_ids=known_record_ids))
+            mark('deliver_outbox')
+            self.deliver_outbox(self.remote.head(),errors)
+        except Exception as error:
+            errors.append({'stage':'upload','message':str(error)})
+        finally:
+            self._upload_status={'stage':'idle','started_at':self._upload_status['started_at'],
+                                 'finished_at':now(),'errors':errors}
 
     def download_artifacts(self,commit,refs,target,deadline):
         missing=[]
@@ -299,7 +323,7 @@ class Engine:
             except (OSError,ValueError,KeyError,TypeError): pass
         return counts
 
-    def cycle(self):
+    def cycle(self,*,background_upload=False):
         self.errors=[]; status_path=self.state/'status.json'
         previous=read_json(status_path) if status_path.exists() else {}
         cycle_started=time.monotonic(); timings={}
@@ -329,13 +353,24 @@ class Engine:
                 stage('receive_submissions',lambda:self.receive_submissions(head))
                 status['receive']=self.receive_status
                 stage('publish_snapshot',lambda:self.publish_snapshot(head))
-            if self.config.get('watch_repositories'):
-                def scan_committed_feeds():
-                    known=self.accepted_record_ids()
-                    self.errors.extend({'stage':'watch','message':e['error']} for e in discover(
-                        self.state,self.config['watch_repositories'],self.actor,known_record_ids=known))
-                stage('discover',scan_committed_feeds)
-            stage('deliver_outbox',lambda:self.deliver_outbox(head))
+            if background_upload:
+                if self._upload_thread is None or not self._upload_thread.is_alive():
+                    # Only the polling thread touches the accepted snapshot cache.
+                    # The upload worker gets an immutable ID set and owns all outbox writes.
+                    known=self.accepted_record_ids() if self.config.get('watch_repositories') else None
+                    self._upload_thread=threading.Thread(target=self.upload_pass,args=(known,),
+                        name='benchmark-upload',daemon=True)
+                    self._upload_thread.start()
+                status['upload_worker']=dict(self._upload_status)
+                self.errors.extend(status['upload_worker']['errors'])
+            else:
+                if self.config.get('watch_repositories'):
+                    def scan_committed_feeds():
+                        known=self.accepted_record_ids()
+                        self.errors.extend({'stage':'watch','message':e['error']} for e in discover(
+                            self.state,self.config['watch_repositories'],self.actor,known_record_ids=known))
+                    stage('discover',scan_committed_feeds)
+                stage('deliver_outbox',lambda:self.deliver_outbox(head))
             status['last_success_at']=now()
             status['state']='online' if not self.errors else 'error'
         except Exception as error:

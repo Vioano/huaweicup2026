@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import sqlite3
 import tempfile
+import threading
 import unittest
 from src.benchmark_sync.engine import Engine, write_json, read_json
 from src.benchmark_sync.snapshot import canonical, digest
@@ -290,3 +291,30 @@ class EngineTests(unittest.TestCase):
             file.write_bytes(file.read_bytes()+b'x')
             with self.assertRaisesRegex(ValueError,'compressed bytes/hash'):
                 self.engines['member'].accepted_payload(manifest)
+
+    def test_slow_upload_does_not_block_next_signed_snapshot_poll(self):
+        from unittest.mock import patch
+        member=self.engines['member']
+        entered=threading.Event();release=threading.Event()
+        heads=[];accepted=[]
+        def slow_upload(_known):
+            entered.set()
+            release.wait(5)
+        def next_head():
+            value='a'*40 if not heads else 'b'*40
+            heads.append(value)
+            return value
+        try:
+            with patch.object(member,'upload_pass',side_effect=slow_upload) as upload, \
+                 patch.object(member.remote,'head',side_effect=next_head), \
+                 patch.object(member,'accept_snapshot',side_effect=accepted.append):
+                first=member.cycle(background_upload=True)
+                self.assertTrue(entered.wait(1))
+                second=member.cycle(background_upload=True)
+                self.assertEqual(accepted,['a'*40,'b'*40])
+                self.assertEqual(upload.call_count,1)
+                self.assertEqual(first['state'],'online')
+                self.assertEqual(second['state'],'online')
+        finally:
+            release.set()
+            if member._upload_thread: member._upload_thread.join(5)
