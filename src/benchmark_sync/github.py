@@ -55,7 +55,8 @@ class GitHub:
         if self.request('GET','/user')['login'].lower() != actor.lower():
             raise ValueError('gh identity does not match configured actor')
 
-    def request(self, method, endpoint, body=None, *, raw=False, limit=MAX_FILE, params=None):
+    def request(self, method, endpoint, body=None, *, raw=False, limit=MAX_FILE, params=None,
+                headers=None, response=False):
         if time.time()<self.cooldown_until: raise RemoteError(429,self.cooldown_until-time.time())
         if not endpoint.startswith('/') or '..' in endpoint or '?' in endpoint:
             raise ValueError('Invalid GitHub endpoint')
@@ -63,14 +64,18 @@ class GitHub:
         req=urllib.request.Request('https://api.github.com'+prefix+endpoint+('?' + urllib.parse.urlencode(params) if params else ''),
             data=None if body is None else canonical(body),method=method,
             headers={'Authorization':'Bearer '+self.token,'Accept':'application/vnd.github.raw+json' if raw else 'application/vnd.github+json',
-                     'X-GitHub-Api-Version':'2022-11-28','User-Agent':'benchmark-sync/1','Content-Type':'application/json'})
+                     'X-GitHub-Api-Version':'2022-11-28','User-Agent':'benchmark-sync/1','Content-Type':'application/json',
+                     **(headers or {})})
         for attempt in range(3 if method=='GET' else 1):
             if time.time()<self.cooldown_until: raise RemoteError(429,self.cooldown_until-time.time())
             try:
                 with urllib.request.urlopen(req,timeout=45) as res:
                     data=res.read(limit+1)
+                    metadata={'status':getattr(res,'status',200),'headers':dict(getattr(res,'headers',{}).items())}
                 break
             except urllib.error.HTTPError as e:
+                if response and e.code==304:
+                    return {'status':304,'headers':dict(e.headers.items()),'data':b''}
                 retry=max(float(e.headers.get('Retry-After','0')),0)
                 if e.headers.get('X-RateLimit-Remaining')=='0':
                     retry=max(retry,float(e.headers.get('X-RateLimit-Reset','0'))-time.time())
@@ -88,10 +93,32 @@ class GitHub:
                 if time.time()<self.cooldown_until: raise RemoteError(429,self.cooldown_until-time.time()) from None
                 time.sleep(.25*2**attempt)
         if len(data)>limit: raise ValueError('GitHub response exceeds byte limit')
+        if response: return {**metadata,'data':data}
         return data if raw else json.loads(data)
 
     def head(self):
-        try: return self.request('GET','/git/ref/heads/'+self.branch)['object']['sha']
+        identity=digest(canonical({'repository':self.repository,'branch':self.branch}))
+        cache_file=self.cache/('head-'+identity+'.json')
+        cached={}
+        if cache_file.exists():
+            try:
+                cached=json.loads(cache_file.read_bytes())
+                if cached.get('repository')!=self.repository or cached.get('branch')!=self.branch:
+                    cached={}
+            except (OSError,ValueError,TypeError):
+                cached={}
+        headers={'If-None-Match':cached['etag']} if cached.get('etag') else None
+        try:
+            result=self.request('GET','/git/ref/heads/'+self.branch,headers=headers,response=True)
+            if result['status']==304:
+                if not isinstance(cached.get('sha'),str): raise ValueError('GitHub returned 304 without a cached branch head')
+                return cached['sha']
+            payload=json.loads(result['data'])
+            sha=fixed_sha(payload['object']['sha'])
+            etag=result['headers'].get('ETag') or result['headers'].get('Etag')
+            if isinstance(etag,str) and etag:
+                atomic_write(cache_file,canonical({'repository':self.repository,'branch':self.branch,'sha':sha,'etag':etag}))
+            return sha
         except RemoteError as e:
             if e.status==404: return None
             raise
