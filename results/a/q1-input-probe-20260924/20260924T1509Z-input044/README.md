@@ -12,6 +12,8 @@ Reference results are exact reused originals: bounded04 from `ad8903ba8c7bf0dcb9
 
 The candidate emits5 depth windows/20 Tasks, preserving core assignment. Official Makespan drops38.42% from bounded04. Extra DDR changes5678624→2912288 bytes and spill2887424→0; new partition-added bytes2912288 exceed the old2791200. Thus the actual E0 improvement includes a measured spill/boundary tradeoff, not a zero-cost window split.
 
+The earlier profile-refine044 result114443 is also preserved and hash-checked from `8c8ba37b8db770c490423a88061a696e15cc445b`;76519 is33.14% lower. This is a same-cell comparison across two algorithms, not a revised full100 score or a rerun of the historical method. See `historical-profile-comparison.json`.
+
 This supports the fixed input-window candidate for044. The external-input union threshold is not a capacity certificate; no guarantee follows for other graphs, configurations or numbers of cores. The frozen400-cell bounded04 batch remains a distinct algorithm experiment.
 
 Budget and actual calls: {'solver': 1, 'E0': 1, 'E1': 0, 'E2': 0}; one worker; no retry, E1/E2, GPU or Colab. Each solver includes one complete inherited bounded04 construction and all wrapper/I/O/structural validation costs. Independent external E0 wall is not part of solver wall. Compression, export and precheck happen afterwards.
@@ -25,3 +27,5 @@ Reproduction uses the frozen runner and a NEW run ID; do not reuse this director
 ```sh
 uv run python -B src/q1_benchmarks/input_probe_e0.py export 20260924T1509Z-input044
 ```
+
+Fixed Git-byte precheck also passed at `430f2ff73b450589314f9b43f0b8b163b0a04e06`; all plan/result/run/log/baseline references are in that commit. `git-precheck.json` is the read-only receipt. Official logs are explicitly tracked despite the repository log-ignore rule.
