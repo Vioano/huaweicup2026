@@ -46,3 +46,5 @@ Pro随后最终答复已以2a0d3462完整归档并及时读取，临时监听已
 独立a023787a2 wave-followup已冻结/预检，但原图与成员台的新必要界使其在启动前取消：71完整job各M829792，5核必有15job/core，Makespan≥12446880 > 同身份最新12237901。b64397b4驱动独立确认计算分量、工作量和台记录，0构造/Step/E0，详见WHOLE_JOB_BOUND.md；累计33/56不变。下一有界实现由Sol medium负责仅一个余量job连续切段，其余完整归核；soft6000tokens/25分钟准备目标、最多8项合成检查、0真实图/Step/E0、不递归派工。未测方案不晋升。
 
 单尾源码1b0da8c9完成5项合成验证，使用两遍DP修复前缀minimax饱和后的字节次目标误剪。acfdded5冻结单候选1cold/2E0预算，由Luna medium实际执行，在21:18:38.367667Z首派前因RAM不足停止；实际0/0，累计仍33cold/56外部E0，未生成真实计划。两方资源窗口已释放；当前Sol medium做软2500tokens的单尾跨核等待纯合成审计，不跑真实图求解/Step/E0。容量044/k4两条37581周期结果已从成绩台本机镜像读回并匹配来源，见board-receipt-capacity.json。
+
+实际补读Issue51#5822368918，以及4de8b53f49固定cache-trace-audit-v2 README与311322b996固定forest-memory REPORT全文。队长报告同plan全500 CacheGain及两图森林改进，根会话未独立下载全部原件/复评。继续本人容量/单尾模块。af7c4977新增最长路下界，2项合成验证；根会话一次067/k5只读候选次序分析0.849157s得12218400（work11791696，incumbent12237901），不足以严格剪枝，0新提交构造/Step/E0。Luna medium软1500tokens核证书字节、关键路径原依赖与周期和，未声称独立核全FIFO投影。结果见tail-fifo-audit-20260925；第二轮Pro已按9ac4689c输入在最高档生成，监听持续。
