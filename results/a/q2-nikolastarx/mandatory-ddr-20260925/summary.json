@@ -1,0 +1,306 @@
+{
+  "scope": "Six existing plans, static counter only. No scheduling, simulation or solver calls.",
+  "calls": {
+    "solver": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "sources": {
+    "src/q2_nikolastarx/candidate_ddr.py": "a0b732ffc4ce68ab8a821f6ece096cd51198a437a4993f2e174cdea602d4cd3d",
+    "data/raw/a/official/code/multicore_cut_evaluate_problem_2.py": "0b39f84d5ec0a7fba9a4c92a598a9044b97ab79c71393824c1ba130ecfe6c464",
+    "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py": "2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f",
+    "data/raw/a/official/code/schedule_step3.py": "50053db0436f1d166dd75436693ba3af49b5c339576beb6e7299477f6b69fc7a"
+  },
+  "manifest_sha256": "9ee379269c0c4f25b64f9d0aeaf1e397e85e48c2103b08637db356d3c9595387",
+  "audit_script_sha256": "a03be578adb4079a2578c312bd755ccd9c7db346448221d77551af7e661bcef7",
+  "rows": [
+    {
+      "pair": "012-k4",
+      "label": "whole_component",
+      "plan": {
+        "commit": "571536962b3f6ad9468584a0e5ae04398e684543",
+        "path": "results/a/q2-nikolastarx/semantic-benchmark-s59ee-20260925/20260924T1729Z-s59ee/cells/012/k4/case_012_multicore_res.json",
+        "sha256": "ab0354480fcab87dba2ff7096cf06bf4373c77c3c3aac00f116b59cb829885a8"
+      },
+      "truth": {
+        "commit": "571536962b3f6ad9468584a0e5ae04398e684543",
+        "path": "results/a/q2-nikolastarx/semantic-benchmark-s59ee-20260925/20260924T1729Z-s59ee/cells/012/k4/result.json.gz",
+        "sha256": "9cd1c440bbc2e08f9be76b59a22da5a4e0d12bfc037724e68bbdf301fc1501b1"
+      },
+      "counts": {
+        "copy_count": 351,
+        "transfer_bytes": 575634,
+        "service_work": 9888,
+        "categories": {
+          "boundary_input": {
+            "copy_count": 270,
+            "transfer_bytes": 504832,
+            "service_work": 8634
+          },
+          "boundary_output": {
+            "copy_count": 81,
+            "transfer_bytes": 70802,
+            "service_work": 1254
+          },
+          "cross_tensor": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          },
+          "cross_direct": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          }
+        },
+        "scope": "P2 Scene B original mandatory COPYs before Step2 spills"
+      },
+      "existing_E0_makespan": 13803,
+      "whole_E0_makespan": 13803,
+      "work_exceeds_whole_makespan": false,
+      "task_copy_bytes_match": true,
+      "cross_task_bytes_match": true
+    },
+    {
+      "pair": "012-k4",
+      "label": "dag_split",
+      "plan": {
+        "commit": "d50f48280d236c351e9cb8e75ae5a3a006cf6c89",
+        "path": "results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/012/k4/case_012_multicore_res.json",
+        "sha256": "7fd2d487312ee944219065cfc4d4ae312193b5b634eeb505f81fb11c66934705"
+      },
+      "truth": {
+        "commit": "d50f48280d236c351e9cb8e75ae5a3a006cf6c89",
+        "path": "results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/012/k4/result.json.gz",
+        "sha256": "9dcaa80d209f69a9bac188e86410af998e8f4a3841cda1baa3ea83f5a44e1214"
+      },
+      "counts": {
+        "copy_count": 1278,
+        "transfer_bytes": 1879284,
+        "service_work": 32389,
+        "categories": {
+          "boundary_input": {
+            "copy_count": 383,
+            "transfer_bytes": 795090,
+            "service_work": 13563
+          },
+          "boundary_output": {
+            "copy_count": 81,
+            "transfer_bytes": 70802,
+            "service_work": 1254
+          },
+          "cross_tensor": {
+            "copy_count": 814,
+            "transfer_bytes": 1013392,
+            "service_work": 17572
+          },
+          "cross_direct": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          }
+        },
+        "scope": "P2 Scene B original mandatory COPYs before Step2 spills"
+      },
+      "existing_E0_makespan": 34274,
+      "whole_E0_makespan": 13803,
+      "work_exceeds_whole_makespan": true,
+      "task_copy_bytes_match": true,
+      "cross_task_bytes_match": true
+    },
+    {
+      "pair": "056-k5",
+      "label": "whole_component",
+      "plan": {
+        "commit": "571536962b3f6ad9468584a0e5ae04398e684543",
+        "path": "results/a/q2-nikolastarx/semantic-benchmark-s59ee-20260925/20260924T1729Z-s59ee/cells/056/k5/case_056_multicore_res.json",
+        "sha256": "66a57f85e29071fb8be7fb531aec89641362875b137a9c89745335d8ddfad977"
+      },
+      "truth": {
+        "commit": "571536962b3f6ad9468584a0e5ae04398e684543",
+        "path": "results/a/q2-nikolastarx/semantic-benchmark-s59ee-20260925/20260924T1729Z-s59ee/cells/056/k5/result.json.gz",
+        "sha256": "f2e0d2b6869b42787ef53ba0c12ccc09328ef298994ee31b1966d1590966dac3"
+      },
+      "counts": {
+        "copy_count": 258,
+        "transfer_bytes": 221600,
+        "service_work": 3872,
+        "categories": {
+          "boundary_input": {
+            "copy_count": 221,
+            "transfer_bytes": 221526,
+            "service_work": 3835
+          },
+          "boundary_output": {
+            "copy_count": 37,
+            "transfer_bytes": 74,
+            "service_work": 37
+          },
+          "cross_tensor": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          },
+          "cross_direct": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          }
+        },
+        "scope": "P2 Scene B original mandatory COPYs before Step2 spills"
+      },
+      "existing_E0_makespan": 253392,
+      "whole_E0_makespan": 253392,
+      "work_exceeds_whole_makespan": false,
+      "task_copy_bytes_match": true,
+      "cross_task_bytes_match": true
+    },
+    {
+      "pair": "056-k5",
+      "label": "dag_split",
+      "plan": {
+        "commit": "d50f48280d236c351e9cb8e75ae5a3a006cf6c89",
+        "path": "results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/056/k5/case_056_multicore_res.json",
+        "sha256": "bf79ff0685a6837c77871acba410e17cf3eb9697b4e8f077fbeec70dbffb5869"
+      },
+      "truth": {
+        "commit": "d50f48280d236c351e9cb8e75ae5a3a006cf6c89",
+        "path": "results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/056/k5/result.json.gz",
+        "sha256": "ac7c7b2ebc00905c671fdc111a995a3a5564054ce9d2d1894705a9a99a3614f0"
+      },
+      "counts": {
+        "copy_count": 7939,
+        "transfer_bytes": 7443622,
+        "service_work": 130473,
+        "categories": {
+          "boundary_input": {
+            "copy_count": 402,
+            "transfer_bytes": 404944,
+            "service_work": 7010
+          },
+          "boundary_output": {
+            "copy_count": 37,
+            "transfer_bytes": 74,
+            "service_work": 37
+          },
+          "cross_tensor": {
+            "copy_count": 7500,
+            "transfer_bytes": 7038604,
+            "service_work": 123426
+          },
+          "cross_direct": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          }
+        },
+        "scope": "P2 Scene B original mandatory COPYs before Step2 spills"
+      },
+      "existing_E0_makespan": 165886,
+      "whole_E0_makespan": 253392,
+      "work_exceeds_whole_makespan": false,
+      "task_copy_bytes_match": true,
+      "cross_task_bytes_match": true
+    },
+    {
+      "pair": "031-k4",
+      "label": "whole_component",
+      "plan": {
+        "commit": "571536962b3f6ad9468584a0e5ae04398e684543",
+        "path": "results/a/q2-nikolastarx/semantic-benchmark-s59ee-20260925/20260924T1729Z-s59ee/cells/031/k4/case_031_multicore_res.json",
+        "sha256": "ac7cd8670696504de369309317b7d004eb016f20521d055bc88791ea1f24d9dc"
+      },
+      "truth": {
+        "commit": "571536962b3f6ad9468584a0e5ae04398e684543",
+        "path": "results/a/q2-nikolastarx/semantic-benchmark-s59ee-20260925/20260924T1729Z-s59ee/cells/031/k4/result.json.gz",
+        "sha256": "3f4a65f779e94d2cd23ff9f9de852bddfec1efa778d98457c26860715c967d1f"
+      },
+      "counts": {
+        "copy_count": 1603,
+        "transfer_bytes": 6499664,
+        "service_work": 109460,
+        "categories": {
+          "boundary_input": {
+            "copy_count": 1493,
+            "transfer_bytes": 6499444,
+            "service_work": 109350
+          },
+          "boundary_output": {
+            "copy_count": 110,
+            "transfer_bytes": 220,
+            "service_work": 110
+          },
+          "cross_tensor": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          },
+          "cross_direct": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          }
+        },
+        "scope": "P2 Scene B original mandatory COPYs before Step2 spills"
+      },
+      "existing_E0_makespan": 419131,
+      "whole_E0_makespan": 419131,
+      "work_exceeds_whole_makespan": false,
+      "task_copy_bytes_match": true,
+      "cross_task_bytes_match": true
+    },
+    {
+      "pair": "031-k4",
+      "label": "dag_split",
+      "plan": {
+        "commit": "d50f48280d236c351e9cb8e75ae5a3a006cf6c89",
+        "path": "results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/031/k4/case_031_multicore_res.json",
+        "sha256": "208a2b1f110757430746d514c2e50612b27a16f4d5c4e6ae837feddcf78ff123"
+      },
+      "truth": {
+        "commit": "d50f48280d236c351e9cb8e75ae5a3a006cf6c89",
+        "path": "results/a/q2-nikolastarx/frontier-benchmark-s59ee-20260925/20260924T1827Z-s59ee/cells/031/k4/result.json.gz",
+        "sha256": "06bacd338bc1a24e26ba6aa43d12d91bd202c528a400543bd5b5393b9ea4a580"
+      },
+      "counts": {
+        "copy_count": 6799,
+        "transfer_bytes": 20803208,
+        "service_work": 351187,
+        "categories": {
+          "boundary_input": {
+            "copy_count": 771,
+            "transfer_bytes": 2964388,
+            "service_work": 49905
+          },
+          "boundary_output": {
+            "copy_count": 110,
+            "transfer_bytes": 220,
+            "service_work": 110
+          },
+          "cross_tensor": {
+            "copy_count": 5918,
+            "transfer_bytes": 17838600,
+            "service_work": 301172
+          },
+          "cross_direct": {
+            "copy_count": 0,
+            "transfer_bytes": 0,
+            "service_work": 0
+          }
+        },
+        "scope": "P2 Scene B original mandatory COPYs before Step2 spills"
+      },
+      "existing_E0_makespan": 680364,
+      "whole_E0_makespan": 419131,
+      "work_exceeds_whole_makespan": false,
+      "task_copy_bytes_match": true,
+      "cross_task_bytes_match": true
+    }
+  ],
+  "limitations": [
+    "This is not a new algorithm performance batch.",
+    "Integer service-work model; no universal floating-point error proof.",
+    "Passing a lower bound does not establish a candidate improvement."
+  ]
+}
