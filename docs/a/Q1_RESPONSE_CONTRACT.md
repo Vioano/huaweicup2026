@@ -77,6 +77,66 @@ inside the complete solver budget and retain the incumbent on a worse result.
 That would be heuristic candidate generation, not a claim of exact E0 DP
 optimality. No DP integration or extra scoring batch is released by this note.
 
+## Three-state candidate constructor
+
+`src/q1/packet_dp.py` now builds one candidate for private homogeneous
+M–V+–M chains on 2–5 cores. It derives the packet size from graph footprint
+and capacity, then optimizes the pending-return states `{0, Q-1, Q}`. A
+return-only Task can drain a pending state without consuming another packet.
+The objective is lexicographic rational-model cycles, COPY bytes, and Task
+groups. The final incomplete packet is simulated explicitly.
+
+Each transition is compiled through the frozen official compiler on its
+projected original nodes, preserving tensor input/output boundaries. After
+reconstruction, the complete original graph and two-key plan are recompiled:
+every selected Task signature, total COPY bytes and full rational response
+must match the profiled transition path. Any mismatch rejects the candidate.
+There is no official scoring or integration with the unified solver yet.
+
+For R complete packets and K cores, at most 11 transition profiles per layer
+are considered, each compiling at most K Tasks. The shortest-path state space
+is O(R); actual cost additionally includes the official static compilation
+and response simulation, and the final whole-plan compilation. A declared
+5000-Task compilation ceiling stops with an error rather than hiding work.
+This optimizes only this accepted packet template with fixed remainder
+treatment under the rational model. It is not an optimum over all P1 plans.
+
+Three new tests cover a drain that beats every direct continuation, a 12-chain
+two-core multi-round construction and a seven-chain three-core remainder.
+The latter two execute small synthetic constructors; they are not official
+case performance measurements.
+
+## Frozen differential probe, prepared only
+
+`src/q1_benchmarks/response_contract_probe.py` defines exactly three micrographs:
+two symmetric two-round plans at K=2 and K=3, and a K=3 plan whose second
+round diverges. The 121-byte input and 61-byte output force non-integral
+byte/bandwidth ratios and overlapping MTE2/MTE3 activity.
+
+Preparation freezes input, plan, model output, official files/config, probe,
+compiler, oracle and the process-cleanup helper by SHA-256. The separate `run`
+command permits at most three sequential unmodified E0 CLI calls, 10 seconds
+per child, no retry, first error/mismatch stop. It compares full Makespan,
+every operation's start/end, all data-movement counters and Task-cut bytes.
+The 90-second budget controls new-call admission; cleanup and final evidence
+writing are recorded, and it is explicitly not a hard parent-process watchdog.
+
+Root review added missing DDR comparisons, froze the process helper, and
+clarified that timing boundary. The current prepared input is
+`output/p1-response-contract-probe/prepared-20260925-v4`; earlier preparations
+predate those corrections or runtime receipt metadata and must not be executed.
+No E0/E1/E2 has been run for this probe.
+
+Current validation command:
+
+```sh
+python3 -m unittest tests.q1.test_packet_dp tests.q1.test_response_contract_inputs tests.q1.test_response_compile tests.q1.test_response_oracle -v
+```
+
+Result: 15 tests passed (0.075 seconds, Python 3.14.5, macOS 27 arm64). That includes
+the two synthetic DP constructions, three static response fixtures, and a
+regression proving unchanged timing cannot conceal a DDR-byte mismatch.
+
 Reference: complete Pro R2 and qualified reviews at fixed commit
 `d6e640a337001e333108f592e6876ac6bd0a2561`, stable directory
 `AI chats/P1多Pipe链构造证明/`. The archive's model experiments and conditional
