@@ -4,10 +4,12 @@ import unittest
 from unittest.mock import Mock, patch
 
 from src.q3 import adaptive_solve as adaptive
+from src.q3.attention_rows import construct as attention_construct
 from src.q3.construct import Index, UnsupportedStructure
 from src.q3.guarded_solve import evaluate_candidates as guarded
 from src.q3.stage_fork_join import construct as stage_construct
 from tests.q3.test_reduction_tree import graph as reduction_graph
+from tests.q3.test_attention_rows import attention_ffn_graph, plan_words
 from tests.q3.test_stage_fork_join import stage_graph
 from evaluation_validation import EvaluationValidationError
 
@@ -30,9 +32,13 @@ class AdaptiveTests(unittest.TestCase):
                 evaluate = Mock(return_value=result)
                 save = Mock(return_value=refs)
                 with patch.object(adaptive, "stage_construct", wraps=stage_construct) as construct, \
+                     patch.object(adaptive, "attention_construct") as attention, \
+                     patch.object(adaptive, "read_required_settings") as config, \
                      patch.object(adaptive, "guarded_candidates") as fallback:
                     winner, calls, records, selection = adaptive.evaluate_candidates(index, cores, evaluate, save)
                 construct.assert_called_once_with(index, cores, collector_policy=policy)
+                attention.assert_not_called()
+                config.assert_not_called()
                 fallback.assert_not_called()
                 evaluate.assert_called_once_with(expected)
                 save.assert_called_once_with("seed", expected, result)
@@ -50,6 +56,8 @@ class AdaptiveTests(unittest.TestCase):
                 self.assertEqual(meta["router"]["evaluation_calls"], 1)
                 self.assertEqual(meta["router"]["stage_construct_attempts"], 1)
                 self.assertEqual(meta["router"]["stage_candidate_plans"], 1)
+                self.assertEqual(meta["router"]["attention_construct_attempts"], 0)
+                self.assertEqual(meta["router"]["attention_candidate_plans"], 0)
                 self.assertEqual(meta["router"]["route_e0_limit"], 1)
                 self.assertEqual(selection["router"], meta["router"])
                 if policy == "rotate_heavy":
@@ -57,6 +65,84 @@ class AdaptiveTests(unittest.TestCase):
                 else:
                     self.assertEqual(meta["collector_cycle"], [meta["collector_core"]])
                 self.assertEqual(graph, original)
+
+    def test_real_attention_ffn_routes_and_saves_exactly_one_candidate(self):
+        for cores in (1, 2, 5):
+            with self.subTest(cores=cores):
+                builder, _, diamonds = attention_ffn_graph()
+                graph, original = builder.graph, deepcopy(builder.graph)
+                index = Index(graph)
+                expected, expected_meta = attention_construct(index, cores, cross_delay=500, pack_ffn=True)
+                result = {"makespan": 987654, "full_result_field": {"untouched": True}}
+                refs = {"plan": {"path": "seed-plan.json", "sha256": "p"},
+                        "result": {"path": "seed-result.json.gz", "sha256": "r"}}
+                evaluate, save = Mock(return_value=result), Mock(return_value=refs)
+                with patch.object(adaptive, "stage_construct", wraps=stage_construct) as stage, \
+                     patch.object(adaptive, "attention_construct", wraps=attention_construct) as attention, \
+                     patch.object(adaptive, "guarded_candidates") as fallback:
+                    winner, calls, records, selection = adaptive.evaluate_candidates(index, cores, evaluate, save)
+                stage.assert_called_once()
+                attention.assert_called_once_with(index, cores, cross_delay=500, pack_ffn=True)
+                fallback.assert_not_called()
+                evaluate.assert_called_once_with(expected)
+                save.assert_called_once_with("seed", expected, result)
+                self.assertEqual(winner[0], expected)
+                self.assertIs(winner[1], result)
+                self.assertEqual(winner[2], "attention_rows_ffn")
+                self.assertEqual(calls, 1)
+                self.assertEqual(len(records), 1)
+                self.assertIs(records[0]["artifacts"], refs)
+                meta = records[0]["metadata"]
+                for key, value in expected_meta.items():
+                    self.assertEqual(meta[key], value)  # Preserve all constructor diagnostics.
+                self.assertEqual(meta["packed_ffn_count"], len(diamonds))
+                self.assertEqual(meta["route"], "attention")
+                self.assertTrue(meta["pack_ffn"])
+                self.assertNotIn("collector_core", meta)
+                routing = selection["router"]
+                self.assertEqual(routing, meta["router"])
+                self.assertEqual(routing["route"], "attention")
+                self.assertEqual(routing["stage_construct_attempts"], 1)
+                self.assertEqual(routing["stage_candidate_plans"], 0)
+                self.assertEqual(routing["attention_construct_attempts"], 1)
+                self.assertEqual(routing["attention_candidate_plans"], 1)
+                self.assertEqual(routing["attention_cross_delay_cycles"], 500)
+                self.assertEqual(routing["guarded_policy_invocations"], 0)
+                self.assertEqual(routing["route_e0_limit"], 1)
+                self.assertEqual(routing["evaluation_calls"], evaluate.call_count)
+                self.assertIn("stage_guard_reason", routing)
+                self.assertNotIn("attention_guard_reason", routing)
+                self.assertEqual(set(winner[0]), {"node_to_subgraph", "core_schedules"})
+                words = plan_words(expected)
+                owner = {u: c for c, word in enumerate(words) for u in word}
+                self.assertEqual(set(owner), set(index.ops))
+                for diamond in diamonds:
+                    self.assertEqual(len({owner[op[0]] for op in diamond}), 1)
+                self.assertEqual(graph, original)
+
+    def test_attention_uses_frozen_config_delay_and_config_errors_propagate(self):
+        index = Index(attention_ffn_graph()[0].graph)
+        expected, _ = attention_construct(index, 2, cross_delay=17, pack_ffn=True)
+        with patch.object(adaptive, "read_required_settings", return_value={"cross_core_copy_delay_cycles": 17}) as read, \
+             patch.object(adaptive, "attention_construct", wraps=attention_construct) as attention:
+            winner, _, _, selection = adaptive.evaluate_candidates(index, 2, Mock(return_value={"makespan": 10}), Mock())
+        read.assert_called_once_with(adaptive.ROOT / "data/raw/a/official/data/config.txt", "multicore_scene_b",
+                                     ("cross_core_copy_delay_cycles",))
+        attention.assert_called_once_with(index, 2, cross_delay=17, pack_ffn=True)
+        self.assertEqual(winner[0], expected)
+        self.assertEqual(selection["router"]["attention_cross_delay_cycles"], 17)
+        for failure in (OSError("missing config"), EvaluationValidationError("bad config")):
+            with self.subTest(failure=type(failure).__name__), \
+                 patch.object(adaptive, "read_required_settings", side_effect=failure), \
+                 patch.object(adaptive, "attention_construct") as attention, \
+                 patch.object(adaptive, "guarded_candidates") as fallback:
+                evaluate, save = Mock(), Mock()
+                with self.assertRaises(type(failure)):
+                    adaptive.evaluate_candidates(index, 2, evaluate, save)
+                attention.assert_not_called()
+                fallback.assert_not_called()
+                evaluate.assert_not_called()
+                save.assert_not_called()
 
     def run_guarded_comparison(self, policy, graph, scores, lower=None):
         values = iter(scores)
@@ -97,6 +183,12 @@ class AdaptiveTests(unittest.TestCase):
         self.assertEqual(route["evaluation_calls"], len(evaluated))
         self.assertEqual(route["guarded_policy_invocations"], 1)
         self.assertEqual(route["stage_candidate_plans"], 0)
+        self.assertEqual(route["stage_construct_attempts"], 1)
+        self.assertEqual(route["attention_construct_attempts"], 1)
+        self.assertEqual(route["attention_candidate_plans"], 0)
+        self.assertIn("stage_guard_reason", route)
+        self.assertIn("attention_guard_reason", route)
+        self.assertEqual(route["route_e0_limit"], 2)
         self.assertLessEqual(len(evaluated), 2)
         return routed
 
@@ -133,41 +225,93 @@ class AdaptiveTests(unittest.TestCase):
         evaluate.assert_not_called()
         save.assert_not_called()
 
+    def test_attention_raw_closure_rejection_reaches_guarded_without_scoring(self):
+        builder, row, _ = attention_ffn_graph()
+        builder.op("RELU", "PIPE_V", 3, [row["exp"][1]])
+        index = Index(builder.graph)
+        sentinel = (({"fallback": 1}, {"makespan": 7}, "fallback"), 1, [], {"rule": "sentinel"})
+        evaluate, save = Mock(), Mock()
+        with patch.object(adaptive, "attention_construct", wraps=attention_construct) as attention, \
+             patch.object(adaptive, "guarded_candidates", return_value=sentinel) as fallback:
+            out = adaptive.evaluate_candidates(index, 2, evaluate, save)
+        attention.assert_called_once_with(index, 2, cross_delay=500, pack_ffn=True)
+        fallback.assert_called_once_with(index, 2, evaluate, save)
+        self.assertEqual(out[:3], sentinel[:3])
+        self.assertIn("interior compute consumer", out[3]["router"]["attention_guard_reason"])
+        self.assertEqual(out[3]["router"]["attention_candidate_plans"], 0)
+        evaluate.assert_not_called()
+        save.assert_not_called()
+
+    def test_incidental_case_names_and_history_do_not_affect_structural_routes(self):
+        for graph in (stage_graph()[0], attention_ffn_graph()[0].graph):
+            outcomes = []
+            for label, historical in (("unseen-a", 1), ("unseen-b", 10**12)):
+                tagged = deepcopy(graph)
+                tagged["case_id"] = label
+                tagged["historical_results"] = {"makespan": historical}
+                evaluate, save = Mock(return_value={"makespan": 123}), Mock(return_value={})
+                outcomes.append(adaptive.evaluate_candidates(Index(tagged), 2, evaluate, save))
+                evaluate.assert_called_once()
+                save.assert_called_once()
+            self.assertEqual(outcomes[0], outcomes[1])
+
     def test_constructor_defects_do_not_silently_fallback(self):
         index = Index(stage_graph()[0])
         for failure in (RuntimeError("bug"), AssertionError("invariant"), ValueError("bad option")):
             with self.subTest(failure=type(failure).__name__):
                 evaluate, save = Mock(), Mock()
                 with patch.object(adaptive, "stage_construct", side_effect=failure), \
+                     patch.object(adaptive, "attention_construct") as attention, \
                      patch.object(adaptive, "guarded_candidates") as fallback:
                     with self.assertRaises(type(failure)):
                         adaptive.evaluate_candidates(index, 2, evaluate, save)
+                fallback.assert_not_called()
+                attention.assert_not_called()
+                evaluate.assert_not_called()
+                save.assert_not_called()
+
+    def test_attention_constructor_defects_do_not_silently_fallback(self):
+        index = Index(attention_ffn_graph()[0].graph)
+        for failure in (RuntimeError("bug"), AssertionError("invariant"), ValueError("bad option"),
+                        EvaluationValidationError("constructor invalid")):
+            with self.subTest(failure=type(failure).__name__):
+                evaluate, save = Mock(), Mock()
+                with patch.object(adaptive, "attention_construct", side_effect=failure) as attention, \
+                     patch.object(adaptive, "guarded_candidates") as fallback:
+                    with self.assertRaises(type(failure)):
+                        adaptive.evaluate_candidates(index, 2, evaluate, save)
+                attention.assert_called_once()
                 fallback.assert_not_called()
                 evaluate.assert_not_called()
                 save.assert_not_called()
 
     def test_evaluation_failures_do_not_trigger_fallback_or_save(self):
-        index = Index(stage_graph()[0])
-        for failure in (EvaluationValidationError("capacity"), UnsupportedStructure("from evaluator"),
-                        RuntimeError("runtime")):
-            with self.subTest(failure=type(failure).__name__):
-                evaluate, save = Mock(side_effect=failure), Mock()
-                with patch.object(adaptive, "guarded_candidates") as fallback:
-                    with self.assertRaises(type(failure)):
-                        adaptive.evaluate_candidates(index, 2, evaluate, save)
-                evaluate.assert_called_once()
-                save.assert_not_called()
-                fallback.assert_not_called()
+        for route, graph in (("stage", stage_graph()[0]), ("attention", attention_ffn_graph()[0].graph)):
+            index = Index(graph)
+            for failure in (EvaluationValidationError("capacity"), UnsupportedStructure("from evaluator"),
+                            RuntimeError("runtime")):
+                with self.subTest(route=route, failure=type(failure).__name__):
+                    evaluate, save = Mock(side_effect=failure), Mock()
+                    with patch.object(adaptive, "attention_construct", wraps=attention_construct) as attention, \
+                         patch.object(adaptive, "guarded_candidates") as fallback:
+                        with self.assertRaises(type(failure)):
+                            adaptive.evaluate_candidates(index, 2, evaluate, save)
+                    self.assertEqual(attention.call_count, 0 if route == "stage" else 1)
+                    evaluate.assert_called_once()
+                    save.assert_not_called()
+                    fallback.assert_not_called()
 
     def test_save_failure_is_not_silently_fallback(self):
-        evaluate = Mock(return_value={"makespan": 1})
-        save = Mock(side_effect=OSError("disk"))
-        with patch.object(adaptive, "guarded_candidates") as fallback:
-            with self.assertRaises(OSError):
-                adaptive.evaluate_candidates(Index(stage_graph()[0]), 2, evaluate, save)
-        evaluate.assert_called_once()
-        save.assert_called_once()
-        fallback.assert_not_called()
+        for route, graph in (("stage", stage_graph()[0]), ("attention", attention_ffn_graph()[0].graph)):
+            for failure in (OSError("disk"), UnsupportedStructure("from save")):
+                with self.subTest(route=route, failure=type(failure).__name__):
+                    evaluate, save = Mock(return_value={"makespan": 1}), Mock(side_effect=failure)
+                    with patch.object(adaptive, "guarded_candidates") as fallback:
+                        with self.assertRaises(type(failure)):
+                            adaptive.evaluate_candidates(Index(graph), 2, evaluate, save)
+                    evaluate.assert_called_once()
+                    save.assert_called_once()
+                    fallback.assert_not_called()
 
     def test_fallback_exception_propagates(self):
         with patch.object(adaptive, "guarded_candidates", side_effect=RuntimeError("guarded bug")):
@@ -184,10 +328,12 @@ class AdaptiveTests(unittest.TestCase):
         for cores in (0, -1, True, 1.5):
             with self.subTest(cores=cores), \
                  patch.object(adaptive, "stage_construct") as construct, \
+                 patch.object(adaptive, "attention_construct") as attention, \
                  patch.object(adaptive, "guarded_candidates") as fallback:
                 with self.assertRaises(ValueError):
                     adaptive.evaluate_candidates(index, cores, Mock(), Mock())
                 construct.assert_not_called()
+                attention.assert_not_called()
                 fallback.assert_not_called()
 
 

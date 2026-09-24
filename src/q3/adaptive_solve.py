@@ -1,15 +1,18 @@
-"""One structural router: a direct stage plan, otherwise the unchanged guard policy.
+"""Strict stage, then closed attention/FFN rows, then the unchanged guard policy.
 
 Stage routing uses only the compute graph and core count. Exactly two heaviest
 lane cores request rotation; all other lane-load patterns request fixed gather.
 Only the full stage constructor can confirm that this interpretation is valid.
-The stage route has one candidate and one online E0 call, with no old-anchor
-non-regression promise. Non-stage inputs retain guarded_solve's own policy.
+Stage and attention each have one candidate and one online E0 call, with no
+historical-anchor or cross-route non-regression promise. Only declared shape
+rejections advance the router. Other inputs retain guarded_solve's own policy.
 """
-from .construct import UnsupportedStructure
+from .attention_rows import construct as attention_construct
+from .construct import ROOT, UnsupportedStructure
 from .guarded_solve import evaluate_candidates as guarded_candidates
 from .safe_solve import main as run_solver
 from .stage_fork_join import construct as stage_construct
+from evaluation_validation import read_required_settings
 
 
 def stage_request(index, cores):
@@ -33,6 +36,9 @@ def stage_request(index, cores):
 
 def evaluate_candidates(index, cores, evaluate, save):
     request = stage_request(index, cores)
+    routing = {"stage_request": request, "stage_construct_attempts": 1,
+               "stage_candidate_plans": 0, "attention_construct_attempts": 0,
+               "attention_candidate_plans": 0, "guarded_policy_invocations": 0}
     try:
         # One construction attempt, not fixed-plan construction followed by a
         # second rotated-plan construction. The constructor performs its full
@@ -41,31 +47,43 @@ def evaluate_candidates(index, cores, evaluate, save):
     except UnsupportedStructure as error:
         # Only a declared guard rejection changes routes. Constructor defects,
         # evaluator errors and save failures must not become silent fallbacks.
-        winner, calls, records, selection = guarded_candidates(index, cores, evaluate, save)
-        routing = {"route": "guarded", "stage_guard_reason": str(error),
-                   "stage_request": request, "stage_construct_attempts": 1,
-                   "stage_candidate_plans": 0, "guarded_policy_invocations": 1,
-                   "route_e0_limit": 2, "evaluation_calls": calls,
-                   "count_scope": "Router attempts only; guarded internal construction/decision records are preserved unchanged."}
-        return winner, calls, records, {**selection, "router": routing}
+        routing.update(stage_guard_reason=str(error), attention_construct_attempts=1)
+        delay = read_required_settings(ROOT / "data/raw/a/official/data/config.txt", "multicore_scene_b",
+                                       ("cross_core_copy_delay_cycles",))["cross_core_copy_delay_cycles"]
+        routing["attention_cross_delay_cycles"] = delay
+        try:
+            plan, metadata = attention_construct(index, cores, cross_delay=delay, pack_ffn=True)
+        except UnsupportedStructure as attention_error:
+            routing.update(attention_guard_reason=str(attention_error))
+            winner, calls, records, selection = guarded_candidates(index, cores, evaluate, save)
+            routing.update(route="guarded", guarded_policy_invocations=1,
+                           route_e0_limit=2, evaluation_calls=calls,
+                           count_scope="Router attempts only; guarded internal construction/decision records are preserved unchanged.")
+            return winner, calls, records, {**selection, "router": routing}
+        routing.update(route="attention", attention_candidate_plans=1,
+                       attention_pack_ffn=True)
+        metadata = {**metadata, "route": "attention", "pack_ffn": True}
+        rule = "strict_stage_declined_then_closed_attention_ffn"
+    else:
+        if metadata["lane_count"] != request["source_count"]:
+            raise AssertionError("recognized stage lane count differs from provisional source count")
+        routing.update(route="stage", stage_candidate_plans=1)
+        metadata = {**metadata, "route": "stage",
+                    "collector_policy": request["collector_policy"],
+                    "collector_cycle": metadata.get("collector_cycle", [metadata["collector_core"]])}
+        rule = "strict_stage_guard_then_lane_load_collector"
 
-    if metadata["lane_count"] != request["source_count"]:
-        raise AssertionError("recognized stage lane count differs from provisional source count")
-    policy = request["collector_policy"]
-    routing = {"route": "stage", "stage_request": request,
-               "stage_construct_attempts": 1, "stage_candidate_plans": 1,
-               "guarded_policy_invocations": 0, "route_e0_limit": 1,
-               "evaluation_calls": 1,
-               "count_scope": "One successful stage construction and one injected online evaluation; no anchor comparison."}
+    # Deliberately outside both constructor guard handlers: even an evaluator
+    # raising UnsupportedStructure must propagate, not try another candidate.
+    routing.update(route_e0_limit=1, evaluation_calls=1,
+                   count_scope="One successful direct construction and one injected online evaluation; no anchor comparison.")
     result = evaluate(plan)
     artifacts = save("seed", plan, result) or {}
-    metadata = {**metadata, "route": "stage", "collector_policy": policy,
-                "collector_cycle": metadata.get("collector_cycle", [metadata["collector_core"]]),
-                "router": routing,
-                "construction_note": "metadata.official_e0_calls=0 describes the static constructor only; this saved candidate received one online evaluation."}
+    metadata = {**metadata, "router": routing,
+                "construction_note": "The constructor performs no E0 calls; this saved candidate received one online evaluation. No historical or cross-route non-regression guarantee."}
     records = [{"name": "seed", "strategy": metadata["strategy"], "status": "ok",
                 "makespan": result["makespan"], "metadata": metadata, "artifacts": artifacts}]
-    selection = {"rule": "strict_stage_guard_then_lane_load_collector", "router": routing}
+    selection = {"rule": rule, "router": routing}
     return (plan, result, metadata["strategy"]), 1, records, selection
 
 

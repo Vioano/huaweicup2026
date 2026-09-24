@@ -21,6 +21,11 @@ from .solve import publish_new, select
 
 
 def prepare(index, cores, method):
+    if method in ("stage-single-cut", "stage-two-cut"):
+        from .stage_migration import construct as migration_construct
+        mode = "single_cut" if method == "stage-single-cut" else "two_cut"
+        return _prepare(index, cores, method,
+                        lambda i, k: migration_construct(i, k, mode=mode))
     # Keep the research attention route separate from the adaptive production router.
     if method in ("attention", "attention-ffn"):
         from .attention_rows import construct as attention_construct
@@ -50,7 +55,8 @@ def main():
     parser.add_argument("graph", type=Path)
     parser.add_argument("--cores", type=int, default=4)
     parser.add_argument("--tree-method", choices=("balanced", "capacity", "fragment",
-                                                "release-order", "release-place", "stage", "stage-rotate", "attention", "attention-ffn"), required=True)
+                                                "release-order", "release-place", "stage", "stage-rotate",
+                                                "stage-single-cut", "stage-two-cut", "attention", "attention-ffn"), required=True)
     parser.add_argument("-o", "--output", type=Path, required=True)
     parser.add_argument("--evidence", type=Path, required=True)
     args = parser.parse_args()
