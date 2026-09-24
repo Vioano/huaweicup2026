@@ -1,0 +1,134 @@
+[
+  {
+    "case": "044",
+    "cores": 5,
+    "graph_sha256": "9abd4468a4be365e384de47431ac914ee44fd6e7b6221dffc584561f388cd57e",
+    "existing_calendar_M": 83958,
+    "pipeline_relaxation_lower": 25412,
+    "pruned": false,
+    "construct_bound_seconds": 0.03957033299957402,
+    "metadata": {
+      "guard": true,
+      "selected": "pipeline_stages",
+      "requested_cores": 5,
+      "active_cores": 5,
+      "jobs": 11,
+      "positions": 124,
+      "cuts": [
+        0,
+        21,
+        45,
+        70,
+        97,
+        124
+      ],
+      "stage_compute_cycles": [
+        1502,
+        1494,
+        1535,
+        1567,
+        1574
+      ],
+      "bottleneck_cycles": 1574,
+      "ideal_flowshop_cycles": 23412,
+      "shared_input_bytes_by_stage": [
+        5472,
+        86400,
+        645120,
+        186368,
+        7040
+      ],
+      "crossing_tensor_net_copies": 121,
+      "crossing_tensor_net_bytes": 83072,
+      "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+    }
+  },
+  {
+    "case": "046",
+    "cores": 5,
+    "graph_sha256": "1917fbb2bfe1141fd8dc4bdac6119dd44014df9a13eb18faa3e55f25bcc91659",
+    "existing_calendar_M": 88200,
+    "pipeline_relaxation_lower": 70776,
+    "pruned": false,
+    "construct_bound_seconds": 0.03131129199755378,
+    "metadata": {
+      "guard": true,
+      "selected": "pipeline_stages",
+      "requested_cores": 5,
+      "active_cores": 5,
+      "jobs": 8,
+      "positions": 124,
+      "cuts": [
+        0,
+        20,
+        45,
+        70,
+        98,
+        124
+      ],
+      "stage_compute_cycles": [
+        5592,
+        5582,
+        5690,
+        5804,
+        5788
+      ],
+      "bottleneck_cycles": 5804,
+      "ideal_flowshop_cycles": 69084,
+      "shared_input_bytes_by_stage": [
+        5472,
+        86400,
+        645120,
+        186368,
+        7040
+      ],
+      "crossing_tensor_net_copies": 80,
+      "crossing_tensor_net_bytes": 225280,
+      "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+    }
+  },
+  {
+    "case": "067",
+    "cores": 5,
+    "graph_sha256": "f49b5087689e18c6bf231843f8f3bbaca238a547ea5309b2492c76d5f170b542",
+    "existing_calendar_M": 12237901,
+    "pipeline_relaxation_lower": 13321680,
+    "pruned": true,
+    "construct_bound_seconds": 0.28973620798205957,
+    "metadata": {
+      "guard": true,
+      "selected": "pipeline_stages",
+      "requested_cores": 5,
+      "active_cores": 5,
+      "jobs": 71,
+      "positions": 124,
+      "cuts": [
+        0,
+        21,
+        45,
+        70,
+        96,
+        124
+      ],
+      "stage_compute_cycles": [
+        167408,
+        170496,
+        177392,
+        177952,
+        169792
+      ],
+      "bottleneck_cycles": 177952,
+      "ideal_flowshop_cycles": 13319680,
+      "shared_input_bytes_by_stage": [
+        21888,
+        345600,
+        2580480,
+        745472,
+        28160
+      ],
+      "crossing_tensor_net_copies": 781,
+      "crossing_tensor_net_bytes": 4289536,
+      "assumption": "copy-free serial-server flowshop; not an E0 lower or upper bound"
+    }
+  }
+]
