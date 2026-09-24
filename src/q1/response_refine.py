@@ -11,7 +11,6 @@ import hashlib
 import json
 import os
 from pathlib import Path
-import signal
 import subprocess
 import sys
 import tempfile
@@ -62,7 +61,11 @@ def validate_candidate(graph, plan):
 
 
 def packet_child(graph, cores):
-    """Run exactly one bounded child; temporary files and process group are reaped."""
+    """Run one bounded direct child in the wrapper's process group.
+
+    The DP path has no descendants. An external process-group cancellation can
+    therefore reach this child; local timeout kills and reaps only this child.
+    """
     started = time.perf_counter()
     with tempfile.TemporaryDirectory(prefix="q1-response-refine-") as folder:
         root = Path(folder)
@@ -78,20 +81,18 @@ def packet_child(graph, cores):
                    "--state-mode", "auto"]
         with (root / "stdout.txt").open("wb") as out, (root / "stderr.txt").open("wb") as err:
             child = subprocess.Popen(command, stdin=subprocess.DEVNULL, stdout=out,
-                                     stderr=err, env=env, start_new_session=True)
+                                     stderr=err, env=env)
+            def reap_if_running():
+                if child.poll() is None:
+                    child.kill()
+                    child.wait(timeout=10)
             try:
                 returncode = child.wait(timeout=CHILD_LIMIT_SECONDS)
             except subprocess.TimeoutExpired as exc:
-                os.killpg(child.pid, signal.SIGKILL)
-                child.wait()
+                reap_if_running()
                 raise TimeoutError("packet DP child exceeded 120 seconds") from exc
             finally:
-                # If the parent exited but left descendants, only its own group is signalled.
-                try:
-                    os.killpg(child.pid, signal.SIGKILL)
-                except ProcessLookupError:
-                    pass
-                child.wait()
+                reap_if_running()
         if returncode != 0:
             raise RuntimeError(f"packet DP child exited {returncode}")
         candidate = json.loads(plan_path.read_bytes())

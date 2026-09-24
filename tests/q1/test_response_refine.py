@@ -1,6 +1,8 @@
 """Controller-only tests; all solver, child, validator and scorer calls are fakes."""
 import hashlib
+import subprocess
 import unittest
+from unittest.mock import patch
 
 from src.q1 import response_refine as target
 
@@ -26,6 +28,28 @@ def ok_validator(graph, plan):
 
 
 class ResponseControllerTests(unittest.TestCase):
+    def test_child_timeout_reaps_direct_process_without_new_session(self):
+        class FakeChild:
+            def __init__(self):
+                self.kills = 0
+                self.waits = []
+            def wait(self, timeout):
+                self.waits.append(timeout)
+                if self.kills == 0:
+                    raise subprocess.TimeoutExpired("fake packet DP", timeout)
+                return -9
+            def poll(self):
+                return None if self.kills == 0 else -9
+            def kill(self):
+                self.kills += 1
+        child = FakeChild()
+        with patch.object(target.subprocess, "Popen", return_value=child) as popen:
+            with self.assertRaises(TimeoutError):
+                target.packet_child({}, 2)
+        self.assertNotIn("start_new_session", popen.call_args.kwargs)
+        self.assertEqual(child.waits, [120, 10])
+        self.assertEqual(child.kills, 1)
+
     def test_guard_skips_every_unscored_or_other_winner(self):
         for info in (diagnostics(selected="bounded"), diagnostics(status="error"),
                      {**diagnostics(), "online_scores": []}):
