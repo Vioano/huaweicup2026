@@ -72,6 +72,12 @@ uv run python -m src.q3.feedback_report results/a/q3-nikolastarx/feedback-202609
 预检不是中央成绩台入库或独立算法验收；接收方回执通过原 Issue #51 跟进。
 官方与 shared scoreboard 代码未改，算法 PR #53 保持 Draft，Actions 停用且未触发。
 
+发布后补记：成果提交 `78aeda4e18ffe64adead9644a2369f3358bafcaf` 已推送主库，镜像 14:21 UTC
+核对已发布 refs 一致。成绩台维护者确认 10 条全部准入、7 格严格改善、3 格同分；根会话随后
+从实时 API 回读 7 个改善格的算法 ID、官方分数与 eligible=true（008 同分可能也被稳定次序选中，
+不计为改善）。所有新记录 `cache_pair_verified=false`，未构造假的 Cache 收益。
+见上一层 `delivery-readback.json`；准入核原件不是重跑或科学终验。
+
 论文表述：在已见反馈的三棵归约树中，将整分量分配替换为平衡切边及全局后序的核内投影，
 并通过精确评价保留更优者，四核模拟 Makespan 降低 67.84%–72.46%。本构造在线最多增加一次
 官方评价，完整单例求解为 0.313–11.617 秒；结果只反映所列开发图和非独占本机观察，

@@ -81,6 +81,12 @@ Makespan 不退化，不保证同墙钟更优；新程序延迟可能增加。�
 子代理只拥有本任务 runner/exporter 和指定测试写权，待算法固定后执行上述清单；主代理审阅结果，
 成绩台维护者接收。P1/P2/E2 的单写范围保持各自主责。
 
+14:23 UTC 后续：已明确 Fang Q3 为 `yuanzhifang30-sudo/s-3d9c78db26714786b88b987ca6f58e2b`，
+完整读其 Issue51#5815599293 以及固定 `8f8bfce73b0b8e350de1dc40af21f3787c8ac8d6` 的方法/任务卡。
+其 `src/q3_yuanzhifang` 研究共享输入排序和负载受限分核，与本轮树分解互补；
+已在 [直接协作回信](https://github.com/huaweibei123/huaweicup2026/issues/51#issuecomment-5816007185)
+发送固定结果、MVM 下界诊断与 044/080 负例，不扩大其预算。尚未收到其读取本次结果的回执。
+
 ## 本阶段结果
 
 两块已完成：10 个单元、17 次 E0，7 个适用树候选均严格改善，3 个 unsupported 保留 seed，
