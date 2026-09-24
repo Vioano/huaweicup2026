@@ -42,6 +42,9 @@ def timings(values):
 
 
 def export(output):
+    exporter_commit = git("rev-parse", "HEAD").decode().strip()
+    exporter_path = "src/q1_yuanzhifang/export_e.py"
+    require((ROOT / exporter_path).read_bytes() == git("show", f"{exporter_commit}:{exporter_path}"), "Exporter must be committed before use")
     protocol = read_json(Path(OUTPUT) / "protocol.json")
     rows = read_json(Path(OUTPUT) / "rows.json")
     completion = read_json(Path(OUTPUT) / "completion.json")
@@ -110,14 +113,27 @@ def export(output):
                 require(result["data_movement_bytes"] == row["data_movement_bytes"], "Result movement mismatch")
                 require(max(x["ts"] + x["dur"] for x in trace["traceEvents"] if x.get("ph") == "X") == result["makespan"], "Trace/result endpoint mismatch")
             denominator = index["singlecore"][case]
+            single_refs = {}
+            single_folder = ROOT / BASE / "references" / "singlecore" / case
+            single_folder.mkdir(parents=True, exist_ok=True)
             for kind in ("result", "run"):
                 ref = denominator[kind]
-                require((ROOT / ref["path"]).read_bytes() == blobs.read(denominator["commit"], ref["path"]), "Singlecore working tree differs from fixed source")
-                require(sha((ROOT / ref["path"]).read_bytes()) == ref["sha256"], "Singlecore reference hash mismatch")
+                original = blobs.read(denominator["commit"], ref["path"])
+                require(sha(original) == ref["sha256"], "Singlecore fixed-Git reference hash mismatch")
+                # Existing text checkouts can apply CRLF. Preserve the exact Git
+                # original in our own byte-preserving evidence scope, never
+                # rewrite the shared denominator or normalize its raw receipt.
+                destination = single_folder / Path(ref["path"]).name
+                if destination.exists():
+                    require(destination.read_bytes() == original, "Existing copied denominator differs")
+                else:
+                    with destination.open("xb") as handle:
+                        handle.write(original)
+                single_refs[kind] = artifact(destination.relative_to(ROOT))
             baseline = {"graph_sha256": protocol["input_sha256"][f"case_{case}.json"],
                         "config_sha256": protocol["input_sha256"]["config.txt"], "official_sha256": protocol["official_code_hash"],
                         "route": "E0", "entrypoint": "singlecore_evaluate.evaluate_singlecore",
-                        "result": {k: denominator["result"][k] for k in ("path", "sha256")}}
+                        "result": single_refs["result"]}
             missing = {"provenance.environment.peak_rss_bytes": "Child peak RSS was not instrumented; RAM and single-worker limit recorded.",
                        "provenance.environment.threads": "OMP/OpenBLAS/MKL environment capped at 1; actual process thread count not sampled.",
                        "provenance.measurement.seed": "Deterministic graph constructions have no RNG or seed."}
@@ -174,11 +190,12 @@ def export(output):
                                 "historical_E0_attempt_id": historical["attempt_id"] if historical else None, "bounded_source_commit": old["commit"],
                                 "bounded_attempt_id": old["record"]["attempt_id"], "plan_sha256": plan_sha})
     completed = [c for c in comparisons if c["status"] == "ok"]
-    summary = {"solver_commit": SOLVER, "runner_commit": protocol["runner_commit"], "cases_ok": len(completed), "cases_expected": 100,
+    summary = {"solver_commit": SOLVER, "runner_commit": protocol["runner_commit"], "exporter_commit": exporter_commit, "cases_ok": len(completed), "cases_expected": 100,
                "status_counts": dict(Counter(r["status"] for r in rows)), "unrun": completion["unrun"], "calls": completion["calls"],
                "reused_E0_results": completion["reused_E0_results"], "selected_counts": dict(Counter(r.get("selected", "none") for r in rows)),
                "uniform_algorithm_full100_mean_speedup": statistics.mean(c["singlecore_speedup"] for c in completed) if len(completed) == 100 else None,
                "observed_success_only_mean_speedup": statistics.mean(c["singlecore_speedup"] for c in completed) if completed else None,
+               "bounded_same_success_subset_mean_speedup": statistics.mean(c["bounded_speedup"] for c in completed) if completed else None,
                "captain_bounded_full100_mean_speedup": statistics.mean(index["singlecore"][case]["makespan_cycles"] / e["checked"]["makespan_cycles"] for case, e in prior.items()),
                "history_best_of_only_portfolio_and_bounded_mean": statistics.mean(max(c["singlecore_speedup"], c["bounded_speedup"]) for c in completed) if len(completed) == 100 else None,
                "comparison_counts": dict(Counter(c["quality_comparison"] for c in comparisons)),
@@ -192,7 +209,9 @@ def export(output):
     with (ROOT / BASE / "comparison.csv").open("x", encoding="utf-8", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=list(comparisons[0]))
         writer.writeheader(); writer.writerows(comparisons)
-    dump(ROOT / BASE / "readback.json", {"records_checked": len(rows), "result_trace_run_plan_checked": True,
+    dump(ROOT / BASE / "readback.json", {"records_checked": len(rows), "successful_result_trace_plan_run_records_checked": len(completed),
+                                        "failed_records_preserved": len(rows) - len(completed), "all_present_artifact_hashes_checked": True,
+                                        "singlecore_fixed_originals_copied": len(rows), "exporter_commit": exporter_commit,
                                         "new_calls": {"solver": 0, "E0": 0, "E1": 0, "E2": 0},
                                         "scope": "Independent static readback of raw artifacts and copied fixed Git originals; no reevaluation."})
     print(json.dumps(summary, ensure_ascii=False))
