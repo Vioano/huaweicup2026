@@ -210,6 +210,19 @@ def batch_candidates(allrows, problem, cores, case_ids):
     candidates=[]
     for run,all_run_rows in groups.items():
         sources={(r['algorithm_id'],r.get('solver_commit')) for r in all_run_rows}
+        entrypoints=set()
+        for r in all_run_rows:
+            solver=(r.get('provenance') or {}).get('solver') or {}
+            source=solver.get('source') or {}
+            entrypoints.add((source.get('path'),source.get('entrypoint')))
+        fixed_entrypoint=len(entrypoints)==1 and all(isinstance(value,str) and value for value in next(iter(entrypoints)))
+        full_best={}
+        for r in all_run_rows:
+            if r['status']!='ok' or not r['eligible']: continue
+            key=(r['case_id'],r['cores'])
+            old=full_best.get(key)
+            if old is None or (r['metrics']['makespan_cycles'],r['id'])<(old['metrics']['makespan_cycles'],old['id']):
+                full_best[key]=r
         rows=[r for r in all_run_rows if r['cores']==cores and r['case_id'] in cases]
         best={}
         for r in rows:
@@ -224,20 +237,32 @@ def batch_candidates(allrows, problem, cores, case_ids):
         walls=values('solver_wall_seconds')
         single=len(sources)==1 and all(sha(commit,40) for _,commit in sources)
         complete=len(ratios)==len(cases) and single
+        full_ratios={k:[r['metrics'].get('baseline_speedup') for (case,core),r in full_best.items()
+                        if core==k and r.get('baseline_verified') and number(r['metrics'].get('baseline_speedup'),True)]
+                     for k in range(1,6)}
+        full_scored=sum(map(len,full_ratios.values()))
+        full_complete=len(full_best)==500 and single and fixed_entrypoint
         candidates.append({'run_id':run,'algorithm_ids':sorted({a for a,_ in sources}),
             'solver_commits':sorted({c for _,c in sources if c}), 'single_source':single,
+            'fixed_entrypoint':fixed_entrypoint,
             'valid_count':len(best),'scored_count':len(ratios),'target_count':len(cases),
             'mean_speedup':sum(ratios)/len(ratios) if ratios else None,
             'mean_solver_seconds':sum(walls)/len(walls) if walls else None,'solver_count':len(walls),
             'complete':complete,'missing_cases':sorted(cases-set(best)),
+            'full_valid_count':len(full_best),'full_scored_count':full_scored,
+            'full_complete':full_complete,
+            'full_mean_speedup':sum(full_ratios[cores])/100 if len(full_ratios[cores])==100 else None,
             'record_count':len(all_run_rows),'scope_attempts':len(rows),
             'status_counts':{status:sum(r['status']==status for r in rows) for status in sorted({r['status'] for r in rows})}})
+    full=sorted((r for r in candidates if r['full_complete']),
+                key=lambda r:(r['full_mean_speedup'] is None,-(r['full_mean_speedup'] or 0),r['run_id']))
     complete=sorted((r for r in candidates if r['complete']),key=lambda r:(-r['mean_speedup'],r['run_id']))
     partial=sorted((r for r in candidates if not r['complete']),key=lambda r:(-r['scored_count'],-r['valid_count'],r['run_id']))
     return {'problem':problem,'cores':cores,'case_ids':sorted(cases),'target_count':len(cases),
+            'full_complete_count':len(full),'full':full[:3],
             'complete_count':len(complete),'partial_count':len(partial),'complete':complete[:3],'partial':partial[:3],
-            'batches':complete+partial,
-            'ranking':'逐例官方单核加速比的算术平均；只排名覆盖当前全部算例、来源单一的真实批次。缺例不补值，跨批次不合并。'}
+            'batches':full+[r for r in complete+partial if not r['full_complete']],
+            'ranking':'主成绩须同一批次、同一算法和求解器提交在本题100图×1–5核均已核；逐核均值为逐例算术平均。筛选子集只作预览，历史逐格最佳不参与。'}
 
 def project_records(allrows, manifest, cursor, sources, algorithm=None, run=None, include_reported=False):
     """Shared selection for local original checking and central read-only mirrors."""
