@@ -140,7 +140,7 @@ class Index:
         pipe_work = [sum(self.work[j][p] for j in jobs) for p in PIPES]
         return min(len(jobs), 8, 1 + math.ceil(sum(pipe_work) / max(pipe_work)))
 
-    def pipe_window(self, jobs, window):
+    def pipe_window(self, jobs, window, prefer_fill=False):
         if not jobs:
             return [], {"window": 0, "ideal_coordinate_end": 0}
         window = min(len(jobs), window or self.window_size(jobs))
@@ -169,9 +169,11 @@ class Index:
             def key(j):
                 u = self.components[j][position[j]]
                 start = max(ready_time[j], pipe_time[self.ops[u]["pipe"]])
-                # Drain an in-flight job at a tie, then original IDs. This is
-                # a policy, not an optimality rule for the official machine.
-                return start, tail[j], u
+                # Round 1 drains at a tie. The fill variant instead exposes
+                # earlier job stages (larger remaining work) so the returning
+                # bottleneck pipe need not wait for a late admitted last job.
+                # Neither tie policy is an official optimality theorem.
+                return start, -tail[j] if prefer_fill else tail[j], u
             j = min(active, key=key)
             u = self.components[j][position[j]]
             p = self.ops[u]["pipe"]
@@ -191,8 +193,8 @@ class Index:
         nodes = [u for j in jobs for u in self.components[j]]
         if strategy == "component":
             return nodes, {}
-        if strategy == "pipe_window":
-            return self.pipe_window(jobs, window)
+        if strategy in ("pipe_window", "pipe_window_fill"):
+            return self.pipe_window(jobs, window, strategy == "pipe_window_fill")
         if strategy == "affine_eighth":
             length = max((sum(self.work[j].values()) for j in jobs), default=1)
             lag = max(1, length // 8)
@@ -249,7 +251,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("graph", type=Path)
     parser.add_argument("--cores", type=int, default=4)
-    parser.add_argument("--strategy", choices=("component", "affine_eighth", "resource_word", "pipe_window"), default="pipe_window")
+    parser.add_argument("--strategy", choices=("component", "affine_eighth", "resource_word", "pipe_window", "pipe_window_fill"), default="pipe_window")
     parser.add_argument("--window", type=int)
     parser.add_argument("-o", "--output", type=Path, required=True)
     args = parser.parse_args()

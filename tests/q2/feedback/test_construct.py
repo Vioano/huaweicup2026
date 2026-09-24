@@ -13,7 +13,7 @@ class ConstructTests(unittest.TestCase):
 
     def test_all_strategies_preserve_mapping_and_core_ownership(self):
         plans = [self.index.build(4, s)[0] for s in
-                 ("component", "affine_eighth", "resource_word", "pipe_window")]
+                 ("component", "affine_eighth", "resource_word", "pipe_window", "pipe_window_fill")]
         first = plans[0]
         for plan in plans:
             self.assertEqual(list(first["node_to_subgraph"].items()), list(plan["node_to_subgraph"].items()))
@@ -35,6 +35,18 @@ class ConstructTests(unittest.TestCase):
         a, _ = self.index.build(4, "component")
         b, _ = self.index.build(4, "pipe_window", 1)
         self.assertEqual(a, b)
+        c, _ = self.index.build(4, "pipe_window_fill", 1)
+        self.assertEqual(a, c)
+
+    def test_fill_policy_preserves_edges_for_every_pipe(self):
+        for cores in (1, 2, 3, 4, 5):
+            plan, _ = self.index.build(cores, "pipe_window_fill")
+            mapping = plan["node_to_subgraph"]
+            rank = {sg: (c, i) for c, seq in enumerate(plan["core_schedules"]) for i, sg in enumerate(seq)}
+            for u in self.index.ops:
+                for v in self.index.succ[u]:
+                    self.assertEqual(rank[mapping[str(u)]][0], rank[mapping[str(v)]][0])
+                    self.assertLess(rank[mapping[str(u)]][1], rank[mapping[str(v)]][1])
 
     def test_known_word_family_is_detected_not_assumed(self):
         self.assertEqual(self.index.word_descriptor(), (1158, 2196, 3))
