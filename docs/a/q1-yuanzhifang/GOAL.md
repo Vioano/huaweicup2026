@@ -81,3 +81,10 @@ Stage K由同一Sol会话继续，独立codex/q1-unified-pacing-20260925从a0537
 - 新统一Stage K源08e5cbf96c57bbfb603ec9661ee591e2adb8c26f保留a053候选、加严格守卫H/J，父源码及干净进程import路径检查通过。Sol medium准备100/k4 runner：100cold、≤700E1尝试、≤8新E0、0重试、2workers/2400s；旧E0只在全身份及新plan实际字节一致时复用，新冷wall实测。尚无START、不能预报正式新均值。P2于21:08Z启动其33格批，P1未占评分窗口。
 - 本次Mailbox full实际抓取20:55:31.673537Z–20:55:43.881595Z，6话题555评论。父专项补读Issue98至5822057279、公共Issue26至5822020749；无更晚的新公共/P1评论。其他专项全文未导入，完整抓取不同于已读全部账号历史。
 - 新共享输入packet-pipeline静态研究覆盖044的11×124同构计算结构，50共享输入；metadata最优选择四层段[0,28,60,86,124]及三批[4,4,3]，流代理47221、DDR服务代理49494。容量按全部局部tensor并集保守计入；不把代理称为官方分值或时间上下界。已实现一次性结构构造与两项合成测试，Stage L任务卡冻结两格最小验证预算但尚无真实计划/评分START。持续目标仍active，没有全自由度最优证明。
+
+2026-09-24T21:32Z追加：
+
+- Luna完成9c5原件100/k4独立只读审计，父已读取summary/index：100图身份、全部plan/result/run/baseline压缩字节与result/trace raw哈希桥通过，0异常，逐例均值精确3.4530397551189473。证据在v4-reuse-audit-20260925；补充全500 protocol命令因懒取Git对象等待超预算而按父指示只停本任务进程，不报告协议通过，不算评分失败。
+- Stage K原8acaaa9双worker窗口START前WMI检查FreeRAM=1.71GiB，低于2GiB，0solver/Task/E0/E1，runner未启动、没有算法成绩。那条检查未记录UTC，不能补造。父随后21:29:04.8511936Z取得CIM1710186496B，21:29:05.342202Z取得冻结runner的GlobalMemoryStatusEx1764724736B，证实当时不足；未发现本线遗留q1/benchmark/protocol进程，未停止其他服务。已立即释放窗口给P2，其17b随后启动。新的K单worker/1.5GiB入口门槛/每Job1GiB提交内存上限修订由Sol准备，评分次数及120/180/2400s不扩大，未START。
+- Stage L初源d3fd2a344发现COPY桥依赖守卫缺口，5c64b4057cb9b2f2af5426bd1efdd579b9df5559已修，三合成测试通过；044重读metadata新旧字节完全一致，仍没有实图计划或评分。静态表的stages<=2候选为空，故未运行的两格从k2/k4改为有可行模型的k3/k4，避免明知Unsupported仍开cold。新runner a6e48df8884d26700c77141f16a668888334d34c固定source5c64，2cold+2E0/0E1/E2/retry、1worker、120/90/300s、RAM≥2GiB，尚无START。初c34准备被此修订替代，0调用历史保留。
+- 已向队长发实质同步Issue98#5822455828：自行取得新v4原件、K严格复用计划、L结构机制和未测范围；随后k2静态排除的改格记录在任务卡。持续目标active，未证明全自由度最优，也未声称本线已完成新100均值。
