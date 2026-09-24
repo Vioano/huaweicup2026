@@ -1,5 +1,21 @@
 # Shared-input waves with a core budget
 
+After the ee1 full500 regression audit, this entrypoint preserves whole-component
+ownership when enough independent components exist. It no longer infers that
+internal splitting helps from `largest_component_work > balanced_work` alone.
+The old `adaptive_frontier` entrypoint keeps its frozen policy for reproducibility.
+This revision is later than the b4 active-core prototype and requires its own
+full-suite run; neither b7 nor ee1 results are its achieved scores.
+
+All twenty four-core and twenty-two five-core regressions in the paired audit
+belong to the added `dominant_component_dag` route. It also improves eight and
+nine cases respectively, so this is not a theorem that splitting is useless.
+Each shared-input-wave route improves all nine cases at each of those core
+counts. New split proposals need a cost decision that accounts for COPY and
+memory, rather than the failed balance-only proxy. E2's current P2 interface
+can compare complete plans, but new-plan cold preparation is substantial and
+its existing 32-plan validation does not cover this new candidate family.
+
 `adaptive_budget` is a new algorithm version. The currently assigned full500
 experiment remains fixed at `ee1b8fd` / `adaptive_frontier`; it does not use this
 new version. No original-graph solver or official evaluation has yet been run
