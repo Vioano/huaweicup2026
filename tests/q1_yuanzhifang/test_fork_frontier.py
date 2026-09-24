@@ -10,6 +10,28 @@ from test_construct import graph_from_edges
 
 
 class ForkFrontierTests(unittest.TestCase):
+    def test_unit_frontiers_have_acyclic_joint_orders(self):
+        possible = [(u, v) for u in range(4) for v in range(u + 1, 4)]
+        for bits in range(64):
+            edges = [e for j, e in enumerate(possible) if bits & (1 << j)]
+            graph = graph_from_edges(4, edges)
+            for cores in range(1, 6):
+                plan, info = construct(graph, cores, frontier_tasks="unit")
+                m = plan["node_to_subgraph"]
+                self.assertEqual(set(m), set(range(4)))
+                ts = [t for row in plan["core_schedules"] for t in row]
+                self.assertEqual(len(ts), len(set(ts)))
+                self.assertEqual(set(ts), set(m.values()))
+                reach = {(m[a], m[b]) for a, b in edges if m[a] != m[b]}
+                reach.update((a, b) for row in plan["core_schedules"] for a, b in zip(row, row[1:]))
+                for v in ts:
+                    for a in ts:
+                        for b in ts:
+                            if (a, v) in reach and (v, b) in reach:
+                                reach.add((a, b))
+                self.assertFalse(any((t, t) in reach for t in ts))
+                self.assertTrue(all(t["units"] == 1 for t in info["tasks"]))
+
     def test_small_dags_cover_ops_and_have_no_joint_cycle(self):
         possible = [(u, v) for u in range(4) for v in range(u + 1, 4)]
         for bits in range(64):
@@ -61,6 +83,13 @@ class ForkFrontierTests(unittest.TestCase):
                 self.assertEqual(len({plan["node_to_subgraph"][u] for u in ids}), 1)
         graph["edges"].reverse()
         self.assertEqual(plan, construct(graph, 2)[0])
+        separate, details = construct(graph, 2, frontier_tasks="unit")
+        self.assertEqual(details["task_count"], 15)
+        self.assertEqual([x["ops"] for x in details["tasks"] if x["phase"] == 1], [3, 3, 3])
+        for stage in range(3):
+            for branch in range(4):
+                ids = range(stage * 15 + branch * 3, stage * 15 + branch * 3 + 3)
+                self.assertEqual(len({separate["node_to_subgraph"][u] for u in ids}), 1)
 
     def test_copy_bridge_exclusion_and_argument_checks(self):
         graph = graph_from_edges(4, [(0, 1), (1, 2), (2, 3)])
@@ -73,6 +102,8 @@ class ForkFrontierTests(unittest.TestCase):
                 construct(graph, cores)
         with self.assertRaises(ValueError):
             construct(graph, 2, grain=0)
+        with self.assertRaises(ValueError):
+            construct(graph, 2, frontier_tasks="unknown")
 
 
 if __name__ == "__main__":

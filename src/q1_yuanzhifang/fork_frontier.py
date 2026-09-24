@@ -121,11 +121,13 @@ def stage_units(graph, cores, grain):
     return ops, units, unit_of, upred, by_stage
 
 
-def construct(graph, cores, grain=4, same_wait=100, cross_wait=1000):
+def construct(graph, cores, grain=4, same_wait=100, cross_wait=1000, frontier_tasks="core"):
     if type(cores) is not int or not 1 <= cores <= 5:
         raise ValueError("cores must be an integer in 1..5")
     if type(grain) is not int or grain < 1:
         raise ValueError("grain must be a positive integer")
+    if frontier_tasks not in {"core", "unit"}:
+        raise ValueError("frontier_tasks must be core or unit")
     ops, units, unit_of, upred, stages = stage_units(graph, cores, grain)
     sizes = {t["id"]: t["size"] for t in graph["tensors"]}
     producers, consumers = defaultdict(set), defaultdict(set)
@@ -169,6 +171,19 @@ def construct(graph, cores, grain=4, same_wait=100, cross_wait=1000):
         bins, loads, shared = [[] for _ in range(cores)], [{} for _ in range(cores)], [set() for _ in range(cores)]
         bin_release = [core_end[k] + (same_wait if schedules[k] else 0) for k in range(cores)]
         frontier = sorted(data["frontier"], key=lambda g: (-max(units[g]["work"].values()), -sum(units[g]["work"].values()), g))
+        if frontier_tasks == "unit":
+            # One complete independent subtree per Task. This deliberately
+            # changes boundary/readiness granularity, never splits a chain,
+            # and keeps the whole reduction tail as one later Task. The same
+            # stage/phase proof applies; it does not promise less DDR or E0.
+            for g in frontier:
+                core = min(range(cores), key=lambda k: (estimate(k, [g], units[g]["work"]), k))
+                append_task(core, [g], units[g]["work"], stage, 0)
+            tail = data["tail"]
+            if tail is not None:
+                core = min(range(cores), key=lambda k: (estimate(k, [tail], units[tail]["work"]), k))
+                append_task(core, [tail], units[tail]["work"], stage, 1)
+            continue
         for g in frontier:
             release = [max((unit_end[p] + (cross_wait if unit_core[p] != k else 0) for p in upred[g]), default=0)
                        for k in range(cores)]
@@ -191,7 +206,7 @@ def construct(graph, cores, grain=4, same_wait=100, cross_wait=1000):
             append_task(core, [tail], units[tail]["work"], stage, 1)
     plan = {"node_to_subgraph": {u: mapping[u] for u in sorted(mapping)}, "core_schedules": schedules}
     validate_task_order(derive_multicore_plan(graph, plan))
-    return plan, {"variant": "fork-stage-frontier", "grain": grain, "stages": len(stages),
+    return plan, {"variant": "fork-stage-frontier", "grain": grain, "frontier_tasks": frontier_tasks, "stages": len(stages),
                   "unit_count": len(units), "task_count": len(tasks), "tasks": tasks,
                   "scope": "Graph-only construction and structural validation; estimates omit DDR and actual FIFO. Final E0 required."}
 
@@ -202,12 +217,13 @@ def main():
     p.add_argument("output", type=Path)
     p.add_argument("--cores", type=int, required=True)
     p.add_argument("--grain", type=int, default=4)
+    p.add_argument("--frontier-tasks", choices=("core", "unit"), default="core")
     p.add_argument("--config", type=Path, default=OFFICIAL / "data/config.txt")
     p.add_argument("--diagnostics", type=Path)
     args = p.parse_args()
     config = read_scene_a_config(str(args.config))
     plan, diagnostics = construct(json.loads(args.graph.read_bytes()), args.cores, args.grain,
-                                  config["task_same_core_wait_cycles"], config["task_cross_core_wait_cycles"])
+                                  config["task_same_core_wait_cycles"], config["task_cross_core_wait_cycles"], args.frontier_tasks)
     for path, value in ((args.output, plan), (args.diagnostics, diagnostics)):
         if path:
             with path.open("x", encoding="utf-8", newline="\n") as out:
