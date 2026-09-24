@@ -180,7 +180,7 @@ def export(folder):
                       for x in m["identity"]["implementation"] if x["path"] !=
                       "src/q3_yuanzhifang/wave_capacity.py"])
         p["runner"] = dict(source=source(m["identity"]["runner_commit"],
-            "src/q3_yuanzhifang/wave_benchmark.py", "main"),
+            m.get("runner_source_path", "src/q3_yuanzhifang/wave_benchmark.py"), "main"),
             argv=m["argv"], working_directory=".")
         p["environment"] = m["environment"]
         p["producer_session"] = m["producer_session"]
