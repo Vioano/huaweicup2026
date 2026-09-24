@@ -86,8 +86,8 @@ def construct(graph, cores, variant="chain-wave"):
     if variant not in {"chain-wave", "component-pack"}:
         raise ValueError("Unknown construction variant")
     ops, groups, edges, depth, packet_of = packets(graph, variant)
-    # Packet work is a ranking heuristic. The three entries retain the two
-    # compute-pipe loads and a serial-path surrogate; they are not E0 scores.
+    # Per-pipe work totals are ranking heuristics, not E0 scores or an
+    # execution model of the packet's internal critical path.
     work = {}
     for g, nodes in groups.items():
         loads = defaultdict(int)
