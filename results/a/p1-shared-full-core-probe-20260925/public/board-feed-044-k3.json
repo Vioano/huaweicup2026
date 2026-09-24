@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "submission_version": 1,
+  "records": [
+    {
+      "attempt_id": "nikolastarx-20260924T2305Z-shared-full-core-044-k3-r0",
+      "revision": 1,
+      "run_id": "20260924T2305Z-s6607-shared-full-core-044",
+      "algorithm_id": "q1-shared-input-full-core-research",
+      "algorithm_name": "P1 shared-input full-core structural candidate",
+      "variant": "force-requested-cores-local-windows-v1",
+      "solver_commit": "6e22fd4356842c7473fcf7ee6aa071bf77c8a452",
+      "parameters": {
+        "cores": 3,
+        "input_budget_bytes": 262144,
+        "activation_bytes": 524288,
+        "max_phases": 32,
+        "solver_calls": 1,
+        "E0_calls": 1,
+        "E1_calls": 0,
+        "E2_calls": 0,
+        "retry_calls": 0,
+        "workers": 1
+      },
+      "problem": "P1",
+      "case_id": "044",
+      "cores": 3,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 68109,
+        "solver_wall_seconds": 0.0813851659768261,
+        "evaluation_wall_seconds": 0.14207645796705037,
+        "ddr_bytes": 2957344,
+        "extra_ddr_bytes": 1981888,
+        "spill_bytes": 0
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "8685b5a867a4f66c7cacaf166d50896bd7c09a41",
+        "entrypoint": "multicore_cut_evaluate_problem_1.py CLI"
+      },
+      "identity": {
+        "graph_sha256": "9abd4468a4be365e384de47431ac914ee44fd6e7b6221dffc584561f388cd57e",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "f3a2aa98bdbb966adc11ee60c0667229f35b4b69521f70387d65e7ec57fd1b4a"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/p1-shared-full-core-probe-20260925/public/plan.json",
+          "sha256": "f3a2aa98bdbb966adc11ee60c0667229f35b4b69521f70387d65e7ec57fd1b4a"
+        },
+        "result": {
+          "path": "results/a/p1-shared-full-core-probe-20260925/public/result.json.gz",
+          "sha256": "f2cd9fe83f6189bb0119bbd7dce4c8f4dd68a9a7435e6cf13475ec6ac47348ec"
+        },
+        "run": {
+          "path": "results/a/p1-shared-full-core-probe-20260925/public/receipt.json",
+          "sha256": "f0ae1189a03203d67aaf2f38612427ff1d47efca96446ec4e98173600f1415f5"
+        },
+        "trace": {
+          "path": "results/a/p1-shared-full-core-probe-20260925/public/trace.json.gz",
+          "sha256": "822ee8084fffaccc8ccd3bd8f21ee19a0669e71fabcbd23c217365ffc6086f4a"
+        },
+        "log": {
+          "path": "results/a/p1-shared-full-core-probe-20260925/public/e0.log",
+          "sha256": "5f42723603ba463ba120cc7aa18a604dab8e7e03555920c17243fd74e5c31d1e"
+        }
+      },
+      "runtime_id": "macOS-27.0-arm64-arm-64bit",
+      "observed_at": "2026-09-24T23:05:51.024Z",
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "perf_counter around separate child process wall time",
+        "utc": "UTC"
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-6607cb2735304751b36662035723372b",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "6e22fd4356842c7473fcf7ee6aa071bf77c8a452",
+            "path": "src/q1/shared_input_full_core.py",
+            "entrypoint": "main"
+          },
+          "authors": [
+            "nikolastarx"
+          ],
+          "method": "Shared-input full-core structural constructor; activates all requested cores for local windows. One cell, structural candidate; E0 quality was unknown before this run.",
+          "references": [],
+          "upstream": [],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": null,
+          "argv": [
+            "<python-3.12>",
+            "-B",
+            "results/a/p1-shared-full-core-probe-20260925/run_probe.py"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS-27.0-arm64-arm-64bit",
+          "cpu": null,
+          "gpu": "none (no accelerator used)",
+          "ram_bytes": null,
+          "python": "3.12.13 (main, May 10 2026, 19:20:41) [Clang 22.1.3 ]",
+          "dependencies": null,
+          "threads": 1,
+          "workers": 1,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": "2026-09-24T23:05:51.025Z",
+          "finished_at": "2026-09-24T23:05:51.252Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": "Separate solver CLI process from input read through plan and diagnostics write.",
+          "evaluation_scope": "Separate official E0 CLI process on saved plan; stage wall 0.14207645796705037 seconds.",
+          "budget": {
+            "wall_seconds": 120,
+            "candidate_limit": null,
+            "stop_reason": "Both child stages succeeded within their 30s/60s caps."
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 1,
+            "E1": 0,
+            "E2": 0
+          },
+          "offline_costs": "none reported",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.solver.selected_algorithm_id": "No portfolio selector in this single candidate.",
+          "provenance.solver.selected_solver_commit": "No selected sub-algorithm.",
+          "provenance.runner.source": "The executed outer Python orchestration was local/uncommitted; the included portable runner is a derived copy, not the executed source.",
+          "provenance.environment.cpu": "CPU model not captured in run receipt.",
+          "provenance.environment.ram_bytes": "RAM size not captured.",
+          "provenance.environment.dependencies": "Dependency-lock identity not captured.",
+          "provenance.environment.peak_rss_bytes": "Peak RSS not captured.",
+          "provenance.measurement.seed": "No seed recorded.",
+          "provenance.measurement.cold_start": "OS cache state not measured.",
+          "provenance.measurement.budget.candidate_limit": "No candidate limit; this was one direct construction."
+        }
+      },
+      "notes": [
+        "Official E0 execution succeeded; the candidate is negative against the coordinator-provided v4 comparison: makespan 68109 vs 64624 (+3485, +5.392733%); scheduled DDR 2957344 vs 2026944 (+930400 B); spill 0.",
+        "No solver execution failure. Quality comparison is a regression.",
+        "One constructor and one official E0; zero E1/E2/retries. Solver wall 0.0813851659768261 seconds; E0 stage wall 0.14207645796705037 seconds; whole orchestration wall 0.4217144579743035 seconds.",
+        "Official result records input_plan basename plan.json; evaluator CLI argv identifies the exact public plan bytes via matching plan SHA."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+      "baseline": {
+        "graph_sha256": "9abd4468a4be365e384de47431ac914ee44fd6e7b6221dffc584561f388cd57e",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/p1-shared-full-core-probe-20260925/public/baseline-044-singlecore.json.gz",
+          "sha256": "73f1d15fdea4f706b22099d2339a0e74a76c4114a68672077a98a8e15faa913c"
+        }
+      },
+      "cache_pair": null
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "kind": "public-derived-three-constructor-transfer",
+  "source_raw_directory": "results/a/p1-intact-frontier-transfer-20260925",
+  "source_commit": "9293aad78dde0dc170d05bc2c4142db634d46b4d",
+  "source_sha256": "bca85389d883e952366db5f2a6307a24f6a616951338b25f7d546335a4d21cbc",
+  "runner_sha256": "324cb15620eaed7fdcf1c5be0c31fb4a6da0dc5db5dda963ef51b78e0072d568",
+  "input": {
+    "archive_path": "data/raw/a/official-cases.zip",
+    "archive_sha256": "e9c33753eb4c0caddc1ff8f05065144f762189d5071476611de1f7bb5887e528",
+    "member": "data/case_051.json",
+    "sha256": "884e8b12ac1f7a9b569958909680e8c2f6055966a59c9f929ffd5cee48aae43b",
+    "bytes": 479298
+  },
+  "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+  "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+  "supervisor_python": "3.14.5",
+  "constructor_python": "3.12.13",
+  "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+  "started_at": "2026-09-24T22:57:24.542Z",
+  "finished_at": "2026-09-24T22:57:24.745Z",
+  "elapsed_seconds": 0.258981374965515,
+  "limits": {
+    "per_constructor_timeout_seconds": 30,
+    "aggregate_seconds": 120,
+    "workers": 1,
+    "retry": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "task_compile": 0
+  },
+  "calls": {
+    "constructor": 3,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "task_compile": 0,
+    "retry": 0
+  },
+  "cells": [
+    {
+      "cell": "051-k3-paced",
+      "wall_seconds": 0.039077833003830165,
+      "plan_sha256": "9806867d136803fab19f0d03fad66ad7c920a5d3f7a0fa8d44095b89bbebf5fe",
+      "prior_plan_sha256": "21d5b6f2fec685393aa7972084b9c5655345c5bdec5daf46fbc0921fe4fa62c9",
+      "prior_result_sha256": "8cede6e1806b2dbfd940a65f246283eb61a2af4ecf008ad82c92c2860a292826",
+      "prior_result_reuse_status": "withheld: semantic equality and terminal newline change only; no byte-identical result reuse"
+    },
+    {
+      "cell": "051-k4-paced",
+      "wall_seconds": 0.03846937499474734,
+      "plan_sha256": "fa829d669f649cd083a651452fb484b030cb2081d863160c50b47dce91d5e049",
+      "prior_plan_sha256": "cbe958b2f4385b21d25f9d52b6efa48d5c109b074d1c61e5d8d573eb4d96cad1",
+      "prior_result_sha256": "53b7da444417f2e67e37d2d9313dc74280146f00000da90082b0ac6dc5207c18",
+      "prior_result_reuse_status": "withheld: semantic equality and terminal newline change only; no byte-identical result reuse"
+    },
+    {
+      "cell": "051-k5-root-heavy-fused",
+      "wall_seconds": 0.07237108302069828,
+      "plan_sha256": "d7de42f7eea7ca83787244b2307448d6d34b5b61045fd902fb2a97540b8ed5e2",
+      "prior_plan_sha256": "d7de42f7eea7ca83787244b2307448d6d34b5b61045fd902fb2a97540b8ed5e2",
+      "prior_result_sha256": "5b11b882d9628481766f96894cabf893bd4e5c2f9c3ba38d86654cf6baa925a6",
+      "prior_result_reuse_status": "exact_plan_bytes_only; prior Fang E0 not rerun locally"
+    }
+  ],
+  "files": {
+    "src/q1/intact_frontier.py": {
+      "sha256": "bca85389d883e952366db5f2a6307a24f6a616951338b25f7d546335a4d21cbc",
+      "bytes": 9003
+    },
+    "case_051.json": {
+      "sha256": "884e8b12ac1f7a9b569958909680e8c2f6055966a59c9f929ffd5cee48aae43b",
+      "bytes": 479298
+    },
+    "051-k3-paced/plan.json": {
+      "sha256": "9806867d136803fab19f0d03fad66ad7c920a5d3f7a0fa8d44095b89bbebf5fe",
+      "bytes": 13610
+    },
+    "051-k3-paced/prior-plan.json": {
+      "sha256": "21d5b6f2fec685393aa7972084b9c5655345c5bdec5daf46fbc0921fe4fa62c9",
+      "bytes": 13611
+    },
+    "051-k3-paced/diagnostics.json": {
+      "sha256": "3562ca9539faf289b58a3f4f2efa1a75d4f2ac7b0587a65ab1c7d30113b63d91",
+      "bytes": 10579
+    },
+    "051-k3-paced/receipt.json": {
+      "sha256": "bf40b7e77eb47b2f916570a6c6a649b86aae3962bfd3ee90dbb351c30b2dee86",
+      "bytes": 1666
+    },
+    "051-k4-paced/plan.json": {
+      "sha256": "fa829d669f649cd083a651452fb484b030cb2081d863160c50b47dce91d5e049",
+      "bytes": 13915
+    },
+    "051-k4-paced/prior-plan.json": {
+      "sha256": "cbe958b2f4385b21d25f9d52b6efa48d5c109b074d1c61e5d8d573eb4d96cad1",
+      "bytes": 13916
+    },
+    "051-k4-paced/diagnostics.json": {
+      "sha256": "886aae4e8a55ffbdeee6b00ade6240fcefd725b8c49edcde34b5b9f5df755f75",
+      "bytes": 12513
+    },
+    "051-k4-paced/receipt.json": {
+      "sha256": "500ce19ac6af96730f3f2865874b2ec1e7cbeb91005d340292399cc26a499343",
+      "bytes": 1665
+    },
+    "051-k5-root-heavy-fused/plan.json": {
+      "sha256": "d7de42f7eea7ca83787244b2307448d6d34b5b61045fd902fb2a97540b8ed5e2",
+      "bytes": 13903
+    },
+    "051-k5-root-heavy-fused/prior-plan.json": {
+      "sha256": "d7de42f7eea7ca83787244b2307448d6d34b5b61045fd902fb2a97540b8ed5e2",
+      "bytes": 13903
+    },
+    "051-k5-root-heavy-fused/diagnostics.json": {
+      "sha256": "776bf3ae684636183b41272fa8d23b3dcafa2b697e71ef9ce895e16a6551f7d9",
+      "bytes": 13117
+    },
+    "051-k5-root-heavy-fused/receipt.json": {
+      "sha256": "90d4c6fd8afbcb366c00714427619701a5737f244b2ed3c3d008419beb1a2d7c",
+      "bytes": 1681
+    },
+    "README.md": {
+      "sha256": "fd368f38a7ab3fa26f0db8018a01d1eed71c2bc89624a3c11662eca601a7acbf",
+      "bytes": 3256
+    },
+    ".gitattributes": {
+      "bytes": 131,
+      "sha256": "4cf0ae026856b8fbdd9f717ac05420844abf262de71aef8443fdc9cdd22c3340"
+    }
+  },
+  "git_byte_preservation": "Local .gitattributes disables text normalization for archived CRLF input/prior plans; verify Git blobs against manifest."
+}

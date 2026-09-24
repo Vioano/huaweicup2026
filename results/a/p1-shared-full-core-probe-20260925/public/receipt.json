@@ -1,0 +1,164 @@
+{
+  "derived_from_raw_receipt_sha256": "10f3d021c676436599ab088a5ed46cb66006f670f925a69789826836ba469e72",
+  "derivation": "Absolute personal workspace and interpreter paths replaced in receipt copy; timings, hashes, exit status, argv structure, and metric values preserved.",
+  "executed_runner": {
+    "path": "results/a/p1-shared-full-core-probe-20260925/run_probe.py",
+    "sha256": "5c208835a4df0a37654832a8c96fc6b0bed44cc79cd0509df9599e6b68f3c1ee",
+    "status": "actual executed runner; raw copy retained in parent result directory"
+  },
+  "portable_runner_copy": {
+    "path": "run_probe_portable.py",
+    "sha256": "ca308c6a276b11e5e8ee0cfe832de48c82522572916fcf2aac2ee2f28430e5d4",
+    "status": "derived portable reproduction copy; not executed"
+  },
+  "receipt": {
+    "solver_commit": "6e22fd4356842c7473fcf7ee6aa071bf77c8a452",
+    "source_hashes": {
+      "src/q1/shared_input_full_core.py": "5c8dd6abc5597cca63c9fde6890f10d563dfc8bb17765a8d9061d960289ce9ef",
+      "src/q1/shared_input_budget.py": "8189cbc0f21135dcd22ca9a0817315c89fca5dcf32b85f4346b0c73538fd72f5",
+      "src/q1/component_pack.py": "edfa0eb4526e415aec2a983f030ea4872dabe65872873c8edb96ecc4839adb9c",
+      "data/raw/a/official/code/stub_multicore_cut_and_schedule.py": "0a3a3b79b5173b466fc05fc8d33b72d11d90b4df78995435853d91c632a35892",
+      "data/raw/a/official/code/evaluation_validation.py": "103206b8c5c25e37de50cc3193de3989d7c1e01d4a11cc5f509dedd8f9be9a64",
+      "data/raw/a/official/code/contest_io.py": "d5936908e4c261c7003b78e783f30bd7d65cb38d6b53a269ea67f0103cac848e",
+      "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py": "2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f"
+    },
+    "official_commit": "8685b5a867a4f66c7cacaf166d50896bd7c09a41",
+    "official_code_hash": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+    "official_files": {
+      "code/contest_io.py": "d5936908e4c261c7003b78e783f30bd7d65cb38d6b53a269ea67f0103cac848e",
+      "code/evaluation_validation.py": "103206b8c5c25e37de50cc3193de3989d7c1e01d4a11cc5f509dedd8f9be9a64",
+      "code/multicore_cut_evaluate_problem_1.py": "2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f",
+      "code/multicore_cut_evaluate_problem_2.py": "0b39f84d5ec0a7fba9a4c92a598a9044b97ab79c71393824c1ba130ecfe6c464",
+      "code/multicore_cut_evaluate_problem_3.py": "eab1504dead881f4b67c0f0498cbc2dbbd9039dc3c9d198c6af58773c127eeb0",
+      "code/schedule_step1.py": "d8fe721ff3dbe036e34a20c00cce6430960860000a49eb467e63465f76b84034",
+      "code/schedule_step2.py": "2836baac176f4e0bdd9eec59b8d9ce254e209e5f7a251e23837ab684312fa0c3",
+      "code/schedule_step3.py": "50053db0436f1d166dd75436693ba3af49b5c339576beb6e7299477f6b69fc7a",
+      "code/singlecore_evaluate.py": "446b753ee134ef1fec8e052356bb077a2602fbe95572ccd3dddd7928e894b77a",
+      "code/stub_multicore_cut_and_schedule.py": "0a3a3b79b5173b466fc05fc8d33b72d11d90b4df78995435853d91c632a35892",
+      "data/config.txt": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9"
+    },
+    "archive_sha256": "e9c33753eb4c0caddc1ff8f05065144f762189d5071476611de1f7bb5887e528",
+    "input_member": "data/case_044.json",
+    "input_sha256": "9abd4468a4be365e384de47431ac914ee44fd6e7b6221dffc584561f388cd57e",
+    "input_bytes": 502310,
+    "runtime_requested": "<python-3.12>",
+    "runtime_actual": "<python-3.12>",
+    "python_version": "3.12.13 (main, May 10 2026, 19:20:41) [Clang 22.1.3 ]",
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "workers": 1,
+    "limits": {
+      "solver_seconds": 30,
+      "E0_seconds": 60,
+      "whole_window_seconds": 120,
+      "retries": 0,
+      "E1": 0,
+      "E2": 0
+    },
+    "calls": {
+      "constructor": 1,
+      "E0": 1,
+      "E1": 0,
+      "E2": 0,
+      "retry": 0
+    },
+    "v4_comparison_makespan_cycles": 64624,
+    "started_at": "2026-09-24T23:05:51.024Z",
+    "stages": [
+      {
+        "argv": [
+          "<python-3.12>",
+          "-B",
+          "-m",
+          "src.q1.shared_input_full_core",
+          "<repo>/results/a/p1-shared-full-core-probe-20260925/case_044.json",
+          "--cores",
+          "3",
+          "--output",
+          "<repo>/results/a/p1-shared-full-core-probe-20260925/plan.json",
+          "--diagnostics",
+          "<repo>/results/a/p1-shared-full-core-probe-20260925/diagnostics.json"
+        ],
+        "cwd": ".",
+        "timeout_seconds": 30,
+        "started_at": "2026-09-24T23:05:51.025Z",
+        "exit_code": 0,
+        "cleanup_confirmed": true,
+        "status": "ok",
+        "wall_seconds": 0.0813851659768261,
+        "finished_at": "2026-09-24T23:05:51.106Z",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "argv": [
+          "<python-3.12>",
+          "-B",
+          "<repo>/data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+          "<repo>/results/a/p1-shared-full-core-probe-20260925/case_044.json",
+          "<repo>/results/a/p1-shared-full-core-probe-20260925/plan.json",
+          "--config",
+          "<repo>/data/raw/a/official/data/config.txt",
+          "--output",
+          "<repo>/results/a/p1-shared-full-core-probe-20260925/e0-result.json",
+          "--trace-output",
+          "<repo>/results/a/p1-shared-full-core-probe-20260925/e0-trace.json",
+          "--log-output",
+          "<repo>/results/a/p1-shared-full-core-probe-20260925/e0.log"
+        ],
+        "cwd": ".",
+        "timeout_seconds": 60,
+        "started_at": "2026-09-24T23:05:51.107Z",
+        "exit_code": 0,
+        "cleanup_confirmed": true,
+        "status": "ok",
+        "wall_seconds": 0.14207645796705037,
+        "finished_at": "2026-09-24T23:05:51.250Z",
+        "stdout_sha256": "5e6e5da877e1e10378eab87091a3622ed376a15055a9af2e077afc2506c5044c",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "plan_sha256": "f3a2aa98bdbb966adc11ee60c0667229f35b4b69521f70387d65e7ec57fd1b4a",
+    "diagnostics_sha256": "80aacbce1513e516ac360f1ae38f47287568dbf38594ac176959e3a7b6694731",
+    "plan_keys": [
+      "node_to_subgraph",
+      "core_schedules"
+    ],
+    "metrics": {
+      "makespan_cycles": 68109,
+      "scheduled_ddr_bytes": 2957344,
+      "extra_ddr_bytes": 1981888,
+      "spill_bytes": 0
+    },
+    "result_sha256": "bf043aef58099632088b8a2b4f8d3f679de8da8cb612a002004243a2d9fb2015",
+    "trace_sha256": "5b19b22ee3b03e6391e1d5f5c54fa190b287ab9a0bcd24682de23b9d1a5a636e",
+    "status": "ok",
+    "finished_at": "2026-09-24T23:05:51.252Z",
+    "whole_window_wall_seconds": 0.4217144579743035,
+    "evaluator_input_binding": {
+      "result_input_graph": "case_044.json",
+      "result_input_plan": "plan.json",
+      "graph_argument": "<repo>/results/a/p1-shared-full-core-probe-20260925/case_044.json",
+      "plan_argument": "<repo>/results/a/p1-shared-full-core-probe-20260925/plan.json",
+      "plan_file_sha256": "f3a2aa98bdbb966adc11ee60c0667229f35b4b69521f70387d65e7ec57fd1b4a",
+      "plan_bytes_were_the_file_passed_to_evaluator": true
+    },
+    "v4_comparison": {
+      "reference_makespan_cycles": 64624,
+      "new_makespan_cycles": 68109,
+      "delta_cycles": 3485,
+      "relative_delta_percent": 5.392733349839074,
+      "note": "Reference value supplied in the task; not a new evaluation in this run."
+    }
+  },
+  "quality_comparison": {
+    "v4_makespan_cycles": 64624,
+    "new_makespan_cycles": 68109,
+    "delta_cycles": 3485,
+    "delta_percent": 5.3927333498390695,
+    "v4_scheduled_ddr_bytes": 2026944,
+    "new_scheduled_ddr_bytes": 2957344,
+    "scheduled_ddr_delta_bytes": 930400,
+    "spill_bytes": 0,
+    "note": "v4 values provided by coordinator; this comparison is negative for the candidate."
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "kind": "p1-shared-input-full-core-negative-single-cell-public-package",
+  "cell": "P1/044/k3",
+  "source_commit": "6e22fd4356842c7473fcf7ee6aa071bf77c8a452",
+  "files": {
+    "README.md": {
+      "bytes": 1311,
+      "sha256": "753ef45694124a60de732b839a788b7f5745b2267bedbb330005134dd4acd6d5"
+    },
+    "baseline-044-singlecore.json.gz": {
+      "bytes": 24311,
+      "sha256": "73f1d15fdea4f706b22099d2339a0e74a76c4114a68672077a98a8e15faa913c"
+    },
+    "board-feed-044-k3.json": {
+      "bytes": 7709,
+      "sha256": "fde8e3e22a6dcdd748cd3b532532c5283e92374b514dcfb615b74bb5d4e4ba39"
+    },
+    "diagnostics.json": {
+      "bytes": 3135,
+      "sha256": "80aacbce1513e516ac360f1ae38f47287568dbf38594ac176959e3a7b6694731"
+    },
+    "e0.log": {
+      "bytes": 218,
+      "sha256": "5f42723603ba463ba120cc7aa18a604dab8e7e03555920c17243fd74e5c31d1e"
+    },
+    "plan.json": {
+      "bytes": 11678,
+      "sha256": "f3a2aa98bdbb966adc11ee60c0667229f35b4b69521f70387d65e7ec57fd1b4a"
+    },
+    "receipt.json": {
+      "bytes": 7872,
+      "sha256": "f0ae1189a03203d67aaf2f38612427ff1d47efca96446ec4e98173600f1415f5"
+    },
+    "result.json.gz": {
+      "bytes": 32318,
+      "sha256": "f2cd9fe83f6189bb0119bbd7dce4c8f4dd68a9a7435e6cf13475ec6ac47348ec"
+    },
+    "run_probe_portable.py": {
+      "bytes": 6279,
+      "sha256": "ca308c6a276b11e5e8ee0cfe832de48c82522572916fcf2aac2ee2f28430e5d4"
+    },
+    "trace.json.gz": {
+      "bytes": 26515,
+      "sha256": "822ee8084fffaccc8ccd3bd8f21ee19a0669e71fabcbd23c217365ffc6086f4a"
+    }
+  },
+  "raw_local_sha256": {
+    "receipt": "10f3d021c676436599ab088a5ed46cb66006f670f925a69789826836ba469e72",
+    "runner": "5c208835a4df0a37654832a8c96fc6b0bed44cc79cd0509df9599e6b68f3c1ee",
+    "result": "bf043aef58099632088b8a2b4f8d3f679de8da8cb612a002004243a2d9fb2015",
+    "trace": "5b19b22ee3b03e6391e1d5f5c54fa190b287ab9a0bcd24682de23b9d1a5a636e",
+    "diagnostics": "80aacbce1513e516ac360f1ae38f47287568dbf38594ac176959e3a7b6694731"
+  },
+  "gzip_roundtrip": {
+    "result_uncompressed_sha256": "bf043aef58099632088b8a2b4f8d3f679de8da8cb612a002004243a2d9fb2015",
+    "result_matches_raw": true,
+    "trace_uncompressed_sha256": "5b19b22ee3b03e6391e1d5f5c54fa190b287ab9a0bcd24682de23b9d1a5a636e",
+    "trace_matches_raw": true
+  },
+  "metrics": {
+    "v4_makespan_cycles": 64624,
+    "new_makespan_cycles": 68109,
+    "delta_cycles": 3485,
+    "delta_percent": 5.3927333498390695,
+    "v4_scheduled_ddr_bytes": 2026944,
+    "new_scheduled_ddr_bytes": 2957344,
+    "scheduled_ddr_delta_bytes": 930400,
+    "spill_bytes": 0,
+    "note": "v4 values provided by coordinator; this comparison is negative for the candidate."
+  },
+  "calls": {
+    "constructor": 1,
+    "E0": 1,
+    "E1": 0,
+    "E2": 0,
+    "retry": 0
+  },
+  "runner_derivation": "Portable copy modifies interpreter resolution and output root; it was not executed and is not the original runner.",
+  "protocol_preflight": {
+    "command": "/Users/nikolastar/Projects/huaweicup2026/.venv/bin/python -B /Users/nikolastar/Projects/huaweicup2026/src/benchmark_board/protocol.py results/a/p1-shared-full-core-probe-20260925/public/board-feed-044-k3.json --repo /Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925 --submission",
+    "exit_code": 0,
+    "valid": true,
+    "records": 1,
+    "eligible": 1,
+    "reported_or_failed": [],
+    "scope": "format and available bytes only; no solver/evaluator execution or production write"
+  },
+  "baseline_correction": {
+    "source_commit": "0e0d7cd327c51cc6ac365e01f4b6a7d2b28f9297",
+    "source_path": "results/a/q1-unified-v4-full500-20260925-s59/20260924T1952Z-s59ee/baseline/044/result.json.gz",
+    "sha256": "73f1d15fdea4f706b22099d2339a0e74a76c4114a68672077a98a8e15faa913c",
+    "graph_matches_record_identity": true,
+    "makespan_cycles": 154407,
+    "log_bundled": "e0.log"
+  },
+  "artifact_path_audit": {
+    "all_feed_artifacts_exist": true,
+    "all_feed_artifacts_within_public_package": true,
+    "paths": [
+      "results/a/p1-shared-full-core-probe-20260925/public/plan.json",
+      "results/a/p1-shared-full-core-probe-20260925/public/result.json.gz",
+      "results/a/p1-shared-full-core-probe-20260925/public/receipt.json",
+      "results/a/p1-shared-full-core-probe-20260925/public/trace.json.gz",
+      "results/a/p1-shared-full-core-probe-20260925/public/e0.log",
+      "results/a/p1-shared-full-core-probe-20260925/public/baseline-044-singlecore.json.gz"
+    ]
+  }
+}
