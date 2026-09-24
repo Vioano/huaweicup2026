@@ -175,7 +175,7 @@ def export(run_dir, feed):
                                                          stop_reason=run["status"] + "; 0 retries"),
                                              calls=run["calls"], offline_costs="No current-case offline model or score selection.",
                                              failure=failure), missing_reasons=missing),
-            notes=["Two exposed 044/k2,k4 cells only; no full matrix or blind mean.",
+            notes=["Two exposed 044/k3,k4 cells only; no full matrix or blind mean.",
                    f"Official singlecore denominator {baseline_cycles} cycles from fixed {BASELINE}; 0 reruns.",
                    "Model proxy is not official E0 Makespan and does not choose by historical score."],
             source_url="https://github.com/huaweibei123/huaweicup2026/issues/98",

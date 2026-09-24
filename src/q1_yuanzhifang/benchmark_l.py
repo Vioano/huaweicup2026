@@ -23,7 +23,7 @@ E0 = ROOT / "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py"
 CONFIG = ROOT / "data/raw/a/official/data/config.txt"
 OUT = ROOT / "results/a/q1-yuanzhifang-stage-l/stage-l-20260925/run"
 TOKEN = "STAGE-L-20260925-START"
-CELLS = (2, 4)
+CELLS = (3, 4)
 
 
 def sha(path):
