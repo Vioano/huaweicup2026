@@ -21,7 +21,7 @@ import time
 
 ROOT = Path(__file__).resolve().parents[2]
 THEORY = "f16746ff2ab112ae8e802711e90d74829c419eb9"
-OUTPUT = "results/a/q1-yuanzhifang/barrier-audit-20260924"
+OUTPUT = "results/a/q1-yuanzhifang/barrier-audit-20260924/full"
 BATCHES = (
     ("A", "9b07b791cbbb950410d56d2c8c02407fde013982", "stage-a-20260924/board-feed-20260924T141300Z-stage-a.json"),
     ("B", "0441891f60b07a456a0f21ed74a024987edd8cd9", "stage-b-20260924/board-feed-20260924T143000Z-stage-b.json"),
@@ -203,13 +203,13 @@ def compact(bound):
 
 def audit(args, module, source_hashes, manifest, manifest_identity):
     started, tick = utc(), time.perf_counter()
-    out = ROOT / OUTPUT; out.mkdir(parents=True, exist_ok=False)
     config_raw = (args.graphs / "config.txt").read_bytes()
     expected = {i["path"]: i["sha256"] for i in manifest["files"]}
     assert sha(config_raw) == expected["data/config.txt"]
-    config = configparser.ConfigParser(); config.read_string(config_raw.decode())
+    config = configparser.ConfigParser(delimiters=(" ",)); config.read_string(config_raw.decode())
     delta = config.getint("multicore_scene_a", "task_cross_core_wait_cycles")
     assert delta == 1000
+    out = ROOT / OUTPUT; out.mkdir(parents=True, exist_ok=False)
     checks = smoke(module); checks["multipipe_relaxation"] = relaxed_checks(module)
     dump(out / "synthetic-checks.json", checks)
     bounds, input_hashes = {}, {}
