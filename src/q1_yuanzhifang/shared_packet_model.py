@@ -24,6 +24,30 @@ def model(graph, cores, capacity, bandwidth, same_wait, cross_wait, *, include_j
     ops = {o['id']: o for o in graph['ops'] if o['op'] not in ('COPY_IN', 'COPY_OUT')}
     tensors = {t['id']: t for t in graph['tensors']}
     all_ops = {o['id']: o for o in graph['ops']}
+    full_pr, full_co = defaultdict(set), defaultdict(set)
+    full_pred, full_succ = ({u:set() for u in all_ops} for _ in range(2))
+    for e in graph['edges']:
+        a,b=e['source'],e['target']
+        if a in all_ops and b in tensors: full_pr[b].add(a)
+        if a in tensors and b in all_ops: full_co[a].add(b)
+        if a in all_ops and b in all_ops: full_pred[b].add(a); full_succ[a].add(b)
+    for t in tensors:
+        for a in full_pr[t]:
+            for b in full_co[t]: full_pred[b].add(a); full_succ[a].add(b)
+    degree={u:len(ps) for u,ps in full_pred.items()}
+    ready=[u for u in all_ops if not degree[u]]; heapq.heapify(ready)
+    full_order=[]; before=dict.fromkeys(all_ops,False); after=dict(before)
+    while ready:
+        u=heapq.heappop(ready); full_order.append(u)
+        for v in full_succ[u]:
+            before[v] |= before[u] or u in ops
+            degree[v]-=1
+            if not degree[v]: heapq.heappush(ready,v)
+    if len(full_order)!=len(all_ops): raise Unsupported('cyclic full op graph')
+    for u in reversed(full_order):
+        for v in full_succ[u]: after[u] |= after[v] or v in ops
+    if any(before[u] and after[u] for u in all_ops if u not in ops):
+        raise Unsupported('excluded COPY bridge requires a different component model')
     producers, consumers = defaultdict(set), defaultdict(set)
     incident, preds, succs = ({u: set() for u in ops} for _ in range(3))
     original_out = set()

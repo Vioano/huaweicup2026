@@ -41,3 +41,11 @@ Reproduction: `python -m src.q1_yuanzhifang.shared_packet_model GRAPH --cores 5
 Runtime includes graph parsing, table construction and DP when used inside a
 solver; the current diagnostic has no complete solver-wall measurement.
 No case ID, previous score or stored model result is used as an algorithm rule.
+
+Guard review additionally rejects excluded COPY operations lying between two
+compute operations, using full-op ancestry/reachability before constructing
+compute-only components. Official nearest-eligible contraction preserves such
+bridges, so ignoring them would invalidate the component-independence proof.
+Three small synthetic tests cover structural/capacity validity, shape/sharing
+mismatch, and this hidden cross-job dependency. No official evaluation is
+performed by these tests.

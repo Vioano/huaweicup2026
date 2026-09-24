@@ -36,6 +36,12 @@ class SharedPacket(unittest.TestCase):
     def test_shape_and_shared_position_mismatch_are_rejected(self):
         g=graph(); g['ops'][-1]['cycles']+=1
         with self.assertRaises(Unsupported): construct(g,3,{'L1':256,'UB':64},60,100,1000)
+
+    def test_excluded_copy_bridge_cannot_hide_a_cross_job_dependency(self):
+        g=graph(); g['ops'].append(dict(id=100,op='COPY_IN',pipe='PIPE_MTE2',cycles=0))
+        g['edges'].extend([dict(source=8,target=100),dict(source=100,target=11)])
+        with self.assertRaisesRegex(Unsupported,'COPY bridge'):
+            construct(g,3,{'L1':256,'UB':64},60,100,1000)
         g=graph(); g['edges'].append(dict(source=1000,target=2))
         with self.assertRaises(Unsupported): construct(g,3,{'L1':256,'UB':64},60,100,1000)
 

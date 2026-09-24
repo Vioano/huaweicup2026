@@ -25,7 +25,8 @@
    machine window before starting. A 5–10 minute solver time is a suggestion,
    not a required run length or a hard 600-second validity rule.
 6. **Status/deadline:** source preparation 2026-09-25 Asia/Shanghai; two small
-   synthetic tests pass (augmented-DAG/capacity guard and mismatched structure).
+   synthetic tests plus an excluded-COPY-bridge regression pass (three total:
+   augmented-DAG/capacity, mismatched structure and hidden dependencies).
    044-model.json is a read-only metadata run: zero real plan construction,
    zero official Task compilation or scoring. No trial START yet. Freeze and
    validate actual E0 evidence before claiming quality gains.
