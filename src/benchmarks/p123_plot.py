@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import io
 import json
 import math
 from pathlib import Path
@@ -42,7 +43,7 @@ LABELS = {
     "case": ("用例", "Case"),
     "mean": ("逐用例加速比的算术平均", "Arithmetic mean of per-case speedups"),
     "count": ("有效 / 预期用例", "Valid / expected cases"),
-    "missing": ("灰色 NA：缺失、失败或指标不可用", "Gray NA: absent, failed, or unavailable metric"),
+    "missing": ("灰色 NA：缺失、未完成、失败或指标不可用", "Gray NA: absent, incomplete, failed, or unavailable metric"),
     "p3": ("P3 官方主对照为同核数无 Cache / Cache；多核图为扩展指标。",
            "P3 official comparison: no Cache / Cache at equal cores; multicore is an extension."),
     "formula": ("单核 Makespan / 多核 Makespan（周期比；不是程序墙钟提速）",
@@ -54,6 +55,8 @@ LABELS = {
     "baseline": ("通用基线", "generic baseline"),
     "valid_cells": ("有效比值 / 计划比值", "Valid / planned ratios"),
     "p1_method": ("默认 32 候选预算", "Default budget: 32 candidates"),
+    "anchors": ("P1/P2 的 1 核点共用官方单核基准；本批实际求解为 2–5 核。",
+                "P1/P2 core-1 points share the official baseline; actual solver runs cover cores 2–5."),
 }
 
 
@@ -88,9 +91,10 @@ def finite(value, *, positive=False):
     return number
 
 
-def read_rows(path):
+def read_rows(path, raw_bytes=None):
     rows = {}
-    with path.open(encoding="utf-8-sig", newline="") as stream:
+    raw_bytes = path.read_bytes() if raw_bytes is None else raw_bytes
+    with io.StringIO(raw_bytes.decode("utf-8-sig"), newline="") as stream:
         reader = csv.DictReader(stream)
         missing = set(FIELDS) - set(reader.fieldnames or ())
         if missing:
@@ -144,7 +148,7 @@ def save_figure(fig, output, name):
     plt.close(fig)
 
 
-def heatmap(values, cores, problem, norm, limits, output, text, *, cache=False):
+def heatmap(values, cores, problem, norm, limits, output, text, *, cache=False, snapshot_label=""):
     title = f"{problem} | {text('cache' if cache else 'multicore')}"
     if problem == "P3" and not cache:
         title += f" ({text('extension')})"
@@ -177,7 +181,8 @@ def heatmap(values, cores, problem, norm, limits, output, text, *, cache=False):
             else:
                 rgb = cmap(norm(number))[:3]
                 luminance = sum(component * weight for component, weight in zip(rgb, (.2126, .7152, .0722)))
-                label, color = f"{number:.2f}", "white" if luminance < .44 else "#16252c"
+                label = f"{number:.3f}" if cache else f"{number:.2f}"
+                color = "white" if luminance < .44 else "#16252c"
             ax.text(j, i, label, ha="center", va="center", fontsize=8, color=color)
     # A uniform/all-missing grid has no varying scale; avoid colorbar expanding
     # the shared Normalize in place and changing later figures' color mapping.
@@ -193,6 +198,8 @@ def heatmap(values, cores, problem, norm, limits, output, text, *, cache=False):
     if problem == "P1":
         coverage += " | " + text("p1_method")
     fig.text(.5, .954, coverage, ha="center", fontsize=9, color="#555555")
+    if snapshot_label:
+        fig.text(.5, .074, snapshot_label, ha="center", fontsize=8, color="#555555")
     fig.text(.5, .052, text("cache_formula" if cache else "formula"), ha="center", fontsize=9)
     fig.text(.5, .033, text("missing"), ha="center", fontsize=9, color="#555555")
     if problem == "P3":
@@ -203,11 +210,20 @@ def heatmap(values, cores, problem, norm, limits, output, text, *, cache=False):
 def summary(rows, problem, core, metric):
     group = [rows.get((problem, case, core)) for case in CASES]
     values = [value for row in group if (value := metric_value(row, metric)) is not None]
+    missing_states = {"missing", "not_run", "unrun"}
+    incomplete_states = {"incomplete", "running", "running_unconfirmed", "pending"}
+    failed_states = {"error", "failed", "timeout", "cancelled", "fatal", "fatal_cleanup", "unsupported"}
+    for row in group:
+        if row is not None and row["status"] not in (
+                missing_states | incomplete_states | failed_states | {"ok"}):
+            raise ValueError(f"Unrecognized result status: {row['status']!r}")
     result = dict(problem=problem, cores=core, metric=metric, n=len(values), expected=len(CASES),
-                  failed=sum(row is not None and row["status"] != "ok" for row in group),
-                  missing=sum(row is None for row in group),
+                  failed=sum(row is not None and row["status"] in failed_states for row in group),
+                  missing=sum(row is None or row["status"] in missing_states for row in group),
+                  incomplete=sum(row is not None and row["status"] in incomplete_states for row in group),
                   unavailable=sum(row is not None and row["status"] == "ok"
                                   and metric_value(row, metric) is None for row in group))
+    assert sum(result[key] for key in ("n", "failed", "missing", "incomplete", "unavailable")) == len(CASES)
     result.update(mean=statistics.fmean(values) if values else None,
                   median=statistics.median(values) if values else None,
                   min=min(values) if values else None, max=max(values) if values else None)
@@ -230,23 +246,24 @@ def write_csv(path, rows):
         writer.writerows(rows)
 
 
-def comparison(summaries, output, text):
+def comparison(summaries, output, text, snapshot_label=""):
     groups = {(row["problem"], row["cores"]): row for row in summaries
               if row["metric"] == "multicore_speedup"}
     wide, markdown = [], ["# Mean per-case Makespan speedup", "",
         "Arithmetic mean of each valid case's singlecore_cycles / makespan_cycles; not a ratio of sums.",
         "P3 is an extension metric; its official primary comparison is same-core no Cache / Cache.",
         "NA values are excluded, and valid / expected counts are retained. Unequal coverage is not a paired comparison.",
+        "P1/P2 core-1 points reuse the same official singlecore anchors, not separate solver executions; actual P1/P2 runs cover cores 2–5.",
         "", "| Cores | P1 mean (n/100) | P2 mean (n/100) | P3 extension mean (n/100) |",
         "| --- | --- | --- | --- |"]
-    fig, ax = plt.subplots(figsize=(10.5, 5.8))
+    fig, ax = plt.subplots(figsize=(10.5, 6.2))
     styles = (("#147a6c", "o", "-"), ("#285f9b", "s", "--"), ("#765394", "^", "-."))
     for core in range(1, 6):
         row, cells = {"cores": core}, []
         for problem in PROBLEMS:
             entry = groups[problem, core]
             row.update({f"{problem}_{field}": entry[field] for field in
-                        ("mean", "n", "expected", "failed", "missing", "unavailable")})
+                        ("mean", "n", "expected", "failed", "missing", "incomplete", "unavailable")})
             cells.append(f"{entry['mean']:.3f} ({entry['n']}/100)" if entry["mean"] is not None else "NA (0/100)")
         wide.append(row)
         markdown.append(f"| {core} | " + " | ".join(cells) + " |")
@@ -259,8 +276,13 @@ def comparison(summaries, output, text):
         ax.plot(range(1, 6), y, color=color, marker=marker, linestyle=line, linewidth=1.8, label=label)
         for core, value in enumerate(y, 1):
             if math.isfinite(value):
-                ax.annotate(f"{groups[problem, core]['n']}/100", (core, value),
-                            xytext=(0, 8 + index * 10), textcoords="offset points",
+                if core == 1 and problem == "P2":
+                    continue  # The shared P1/P2 official anchor is labelled once.
+                label = f"{groups[problem, core]['n']}/100"
+                if core == 1 and problem == "P1":
+                    label = "P1/P2: " + label
+                ax.annotate(label, (core, value),
+                            xytext=(0, 11 if problem == "P3" else -17), textcoords="offset points",
                             ha="center", color=color, fontsize=8)
     ax.axhline(1, color="#808080", linewidth=.8, linestyle=":")
     ax.set_xticks(range(1, 6))
@@ -272,43 +294,71 @@ def comparison(summaries, output, text):
     ax.grid(axis="y", color="#dddddd", linewidth=.6)
     ax.spines[["top", "right"]].set_visible(False)
     ax.legend(frameon=False, loc="best")
-    fig.subplots_adjust(left=.10, right=.97, top=.87, bottom=.21)
+    fig.subplots_adjust(left=.10, right=.97, top=.87, bottom=.26)
+    if snapshot_label:
+        fig.text(.5, .145, snapshot_label, ha="center", fontsize=8, color="#555555")
     fig.text(.5, .095, text("formula"), ha="center", fontsize=9)
     fig.text(.5, .06, text("count") + " = n/100; " + text("coverage"), ha="center", fontsize=8)
     fig.text(.5, .025, text("p3"), ha="center", fontsize=8)
+    fig.text(.5, .006, text("anchors"), ha="center", fontsize=7.5)
     save_figure(fig, output, "mean_multicore_comparison")
     write_csv(output / "mean_comparison.csv", wide)
     (output / "mean_comparison.md").write_text("\n".join(markdown) + "\n", encoding="utf-8")
+
+
+def matched_comparison(rows, output):
+    """Supplementary comparison on one identical case set for all 15 groups."""
+    common = [case for case in CASES if all(
+        metric_value(rows.get((problem, case, core)), "multicore_speedup") is not None
+        for problem in PROBLEMS for core in range(1, 6))]
+    table = []
+    for core in range(1, 6):
+        row = dict(cores=core, common_n=len(common), expected=100)
+        for problem in PROBLEMS:
+            values = [metric_value(rows[problem, case, core], "multicore_speedup") for case in common]
+            row[problem + "_mean"] = statistics.fmean(values) if values else None
+        table.append(row)
+    write_csv(output / "matched_mean_comparison.csv", table)
+    return {"cases": common, "n": len(common), "expected": 100,
+            "selection": "Identical subset with a valid multicore ratio for every P1/P2/P3 core count 1..5",
+            "limitation": "Supplementary complete-case subset, not the full 100-case result; P3 remains an extension metric"}
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--csv", required=True, type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
+    parser.add_argument("--snapshot-label", default="", help="Visible provenance/status caption for this snapshot")
     args = parser.parse_args()
-    rows = read_rows(args.csv)
+    raw_csv = args.csv.read_bytes()
+    rows = read_rows(args.csv, raw_csv)
     args.output_dir.mkdir(parents=True, exist_ok=False)
+    (args.output_dir / "input_comparison.csv").write_bytes(raw_csv)
     plt.rcParams.update({"pdf.fonttype": 42, "svg.fonttype": "none", "axes.unicode_minus": False})
     font, chinese = configure_font()
     text = lambda name: LABELS[name][0 if chinese else 1]
     grids = [matrix(rows, problem, (2, 3, 4, 5), "multicore_speedup") for problem in PROBLEMS]
     norm, limits = scale(grids)
     for problem, values in zip(PROBLEMS, grids):
-        heatmap(values, (2, 3, 4, 5), problem, norm, limits, args.output_dir, text)
+        heatmap(values, (2, 3, 4, 5), problem, norm, limits, args.output_dir, text,
+                snapshot_label=args.snapshot_label)
     cache = matrix(rows, "P3", (1, 2, 3, 4, 5), "cache_speedup")
     cache_norm, cache_limits = scale([cache])
-    heatmap(cache, (1, 2, 3, 4, 5), "P3", cache_norm, cache_limits, args.output_dir, text, cache=True)
+    heatmap(cache, (1, 2, 3, 4, 5), "P3", cache_norm, cache_limits, args.output_dir, text,
+            cache=True, snapshot_label=args.snapshot_label)
     summaries = [summary(rows, problem, core, "multicore_speedup")
                  for problem in PROBLEMS for core in range(1, 6)]
     summaries += [summary(rows, "P3", core, "cache_speedup") for core in range(1, 6)]
     write_csv(args.output_dir / "summary_statistics.csv", summaries)
-    comparison(summaries, args.output_dir, text)
+    comparison(summaries, args.output_dir, text, args.snapshot_label)
+    matched = matched_comparison(rows, args.output_dir)
     try:
         commit = subprocess.check_output(["git", "rev-parse", "HEAD"],
                                          cwd=Path(__file__).resolve().parents[2], text=True).strip()
     except (OSError, subprocess.CalledProcessError):
         commit = None
-    metadata = dict(input_csv=args.csv.name, input_sha256=hashlib.sha256(args.csv.read_bytes()).hexdigest(),
+    metadata = dict(input_csv=args.csv.name, saved_input_csv="input_comparison.csv",
+                    input_sha256=hashlib.sha256(raw_csv).hexdigest(),
                     plot_source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                     plot_checkout_head=commit, source_commits=sorted({row["source_commit"] for row in rows.values()}),
                     algorithms={problem: sorted({row["algorithm"] for row in rows.values()
@@ -323,10 +373,15 @@ def main():
                     cache_metric="same-plan same-core no_cache_makespan_cycles / makespan_cycles, P3 only",
                     timing_units="seconds; solver and external E0 times are separate from simulated cycle ratios",
                     limitations=["P3 multicore speedup is an extension metric",
+                                 "P1/P2 core-1 points are shared official anchors, not actual P1/P2 solver runs",
                                  "Coverage may differ across groups; inspect n/100 before comparison",
                                  "Ratios and same-plan provenance are supplied by the benchmark CSV producer",
                                  "Export completed; visual inspection by the caller is still required"],
                     summaries=summaries)
+    metadata["matched_multicore_subset"] = matched
+    metadata["snapshot_label"] = args.snapshot_label
+    if args.snapshot_label:
+        metadata["command"] += ["--snapshot-label", args.snapshot_label]
     (args.output_dir / "plot_summary.json").write_text(
         json.dumps(metadata, ensure_ascii=False, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     print(json.dumps({"output_dir": str(args.output_dir), "font": font,
