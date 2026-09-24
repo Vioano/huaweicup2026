@@ -63,10 +63,15 @@ def check():
     source_paths = [p for p in source_paths if p.endswith(('.py','.json'))]
     actual_paths = [str(p.relative_to(ROOT)) for folder in ('src/q1','src/eval_exact') for p in (ROOT/folder).rglob('*') if p.suffix in ('.py','.json')]
     if set(source_paths) != set(actual_paths): raise RuntimeError('source module closure differs')
-    archived = 'AI chats/P1多Pipe链构造证明/附件/r1-p1_s6607/p1_phase_cut.py'
+    sources = h.read(ROOT/'src/q1/unified_sources.json')
+    archived = sources['archived_return_path']
+    if archived != 'AI chats/P1多Pipe链构造证明/附件/r1-p1_s6607/p1_phase_cut.py':
+        raise RuntimeError('Archived return dependency path changed')
     for path in source_paths + [archived,'uv.lock','pyproject.toml','docs/a/source-manifest.json']:
         if (ROOT/path).read_bytes() != h.git('show',f'{SOURCE}:{path}'):
             raise RuntimeError(f'fixed source differs: {path}')
+    if h.sha(ROOT/archived) != sources['archived_return_sha256']:
+        raise RuntimeError('Archived return dependency SHA-256 differs')
     import subprocess
     check_import = subprocess.run([sys.executable,'-B','-c','import src.q1.unified'],
                                   cwd=ROOT,capture_output=True,text=True)
