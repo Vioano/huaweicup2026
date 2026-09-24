@@ -13,7 +13,7 @@
 
 ## 交付记录
 
-实际命令：`python -m unittest tests.q1.test_unified_stage_k -v`（父现有虚拟环境，Windows；5 tests OK）。
+实际命令：`python -m unittest tests.q1.test_unified_stage_k -v`（父现有虚拟环境，Windows；6 tests OK）。
 
 代码提交与输入版本：交付时填写本分支完整 SHA；base `a0537aeb72dc702af86d67d3194587d581ac207c`；H `4f1b9f8be4bbcc98759a19451c108e62e80abb17`；J `aa3f18a71b117ebd0476c8d714c97d8d366d74d7`；E1 `5bfe53a29c1ba05167239f51ea937e602f7f85b4`。
 
