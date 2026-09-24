@@ -42,3 +42,13 @@ candidate sets. Three synthetic tests cover plan coverage/DAG, capacity,
 determinism, metadata independence, rejection and the serial whole-work rate.
 Python3.12.13 tests pass; no real constructor or E0/E1/E2 call has run for this
 new candidate. The previous source/data remain unchanged.
+
+Read-only check of the existing084 all-cut E0 output and plan: total rounded
+DDR service390951 cycles equals the observed union of all COPY intervals.
+Makespan399121 is only1.02089776 times that fixed-plan DDR service. The plan's
+boundary copy bytes exactly equal official scheduled-copy bytes23161962.
+Thus further Task ordering on this unchanged copy workload has little room;
+a better partition must trade fewer DDR copies against available M/V overlap.
+This is a fixed-partition resource bound, not a global optimum certificate.
+Evidence: results/a/q1-capacity-return-20260925/fixed-plan-analysis/ddr-audit.json.
+No scoring or real constructor was rerun for this analysis.
