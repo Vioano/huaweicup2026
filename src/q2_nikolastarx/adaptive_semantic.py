@@ -36,7 +36,7 @@ def _large_internal_crossings(template, plan):
     return len(crossings), sum(template['tensors'][t]['size'] for t, _, _ in crossings)
 
 
-def build(graph, cores, config):
+def build(graph, cores, config, *, component_builder=None):
     if type(cores) is not int or cores < 1:
         raise ValueError('cores must be a positive integer')
     index = DAGIndex(graph)
@@ -60,8 +60,8 @@ def build(graph, cores, config):
                       'index_constructions': 1, 'repair_construct_calls': 0}
     # Preserve the previous general route before considering a diagnosed repair.
     if len(index.components) >= cores:
-        plan, detail = build_from_index(index, cores, config)
-        route = 'component_envelope'
+        plan, detail = (component_builder or build_from_index)(index, cores, config)
+        route = detail.get('selected_strategy', 'component_envelope')
     else:
         plan, detail = index.build(cores, bandwidth=config['bandwidth'],
                                   cross_core_delay=config['cross_core_copy_delay_cycles'])
@@ -92,7 +92,7 @@ def dump(path, value):
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
 
 
-def main():
+def main(*, constructor=None, label='adaptive_semantic'):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('graph', type=Path)
     parser.add_argument('--config', type=Path, default=ROOT/'data/raw/a/official/data/config.txt')
@@ -109,20 +109,20 @@ def main():
     try:
         graph = json.loads(args.graph.read_text())
         config = {**read_evaluation_config(args.config), **read_scene_b_config(args.config)}
-        plan, detail = build(graph, args.cores, config)
-        folder = args.evidence/'adaptive_semantic'
+        plan, detail = (constructor or build)(graph, args.cores, config)
+        folder = args.evidence/label
         folder.mkdir()
         dump(folder/'plan.json', plan)
         raw = (folder/'plan.json').read_bytes()
         digest = hashlib.sha256(raw).hexdigest()
-        ledger['attempts'].append({'name': 'adaptive_semantic', 'status': 'constructed',
+        ledger['attempts'].append({'name': label, 'status': 'constructed',
                                   'detail': detail, 'plan_sha256': digest})
         if time.perf_counter() - started > args.wall:
             raise TimeoutError('construction exceeded solver wall limit')
         args.output.parent.mkdir(parents=True, exist_ok=True)
         with args.output.open('xb') as stream:
             stream.write(raw)
-        ledger.update(status='ok', selected='adaptive_semantic', plan_sha256=digest,
+        ledger.update(status='ok', selected=label, plan_sha256=digest,
                       stop_reason='single_structural_route_completed')
     except Exception as error:
         ledger.update(status='failed', error=repr(error))

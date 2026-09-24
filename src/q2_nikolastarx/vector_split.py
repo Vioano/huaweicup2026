@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from collections import Counter, defaultdict
 import heapq
+import math
 
 from .direct import Index, UnsupportedStructure, derive_multicore_plan
 from .vector_lanes import recognize, _tree_order
@@ -20,7 +21,15 @@ def _need(condition, reason):
 
 
 def _transfer(size, bandwidth, delay):
-    return delay + 2 * max(1, (size + bandwidth - 1) // bandwidth)
+    isolated = max(1, (size + bandwidth - 1) // bandwidth)
+    # Frozen COPY duration uses float division before ceil. An exact integer
+    # ceil can exceed it for large inputs, invalidating a claimed lower bound.
+    try:
+        official = max(1, math.ceil(size / bandwidth))
+    except (OverflowError, ValueError):
+        raise UnsupportedStructure('vector split: COPY duration exceeds numeric domain') from None
+    _need(isolated == official, 'COPY integer/official duration rounding differs')
+    return delay + 2 * isolated
 
 
 def _fixed_bound(index, model, owners, sequences, bandwidth, delay):

@@ -27,6 +27,13 @@ def homogeneous(lanes=12, stages=2, length=4):
 
 
 class VectorSplitTests(unittest.TestCase):
+    def test_copy_lower_bound_rejects_float_rounding_counterexample(self):
+        # Official ceil((2**53 + 1) / 2**53) is 1; integer ceil is 2.
+        # Reject instead of publishing a lower bound with too much COPY lag.
+        with self.assertRaisesRegex(UnsupportedStructure, 'rounding differs'):
+            vector_split._transfer(2**53 + 1, 2**53, 500)
+        self.assertEqual(vector_split._transfer(32768, 60, 500), 1594)
+
     def forbidden(self):
         context = ExitStack()
         for name in ('subprocess.Popen', 'multicore_cut_evaluate_problem_2.evaluate_scene_b',
