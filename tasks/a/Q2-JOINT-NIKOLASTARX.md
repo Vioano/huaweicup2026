@@ -15,4 +15,6 @@
 
 ## 交付记录
 
-待首批运行后填写固定报告与PR；无未运行成绩。
+首批已完成：`results/a/q2-nikolastarx/joint-20260924/REPORT.md`。as-run `73e40f6`（完整SHA见protocol），13/13次P2官方CLI、4项结构测试通过；002从72415到72056，044保留69113。两赢家完整JSON复跑相同。源、输入、输出与预算证据见同目录；所有额度已封存，无在途实验。
+
+命令：`.venv/bin/python -m src.q2_nikolastarx.pilot results/a/q2-nikolastarx/joint-20260924`。测后报告由 `python -m src.q2_nikolastarx.report <目录>` 重建，无评价。结果属于两图强种子的局部开发检查点，不能称完整求解器或普遍优于Fang；PR链接由任务Issue发布。
