@@ -1,0 +1,48 @@
+{
+  "gate": "WAIT_ROOT_EXECUTE_AND_TAIL6_RELEASE",
+  "source_commit": "48faef6f1386c3dc7d037674a38af29d533ba774",
+  "entrypoint": "src/q1/unified.py",
+  "runner_path": "src/q1_benchmarks/unified_smoke.py",
+  "cells": [
+    [
+      "051",
+      5
+    ],
+    [
+      "044",
+      5
+    ],
+    [
+      "031",
+      5
+    ],
+    [
+      "008",
+      5
+    ]
+  ],
+  "maximum_calls": {
+    "solver": 4,
+    "external_E0": 4,
+    "internal_E1": 16,
+    "E2": 0,
+    "retries": 0
+  },
+  "timeouts_seconds": {
+    "solver": 300,
+    "external_E0": 120,
+    "batch": 1800
+  },
+  "workers": 1,
+  "rss_limit_bytes": 4294967296,
+  "rss_sampling_seconds": 0.1,
+  "stop_policy": "First solver, internal score, E0, identity, consistency, resource or supervisor failure stops remaining cells; no retry.",
+  "online_cost": "All candidate construction and internal E1 included in outer solver wall; independent E0 separate.",
+  "internal_limits": {
+    "E1_per_cell": 4,
+    "E1_timeout_seconds": 60,
+    "startup_timeout_seconds": 10
+  },
+  "coordination": "Preparation only. Await frozen source SHA and explicit root EXECUTE after s59 tail6 release; no exclusive host claim.",
+  "exports": "No board export or additional experiment authorized in this preparation task."
+}
