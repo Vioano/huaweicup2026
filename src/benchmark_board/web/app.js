@@ -24,7 +24,7 @@ async function refresh(force=false){if(busy)return;busy=true;try{const response=
 function visibleCase(c){const s=$('#search').value.trim();if(!s)return true;const range=s.match(/^(\d+)\s*[-–~]\s*(\d+)$/);return range?+c>=+range[1]&&+c<=+range[2]:c.includes(s.padStart(3,'0'));}
 // Stable absolute scales for ratios; relative positions never change the colors.
 function mixColor(a,b,t){return a.map((v,i)=>Math.round(v+(b[i]-v)*t));}
-function inkFor(rgb){const lum=rgb.map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;}).reduce((s,v,i)=>s+v*[.2126,.7152,.0722][i],0);return lum>.179?'#101923':'#ffffff';}
+function inkFor(rgb){const lum=rgb.map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;}).reduce((s,v,i)=>s+v*[.2126,.7152,.0722][i],0);return lum>.179?'#000000':'#ffffff';}
 function absoluteColor(value,metric,low,high){
   const palette=[[45,54,77],[47,87,144],[29,145,147],[119,199,137],[239,226,132]];
   let t;
