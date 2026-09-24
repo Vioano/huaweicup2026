@@ -26,3 +26,17 @@ python3 reproduce.py \
 ```
 
 Outputs are `cells.csv` (500 paired rows) and `summary.json`. Feed inputs and producer checkouts are passed explicitly; no personal path is embedded in the script.
+
+## Per-cell tradeoffs
+
+Each triple is improved / equal / worse, comparing calendar with the frozen expanded algorithm. Lower extra DDR/spill is better; higher per-case byte hit rate is better. These are separate comparisons, not a composite score.
+
+|Cores|Extra DDR|Spill|Byte hit rate|
+|---:|---:|---:|---:|
+|1|0/100/0|0/100/0|0/100/0|
+|2|23/76/1|6/89/5|17/76/7|
+|3|23/74/3|3/93/4|23/74/3|
+|4|20/76/4|5/95/0|16/76/8|
+|5|20/76/4|4/96/0|16/76/8|
+
+At5cores, summed extra DDR decreases from 1,717,733,234 to 1,568,498,768 bytes; spill decreases from 757,086,460 to 750,578,324 bytes. The arithmetic mean of per-case byte hit rates increases from 0.301649 to 0.304436; it is not a global byte-weighted hit rate. Four improved-M cells have worse extra DDR and eight have worse hit rate. Thus improved aggregate traffic does not establish per-case dominance.

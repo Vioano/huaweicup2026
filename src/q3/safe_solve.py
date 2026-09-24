@@ -107,11 +107,19 @@ def main(policy=evaluate_candidates, *, candidate_limit=2):
         (args.evidence / "evaluations.json").write_bytes(encoded(evaluations))
         return result
 
+    best_result = None  # (raw SHA-256, compressed bytes, makespan)
+
     def save(name, plan, result):
+        nonlocal best_result
         folder = args.evidence / name
         folder.mkdir()
+        raw_result = encoded(result)
+        compressed = gzip.compress(raw_result, mtime=0)
+        score = result["makespan"]
+        if best_result is None or score < best_result[2]:
+            best_result = (hashlib.sha256(raw_result).digest(), compressed, score)
         files = {"plan": ("plan.json", encoded(plan)),
-                 "result": ("result.json.gz", gzip.compress(encoded(result), mtime=0))}
+                 "result": ("result.json.gz", compressed)}
         artifacts = {}
         for kind, (filename, data) in files.items():
             (folder / filename).write_bytes(data)
@@ -122,7 +130,10 @@ def main(policy=evaluate_candidates, *, candidate_limit=2):
     (plan, result, strategy), calls, candidates, selection = policy(
         index, args.cores, evaluate, save)
     payload = encoded(plan)
-    full = gzip.compress(encoded(result), mtime=0)
+    raw_result = encoded(result)
+    raw_hash = hashlib.sha256(raw_result).digest()
+    full = (best_result[1] if best_result is not None and raw_hash == best_result[0]
+            else gzip.compress(raw_result, mtime=0))
     receipt = {"strategy": strategy, "selected_strategy": strategy,
                "official_e0_calls": calls, "candidate_limit": candidate_limit,
                "seed_selection": selection, "candidates": candidates,

@@ -421,7 +421,8 @@ def _gap_trial(index, nodes, block_id, block_of, core, roots, tails,
     return local, trial_roots, starts, inserted
 
 
-def construct(index, cores, cross_delay=500, *, pack_ffn=False, placement_mode="append"):
+def construct(index, cores, cross_delay=500, *, pack_ffn=False, placement_mode="append",
+              final_order="ready"):
     """One construction, at most k core trials/unit; optional closed FFN packing."""
     if type(cores) is not int or cores < 1:
         raise ValueError("cores must be a positive integer")
@@ -431,6 +432,8 @@ def construct(index, cores, cross_delay=500, *, pack_ffn=False, placement_mode="
         raise ValueError("pack_ffn must be a boolean")
     if placement_mode not in ("append", "gap"):
         raise ValueError("placement_mode must be 'append' or 'gap'")
+    if final_order not in ("ready", "placement"):
+        raise ValueError("final_order must be 'ready' or 'placement'")
     ports = _ports(index)
     rows = _recognize(index, ports)
     ffn_diamonds = _packed_ffn_motifs(index, ports, rows) if pack_ffn else ()
@@ -447,7 +450,7 @@ def construct(index, cores, cross_delay=500, *, pack_ffn=False, placement_mode="
                 for j, b in enumerate(blocks)]
     pipe_free = [{"PIPE_M": 0, "PIPE_V": 0} for _ in range(cores)]
     calendars = [{p: empty() for p in ("PIPE_M", "PIPE_V")} for _ in range(cores)] if placement_mode == "gap" else None
-    finish, op_owner = {}, {}
+    finish, op_owner, placement_starts = {}, {}, {}
     degree = {j: len(predecessors[j]) for j in successors}
     ready = [(-bottom[j], blocks[j]["nodes"][0], j) for j in successors if not degree[j]]
     heapq.heapify(ready)
@@ -495,6 +498,7 @@ def construct(index, cores, cross_delay=500, *, pack_ffn=False, placement_mode="
             calendars[c] = roots
             inserted_before_tail += inserted
         finish.update(local)
+        placement_starts.update(starts)
         op_owner.update((u, c) for u in blocks[j]["nodes"])
         schedules[c].extend(blocks[j]["nodes"])
         global_word.extend(blocks[j]["nodes"])
@@ -512,9 +516,18 @@ def construct(index, cores, cross_delay=500, *, pack_ffn=False, placement_mode="
     if any(rank[u] >= rank[v] for u in index.ops for v in index.succ[u]):
         raise AssertionError("global capsule selection order is not original-DAG topological")
     placement_proxy = max(finish.values())
-    # Placement trials commit capsule words only to choose ownership. The final
-    # singleton word is built afresh, so different rows may overlap/interleave.
-    schedules, finish, starts, global_word = _ready_word(index, op_owner, cores, cross_delay)
+    if final_order == "placement":
+        # Positive durations make every original dependency and each calendar
+        # reservation strictly later than its predecessor's start. Sorting by
+        # the committed starts therefore preserves both partial orders.
+        global_word = sorted(index.ops, key=lambda u: (placement_starts[u], u))
+        schedules = [[] for _ in range(cores)]
+        for u in global_word:
+            schedules[op_owner[u]].append(u)
+        starts = placement_starts
+    else:
+        # The historical fixed-owner ready pass is the default verbatim path.
+        schedules, finish, starts, global_word = _ready_word(index, op_owner, cores, cross_delay)
     rank = {u: i for i, u in enumerate(global_word)}
     if any(rank[u] >= rank[v] for u in index.ops for v in index.succ[u]):
         raise AssertionError("final global word is not original-DAG topological")
@@ -567,4 +580,14 @@ def construct(index, cores, cross_delay=500, *, pack_ffn=False, placement_mode="
         metadata["complexity"] = "recognition worst-case O(C*(V+E)); quotient/placement O(k*(V+E) log V+(V+E) log V); final ready pass O((V+E) log V+kV)"
         metadata["limitations"][2] = "Placement trials reserve persistent M/V calendar gaps; the final op-level ready pass may improve or worsen that proxy and does not revisit ownership."
         metadata["limitations"].append("Gap calendar timing is a placement proxy only; it does not prove E0 timing, DDR traffic, or capacity feasibility.")
+    if final_order == "placement":
+        metadata["strategy"] += "_placement_word"
+        metadata["final_order"] = "placement"
+        metadata["placement_witness"] = {
+            str(u): {"start": starts[u], "finish": finish[u]}
+            for u in index.order}
+        metadata["order"] = "placement: quotient bottom-level ready; final global word: committed operation starts then ID, projected per core"
+        metadata["complexity"] = metadata["complexity"].replace(
+            "final ready pass O((V+E) log V+kV)", "final witness sort O(V log V)")
+        metadata["limitations"][2] = "The final word preserves the committed placement timing witness under compute dependencies, per-pipe FIFO and fixed cross-core delay; this is not an E0 bound."
     return plan, metadata
