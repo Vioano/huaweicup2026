@@ -253,6 +253,11 @@ $('#close-detail').onclick=()=>{
   [...document.querySelectorAll('[data-case]')].find(b=>b.dataset.p===previous?.problem&&b.dataset.case===previous?.case_id&&+b.dataset.k===previous?.cores)?.focus({preventScroll:true});
 };
 if(updateURL)window.history.replaceState(null,'','#'+q.toString());render();
+// Keep the selected cell visible: a right-side inspector would cover P3 cells.
+const anchor=[...document.querySelectorAll('[data-case]')].find(b=>b.dataset.p===s.problem&&b.dataset.case===s.case_id&&+b.dataset.k===s.cores);
+const viewportWidth=document.documentElement.clientWidth;
+const rightInspectorStart=viewportWidth-12-panel.getBoundingClientRect().width;
+panel.classList.toggle('dock-left',Boolean(viewportWidth>850&&anchor?.getBoundingClientRect().right>rightInspectorStart));
 if(focused){const target=[...panel.querySelectorAll('button,a')].find(el=>focused.id?el.id===focused.id:focused.href&&el.getAttribute('href')===focused.href);(target||$('#close-detail')).focus({preventScroll:true});}
 else if(updateURL)$('#close-detail').focus({preventScroll:true});
 panel.scrollTop=keepPosition?previousScroll:0;
