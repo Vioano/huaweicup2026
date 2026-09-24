@@ -8,7 +8,8 @@ import subprocess
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
-from .github import fixed_sha, path_ok, RemoteError
+from datetime import datetime
+from .github import fixed_sha, path_ok, RemoteError, MAX_FILE
 from .snapshot import (atomic_write, canonical, digest, now, read_central, publish_files,
                        unpack, reject_history_regression, payload_name, git_json)
 from .submission import discover, references, MAX_FEED
@@ -40,6 +41,8 @@ class Engine:
         self._upload_status={'stage':'idle','started_at':None,'finished_at':None,'errors':[]}
         self._receive_thread=None
         self._receive_worker_status={'stage':'idle','started_at':None,'finished_at':None,'pending':0,'errors':[]}
+        self._local_fastpath_status={'state':'idle','delivery_id':None,'started_at':None,
+                                     'finished_at':None,'error':None}
 
     def sign(self,domain,payload): return self.signatures.sign(domain,self.actor,payload,self.key)
     def verify(self,envelope,domain,*,central=False):
@@ -138,15 +141,126 @@ class Engine:
                             'channels/central.json':canonical(self.sign('snapshot',channel))},
                            expected={'channels/central.json':canonical(envelope) if envelope else None})
 
+    @staticmethod
+    def _local_commit_files(repo,commit,paths,max_bytes=128*1024*1024):
+        """Read a bounded set of regular blobs from an immutable local commit."""
+        commit=fixed_sha(commit);paths=[path_ok(path) for path in paths]
+        base=['git','-C',str(repo)]
+        subprocess.run(base+['cat-file','-e',commit+'^{commit}'],stdout=subprocess.DEVNULL,
+                       stderr=subprocess.DEVNULL,timeout=15,check=True)
+        listing=subprocess.run(base+['ls-tree','-rz',commit,'--',*paths],stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE,timeout=20,check=True).stdout
+        entries={}
+        for item in listing.split(b'\0'):
+            if not item: continue
+            meta,name=item.split(b'\t',1);mode,kind,sha=meta.decode('ascii').split(' ')
+            name=name.decode('utf-8')
+            if name not in paths or kind!='blob' or mode not in ('100644','100755'):
+                raise ValueError('Local source is not a regular file: '+name)
+            entries[name]=fixed_sha(sha)
+        if set(entries)!=set(paths): raise FileNotFoundError('Local fixed commit is missing source files')
+        object_ids=('\n'.join(entries.values())+'\n').encode('ascii')
+        checked=subprocess.run(base+['cat-file','--batch-check'],input=object_ids,
+                               stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=15,check=True).stdout
+        sizes={};total=0
+        for name,line in zip(entries,checked.splitlines()):
+            fields=line.decode('ascii').split()
+            if len(fields)!=3 or fields[0]!=entries[name] or fields[1]!='blob':
+                raise ValueError('Invalid local Git object size header')
+            size=int(fields[2]);total+=size
+            if size<0 or size>MAX_FILE or total>max_bytes:
+                raise ValueError('Local fast-path artifact set exceeds size bound')
+            sizes[name]=size
+        if len(sizes)!=len(entries): raise ValueError('Incomplete local Git object size response')
+        proc=subprocess.run(base+['cat-file','--batch'],input=object_ids,
+                            stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=30,check=True)
+        data=proc.stdout;offset=0;result={}
+        for name,want in entries.items():
+            end=data.find(b'\n',offset)
+            if end<0: raise ValueError('Invalid local Git batch header')
+            fields=data[offset:end].decode('ascii').split();offset=end+1
+            if len(fields)!=3 or fields[0]!=want or fields[1]!='blob': raise ValueError('Local Git object identity mismatch')
+            size=int(fields[2])
+            if sizes.get(name)!=size: raise ValueError('Local Git object size changed')
+            blob=data[offset:offset+size];offset+=size
+            if len(blob)!=size or data[offset:offset+1]!=b'\n': raise ValueError('Truncated local Git object')
+            offset+=1
+            import hashlib
+            if hashlib.sha1(b'blob '+str(size).encode()+b'\0'+blob).hexdigest()!=want:
+                raise ValueError('Local Git blob hash mismatch')
+            result[name]=blob
+        return result
+
+    def materialize_local_submission(self,entry,envelope):
+        """Use the same signed submission to reach this machine's central inbox.
+
+        The normal remote publication still runs. This only avoids sending a
+        leader's own verified result through GitHub to its co-located ledger.
+        """
+        if self.role!='leader' or entry.get('payload',{}).get('actor')!=self.actor:
+            return False
+        payload=self.verify(envelope,'submission')
+        identity=digest(canonical(payload))
+        if entry.get('id')!=identity: raise ValueError('Local fast-path submission identity mismatch')
+        repo=entry.get('repo');commit=fixed_sha(payload.get('commit'));feed_path=path_ok(payload.get('feed'))
+        feed_bytes=self._local_commit_files(repo,commit,[feed_path])[feed_path]
+        if len(feed_bytes)>MAX_FEED or digest(feed_bytes)!=payload.get('feed_sha256'):
+            raise ValueError('Local fast-path feed hash mismatch')
+        feed=json.loads(feed_bytes);refs=references(feed)
+        if refs!=payload.get('artifacts'): raise ValueError('Local fast-path artifact manifest mismatch')
+        producers={r.get('provenance',{}).get('producer_session','').split('/')[0].lower()
+                   for r in feed['records']}
+        if producers!={self.actor.lower()}: raise ValueError('Local fast-path producer identity mismatch')
+        target=Path(self.config['central']['inbox'])/identity
+        if (target/'request.json').exists():
+            prior=read_json(target/'request.json')
+            source=prior.get('source',{}) if isinstance(prior,dict) else None
+            if not isinstance(source,dict) or prior.get('id')!=identity or source.get('commit')!=commit:
+                raise ValueError('Existing local inbox request has conflicting identity')
+            return True
+        if (target/'result.json').exists():
+            prior=read_json(target/'result.json')
+            if not isinstance(prior,dict) or prior.get('id')!=identity or prior.get('state') not in ('accepted','rejected'):
+                raise ValueError('Existing local inbox result has conflicting identity')
+            return True
+        files=self._local_commit_files(repo,commit,list(refs)) if refs else {}
+        for name,sha in refs.items():
+            data=files[name]
+            if digest(data)!=sha: raise ValueError('Local fast-path artifact hash mismatch: '+name)
+            atomic_write(target/'artifacts'/name,data)
+        atomic_write(target/'feed.json',feed_bytes)
+        source={'id':f'auto:{self.actor}:{identity}','repo':self.remote.repository,'commit':commit,
+                'feed':feed_path,'path':feed_path,
+                'url':f'https://github.com/{self.remote.repository}/blob/{commit}/{feed_path}'}
+        write_json(target/'request.json',{'schema_version':1,'id':identity,'feed_file':'feed.json','source':source})
+        return True
+
     def deliver_outbox(self,head,errors=None):
         if errors is None: errors=self.errors
         folder=self.state/'outbox'
-        entries=sorted(folder.glob('*/entry.json'))
+        entries=list(folder.glob('*/entry.json'))
+        # New result slices should join the transport promptly even while older
+        # receipts are outstanding. FIFO by durable enqueue time remains stable
+        # for the old work and is deterministic across restarts.
+        def enqueue_key(path):
+            try:
+                item=read_json(path);queued=item.get('queued_at','')
+                state=item.get('state')
+                # A fresh complete feed must not sit behind hundreds of entries
+                # whose immutable envelopes are already published and just await
+                # a receipt. Those are cheaply reconciled from the central tree.
+                group=0 if state in ('queued','publishing') else 1
+                return (group,not isinstance(queued,str),queued if isinstance(queued,str) else '',path.parent.name)
+            except (OSError,ValueError,TypeError):
+                return (2,True,'',path.parent.name)
+        entries.sort(key=enqueue_key)
         pending={};parents=[];commit_presence={}
         lane=submission_lane(self.actor)
         lane_head=self.remote.head(lane) if entries else None
         lane_tree=self.remote.tree(lane_head) if lane_head else {}
-        legacy_tree=None
+        # Receipt and legacy-submission presence are in this immutable head.
+        # One cached tree lookup replaces one REST read per outbox entry.
+        legacy_tree=self.remote.tree(head) if entries and head else {}
         def publish_pending():
             if not pending: return
             batch=dict(pending)
@@ -201,7 +315,7 @@ class Engine:
             if entry['state'] in ('accepted','rejected'): continue
             try:
                 receipt_path='receipts/'+self.actor+'/'+entry['id']+'.json'
-                try: receipt=json.loads(self.remote.read(head,receipt_path)) if head else None
+                try: receipt=json.loads(self.remote.read(head,receipt_path)) if head and receipt_path in legacy_tree else None
                 except FileNotFoundError: receipt=None
                 if receipt:
                     result=self.verify(receipt,'receipt',central=True)
@@ -209,13 +323,45 @@ class Engine:
                         raise ValueError('Receipt identity/state mismatch')
                     entry.update(state=result['state'],receipt=result,error=None);write_json(path,entry);continue
                 published='submissions/'+self.actor+'/'+entry['id']+'.json'
-                if legacy_tree is None: legacy_tree=self.remote.tree(head) if head else {}
+                is_published=published in lane_tree or published in legacy_tree
+                if entry['state']=='awaiting_receipt' and is_published:
+                    envelope=self.sign('submission',payload)
+                    if self.role=='leader' and payload.get('actor')==self.actor:
+                        try:
+                            self._local_fastpath_status={'state':'syncing','delivery_id':entry['id'],
+                                                         'started_at':now(),'finished_at':None,'error':None}
+                            self.materialize_local_submission(entry,envelope)
+                            self._local_fastpath_status={'state':'ready','delivery_id':entry['id'],
+                                                         'started_at':self._local_fastpath_status['started_at'],
+                                                         'finished_at':now(),'error':None}
+                        except (OSError,ValueError,KeyError,TypeError,subprocess.SubprocessError) as error:
+                            self._local_fastpath_status={'state':'fallback_remote','delivery_id':entry['id'],
+                                'started_at':self._local_fastpath_status['started_at'],'finished_at':now(),
+                                'error':str(error)}
+                    # Presence in the immutable tree is enough here: the same
+                    # writer already recorded successful publication. Do not read
+                    # hundreds of unchanged envelopes merely to reassert it.
+                    continue
                 try:
                     if published in lane_tree: existing=json.loads(self.remote.read(lane_head,published))
                     elif published in legacy_tree: existing=json.loads(self.remote.read(head,published))
                     else: existing=None
                 except FileNotFoundError: existing=None
                 envelope=self.sign('submission',payload)
+                if entry['state'] not in ('accepted','rejected') and self.role=='leader' and payload.get('actor')==self.actor:
+                    try:
+                        self._local_fastpath_status={'state':'syncing','delivery_id':entry['id'],
+                                                     'started_at':now(),'finished_at':None,'error':None}
+                        self.materialize_local_submission(entry,envelope)
+                        self._local_fastpath_status={'state':'ready','delivery_id':entry['id'],
+                                                     'started_at':self._local_fastpath_status['started_at'],
+                                                     'finished_at':now(),'error':None}
+                    except (OSError,ValueError,KeyError,TypeError,subprocess.SubprocessError) as error:
+                        # Local acceleration is optional; the authenticated remote
+                        # route remains authoritative and retries without data loss.
+                        self._local_fastpath_status={'state':'fallback_remote','delivery_id':entry['id'],
+                            'started_at':self._local_fastpath_status['started_at'],'finished_at':now(),
+                            'error':str(error)}
                 if existing:
                     if existing!=envelope: raise ValueError('Submission ID already has different bytes')
                     # The immutable envelope already exists. Its original batch may
@@ -267,7 +413,8 @@ class Engine:
             if not dest.exists() or digest(dest.read_bytes())!=sha: missing.append((name,sha,dest))
         def download(item):
             name,sha,dest=item
-            value=self.remote.read(commit,name)
+            reader=getattr(self.remote,'read_path',None)
+            value=reader(commit,name) if reader else self.remote.read(commit,name)
             if digest(value)!=sha: raise ValueError('Artifact content hash mismatch: '+name)
             atomic_write(dest,value)
         # Only artifact GETs run concurrently; all signatures, Git writes, cursor updates
@@ -325,9 +472,23 @@ class Engine:
                 ordered.append((actor,lane_head,lane_tree,group,cursor_key,path))
         self.receive_status={'pending':pending_count,'budget_seconds':30 if pending_count>4 else 8}
         pending_buckets={};completed_buckets={}
+        first_seen=progress.setdefault('first_seen',{})
+        if not isinstance(first_seen,dict): first_seen={};progress['first_seen']=first_seen
+        # snapshot.now() remains injectable in deterministic scheduler tests and
+        # is persisted as a wall-clock timestamp so age survives process restarts.
+        observed_at=datetime.fromisoformat(now()).timestamp()
         for actor,lane_head,lane_tree,group,cursor_key,path in ordered:
             cursor=progress.get(cursor_key,'')
             if not isinstance(cursor,str): cursor=''
+            seen_key=cursor_key+'|'+path
+            receipt_path='receipts/'+path.removeprefix('submissions/')
+            if receipt_path in central_tree:
+                first_seen.pop(seen_key,None)
+            else:
+                seen=first_seen.get(seen_key)
+                if (isinstance(seen,bool) or not isinstance(seen,(int,float)) or seen<0
+                        or seen>observed_at+30):
+                    first_seen[seen_key]=observed_at
             item=(actor,lane_head,lane_tree,group,cursor_key,path,path>cursor)
             buckets=pending_buckets if group=='pending' else completed_buckets
             buckets.setdefault(cursor_key,[]).append(item)
@@ -348,7 +509,25 @@ class Engine:
         if type(lane_rotation) is not int: lane_rotation=0
         pending_items,lane_keys=round_robin(pending_buckets,lane_rotation)
         completed_items,_=round_robin(completed_buckets,lane_rotation)
-        scheduled=pending_items+completed_items
+        fresh_cutoff=observed_at-30
+        def split_fresh(items):
+            fresh=[];old=[]
+            for item in items:
+                key=item[4]+'|'+item[5]
+                (fresh if first_seen.get(key,0)>=fresh_cutoff else old).append(item)
+            return fresh,old
+        fresh_pending,old_pending=split_fresh(pending_items)
+        fresh_completed,old_completed=split_fresh(completed_items)
+        # Fresh pending submissions get a fast lane, but one old pending item is
+        # admitted after every four fresh ones so continuous arrivals cannot starve
+        # the durable backlog. Completed items remain lower priority than pending.
+        scheduled=[]
+        for offset in range(0,len(fresh_pending),4):
+            scheduled.extend(fresh_pending[offset:offset+4])
+            old_index=offset//4
+            if old_index<len(old_pending): scheduled.append(old_pending[old_index])
+        scheduled.extend(old_pending[(len(fresh_pending)+3)//4:])
+        scheduled.extend(fresh_completed);scheduled.extend(old_completed)
         if lane_keys: progress['lane_rotation']=lane_rotation%len(lane_keys)
         deadline=time.monotonic()+self.receive_status['budget_seconds']
         seen_submissions={}
@@ -393,7 +572,8 @@ class Engine:
                 if (target/'request.json').exists(): continue
                 verified_delivery=True
                 commit=fixed_sha(payload['commit']); feed_path=path_ok(payload['feed'])
-                data=self.remote.read(commit,feed_path)
+                reader=getattr(self.remote,'read_path',None)
+                data=reader(commit,feed_path) if reader else self.remote.read(commit,feed_path)
                 if len(data)>MAX_FEED or digest(data)!=payload['feed_sha256']: raise ValueError('Feed hash mismatch')
                 feed=json.loads(data); refs=references(feed)
                 if refs!=payload['artifacts']: raise ValueError('Incomplete submission artifact manifest')
@@ -447,7 +627,8 @@ class Engine:
                 'transport':{'backend':'github-api','poll_seconds':self.config.get('poll_seconds',2)},
                 'current_stage':None,'stage_started_at':None,'stage_timings_ms':{},
                 'runtime_stage':previous.get('runtime_stage'),'runtime_stage_started_at':previous.get('runtime_stage_started_at'),
-                'runtime_stage_timings_ms':previous.get('runtime_stage_timings_ms',{})}
+                'runtime_stage_timings_ms':previous.get('runtime_stage_timings_ms',{}),
+                'local_fastpath':dict(self._local_fastpath_status)}
         write_json(status_path,status)
         def stage(name,operation):
             started=time.monotonic()
@@ -509,6 +690,7 @@ class Engine:
         if current.exists():
             m=read_json(current); status['data']={k:m.get(k) for k in ('snapshot_id','sequence','record_count','generated_at','verified_at')}
         status['upload']=self.outbox_counts()
+        status['local_fastpath']=dict(self._local_fastpath_status)
         software=self.state/'software'/'status.json'
         if software.exists(): status['software']=read_json(software)
         write_json(status_path,status)
