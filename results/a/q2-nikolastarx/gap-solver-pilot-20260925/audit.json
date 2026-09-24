@@ -1,0 +1,94 @@
+{
+  "status": "passed",
+  "coordinates": [
+    {
+      "case": "003",
+      "cores": 2,
+      "selected": "candidate",
+      "baseline_makespan": 511949,
+      "candidate_attempt_makespan": 248166,
+      "selected_makespan": 248166,
+      "delta_selected_makespan": -263783,
+      "baseline_extra_ddr": 98304,
+      "candidate_attempt_extra_ddr": 5067158,
+      "delta_candidate_extra_ddr": 4968854,
+      "solver_wall_seconds": 5.058028209023178,
+      "solver_internal_wall_seconds": 4.878824416024145,
+      "external_e0_wall_seconds": 3.3689509170362726,
+      "selected_plan_raw_sha256": "f4cf0b78c41bced2d8f8e76231083e2194c9e7ebef12499a53ec3d06ec59d24a",
+      "selected_plan_canonical_sha256": "6653a49602f4da8150809b685ff0cc1a26c8c9cf246c151c9682e6b7b42917b5"
+    },
+    {
+      "case": "005",
+      "cores": 3,
+      "selected": "candidate",
+      "baseline_makespan": 80167,
+      "candidate_attempt_makespan": 49426,
+      "selected_makespan": 49426,
+      "delta_selected_makespan": -30741,
+      "baseline_extra_ddr": 3101386,
+      "candidate_attempt_extra_ddr": 2394028,
+      "delta_candidate_extra_ddr": -707358,
+      "solver_wall_seconds": 1.7384513749857433,
+      "solver_internal_wall_seconds": 1.565649833995849,
+      "external_e0_wall_seconds": 0.7152567079756409,
+      "selected_plan_raw_sha256": "06da4bb75b626bd1a2fcbf3987b39485e82834407af758d8e93b4d33d8509ed3",
+      "selected_plan_canonical_sha256": "dc23ed1783691d699f915b19afd5d43148c37d1036adb2079197cc6da13918a2"
+    },
+    {
+      "case": "056",
+      "cores": 5,
+      "selected": "candidate",
+      "baseline_makespan": 253392,
+      "candidate_attempt_makespan": 96280,
+      "selected_makespan": 96280,
+      "delta_selected_makespan": -157112,
+      "baseline_extra_ddr": 0,
+      "candidate_attempt_extra_ddr": 4863236,
+      "delta_candidate_extra_ddr": 4863236,
+      "solver_wall_seconds": 3.8366011250182055,
+      "solver_internal_wall_seconds": 3.6346706250333227,
+      "external_e0_wall_seconds": 1.6915236670174636,
+      "selected_plan_raw_sha256": "ae83fd8bc8b3fed7447c53962d36be0c1c4f7ef46cde698d9fcf23d42a1b4aa2",
+      "selected_plan_canonical_sha256": "a1e8230d7b0a994fe00bbf0126120c58a0143e824d95ed8dfa907fb6b348531a"
+    },
+    {
+      "case": "008",
+      "cores": 5,
+      "selected": "baseline",
+      "baseline_makespan": 52291,
+      "candidate_attempt_makespan": 233682,
+      "selected_makespan": 52291,
+      "delta_selected_makespan": 0,
+      "baseline_extra_ddr": 0,
+      "candidate_attempt_extra_ddr": 11172480,
+      "delta_candidate_extra_ddr": 11172480,
+      "solver_wall_seconds": 0.9266969169839285,
+      "solver_internal_wall_seconds": 0.7572330419789068,
+      "external_e0_wall_seconds": 0.2513163340045139,
+      "selected_plan_raw_sha256": "046b1caf9643b63aa2352374ac6e7c9fd11fcb278a7cd80c96402dff52f0b26f",
+      "selected_plan_canonical_sha256": "60e875e5ed6100b69953edebb6d78a0e87d4b3802cdee46bad5014b497e48154"
+    }
+  ],
+  "calls": {
+    "solver": 4,
+    "E2_api": 8,
+    "native": 8,
+    "fallback": 0,
+    "E0_independent": 4
+  },
+  "processes": {
+    "count": 8,
+    "all_exit_0": true,
+    "all_surviving_pids_empty": true,
+    "all_inflight_false": true
+  },
+  "source_identity": {
+    "preflight_source_checked_all": true,
+    "solver_sources_match_manifest_except_runner": true,
+    "runner_script_sha256": "3e6c4198a817fb525c277ae1fca059026ab12c6c577ee62646d8930702304f49",
+    "e2_manifest_sha256": "9ee379269c0c4f25b64f9d0aeaf1e397e85e48c2103b08637db356d3c9595387"
+  },
+  "online_plan_json_count": 0,
+  "limits": "Four targeted coordinates only. Solver process wall includes launch and online E2; internal wall is separately retained; independent E0 wall is separate. No full algorithm mean or time-budget causal claim."
+}

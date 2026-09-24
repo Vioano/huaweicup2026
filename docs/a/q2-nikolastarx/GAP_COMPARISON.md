@@ -1,8 +1,8 @@
 # Whole-plan baseline versus join/gap candidate
 
 `python -m src.q2_nikolastarx.adaptive_gap_guarded` is an experimental solver
-entrypoint using the existing E2 CLI arguments. It has not yet been measured
-on official cases. It constructs the complete `adaptive_budget` plan, including
+entrypoint using the existing E2 CLI arguments. It has a four-coordinate
+official pilot, but no full500 measurement yet. It constructs the complete `adaptive_budget` plan, including
 existing semantic repairs, and a separate join/gap plan. Both are built online
 from the current graph and configuration. No case ID, historical result or
 stored winner selects the output.
@@ -65,8 +65,33 @@ His extra DDR totals are higher. The new gap table is only 200 cells and must
 not be labeled full500. This is a saved-table comparison, not a fresh audit
 of all his source/result identities or a cross-machine runtime comparison.
 
-Next: retain the already frozen six-chain-plan pilot while its resource window
-is pending; then validate this separate complete-plan entrypoint on an explicit
-small budget before any new full500 run. Only a new frozen all-case run can
-establish a new algorithm score. No whole-algorithm improvement or optimality
-claim is made here.
+## Official pilot and quality versus time
+
+The four-coordinate run fixes solver `923b25ecb0b9d6d0e2d3f149fccef431b5403f99`
+and runner `39341726395734626cd5dd903753cb1537c0f9a9`. Evidence is in
+`results/a/q2-nikolastarx/gap-solver-pilot-20260925/`. Eight public E2 requests
+returned native records; all four selected complete plans matched independent
+E0 on Makespan, five movement fields and cross-task traffic. There were no
+fallbacks, retries or surviving monitored descendants.
+
+| Case/core | Baseline to selected Makespan | Baseline to selected extra DDR (bytes) | Outer solver wall (s) |
+| --- | ---: | ---: | ---: |
+| 003/2 | 511949 to 248166 | 98304 to 5067158 | 5.058 |
+| 005/3 | 80167 to 49426 | 3101386 to 2394028 | 1.738 |
+| 056/5 | 253392 to 96280 | 0 to 4863236 | 3.837 |
+| 008/5 | 52291 to 52291 | 0 to 0 | 0.927 |
+
+008 constructed a candidate with Makespan 233682 and rejected it after scoring;
+the anticipated zero-score structural rejection was not exercised. The two
+online score requests consumed 58–69% of outer solver wall on these samples.
+External final E0 is excluded from solver wall and reported separately. Two
+of the three improvements increased extra DDR; the selector does not dominate
+the baseline on every metric.
+
+These are targeted cases, not a random sample or a controlled experiment in
+which only the time budget changed. They support testing more informative
+construction and limited online comparison, not merely raising a timeout or
+claiming that minutes of search must improve quality. The separate six-chain
+pilot improved five cases and regressed one; its results are not spliced into
+this algorithm's batch. A fresh frozen all-case run is the next quality and
+latency check. Until then, the complete algorithm score remains the 2794 batch.
