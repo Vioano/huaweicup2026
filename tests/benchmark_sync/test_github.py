@@ -5,7 +5,7 @@ from src.benchmark_sync.github import GitHub,RemoteError
 class RacingGitHub(GitHub):
  def __init__(self,collision):
   self.commits={};self.trees_data={};self.data={};self.latest='a'*40;self.trees={};self.counter=1
-  self.branch='test';self.collision=collision;self.raced=False;self.parents={};self.commits[self.latest]={'channel':self.put_blob(b'old')}
+  self.branch='test';self.collision=collision;self.raced=False;self.parents={};self.tree_bodies=[];self.commits[self.latest]={'channel':self.put_blob(b'old')}
  def new(self): self.counter+=1;return f'{self.counter:040x}'
  def head(self):return self.latest
  def tree(self,c):return {p:{'sha':sha,'size':len(self.data[sha])} for p,sha in self.commits[c].items()}
@@ -15,7 +15,11 @@ class RacingGitHub(GitHub):
  def request(self,method,path,body=None):
   if method=='GET':return {'tree':{'sha':path.rsplit('/',1)[-1]}}
   if path=='/git/trees':
-   values=dict(self.commits.get(body.get('base_tree'),{}));values.update({x['path']:x['sha'] for x in body['tree']})
+   self.tree_bodies.append(body)
+   values=dict(self.commits.get(body.get('base_tree'),{}))
+   for x in body['tree']:
+    sha=x.get('sha') or self.put_blob(x['content'].encode('utf-8'))
+    values[x['path']]=sha
    sha=self.new();self.trees_data[sha]=values;return {'sha':sha}
   if path=='/git/commits':
    sha=self.new();self.commits[sha]=self.trees_data[body['tree']];self.parents[sha]=body['parents'];return {'sha':sha}
@@ -28,6 +32,19 @@ class RacingGitHub(GitHub):
   raise AssertionError((method,path))
 
 class GitHubTests(unittest.TestCase):
+ def test_small_utf8_envelopes_are_inlined_while_binary_snapshots_use_blobs(self):
+  r=RacingGitHub(False);binary=b'\x00\xff'+b'x'*70000
+  r.update({'submissions/member/one.json':b'{"id":"one"}','objects/snapshot.gz':binary})
+  tree=r.tree(r.head());body=r.tree_bodies[-1]
+  self.assertEqual(len(body['tree']),2)
+  entries={x['path']:x for x in body['tree']}
+  self.assertEqual(entries['submissions/member/one.json']['content'],'{"id":"one"}')
+  self.assertNotIn('sha',entries['submissions/member/one.json'])
+  self.assertIn('sha',entries['objects/snapshot.gz'])
+  self.assertNotIn('content',entries['objects/snapshot.gz'])
+  self.assertEqual(r.blob(tree['submissions/member/one.json']['sha']),b'{"id":"one"}')
+  self.assertEqual(r.blob(tree['objects/snapshot.gz']['sha']),binary)
+
  def test_head_uses_conditional_etag_and_reuses_cached_sha_on_not_modified(self):
   import json,tempfile,types
   from pathlib import Path
