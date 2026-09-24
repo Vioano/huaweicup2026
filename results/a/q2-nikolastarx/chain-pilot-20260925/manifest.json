@@ -1,0 +1,172 @@
+{
+  "schema": "chain_pilot_v1",
+  "cases": [
+    "003",
+    "005",
+    "056",
+    "068",
+    "086",
+    "088"
+  ],
+  "preflight_commit": "ee4fe0282ca2ff5d73bb23d54b1c213909e1401c",
+  "baseline_commit": "60afc38b327680fbda0ff10182e3e05a01edd72d",
+  "constructor_commit": "47baf7f89948aa0a1ea2038c823e60513c78f160",
+  "e2_commit": "603b0741e21c449d3db652ebd67c94f2dc014cc9",
+  "e2_manifest": {
+    "path": "results/a/q2-nikolastarx/e2-plan-pairs-20260925/manifest.json",
+    "sha256": "9ee379269c0c4f25b64f9d0aeaf1e397e85e48c2103b08637db356d3c9595387"
+  },
+  "preflight_summary": {
+    "commit": "ee4fe0282ca2ff5d73bb23d54b1c213909e1401c",
+    "path": "results/a/q2-nikolastarx/structural-next-20260925/chain-preflight/summary.json",
+    "sha256": "0550eb9b14bcb42c83861905bb228b3d6fb3df2904c1b2f99ad2a71134185c4b"
+  },
+  "config": {
+    "path": "data/raw/a/official/data/config.txt",
+    "sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9"
+  },
+  "official_entry": "data/raw/a/official/code/multicore_cut_evaluate_problem_2.py",
+  "official_files": [
+    "code/contest_io.py",
+    "code/evaluation_validation.py",
+    "code/multicore_cut_evaluate_problem_1.py",
+    "code/multicore_cut_evaluate_problem_2.py",
+    "code/multicore_cut_evaluate_problem_3.py",
+    "code/schedule_step1.py",
+    "code/schedule_step2.py",
+    "code/schedule_step3.py",
+    "code/singlecore_evaluate.py",
+    "code/stub_multicore_cut_and_schedule.py"
+  ],
+  "limits": {
+    "e2_requests": 6,
+    "e2_fallback": 6,
+    "independent_e0": 6,
+    "retries": 0,
+    "workers": 1,
+    "case_seconds": 120,
+    "batch_seconds": 600,
+    "rss_bytes": 4294967296
+  },
+  "rows": [
+    {
+      "case": "003",
+      "graph": {
+        "path": "data/raw/a/official/data/case_003.json",
+        "sha256": "2c80acfd37edcf811ce76b7e7b1f7194c706bd4d4aa6449e6a19e9eac1028ced"
+      },
+      "candidate": {
+        "commit": "ee4fe0282ca2ff5d73bb23d54b1c213909e1401c",
+        "path": "results/a/q2-nikolastarx/structural-next-20260925/chain-preflight/003-k5-plan.json.gz",
+        "sha256": "47dade0a133537bf8d396cedd51898af8587393ed03f933a47520c5a1b259872"
+      },
+      "baseline_truth": {
+        "commit": "60afc38b327680fbda0ff10182e3e05a01edd72d",
+        "path": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s01/003-k5/final/result.json.gz",
+        "sha256": "c87e6e83dbe528dd99ca6eb7038536bcc7af80b60475966fb448f14c56c29226"
+      },
+      "baseline_m": 515736
+    },
+    {
+      "case": "005",
+      "graph": {
+        "path": "data/raw/a/official/data/case_005.json",
+        "sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f"
+      },
+      "candidate": {
+        "commit": "ee4fe0282ca2ff5d73bb23d54b1c213909e1401c",
+        "path": "results/a/q2-nikolastarx/structural-next-20260925/chain-preflight/005-k5-plan.json.gz",
+        "sha256": "ed07e3b0af99686f68c06799f8e4c99fad0a9c6616545ac2620a24b36193d613"
+      },
+      "baseline_truth": {
+        "commit": "60afc38b327680fbda0ff10182e3e05a01edd72d",
+        "path": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s01/005-k5/final/result.json.gz",
+        "sha256": "ceb4f6558cb533677df996c3f722c20aa5e415b5c8733df2c17836e39d7eb50f"
+      },
+      "baseline_m": 66385
+    },
+    {
+      "case": "056",
+      "graph": {
+        "path": "data/raw/a/official/data/case_056.json",
+        "sha256": "fda213426382a3810afd172eadc10b9221330b906888537cb13b16369be3369d"
+      },
+      "candidate": {
+        "commit": "ee4fe0282ca2ff5d73bb23d54b1c213909e1401c",
+        "path": "results/a/q2-nikolastarx/structural-next-20260925/chain-preflight/056-k5-plan.json.gz",
+        "sha256": "c3745e4a108be3cda980b7e2839ea117819086f9983f6da86aa6d5a3e4b9c286"
+      },
+      "baseline_truth": {
+        "commit": "60afc38b327680fbda0ff10182e3e05a01edd72d",
+        "path": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/056-k5/final/result.json.gz",
+        "sha256": "93c4bb00c7dbcfe1dd107a5c49276551234f795dee3769ebddbb70e5bda92b45"
+      },
+      "baseline_m": 253392
+    },
+    {
+      "case": "068",
+      "graph": {
+        "path": "data/raw/a/official/data/case_068.json",
+        "sha256": "dfd9a58ef9d26a8a4567026b50af8b4499d87eebb3d98f8208b909b11e963c6d"
+      },
+      "candidate": {
+        "commit": "ee4fe0282ca2ff5d73bb23d54b1c213909e1401c",
+        "path": "results/a/q2-nikolastarx/structural-next-20260925/chain-preflight/068-k5-plan.json.gz",
+        "sha256": "4ac36f9ce7837b7d0ca1899c1f6a41ab5ff30718e5035f56419a34df4db85971"
+      },
+      "baseline_truth": {
+        "commit": "60afc38b327680fbda0ff10182e3e05a01edd72d",
+        "path": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s03/068-k5/final/result.json.gz",
+        "sha256": "14818ac400432821cd494618d26fddaee332a70536e37713c5e27f3560931240"
+      },
+      "baseline_m": 295114
+    },
+    {
+      "case": "086",
+      "graph": {
+        "path": "data/raw/a/official/data/case_086.json",
+        "sha256": "ef91fda2692fd0add63db3c7f677e4e03c8d115d97db3cb959cffc62fff2434a"
+      },
+      "candidate": {
+        "commit": "ee4fe0282ca2ff5d73bb23d54b1c213909e1401c",
+        "path": "results/a/q2-nikolastarx/structural-next-20260925/chain-preflight/086-k5-plan.json.gz",
+        "sha256": "eddf64740334987279fa194c8cd1818002caca9cd22b7acdd174263251a75367"
+      },
+      "baseline_truth": {
+        "commit": "60afc38b327680fbda0ff10182e3e05a01edd72d",
+        "path": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s04/086-k5/final/result.json.gz",
+        "sha256": "89356128543d8c42422e423a289bc54b69c6872a28020cdfa79b6daa7f115945"
+      },
+      "baseline_m": 102180
+    },
+    {
+      "case": "088",
+      "graph": {
+        "path": "data/raw/a/official/data/case_088.json",
+        "sha256": "2ff71575ba33875431f54823fc1f2214e018edcfc9d568edfb7c47b0f264b825"
+      },
+      "candidate": {
+        "commit": "ee4fe0282ca2ff5d73bb23d54b1c213909e1401c",
+        "path": "results/a/q2-nikolastarx/structural-next-20260925/chain-preflight/088-k5-plan.json.gz",
+        "sha256": "60ffb6c15e80462daba1461b3b02ae35d00fd552dbac76a6907189e68aa62e6f"
+      },
+      "baseline_truth": {
+        "commit": "60afc38b327680fbda0ff10182e3e05a01edd72d",
+        "path": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/s04/088-k5/final/result.json.gz",
+        "sha256": "68525945cf41456179e3074eb652d5897df791fc58dc9cf69855e59f57abab49"
+      },
+      "baseline_m": 200888
+    }
+  ],
+  "baseline_feed": {
+    "commit": "60afc38b327680fbda0ff10182e3e05a01edd72d",
+    "path": "results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/board-feed-500-with-runtime-notes.json",
+    "sha256": "0b850686966d1d7c1ce1a8babb1655051756b42f9a59d5c6f6becd6a87f2f99c"
+  },
+  "source_manifest_sha256": "713792d81693757a71cb29b9daea7434192d1bf14fcb8efd25165e6f68d9cffc",
+  "constructor_source": {
+    "commit": "47baf7f89948aa0a1ea2038c823e60513c78f160",
+    "path": "src/q2_nikolastarx/chain_packets.py",
+    "sha256": "59c5b9d0cab785b55a56c031f414538a7c2595a489214dd6539626ea5812ed0f"
+  }
+}
