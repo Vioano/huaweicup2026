@@ -25,6 +25,9 @@ class Remote:
     def update(self,files,parents=(),expected=None,branch=None):
         head=self.current if branch is None else self.branches.get(branch)
         values=dict(self.commits.get(head,{}));values.update(files)
+        for path,want in (expected or {}).items():
+            current=self.commits.get(head,{}).get(path)
+            if current!=want: raise RuntimeError('Channel changed before publication; rebuild against latest generation')
         commit=hashlib.sha1(canonical({p:digest(v) for p,v in values.items()})).hexdigest()
         self.commits[commit]=values
         if branch is None:self.current=commit
@@ -102,14 +105,33 @@ class EngineTests(unittest.TestCase):
         self.remote.update({legacy:envelope})
         target=self.root/'inbox'/identity
         write_json(target/'result.json',{'schema_version':1,'id':identity,'state':'accepted','receipt':{'added':1},'error':None})
-        original=self.remote.update;published=[]
+        original=self.remote.update;published=[];expected_refs=[]
         def record(files,**kwargs):
             published.extend(path for path in files if path==f'receipts/member/{identity}.json')
+            expected_refs.append(kwargs.get('expected'))
             return original(files,**kwargs)
         with patch.object(self.remote,'update',side_effect=record):
             self.engines['leader'].receive_submissions(self.remote.head())
         self.assertEqual(published,[f'receipts/member/{identity}.json'])
+        self.assertEqual(expected_refs,[{f'receipts/member/{identity}.json':None}])
         self.assertIn(f'receipts/member/{identity}.json',self.remote.tree(self.remote.head()))
+
+    def test_concurrent_existing_receipt_is_never_overwritten(self):
+        from unittest.mock import patch
+        entry,identity=self.queue();payload=read_json(entry)['payload'];member=self.engines['member']
+        member.deliver_outbox(None)
+        write_json(self.root/'inbox'/identity/'result.json',{'schema_version':1,'id':identity,'state':'accepted','receipt':{'added':1},'error':None})
+        path=f'receipts/member/{identity}.json';original=self.remote.update;existing=None
+        def race(files,**kwargs):
+            nonlocal existing
+            if path in files and existing is None:
+                competing={'id':identity,'actor':'member','state':'accepted','received_at':'2026-09-24T20:00:00Z'}
+                existing=canonical(self.engines['leader'].sign('receipt',competing))
+                original({path:existing})
+            return original(files,**kwargs)
+        with patch.object(self.remote,'update',side_effect=race):
+            self.engines['leader'].receive_submissions(self.remote.head())
+        self.assertEqual(self.remote.read(self.remote.head(),path),existing)
     def test_interrupted_download_never_exposes_partial_submission(self):
         p,identity=self.queue();self.engines['member'].deliver_outbox(None)
         self.remote.fail_path='results/plan.json';leader=self.engines['leader'];leader.receive_submissions(self.remote.head())

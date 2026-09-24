@@ -367,7 +367,8 @@ class Engine:
                     result=read_json(result_file)
                     if result.get('id')!=identity or result.get('state') not in ('accepted','rejected'): raise ValueError('Invalid board receipt')
                     result=dict(result,actor=actor,received_at=now())
-                    self.remote.update({receipt_path:canonical(self.sign('receipt',result))});continue
+                    self.remote.update({receipt_path:canonical(self.sign('receipt',result))},
+                                       expected={receipt_path:None});continue
                 if (target/'request.json').exists(): continue
                 verified_delivery=True
                 commit=fixed_sha(payload['commit']); feed_path=path_ok(payload['feed'])
