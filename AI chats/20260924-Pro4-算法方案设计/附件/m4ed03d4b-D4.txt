@@ -1,0 +1,96 @@
+/goal D4 — Q1非前缀释放理想与backing边界的联合候选设计
+
+阶段：首批/P1，依赖闸门后。本卡新评价上限：16（受共同全局额度及授权约束）。
+
+## 每张卡的共同完成契约（随卡复制，不从聊天记忆补义）
+
+本文件是D综合设计，当前没有任何Goal或实验被启动。只有队长明确分配此卡、确认写权和预算账本后才执行；旧Pro候选额度不构成本卡授权。任务开始先按固定归档版本读取AGENTS、当前任务和授权协作通知；不覆盖他人未提交改动，不自动发消息、创建服务或认领他人写域。
+
+研究范围是三问共同框架，按卡声明的q/k特化。正文定义使用Glossary v1；D的Definition Amendments单列为提议。本卡显式附加runtime、合法性层级、动作参数和证据要求，不得反写原Glossary或作者历史结果。
+
+基底固定ARCHIVE提交；跨分支源码按下表固定SHA读取，不能用main猜别支内容，也不能使用后来移动的HEAD冒充as-run。Codex使用本人已授权的组织主库/本地工作树；Pro材料仅通过Vioano镜像。下载/解压官方文件可以到独立只读材料目录，逐字节核验后使用，不修改官方源码、原图或固定config；不要重序列化原图后沿用旧hash。
+
+先冻结protocol.json、RuntimeID、source/input/plan哈希、观测Φ/ρ、动作类、样本选择规则及资源额度。运行代码身份、读取快照和归档提交分别记。未安装或未授权的依赖/硬件不得自行换用；报告阻塞，不借新账号、Colab或GPU绕过。默认CPU、单评价worker。
+
+**共同评价预算候选：首批全局最多96次实际评价执行，不是每卡96次。** 配额：D0=36、D1=0、D2=4、D3=16、D4=16、D5=16、中央保留8。E0、E1、native分账；每次真实后端完整评分尝试均扣一次，自动fallback若再次完整评分另扣一次；一次评分内部的Step1–3局部编译不重复当成E0次数，但须计时。plain/observed、重复、失败、超时、最终确认都计数。派发前预留最坏路由额度，只有确定未调用的预留可释放。中央保留及卡间转额须队长/指定协调者显式确认；卡内余额不允许事后开新族。D6–D8、D2模型阶段及D3 lag支线当前新增评价额度为0。
+
+最多三个活跃研发session；同一性能宿主机的配对计时独占，普通诊断最多两个评价worker且受总内存许可，不由各session各自开满。RSS用整个相关进程组采样口径，报告共享页重计/短峰遗漏；阈值不是OS硬限。取消后清理子进程并持久化账本。
+
+所有结果保留success、official_invalid、official_error、external_timeout、service_error、cancelled、not_evaluated、not_observed、proxy_abstain；禁止用0/无穷代替未知分数。ABSTAIN不是丢弃候选；unsupported不是官方invalid。最终可提交incumbent与探索frontier分离，只提升经本题相应E0确认的候选。
+
+Makespan cycles与solver外层wall分别报告；在线读取/import/预处理/构造/检测/评分/回退/确认/IO/收尾均计入。独立事后裁判可另列，不能省掉在线E0。研究诊断成本单列，不与生产热路径混算。5–10分钟不是硬淘汰、最低运行时间或本队速度终点；限制评价次数也不自动把暴力变成结构化方法。
+
+Q1/Q2正式曲线使用固定singlecore_evaluate基准，1核点按题面为1；算法优化的一核结果另表。Q3另列同核no-L2/cache比值和字节命中率；同plan机制对照与各自优化后的solver对照分开。配置变化只在独立诊断副本，不混进官方成绩。mean-of-ratios不是ratio-of-sums。
+
+证据标明producer、完整性、本session核验方式、FORMAL/EMP/HYP、适用域。CRC/SHA不代表实验重跑；同一来源被多Pro引用不算独立重复。未读或未验标unknown。禁止事后修改guard、候选池、阈值来救结果；预注册假说被否定也是合格交付。
+
+每卡交付目录必须有README、protocol、source/input manifest、事件/调用账本、输出计划与完整必需结果、失败/未评价记录、ACCEPTANCE.json以及逐项hash清单。原产物只读，新运行新目录，不覆盖。任何精确性差异立即隔离该域/快路径，按剩余额度提供最小反例或静态缩减说明；不自动新开Pro、Goal或追加实验。
+
+依赖产物用其提交+manifest哈希绑定；依赖未冻结时可做只读/静态设计，不能猜文件内容或开始下游评价。完成后只交接，不自行触发Research DAG下一个节点。
+
+### 冻结引用表
+
+- ARCHIVE: `eaa15af9dde7365722e3b497df2fb869ff6e1c1e`
+- Q1: `4dff90ef699fd51845cf482951e8477066f5f566`
+- Q2_STRUCTURE: `74c46372faf5910b9b3cce6ad9a61a7e040b17aa`
+- Q2_BUDGET: `0b58c123cccf02fc993b741d79dcd8511e4dd38f`
+- Q3: `a4e7ee13310d693ec4fb5cc236669ceb3b172d1f`
+- P1_EXACT: `5bfe53a29c1ba05167239f51ea937e602f7f85b4`
+- P1_NATIVE: `03f02e79de4b4bd6f55241385664b154f4332454`
+- P23_NATIVE: `603b0741e21c449d3db652ebd67c94f2dc014cc9`
+- ERRATA: `e1575a1de5e3b921aef350e920720f0584fb1719`
+- OFFICIAL_CODE_SHA256: `de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0`
+
+## 本卡专属契约
+
+### 核心命题
+
+通过依赖理想直接选成员，可以产生旧Step1真前缀生成器没覆盖的释放机会；收益须扣除新增Task等待、真实COPY、延迟出口及backing/spill变化，而非仅减少流量。
+
+### 固定代码与输入
+
+Q1 src/q1/{release_ideals.py,profile_candidates.py,profile_refine.py}及Q1_RELEASE_IDEALS_REVIEW、TRACE_EXPLANATION、TRACE_PROSPECTIVE；051旧父/cut4/cut5，044好坏merge/零spill坏split；ERRATA L1 backing探针。原计划/结果未取得时由D0标阻塞，不照文本自行造同名计划。
+
+### 允许修改范围
+
+research/a/coherent_d/D4_release/、tests/coherent_d/D4/、results/a/coherent_d/D4/。只做研究生成器及profile消费者；不改Q1默认solver、不并行改共享observer。
+
+### 禁止改动
+
+不提交Task内部op顺序；不继承跨Task私有backing；不把局部Step3时长作下界；不按零spill/最小cut硬删；不把min-cut代理最优当Makespan最优；不继续仅对全零提前量旧候选调权重。
+
+### 实验协议
+
+零新评价先审核已有051/044机制记录；分清当前父时间线、入口控制前驱及早出口。成员候选必须是内部偏序理想，可为非旧Step1前缀；旧前缀只作基线。至少包含一种“输入提前量为零但可能提前远端出口”的候选规则，防止入口单指标盲区。
+冻结三个父环境（051已见对照＋两个未用来选规则的父计划，核数可从2/4/5中预选），每环境父plan+两旧规则候选+两新理想/出口候选，共5次；合计≤15次，余1次仅预留预注册确认/失败，不增新族。两生成器使用相同候选槽和精评上限；记录实际成本，不用同上限冒充同用量。
+每次CUT同核相邻；JOIN只在完整数据+核链cover域；产生新计划后重新官方构图Step1/2/3。计算真实预spill边界，并按每Task初始backing/是否实际写回/pos/version记录条件spill。旧父冻结release标签只用于提议；接受新父后必须失效。
+小整数min-cut只求原文定义的boundary/work代理；如无充分信息/容量溢出则退回直接理想/出口候选，不能假称图无解。源码检测及既存反例解释计入研究成本，在线候选生成成本另给。
+
+### 输出产物
+
+旧/新候选的成员与receipt；非前缀见证；入口/出口gate说明；真实boundary/backing/spill表；每候选完整结果、incumbent按调用/墙钟轨迹；可部署或停止的决定。
+
+### 验收指标
+
+至少明确检验一种旧前缀无法覆盖的候选，并在新父计划上形成可证伪预测；检查联合DAG但不声称P_exec必成功。条件spill字节逐记录与官方匹配；总收益和中介机制分开。同预算有净收益才建议接入；全失败或全部零机会也可作为负交付，不能用051单例替代迁移。
+
+### 失败与停止条件
+
+依赖源材料缺失则停止该W；标签过期、旧backing继承、非理想CUT出现即拒绝生成逻辑；三父环境无覆盖增量则暂缓，不开全切点搜索。16次/20分钟/RSS4GiB任一达到停止。
+
+### 依赖
+
+D0原始Q1见证与L1–L4/gate观测；D1 CUT/JOIN/receipt；可用E0不依赖D2提速。
+
+### 并行与互斥
+
+与D3/D5可并行；本卡统一负责原PB02与PB03，避免两个session分别改同一Q1候选生成器。
+
+### 资源预算
+
+建议2小时实现窗口；新评价≤16，全局96内，单CPU、4GiB，实验≤20分钟，每调用30秒保护可按预注册大图单独声明；不授权整批正式图。
+
+### 成功后解锁
+
+Q1 ReleaseIdeal/ExitClosure宏及backing-aware风险特征；失败可明确排除无用候选/排序，而非回到固定2×size错误。
+

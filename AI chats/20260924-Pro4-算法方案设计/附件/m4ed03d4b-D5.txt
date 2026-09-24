@@ -1,0 +1,96 @@
+/goal D5 — Q3 Cache相位与排名翻转：从同plan对照到预先预测
+
+阶段：首批/P1，依赖闸门后。本卡新评价上限：16（受共同全局额度及授权约束）。
+
+## 每张卡的共同完成契约（随卡复制，不从聊天记忆补义）
+
+本文件是D综合设计，当前没有任何Goal或实验被启动。只有队长明确分配此卡、确认写权和预算账本后才执行；旧Pro候选额度不构成本卡授权。任务开始先按固定归档版本读取AGENTS、当前任务和授权协作通知；不覆盖他人未提交改动，不自动发消息、创建服务或认领他人写域。
+
+研究范围是三问共同框架，按卡声明的q/k特化。正文定义使用Glossary v1；D的Definition Amendments单列为提议。本卡显式附加runtime、合法性层级、动作参数和证据要求，不得反写原Glossary或作者历史结果。
+
+基底固定ARCHIVE提交；跨分支源码按下表固定SHA读取，不能用main猜别支内容，也不能使用后来移动的HEAD冒充as-run。Codex使用本人已授权的组织主库/本地工作树；Pro材料仅通过Vioano镜像。下载/解压官方文件可以到独立只读材料目录，逐字节核验后使用，不修改官方源码、原图或固定config；不要重序列化原图后沿用旧hash。
+
+先冻结protocol.json、RuntimeID、source/input/plan哈希、观测Φ/ρ、动作类、样本选择规则及资源额度。运行代码身份、读取快照和归档提交分别记。未安装或未授权的依赖/硬件不得自行换用；报告阻塞，不借新账号、Colab或GPU绕过。默认CPU、单评价worker。
+
+**共同评价预算候选：首批全局最多96次实际评价执行，不是每卡96次。** 配额：D0=36、D1=0、D2=4、D3=16、D4=16、D5=16、中央保留8。E0、E1、native分账；每次真实后端完整评分尝试均扣一次，自动fallback若再次完整评分另扣一次；一次评分内部的Step1–3局部编译不重复当成E0次数，但须计时。plain/observed、重复、失败、超时、最终确认都计数。派发前预留最坏路由额度，只有确定未调用的预留可释放。中央保留及卡间转额须队长/指定协调者显式确认；卡内余额不允许事后开新族。D6–D8、D2模型阶段及D3 lag支线当前新增评价额度为0。
+
+最多三个活跃研发session；同一性能宿主机的配对计时独占，普通诊断最多两个评价worker且受总内存许可，不由各session各自开满。RSS用整个相关进程组采样口径，报告共享页重计/短峰遗漏；阈值不是OS硬限。取消后清理子进程并持久化账本。
+
+所有结果保留success、official_invalid、official_error、external_timeout、service_error、cancelled、not_evaluated、not_observed、proxy_abstain；禁止用0/无穷代替未知分数。ABSTAIN不是丢弃候选；unsupported不是官方invalid。最终可提交incumbent与探索frontier分离，只提升经本题相应E0确认的候选。
+
+Makespan cycles与solver外层wall分别报告；在线读取/import/预处理/构造/检测/评分/回退/确认/IO/收尾均计入。独立事后裁判可另列，不能省掉在线E0。研究诊断成本单列，不与生产热路径混算。5–10分钟不是硬淘汰、最低运行时间或本队速度终点；限制评价次数也不自动把暴力变成结构化方法。
+
+Q1/Q2正式曲线使用固定singlecore_evaluate基准，1核点按题面为1；算法优化的一核结果另表。Q3另列同核no-L2/cache比值和字节命中率；同plan机制对照与各自优化后的solver对照分开。配置变化只在独立诊断副本，不混进官方成绩。mean-of-ratios不是ratio-of-sums。
+
+证据标明producer、完整性、本session核验方式、FORMAL/EMP/HYP、适用域。CRC/SHA不代表实验重跑；同一来源被多Pro引用不算独立重复。未读或未验标unknown。禁止事后修改guard、候选池、阈值来救结果；预注册假说被否定也是合格交付。
+
+每卡交付目录必须有README、protocol、source/input manifest、事件/调用账本、输出计划与完整必需结果、失败/未评价记录、ACCEPTANCE.json以及逐项hash清单。原产物只读，新运行新目录，不覆盖。任何精确性差异立即隔离该域/快路径，按剩余额度提供最小反例或静态缩减说明；不自动新开Pro、Goal或追加实验。
+
+依赖产物用其提交+manifest哈希绑定；依赖未冻结时可做只读/静态设计，不能猜文件内容或开始下游评价。完成后只交接，不自行触发Research DAG下一个节点。
+
+### 冻结引用表
+
+- ARCHIVE: `eaa15af9dde7365722e3b497df2fb869ff6e1c1e`
+- Q1: `4dff90ef699fd51845cf482951e8477066f5f566`
+- Q2_STRUCTURE: `74c46372faf5910b9b3cce6ad9a61a7e040b17aa`
+- Q2_BUDGET: `0b58c123cccf02fc993b741d79dcd8511e4dd38f`
+- Q3: `a4e7ee13310d693ec4fb5cc236669ceb3b172d1f`
+- P1_EXACT: `5bfe53a29c1ba05167239f51ea937e602f7f85b4`
+- P1_NATIVE: `03f02e79de4b4bd6f55241385664b154f4332454`
+- P23_NATIVE: `603b0741e21c449d3db652ebd67c94f2dc014cc9`
+- ERRATA: `e1575a1de5e3b921aef350e920720f0584fb1719`
+- OFFICIAL_CODE_SHA256: `de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0`
+
+## 本卡专属契约
+
+### 核心命题
+
+080同plan Q2/Q3排序翻转具有可定位的请求/准入/FIFO/两池条件；命中率或Q2排序本身不能替代Q3评价。
+
+### 固定代码与输入
+
+Q3 pilot的080 component/affine两plan、配对完整结果；044命中率下降对照；A包008全miss完整结果；冻结Q3官方copy_tensor_info/insert_cache/retire/issue与P23能力只读。080结果取得前只算AUTHOR-REPORT。
+
+### 允许修改范围
+
+research/a/coherent_d/D5_cache_phase/、tests/coherent_d/D5/、results/a/coherent_d/D5/。仅合法priority/grain宏候选、观察后解释及廉价前置detector原型。
+
+### 禁止改动
+
+不换FIFO为LRU，不加预取/等待/重算；不合并同时miss；不把hit完成前被逐出后的再插入删掉；不跨评价继承Cache；不从scheduled_copy扣hit_bytes冒充官方字段。
+
+### 实验协议
+
+阶段0完整回读080两plan的q2/q3，原字节一致是对照前提。用008零hit作为排除性控制，用044hit降低但更快作为反单指标控制；缺完整记录先D0恢复，不能只看最后数值做因果结论。
+最多16新评价：四个预冻结比较单元，每单元两plan×Q2/Q3=4次。单元1为080原对照（若有同runtime完整可用原件则不重跑）；单元2为合法单插入邻居相对父；单元3为新匹配图；单元4可为一个L2容量/相位诊断副本，改变轴明确。未使用配额不追加第二个临界参数搜索。
+追踪发射查Cache、完成插入、有序FIFO、在飞hit被逐出、DDR与CACHE_READ各自活跃集合、关键COPY及原op时刻。运行后ρ用于解释；前置detector仅使用执行前可获得特征，不得读取候选缓存轨迹后宣称预测。
+在新单元评价前固定收益方向或ABSTAIN；报告失败/反转/未预测。配置副本的结果与正式固定配置分表；若多个早期guard同时变化，写复合干预，不归因于一个hit。
+
+### 输出产物
+
+同plan跨q见证及原hash；Cache/两池事件diff；前置预测与实际结果表；graph support特征；Q3专用macro候选或只宜离线解释的结论。
+
+### 验收指标
+
+原反转身份一致且被完整产物或复评确认；至少一项新单元的前置可证伪预测完成检验。不能只用事后命中率解释，不把008高峰归功于L2。输出CacheGain_sameplan和独立solver对照标签，不混B-normalized倍率。
+
+### 失败与停止条件
+
+未读原计划不得继续归因；只有事后指标有效则不给detector线上地位；同guard反例要保留/收窄；16次/20分钟/RSS4GiB停止，不开展全Cache参数相图。
+
+### 依赖
+
+D0完整Cache字段/见证及对齐；D1合法变换；支持域不足直接E0。
+
+### 并行与互斥
+
+与D3/D4独立；不共享运行中Cache、不修改他人适配器；性能配对独占。
+
+### 资源预算
+
+建议2小时实现窗口；新评价≤16，全局96内，单CPU、4GiB，实验≤20分钟，普通调用30秒保护，无GPU。
+
+### 成功后解锁
+
+Q3 SharedInputPhase候选及局部专家的可用/拒答域；D6跨核相位边界。
+
