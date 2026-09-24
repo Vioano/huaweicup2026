@@ -315,6 +315,28 @@ class EngineTests(unittest.TestCase):
         self.assertEqual(leader.receive_status,{'pending':6,'budget_seconds':30})
         for identity in identities:self.assertEqual(read_json(self.root/'inbox'/identity/'result.json')['state'],'rejected')
 
+    def test_member_lane_gets_a_turn_before_leader_backlog_fills_receive_budget(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        leader=self.engines['leader'];files={}
+        for actor,count in [('leader',45),('member',1)]:
+            for nonce in range(count):
+                payload={'schema_version':1,'actor':actor,'nonce':nonce}
+                identity=digest(canonical(payload));path=f'submissions/{actor}/{identity}.json'
+                files.setdefault(actor,{})[path]=canonical(self.engines[actor].sign('submission',payload))
+        self.remote.update(files['leader'],branch='benchmark-submissions/leader')
+        self.remote.update(files['member'],branch='benchmark-submissions/member')
+        clock=[0];visited=[]
+        def verify(envelope,domain,**kwargs):
+            if domain=='submission':
+                clock[0]+=1;visited.append(envelope['payload']['actor'])
+            return envelope['payload']
+        leader.verify=verify
+        with patch('src.benchmark_sync.engine.time',SimpleNamespace(monotonic=lambda:clock[0])):
+            leader.receive_submissions(self.remote.head())
+        self.assertEqual(visited[:2],['leader','member'])
+        self.assertEqual(leader.receive_status,{'pending':46,'budget_seconds':30})
+
     def test_sync_in_progress_keeps_real_durable_queue_counts(self):
         self.queue();member=self.engines['member'];observed=[];original=self.remote.head
         def head(branch=None):

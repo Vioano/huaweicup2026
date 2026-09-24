@@ -324,13 +324,32 @@ class Engine:
                 cursor_key=actor+':lane:'+group
                 ordered.append((actor,lane_head,lane_tree,group,cursor_key,path))
         self.receive_status={'pending':pending_count,'budget_seconds':30 if pending_count>4 else 8}
-        scheduled=[]
+        pending_buckets={};completed_buckets={}
         for actor,lane_head,lane_tree,group,cursor_key,path in ordered:
             cursor=progress.get(cursor_key,'')
             if not isinstance(cursor,str): cursor=''
-            scheduled.append((actor,lane_head,lane_tree,group,cursor_key,path,path>cursor))
-        # Visit newly appended envelopes before cycling back over older transient failures.
-        scheduled.sort(key=lambda item:(item[3]!='pending',item[4],not item[6],item[5]))
+            item=(actor,lane_head,lane_tree,group,cursor_key,path,path>cursor)
+            buckets=pending_buckets if group=='pending' else completed_buckets
+            buckets.setdefault(cursor_key,[]).append(item)
+        def round_robin(buckets,start):
+            keys=sorted(buckets)
+            if not keys:return [],keys
+            start%=len(keys);keys=keys[start:]+keys[:start]
+            queues={key:sorted(buckets[key],key=lambda item:(not item[6],item[5])) for key in keys}
+            ordered_items=[];active=True
+            while active:
+                active=False
+                for key in keys:
+                    if queues[key]: ordered_items.append(queues[key].pop(0));active=True
+            return ordered_items,keys
+        pending_keys=sorted(pending_buckets)
+        try: lane_rotation=progress.get('lane_rotation',0)
+        except (TypeError,ValueError): lane_rotation=0
+        if type(lane_rotation) is not int: lane_rotation=0
+        pending_items,lane_keys=round_robin(pending_buckets,lane_rotation)
+        completed_items,_=round_robin(completed_buckets,lane_rotation)
+        scheduled=pending_items+completed_items
+        if lane_keys: progress['lane_rotation']=lane_rotation%len(lane_keys)
         deadline=time.monotonic()+self.receive_status['budget_seconds']
         seen_submissions={}
         for actor,lane_head,lane_tree,group,cursor_key,path,_is_new in scheduled:
@@ -349,6 +368,8 @@ class Engine:
             fingerprint=[submission_sha,receipt_sha,trust_id]
             if submission_sha and receipt_sha and cache.get(path)==fingerprint: continue
             progress[cursor_key]=path
+            if group=='pending' and lane_keys:
+                progress['lane_rotation']=(lane_keys.index(cursor_key)+1)%len(lane_keys)
             verified_delivery=False
             try:
                 envelope=json.loads(self.remote.read(lane_head,path)); payload=self.verify(envelope,'submission')
