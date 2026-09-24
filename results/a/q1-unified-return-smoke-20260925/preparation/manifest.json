@@ -3,7 +3,20 @@
   "source_entry": "src/q1/unified.py",
   "runner": "src/q1_benchmarks/unified_return_smoke.py",
   "result_root": "results/a/q1-unified-return-smoke-20260925",
-  "cells": [["008", 5], ["084", 5], ["095", 5]],
+  "cells": [
+    [
+      "008",
+      5
+    ],
+    [
+      "084",
+      5
+    ],
+    [
+      "095",
+      5
+    ]
+  ],
   "maximum_calls": {
     "solver": 3,
     "external_E0": 3,
@@ -26,5 +39,15 @@
     "retries": 0
   },
   "gate": "WAIT_P3_RELEASE_AND_ROOT_EXECUTE",
-  "E1_per_cell": 5
+  "E1_per_cell": 5,
+  "workers": 1,
+  "rss_limit_bytes": 4294967296,
+  "rss_sampling_seconds": 0.1,
+  "stop_policy": "First solver, internal score, E0, identity, consistency or resource failure stops new cells; no retry",
+  "online_cost": "All constructors, online E1 and output serialization included in outer solver wall; external E0 separate",
+  "internal_limits": {
+    "E1_per_cell": 5,
+    "E1_timeout_seconds": 60,
+    "startup_timeout_seconds": 10
+  }
 }
