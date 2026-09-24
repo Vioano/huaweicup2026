@@ -23,7 +23,7 @@ class SupervisorTests(unittest.TestCase):
   root=self.root/name;web=root/'src/benchmark_board/web';web.mkdir(parents=True)
   for filename in ('index.html','app.js','style.css'): (web/filename).write_text(name+filename)
   (web.parent/'app.py').write_text(APP.format(failure=failure))
-  files={str(p.relative_to(root)):{'sha256':digest(p.read_bytes())} for p in web.iterdir()}
+  files={p.relative_to(root).as_posix():{'sha256':digest(p.read_bytes())} for p in web.iterdir()}
   write_json(root/'release.json',{'files':files})
   return {'release_id':name,'code_commit':'a'*40,'path':str(root)}
  def test_candidate_failure_keeps_existing_server(self):
