@@ -71,6 +71,28 @@ class GapHyperrefineTests(unittest.TestCase):
         self.assertEqual(detail['flows'], 0)
         self.assertGreater(detail['skipped_by_connection_floor'], 0)
 
+    def test_multiple_regions_keep_outside_work_separate(self):
+        # Twenty noncontractible chains exceed the sixteen-unit flow region.
+        graph = {'ops': [], 'tensors': [], 'edges': []}
+        rows = [[], []]
+        for offset in (0, 10, 20, 30):
+            part = swap_graph()
+            graph['ops'].extend({**op, 'id': op['id'] + offset}
+                                for op in part['ops'])
+            graph['edges'].extend({**edge,
+                                   'source': edge['source'] + offset,
+                                   'target': edge['target'] + offset}
+                                  for edge in part['edges'])
+            rows[0].extend(u + offset for u in (1, 5, 4))
+            rows[1].extend(u + offset for u in (2, 3))
+        before = singleton(rows)
+        after, detail = refine(graph, before, CONFIG, region_width=16)
+        self.check_result(graph, before, after, detail)
+        self.assertEqual(detail['regions'], 2)
+        self.assertGreater(detail['flows'], 0)
+        self.assertLess(detail['after_original_copy_bytes'],
+                        detail['before_original_copy_bytes'])
+
     def test_rejects_split_chain_and_non_singleton(self):
         graph = diamond()
         before = singleton([[1, 3, 4], [2, 5]])

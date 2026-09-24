@@ -114,7 +114,9 @@ def refine(graph, plan, config, region_width=16):
                 if baseline_cost == connection_floor:
                     skipped_by_bound += 1
                     continue
-                cut = load_guarded_cut(units, edges, a, b, initial, work, outside, caps)
+                region_work = {j: work[j] for j in units}
+                cut = load_guarded_cut(units, edges, a, b, initial,
+                                       region_work, outside, caps)
                 flows += cut.flow_calls
                 if cut.cost >= baseline_cost:
                     continue
