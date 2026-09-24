@@ -40,6 +40,8 @@ def verify(manifest, head):
             raw = (ROOT / record["path"]).read_bytes()
         if h.digest(raw) != record["sha256"]:
             raise RuntimeError(f"Identity mismatch: {record['path']}")
+        if not record.get("commit") and h.git("show", f"{head}:{record['path']}") != raw:
+            raise RuntimeError(f"Frozen Git input bytes differ: {record['path']}")
 
 
 def process(argv, batch, name, timeout, deadline, launched):
