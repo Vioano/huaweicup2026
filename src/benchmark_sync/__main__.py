@@ -13,6 +13,13 @@ from .submission import enqueue
 from .release import publish_release, receive_release
 
 
+def poll_delay(config,status,failures,cooldown_until):
+    delay=min(300,config.get('poll_seconds',15)*2**min(failures,5))
+    if config['role']=='leader' and status['state']=='online' and status.get('receive',{}).get('pending',0):
+        delay=min(delay,2)
+    return max(delay,cooldown_until-time.time(),status.get('error',{}).get('retry_after',0) if status.get('error') else 0)
+
+
 def main():
     p=argparse.ArgumentParser(description='Model-free benchmark synchronization')
     p.add_argument('--config',type=Path)
@@ -32,7 +39,8 @@ def main():
         print(enqueue(state,args.repo,args.commit,args.feed,config['actor']));return
     with exclusive_lock(state/'runtime.lock'):
         s=Signatures(config.get('node'))
-        remote=GitHub(config['repository'],config.get('branch','benchmark-sync-v1'),state/'git-cache',actor=config['actor'],gh=config.get('gh','gh'))
+        remote=GitHub(config['repository'],config.get('branch','benchmark-sync-v1'),state/'git-cache',actor=config['actor'],gh=config.get('gh','gh'),
+                      local_repository=config.get('central',{}).get('repo') if config['role']=='leader' else None)
         e=Engine(config,remote,s)
         if args.command=='publish-release':
             if config['role']!='leader': raise ValueError('Only central publisher may release code')
@@ -54,8 +62,7 @@ def main():
                 status['error']={'stage':'release','message':str(error)};status['state']='error';write_json(state/'status.json',status)
             if args.command=='once': print(json.dumps(status,ensure_ascii=False));return
             failures=failures+1 if status['state']=='offline' else 0
-            delay=min(300,config.get('poll_seconds',15)*2**min(failures,5))
-            delay=max(delay,getattr(remote,'cooldown_until',0)-time.time(),status.get('error',{}).get('retry_after',0) if status.get('error') else 0)
+            delay=poll_delay(config,status,failures,getattr(remote,'cooldown_until',0))
             time.sleep(delay+random.random()*min(3,delay/5))
 
 if __name__=='__main__': main()
