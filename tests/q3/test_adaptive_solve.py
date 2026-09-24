@@ -8,9 +8,11 @@ from src.q3.attention_rows import construct as attention_construct
 from src.q3.construct import Index, UnsupportedStructure
 from src.q3.guarded_solve import evaluate_candidates as guarded
 from src.q3.stage_fork_join import construct as stage_construct
+from src.q3.stage_migration import construct as migration_construct
 from tests.q3.test_reduction_tree import graph as reduction_graph
 from tests.q3.test_attention_rows import attention_ffn_graph, plan_words
 from tests.q3.test_stage_fork_join import stage_graph
+from tests.q3.test_stage_migration import stage_graph as migration_stage_graph
 from evaluation_validation import EvaluationValidationError
 
 
@@ -32,11 +34,13 @@ class AdaptiveTests(unittest.TestCase):
                 evaluate = Mock(return_value=result)
                 save = Mock(return_value=refs)
                 with patch.object(adaptive, "stage_construct", wraps=stage_construct) as construct, \
+                     patch.object(adaptive, "migration_construct") as migration, \
                      patch.object(adaptive, "attention_construct") as attention, \
                      patch.object(adaptive, "read_required_settings") as config, \
                      patch.object(adaptive, "guarded_candidates") as fallback:
                     winner, calls, records, selection = adaptive.evaluate_candidates(index, cores, evaluate, save)
                 construct.assert_called_once_with(index, cores, collector_policy=policy)
+                migration.assert_not_called()
                 attention.assert_not_called()
                 config.assert_not_called()
                 fallback.assert_not_called()
@@ -55,6 +59,8 @@ class AdaptiveTests(unittest.TestCase):
                 self.assertEqual(meta["official_e0_calls"], 0)  # Static constructor scope.
                 self.assertEqual(meta["router"]["evaluation_calls"], 1)
                 self.assertEqual(meta["router"]["stage_construct_attempts"], 1)
+                self.assertEqual(meta["router"]["migration_construct_attempts"], 0)
+                self.assertEqual(meta["router"]["migration_candidate_plans"], 0)
                 self.assertEqual(meta["router"]["stage_candidate_plans"], 1)
                 self.assertEqual(meta["router"]["attention_construct_attempts"], 0)
                 self.assertEqual(meta["router"]["attention_candidate_plans"], 0)
@@ -65,6 +71,161 @@ class AdaptiveTests(unittest.TestCase):
                 else:
                     self.assertEqual(meta["collector_cycle"], [meta["collector_core"]])
                 self.assertEqual(graph, original)
+
+    def test_exact_migration_family_preempts_old_routes_with_one_evaluation(self):
+        for stages in (1, 3):
+            with self.subTest(stages=stages):
+                graph, _ = migration_stage_graph(stages=stages)
+                original = deepcopy(graph)
+                index = Index(graph)
+                expected, expected_meta = migration_construct(index, 5, mode="single_cut")
+                result = {"makespan": 10**9, "data_movement_bytes": {"extra": 999}}
+                refs = {"plan": {"path": "seed-plan.json"}, "result": {"path": "seed-result.json.gz"}}
+                evaluate, save = Mock(return_value=result), Mock(return_value=refs)
+                with patch.object(adaptive, "migration_construct", wraps=migration_construct) as migration, \
+                     patch.object(adaptive, "stage_construct") as stage, \
+                     patch.object(adaptive, "attention_construct") as attention, \
+                     patch.object(adaptive, "guarded_candidates") as fallback:
+                    winner, calls, records, selection = adaptive.evaluate_candidates(index, 5, evaluate, save)
+                migration.assert_called_once_with(index, 5, mode="single_cut", cross_core_delay_cycles=500)
+                stage.assert_not_called()
+                attention.assert_not_called()
+                fallback.assert_not_called()
+                evaluate.assert_called_once_with(expected)
+                save.assert_called_once_with("seed", expected, result)
+                self.assertEqual(winner[0], expected)
+                self.assertIs(winner[1], result)
+                self.assertEqual(winner[2], "stage_migration_single_cut")
+                self.assertEqual((calls, len(records)), (1, 1))
+                self.assertIs(records[0]["artifacts"], refs)
+                meta = records[0]["metadata"]
+                for key, value in expected_meta.items():
+                    self.assertEqual(meta[key], value)
+                self.assertEqual(meta["route"], "stage_migration")
+                self.assertEqual(meta["mode"], "single_cut")
+                self.assertEqual(meta["collector_sequence"], [2] * stages)
+                self.assertEqual(meta["official_e0_calls"], 0)  # Static constructor only.
+                routing = selection["router"]
+                self.assertEqual(routing, meta["router"])
+                self.assertEqual(routing["route"], "stage_migration")
+                self.assertEqual(routing["migration_construct_attempts"], 1)
+                self.assertEqual(routing["migration_candidate_plans"], 1)
+                self.assertEqual(routing["migration_cross_delay_cycles"], 500)
+                for name in ("stage_construct_attempts", "stage_candidate_plans",
+                             "attention_construct_attempts", "attention_candidate_plans",
+                             "guarded_policy_invocations"):
+                    self.assertEqual(routing[name], 0)
+                self.assertEqual(routing["evaluation_calls"], evaluate.call_count)
+                self.assertEqual(routing["route_e0_limit"], 1)
+                self.assertNotIn("migration_guard_reason", routing)
+                self.assertEqual(graph, original)
+
+    def test_migration_signature_rejection_keeps_the_old_stage_plan(self):
+        for kwargs in ({"cycles": 525}, {"vector": 16384}, {"chain_length": 3}):
+            with self.subTest(kwargs=kwargs):
+                graph, _ = migration_stage_graph(**kwargs)
+                index = Index(graph)
+                expected, _ = stage_construct(index, 5, collector_policy="rotate_heavy")
+                evaluate, save = Mock(return_value={"makespan": 11}), Mock(return_value={})
+                with patch.object(adaptive, "migration_construct", wraps=migration_construct) as migration, \
+                     patch.object(adaptive, "stage_construct", wraps=stage_construct) as stage, \
+                     patch.object(adaptive, "attention_construct") as attention, \
+                     patch.object(adaptive, "guarded_candidates") as fallback:
+                    winner, calls, _, selection = adaptive.evaluate_candidates(index, 5, evaluate, save)
+                migration.assert_called_once_with(index, 5, mode="single_cut", cross_core_delay_cycles=500)
+                stage.assert_called_once_with(index, 5, collector_policy="rotate_heavy")
+                attention.assert_not_called()
+                fallback.assert_not_called()
+                evaluate.assert_called_once_with(expected)
+                save.assert_called_once()
+                self.assertEqual((winner[0], calls), (expected, 1))
+                routing = selection["router"]
+                self.assertEqual(routing["route"], "stage")
+                self.assertEqual(routing["migration_construct_attempts"], 1)
+                self.assertEqual(routing["migration_candidate_plans"], 0)
+                self.assertIn("signature", routing["migration_guard_reason"])
+                self.assertEqual(routing["stage_candidate_plans"], 1)
+
+    def test_migration_prefilter_does_not_try_other_core_counts(self):
+        index = Index(migration_stage_graph()[0])
+        expected, _ = stage_construct(index, 4, collector_policy="fixed")
+        evaluate = Mock(return_value={"makespan": 11})
+        with patch.object(adaptive, "migration_construct") as migration, \
+             patch.object(adaptive, "read_required_settings") as config:
+            winner, calls, _, selection = adaptive.evaluate_candidates(index, 4, evaluate, Mock())
+        migration.assert_not_called()
+        config.assert_not_called()
+        evaluate.assert_called_once_with(expected)
+        self.assertEqual((winner[0], calls), (expected, 1))
+        self.assertEqual(selection["router"]["migration_construct_attempts"], 0)
+
+    def test_migration_raw_port_rejection_preserves_full_remaining_route(self):
+        graph, layout = migration_stage_graph()
+        graph["edges"].append({"source": layout["immutable"][1],
+                               "target": layout["stages"][0]["chains"][0][2]})
+        index = Index(graph)
+        sentinel = (({"fallback": 1}, {"makespan": 7}, "fallback"), 1, [], {"rule": "sentinel"})
+        evaluate, save = Mock(), Mock()
+        with patch.object(adaptive, "migration_construct", wraps=migration_construct) as migration, \
+             patch.object(adaptive, "stage_construct", wraps=stage_construct) as stage, \
+             patch.object(adaptive, "attention_construct", wraps=attention_construct) as attention, \
+             patch.object(adaptive, "guarded_candidates", return_value=sentinel) as fallback:
+            out = adaptive.evaluate_candidates(index, 5, evaluate, save)
+        migration.assert_called_once()
+        stage.assert_called_once()
+        attention.assert_called_once()
+        fallback.assert_called_once_with(index, 5, evaluate, save)
+        self.assertEqual(out[:3], sentinel[:3])
+        routing = out[3]["router"]
+        self.assertEqual(routing["route"], "guarded")
+        self.assertEqual(routing["migration_construct_attempts"], 1)
+        self.assertEqual(routing["migration_candidate_plans"], 0)
+        self.assertIn("lane-internal tensor input", routing["migration_guard_reason"])
+        evaluate.assert_not_called()
+        save.assert_not_called()
+
+    def test_migration_failures_do_not_trigger_other_routes(self):
+        index = Index(migration_stage_graph()[0])
+        failures = (RuntimeError("bug"), AssertionError("invariant"), ValueError("bad option"),
+                    EvaluationValidationError("invalid"))
+        for phase in ("construct", "evaluate", "save"):
+            for failure in failures + (() if phase == "construct" else (UnsupportedStructure("not a guard"),)):
+                with self.subTest(phase=phase, failure=type(failure).__name__):
+                    evaluate = Mock(side_effect=failure) if phase == "evaluate" else Mock(return_value={"makespan": 1})
+                    save = Mock(side_effect=failure) if phase == "save" else Mock(return_value={})
+                    constructor_options = {"side_effect": failure} if phase == "construct" else {"wraps": migration_construct}
+                    with patch.object(adaptive, "migration_construct", **constructor_options) as migration, \
+                         patch.object(adaptive, "stage_construct") as stage, \
+                         patch.object(adaptive, "attention_construct") as attention, \
+                         patch.object(adaptive, "guarded_candidates") as fallback:
+                        with self.assertRaises(type(failure)):
+                            adaptive.evaluate_candidates(index, 5, evaluate, save)
+                    migration.assert_called_once()
+                    stage.assert_not_called()
+                    attention.assert_not_called()
+                    fallback.assert_not_called()
+                    self.assertEqual(evaluate.call_count, 0 if phase == "construct" else 1)
+                    self.assertEqual(save.call_count, 1 if phase == "save" else 0)
+
+    def test_migration_reads_configuration_without_silent_default(self):
+        index = Index(migration_stage_graph()[0])
+        with patch.object(adaptive, "read_required_settings", return_value={"cross_core_copy_delay_cycles": 17}), \
+             patch.object(adaptive, "migration_construct", wraps=migration_construct) as migration:
+            _, calls, _, selection = adaptive.evaluate_candidates(index, 5, Mock(return_value={"makespan": 1}), Mock())
+        migration.assert_called_once_with(index, 5, mode="single_cut", cross_core_delay_cycles=17)
+        self.assertEqual(calls, 1)
+        self.assertEqual(selection["router"]["route"], "stage")
+        self.assertIn("500-cycle", selection["router"]["migration_guard_reason"])
+        with patch.object(adaptive, "read_required_settings", side_effect=OSError("missing config")), \
+             patch.object(adaptive, "migration_construct") as migration, \
+             patch.object(adaptive, "stage_construct") as stage:
+            evaluate, save = Mock(), Mock()
+            with self.assertRaises(OSError):
+                adaptive.evaluate_candidates(index, 5, evaluate, save)
+            migration.assert_not_called()
+            stage.assert_not_called()
+            evaluate.assert_not_called()
+            save.assert_not_called()
 
     def test_real_attention_ffn_routes_and_saves_exactly_one_candidate(self):
         for cores in (1, 2, 5):
@@ -243,14 +404,15 @@ class AdaptiveTests(unittest.TestCase):
         save.assert_not_called()
 
     def test_incidental_case_names_and_history_do_not_affect_structural_routes(self):
-        for graph in (stage_graph()[0], attention_ffn_graph()[0].graph):
+        for graph, cores in ((stage_graph()[0], 2), (attention_ffn_graph()[0].graph, 2),
+                             (migration_stage_graph()[0], 5)):
             outcomes = []
             for label, historical in (("unseen-a", 1), ("unseen-b", 10**12)):
                 tagged = deepcopy(graph)
                 tagged["case_id"] = label
                 tagged["historical_results"] = {"makespan": historical}
                 evaluate, save = Mock(return_value={"makespan": 123}), Mock(return_value={})
-                outcomes.append(adaptive.evaluate_candidates(Index(tagged), 2, evaluate, save))
+                outcomes.append(adaptive.evaluate_candidates(Index(tagged), cores, evaluate, save))
                 evaluate.assert_called_once()
                 save.assert_called_once()
             self.assertEqual(outcomes[0], outcomes[1])
@@ -327,12 +489,14 @@ class AdaptiveTests(unittest.TestCase):
         index = Index(stage_graph()[0])
         for cores in (0, -1, True, 1.5):
             with self.subTest(cores=cores), \
+                 patch.object(adaptive, "migration_construct") as migration, \
                  patch.object(adaptive, "stage_construct") as construct, \
                  patch.object(adaptive, "attention_construct") as attention, \
                  patch.object(adaptive, "guarded_candidates") as fallback:
                 with self.assertRaises(ValueError):
                     adaptive.evaluate_candidates(index, cores, Mock(), Mock())
                 construct.assert_not_called()
+                migration.assert_not_called()
                 attention.assert_not_called()
                 fallback.assert_not_called()
 

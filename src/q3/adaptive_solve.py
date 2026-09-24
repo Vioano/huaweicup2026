@@ -1,8 +1,10 @@
-"""Strict stage, then closed attention/FFN rows, then the unchanged guard policy.
+"""Strict single-cut stage, ordinary stage, attention/FFN, then guarded policy.
 
 Stage routing uses only the compute graph and core count. Exactly two heaviest
 lane cores request rotation; all other lane-load patterns request fixed gather.
 Only the full stage constructor can confirm that this interpretation is valid.
+Five-core graphs with twelve compute sources first try the narrower original
+4x524 stage signature, using only the single-cut migration template.
 Stage and attention each have one candidate and one online E0 call, with no
 historical-anchor or cross-route non-regression promise. Only declared shape
 rejections advance the router. Other inputs retain guarded_solve's own policy.
@@ -12,6 +14,7 @@ from .construct import ROOT, UnsupportedStructure
 from .guarded_solve import evaluate_candidates as guarded_candidates
 from .safe_solve import main as run_solver
 from .stage_fork_join import construct as stage_construct
+from .stage_migration import construct as migration_construct
 from evaluation_validation import read_required_settings
 
 
@@ -36,9 +39,26 @@ def stage_request(index, cores):
 
 def evaluate_candidates(index, cores, evaluate, save):
     request = stage_request(index, cores)
-    routing = {"stage_request": request, "stage_construct_attempts": 1,
+    routing = {"stage_request": request, "migration_construct_attempts": 0,
+               "migration_candidate_plans": 0, "stage_construct_attempts": 0,
                "stage_candidate_plans": 0, "attention_construct_attempts": 0,
                "attention_candidate_plans": 0, "guarded_policy_invocations": 0}
+    if cores == 5 and request["source_count"] == 12:
+        routing["migration_construct_attempts"] = 1
+        delay = read_required_settings(ROOT / "data/raw/a/official/data/config.txt", "multicore_scene_b",
+                                       ("cross_core_copy_delay_cycles",))["cross_core_copy_delay_cycles"]
+        routing["migration_cross_delay_cycles"] = delay
+        try:
+            plan, metadata = migration_construct(index, cores, mode="single_cut",
+                                                  cross_core_delay_cycles=delay)
+        except UnsupportedStructure as error:
+            routing["migration_guard_reason"] = str(error)
+        else:
+            routing.update(route="stage_migration", migration_candidate_plans=1)
+            metadata = {**metadata, "route": "stage_migration"}
+            return _evaluate_direct(plan, metadata, routing,
+                                    "strict_five_core_twelve_lane_single_cut", evaluate, save)
+    routing["stage_construct_attempts"] = 1
     try:
         # One construction attempt, not fixed-plan construction followed by a
         # second rotated-plan construction. The constructor performs its full
@@ -73,7 +93,11 @@ def evaluate_candidates(index, cores, evaluate, save):
                     "collector_cycle": metadata.get("collector_cycle", [metadata["collector_core"]])}
         rule = "strict_stage_guard_then_lane_load_collector"
 
-    # Deliberately outside both constructor guard handlers: even an evaluator
+    return _evaluate_direct(plan, metadata, routing, rule, evaluate, save)
+
+
+def _evaluate_direct(plan, metadata, routing, rule, evaluate, save):
+    # Deliberately outside all constructor guard handlers: even an evaluator
     # raising UnsupportedStructure must propagate, not try another candidate.
     routing.update(route_e0_limit=1, evaluation_calls=1,
                    count_scope="One successful direct construction and one injected online evaluation; no anchor comparison.")
