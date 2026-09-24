@@ -25,7 +25,7 @@ def load_feed(ledger,repo,commit,path):
     if len(data)>8*1024*1024: raise ValueError('feed too large')
     return ledger.ingest(json.loads(data),lambda p:blob(repo,commit,p),{'repo':REPO,'commit':commit,'path':path,'url':f'https://github.com/{REPO}/blob/{commit}/{path}'})
 
-def sync_once(ledger,repo,sources):
+def sync_once(ledger,repo,sources,on_progress=None):
     for s in sources:
         started=now(); name=s['id']
         try:
@@ -43,10 +43,15 @@ def sync_once(ledger,repo,sources):
             paths=git(repo,'ls-tree','-r','--name-only',commit,'--',s['prefix']).decode().splitlines()
             paths=[p for p in paths if fnmatch.fnmatch(p,s['prefix'].rstrip('/')+'/**/board-feed*.json') or (p.startswith(s['prefix'].rstrip('/')+'/') and Path(p).name.startswith('board-feed') and p.endswith('.json'))]
             if len(paths)>300: raise ValueError('source feed count exceeds 300; scope review needed')
-            results=[load_feed(ledger,repo,commit,path) for path in paths]
+            results=[]
+            for path in paths:
+                if on_progress: on_progress()
+                results.append(load_feed(ledger,repo,commit,path))
             ledger.source_status(name,{'status':'ok' if paths else 'waiting_feed','ref':ref,'commit':commit,'checked_at':now(),'started_at':started,'feeds':len(paths),'added':sum(r['added'] for r in results),'message':'已接收固定数据' if paths else '分支可读，等待发布 board-feed；不等于队友未运行'})
         except Exception as e:
             ledger.source_status(name,{'status':'error','checked_at':now(),'started_at':started,'ref':s['ref'],'message':type(e).__name__+': '+str(e)[:250]})
+        finally:
+            if on_progress: on_progress()
 
 def make_handler(ledger):
     class Handler(BaseHTTPRequestHandler):
@@ -113,9 +118,11 @@ def main():
     s=sub.add_parser('serve');s.add_argument('--port',type=int,default=52341);s.add_argument('--sync-interval',type=int,default=120);s.add_argument('--no-sync',action='store_true')
     s.add_argument('--mirror',type=Path,help='Read an accepted central snapshot current.json; never ingest it into the local ledger')
     s.add_argument('--sync-status',type=Path,help='Read-only status file owned by the separate sync process')
+    s.add_argument('--sync-inbox',type=Path,help='Central mode only: receive completed local deliveries from the authenticated sync transport')
     sub.add_parser('sync');args=p.parse_args()
     manifest=json.loads((ROOT/'docs/a/source-manifest.json').read_text(encoding="utf-8"))
     mirror=args.command=='serve' and args.mirror is not None
+    if mirror and args.sync_inbox: p.error('--sync-inbox is only available in central ledger mode')
     if mirror:
         from mirror import MirrorView
         ledger=MirrorView(args.mirror,manifest,args.sync_status)
@@ -124,10 +131,25 @@ def main():
     sources=json.loads((ROOT/'docs/benchmarks/board-sources.json').read_text(encoding="utf-8"))
     if args.command=='import': print(packed(load_feed(ledger,args.repo,args.commit,args.feed)));return
     if args.command=='sync':sync_once(ledger,args.repo,sources);print(packed({'done':True}));return
-    if not args.no_sync and not mirror:
+    if not mirror and (not args.no_sync or args.sync_inbox):
+        def receive():
+            if args.sync_inbox:
+                from inbox import drain_inbox
+                for result in drain_inbox(ledger,args.sync_inbox):
+                    if result['state']=='retry': print('Benchmark inbox retry: '+packed(result),flush=True)
         def worker():
+            next_sources=0
             while True:
-                sync_once(ledger,args.repo,sources);time.sleep(max(60,args.sync_interval))
+                try:
+                    receive()
+                    if not args.no_sync and time.monotonic()>=next_sources:
+                        sync_once(ledger,args.repo,sources,on_progress=receive)
+                        next_sources=time.monotonic()+max(60,args.sync_interval)
+                except Exception:
+                    # Keep retries visible and preserve batch idempotency if a
+                    # filesystem/database interruption occurs after admission.
+                    traceback.print_exc()
+                time.sleep(2 if args.sync_inbox else max(60,args.sync_interval))
         threading.Thread(target=worker,daemon=True).start()
     server=ThreadingHTTPServer(('127.0.0.1',args.port),make_handler(ledger));server.daemon_threads=True
     args.state.mkdir(parents=True,exist_ok=True)

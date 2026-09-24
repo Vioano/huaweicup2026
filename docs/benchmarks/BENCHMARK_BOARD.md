@@ -97,6 +97,14 @@ python3 src/benchmark_board/app.py --state output/benchmark-board serve --port 5
 
 ## Agent 接口
 
+### 已验签传输的中央本地收件
+
+中央服务可选 `serve --sync-inbox <本机收件目录>`。它沿用同一个 Ledger 实例和单个接收 worker；`--no-sync` 仅关闭旧 Git 分支抓取，不关闭本地收件。镜像模式拒绝此参数，HTTP 仍完全只读。收件循环约每2秒检查，正在进行的旧分支下载/校验可能延后；旧来源的每个feed与每个来源之间也检查队列。传输、身份验签、代码更新由独立同步器负责；本接口不另发消息、不调用solver/evaluator、不改变算法预算。
+
+同步器先完成不可变目录 `<inbox>/<id>/`，其中 `feed.json` 为完整 `submission_version=1`，`artifacts/` 下按feed内仓库相对路径保存全部原件，最后原子发布 `request.json`。请求为 `{schema_version:1,id,feed_file:"feed.json",source:{id:"auto:<actor>:<id>",commit:"<40位SHA>",feed:"<仓库相对feed路径>",url:"https://github.com/huaweibei123/huaweicup2026/blob/<SHA>/<feed路径>"}}`；id与目录名一致，允许1–128个字母、数字、下划线和连字符。这个目录仅接收同步器已经完成身份验证和下载的交付；本模块的哈希校验不能代替身份验证。
+
+接收器检查安全路径、大小、v1结构、所有声明原件的SHA256，再走原准入逻辑，原子写 `result.json`：`{schema_version:1,id,state:"accepted"|"rejected",receipt:<原ingest结果或null>,error:<原因或null>}`。成功额外返回 `admission` 的records/eligible/reported_ok/statuses计数；**accepted表示已入库，正式入榜仍看每条eligible**。未成功、E2及证据不足记录的原有语义不变。已有结果不重复处理；固定feed和来源归一化保证入库后、回执落盘前崩溃的重试added=0。已发request之后不得原地修文件；被拒交付修正后用新id提交，原attempt的字段勘误仍遵守revision规则。
+
 网页与 Agent 同数据/同选择器，HTTP 只读，无 POST 执行入口。发现页 `/agent`，机器 schema `/api/v1/schema`。
 
 - `GET /api/v1/cells?problem=P1&case_id=002&cores=4&algorithm=...&run=...`：最优和覆盖；无筛选完整1500格。`include_reported=true` 只预览，不替换已入榜方案。
