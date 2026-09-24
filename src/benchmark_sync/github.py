@@ -98,20 +98,22 @@ class GitHub:
         if response: return {**metadata,'data':data}
         return data if raw else json.loads(data)
 
-    def head(self):
-        identity=digest(canonical({'repository':self.repository,'branch':self.branch}))
+    def head(self, branch=None):
+        branch=self.branch if branch is None else branch
+        if not re.fullmatch(r'[A-Za-z0-9_/-]+',branch): raise ValueError('Invalid transport branch')
+        identity=digest(canonical({'repository':self.repository,'branch':branch}))
         cache_file=self.cache/('head-'+identity+'.json')
         cached={}
         if cache_file.exists():
             try:
                 cached=json.loads(cache_file.read_bytes())
-                if cached.get('repository')!=self.repository or cached.get('branch')!=self.branch:
+                if cached.get('repository')!=self.repository or cached.get('branch')!=branch:
                     cached={}
             except (OSError,ValueError,TypeError):
                 cached={}
         headers={'If-None-Match':cached['etag']} if cached.get('etag') else None
         try:
-            result=self.request('GET','/git/ref/heads/'+self.branch,headers=headers,response=True)
+            result=self.request('GET','/git/ref/heads/'+branch,headers=headers,response=True)
             if result['status']==304:
                 if not isinstance(cached.get('sha'),str): raise ValueError('GitHub returned 304 without a cached branch head')
                 return cached['sha']
@@ -119,11 +121,30 @@ class GitHub:
             sha=fixed_sha(payload['object']['sha'])
             etag=result['headers'].get('ETag') or result['headers'].get('Etag')
             if isinstance(etag,str) and etag:
-                atomic_write(cache_file,canonical({'repository':self.repository,'branch':self.branch,'sha':sha,'etag':etag}))
+                atomic_write(cache_file,canonical({'repository':self.repository,'branch':branch,'sha':sha,'etag':etag}))
             return sha
         except RemoteError as e:
             if e.status==404: return None
             raise
+
+    def matching_heads(self, prefix):
+        """Fetch the small set of actor lanes with one API request."""
+        if not isinstance(prefix,str) or not re.fullmatch(r'[A-Za-z0-9_/-]+',prefix):
+            raise ValueError('Invalid transport branch prefix')
+        refs=self.request('GET','/git/matching-refs/heads/'+prefix)
+        if not isinstance(refs,list): raise ValueError('Invalid matching-refs response')
+        result={}
+        for item in refs:
+            if not isinstance(item,dict): raise ValueError('Invalid matching-ref entry')
+            name=item.get('ref'); obj=item.get('object')
+            if not isinstance(name,str) or not name.startswith('refs/heads/') or not isinstance(obj,dict):
+                raise ValueError('Invalid matching-ref entry')
+            branch=name.removeprefix('refs/heads/')
+            if not branch.startswith(prefix): continue
+            sha=fixed_sha(obj.get('sha'))
+            if branch in result and result[branch]!=sha: raise ValueError('Duplicate matching ref')
+            result[branch]=sha
+        return result
 
     def tree(self, commit):
         fixed_sha(commit)
@@ -178,19 +199,21 @@ class GitHub:
         if len(data)>MAX_FILE: raise ValueError('Git upload too large')
         return self.request('POST','/git/blobs',{'content':base64.b64encode(data).decode(),'encoding':'base64'})['sha']
 
-    def update(self, files, *, parents=(), expected=None):
-        # Receiver, uploader, snapshot publisher, and release publisher share this
-        # branch. CAS remains the cross-process guard; this lock prevents our own
-        # threads from needlessly racing each other through the same ref update.
+    def update(self, files, *, parents=(), expected=None, branch=None):
+        # The leader's central ref and each actor's submission lane are distinct.
+        # CAS remains the cross-process guard for writers to one ref; this lock
+        # serializes local threads before they contend on that same ref.
         with self.write_lock:
-            return self._update(files,parents=parents,expected=expected)
+            return self._update(files,parents=parents,expected=expected,branch=branch)
 
-    def _update(self, files, *, parents=(), expected=None):
+    def _update(self, files, *, parents=(), expected=None, branch=None):
         """CAS non-force update. Unknown-success retry compares bytes and is idempotent."""
+        branch=self.branch if branch is None else branch
+        if not re.fullmatch(r'[A-Za-z0-9_/-]+',branch): raise ValueError('Invalid transport branch')
         blob_shas={}
         original=None
         for attempt in range(5):
-            head=self.head()
+            head=self.head(branch)
             entries=self.tree(head) if head else {}
             for p,want in (expected or {}).items():
                 current=self.blob(entries[p]['sha'],entries[p].get('size')) if p in entries else None
@@ -223,8 +246,8 @@ class GitHub:
             ps=([head] if head else [])+[fixed_sha(p) for p in parents if p!=head]
             commit=self.request('POST','/git/commits',{'message':'Automatic benchmark synchronization','tree':tree,'parents':ps})['sha']
             try:
-                if head: self.request('PATCH','/git/refs/heads/'+self.branch,{'sha':commit,'force':False})
-                else: self.request('POST','/git/refs',{'ref':'refs/heads/'+self.branch,'sha':commit})
+                if head: self.request('PATCH','/git/refs/heads/'+branch,{'sha':commit,'force':False})
+                else: self.request('POST','/git/refs',{'ref':'refs/heads/'+branch,'sha':commit})
                 return commit
             except RemoteError as e:
                 if e.status not in (409,422): raise
