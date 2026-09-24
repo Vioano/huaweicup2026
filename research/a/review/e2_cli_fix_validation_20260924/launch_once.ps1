@@ -80,7 +80,7 @@ $e2Outer = [ordered]@{ schema='e2-cli-fixed-driver-v1'; outer_t0_utc=$e2T0Utc;
     root_job_active_limit=17; root_job_commit_limit_bytes=2415919104;
     controller_private_budget_bytes=268435456; forced_outer_cleanup=$false;
     outer_nonce=([Guid]::NewGuid().ToString('N')+[Guid]::NewGuid().ToString('N'));
-    preparation_external_process_requests=0; fixed_workspace_files=$e2Manifest.workspace_files.PSObject.Properties.Count;
+    preparation_external_process_requests=0; fixed_workspace_files=@($e2Manifest.workspace_files.PSObject.Properties).Count;
     git_index_sha256=$e2IndexHash;
     status='preparing'; close_errors=@() }
 function Save-E2Outer {
