@@ -6,9 +6,12 @@ with entrypoint `src.q3.expanded_solve`; the execution controller is
 `b57ae6d3a4038343819dd842ce871d5e42cb5578`. The ten disjoint 50-cell
 shards ran between 2026-09-24 18:37:19 and 18:43:00 UTC, with a four-cell
 pilot and at most eight concurrent shard processes. They produced 500/500
-plans and 500/500 independent, unmodified official P3 E0 evaluations. The
-solver used 755 online official P3 E0 calls, zero E1/E2 calls and zero
-retries. All ten shards completed and their process cleanup was confirmed.
+plans and matching official P3 E0 result artifacts. The solver used 755
+online calls to the unmodified official E0, zero E1/E2 calls and zero
+retries. The final result for each cell reuses its online winning evaluation;
+there was no additional independent external E0 run. The benchmark runner
+checked the saved plan, result and receipt hashes. All ten shards completed
+and their process cleanup was confirmed.
 
 The [standard board feed](../../../results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/board-feed-500-with-baselines.json)
 includes the matched official single-core baseline for each case. The 100

@@ -1,0 +1,250 @@
+{
+  "schema": "p3-ten-shard-dispatch-v1",
+  "source_commit": "8314351854c716091bc6d31215569825ae45ec55",
+  "handoff_commit": "e923cae8d38a351ee44290a967725046fd9d83ff",
+  "runner_commit": "8314351854c716091bc6d31215569825ae45ec55",
+  "runner_path": "src/q3/feedback_benchmark.py",
+  "controller_path": "scripts/s59ee_p3_calendar_dispatch.py",
+  "controller_sha256": "c8bc4b26e1923d5d986e8eebad5341251df8c82ea48b529c897ab98680255b14",
+  "started_at": "2026-09-24T19:04:48.937Z",
+  "finished_at": "2026-09-24T19:11:20.238Z",
+  "status": "complete",
+  "max_workers": 8,
+  "max_solver_calls": 500,
+  "max_E0_calls": 1000,
+  "deadline_seconds": 3600,
+  "retries": 0,
+  "pilot": [
+    [
+      "001",
+      1
+    ],
+    [
+      "051",
+      5
+    ],
+    [
+      "082",
+      4
+    ],
+    [
+      "062",
+      5
+    ]
+  ],
+  "available_bytes_at_start": 10381639680,
+  "shards": {
+    "s01": {
+      "status": "stage_complete",
+      "manifest_sha256": "ad818f296a98e2e26af975a1e148dd32d38ddcf36a6f935960f6ebd3732a91de",
+      "run_id": "q3-calendar-full500-20260925-s59-s01",
+      "coordinates": 50,
+      "pid": 96267,
+      "started_at": "2026-09-24T19:04:48.945Z",
+      "available_bytes_at_launch": 10399727616,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/calendar500-handoff-20260925/manifest-s01.json",
+        "results/a/q3-nikolastarx/calendar-full500-20260925-s59/20260924T1905Z-s59ee/s01"
+      ],
+      "finished_at": "2026-09-24T19:09:26.148Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 85
+    },
+    "s02": {
+      "status": "stage_complete",
+      "manifest_sha256": "c8e98c5eff2610f69979f58d2c30528efd41c994ad37241e9287cbc087893ded",
+      "run_id": "q3-calendar-full500-20260925-s59-s02",
+      "coordinates": 50,
+      "pid": 96270,
+      "started_at": "2026-09-24T19:04:48.951Z",
+      "available_bytes_at_launch": 10393288704,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/calendar500-handoff-20260925/manifest-s02.json",
+        "results/a/q3-nikolastarx/calendar-full500-20260925-s59/20260924T1905Z-s59ee/s02"
+      ],
+      "finished_at": "2026-09-24T19:08:42.949Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 84
+    },
+    "s03": {
+      "status": "stage_complete",
+      "manifest_sha256": "4fab4a156f5f00d59a7f77ef2ce9fe25b608be1b99560e8383ddb98edb71c932",
+      "run_id": "q3-calendar-full500-20260925-s59-s03",
+      "coordinates": 50,
+      "pid": 96274,
+      "started_at": "2026-09-24T19:04:48.959Z",
+      "available_bytes_at_launch": 10380869632,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/calendar500-handoff-20260925/manifest-s03.json",
+        "results/a/q3-nikolastarx/calendar-full500-20260925-s59/20260924T1905Z-s59ee/s03"
+      ],
+      "finished_at": "2026-09-24T19:08:29.128Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 88
+    },
+    "s04": {
+      "status": "stage_complete",
+      "manifest_sha256": "6cf60be73d9b3b89fbc44e7e5fc51979895669a38b71dd1da2e7a60614025f47",
+      "run_id": "q3-calendar-full500-20260925-s59-s04",
+      "coordinates": 50,
+      "pid": 96276,
+      "started_at": "2026-09-24T19:04:48.965Z",
+      "available_bytes_at_launch": 10374660096,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/calendar500-handoff-20260925/manifest-s04.json",
+        "results/a/q3-nikolastarx/calendar-full500-20260925-s59/20260924T1905Z-s59ee/s04"
+      ],
+      "finished_at": "2026-09-24T19:08:12.428Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 79
+    },
+    "s05": {
+      "status": "stage_complete",
+      "manifest_sha256": "af5d8f44e6e6b925a787a9ac84a8fe4f55f0d211e69922d6cbbad51fd79f0c8c",
+      "run_id": "q3-calendar-full500-20260925-s59-s05",
+      "coordinates": 50,
+      "pid": 97970,
+      "started_at": "2026-09-24T19:04:59.609Z",
+      "available_bytes_at_launch": 11133730816,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/calendar500-handoff-20260925/manifest-s05.json",
+        "results/a/q3-nikolastarx/calendar-full500-20260925-s59/20260924T1905Z-s59ee/s05"
+      ],
+      "finished_at": "2026-09-24T19:08:29.773Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 86
+    },
+    "s06": {
+      "status": "stage_complete",
+      "manifest_sha256": "ef177494004f77c6222d04d621a39bea41be6152ac1ea85c0ccc2ae78656020a",
+      "run_id": "q3-calendar-full500-20260925-s59-s06",
+      "coordinates": 50,
+      "pid": 97972,
+      "started_at": "2026-09-24T19:04:59.616Z",
+      "available_bytes_at_launch": 11131666432,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/calendar500-handoff-20260925/manifest-s06.json",
+        "results/a/q3-nikolastarx/calendar-full500-20260925-s59/20260924T1905Z-s59ee/s06"
+      ],
+      "finished_at": "2026-09-24T19:07:31.354Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 87
+    },
+    "s07": {
+      "status": "stage_complete",
+      "manifest_sha256": "70a7dc2e319980f9478cc285212eb6dcd2aeba7d84068619aae52e8b56c9be79",
+      "run_id": "q3-calendar-full500-20260925-s59-s07",
+      "coordinates": 50,
+      "pid": 97977,
+      "started_at": "2026-09-24T19:04:59.624Z",
+      "available_bytes_at_launch": 11131600896,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/calendar500-handoff-20260925/manifest-s07.json",
+        "results/a/q3-nikolastarx/calendar-full500-20260925-s59/20260924T1905Z-s59ee/s07"
+      ],
+      "finished_at": "2026-09-24T19:08:07.770Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 83
+    },
+    "s08": {
+      "status": "stage_complete",
+      "manifest_sha256": "c883715870c15f216eeb383eebae366517ed0cbe968d7a5ff2e6aab3a04cbdd7",
+      "run_id": "q3-calendar-full500-20260925-s59-s08",
+      "coordinates": 50,
+      "pid": 97979,
+      "started_at": "2026-09-24T19:04:59.631Z",
+      "available_bytes_at_launch": 11119181824,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/calendar500-handoff-20260925/manifest-s08.json",
+        "results/a/q3-nikolastarx/calendar-full500-20260925-s59/20260924T1905Z-s59ee/s08"
+      ],
+      "finished_at": "2026-09-24T19:08:51.199Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 90
+    },
+    "s09": {
+      "status": "stage_complete",
+      "manifest_sha256": "4a49c1424f6a4fd9927f1764dd07390e5b9549097c53a3c3142588e48babb28e",
+      "run_id": "q3-calendar-full500-20260925-s59-s09",
+      "coordinates": 50,
+      "pid": 13119,
+      "started_at": "2026-09-24T19:07:31.362Z",
+      "available_bytes_at_launch": 10646929408,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/calendar500-handoff-20260925/manifest-s09.json",
+        "results/a/q3-nikolastarx/calendar-full500-20260925-s59/20260924T1905Z-s59ee/s09"
+      ],
+      "finished_at": "2026-09-24T19:10:58.974Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 88
+    },
+    "s10": {
+      "status": "stage_complete",
+      "manifest_sha256": "b21c7e670eafa970f8cb0489ee410e5a8a56e639627da51997d52c3d103c33f8",
+      "run_id": "q3-calendar-full500-20260925-s59-s10",
+      "coordinates": 50,
+      "pid": 16204,
+      "started_at": "2026-09-24T19:08:07.779Z",
+      "available_bytes_at_launch": 10935894016,
+      "argv": [
+        "python",
+        "-B",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "results/a/q3-nikolastarx/calendar500-handoff-20260925/manifest-s10.json",
+        "results/a/q3-nikolastarx/calendar-full500-20260925-s59/20260924T1905Z-s59ee/s10"
+      ],
+      "finished_at": "2026-09-24T19:11:19.732Z",
+      "exit_code": 0,
+      "actual_records": 50,
+      "actual_E0_or_reservation": 91
+    }
+  },
+  "pilot_completed_at": "2026-09-24T19:04:59.599Z",
+  "queued_shards": []
+}
