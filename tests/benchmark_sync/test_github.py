@@ -110,6 +110,23 @@ class GitHubTests(unittest.TestCase):
    cache=list(Path(tmp).glob('head-*.json'))
    self.assertEqual(len(cache),1);self.assertEqual(json.loads(cache[0].read_text())['sha'],sha)
 
+ def test_path_lookup_walks_nonrecursive_trees_and_caches_commit_and_directories(self):
+  import threading
+  from collections import OrderedDict
+  r=GitHub.__new__(GitHub);r.trees=OrderedDict();r.path_trees=OrderedDict();r.commit_tree_roots=OrderedDict();r.tree_lock=threading.Lock()
+  commit='a'*40;root='b'*40;folder='c'*40;blob='d'*40;calls=[]
+  def request(method,path,**kwargs):
+   calls.append(path)
+   if path=='/git/commits/'+commit:return {'tree':{'sha':root}}
+   if path=='/git/trees/'+root:return {'tree':[{'path':'results','type':'tree','sha':folder}]}
+   if path=='/git/trees/'+folder:return {'tree':[{'path':'board-feed.json','type':'blob','mode':'100644','sha':blob,'size':12}]}
+   raise AssertionError(path)
+  r.request=request
+  want={'path':'board-feed.json','type':'blob','mode':'100644','sha':blob,'size':12}
+  self.assertEqual(r.tree_entry(commit,'results/board-feed.json'),want)
+  self.assertEqual(r.tree_entry(commit,'results/board-feed.json'),want)
+  self.assertEqual(calls,['/git/commits/'+commit,'/git/trees/'+root,'/git/trees/'+folder])
+
  def test_parallel_writers_preserve_unrelated_paths(self):
   r=RacingGitHub(False);r.update({'channel':b'new'},expected={'channel':b'old'})
   self.assertEqual(r.blob(r.tree(r.head())['channel']['sha']),b'new')

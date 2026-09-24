@@ -49,6 +49,8 @@ class GitHub:
         self.token = subprocess.check_output([gh,'auth','token','--hostname','github.com'],stderr=subprocess.DEVNULL,text=True).strip()
         self.local_repository=Path(local_repository) if local_repository else None
         self.trees = OrderedDict()
+        self.path_trees = OrderedDict()
+        self.commit_tree_roots = OrderedDict()
         self.tree_lock=threading.Lock()
         self.write_lock=threading.RLock()
         self.cooldown_lock=threading.Lock()
@@ -164,6 +166,48 @@ class GitHub:
             while len(self.trees)>16: self.trees.popitem(last=False)
         return entries
 
+    def tree_entry(self, commit, path):
+        """Resolve one path through bounded non-recursive Git trees.
+
+        Research commits can have enough entries for GitHub's recursive tree API
+        to return a truncated prefix. Walking directory-by-directory avoids that
+        ambiguous partial result and caches immutable intermediate trees by SHA.
+        """
+        fixed_sha(commit); path_ok(path)
+        with self.tree_lock:
+            tree_sha=self.commit_tree_roots.get(commit)
+            if tree_sha is not None: self.commit_tree_roots.move_to_end(commit)
+        if tree_sha is None:
+            meta=self.request('GET','/git/commits/'+commit)
+            tree_sha=fixed_sha(meta['tree']['sha'])
+            with self.tree_lock:
+                self.commit_tree_roots[commit]=tree_sha
+                self.commit_tree_roots.move_to_end(commit)
+                while len(self.commit_tree_roots)>128: self.commit_tree_roots.popitem(last=False)
+        parts=path.split('/')
+        for index,name in enumerate(parts):
+            with self.tree_lock:
+                entries=self.path_trees.get(tree_sha)
+                if entries is not None:
+                    self.path_trees.move_to_end(tree_sha)
+            if entries is None:
+                obj=self.request('GET','/git/trees/'+tree_sha)
+                if obj.get('truncated') or not isinstance(obj.get('tree'),list) or len(obj['tree'])>100000:
+                    raise ValueError('Truncated or excessive directory tree')
+                entries={item.get('path'):item for item in obj['tree'] if isinstance(item,dict)}
+                with self.tree_lock:
+                    self.path_trees[tree_sha]=entries
+                    self.path_trees.move_to_end(tree_sha)
+                    while len(self.path_trees)>128: self.path_trees.popitem(last=False)
+            entry=entries.get(name)
+            if entry is None: raise FileNotFoundError(path)
+            if index<len(parts)-1:
+                if entry.get('type')!='tree': raise FileNotFoundError(path)
+                tree_sha=fixed_sha(entry.get('sha'))
+            else:
+                return entry
+        raise FileNotFoundError(path)
+
     def local_blob(self,sha):
         repo=getattr(self,'local_repository',None)
         if repo is None: return None
@@ -194,6 +238,12 @@ class GitHub:
         if entry is None: raise FileNotFoundError(path)
         if entry['mode']!='100644' and entry['mode']!='100755': raise ValueError('Non-regular Git file')
         return self.blob(entry['sha'],entry.get('size'))
+
+    def read_path(self, commit, path):
+        entry=self.tree_entry(commit,path)
+        if entry.get('type')!='blob' or entry.get('mode') not in ('100644','100755'):
+            raise ValueError('Non-regular Git file')
+        return self.blob(fixed_sha(entry.get('sha')),entry.get('size'))
 
     def put_blob(self,data):
         if len(data)>MAX_FILE: raise ValueError('Git upload too large')

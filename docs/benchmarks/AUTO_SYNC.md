@@ -35,6 +35,12 @@ python -X utf8 -m src.benchmark_sync --config /outside-git/config.json enqueue -
 - 每个已提交的完整feed进入持久outbox后即参与下一轮签名传输；在线时双方同步器最多每2秒检查一次远端及本地已提交worktree。每轮固定一个远端head用于数据接收/发布/回执扫描，完成轮次后按起始节拍等待；慢轮次不会再额外叠加整段2秒等待。`status.json` 持久报告当前同步阶段、阶段开始时间、各阶段最近耗时和整轮耗时；`runtime_stage` / `runtime_stage_timings_ms` 另显示接收网站release与检查已批准main代码，便于发现软件检查对数据轮询的阻塞。central 的 main 代码分支每5秒检查，只有SHA改变才fetch/构建签名release；打开的新版页面每5秒检查软件指纹，数据视图每1秒读取已验签快照，中央接收器仍每2秒排空本地inbox。没有“凑够500条再发送”门槛，也不要求每个科研run覆盖500个格：任意大小的完整feed按各自attempt/revision立即追加，后续补片继续追加，旧历史不会被覆盖。GitHub说明，正确授权的条件GET若返回304，不计入REST primary rate limit（[官方文档](https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api#use-conditional-requests)）。轮询间隔不是端到端硬保证：原件体积、验签/准入、网络、限流和离线会增加耗时；状态页分别显示最后成功时间、队列和错误。
 - 高频空闲检查使用 GitHub REST 条件请求（ETag）；已对固定 `benchmark-sync-v1` ref 验证 `304 Not Modified`，可避免每轮都下载tree和快照。遇到更新才读取变化对象或写新签名快照；403/429、`Retry-After`及离线指数退避仍优先，失败不忙轮询、不降低验签要求。
 
+#### 任意大小补片的低延迟路径
+
+没有“凑够500条再发送”门槛，也不要求每个科研run覆盖500个格：任意大小的完整feed按各自attempt/revision立即追加，后续补片继续追加，旧历史不会被覆盖。队长同机同步器先验证本人签名、固定commit、producer身份及feed/原件SHA，再将同一submission ID的完整请求写入唯一中央inbox；远端签名传输同时继续。相同submission ID的本地与远端物化由per-ID锁串行，request marker始终最后原子发布。中央Ledger仍是唯一准入写者，本机快路径失败时远端通路继续。中央接收器每0.25秒检查本机已完整落盘的inbox。
+
+远端收件优先处理最近首次发现的pending交付，每四个新件至少处理一个旧pending，持续新数据不会饿死旧队列。固定源仓库按commit root逐目录查询非递归Git tree，避免GitHub递归整树截断；固定commit和目录tree按SHA有界缓存。需分别测量E0完成到固定feed提交/入队、中央准入/签收、快照生成/发布、两端验签及双方原页面完整可见时间；轮询频率不代表端到端延迟保证。
+
 ## 网站代码更新
 
 网页/接收器/同步模块及必要小JSON/协议组成独立签名ZIP，不打包科研数据。中央发布器只跟踪审查合入的 main 相关文件；无关文件变化不会生成新release。成员先验签和每文件hash、限制展开范围/大小，再隔离启动候选、核对HTTP实际资源；通过后才切原端口。失败恢复上一可用版本，不删除原账本。正常服务启用后只能由同一supervisor管理，不能再手开另一个写库进程。
