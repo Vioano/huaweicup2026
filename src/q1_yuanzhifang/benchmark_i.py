@@ -7,7 +7,7 @@ only that cell's Job and its descendants.
 from __future__ import annotations
 
 import argparse
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
 import ctypes
 from ctypes import wintypes
 from datetime import datetime, timezone
@@ -77,12 +77,22 @@ def job_api():
     api.AssignProcessToJobObject.restype = wintypes.BOOL
     api.CloseHandle.argtypes = (c_void_p,)
     api.CloseHandle.restype = wintypes.BOOL
-    return api, Extended
+    class Accounting(ctypes.Structure):
+        _fields_ = [(name, c_longlong) for name in
+                    ("TotalUserTime", "TotalKernelTime", "ThisPeriodTotalUserTime", "ThisPeriodTotalKernelTime")]
+        _fields_ += [(name, c_uint32) for name in
+                     ("TotalPageFaultCount", "TotalProcesses", "ActiveProcesses", "TotalTerminatedProcesses")]
+
+    api.QueryInformationJobObject.argtypes = (c_void_p, ctypes.c_int, c_void_p, c_uint32, c_void_p)
+    api.QueryInformationJobObject.restype = wintypes.BOOL
+    api.TerminateJobObject.argtypes = (c_void_p, c_uint32)
+    api.TerminateJobObject.restype = wintypes.BOOL
+    return api, Extended, Accounting
 
 
 def managed_process(entry, args, cell_dir, label, timeout):
-    """Run one owned tree; closing the Job is the timeout and cleanup action."""
-    api, Extended = job_api()
+    """Run one owned tree; verify Job active count is zero before returning."""
+    api, Extended, Accounting = job_api()
     gate = cell_dir / f"{label}.gate"
     stdout = cell_dir / f"{label}.stdout.jsonl"
     stderr = cell_dir / f"{label}.stderr.txt"
@@ -100,6 +110,7 @@ def managed_process(entry, args, cell_dir, label, timeout):
         raise error
     proc = None
     timed_out = False
+    assigned = False
     try:
         with stdout.open("xb") as out, stderr.open("xb") as err:
             start = time.perf_counter()
@@ -108,18 +119,43 @@ def managed_process(entry, args, cell_dir, label, timeout):
             if not api.AssignProcessToJobObject(job, int(proc._handle)):
                 # The child is still held at the gate and cannot spawn workers.
                 raise ctypes.WinError(ctypes.get_last_error())
+            assigned = True
             gate.write_text("assigned\n", encoding="utf-8")
             try:
                 proc.wait(timeout=timeout)
             except subprocess.TimeoutExpired:
                 timed_out = True
     finally:
-        api.CloseHandle(job)  # Kills any still-running descendants of this cell.
-        if proc is not None:
-            try:
-                proc.wait(timeout=10)
-            except subprocess.TimeoutExpired:
-                raise RuntimeError(f"{label} did not exit after Job close")
+        supervision_error = None
+        try:
+            if assigned:
+                if timed_out and not api.TerminateJobObject(job, 1):
+                    supervision_error = "TerminateJobObject failed"
+                end = time.monotonic() + 10
+                while True:
+                    accounting = Accounting()
+                    if not api.QueryInformationJobObject(job, 1, ctypes.byref(accounting), ctypes.sizeof(accounting), None):
+                        supervision_error = "Job active-process query failed"
+                        break
+                    if accounting.ActiveProcesses == 0:
+                        break
+                    if time.monotonic() >= end:
+                        api.TerminateJobObject(job, 1)
+                        supervision_error = f"Job still has {accounting.ActiveProcesses} active processes"
+                        break
+                    time.sleep(.05)
+            elif proc is not None:
+                # Assignment failed: this gated process is not owned by the Job.
+                proc.kill()
+            if proc is not None:
+                try:
+                    proc.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    supervision_error = "parent did not exit after cleanup"
+        finally:
+            api.CloseHandle(job)
+        if supervision_error:
+            raise RuntimeError(f"{label} supervision failure: {supervision_error}")
     return dict(command=command, pid=proc.pid, returncode=proc.returncode,
                 timeout=timed_out, wall_seconds=time.perf_counter() - start,
                 stdout=str(stdout.relative_to(cell_dir)), stderr=str(stderr.relative_to(cell_dir)))
@@ -150,6 +186,11 @@ def pack_exact(path):
 def preflight(graph_dir, output):
     from src.q1_yuanzhifang.unified import verify_sources
     verify_sources()
+    for relative in ("src/q1_yuanzhifang/unified.py", "src/q1_yuanzhifang/unified_sources.json"):
+        frozen = subprocess.check_output(["git", "rev-parse", f"{SOLVER_SHA}:{relative}"], cwd=ROOT).strip()
+        local = subprocess.check_output(["git", "hash-object", relative], cwd=ROOT).strip()
+        if local != frozen:
+            raise RuntimeError(f"solver bytes differ from {SOLVER_SHA}: {relative}")
     source_paths = list(json.loads((ROOT / "src/q1_yuanzhifang/unified_sources.json").read_text(
         encoding="utf-8"))["files_sha256"])
     if os.name != "nt":
@@ -162,10 +203,22 @@ def preflight(graph_dir, output):
     if subprocess.run(["git", "diff", "--quiet", "--", *source_paths],
                       cwd=ROOT).returncode:
         raise RuntimeError("unstaged solver/dependency changes")
+    if subprocess.run(["git", "diff", "--cached", "--quiet", "--", *source_paths],
+                      cwd=ROOT).returncode:
+        raise RuntimeError("staged solver/dependency changes")
+    frozen_manifest = json.loads(subprocess.check_output(
+        ["git", "show", f"{SOLVER_SHA}:docs/a/source-manifest.json"], cwd=ROOT))
+    expected_graphs = {item["path"].split("/")[-1]: item["sha256"] for item in frozen_manifest["files"]
+                       if item["path"] in {f"data/case_{case}.json" for case, _ in CELLS}}
     graphs = {case: graph_dir / f"case_{case}.json" for case, _ in CELLS}
     for path in graphs.values():
         if not path.is_file():
             raise FileNotFoundError(path)
+        if sha(path) != expected_graphs.get(path.name):
+            raise RuntimeError(f"graph differs from frozen source manifest: {path.name}")
+    from src.eval_exact._official import compute_official_code_hash
+    if compute_official_code_hash() != frozen_manifest["official_code_hash"]:
+        raise RuntimeError("official code hash differs from frozen source manifest")
     if shutil.disk_usage(output.parent if output.parent.exists() else ROOT).free < 1_000_000_000:
         raise RuntimeError("less than 1 GB free near pilot output")
     return dict(solver_commit=SOLVER_SHA,
@@ -199,12 +252,18 @@ def run_cell(case, cores, graph, output, deadline):
         (cell / "online_events.json").write_text(json.dumps(online, indent=2) + "\n", encoding="utf-8")
         record["e1_interface_attempts_observed"] = sum(
             row["event"] == "e1_interface_attempt_started" for row in online)
+        record["e1_worker_confirmed_calls"] = sum(
+            row["event"] == "e1_interface_attempt_returned" and row.get("worker_pid") is not None for row in online)
+        record["e1_worker_execution_unknown_attempts"] = max(
+            0, record["e1_interface_attempts_observed"] - record["e1_worker_confirmed_calls"])
         record["e1_budget_charge"] = 5 if not diag.is_file() else record["e1_interface_attempts_observed"]
         if record["solver"]["returncode"] or not plan.is_file() or not diag.is_file():
             record["status"] = "solver-failed"
             return record
         diagnosis = json.loads(diag.read_text(encoding="utf-8"))
         record["e1_interface_attempts_diagnostics"] = diagnosis["e1_interface_attempts"]
+        record["e1_worker_confirmed_calls"] = diagnosis["actual_e1_calls"]
+        record["e1_worker_execution_unknown_attempts"] = diagnosis["e1_worker_execution_unknown_attempts"]
         if diagnosis["e1_interface_attempts"] != record["e1_interface_attempts_observed"]:
             record["status"] = "online-accounting-mismatch"
             return record
@@ -243,6 +302,7 @@ def main():
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--preflight", action="store_true")
     parser.add_argument("--start-token")
+    parser.add_argument("--producer-session", help="Actual supervising session for the run and board provenance")
     args = parser.parse_args()
     facts = preflight(args.graph_dir.resolve(), args.output.resolve())
     if args.preflight:
@@ -250,25 +310,52 @@ def main():
         return
     if args.start_token != START_TOKEN:
         raise ValueError("explicit parent START token required; preflight is read-only")
+    if not args.producer_session or "/s-" not in args.producer_session:
+        raise ValueError("actual supervising producer session is required")
+    facts["producer_session"] = args.producer_session
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     (output / "batch_manifest.json").write_text(json.dumps(facts, indent=2) + "\n", encoding="utf-8")
     deadline = time.monotonic() + 1200
     started = time.perf_counter()
     rows = []
+    pending = iter(CELLS)
+    hard_failure = False
     with ThreadPoolExecutor(max_workers=2) as pool:
-        futures = [pool.submit(run_cell, case, cores, args.graph_dir / f"case_{case}.json", output, deadline)
-                   for case, cores in CELLS]
-        for future in as_completed(futures):
-            row = future.result()
-            rows.append(row)
-            print(json.dumps({"cell": f"{row['case']}/k{row['cores']}", "status": row["status"]}), flush=True)
+        active = {}
+        def launch_next():
+            case, cores = next(pending)
+            active[pool.submit(run_cell, case, cores, args.graph_dir / f"case_{case}.json", output, deadline)] = (case, cores)
+        for _ in range(2):
+            launch_next()
+        while active:
+            done, _ = wait(active, return_when=FIRST_COMPLETED)
+            for future in done:
+                case, cores = active.pop(future)
+                row = future.result()
+                rows.append(row)
+                print(json.dumps({"cell": f"{case}/k{cores}", "status": row["status"]}), flush=True)
+                if row["status"] in {"runner-error", "online-accounting-mismatch", "bad-plan-keys"}:
+                    hard_failure = True
+            if not hard_failure:
+                for _ in range(2 - len(active)):
+                    try:
+                        launch_next()
+                    except StopIteration:
+                        break
+    for case, cores in pending:
+        cell = output / f"case_{case}_k{cores}"
+        cell.mkdir(exist_ok=False)
+        row = dict(case=case, cores=cores, graph_sha256=facts["graph_sha256"][case],
+                   status="not-started-after-supervision-failure", started_at=utc(), finished_at=utc())
+        (cell / "run.json").write_text(json.dumps(row, indent=2) + "\n", encoding="utf-8")
+        rows.append(row)
     receipt = dict(finished_at=utc(), wall_seconds=time.perf_counter()-started,
                    solver_attempts=sum("solver" in row for row in rows),
                    online_e1_interface_budget_charge=sum(row.get("e1_budget_charge", 5 if "solver" in row else 0) for row in rows),
                    external_e0_attempts=sum("e0" in row for row in rows),
                    statuses={f"{row['case']}/k{row['cores']}": row["status"] for row in rows},
-                   no_retries=True)
+                   no_retries=True, stopped_after_supervision_failure=hard_failure)
     if receipt["solver_attempts"] > 5 or receipt["online_e1_interface_budget_charge"] > 25 or receipt["external_e0_attempts"] > 5:
         raise AssertionError("pilot call budget exceeded")
     (output / "batch_receipt.json").write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")

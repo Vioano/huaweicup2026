@@ -6,13 +6,16 @@ import gzip
 import hashlib
 import json
 from pathlib import Path
+import subprocess
 
 from src.q1_yuanzhifang.benchmark_i import CELLS, DEFAULT_OUTPUT, ROOT, SOLVER_SHA
 from src.eval_exact._official import compute_official_code_hash
 
 REPO = "huaweibei123/huaweicup2026"
-SESSION = "yuanzhifang30-sudo/s-0e91469d5b284a0aaf7aca42c456233c"
 E0_SOURCE = "1cc29d207ebad396d5a0bbfcabf2ef4b4c26ffed"
+BASELINE_COMMIT = "0b47d802cdd0bfe7011017c8098c1c0917b2c959"
+BASELINE_SOURCE = "results/benchmark-board/official-singlecore-20260924"
+BASELINE_COPY = ROOT / "results/a/q1-yuanzhifang-stage-i/stage-i-20260925/baseline"
 
 
 def digest(raw):
@@ -28,15 +31,53 @@ def source(commit, path, entrypoint):
     return dict(repo=REPO, commit=commit, path=path, entrypoint=entrypoint)
 
 
+def baseline(case, manifest, official_hash):
+    folder = BASELINE_COPY / case
+    originals = {}
+    for name in ("run.json", "result.json.gz"):
+        original = subprocess.check_output(
+            ["git", "show", f"{BASELINE_COMMIT}:{BASELINE_SOURCE}/{case}/{name}"], cwd=ROOT)
+        copied = (folder / name).read_bytes()
+        if copied != original:
+            # A later Windows checkout may convert text run.json LF to CRLF.
+            # Git's clean-filtered blob identity still pins the original bytes.
+            fixed_blob = subprocess.check_output(
+                ["git", "rev-parse", f"{BASELINE_COMMIT}:{BASELINE_SOURCE}/{case}/{name}"], cwd=ROOT).strip()
+            local_blob = subprocess.check_output(["git", "hash-object", str(folder / name)], cwd=ROOT).strip()
+            if local_blob != fixed_blob:
+                raise ValueError(f"baseline copy differs from fixed Git original: {case}/{name}")
+        originals[name] = copied
+    run = json.loads(originals["run.json"])
+    result = json.loads(gzip.decompress(originals["result.json.gz"]))
+    reference = run["artifacts"]["result.json"]
+    if (run["case_id"] != case or run["status"] != "ok" or run["official_calls"] != 1
+            or run["graph_sha256"] != manifest["graph_sha256"][case]
+            or run["config_sha256"] != manifest["config_sha256"]
+            or run["official_code_hash"] != official_hash
+            or reference["sha256"] != digest(originals["result.json.gz"])
+            or reference["raw_sha256"] != digest(gzip.decompress(originals["result.json.gz"]))
+            or result["scene"] != "A" or result["num_cores"] != 1
+            or type(result["makespan"]) is not int
+            or result["makespan"] != run["makespan_cycles"]):
+        raise ValueError(f"singlecore baseline identity mismatch: {case}")
+    return {"graph_sha256": run["graph_sha256"], "config_sha256": run["config_sha256"],
+            "official_sha256": run["official_code_hash"], "route": "E0",
+            "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+            "result": artifact(folder / "result.json.gz")}, result["makespan"]
+
+
 def export(run_dir, feed_path):
     manifest = json.loads((run_dir / "batch_manifest.json").read_text(encoding="utf-8"))
     receipt = json.loads((run_dir / "batch_receipt.json").read_text(encoding="utf-8"))
     if manifest["solver_commit"] != SOLVER_SHA or manifest["official_e0_sha256"] != digest(
             (ROOT / "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py").read_bytes()):
         raise ValueError("frozen source identity mismatch")
+    if not manifest.get("producer_session"):
+        raise ValueError("actual supervising producer session missing")
     if receipt["solver_attempts"] > 5 or receipt["online_e1_interface_budget_charge"] > 25 or receipt["external_e0_attempts"] > 5:
         raise ValueError("batch exceeded frozen calls")
     official_hash = compute_official_code_hash()
+    baselines = {case: baseline(case, manifest, official_hash) for case in ("008", "051", "084")}
     records = []
     for case, cores in CELLS:
         cell = run_dir / f"case_{case}_k{cores}"
@@ -68,8 +109,12 @@ def export(run_dir, feed_path):
                 raise ValueError("E0 result identity or makespan invalid")
             if run["e0_result_sha256"] != artifacts["result"]["sha256"]:
                 raise ValueError("E0 result hash mismatch")
-        status = "ok" if success else ("timeout" if run.get("solver", {}).get("timeout") or run.get("e0", {}).get("timeout") else "failed")
+        status = ("ok" if success else "not_run" if run["status"] in
+                  {"not-started-after-supervision-failure", "global-deadline-before-solver"}
+                  else "timeout" if run.get("solver", {}).get("timeout") or run.get("e0", {}).get("timeout")
+                  else "failed")
         movement = result["data_movement_bytes"] if success else {}
+        verified_baseline, baseline_cycles = baselines[case]
         solver = run.get("solver", {})
         e0 = run.get("e0", {})
         missing = {
@@ -88,15 +133,20 @@ def export(run_dir, feed_path):
                 missing["provenance.measurement.failure.exit_code"] = "No child exit code was observed."
             if failure["elapsed_seconds"] is None:
                 missing["provenance.measurement.failure.elapsed_seconds"] = "No child process was started."
-        e1_calls = run.get("e1_budget_charge", 5 if "solver" in run else 0)
+        e1_calls = run.get("e1_worker_confirmed_calls", 0)
+        unknown_e1 = run.get("e1_worker_execution_unknown_attempts", run.get("e1_interface_attempts_observed", 0))
         provenance = {
-            "producer_session": SESSION,
+            "producer_session": manifest["producer_session"],
             "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
             "solver": {"source": source(SOLVER_SHA, "src/q1_yuanzhifang/unified.py", "main"),
-                       "authors": ["yuanzhifang30-sudo"],
+                       "authors": ["NikolaStarx", "yuanzhifang30-sudo"],
                        "method": "Frozen captain candidate union plus one structure-gated H or private capacity-return candidate; E1 online ranking",
                        "references": ["https://github.com/huaweibei123/huaweicup2026/issues/98"],
-                       "upstream": [], "selected_algorithm_id": None, "selected_solver_commit": None},
+                       "upstream": [
+                           source("48faef6f1386c3dc7d037674a38af29d533ba774", "src/q1/unified.py", "generate_candidates"),
+                           source("4f1b9f8be4bbcc98759a19451c108e62e80abb17", "src/q1_yuanzhifang/prefetch_frontier.py", "construct"),
+                           source("e566dd5ce6a1737880ca88d35964bfd846bc4512", "src/q1/capacity_return.py", "construct")],
+                       "selected_algorithm_id": None, "selected_solver_commit": None},
             "runner": {"source": source(manifest["runner_head"], "src/q1_yuanzhifang/benchmark_i.py", "main"),
                        "argv": solver.get("command", []), "working_directory": "."},
             "environment": {"os": manifest["platform"], "cpu": manifest["cpu"] or "unavailable",
@@ -120,9 +170,12 @@ def export(run_dir, feed_path):
             "algorithm_name": "Fang structural union with one additional candidate", "variant": "base-four-plus-one-v1",
             "solver_commit": SOLVER_SHA,
             "parameters": {"cores": cores, "candidate_limit": 5, "online_e1_worker_limit": 1,
+                           "singlecore_baseline_commit": BASELINE_COMMIT,
                            "batch_budget": {"solver": 5, "E0": 5, "E1_attempts": 25, "E2": 0,
                                             "workers": 2, "wall_seconds": 1200, "retries": 0},
-                           "batch_actual_calls": receipt},
+                           "batch_actual_calls": receipt,
+                           "e1_unknown_execution_attempts": unknown_e1,
+                           "e1_conservative_budget_charge": run.get("e1_budget_charge", 5 if "solver" in run else 0)},
             "problem": "P1", "case_id": case, "cores": cores, "status": status,
             "metrics": {"makespan_cycles": result["makespan"] if success else None,
                         "solver_wall_seconds": solver.get("wall_seconds"),
@@ -142,9 +195,10 @@ def export(run_dir, feed_path):
                        "utc": "UTC ISO8601 Z"},
             "provenance": provenance,
             "notes": ["Five exposed prospective pilot cells only; no full 100x5 mean or blind test.",
+                      f"Official singlecore denominator {baseline_cycles} cycles copied byte-for-byte from {BASELINE_COMMIT} and independently identity-checked; 0 baseline reruns.",
                       "E1 execution unknown attempts are charged conservatively; see original diagnostics/events."],
             "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
-            "baseline": None, "cache_pair": None,
+            "baseline": verified_baseline, "cache_pair": None,
         })
     if feed_path.exists():
         raise FileExistsError(feed_path)
