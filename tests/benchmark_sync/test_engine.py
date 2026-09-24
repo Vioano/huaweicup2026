@@ -68,6 +68,47 @@ class EngineTests(unittest.TestCase):
         before=self.remote.head();member.deliver_outbox(before);leader.receive_submissions(before)
         self.assertEqual(before,self.remote.head())
 
+    def test_new_feed_precedes_bounded_old_receipt_checks_without_starvation(self):
+        from src.benchmark_sync.engine import OUTBOX_RECEIPT_CHECK_BATCH_SIZE
+        member=self.engines['member']
+        old=[self.queue(nonce=n) for n in range(OUTBOX_RECEIPT_CHECK_BATCH_SIZE*2+1)]
+        member.deliver_outbox(None)
+        self.assertTrue(all(read_json(path)['state']=='awaiting_receipt' for path,_ in old))
+        fresh,fresh_id=self.queue(nonce=9999)
+        member.deliver_outbox(None)
+        self.assertEqual(read_json(fresh)['state'],'awaiting_receipt')
+        self.assertIn(f'submissions/member/{fresh_id}.json',self.remote.tree(self.remote.head('benchmark-submissions/member')))
+        self.assertEqual(sum('last_checked_at' in read_json(path) for path,_ in old),OUTBOX_RECEIPT_CHECK_BATCH_SIZE)
+        member.deliver_outbox(None)
+        member.deliver_outbox(None)
+        self.assertTrue(all('last_checked_at' in read_json(path) for path,_ in old))
+
+    def test_short_new_batch_is_published_before_reading_old_receipts(self):
+        from unittest.mock import patch
+        member=self.engines['member'];leader=self.engines['leader']
+        old=[self.queue(nonce=n) for n in range(33)]
+        member.deliver_outbox(None)
+        old_path,old_id=min(old,key=lambda pair:(read_json(pair[0])['last_attempt_at'],pair[0].parent.name))
+        receipt_path=f'receipts/member/{old_id}.json'
+        receipt=leader.sign('receipt',{'id':old_id,'actor':'member','state':'accepted',
+                                       'received_at':'2026-09-24T20:00:00Z'})
+        self.remote.update({receipt_path:canonical(receipt)})
+        fresh,fresh_id=self.queue(nonce=9999)
+        new_path=f'submissions/member/{fresh_id}.json'
+        events=[];original_update=self.remote.update;original_read=self.remote.read
+        def recorded_update(files,**kwargs):
+            if new_path in files: events.append('new_published')
+            return original_update(files,**kwargs)
+        def recorded_read(commit,path):
+            if path==receipt_path: events.append('old_receipt_read')
+            return original_read(commit,path)
+        with patch.object(self.remote,'update',side_effect=recorded_update), \
+             patch.object(self.remote,'read',side_effect=recorded_read):
+            member.deliver_outbox(self.remote.head())
+        self.assertEqual(read_json(fresh)['state'],'awaiting_receipt')
+        self.assertEqual(read_json(old_path)['state'],'accepted')
+        self.assertLess(events.index('new_published'),events.index('old_receipt_read'))
+
     def test_leader_local_fastpath_validates_fixed_commit_and_keeps_remote_delivery(self):
         import os,subprocess
         repo=self.root/'source';repo.mkdir()
@@ -99,6 +140,11 @@ class EngineTests(unittest.TestCase):
         envelope=leader.sign('submission',payload)
         with ThreadPoolExecutor(max_workers=2) as pool:
             self.assertEqual(list(pool.map(lambda _:leader.materialize_local_submission(read_json(entry_path),envelope),range(2))),[True,True])
+        # A durable request was published only after its artifacts passed the
+        # checks above. Reconciliation must still work if an old source worktree
+        # has since been removed.
+        old_entry=dict(read_json(entry_path),repo=str(self.root/'removed-source'))
+        self.assertTrue(leader.materialize_local_submission(old_entry,envelope))
         bad_payload=dict(payload,artifacts={'results/plan.json':'0'*64})
         bad_entry={'id':digest(canonical(bad_payload)),'payload':bad_payload,'repo':str(repo)}
         with self.assertRaisesRegex(ValueError,'artifact manifest'):
