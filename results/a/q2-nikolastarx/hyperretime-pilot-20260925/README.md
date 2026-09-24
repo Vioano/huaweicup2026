@@ -66,3 +66,26 @@ the requested venv entry path, checks E2/NumPy imports, and records nested
 subprocess stdout/stderr on `CalledProcessError`; its separately authorized
 batch uses `run-v3`. The first batch remains one attempted E2 request plus one
 possible E0 fallback in the cumulative call account.
+
+## Completed run-v3 pilot
+
+The fixed three-cell batch completed in 23.449 seconds (one worker). Every
+selected plan had one native E2 return and one independent official E0; no
+native fallback or E1 ran. E2 and E0 agreed on Makespan and movement fields.
+The gzip archives of plans, native receipts, official result, trace, and log
+passed byte-for-byte roundtrip checks.
+
+| Cell | Old E0 M | New E0 M | M reduction | Old added COPY B | New added COPY B | Cold candidate + E2 + plan s |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 003/k5 | 205,295 | 163,449 | 20.383% | 9,845,480 | 5,637,616 | 6.433 |
+| 043/k5 | 208,889 | 149,013 | 28.664% | 10,459,268 | 5,717,700 | 4.416 |
+| 056/k5 | 96,280 | 69,685 | 27.623% | 4,863,236 | 2,446,782 | 3.813 |
+
+`run-v3/batch.json` and each `candidate.json` contain exact hashes, timings,
+construction diagnostics, E2 call ledgers, and official E0 originals. These
+three selected inputs were a fixed mechanism pilot, not an all-cell result or
+an algorithm chosen online against the old adaptive route. Across all attempts,
+there were four E2 API requests: the first batch's one uncertain request plus
+three run-v3 native returns. The first batch retains one possible E0 fallback;
+run-v3 made three separate verified E0 calls. The run-v2 preflight made no
+candidate or evaluator call.
