@@ -1,5 +1,7 @@
 # Gap full500 streaming board export (prepared only)
 
+The optional released-run watcher and its offline command-order checks are documented in [PUBLISHER.md](PUBLISHER.md). The exporter also accepts an explicit inclusive `--range-start`/`--range-end` pair of at most 50 fully accepted cells; this is mutually exclusive with legacy `--shard`. Existing archive intervals cannot overlap except for an identical idempotent range.
+
 `scripts/q2_gap_stream_export.py` is a read-only consumer of the frozen `gap_full500.py` run. It never starts a solver, E0, E1, or E2. It reads one `summary.json` byte snapshot, takes only the contiguous `accepted` prefix, checks each accepted row against its raw plan, result, solver/E0 process receipts, and online ledger, and writes a new immutable board-submission-v1 feed and archived evidence for one 50-cell shard. A shorter final shard requires `--final` and a terminated summary. Existing archive bytes must match; a changed file is rejected. The first summary snapshot SHA is retained in `snapshot.json`; later idempotent exports preserve that snapshot as the live summary grows.
 
 Example after scheduling release and after the first 50 accepted cells (replace the unique run and output paths with actual ones):

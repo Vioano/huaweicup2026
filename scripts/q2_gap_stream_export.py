@@ -99,7 +99,8 @@ def archive_bytes(data, dest):
 
 
 def export(summary_path, manifest_path, output_root, run_id, shard, producer_session,
-           task_url, runtime_id, source_reference, final=False):
+           task_url, runtime_id, source_reference, final=False,
+           range_start=None, range_end=None):
     from src.benchmark_board.protocol import validate_feed
     summary_raw = summary_path.read_bytes()  # Exactly one snapshot, including a moving run.
     summary = json.loads(summary_raw)
@@ -115,20 +116,34 @@ def export(summary_path, manifest_path, output_root, run_id, shard, producer_ses
     if (not source_reference or len(source_reference) > 300 or source_reference.startswith('/')
             or '..' in Path(source_reference).parts or '\\' in source_reference):
         raise ValueError('Provide a non-absolute source summary reference')
-    if shard < 0 or shard > 9:
-        raise ValueError('shard must be 0..9')
     prefix = accepted_prefix(summary, manifest)
-    start = shard * 50
-    end = min(start + 50, len(prefix))
     terminated = summary['status'] != 'running'
-    if end <= start or (end - start < 50 and not (final and terminated)):
-        raise ValueError('Shard incomplete; partial shard requires explicit final terminated run')
+    if range_start is None and range_end is None:
+        if shard is None or shard < 0 or shard > 9:
+            raise ValueError('Legacy shard must be 0..9')
+        start = shard * 50
+        end = min(start + 50, len(prefix))
+        if end <= start or (end - start < 50 and not (final and terminated)):
+            raise ValueError('Shard incomplete; partial shard requires explicit final terminated run')
+    else:
+        if (shard is not None or type(range_start) is not int or type(range_end) is not int
+                or not 1 <= range_start <= range_end <= 500 or range_end-range_start+1 > 50
+                or len(prefix) < range_end):
+            raise ValueError('Range must be 1-based, accepted, at most 50, and exclusive of --shard')
+        start, end = range_start-1, range_end
     if final and not terminated:
         raise ValueError('Cannot final-export a running batch')
     if not output_root.is_relative_to(ROOT / 'results/a/q2-nikolastarx'):
         raise ValueError('Output must be in P2 results area')
     if output_root.is_symlink():
         raise ValueError('Output root symlink forbidden')
+    for other in output_root.glob('shard-???-???'):
+        try:
+            lo, hi = (int(x) for x in other.name.split('-')[1:])
+        except ValueError:
+            raise ValueError('Malformed existing shard: ' + other.name)
+        if (lo, hi) != (start+1, end) and lo <= end and start+1 <= hi:
+            raise ValueError('Overlapping immutable shard: ' + other.name)
     baselines = frozen_feed(manifest)
     folder = output_root / f'shard-{start+1:03d}-{end:03d}'
     if folder.is_symlink():
@@ -278,7 +293,9 @@ def main():
     p.add_argument('--manifest', required=True, type=Path)
     p.add_argument('--output-root', required=True, type=Path)
     p.add_argument('--run-id', required=True)
-    p.add_argument('--shard', required=True, type=int, help='0 for cells 1-50, through 9')
+    p.add_argument('--shard', type=int, help='legacy 0 for cells 1-50, through 9')
+    p.add_argument('--range-start', type=int, help='1-based inclusive start; pair with --range-end')
+    p.add_argument('--range-end', type=int, help='1-based inclusive end; at most 50 cells')
     p.add_argument('--producer-session', required=True)
     p.add_argument('--task-url', required=True)
     p.add_argument('--runtime-id', required=True)
@@ -289,8 +306,8 @@ def main():
     print(json.dumps(export(args.summary.resolve(), args.manifest.resolve(),
                             args.output_root.resolve(), args.run_id, args.shard,
                             args.producer_session, args.task_url, args.runtime_id,
-                            args.source_reference,
-                            args.final), ensure_ascii=False))
+                            args.source_reference, args.final,
+                            args.range_start, args.range_end), ensure_ascii=False))
 
 
 if __name__ == '__main__':
