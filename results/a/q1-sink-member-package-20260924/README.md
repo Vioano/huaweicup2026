@@ -36,6 +36,9 @@
 成员在保存自己工作后，使用 owner 提供的本包完整提交建立独立worktree，不覆盖原任务。
 下面命令在新工作区根执行；`FULL_PACKAGE_SHA`、session、runtime、run-id和并发说明必须替换成实际值。
 `FULL_PACKAGE_SHA` 是本包最终提交，运行器要求HEAD精确匹配。
+Windows建新worktree可用`git -c core.autocrlf=false worktree add <新目录> FULL_PACKAGE_SHA`，
+只为本次检出保留LF原字节，不修改全局Git配置。自动CRLF换行会被哈希预检拒绝；
+不得通过改官方源码或更新哈希来绕过。
 
 ```text
 uv sync --locked
@@ -89,3 +92,5 @@ python src/benchmark_board/protocol.py results/a/q1-sink-member-runs/RUN_ID/boar
 
 成员要显式保全被`.gitignore`忽略的`official.log`（只force-add本次明确日志）；提交后逐项
 核验feed引用可`git show <结果SHA>:<path>`读取且哈希相同。报告包含失败和not_run，不能只上交好格。
+
+静态预检在`7ac0e72418c21008e4b0e76e08726c2f191a1e85`完成：29个声明/官方文件身份、8个ZIP图字节及16份参考原件一致。收据见`static-preflight.json`。随后仅归档收据与执行说明；没有新增求解或评价。
