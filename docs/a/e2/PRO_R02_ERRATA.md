@@ -45,3 +45,16 @@ K−1个越过提议可能有更多E0，必须按操作费用求和；Q3单候�
 
 本更正为0评价的源码/契约复核。原Pro材料的证据和本更正各有版本，后续归档README需显式链接，
 避免读者只看原brief继承过度概括；Pro建议、当前草案与实际接口仍分开验收。
+
+## 路由审计与父阶段停止域（本轮后续补充，尚未发给Pro）
+
+LYX固定09eef20静态审计及本专项有限复核支持603b074单请求条件上界：P1完整E1≤1，
+P23本问题完整E0≤1。两者分账；E1不能被E0=0掩盖，冷失败两轮prep也不等于两个完整E0。
+外层STARTED/route不证明完整函数进入；中断actual未知仍保留上界预留，调用方truth/final/
+重试另计。仍无公开fallback前拒绝协议，审计不是实际服务或驱动总量证明。
+
+Fang Stage B父stage只有一个active case×method unit；unit即experiment，epoch是unit内
+候选轮，final操作仍属该unit。父控制器核验原stop_after_unit语义、完整回执及清理后，
+才持久放行下一unit；特定baseline拒绝只挡同case，其他意外失败停止stage。
+每experiment一个在途不足以保证旧父stage停止；祖先许可必须进入派发事务。新条文未实现，
+也未被既有10项单层模型检查覆盖。详见当前设计与ROUTE_COST_REVIEW.md。

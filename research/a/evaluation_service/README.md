@@ -26,3 +26,7 @@ These checks do not prove real process isolation, fairness under dynamic arrival
 transaction durability, IPC behavior, real candidate correctness, or speed. The
 next implementation must test those boundaries with fault-injected fake backends
 before consuming any newly declared formal-evaluation budget.
+
+The ten existing checks do not model the later stage/unit/epoch stop hierarchy,
+separate E0/E1 accounting, or multiple evaluation operations per proposal. Those
+contract additions remain unimplemented and untested by this model.

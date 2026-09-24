@@ -3,28 +3,24 @@
 本次 owner：`nikolastarx/s-55b66a31d7bd49019122a179563dc1d2`；2026-09-24。
 这是专项已读与反馈记录，不替他人签收，不用账号级消息代替 session 级角色。
 
-**当前已确认路由**：P1=原任务ce89 / s-6607；P2=任务d043 / s-8ee33与Fang s-25ac协同；
-P3=任务d08a / s-3172；本任务s-55b6维护三问共同基础设施；公共整合/Atlas由s-a5bd负责。
+**当前已确认路由**：P1=s-6607；P2=s-8ee33与Fang s-25ac协同；
+P3=s-3172；本任务s-55b6维护三问共同基础设施；公共整合/Atlas由s-a5bd负责。
 以下早期反馈中“无算法写权”“待回交”等是接收当时的历史状态，已被本段及后续本人接手回执替代。
 
 ## 已收到的直接反馈
 
-- 历史首轮调度反馈（早于用户明确P1回交） `s-a5bdb19389ee43d686b7976d3bcdf766`，Codex task
-  `01a0ccc4-9927-7003-b48e-b090380186b9`：三个本机任务不能直接等同于三问当前单写者。
+- 历史首轮调度反馈（早于用户明确P1回交） `s-a5bdb19389ee43d686b7976d3bcdf766`：三个本机任务不能直接等同于三问当前单写者。
   Q1 旧父任务已释放写权；s-8ee33 又从 Q1 转 Q2，Fang 仍写 src/q2；本机新 Q2 范围需原通道对齐。
-- 本机新 Q2 `s-8ee33b891eb94c529bf5be94bb5d8894`，task
-  `01a0d043-2b7f-78d0-bde2-f8fefb18dab8`：当前1 worker，无在途；拟每轮3–12候选、
+- 本机新 Q2 `s-8ee33b891eb94c529bf5be94bb5d8894`：当前1 worker，无在途；拟每轮3–12候选、
   固定graph/core assignment改序、阶段间自适应。稳定candidate_id、显式失败、原计划保存、
   完成即返且轮内汇合；不因别的实验整批没完成延迟本实验结果。Q1已停写于4dff90e/PR34。
   这是预期新Q2接口需求，尚无已运行的新适配器和样本。
-- Q3 `s-3172f7b01b604cfb90aefd6396bd87bc`，task
-  `01a0d08a-a9ce-7fe1-ab78-4f5efa348f1b`：固定完整画像
+- Q3 `s-3172f7b01b604cfb90aefd6396bd87bc`：固定完整画像
   [517cd105 / EVALUATION_PROFILE.md](https://github.com/huaweibei123/huaweicup2026/blob/517cd105d1330cfbcf7b11b9a1ab9061242f3d54/docs/a/q3/EVALUATION_PROFILE.md)。
   当前1候选+1官方P3，全阶段封存20次E0，0新可用额度。未来普通score需COPY分项和聚合
   cache_stats，少数诊断才需逐事件；full=True的E0成本不可隐藏。支持未来ID/epoch关联，
   当前尚无异步消费者；配对缺一半记incomplete，不同候选不能延续模拟Cache。
-- 历史首轮Q1父任务反馈（早于本人重新接手） `s-6607cb2735304751b36662035723372b`，task
-  `01a0ce89-4ce5-7931-85cf-74419842ba69`：现无算法写权；只提供历史13d6的profile轮次背景。
+- 历史首轮Q1父任务反馈（早于本人重新接手） `s-6607cb2735304751b36662035723372b`：现无算法写权；只提供历史13d6的profile轮次背景。
   本提案以固定4dff代码核对补充，不将历史摘要充当当前开发者接受接口。
 
 ## 跨账号需求请求
@@ -100,3 +96,13 @@ LYX本人已在[5805058735](https://github.com/huaweibei123/huaweicup2026/issues
   公共任务卡、AGENTS和Atlas由调度汇总。无正式E0/E1/E2新增调用，无新正式实验预算。
 - 用户追加探索机制问题后，三问本人均给出机制族/交互/负例，已汇总并实际投递
   [Pro r02](PRO_R02_STATUS.md)。答案未回，上传/镜像/Pro读取/研究有效性分层记录。
+
+## 路由审计与父阶段反馈（后续补读）
+
+已全文读LYX固定09eef20的矩阵/JSON及Issue15#5805508214；Fang协调的
+[路由回执](https://github.com/huaweibei123/huaweicup2026/issues/15#issuecomment-5805578444)和
+[父stage停止域审阅](https://github.com/huaweibei123/huaweicup2026/issues/33#issuecomment-5805545792)
+也已全文读。本专项有限源码复核见[ROUTE_COST_REVIEW.md](ROUTE_COST_REVIEW.md)；
+新设计明确E1独立预算以及stage→unit experiment→epoch祖先许可。身份分层先前已修正，
+本次补父级停止域，不把使用方对旧原则的接受当新版接口接入验收。公开路由记录改用session
+和Issue来源，移除本机任务ID；历史已发送Pro材料保持原件，后续更正另记版本。

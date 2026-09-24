@@ -114,7 +114,7 @@ winner = algorithm.select_when_round_ready(results)  # 原proposal序号tie-brea
   更换父状态或回改已派发前缀；每请求固定manifest revision/hash，封闭后才完成轮次选优。
   单步自适应更新父状态须建立下一epoch；算法spec不用全塞进服务，但声明元数据原样冻结/回传。
 
-对外“交付完成”、后端终态持久化、算法确认前缀分别记录。E0额度释放只凭相应后端终态/成本
+对外“交付完成”、后端终态持久化、算法确认前缀分别记录。完整评价额度释放只凭相应后端终态/成本
 证明，不凭客户端看到了结果；原序前缀停住时，已证实native没有调用E0的预留可单独结算，
 但该候选仍占投机窗口。取消和轮次失败不能撤销已经实际发生的费用。
 
@@ -158,7 +158,7 @@ P2 不作为 P3 的无条件硬筛，已有 080 的排名反转依据见 Q3 画�
   数可能远超K。窗口把相对该顺序首失败后越过的候选限制在至多K−1个，仍需预算全额预留。
   这里明确计数单位为生成提议proposal；一个提议可有P2/P3等多个必需评价操作，只有manifest
   声明的必需操作全部确认才能推进它的前缀。**K−1提议不等于K−1 E0**：费用上界为所有已派发
-  操作的max_oracle_calls之和，同时另限制evaluation在途数。final复核有单独阶段和圈存额度。
+  操作的max_full_calls分项之和（E0/E1分开），同时另限制evaluation在途数。final复核有单独阶段和圈存额度。
   这是吞吐与停止一致性的明确取舍；本实验窗口堵塞时调度可服务其他实验。
 - 第一条意外失败被确认时，在协调者事务内标该epoch失败并停派发；queued项确认取消后退
   额度，已started项按清理策略终止或有限排空，记录实际/未知成本且不重投。
@@ -169,6 +169,36 @@ P2 不作为 P3 的无条件硬筛，已有 080 的排名反转依据见 Q3 画�
   实际派发集合；不声称跨机器调用次数完全确定。队列原序号和全事件日志必须保存。
 - `official_rejected`等预期候选无效是否继续，由manifest错误分类决定；timeout/worker异常
   不能伪装成一个被拒绝候选来绕过“首意外失败停”的约束。最终E0不通过同样明确结束。
+
+### 父阶段停止域与 Fang Stage B 映射
+
+`stage_id`是一次冻结的父运行及其总预算/停止域；`experiment_id`在该父运行内标识一个
+case×method单元；`epoch_id`在单元内标识不可变父状态和有序proposal清单的一轮。相同实验
+不能通过新epoch重置stage费用/截止或绕开停止；不同case的baseline结果互不替代。
+请求同时绑定stage manifest hash、unit序号、experiment/epoch及其revision，父关系注册后不可改。
+父stage不是全项目单一串行锁；互相独立、已登记的其他stage仍可并行。
+
+对Fang固定`0b58c123cccf02fc993b741d79dcd8511e4dd38f`的`stage_b.py`/`budget_search.py`，
+兼容适配必须保留如下顺序，不能只设置每experiment一个worker：
+
+- 一个stage同时最多一个active unit；按manifest给出的原unit顺序推进。初始plan、探索候选
+  和final属于同unit；final是单独收费operation，不能因epoch结束就提前启用下一个unit。
+- unit所有结果、final结果或按策略未执行说明、证据落盘和进程清理回执齐备后，父控制器按固定版本的
+  `stop_after_unit(receipt, summary)`作决定，协调者持久提交父状态后才释放下一unit派发许可。
+  原函数的特定初始plan拒绝组合只封锁同case后续method，其他case可继续；不能把任意
+  `official_rejected`都扩大解释成这个例外。正常confirmed单元才继续；监督/清理异常、
+  halt_stage、其他未确认/意外失败均停止后续unit。PAUSE在unit边界生效，stage总deadline
+  也不能被新unit重置。协议保留这些条件和依据，最终分类由版本锁定的使用方adapter提供。
+- 调度器在每次QUEUED→STARTED事务内核验所有祖先的状态/许可，而非只检查epoch。
+  stage/case阻断与派发在同一协调者内排序，撤销该范围内未开始的排队操作；未知成本、未清理
+  worker仍保留。客户端失联或未提供完整unit回执时父阶段暂停，不自动视为成功放行。
+- strict模式在active unit内也只有一个评价在途；即使拆为多个experiment或有空闲槽位，
+  都不能越过父许可。未来若并行case×method，manifest必须显式改为新stage策略，并分别
+  声明跨unit窗口/失败范围/费用上界及incumbent规则；仅选择epoch投机模式不授权跨unit投机。
+
+这是新增的设计契约，尚未实现父级状态机；已有10项内存模型检查不覆盖多级停止域或多operation。
+Fang的[原审阅](https://github.com/huaweibei123/huaweicup2026/issues/33#issuecomment-5805545792)
+指出的这一接口缺口在接入前必须由使用方核对，不能声称已获本人接受或旧Stage B已完成迁移。
 
 ## 5. 资源和成本是两本相连的账
 
@@ -183,18 +213,26 @@ P2 不作为 P3 的无条件硬筛，已有 080 的排名反转依据见 Q3 画�
 等同进程 RSS。对已启动进程先确认退出/清理，再释放执行资源；未知生存状态保留 lease。
 worker 回收是健康机制，不会使一次评价突破瞬时峰值变安全。
 
-调用账：请求预声明 `max_oracle_calls`（按problem和直接/隐式路径分项）及证据来源；
-协调者用固定后端能力表验证，不接受调用者把可能费用虚报为0；上界未知则拒绝准入。
-提交时原子检查并预留最大可能调用的真值额度，worker 执行前记录开始。
-P2/P3 现实现会在 native 不支持/异常时自动调用本问题 E0；**仅在返回后统计 route 不够**。
-目前从evaluate_record单层静态读取推导的候选上界为每请求1次完整E0入口；这是待LYX固定603b
-完整调用链审计确认的提案，不能凭单层阅读作为已证明能力放行。审计需明确problem/mode/失败
-路径和局部官方子过程的排除口径；未确认能力表标unknown、不能派发。若审计确认上界1，
-第一接入版即为每个可能回退请求预留1次E0；native成功且证据完整才释放该预留，
-full/实际 fallback 转实耗；开始后崩溃/超时保留未知额度，不能退款或自动重投。
-当没有额度时，现后端不能运行“可能回退”的请求；下一内核版本需明确的
-`allow_fallback=False`/拆分 native 与 E0 执行能力，才可在零 E0 预算下安全跑 native。
-P1 按自身 E1/E0 路由能力单列，不能套用 P2/P3 的一个次数字段。
+调用账：请求预声明`max_full_calls={e0_by_problem, e1_by_problem}`及源码/后端证据；
+`max_oracle_calls`若保留，只代表其中E0分项，不能覆盖或省略E1。完整E1不是纯oracle，
+但必须独立预留/实耗/unknown并计CPU/wall；E0与E1不能互相兑换。协调者核对固定能力表，
+拒绝未知上界或虚报0的请求。显式truth、shortlist、final和外部重试均是另一个收费操作。
+
+LYX固定[09eef20审计](https://github.com/huaweibei123/huaweicup2026/blob/09eef20b2285fadb88b2a6e2cad9b4bd9c389d88/docs/a/e2/audit-lyx-20260924/ROUTE_COST_MATRIX.md)
+及本专项[有限只读复核](ROUTE_COST_REVIEW.md)支持以下**条件能力**，输入固定603b074、单次
+公开调用、正常JSON形状、预期未替换依赖/库、无外部重试：P1完整E1≤1且严格E0=0；
+P2/P3各自完整E0≤1且E1=0。能力注册还须核对实际源码/构建/ABI，不据此宣布当前服务已实现。
+冷native准备失败再回退可有两轮prep，但不加算为两个完整评价；prep/CPU成本另计。
+
+第一接入版对可能回退的P1请求预留1次完整E1，对P2/P3请求预留1次本问题E0。
+`full=True`也预留相应完整评价；P1 full返回E1，不能冒充official_full纯E0。
+可信native成功且证据完整才释放完整评价预留；确认进入的full/fallback转实耗。
+route/counter或外层STARTED本身不证明完整函数体已进入；失败记录不足时actual=unknown，
+仍保留max对应额度。派发后崩溃/超时/取消不能退款或自动重投。
+目前公开接口没有fallback前许可回调及持久函数入口协议；`native_enabled=False`强制后备，
+不是拒绝回退。无相应完整评价预算就不能派发可能回退请求；下一后端版本需明确且经验证的
+`allow_fallback=False`或拆分native与完整评价能力，才可在该项零预算下执行。私有_native_score
+不是可承诺的公共门禁。旧实验驱动的事后route断言/局部ledger不能代替事前预留。
 
 ```text
 RECEIVED → RESERVED+QUEUED → STARTED → TERMINAL+RESULT_COMMITTED
