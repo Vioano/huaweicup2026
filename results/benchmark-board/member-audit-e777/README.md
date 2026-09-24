@@ -2,7 +2,23 @@
 
 执行者：`yuanzhifang30-sudo/s-e777d827b5af4adfafd148ff3a4fae8b`，Windows / Python 3.12.14。
 
-本目录证明 **2026-09-24 的固定签名快照与本机接口一致**，不证明最终双向自动同步、代码热更新或算法重新评估已完成。研发上下文已读，不宣称盲审。
+本目录保留 **固定签名快照、真实运行发布与浏览器更新** 的分阶段证据；尚不宣称全部交付队列和最终双向同步验收完成。研发上下文已读，不宣称盲审，也未重新运行算法评估。
+
+## 正式同步与网页自动换版（2026-09-24 16:02 UTC）
+
+`formal-runtime-acceptance.json` 全项通过：签名快照 `200c47360d850d944a10cfae6769099e88d1282e5668623ad4894c9df551e1da` 的全部 3626 条历史与事件逐字段相等；正式/报告预览各 1500 格独立重算一致。原 3209 条记录完整保留，增加 417 条；原本机 872 条与备份逐行相等，全部 ID 确实在中央快照中。签名软件 release `fbc1b27c4154495605179cfe3d70787c2808897a5d9f66058f09dca3b4d4e434` 与中央发布者均对应完整代码 `a36cbcab441ece5df55f104c983e3341265f9f4e`；全部发布文件经 Git blob 核对，4 个 HTTP 静态资源含动态注入 HTML 指纹均相等，实际软件 health=ok。
+
+此次使用 `--sync-state $State --projection-scope overview`，38 次 HTTP，约 27 秒；overview 省略逐算法/批次重复投影，但不省略全部历史、事件或默认 1500 格的两模式验收。此前 138/156 种过滤投影的完整报告仍保留。验收要求全过程快照稳定；之前遇到快照或软件自动变更的尝试没有算通过，见 `formal-first-attempt-inconclusive.json`。
+
+已有 IAB 标签在首次接入正式程序的一次受控刷新后，**没有再次手动刷新**，其已加载 meta 指纹实际从 `ec5afa…` 自动变为 `9c7fd660d2511538b58dc44db6739693224b60235a20668c6f78616f92008588`，与已签名发布/HTTP 完全一致。`browser-3626-auto-ui-update.json` 的全部 1500 显示值及 15 个均值，与独立报告逐项吻合。此标签未设置非默认过滤、未打开 Cache；另一会话的非默认筛选保留不能算成本标签独立观察。
+
+真实网络 TLS EOF 期间浏览器保留 3622 条，见 `browser-3622-network-offline.json`。随后程序自然恢复并更新至 3626；本会话未断用户网络、禁用 TLS 或重启生产。回执和往返延迟仍另核；不能用上述静态通过代替全部队列清空或另一端实际已读。
+
+### PR118 Windows 独立复核暴露关闭端口误判
+
+固定 `480f4a8cc16965984c9b52c69270b93dde539a6c` 的 44 个源码/测试文件，逐 Git blob 与长度校验后在隔离副本运行 `python -X utf8 -B -m unittest discover -s tests/benchmark_sync -v`：**26 项，25 通过、1 错误**。新公平队列、跨重启轮转、信任/blob 变化重验均通过；失败是 `test_handoff_distinguishes_closed_connections_from_live_listener`，`ensure_no_listener(timeout=1)` 在已经关闭的 Windows 回环端口收到 TimeoutError。
+
+`pr118-windows-port-result.json` 保存实际补充探针：真实监听连接约 0.015 秒成功；同一已关闭端口两轮 timeout=1 均超时，timeout=3 均约 2.047 秒返回 WinError10061 / ConnectionRefusedError。原函数仍错误拒绝已关闭端口。本机自动换版已成功，并不能消除此后的冷启动/交接风险。探针仅用隔离临时端口，没有修改生产端口、TLS 或网络设置；未将超时视为安全空闲，修复归正式同步器单写者。
 
 ## 第二次数据更新复核
 

@@ -176,6 +176,7 @@ def audit(args):
     payload = verify_snapshot(manifest, (snapshot_dir / name).read_bytes())
     report = {'checked_at': datetime.now(timezone.utc).isoformat(), 'schema_version': 1,
               'scope': 'Fixed snapshot equality; not original artifact re-evaluation or live-update acceptance',
+              'projection_scope': args.projection_scope,
               'key_sha256': args.key_sha256, 'generation': envelope['payload']['generation'],
               'snapshot': public_manifest, 'checks': {}}
     checks = report['checks']
@@ -204,6 +205,9 @@ def audit(args):
             and health['read_only'] and health['runtime']['local_artifacts_verified'] is False,
             'mirror health or evidence semantics differ')
     checks['health'] = {k: health[k] for k in ('mode', 'records', 'status', 'read_only')}
+    sync = health['runtime'].get('sync', {})
+    checks['transport_observed'] = {k: sync.get(k) for k in
+                                    ('state', 'last_attempt_at', 'last_success_at', 'upload', 'error')}
     received = []
     offset = 0
     while True:
@@ -219,7 +223,9 @@ def audit(args):
     require(get('/api/v1/catalog') == payload['algorithms'], 'catalog differs')
     algorithms = sorted({r['algorithm_id'] for r in received})
     runs = sorted({r['run_id'] for r in received})
-    filters = [(None, None)] + [(a, None) for a in algorithms] + [(None, r) for r in runs]
+    filters = [(None, None)]
+    if args.projection_scope == 'all':
+        filters += [(a, None) for a in algorithms] + [(None, r) for r in runs]
     projections = []
     for algorithm, run in filters:
         for preview in (False, True):
@@ -229,12 +235,12 @@ def audit(args):
             if run:
                 query['run'] = run
             actual = get('/api/v1/cells', query)
+            require(actual['runtime']['snapshot_id'] == payload['snapshot_id'], 'snapshot changed during audit')
             expect = expected_cells(payload, algorithm, run, preview)
             require(canonical(actual['cells']) == canonical(expect), 'cell projection differs: ' + str(query))
             for key, value in (('cursor', payload['sequence']), ('record_count', len(received)),
                                ('algorithms', algorithms), ('runs', runs), ('sources', payload['source_status'])):
                 require(actual[key] == value, 'projection metadata differs: ' + key)
-            require(actual['runtime']['snapshot_id'] == payload['snapshot_id'], 'snapshot changed during audit')
             projections.append(dict(query=query, cells=len(expect), sha256=digest(canonical(expect))))
     checks['projections'] = projections
     winners = [c['best'] for c in expected_cells(payload) if c['best']]
@@ -322,6 +328,8 @@ def audit(args):
             checks['signed_running_release'] = dict(release_id=active['release_id'], code_commit=code,
                 generation=active['_channel']['payload']['generation'], ui_asset_id=asset_id,
                 file_hashes=hashes, software=runtime['software'])
+            require(payload['publisher']['board_code_commit'] == code,
+                    'central snapshot producer and installed software are different releases')
             if args.browser_observation:
                 require(observed.get('ui_asset_id') == asset_id, 'loaded browser asset identity differs')
         require(get(path, raw=True) == expected_bytes, 'HTTP static asset differs: ' + path)
@@ -346,6 +354,8 @@ def main():
     parser.add_argument('--browser-observation', type=Path, help='Read-only CUA DOM observation for this exact snapshot')
     parser.add_argument('--previous-report', type=Path, help='Previously verified report; old compressed payload must remain available')
     parser.add_argument('--prior-payload-dir', type=Path, help='Optional retained prior payload directory')
+    parser.add_argument('--projection-scope', choices=('all', 'overview'), default='all',
+                        help='overview still verifies all records/events and all 1500 winners in both modes; omits per-algorithm/run repetitions')
     args = parser.parse_args()
     if args.bootstrap and args.release is None:
         parser.error('--bootstrap requires --release')
