@@ -1,0 +1,214 @@
+{
+  "case_id": "022",
+  "cores": 2,
+  "variant": "unified-general-gap-e0",
+  "solver_args": [],
+  "parameters": {
+    "structural_router": "stage_then_attention_then_gap_vs_anchor_else_guarded",
+    "candidate_limit": 2,
+    "selection": "strictly smaller official makespan than the fresh structural anchor"
+  },
+  "e0_call_limit": 2,
+  "job_key": "022-k2-unified-general-gap-e0",
+  "stage_id": "shard-10",
+  "started_at": "2026-09-24T18:40:50.323459Z",
+  "status": "ok",
+  "calls": {
+    "solver": 1,
+    "E0": 2,
+    "E1": 0,
+    "E2": 0
+  },
+  "e0_reserved": 2,
+  "artifacts": {
+    "plan": {
+      "path": "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s10/cells/022-k2-unified-general-gap-e0/case_022_multicore_res.json",
+      "sha256": "2ff1ca01a9be16253b5f918871a5da69d44eed372a7ebe52411c70f26354ab29"
+    },
+    "result": {
+      "path": "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s10/cells/022-k2-unified-general-gap-e0/evidence/result.json.gz",
+      "sha256": "03f17b8730bf7cd229f7c82be3d4ed05a825386d25feac1bc7aa5d4cc144d501"
+    },
+    "trace": {
+      "path": "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s10/cells/022-k2-unified-general-gap-e0/evidence/receipt.json",
+      "sha256": "c7ec581f548001df8270f7408aa37d50f109d634f8c33030f358fd1c74d09a9c"
+    }
+  },
+  "run_path": "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s10/cells/022-k2-unified-general-gap-e0/run.json",
+  "failure": null,
+  "solver_process": {
+    "status": "ok",
+    "reason": null,
+    "exit_code": 0,
+    "wall_seconds": 0.46054812500369735,
+    "argv": [
+      "python",
+      "-B",
+      "-m",
+      "src.q3.expanded_solve",
+      "data/raw/a/official/data/case_022.json",
+      "--cores",
+      "2",
+      "-o",
+      "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s10/cells/022-k2-unified-general-gap-e0/case_022_multicore_res.json",
+      "--evidence",
+      "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s10/cells/022-k2-unified-general-gap-e0/evidence"
+    ],
+    "process_tree_cleanup": "POSIX process group",
+    "memory": {
+      "limit_bytes": null,
+      "sampled_peak_rss_bytes": null,
+      "poll_seconds": null,
+      "scope": "sum of process-group RSS / Windows job WorkingSetSize; sampled tripwire, not OS hard limit; shared pages may be counted more than once"
+    },
+    "log_derivation": "stdout/stderr preserve bytes except repository and interpreter absolute paths replaced by markers"
+  },
+  "identity": {
+    "graph_sha256": "b93af0605cda612b707a91a1e9fc76348b527284a03e779b65cbe55813e331e7",
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+    "plan_sha256": "2ff1ca01a9be16253b5f918871a5da69d44eed372a7ebe52411c70f26354ab29"
+  },
+  "makespan_cycles": 28060,
+  "data_movement_bytes": {
+    "original_graph_copy_bytes": 213686,
+    "scheduled_copy_bytes": 220598,
+    "added_copy_bytes": 6912,
+    "partition_added_copy_bytes": 6912,
+    "spill_added_copy_bytes": 0
+  },
+  "cache_stats": {
+    "copy_in_hits": 3,
+    "copy_in_misses": 138,
+    "hit_bytes": 6912,
+    "miss_bytes": 213540,
+    "hits": 3,
+    "accesses": 141,
+    "hit_rate": 0.03135376408469871
+  },
+  "solver_receipt": {
+    "strategy": "affine_eighth",
+    "selected_strategy": "affine_eighth",
+    "official_e0_calls": 2,
+    "candidate_limit": 2,
+    "seed_selection": {
+      "rule": "general_affine",
+      "word_declined": "requires M -> V* -> M components",
+      "general_proposal": "frozen_fang_gap_insertion",
+      "acceptance": "strictly_lower_official_makespan_than_fresh_anchor",
+      "router": {
+        "stage_request": {
+          "collector_policy": "fixed",
+          "source_count": 149,
+          "lanes_by_core": [
+            75,
+            74
+          ],
+          "heaviest_lane_cores": [
+            0
+          ],
+          "feature_scope": "Provisional source-count partition; lane/load meaning is confirmed only by the strict stage guard."
+        },
+        "migration_construct_attempts": 0,
+        "migration_candidate_plans": 0,
+        "stage_construct_attempts": 1,
+        "stage_candidate_plans": 0,
+        "attention_construct_attempts": 1,
+        "attention_candidate_plans": 0,
+        "guarded_policy_invocations": 0,
+        "stage_guard_reason": "requires one weak component",
+        "attention_cross_delay_cycles": 500,
+        "attention_guard_reason": "no closed attention query row matched",
+        "route": "general_gap",
+        "route_e0_limit": 2,
+        "evaluation_calls": 2,
+        "count_scope": "Router attempts only; guarded internal construction/decision records are preserved unchanged.",
+        "general_gap_policy_invocations": 1
+      }
+    },
+    "candidates": [
+      {
+        "name": "seed",
+        "strategy": "affine_eighth",
+        "status": "ok",
+        "makespan": 28060,
+        "metadata": {
+          "strategy": "affine_eighth",
+          "components": 32,
+          "eligible_ops": 1356,
+          "cores": 2
+        },
+        "artifacts": {
+          "plan": {
+            "path": "seed/plan.json",
+            "sha256": "2ff1ca01a9be16253b5f918871a5da69d44eed372a7ebe52411c70f26354ab29"
+          },
+          "result": {
+            "path": "seed/result.json.gz",
+            "sha256": "03f17b8730bf7cd229f7c82be3d4ed05a825386d25feac1bc7aa5d4cc144d501"
+          }
+        }
+      },
+      {
+        "name": "gap",
+        "strategy": "dag_join_gap_list",
+        "metadata": {
+          "guard": true,
+          "selected": "dag_join_gap_list",
+          "strategy": "dag_join_gap_list",
+          "cores": 2,
+          "upstream_commit": "a37eb931a22fb7df7e0d00d193538ce5289ae045",
+          "official_e0_calls": 0,
+          "chains": 608,
+          "paired_joins": 214,
+          "operations_inserted_before_tail": 106,
+          "modeled_compute_finish": 27113,
+          "cross_chain_edges": 232,
+          "assumption": "persistent idle calendars; no official COPY/cache/capacity simulation"
+        },
+        "makespan": 28781,
+        "certified_lower_bound_cycles": 27105,
+        "status": "ok",
+        "artifacts": {
+          "plan": {
+            "path": "gap/plan.json",
+            "sha256": "68427ece632cea99a30b0422611cf4fd48d292c01db2662b5dfcca761b430b90"
+          },
+          "result": {
+            "path": "gap/result.json.gz",
+            "sha256": "456b57853e6563162935c0d5356e687aa2014b684a74688ed0e788d2da6214ab"
+          }
+        }
+      }
+    ],
+    "makespan": 28060,
+    "data_movement_bytes": {
+      "original_graph_copy_bytes": 213686,
+      "scheduled_copy_bytes": 220598,
+      "added_copy_bytes": 6912,
+      "partition_added_copy_bytes": 6912,
+      "spill_added_copy_bytes": 0
+    },
+    "cache_stats": {
+      "copy_in_hits": 3,
+      "copy_in_misses": 138,
+      "hit_bytes": 6912,
+      "miss_bytes": 213540,
+      "hits": 3,
+      "accesses": 141,
+      "hit_rate": 0.03135376408469871
+    },
+    "graph_sha256": "b93af0605cda612b707a91a1e9fc76348b527284a03e779b65cbe55813e331e7",
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "plan_sha256": "2ff1ca01a9be16253b5f918871a5da69d44eed372a7ebe52411c70f26354ab29",
+    "result_sha256": "03f17b8730bf7cd229f7c82be3d4ed05a825386d25feac1bc7aa5d4cc144d501",
+    "evaluation_seconds": 0.18129962400416844,
+    "main_until_evidence_seconds": 0.3297405419871211,
+    "timing_note": "All E0 calls are online; use outer subprocess wall for full solver cost."
+  },
+  "evaluation_ledger": {
+    "path": "results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/s10/cells/022-k2-unified-general-gap-e0/evidence/evaluations.json",
+    "sha256": "0eb4225638299924343e2a7e20728548199cbd5cb854936c8372fa24d5a4d812"
+  },
+  "finished_at": "2026-09-24T18:40:50.834579Z"
+}
