@@ -70,8 +70,8 @@ def discover(state, roots, actor):
         known={r['id'] for r in payload['records']}
     for root in roots:
         try:
-            output=git(root,'worktree','list','--porcelain').decode('utf-8')
-            paths=[line[9:] for line in output.splitlines() if line.startswith('worktree ')]
+            output=git(root,'worktree','list','--porcelain','-z').decode('utf-8')
+            paths=[line[9:] for line in output.split('\0') if line.startswith('worktree ')]
         except Exception as error:
             errors.append({'repository':str(root),'error':str(error)}); continue
         for repo in paths:

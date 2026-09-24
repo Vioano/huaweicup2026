@@ -67,6 +67,14 @@ class EngineTests(unittest.TestCase):
         self.assertFalse((self.root/'inbox'/identity/'request.json').exists())
         self.remote.fail_path=None;leader.receive_submissions(self.remote.head())
         self.assertTrue((self.root/'inbox'/identity/'request.json').exists())
+    def test_authenticated_bad_bytes_return_rejection_instead_of_waiting_forever(self):
+        p,identity=self.queue();self.engines['member'].deliver_outbox(None)
+        self.remote.commits['a'*40]['results/plan.json']=b'changed'
+        leader=self.engines['leader'];leader.receive_submissions(self.remote.head())
+        self.assertFalse((self.root/'inbox'/identity/'request.json').exists())
+        leader.receive_submissions(self.remote.head());self.engines['member'].deliver_outbox(self.remote.head())
+        self.assertEqual(read_json(p)['state'],'rejected')
+
     def test_untrusted_submitter_never_reaches_ledger(self):
         p,identity=self.queue();self.engines['member'].deliver_outbox(None)
         self.engines['leader'].trusted={'leader':self.keys['leader']}

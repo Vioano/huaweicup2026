@@ -135,6 +135,7 @@ class Engine:
         for path in sorted(self.remote.tree(head)):
             if time.monotonic()>deadline: break
             if not path.startswith('submissions/') or not path.endswith('.json'): continue
+            verified_delivery=False
             try:
                 envelope=json.loads(self.remote.read(head,path)); payload=self.verify(envelope,'submission')
                 identity=digest(canonical(payload)); actor=envelope['issuer']
@@ -152,6 +153,7 @@ class Engine:
                     result=dict(result,actor=actor,received_at=now())
                     self.remote.update({receipt_path:canonical(self.sign('receipt',result))});continue
                 if (target/'request.json').exists(): continue
+                verified_delivery=True
                 commit=fixed_sha(payload['commit']); feed_path=path_ok(payload['feed'])
                 data=self.remote.read(commit,feed_path)
                 if len(data)>MAX_FEED or digest(data)!=payload['feed_sha256']: raise ValueError('Feed hash mismatch')
@@ -172,6 +174,8 @@ class Engine:
                         'feed':feed_path,'path':feed_path,'url':f'https://github.com/{self.remote.repository}/blob/{commit}/{feed_path}'}
                 write_json(target/'request.json',{'schema_version':1,'id':identity,'feed_file':'feed.json','source':source})
             except Exception as error:
+                if verified_delivery and isinstance(error,(ValueError,KeyError,TypeError,FileNotFoundError)):
+                    write_json(result_file,{'schema_version':1,'id':identity,'state':'rejected','receipt':None,'stage':'transport','error':str(error)})
                 self.errors.append({'stage':'receive','message':str(error),'submission':path})
 
     def cycle(self):
