@@ -220,7 +220,7 @@ function mirrorNotice(){
     (sync?' · '+(names[sync.state]||'同步状态待确认')+(sync.last_success_at?' · 最近同步成功 '+new Date(sync.last_success_at).toLocaleString('zh-CN'):''):'')+
     (upload?' · 本机提交：待上传 '+(upload.queued??0)+'，待回执 '+(upload.awaiting_receipt??0)+'，已接收 '+(upload.accepted??0)+'，被拒 '+(upload.rejected??0):'')+
     (error?' · 更新失败，保留上次已核快照：'+error:'');
-  if(mirrored)$('#polling-note').textContent='页面每 5 秒读取本机已接收的中央快照；独立同步程序负责传输。快照保留全部历史、筛选和来源；原件通过固定 Git 链接按需读取。中央已核不代表本机逐原件复核，也不代表重新运行评估器。';
+  if(mirrored)$('#polling-note').textContent='页面每 1 秒读取本机已接收的中央快照；独立同步程序在线时最多每 5 秒检查一次签名更新。每个已提交的完整 feed 都保留在全历史中；离线、限流和大文件传输会延长实际时间。中央已核不代表本机逐原件复核，也不代表重新运行评估器。';
 }
 function originalLinks(r){
   const mirrored=data.runtime?.mode==='central_mirror',source=r.source||{};
@@ -264,4 +264,4 @@ for(const id of ['#algorithm','#run'])$(id).addEventListener('change',()=>{if(fo
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&selection&&!$('#cache-dialog').open)$('#close-detail')?.click();});
 const hash=new URLSearchParams(location.hash.slice(1));if(['P1','P2','P3'].includes(hash.get('problem'))&&/^\d{3}$/.test(hash.get('case_id')||'')&&+hash.get('cores')>=1&&+hash.get('cores')<=5)selection={problem:hash.get('problem'),case_id:hash.get('case_id'),cores:+hash.get('cores')};
 async function initialize(){if(focusProblem)await loadBatches();await refresh(true);}
-initialize();setInterval(()=>{refresh();checkVersion();},5000);
+initialize();setInterval(()=>refresh(),1000);setInterval(()=>checkVersion(),5000);

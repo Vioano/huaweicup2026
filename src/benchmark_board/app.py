@@ -149,7 +149,7 @@ def make_handler(ledger,sync_status=None):
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--repo',type=Path,default=ROOT);p.add_argument('--state',type=Path,default=ROOT/'output/benchmark-board');sub=p.add_subparsers(dest='command',required=True)
     i=sub.add_parser('import');i.add_argument('--commit',required=True);i.add_argument('--feed',required=True)
-    s=sub.add_parser('serve');s.add_argument('--port',type=int,default=52341);s.add_argument('--sync-interval',type=int,default=120);s.add_argument('--no-sync',action='store_true')
+    s=sub.add_parser('serve');s.add_argument('--port',type=int,default=52341);s.add_argument('--sync-interval',type=int,default=5);s.add_argument('--no-sync',action='store_true')
     s.add_argument('--mirror',type=Path,help='Read an accepted central snapshot current.json; never ingest it into the local ledger')
     s.add_argument('--sync-status',type=Path,help='Read-only status file owned by the separate sync process')
     s.add_argument('--sync-inbox',type=Path,help='Central mode only: receive completed local deliveries from the authenticated sync transport')
@@ -178,16 +178,16 @@ def main():
                     receive()
                     if not args.no_sync and time.monotonic()>=next_sources:
                         sync_once(ledger,args.repo,sources,on_progress=receive)
-                        next_sources=time.monotonic()+max(60,args.sync_interval)
+                        next_sources=time.monotonic()+max(5,args.sync_interval)
                 except Exception:
                     # Keep retries visible and preserve batch idempotency if a
                     # filesystem/database interruption occurs after admission.
                     traceback.print_exc()
-                time.sleep(2 if args.sync_inbox else max(60,args.sync_interval))
+                time.sleep(2 if args.sync_inbox else max(5,args.sync_interval))
         threading.Thread(target=worker,daemon=True).start()
     server=ThreadingHTTPServer(('127.0.0.1',args.port),make_handler(ledger,args.sync_status));server.daemon_threads=True
     args.state.mkdir(parents=True,exist_ok=True)
-    (args.state/'service.json').write_text(packed({'url':f'http://127.0.0.1:{args.port}','started_at':now(),'mode':'central_mirror' if mirror else 'local_ledger','sources_poll_seconds':None if args.no_sync or mirror else max(60,args.sync_interval)}))
+    (args.state/'service.json').write_text(packed({'url':f'http://127.0.0.1:{args.port}','started_at':now(),'mode':'central_mirror' if mirror else 'local_ledger','sources_poll_seconds':None if args.no_sync or mirror else max(5,args.sync_interval)}))
     print(f'Benchmark board: http://127.0.0.1:{args.port}',flush=True)
     try: server.serve_forever()
     except KeyboardInterrupt: pass

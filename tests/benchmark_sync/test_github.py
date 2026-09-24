@@ -28,6 +28,23 @@ class RacingGitHub(GitHub):
   raise AssertionError((method,path))
 
 class GitHubTests(unittest.TestCase):
+ def test_head_uses_conditional_etag_and_reuses_cached_sha_on_not_modified(self):
+  import json,tempfile,types
+  from pathlib import Path
+  with tempfile.TemporaryDirectory() as tmp:
+   r=GitHub.__new__(GitHub);r.repository='test/repo';r.branch='benchmark-sync-v1';r.cache=Path(tmp)
+   calls=[];sha='a'*40
+   responses=[{'status':200,'headers':{'ETag':'"stable"'},'data':json.dumps({'object':{'sha':sha}}).encode()},
+              {'status':304,'headers':{'ETag':'"stable"'},'data':b''}]
+   def request(self,method,path,*,headers=None,response=False):
+    calls.append((method,path,headers,response));return responses.pop(0)
+   r.request=types.MethodType(request,r)
+   self.assertEqual(r.head(),sha);self.assertEqual(r.head(),sha)
+   self.assertEqual(calls[1][2],{'If-None-Match':'"stable"'})
+   self.assertTrue(calls[1][3])
+   cache=list(Path(tmp).glob('head-*.json'))
+   self.assertEqual(len(cache),1);self.assertEqual(json.loads(cache[0].read_text())['sha'],sha)
+
  def test_parallel_writers_preserve_unrelated_paths(self):
   r=RacingGitHub(False);r.update({'channel':b'new'},expected={'channel':b'old'})
   self.assertEqual(r.blob(r.tree(r.head())['channel']['sha']),b'new')

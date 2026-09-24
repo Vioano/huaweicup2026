@@ -14,7 +14,7 @@ from .release import publish_release, receive_release
 
 
 def poll_delay(config,status,failures,cooldown_until):
-    delay=min(300,config.get('poll_seconds',15)*2**min(failures,5))
+    delay=min(300,config.get('poll_seconds',5)*2**min(failures,5))
     if config['role']=='leader' and status['state']=='online' and status.get('receive',{}).get('pending',0):
         delay=min(delay,2)
     return max(delay,cooldown_until-time.time(),status.get('error',{}).get('retry_after',0) if status.get('error') else 0)
@@ -33,7 +33,10 @@ def main():
         s=Signatures();print(json.dumps({'public_key':s.generate(args.private_key)},ensure_ascii=False));return
     if not args.config: p.error('--config is required')
     config=read_json(args.config)
-    if config['role'] not in ('leader','member') or not 10<=config.get('poll_seconds',15)<=3600: raise ValueError('Invalid runtime role/poll interval')
+    if config['role'] not in ('leader','member') or not 2<=config.get('poll_seconds',5)<=3600: raise ValueError('Invalid runtime role/poll interval')
+    # Keep older installations on the low-latency default without editing their
+    # private config file; explicit faster settings remain available.
+    config['poll_seconds']=min(config.get('poll_seconds',5),5)
     state=Path(config['state']);state.mkdir(parents=True,exist_ok=True)
     if args.command=='enqueue':
         print(enqueue(state,args.repo,args.commit,args.feed,config['actor']));return
@@ -49,6 +52,7 @@ def main():
         while True:
             fresh=read_json(args.config)
             e.trusted=fresh['trusted_keys']
+            e.config['poll_seconds']=min(max(fresh.get('poll_seconds',5),2),5)
             status=e.cycle()
             try:
                 if config.get('receive_releases',True) and remote.head(): receive_release(e,remote.head())
