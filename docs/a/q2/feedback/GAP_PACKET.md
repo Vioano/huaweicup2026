@@ -11,3 +11,5 @@
 通信延迟只用冻结cross delay与两端COPY服务的静态估计，不模拟DDR竞争、L1/UB容量、spill或缓存。日历模型既不是官方Makespan也不是有效的通用下界，不声称改善、无spill、近似比或最优。只有后续独立未改E0能建立本P2适配的真实成绩。P3报告的069/k5等结果属于其固定算法与实测来源，不能复制成此原型的新成绩。
 
 开发小例仅测试持久日历与独立占用区间oracle、汇合配对、覆盖性、参数与COPY/alias守卫、容量回退。未修改当前正在全核实测的construct.py、tensor_packet.py、measure.py或官方文件，也未运行本原型的官方图构造或E0。
+
+原型审查完成后，旧tensor_packet的500格官方实测已全部停止并完成批内审计，才将`capacity_window`、`gap_packet`注册到统一construct CLI。旧结果始终指向旧e64723b源码，新变体须在新源码SHA下重新测量，不反向改写旧计划或算法身份。独立审查见`GAP_PACKET_REVIEW.md`：关系守卫比较二元(u,v)关系，重合COPY路径可能不新增关系，不能据此声称路径多重集或COPY服务完全等价。

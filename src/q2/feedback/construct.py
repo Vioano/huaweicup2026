@@ -260,21 +260,30 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("graph", type=Path)
     parser.add_argument("--cores", type=int, default=4)
-    parser.add_argument("--strategy", choices=("component", "affine_eighth", "resource_word", "pipe_window", "pipe_window_fill", "tree_dp", "tensor_packet"), default="pipe_window")
+    parser.add_argument("--strategy", choices=("component", "affine_eighth", "resource_word", "pipe_window", "pipe_window_fill", "tree_dp", "tensor_packet", "capacity_window", "gap_packet"), default="pipe_window")
     parser.add_argument("--window", type=int)
     parser.add_argument("-o", "--output", type=Path, required=True)
     args = parser.parse_args()
     graph = json.loads(args.graph.read_bytes())
     try:
-        if args.strategy == "tensor_packet":
+        if args.strategy in ("tensor_packet", "capacity_window", "gap_packet"):
             from . import tensor_packet
             from evaluation_validation import read_evaluation_config
             from multicore_cut_evaluate_problem_2 import read_scene_b_config
             config_path = ROOT / "data/raw/a/official/data/config.txt"
             config = {**read_evaluation_config(config_path), **read_scene_b_config(config_path)}
             try:
-                plan, meta = tensor_packet.TensorIndex(graph).build_tensor_plan(
-                    args.cores, config["bandwidth"], config["cross_core_copy_delay_cycles"])
+                index = tensor_packet.TensorIndex(graph)
+                if args.strategy == "tensor_packet":
+                    plan, meta = index.build_tensor_plan(
+                        args.cores, config["bandwidth"], config["cross_core_copy_delay_cycles"])
+                else:
+                    if args.strategy == "capacity_window":
+                        from .capacity_window import build
+                    else:
+                        from .gap_packet import build
+                    plan, meta = build(index, args.cores, config["bandwidth"],
+                                       config["cross_core_copy_delay_cycles"], config["capacity"])
             except tensor_packet.UnsupportedStructure as exc:
                 raise UnsupportedStructure(str(exc)) from exc
         else:
