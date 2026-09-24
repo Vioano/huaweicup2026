@@ -176,9 +176,19 @@ def main():
                     static_serial_pressure_reduction_room=max(0,max(w.values())-max(graph_floor,largest,max(packet_cp.values()))),
                     waves=wave_details)
                 comps.append(data)
+            split_anchors={c['anchor'] for c in comps if c.get('parallel_wave_count',0)>0}
+            retained_floor=max((max(work[i].values()) for i,ns in enumerate(components)
+                                if ns[0] not in split_anchors),default=0)
+            route_floor=max(graph_floor,retained_floor)
+            for c in comps:
+                if c['peel_status']=='ok':
+                    c['static_room_after_retained_components']=max(0,c['component_max_pipe_work']-
+                        max(route_floor,c['max_packet_any_pipe_work'],c['packet_chain_work_proxy']))
             results.append({'case':case,'cores':K,'components':len(components),'compute_ops':len(ops),
                 'total_work_by_pipe':dict(total),'per_pipe_average_targets':target,'global_dominant_pipe':dominant,
                 'compute_graph_lower_bound_without_task_gates':graph_floor,'old_heavy_guard_trigger':old_guard,
+                'max_retained_whole_component_pipe_work':retained_floor,
+                'route_compute_floor_with_retained_components':route_floor,
                 'old_heavy_guard_anchor':components[heavy][0] if old_guard else None,
                 'existing_makespan_cycles':old['makespan_cycles'],'existing_singlecore_baseline_cycles':old['baseline_cycles'],
                 'existing_extra_ddr_bytes':old['extra_ddr_bytes'],'existing_spill_bytes':old['spill_bytes'],
@@ -202,6 +212,7 @@ def main():
         'enough_components_and_parallel_peel':lambda r,c:r['components']>=K and c.get('parallel_wave_count',0)>0,
         'new_vs_old_guard_and_parallel_peel':lambda r,c:r['components']>=K and c.get('parallel_wave_count',0)>0 and not c['selected_by_old_heavy_guard'],
         'new_parallel_positive_static_room':lambda r,c:r['components']>=K and c.get('parallel_wave_count',0)>0 and not c['selected_by_old_heavy_guard'] and c['static_serial_pressure_reduction_room']>0,
+        'new_parallel_positive_room_after_retained_components':lambda r,c:r['components']>=K and c.get('parallel_wave_count',0)>0 and not c['selected_by_old_heavy_guard'] and c['static_room_after_retained_components']>0,
     }
     out['coverage_layers']={name:{'components':len(pairs),'graphs':len({r['case'] for r,c in pairs}),
         'cases':sorted({r['case'] for r,c in pairs})} for name,test in layers.items()
