@@ -92,3 +92,30 @@ silently serialize them onto one core.
 Scale/Windows verification of stable candidates is routed through the existing
 scoreboard coordinator s7c98 for LYX/farmer. This owner keeps algorithm work and
 authorized local mechanism samples; it will not send competing member batches.
+
+## Capacity-envelope feedback and unified handoff
+
+The second mechanism pilot used source
+`919c82370a42eca9fcff444bef4c1e1e3ea78282`, runner
+`aa714b3811fa3722e5e126be12268917af0da93f` and sealed data
+`1e92b165b8609e94191b1be8d1eab7c4f8aa5929`. All six cells
+(014/025 at 2/4/5 cores) completed with six external E0 calls, no online
+evaluation, retries or failures. Each improved Makespan, extra DDR and spill
+against the earlier direct construction; 025 spill is zero at all three core
+counts. All six beat fixed Fang Makespan and were accepted by the central board
+as six strict cell improvements. This is still a selected mechanism sample.
+
+Source `6e5099a35300133419990bf1f44f621f98850c21` freezes
+`adaptive_direct.py`: one shared index and a fixed structural routing rule.
+All 500 graph/core combinations passed structural and priority-DAG checks,
+with zero E0/E1/E2, and 27 related tests passed. The six completed envelope plans
+remain byte-identical after extracting the shared-index helper. Route counts
+are 421 component-envelope, 64 DAG-EFT, 15 homogeneous resource-word. These
+facts do not establish official execution or full-suite means.
+
+`ADAPTIVE_BENCHMARK_HANDOFF.md` gives the central dispatcher one candidate,
+fixed inputs, controls, reusable prior evidence, suggested bounded matrix and
+failure policy. No full matrix has been started by this owner. Windows runner
+compatibility remains unverified. In parallel the next quality research target
+is subtree closure / weighted frontier construction for single-component
+reductions; 016-k2 and 062 remain unresolved rather than hidden by the router.
