@@ -28,3 +28,5 @@ Reproduction uses the frozen runner and a NEW run ID; do not reuse this director
 ```sh
 uv run python -B src/q1_benchmarks/sink_probe_e0.py export 20260924T1509Z-sink2
 ```
+
+Fixed Git-byte precheck also passed at `232b6eccee580053856b67f9edc22eb71d014698`; all plan/result/run/log/baseline references are in that commit. `git-precheck.json` is the read-only receipt. Official logs are explicitly tracked despite the repository log-ignore rule.
