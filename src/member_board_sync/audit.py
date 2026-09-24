@@ -37,13 +37,13 @@ def require(condition, message):
         raise ValueError(message)
 
 
-def verify_envelope(envelope, pem, fingerprint):
+def verify_envelope(envelope, pem, fingerprint, domain='snapshot'):
     from cryptography.hazmat.primitives.serialization import load_pem_public_key
     from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
     require(digest(pem) == fingerprint == envelope['key_sha256'], 'untrusted key')
     require((envelope['schema_version'], envelope['project'], envelope['domain'],
              envelope['issuer']) == (1, 'huaweicup2026-benchmark-board',
-                                     'snapshot', 'nikolastarx'), 'wrong signed context')
+                                     domain, 'nikolastarx'), 'wrong signed context')
     key = load_pem_public_key(pem)
     require(isinstance(key, Ed25519PublicKey), 'wrong key type')
     key.verify(base64.b64decode(envelope['signature'], validate=True),
@@ -147,15 +147,33 @@ def verify_extension(previous, current):
 
 
 def audit(args):
-    root = args.bootstrap
-    manifest = json.loads((root / 'central/current.json').read_bytes())
-    envelope = manifest.get('_channel') or json.loads((root / 'central/accepted-envelope.json').read_bytes())
-    signed = verify_envelope(envelope, (root / 'central-public.pem').read_bytes(), args.key_sha256)
+    root = args.sync_state or args.bootstrap
+    snapshot_dir = root / ('accepted' if args.sync_state else 'central')
+    manifest = json.loads((snapshot_dir / 'current.json').read_bytes())
+    if args.sync_state:
+        config = json.loads((root / 'config.json').read_bytes())
+        pem = config['trusted_keys']['nikolastarx'].encode('utf-8')
+        envelope = manifest['_channel']
+        active = json.loads((root / 'software/active.json').read_bytes())
+        release_dir = Path(active['path'])
+        signed_release = verify_envelope(active['_channel'], pem, args.key_sha256, 'release')
+        require(active['release_id'] == signed_release['release_id']
+                and active['code_commit'] == signed_release['code_commit'], 'active release identity differs')
+        require(json.loads((release_dir / 'release.json').read_bytes()) == signed_release,
+                'installed release manifest differs from signed authority')
+        release = dict(commit=signed_release['code_commit'],
+                       files=[dict(path=p, **spec) for p, spec in signed_release['files'].items()])
+    else:
+        pem = (root / 'central-public.pem').read_bytes()
+        envelope = manifest.get('_channel') or json.loads((snapshot_dir / 'accepted-envelope.json').read_bytes())
+        release_dir = args.release
+        release = json.loads((root / 'release-files.json').read_bytes())
+    signed = verify_envelope(envelope, pem, args.key_sha256)
     public_manifest = {k: v for k, v in manifest.items() if k not in ('_channel', 'verified_at')}
     require(signed == public_manifest, 'installed manifest differs from signed envelope')
     name = manifest['payload_file']
     require(re.fullmatch(r'snapshot-[0-9a-f]{64}\.json\.gz', name), 'unsafe payload name')
-    payload = verify_snapshot(manifest, (root / 'central' / name).read_bytes())
+    payload = verify_snapshot(manifest, (snapshot_dir / name).read_bytes())
     report = {'checked_at': datetime.now(timezone.utc).isoformat(), 'schema_version': 1,
               'scope': 'Fixed snapshot equality; not original artifact re-evaluation or live-update acceptance',
               'key_sha256': args.key_sha256, 'generation': envelope['payload']['generation'],
@@ -167,7 +185,7 @@ def audit(args):
         require(re.fullmatch(r'snapshot-[0-9a-f]{64}\.json\.gz', previous_manifest['payload_file']),
                 'unsafe previous payload name')
         previous_payload = verify_snapshot(previous_manifest,
-            (root / 'central' / previous_manifest['payload_file']).read_bytes())
+            ((args.prior_payload_dir or snapshot_dir) / previous_manifest['payload_file']).read_bytes())
         require(report['generation'] >= previous['generation'], 'signed generation rollback')
         checks['central_history_extension'] = verify_extension(previous_payload, payload)
     requests = 0
@@ -271,7 +289,6 @@ def audit(args):
     require({r[1] for r in old} <= {r['id'] for r in received}, 'local history ids missing centrally')
     checks['local_preservation'] = dict(records=len(old), sqlite_integrity='ok', equal_to_backup=True,
                                        ids_present_in_snapshot=True, rows_sha256=digest(canonical(old)))
-    release = json.loads((root / 'release-files.json').read_bytes())
     code = release['commit']
     require(re.fullmatch('[0-9a-f]{40}', code), 'release commit invalid')
     tree = json.loads(subprocess.check_output(['gh', 'api', 'repos/huaweibei123/huaweicup2026/git/trees/'
@@ -282,15 +299,32 @@ def audit(args):
     for file in release['files']:
         path = file['path']
         require(not Path(path).is_absolute() and '..' not in Path(path).parts, 'unsafe release path')
-        data = (args.release / path).read_bytes()
+        data = (release_dir / path).read_bytes()
         oid = hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\0' + data).hexdigest()
-        require(oid == blobs[path] == file['git_blob'], 'Git release bytes differ: ' + path)
+        require(oid == blobs[path] and (file.get('git_blob', oid) == oid), 'Git release bytes differ: ' + path)
         require(digest(data) == file['sha256'] and len(data) == file['size'], 'release digest differs')
         files.append(dict(path=path, sha256=digest(data), git_blob=oid))
     for path, relative in (('/', 'index.html'), ('/app.js', 'app.js'),
                            ('/style.css', 'style.css'), ('/agent', 'agent.html')):
-        require(get(path, raw=True) == (args.release / 'src/benchmark_board/web' / relative).read_bytes(),
-                'HTTP static asset differs: ' + path)
+        expected_bytes = (release_dir / 'src/benchmark_board/web' / relative).read_bytes()
+        if path == '/' and args.sync_state:
+            hashes = {n: digest((release_dir / 'src/benchmark_board/web' / n).read_bytes())
+                      for n in ('index.html', 'app.js', 'style.css')}
+            asset_id = digest(canonical(hashes))
+            expected_bytes = expected_bytes.replace(b'</head>',
+                f'<meta name="board-assets" content="{asset_id}"></head>'.encode(), 1)
+            runtime = get('/api/v1/runtime')
+            require(runtime['file_hashes'] == hashes and runtime['ui_asset_id'] == asset_id
+                    and runtime['served_html_sha256'] == digest(expected_bytes), 'runtime UI identity differs')
+            require(runtime['software']['release_id'] == active['release_id']
+                    and runtime['software']['code_commit'] == code
+                    and runtime['software']['health'] == 'ok', 'actual running release differs or is not healthy')
+            checks['signed_running_release'] = dict(release_id=active['release_id'], code_commit=code,
+                generation=active['_channel']['payload']['generation'], ui_asset_id=asset_id,
+                file_hashes=hashes, software=runtime['software'])
+            if args.browser_observation:
+                require(observed.get('ui_asset_id') == asset_id, 'loaded browser asset identity differs')
+        require(get(path, raw=True) == expected_bytes, 'HTTP static asset differs: ' + path)
     checks['release'] = dict(commit=code, verified_files=files, static_http_assets_equal=4,
                              loaded_browser_version='Requires separate DOM/hot-update test')
     end = get('/api/v1/health')
@@ -301,13 +335,20 @@ def audit(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    for name in ('bootstrap', 'release', 'backup', 'local-db', 'output'):
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument('--bootstrap', type=Path, help='Legacy compact mirror bootstrap directory')
+    mode.add_argument('--sync-state', type=Path, help='Installed automatic sync state; reads no private key bytes')
+    parser.add_argument('--release', type=Path, help='Legacy portable release root; formal mode reads signed active pointer')
+    for name in ('backup', 'local-db', 'output'):
         parser.add_argument('--' + name, type=Path, required=True)
     parser.add_argument('--url', required=True)
     parser.add_argument('--key-sha256', required=True, help='PEM SHA256 pinned from authenticated captain message')
     parser.add_argument('--browser-observation', type=Path, help='Read-only CUA DOM observation for this exact snapshot')
     parser.add_argument('--previous-report', type=Path, help='Previously verified report; old compressed payload must remain available')
+    parser.add_argument('--prior-payload-dir', type=Path, help='Optional retained prior payload directory')
     args = parser.parse_args()
+    if args.bootstrap and args.release is None:
+        parser.error('--bootstrap requires --release')
     result = audit(args)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

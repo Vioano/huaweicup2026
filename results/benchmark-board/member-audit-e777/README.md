@@ -78,3 +78,15 @@ python -X utf8 -B tests/member_board_sync/reproduce_receive_starvation.py --engi
 ```
 
 脚本严格核对源码 SHA，不会对其他版本冒称同一复现。建议实现带持久位置的公平续扫，或经过验签的完成项按不可变 blob 身份缓存跳过；不能仅提高单轮时间预算。修复后还应保证网络慢/大批次不能饿死其他成员提交。
+
+## 已打开 Cache 面板没有随数据刷新
+
+固定主库 `c22708c5ae52a6046bbb252853d5884464b8420e` 的 `src/benchmark_board/web/app.js`，SHA256 `723f2f980eb3c1131072343fc1d85f89b5c169d65dab40d78c6f7673637a05c9`。`refresh` 在收到新 snapshot 后只重绘主表和详情，未重绘已经打开的 Cache 对话框；该对话框仅由打开、切换页签、手动刷新或软件重载恢复触发绘制。
+
+`tests/member_board_sync/reproduce_cache_refresh.cjs` 抽取该原始 refresh 函数，使用隔离 Node VM 的 HTTP/DOM 替身。cursor 从 1 更新到 2 后，主表为 2、打开的 Cache 面板仍为 1。原始输出在 `cache-panel-staleness-c22708c5.json`。**这是函数级反例，不是真实浏览器或传输延迟实测，不向生产导入模拟成绩。** 应在数据变化时更新打开的面板并保留模式/滚动位置。
+
+```powershell
+node tests/member_board_sync/reproduce_cache_refresh.cjs $ReviewedAppJs
+```
+
+正式安装后的只读验收入口已准备为 `audit.py --sync-state $State`：独立验签数据和 active 软件、核全部 Git 文件、确定性 HTML/meta 与 runtime UI 指纹；其真实部署执行结果待安装完成后追加，不以工具已写好代称已通过。
