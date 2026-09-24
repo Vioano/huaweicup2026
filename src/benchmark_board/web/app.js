@@ -61,7 +61,7 @@ const fmt=(x,metric='makespan_cycles')=>x===null||x===undefined?'NA':metric==='c
 function metrics(){return data?.metrics||{}}
 function options(id,values){const el=$(id),value=pendingRestore?(pendingRestore[id==='#algorithm'?'algorithm':'run']||''):el.value;el.innerHTML='<option value="">'+(id==='#algorithm'?'历史最优组合':'所有已接收批次')+'</option>'+values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');el.value=values.includes(value)?value:'';}
 function state(){return new URLSearchParams({algorithm:pendingRestore?.algorithm||$('#algorithm').value,run:pendingRestore?.run||$('#run').value,include_reported:$('#reported').checked});}
-async function refresh(force=false){if(busy)return;busy=true;try{const response=await fetch('/api/v1/cells?'+state());if(!response.ok)throw Error(response.status);const next=await response.json();data=next;$('#connection').textContent='● 本地服务在线';$('#connection').style.color='';const key=next.cursor+'|'+(next.runtime?.snapshot_id||'')+'|'+state();if(force||key!==lastKey){lastKey=key;options('#algorithm',next.algorithms);options('#run',next.runs);render();if(selection)await detail(false);}sources();restoreView();}catch(e){$('#connection').textContent='连接中断 · 保留上次数据';$('#connection').style.color='var(--fail)';}finally{busy=false;}}
+async function refresh(force=false){if(busy)return;busy=true;try{const response=await fetch('/api/v1/cells?'+state());if(!response.ok)throw Error(response.status);const next=await response.json();data=next;$('#connection').textContent='● 本地服务在线';$('#connection').style.color='';const key=next.cursor+'|'+(next.runtime?.snapshot_id||'')+'|'+state();if(force||key!==lastKey){lastKey=key;options('#algorithm',next.algorithms);options('#run',next.runs);render();const cache=$('#cache-dialog');if(cache.open)openCache(cache.dataset.mode);if(selection)await detail(false);}sources();restoreView();}catch(e){$('#connection').textContent='连接中断 · 保留上次数据';$('#connection').style.color='var(--fail)';}finally{busy=false;}}
 function visibleCase(c){const s=$('#search').value.trim();if(!s)return true;const range=s.match(/^(\d+)\s*[-–~]\s*(\d+)$/);return range?+c>=+range[1]&&+c<=+range[2]:c.includes(s.padStart(3,'0'));}
 // Stable absolute scales for ratios; relative positions never change the colors.
 function mixColor(a,b,t){return a.map((v,i)=>Math.round(v+(b[i]-v)*t));}
@@ -96,10 +96,17 @@ function openCache(mode='cache_gain'){
   const cells=data.cells.filter(c=>c.problem==='P3'&&visibleCase(c.case_id));
   const valid=cells.filter(c=>c.best?.eligible),paired=valid.filter(c=>c.best.cache_pair_verified&&Number.isFinite(c.best.metrics.cache_gain));
   const hits=mode==='cache_hit_rate',rows=hits?valid.filter(c=>Number.isFinite(c.best.metrics.cache_hit_rate)):paired;
-  const dialog=$('#cache-dialog');dialog.dataset.mode=mode;
+  const dialog=$('#cache-dialog'),keepPosition=dialog.open&&dialog.dataset.mode===mode;
+  const table=dialog.querySelector('.cache-table-scroll');
+  const position=keepPosition?{top:table?.scrollTop||0,left:table?.scrollLeft||0,dialogTop:dialog.scrollTop}:null;
+  const active=dialog.contains(document.activeElement)?document.activeElement:null;
+  const focus=active?{id:active.id,href:active.getAttribute('href')}:null;
+  dialog.dataset.mode=mode;
   dialog.innerHTML=`<div class="cache-heading"><div><h2 id="cache-title">P3 · ${hits?'Cache 字节命中率':'同方案 Cache 对照'}</h2><p>当前算法、批次及算例筛选 · ${rows.length}/${cells.length} 格可展示</p></div><button id="cache-close" autofocus>返回成绩表 ×</button></div><div class="cache-tabs"><button id="cache-pairs" aria-pressed="${!hits}">同方案加速对照 · ${paired.length}</button><button id="cache-hits" aria-pressed="${hits}">字节命中率</button><button id="cache-refresh">刷新对照</button></div><p class="cache-explanation">${hits?'命中率来自P3官方结果，按字节计算；它不等于开启Cache后的加速比。':`加速比 = 同计划、同核数的无 Cache 周期 ÷ 有 Cache 周期。当前 ${valid.length-paired.length} 个已核方案尚缺这组配对；P3 成绩有效，但不能据此计算 Cache 收益。这里只列已核配对，主表指标保持不变。`}</p>${rows.length?`<div class="cache-table-scroll"><table><thead><tr><th>算例</th><th>核数</th>${hits?'':'<th>无 Cache 周期</th>'}<th>有 Cache 周期</th>${hits?'':'<th>加速比</th>'}<th>字节命中率</th><th>来源</th></tr></thead><tbody>${rows.map(c=>{const r=c.best,m=r.metrics;return `<tr><th>${c.case_id}</th><td>${c.cores}</td>${hits?'':`<td>${fmt(Number((m.makespan_cycles*m.cache_gain).toFixed(6)))}</td>`}<td>${fmt(m.makespan_cycles)}</td>${hits?'':`<td>${fmt(m.cache_gain,'cache_gain')}×</td>`}<td>${fmt(m.cache_hit_rate,'cache_hit_rate')}</td><td><a href="/api/v1/records/${esc(r.id)}" target="_blank">原件 ↗</a></td></tr>`;}).join('')}</tbody></table></div>`:'<div class="cache-empty">当前筛选没有可展示的配对数据。可以查看字节命中率，或返回成绩表；已有官方成绩不会因此失效。</div>'}`;
-  $('#cache-close').onclick=()=>dialog.close();$('#cache-pairs').onclick=()=>openCache('cache_gain');$('#cache-hits').onclick=()=>openCache('cache_hit_rate');$('#cache-refresh').onclick=()=>openCache(mode);
+  $('#cache-close').onclick=()=>dialog.close();$('#cache-pairs').onclick=()=>openCache('cache_gain');$('#cache-hits').onclick=()=>openCache('cache_hit_rate');$('#cache-refresh').onclick=()=>refresh(true);
   if(!dialog.open)dialog.showModal();
+  if(focus){const target=[...dialog.querySelectorAll('button,a')].find(el=>focus.id?el.id===focus.id:focus.href&&el.getAttribute('href')===focus.href);(target||$('#cache-close')).focus({preventScroll:true});}
+  if(position){const updated=dialog.querySelector('.cache-table-scroll');if(updated){updated.scrollTop=position.top;updated.scrollLeft=position.left;}dialog.scrollTop=position.dialogTop;}
 }
 function mirrorNotice(){
   const runtime=data.runtime,banner=$('#mode-banner');
