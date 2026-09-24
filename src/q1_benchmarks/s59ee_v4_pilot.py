@@ -63,9 +63,15 @@ def check():
     source_paths = [p for p in source_paths if p.endswith(('.py','.json'))]
     actual_paths = [str(p.relative_to(ROOT)) for folder in ('src/q1','src/eval_exact') for p in (ROOT/folder).rglob('*') if p.suffix in ('.py','.json')]
     if set(source_paths) != set(actual_paths): raise RuntimeError('source module closure differs')
-    for path in source_paths + ['uv.lock','pyproject.toml','docs/a/source-manifest.json']:
+    archived = 'AI chats/P1多Pipe链构造证明/附件/r1-p1_s6607/p1_phase_cut.py'
+    for path in source_paths + [archived,'uv.lock','pyproject.toml','docs/a/source-manifest.json']:
         if (ROOT/path).read_bytes() != h.git('show',f'{SOURCE}:{path}'):
             raise RuntimeError(f'fixed source differs: {path}')
+    import subprocess
+    check_import = subprocess.run([sys.executable,'-B','-c','import src.q1.unified'],
+                                  cwd=ROOT,capture_output=True,text=True)
+    if check_import.returncode:
+        raise RuntimeError(f'fixed solver import failed: {check_import.stderr[-1000:]}')
     for path in (HERE,MANIFEST,'src/q1_benchmarks/unified_smoke.py','src/q1_benchmarks/bounded_full4_e0.py'):
         if (ROOT/path).read_bytes() != h.git('show',f'{head}:{path}'):
             raise RuntimeError(f'fixed runner differs: {path}')
