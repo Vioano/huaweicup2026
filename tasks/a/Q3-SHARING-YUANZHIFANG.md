@@ -42,3 +42,5 @@ session: yuanzhifang30-sudo/s-3d9c78db26714786b88b987ca6f58e2b
 Pro随后最终答复已以2a0d3462完整归档并及时读取，临时监听已停；附件字节未取得的缺口明确记录。只读独立核对旧067/044两份事件，共享权重重复量与spill对应，0新增评价。wave源码2cf325fb的6项合成检查通过；第十六批c42dbacf在20:43:33.810454Z因首派RAM2074984448B<2GiB停止，0cold/0E0，累计33/56不变。已通知P1/P2释放资源，后续独立窗口与预算另冻。
 
 本session现已实际补读主库13c7db6c的AGENTS子Agent预算节，与先前0a97785fa一致；本轮Sol medium实现/审阅、Luna medium运行，软目标3500–4500/2000tokens，不存在可用硬cap或精确实际用量。完整Mailbox重新抓取在历史目录rename阶段WinError5失败，不能称本轮完整抓取成功；随后分页API实际读取Issue51新增5821807778、公共26至5821850376。只读队长b2b34d7b的pipeline RESULTS-v2全文和7e43dd00的单岛阴性README全文；Attention及全500仍仅按队长报告记录，不代签原件/全量验收。
+
+独立a023787a2 wave-followup已冻结/预检，但原图与成员台的新必要界使其在启动前取消：71完整job各M829792，5核必有15job/core，Makespan≥12446880 > 同身份最新12237901。b64397b4驱动独立确认计算分量、工作量和台记录，0构造/Step/E0，详见WHOLE_JOB_BOUND.md；累计33/56不变。下一有界实现由Sol medium负责仅一个余量job连续切段，其余完整归核；soft6000tokens/25分钟准备目标、最多8项合成检查、0真实图/Step/E0、不递归派工。未测方案不晋升。
