@@ -1,0 +1,153 @@
+{
+  "schema": "q3-band-eight-evidence-audit-v1",
+  "run_path": "results/a/q3-nikolastarx/band-mechanism-20260925/run.json",
+  "source_commit": "ae5a67ed55b2a983d8a6d609ece06c1a99278355",
+  "status": "complete",
+  "official_code_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+  "e0_calls": 8,
+  "elapsed_seconds": 27.494774499966297,
+  "elapsed_recorded": 27.494774499966297,
+  "finished_at": "2026-09-24T22:27:37.586250Z",
+  "source_input_sha256_all_match": true,
+  "outputs_checked": 8,
+  "plan_sha_verified": 4,
+  "all_result_sha_verified": true,
+  "all_official_scene_and_cores_match": true,
+  "same_case_tree_order_operation_owner_equal": {
+    "058": true,
+    "079": true
+  },
+  "cache_gain_and_tree_order_differences": {
+    "058": {
+      "cache_gain_component_id_P2_over_P3": 1.0133817053385181,
+      "cache_gain_pair_cache_model_P2_over_P3": 1.0059837084946404,
+      "tree_order_delta_pair_minus_component": {
+        "P2_M": -13364,
+        "P3_M": -6431,
+        "P2_extra_bytes": -2838528,
+        "P3_extra_bytes": -2838528,
+        "P2_spill_bytes": -2838528,
+        "P3_spill_bytes": -2838528,
+        "P2_hit_bytes": null,
+        "P3_hit_bytes": -524288
+      }
+    },
+    "079": {
+      "cache_gain_component_id_P2_over_P3": 1.0005902149909764,
+      "cache_gain_pair_cache_model_P2_over_P3": 1.0004784597423972,
+      "tree_order_delta_pair_minus_component": {
+        "P2_M": -29441,
+        "P3_M": -28735,
+        "P2_extra_bytes": -3457024,
+        "P3_extra_bytes": -3457024,
+        "P2_spill_bytes": -3457024,
+        "P3_spill_bytes": -3457024,
+        "P2_hit_bytes": null,
+        "P3_hit_bytes": -958464
+      }
+    }
+  },
+  "records": [
+    {
+      "case_id": "058",
+      "cores": 5,
+      "order_mode": "component_id",
+      "problem": 2,
+      "plan_sha256": "12ed07d9ac621ec6f800f1b7f6173cc219b7dd321995b7f02ffced5e84b001d3",
+      "result_sha256": "7a02c2a85b1616f48b00220b627f89dc90dfddec8d24f52dd0e34e562add4c48",
+      "M": 944415,
+      "extra_bytes": 29671424,
+      "spill_bytes": 21291008,
+      "hit_bytes": null
+    },
+    {
+      "case_id": "058",
+      "cores": 5,
+      "order_mode": "component_id",
+      "problem": 3,
+      "plan_sha256": "12ed07d9ac621ec6f800f1b7f6173cc219b7dd321995b7f02ffced5e84b001d3",
+      "result_sha256": "9688a8788ab4cefc195876e85040d89133e67ed8aa5a433e43f0078bb51e2f78",
+      "M": 931944,
+      "extra_bytes": 29671424,
+      "spill_bytes": 21291008,
+      "hit_bytes": 7790592
+    },
+    {
+      "case_id": "058",
+      "cores": 5,
+      "order_mode": "pair_cache_model",
+      "problem": 2,
+      "plan_sha256": "b0f62112cdc3edf1a4993967f3264e55b8f5b7ebce82a691d708f986dfdde4e9",
+      "result_sha256": "39e73a618f04b0156de5562e17cf228ec8eee5628607fd746d68dd2cf04dc9ee",
+      "M": 931051,
+      "extra_bytes": 26832896,
+      "spill_bytes": 18452480,
+      "hit_bytes": null
+    },
+    {
+      "case_id": "058",
+      "cores": 5,
+      "order_mode": "pair_cache_model",
+      "problem": 3,
+      "plan_sha256": "b0f62112cdc3edf1a4993967f3264e55b8f5b7ebce82a691d708f986dfdde4e9",
+      "result_sha256": "881e0b0a3ddde787b900cb1439d69032ecc1717d9285cb55e5c2f466734f4a10",
+      "M": 925513,
+      "extra_bytes": 26832896,
+      "spill_bytes": 18452480,
+      "hit_bytes": 7266304
+    },
+    {
+      "case_id": "079",
+      "cores": 5,
+      "order_mode": "component_id",
+      "problem": 2,
+      "plan_sha256": "ac5301c3b194f188a3088ec0ebe9151e893c4c58b8120451e1ffca73a026a3d2",
+      "result_sha256": "1ae5479da5bf451f735e520bc4992ba21c95170bc9b7953ac9f61cc3cc3f5c44",
+      "M": 6198009,
+      "extra_bytes": 32034816,
+      "spill_bytes": 24600576,
+      "hit_bytes": null
+    },
+    {
+      "case_id": "079",
+      "cores": 5,
+      "order_mode": "component_id",
+      "problem": 3,
+      "plan_sha256": "ac5301c3b194f188a3088ec0ebe9151e893c4c58b8120451e1ffca73a026a3d2",
+      "result_sha256": "3bdfb9f9a35805dd2f1ff2f73d4760a8fd7ee375d5c517458321cc5aa758176b",
+      "M": 6194353,
+      "extra_bytes": 32034816,
+      "spill_bytes": 24600576,
+      "hit_bytes": 10055680
+    },
+    {
+      "case_id": "079",
+      "cores": 5,
+      "order_mode": "pair_cache_model",
+      "problem": 2,
+      "plan_sha256": "40e189cae5845af36daf5c45174c43c0f21f78ee596bc0e016feac787371512e",
+      "result_sha256": "15d5774abb7c566d8cff98cae1b83048b183e253258343323419dd7eab8731b3",
+      "M": 6168568,
+      "extra_bytes": 28577792,
+      "spill_bytes": 21143552,
+      "hit_bytes": null
+    },
+    {
+      "case_id": "079",
+      "cores": 5,
+      "order_mode": "pair_cache_model",
+      "problem": 3,
+      "plan_sha256": "40e189cae5845af36daf5c45174c43c0f21f78ee596bc0e016feac787371512e",
+      "result_sha256": "ee4cf12491fd74b0ebf8924fdc9ccede90189e1904f8dcb4778d4fba6c614e01",
+      "M": 6165618,
+      "extra_bytes": 28577792,
+      "spill_bytes": 21143552,
+      "hit_bytes": 9097216
+    }
+  ],
+  "notes": [
+    "P2 official outputs omit problem/cache_stats by design; no P2 byte-hit value inferred.",
+    "P2/P3 cache gain is P2 makespan divided by P3 makespan. Tree-order delta is pair_cache_model minus component_id."
+  ],
+  "scope_note": "Independent read-only hash/identity/owner audit; root recomputed comparisons from raw bytes. The earlier chat typo for079 differences is not part of this correct machine-readable audit."
+}

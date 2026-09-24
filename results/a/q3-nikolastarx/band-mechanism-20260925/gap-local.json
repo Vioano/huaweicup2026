@@ -1,0 +1,544 @@
+{
+  "new_pair": {
+    "name": "new_pair",
+    "core": 0,
+    "makespan": 6165618,
+    "summary": {
+      "first_M_start": 860,
+      "last_M_end": 6165005,
+      "busy_M": 5925744,
+      "internal_M_gaps": 238401,
+      "core_end": 6165618,
+      "tail_after_M": 613
+    },
+    "top_gaps": [
+      {
+        "rank": 1,
+        "M_position": 98,
+        "gap": 1224,
+        "gap_start": 306998,
+        "gap_end": 308222,
+        "preceding_M_op": 1349,
+        "following_M_op": 1350,
+        "following_M_start": 308222,
+        "inputs": [
+          {
+            "tensor": 1000001121,
+            "original_producer_ops": [
+              {
+                "id": 561,
+                "op": "COPY_IN"
+              }
+            ],
+            "latest_visible_COPY_IN_before_M": {
+              "op_id": 1000024285,
+              "start": 75164,
+              "end": 75679,
+              "memory_path": "DDR",
+              "cache_hit": false
+            },
+            "copy_end_to_M_start": 232543
+          },
+          {
+            "tensor": 1000001031,
+            "original_producer_ops": [
+              {
+                "id": 516,
+                "op": "COPY_IN"
+              }
+            ],
+            "latest_visible_COPY_IN_before_M": {
+              "op_id": 1000024087,
+              "start": 307814,
+              "end": 308159,
+              "memory_path": "DDR",
+              "cache_hit": false
+            },
+            "copy_end_to_M_start": 63
+          }
+        ],
+        "overlap_other_pipes": [
+          {
+            "op_id": 1374,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 306998,
+            "end": 307406,
+            "subgraph_id": 251
+          },
+          {
+            "op_id": 1378,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 307406,
+            "end": 307814,
+            "subgraph_id": 255
+          },
+          {
+            "op_id": 1380,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 307814,
+            "end": 308222,
+            "subgraph_id": 257
+          },
+          {
+            "op_id": 1000024087,
+            "op": "COPY_IN",
+            "pipe": "PIPE_MTE2",
+            "start": 307814,
+            "end": 308159,
+            "subgraph_id": 227
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "M_position": 131,
+        "gap": 1224,
+        "gap_start": 416729,
+        "gap_end": 417953,
+        "preceding_M_op": 1414,
+        "following_M_op": 1415,
+        "following_M_start": 417953,
+        "inputs": [
+          {
+            "tensor": 1000001121,
+            "original_producer_ops": [
+              {
+                "id": 561,
+                "op": "COPY_IN"
+              }
+            ],
+            "latest_visible_COPY_IN_before_M": {
+              "op_id": 1000024285,
+              "start": 75164,
+              "end": 75679,
+              "memory_path": "DDR",
+              "cache_hit": false
+            },
+            "copy_end_to_M_start": 342274
+          },
+          {
+            "tensor": 1000001033,
+            "original_producer_ops": [
+              {
+                "id": 517,
+                "op": "COPY_IN"
+              }
+            ],
+            "latest_visible_COPY_IN_before_M": {
+              "op_id": 1000024093,
+              "start": 417545,
+              "end": 417890,
+              "memory_path": "DDR",
+              "cache_hit": false
+            },
+            "copy_end_to_M_start": 63
+          }
+        ],
+        "overlap_other_pipes": [
+          {
+            "op_id": 1439,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 416729,
+            "end": 417137,
+            "subgraph_id": 316
+          },
+          {
+            "op_id": 1443,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 417137,
+            "end": 417545,
+            "subgraph_id": 320
+          },
+          {
+            "op_id": 1445,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 417545,
+            "end": 417953,
+            "subgraph_id": 322
+          },
+          {
+            "op_id": 1000024093,
+            "op": "COPY_IN",
+            "pipe": "PIPE_MTE2",
+            "start": 417545,
+            "end": 417890,
+            "subgraph_id": 292
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "M_position": 164,
+        "gap": 1224,
+        "gap_start": 526460,
+        "gap_end": 527684,
+        "preceding_M_op": 1479,
+        "following_M_op": 1480,
+        "following_M_start": 527684,
+        "inputs": [
+          {
+            "tensor": 1000001121,
+            "original_producer_ops": [
+              {
+                "id": 561,
+                "op": "COPY_IN"
+              }
+            ],
+            "latest_visible_COPY_IN_before_M": {
+              "op_id": 1000024285,
+              "start": 75164,
+              "end": 75679,
+              "memory_path": "DDR",
+              "cache_hit": false
+            },
+            "copy_end_to_M_start": 452005
+          },
+          {
+            "tensor": 1000001035,
+            "original_producer_ops": [
+              {
+                "id": 518,
+                "op": "COPY_IN"
+              }
+            ],
+            "latest_visible_COPY_IN_before_M": {
+              "op_id": 1000024099,
+              "start": 527276,
+              "end": 527621,
+              "memory_path": "DDR",
+              "cache_hit": false
+            },
+            "copy_end_to_M_start": 63
+          }
+        ],
+        "overlap_other_pipes": [
+          {
+            "op_id": 1504,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 526460,
+            "end": 526868,
+            "subgraph_id": 381
+          },
+          {
+            "op_id": 1508,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 526868,
+            "end": 527276,
+            "subgraph_id": 385
+          },
+          {
+            "op_id": 1510,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 527276,
+            "end": 527684,
+            "subgraph_id": 387
+          },
+          {
+            "op_id": 1000024099,
+            "op": "COPY_IN",
+            "pipe": "PIPE_MTE2",
+            "start": 527276,
+            "end": 527621,
+            "subgraph_id": 357
+          }
+        ]
+      }
+    ]
+  },
+  "oldforest": {
+    "name": "oldforest",
+    "core": 2,
+    "makespan": 6075472,
+    "summary": {
+      "first_M_start": 860,
+      "last_M_end": 6074852,
+      "busy_M": 5925744,
+      "internal_M_gaps": 148248,
+      "core_end": 6075472,
+      "tail_after_M": 620
+    },
+    "top_gaps": [
+      {
+        "rank": 1,
+        "M_position": 131,
+        "gap": 1504,
+        "gap_start": 411206,
+        "gap_end": 412710,
+        "preceding_M_op": 2259,
+        "following_M_op": 2260,
+        "following_M_start": 412710,
+        "inputs": [
+          {
+            "tensor": 1000001187,
+            "original_producer_ops": [
+              {
+                "id": 594,
+                "op": "COPY_IN"
+              }
+            ],
+            "latest_visible_COPY_IN_before_M": {
+              "op_id": 1000027187,
+              "start": 412298,
+              "end": 412710,
+              "memory_path": "DDR",
+              "cache_hit": false
+            },
+            "copy_end_to_M_start": 0
+          },
+          {
+            "tensor": 1000001027,
+            "original_producer_ops": [
+              {
+                "id": 514,
+                "op": "COPY_IN"
+              }
+            ],
+            "latest_visible_COPY_IN_before_M": {
+              "op_id": 1000026387,
+              "start": 412022,
+              "end": 412298,
+              "memory_path": "DDR",
+              "cache_hit": false
+            },
+            "copy_end_to_M_start": 412
+          }
+        ],
+        "overlap_other_pipes": [
+          {
+            "op_id": 2284,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 411206,
+            "end": 411614,
+            "subgraph_id": 1161
+          },
+          {
+            "op_id": 2288,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 411614,
+            "end": 412022,
+            "subgraph_id": 1165
+          },
+          {
+            "op_id": 2290,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 412022,
+            "end": 412430,
+            "subgraph_id": 1167
+          },
+          {
+            "op_id": 1000026387,
+            "op": "COPY_IN",
+            "pipe": "PIPE_MTE2",
+            "start": 412022,
+            "end": 412298,
+            "subgraph_id": 1137
+          },
+          {
+            "op_id": 1000027187,
+            "op": "COPY_IN",
+            "pipe": "PIPE_MTE2",
+            "start": 412298,
+            "end": 412710,
+            "subgraph_id": 1137
+          },
+          {
+            "op_id": 2291,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 412430,
+            "end": 412838,
+            "subgraph_id": 1168
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "M_position": 230,
+        "gap": 1332,
+        "gap_start": 727386,
+        "gap_end": 728718,
+        "preceding_M_op": 3234,
+        "following_M_op": 3235,
+        "following_M_start": 728718,
+        "inputs": [
+          {
+            "tensor": 1000001253,
+            "original_producer_ops": [
+              {
+                "id": 627,
+                "op": "COPY_IN"
+              }
+            ],
+            "latest_visible_COPY_IN_before_M": {
+              "op_id": 1000027517,
+              "start": 728409,
+              "end": 728718,
+              "memory_path": "DDR",
+              "cache_hit": false
+            },
+            "copy_end_to_M_start": 0
+          },
+          {
+            "tensor": 1000001025,
+            "original_producer_ops": [
+              {
+                "id": 513,
+                "op": "COPY_IN"
+              }
+            ],
+            "latest_visible_COPY_IN_before_M": {
+              "op_id": 1000026377,
+              "start": 728202,
+              "end": 728409,
+              "memory_path": "DDR",
+              "cache_hit": false
+            },
+            "copy_end_to_M_start": 309
+          }
+        ],
+        "overlap_other_pipes": [
+          {
+            "op_id": 3259,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 727386,
+            "end": 727794,
+            "subgraph_id": 2136
+          },
+          {
+            "op_id": 3263,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 727794,
+            "end": 728202,
+            "subgraph_id": 2140
+          },
+          {
+            "op_id": 3265,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 728202,
+            "end": 728610,
+            "subgraph_id": 2142
+          },
+          {
+            "op_id": 1000026377,
+            "op": "COPY_IN",
+            "pipe": "PIPE_MTE2",
+            "start": 728202,
+            "end": 728409,
+            "subgraph_id": 2112
+          },
+          {
+            "op_id": 1000027517,
+            "op": "COPY_IN",
+            "pipe": "PIPE_MTE2",
+            "start": 728409,
+            "end": 728718,
+            "subgraph_id": 2112
+          },
+          {
+            "op_id": 3266,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 728610,
+            "end": 729018,
+            "subgraph_id": 2143
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "M_position": 65,
+        "gap": 1224,
+        "gap_start": 204830,
+        "gap_end": 206054,
+        "preceding_M_op": 1609,
+        "following_M_op": 1610,
+        "following_M_start": 206054,
+        "inputs": [
+          {
+            "tensor": 1000001121,
+            "original_producer_ops": [
+              {
+                "id": 561,
+                "op": "COPY_IN"
+              }
+            ],
+            "latest_visible_COPY_IN_before_M": {
+              "op_id": 1000026857,
+              "start": 85205,
+              "end": 85720,
+              "memory_path": "DDR",
+              "cache_hit": false
+            },
+            "copy_end_to_M_start": 120334
+          },
+          {
+            "tensor": 1000001039,
+            "original_producer_ops": [
+              {
+                "id": 520,
+                "op": "COPY_IN"
+              }
+            ],
+            "latest_visible_COPY_IN_before_M": {
+              "op_id": 1000026447,
+              "start": 205646,
+              "end": 205991,
+              "memory_path": "DDR",
+              "cache_hit": false
+            },
+            "copy_end_to_M_start": 63
+          }
+        ],
+        "overlap_other_pipes": [
+          {
+            "op_id": 1634,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 204830,
+            "end": 205238,
+            "subgraph_id": 511
+          },
+          {
+            "op_id": 1638,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 205238,
+            "end": 205646,
+            "subgraph_id": 515
+          },
+          {
+            "op_id": 1640,
+            "op": "ADD",
+            "pipe": "PIPE_V",
+            "start": 205646,
+            "end": 206054,
+            "subgraph_id": 517
+          },
+          {
+            "op_id": 1000026447,
+            "op": "COPY_IN",
+            "pipe": "PIPE_MTE2",
+            "start": 205646,
+            "end": 205991,
+            "subgraph_id": 487
+          }
+        ]
+      }
+    ]
+  }
+}
