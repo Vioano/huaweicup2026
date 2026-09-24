@@ -24,6 +24,7 @@ class Engine:
         self.actor=config['actor']; self.leader=config['leader']; self.role=config['role']
         self.trusted=config['trusted_keys']; self.key=Path(config['private_key'])
         self.errors=[]
+        self.receive_status={}
 
     def sign(self,domain,payload): return self.signatures.sign(domain,self.actor,payload,self.key)
     def verify(self,envelope,domain,*,central=False):
@@ -185,13 +186,14 @@ class Engine:
             if not path.startswith('submissions/') or not path.endswith('.json'): continue
             receipt_path='receipts/'+path.removeprefix('submissions/')
             groups['completed' if receipt_path in tree else 'pending'].append(path)
+        self.receive_status={'pending':len(groups['pending']),'budget_seconds':30 if len(groups['pending'])>4 else 8}
         ordered=[]
         for group,paths in groups.items():
             cursor=progress.get(group,'')
             if not isinstance(cursor,str): cursor=''
             ordered.extend((group,p) for p in paths if p>cursor)
             ordered.extend((group,p) for p in paths if p<=cursor)
-        deadline=time.monotonic()+8
+        deadline=time.monotonic()+self.receive_status['budget_seconds']
         for group,path in ordered:
             if time.monotonic()>deadline: break
             receipt_path='receipts/'+path.removeprefix('submissions/')
@@ -246,12 +248,22 @@ class Engine:
                 # must give the next pending batch a turn before retrying this one.
                 write_json(progress_file,progress)
 
+    def outbox_counts(self):
+        counts={}
+        for path in (self.state/'outbox').glob('*/entry.json'):
+            try:
+                state=read_json(path)['state']
+                if state in ('queued','publishing','awaiting_receipt','accepted','rejected'):
+                    counts[state]=counts.get(state,0)+1
+            except (OSError,ValueError,KeyError,TypeError): pass
+        return counts
+
     def cycle(self):
         self.errors=[]; status_path=self.state/'status.json'
         previous=read_json(status_path) if status_path.exists() else {}
         status={'schema_version':1,'role':self.role,'state':'syncing','last_attempt_at':now(),
                 'last_success_at':previous.get('last_success_at'),'error':None,'data':previous.get('data',{}),
-                'software':previous.get('software',{}),'upload':{},
+                'software':previous.get('software',{}),'upload':self.outbox_counts(),
                 'transport':{'backend':'github-api','poll_seconds':self.config.get('poll_seconds',15)}}
         write_json(status_path,status)
         try:
@@ -259,6 +271,7 @@ class Engine:
             if head: self.accept_snapshot(head)
             if self.role=='leader':
                 self.receive_submissions(head)
+                status['receive']=self.receive_status
                 self.publish_snapshot(self.remote.head())
             if self.config.get('watch_repositories'):
                 self.errors.extend({'stage':'watch','message':e['error']} for e in discover(self.state,self.config['watch_repositories'],self.actor))
@@ -274,10 +287,7 @@ class Engine:
         current=self.state/'accepted'/'current.json'
         if current.exists():
             m=read_json(current); status['data']={k:m.get(k) for k in ('snapshot_id','sequence','record_count','generated_at','verified_at')}
-        for p in (self.state/'outbox').glob('*/entry.json'):
-            try:
-                name=read_json(p)['state']; status['upload'][name]=status['upload'].get(name,0)+1
-            except (ValueError,KeyError,TypeError): pass
+        status['upload']=self.outbox_counts()
         software=self.state/'software'/'status.json'
         if software.exists(): status['software']=read_json(software)
         write_json(status_path,status)

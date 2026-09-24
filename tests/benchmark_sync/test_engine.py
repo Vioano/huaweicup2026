@@ -226,3 +226,28 @@ class EngineTests(unittest.TestCase):
         self.assertTrue(leader.download_artifacts('b'*40,refs,target,time.monotonic()+5))
         self.assertFalse(saved.intersection(retried))
         self.assertFalse((target/'request.json').exists())
+
+    def test_backlog_gets_larger_bounded_processing_window(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        leader=self.engines['leader'];clock=[0];identities=[];files={}
+        for nonce in range(6):
+            payload={'actor':'member','nonce':nonce};identity=digest(canonical(payload));identities.append(identity)
+            files[f'submissions/member/{identity}.json']=canonical({'issuer':'member','payload':payload})
+        self.remote.update(files)
+        def verify(envelope,domain,**kwargs):clock[0]+=4;return envelope['payload']
+        leader.verify=verify
+        with patch('src.benchmark_sync.engine.time',SimpleNamespace(monotonic=lambda:clock[0])):
+            leader.receive_submissions(self.remote.head())
+        self.assertEqual(leader.receive_status,{'pending':6,'budget_seconds':30})
+        for identity in identities:self.assertEqual(read_json(self.root/'inbox'/identity/'result.json')['state'],'rejected')
+
+    def test_sync_in_progress_keeps_real_durable_queue_counts(self):
+        self.queue();member=self.engines['member'];observed=[];original=self.remote.head
+        def head():
+            if not observed:observed.append(read_json(member.state/'status.json')['upload'])
+            return original()
+        self.remote.head=head
+        result=member.cycle()
+        self.assertEqual(observed,[{'queued':1}])
+        self.assertEqual(result['upload'],{'awaiting_receipt':1})
