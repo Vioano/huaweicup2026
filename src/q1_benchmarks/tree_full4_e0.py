@@ -65,6 +65,8 @@ def verify():
     if sys.version_info[:2] != (3, 12):
         raise RuntimeError("Use locked Python 3.12")
     head = git("rev-parse", "HEAD").decode().strip()
+    if git("diff", "--name-only", head).strip():
+        raise RuntimeError("Tracked worktree differs from frozen runner commit")
     for path, commit in ((SOLVER_PATH, SOLVER), ("src/q1/component_pack.py", SOLVER), (RUNNER_PATH, head)):
         if (ROOT / path).read_bytes() != git("show", f"{commit}:{path}"):
             raise RuntimeError(f"Unfrozen source: {path}")
@@ -154,7 +156,7 @@ def run(batch):
             "started_at": utc(), "finished_at": None, "cells": CELLS, "maximum_calls": {"solver": 99, "E0": 99, "E1": 0, "E2": 0},
             "runner_argv": ["python", "-B", RUNNER_PATH, "run", batch.name],
             "cold_start_definition": "Fresh interpreter process per cell; OS filesystem cache not flushed",
-            "concurrency_context": "P2 scoring reported complete before this batch; Q3 may have a trailing one-worker run; no exclusive-host timing claim",
+            "concurrency_context": "P2 and Q3 scoring reported stopped before this batch; no exclusive-host reservation or controlled timing claim",
             "stop_policy": "one active cell; stop at first unexpected failure; no retry; constructor 30s, E0 60s",
             "status": "running", "input_preparation_wall_seconds": None, "batch_timeout_seconds": 1200,
             "reused_case002": {"source_commit": "bf65aaca608e0c41493eb29c8482712c0a8d2c73", "feed": "results/a/q1-tree-fine-20260924/20260924T1422Z-treefine1/board-feed.json", "scope": "Original attempt only; excluded from this 99-cell execution and feed"}}
@@ -293,7 +295,7 @@ def export(batch):
                     "calls": r["calls"], "offline_costs": f"uv sync --locked and exact ZIP-byte materialization before cells; no training, search, or case-specific algorithm precompute. Shared input preparation {meta['input_preparation_wall_seconds']} seconds; compression/export excluded and separately identifiable.",
                     "failure": r["failure"]}, "missing_reasons": missing},
             "notes": ["Frozen packet-factor=4 coverage extension, 99 new cases; original case002 attempt is reused only by aggregate report. No online parameter search or independent algorithm acceptance.",
-                      "P2 scoring completed before this batch; Q3 may have a trailing one-worker run; wall times are not an exclusive-host controlled measurement.",
+                      "P2 and Q3 scoring reported stopped before this batch; no exclusive-host reservation or controlled timing claim.",
                       "Fresh process timing; OS file cache not flushed. Historical fixed64 used different concurrency and measurement polling, so wall times are descriptive, not controlled speedup.",
                       f"Baseline exact compressed original reused from {OLD}; no baseline evaluation executed."],
             "source_url": TASK, "baseline": baseline}
