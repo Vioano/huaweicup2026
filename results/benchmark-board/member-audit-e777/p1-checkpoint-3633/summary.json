@@ -1,0 +1,74 @@
+{
+  "snapshot_id": "6f9b0084fc221a38e2fade55ae5a60b7471f7175844480729826d83859910155",
+  "snapshot_records": 3633,
+  "scope": "Current admitted historical-best portfolio across algorithms, not one solver or a fresh E0 run.",
+  "aggregation": "Arithmetic mean of each of the 100 case baseline_speedup ratios per core count; not a ratio of summed Makespan.",
+  "timing": "Per-row solver and external evaluation wall times are retained separately; they are not the cost of constructing this portfolio.",
+  "new_solver_calls": 0,
+  "new_evaluation_calls": 0,
+  "cores": {
+    "1": {
+      "count": 100,
+      "mean_speedup": 1.0240076820330801,
+      "min_speedup": 0.998735721934403,
+      "max_speedup": 1.4112843673171653,
+      "below_baseline": 11,
+      "algorithms": {
+        "q1-bounded-component-tasks": 74,
+        "q1-fixed64-local-finish": 25,
+        "q1-component-pack": 1
+      }
+    },
+    "2": {
+      "count": 100,
+      "mean_speedup": 1.7490718758945665,
+      "min_speedup": 1.0,
+      "max_speedup": 2.2459587672412393,
+      "below_baseline": 0,
+      "algorithms": {
+        "q1-bounded-component-tasks": 97,
+        "q1-bounded-search": 3
+      }
+    },
+    "3": {
+      "count": 100,
+      "mean_speedup": 2.388802492425505,
+      "min_speedup": 1.0,
+      "max_speedup": 3.1623043777886473,
+      "below_baseline": 0,
+      "algorithms": {
+        "q1-bounded-component-tasks": 97,
+        "q1-bounded-search": 3
+      }
+    },
+    "4": {
+      "count": 100,
+      "mean_speedup": 2.988906143243726,
+      "min_speedup": 1.0,
+      "max_speedup": 4.478408992743607,
+      "below_baseline": 0,
+      "algorithms": {
+        "q1-bounded-component-tasks": 86,
+        "q1-tree-frontier-pack": 4,
+        "q1-bounded-search": 3,
+        "q1-external-input-windows": 1,
+        "q1-component-pack": 1,
+        "q1-sink-peel": 2,
+        "q1-antichain-pack": 3
+      }
+    },
+    "5": {
+      "count": 100,
+      "mean_speedup": 3.4756428736605987,
+      "min_speedup": 1.0,
+      "max_speedup": 5.501140719714555,
+      "below_baseline": 0,
+      "algorithms": {
+        "q1-bounded-search": 4,
+        "q1-bounded-component-tasks": 93,
+        "q1-fixed64-local-finish": 1,
+        "q1-heavy-component-suffix": 2
+      }
+    }
+  }
+}
