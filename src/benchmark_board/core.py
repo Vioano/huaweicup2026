@@ -7,6 +7,11 @@ from datetime import datetime, timezone
 from contextlib import contextmanager
 from composites import COMPOSITES, member_row, verified as composite_verified
 
+try:
+    import orjson as _fast_json
+except ImportError:
+    _fast_json = None
+
 MAX_BLOB = 64 * 1024 * 1024
 MAX_EXPANDED_JSON = 128 * 1024 * 1024  # Complete official timelines can exceed 64 MiB.
 METRICS = {'makespan_cycles': ('Makespan', '周期', False), 'baseline_speedup': ('相对官方单核', '×', True), 'solver_wall_seconds': ('求解耗时', '秒', False), 'evaluation_wall_seconds': ('外部复评耗时', '秒', False), 'ddr_bytes': ('调度搬运', '字节', False), 'spill_bytes': ('溢出搬运', '字节', False), 'extra_ddr_bytes': ('额外搬运', '字节', False), 'cache_gain': ('Cache 加速比', '×', True), 'cache_hit_rate': ('Cache 字节命中率', '%', True)}
@@ -33,7 +38,7 @@ def read_json_blob(data, path):
     if path.endswith('.gz'):
         with gzip.GzipFile(fileobj=io.BytesIO(data)) as stream: data = stream.read(MAX_EXPANDED_JSON + 1)
     if len(data) > MAX_EXPANDED_JSON: raise ValueError('expanded artifact too large')
-    return json.loads(data)
+    return _fast_json.loads(data) if _fast_json is not None else json.loads(data)
 
 class Ledger:
     def __init__(self, state, manifest, calibrations=None):
@@ -54,15 +59,22 @@ class Ledger:
         try:
             with db: yield db
         finally: db.close()
-    def artifact(self, spec, loader, source):
+    def artifact(self, spec, loader, source, parsed=None):
         if not isinstance(spec, dict) or not sha(spec.get('sha256')): raise ValueError('artifact hash missing')
         path = safe_path(spec.get('path')); data = loader(path)
         if len(data) > MAX_BLOB or digest(data) != spec['sha256']: raise ValueError('artifact bytes/hash mismatch: ' + path)
         target = self.state / 'blobs' / spec['sha256']
         if not target.exists():
             temp = target.with_suffix('.tmp'); temp.write_bytes(data); temp.replace(target)
-        return read_json_blob(data, path)
-    def validate(self, raw, loader, source):
+        # A full 500-cell feed repeats each official single-core baseline five
+        # times. Verify every reference's bytes, then parse identical content once.
+        if parsed is not None and spec['sha256'] in parsed:
+            return parsed[spec['sha256']]
+        value = read_json_blob(data, path)
+        if parsed is not None:
+            parsed[spec['sha256']] = value
+        return value
+    def validate(self, raw, loader, source, parsed=None):
         r = json.loads(packed(raw)); p=r.get('problem'); case=r.get('case_id'); k=r.get('cores')
         if p not in ('P1','P2','P3') or case not in [f'{n:03d}' for n in range(1,101)] or type(k) is not int or k not in range(1,6): raise ValueError('invalid problem/case/cores')
         for field in ('attempt_id','run_id','algorithm_id','algorithm_name'):
@@ -95,11 +107,11 @@ class Ledger:
                 c=self.calibrations.get(ev.get('calibration_id'))
                 if not c or any(c.get(a)!=b for a,b in [('commit',ev['commit']),('problem',p),('config_sha256',identity['config_sha256']),('runtime_id',r.get('runtime_id'))]) or case not in c.get('cases',[]) or k not in c.get('cores',[]): raise ValueError('E1 不在队长固定校准准入范围')
             arts=r.get('artifacts',{})
-            plan=self.artifact(arts.get('plan'),loader,source)
+            plan=self.artifact(arts.get('plan'),loader,source,parsed)
             if arts['plan']['sha256']!=identity.get('plan_sha256'): raise ValueError('plan identity mismatch')
             if set(plan)!={'node_to_subgraph','core_schedules'}: raise ValueError('plan shape mismatch')
-            result=self.artifact(arts.get('result'),loader,source)
-            self.artifact(arts.get('run'),loader,source)  # real receipt bytes; semantics remain source-reported
+            result=self.artifact(arts.get('result'),loader,source,parsed)
+            self.artifact(arts.get('run'),loader,source,parsed)  # real receipt bytes; semantics remain source-reported
             if type(result.get('makespan')) is not type(metrics['makespan_cycles']) or result['makespan']!=metrics['makespan_cycles']: raise ValueError('result/makespan or number type mismatch')
             if not official_scene(result,p) or result.get('num_cores')!=k: raise ValueError('result problem/cache/scene/core mismatch')
             # Derive memory metrics from official result, never caller's prettier numbers.
@@ -125,7 +137,7 @@ class Ledger:
             try:
                 if any(pair.get(a)!=identity.get(a) for a in ('graph_sha256','config_sha256','official_sha256')): raise ValueError('pair identity mismatch')
                 if pair.get('route')!='E0': raise ValueError('pair currently requires E0')
-                result=self.artifact(pair.get('result'),loader,source)
+                result=self.artifact(pair.get('result'),loader,source,parsed)
                 cycles=result.get('makespan')
                 if not number(cycles,True): raise ValueError('invalid denominator')
                 if field=='baseline':
@@ -146,9 +158,9 @@ class Ledger:
         batch=digest(packed({'feed':feed,'source':source}).encode())
         with self.connect() as db:
             if db.execute('SELECT 1 FROM batches WHERE id=?',(batch,)).fetchone(): return {'duplicate':True,'added':0}
-        rows=[]
+        rows=[]; parsed={}
         for raw in feed['records']:
-            rid=digest(packed(raw).encode()); r=self.validate(raw,loader,source); r['id']=rid; rows.append(r)
+            rid=digest(packed(raw).encode()); r=self.validate(raw,loader,source,parsed); r['id']=rid; rows.append(r)
         with self.connect() as db:
             # Another importer may have committed this batch during byte validation.
             db.execute('BEGIN IMMEDIATE')
@@ -174,6 +186,17 @@ class Ledger:
         with self.connect() as db: rows=[dict(json.loads(x['body']),sequence=x['seq']) for x in db.execute('SELECT * FROM records ORDER BY seq')]
         for key,value in (filters or {}).items():
             if value not in (None,'','all'): rows=[r for r in rows if str(r.get(key))==str(value)]
+        return rows
+    def records_by_ids(self, identifiers):
+        """Read only a just-submitted batch when calculating its admission receipt."""
+        ids=list(identifiers)
+        rows=[]
+        with self.connect() as db:
+            for start in range(0,len(ids),400):
+                chunk=ids[start:start+400]
+                marks=','.join('?' for _ in chunk)
+                for item in db.execute(f'SELECT seq,body FROM records WHERE id IN ({marks})',chunk):
+                    rows.append(dict(json.loads(item['body']),sequence=item['seq']))
         return rows
     def compatible(self, r):
         ident=r.get('identity',{})
