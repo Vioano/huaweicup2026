@@ -42,3 +42,55 @@ exposed by the 9,903-chain input, not an algorithm result. No output plan or
 after-byte count was produced, and no evaluator was called. This batch was not
 retried; a future probe requires an independently reviewed source fix and new
 authorization.
+
+## Completed experiment after the interface fix
+
+Root fixed the regional work map in `2cfc86557e3184470ea730d77000624f795d64bd`
+and added a twenty-chain, two-region regression test. The eleven regional-cut
+and flow tests passed. The separately frozen v3 probe ran exactly once.
+
+| 003 / 2 cores | Original COPY bytes | Added DDR bytes | Official Makespan |
+|---|---:|---:|---:|
+| Original gap seed | 6,351,422 | 5,067,158 | 248,166 |
+| One regional cut pass, inherited order | 4,262,874 | 2,978,610 | 390,530 |
+| Same cut placement, freshly retimed | 4,262,874 | 2,978,610 | 245,150 |
+
+All three have zero spill. The original result and plan were read from the
+ongoing frozen `923b` run; its decoded plan was checked equal to the archived
+seed before either new official evaluation. New E0 calls total **two**, both
+successful, no retries, E1/E2 zero. Result/plan/trace gzip files preserve their
+decoded hashes in each `archive-manifest.json`; comparison receipts retain the
+old result hash and frozen graph/config identities. These are one-cell mechanism
+experiments, not a new complete algorithm score.
+
+The byte-only pass took **0.623881 s**, processed 619 regions / 1,201 flow calls,
+and accepted 508 regions. Its per-Pipe work peaks did not increase. Nevertheless,
+the inherited singleton priorities induced a fixed-compute-FIFO lower bound of
+261,573 cycles, already above the seed's official result. Balancing total work
+does not preserve the amount of useful overlap.
+
+`gap_retime.py`, frozen at `69b9d26ef972dfe1c8606a891ef8f89a6e896fec`, keeps
+every operation on its assigned core and dispatches ready maximal chains by
+remaining compute rank into per-Pipe calendar gaps. It uses the existing static
+lag, then emits singleton priorities from the resulting starts. No additional
+assignment, cut, parameter sweep, or evaluator is hidden in this stage. Twelve
+retiming/candidate/regional tests passed. Retiming took **0.528711 s**, brought
+the fixed-FIFO compute bound to 234,971, and had static finish 235,640. That
+static finish is an optimistic model, not an official lower-bound certificate.
+
+The retimed plan's E0 Makespan improves the seed by **3,016 cycles (1.215%)**;
+added DDR falls **41.217%**. New external E0 times were 1.914106 s for the
+inherited-order cut and 2.105202 s for the retimed plan. These clocks are separate
+from construction, and both experiments reuse an archived seed. They do not
+measure the complete production solver, which must also construct its fallback
+and account for online selection. Host execution was shared with the original
+one-worker full500 run.
+
+Evidence: `run-003-k2-v3/`, `e0-003-k2-v3/`, `retime-003-k2-v1/`, and
+`e0-retime-003-k2-v1/`. `score_one.py --retimed` reproduces the second official
+comparison into a fresh output directory; it must not overwrite this run.
+
+Next frozen probe: 003/043/056 at five cores, from cold gap construction through
+one cut pass and one retiming. These selected diagnostic cases test the observed
+communication-heavy mechanism. They are not used in algorithm dispatch rules,
+and their results will not be spliced into the ongoing 500-cell batch.
