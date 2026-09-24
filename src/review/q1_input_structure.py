@@ -4,7 +4,8 @@ Uses only official graph-adjacency helpers. Window bins are geometry diagnostics
 not emitted candidates; does not import/call any q1 construct or evaluation.
 """
 from collections import Counter,defaultdict,deque
-import gzip,hashlib,json,subprocess,sys,zipfile
+import gzip,hashlib,json,math,platform,subprocess,sys,time,zipfile
+from datetime import datetime,timezone
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'data/raw/a/official/code'))
@@ -85,18 +86,36 @@ def analyze(g,row,run):
     total=Counter()
     for c in compwork:total.update(c)
     dominant=max(total,key=total.get)
+    movement=checked(run['artifacts']['result'])['data_movement_bytes']
+    uniform_work=all(c==compwork[0]for c in compwork)
+    shared_by_all=all(len({find(u)for u in cons[t]})==len(groups)for t in shared)
+    curve=[]
+    # Closed-form diagnostics of equal-work/all-shared component families only.
+    # No partition is generated, and the two-copies-per-cut term is a proxy.
+    if uniform_work and shared_by_all:
+        for a in range(1,min(5,len(groups))+1):
+            pipe=math.ceil(len(groups)/a)*max(compwork[0].values())
+            copy=movement['original_graph_copy_bytes']+(a-1)*size(shared)+2*size(boundary)
+            curve.append({'active_cores':a,'pipe_wave_cycles':pipe,'no_spill_copy_proxy_bytes':copy,
+                          'ddr_service_proxy_cycles':math.ceil(copy/60),'max_proxy_cycles':max(pipe,math.ceil(copy/60))})
     return {'case':row['case'],'cores':5,'existing_makespan':row['makespan_cycles'],'existing_spill_bytes':row['spill_bytes'],'existing_extra_ddr_bytes':row['extra_ddr_bytes'],
         'components':len(groups),'compute_ops':len(ops),'old_tasks':len(old),'old_max_task_ops':max(map(len,old.values())),
         'global_external_bytes':size(ext),'external_bytes_by_original_pos':dict(pos),'max_old_task_external_union_bytes':max(map(size,oldinputs.values())),
         'core_external_union_bytes':list(map(size,coreinputs)),'shared_external_bytes_across_components':size(shared),'component_input_min_max':[min(map(size,compinputs.values())),max(map(size,compinputs.values()))],
         'component_dominant_pipe_max_fraction':max(c.get(dominant,0)for c in compwork)/total[dominant],
+        'total_compute_pipe_work':dict(total),'equal_component_pipe_work':uniform_work,'all_shared_inputs_read_by_every_component':shared_by_all,
+        'shared_input_saved_by_whole_component_colocation_bytes':sum(map(size,coreinputs))-size(ext),
+        'existing_data_movement_bytes':movement,'equal_family_active_core_proxy':curve,
         'static_activation':len(groups)>=5 and size(ext)>524288 and 1<len(windows)<=32,'static_global_windows':len(windows),
         'estimated_recombined_tasks':sum(sum(n>0 for n in c)for c in counts),'estimated_recombined_max_task_ops':max(map(max,counts)),
         'static_window_core_ops':counts,'static_window_global_input_bytes':[size(ins)for _,ins in windows],'static_window_core_input_bytes':localbytes,'static_window_core_pipe_work':works,
         'estimated_external_window_reload_bytes_global':sum(size(ins)for _,ins in windows)-size(ext),'cut_tensor_payload_bytes_once':size(boundary),
         'existing_run':row['source_run'],'existing_plan':run['artifacts']['plan'],'existing_result':run['artifacts']['result']}
 def main():
+    began=datetime.now(timezone.utc).isoformat();t0=time.monotonic()
     source=read('docs/a/source-manifest.json');files={x['path']:x for x in source['files']};archive=ROOT/source['case_archive']['path']
+    protected={p:sha((ROOT/'data/raw/a/official'/p).read_bytes())for p in files if p.startswith('code/')or p=='data/config.txt'}
+    assert all(h==files[p]['sha256']for p,h in protected.items())
     assert sha(archive.read_bytes())==source['case_archive']['sha256']
     records=read(COMPARISON);assert len(records)==500
     runs={};oldstats=[]
@@ -115,6 +134,9 @@ def main():
             name=f'data/case_{case}.json';raw=z.read(name);assert sha(raw)==files[name]['sha256']
             rows.append(analyze(json.loads(raw),row,run))
     out={'analysis_source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT).decode().strip(),'read_source_commit':SOURCE,'comparison_source':COMPARISON,'comparison_sha256':sha((ROOT/COMPARISON).read_bytes()),'k4_run_reference_sources':[{'path':p,'sha256':sha((ROOT/p).read_bytes())}for p in K4_FEEDS],'input_archive_sha256':sha(archive.read_bytes()),'official_code_hash':source['official_code_hash'],'actual_calls':{'solver':0,'E0':0,'E1':0,'E2':0},'all500_existing_results_verified':oldstats,'k5_graph_static_rows':rows,'scope':'Window geometry is static analysis, no plan output or solver/evaluator. Unions and payload cut sizes are neither peaks nor exact added DDR predictions.'}
+    assert all(sha((ROOT/'data/raw/a/official'/p).read_bytes())==h for p,h in protected.items())
+    assert sha(archive.read_bytes())==source['case_archive']['sha256']
+    out.update(started_utc=began,ended_utc=datetime.now(timezone.utc).isoformat(),static_analysis_wall_seconds=time.monotonic()-t0,python_version=platform.python_version(),platform=platform.platform(),official_code_config_hashes_before_after=protected)
     OUT.write_text(json.dumps(out,indent=2)+'\n')
     print(json.dumps({'graphs':len(rows),'old_results_verified':len(oldstats),'active':sum(r['static_activation']for r in rows),'new_solver_E0_E1_E2':0}))
 if __name__=='__main__':main()
