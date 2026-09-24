@@ -356,6 +356,10 @@ class Engine:
                 errors.append({'stage':'outbox','message':str(error)});continue
             if entry['state'] in ('accepted','rejected'): continue
             if entry['state']=='awaiting_receipt':
+                # A short new-feed batch must be visible remotely before any
+                # old receipt reconciliation starts. Otherwise the final
+                # publish_pending() still lets old backlog delay new data.
+                publish_pending()
                 if checked_awaiting>=OUTBOX_RECEIPT_CHECK_BATCH_SIZE: continue
                 checked_awaiting+=1
             try:

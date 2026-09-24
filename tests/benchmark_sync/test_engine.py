@@ -83,6 +83,32 @@ class EngineTests(unittest.TestCase):
         member.deliver_outbox(None)
         self.assertTrue(all('last_checked_at' in read_json(path) for path,_ in old))
 
+    def test_short_new_batch_is_published_before_reading_old_receipts(self):
+        from unittest.mock import patch
+        member=self.engines['member'];leader=self.engines['leader']
+        old=[self.queue(nonce=n) for n in range(33)]
+        member.deliver_outbox(None)
+        old_path,old_id=min(old,key=lambda pair:(read_json(pair[0])['last_attempt_at'],pair[0].parent.name))
+        receipt_path=f'receipts/member/{old_id}.json'
+        receipt=leader.sign('receipt',{'id':old_id,'actor':'member','state':'accepted',
+                                       'received_at':'2026-09-24T20:00:00Z'})
+        self.remote.update({receipt_path:canonical(receipt)})
+        fresh,fresh_id=self.queue(nonce=9999)
+        new_path=f'submissions/member/{fresh_id}.json'
+        events=[];original_update=self.remote.update;original_read=self.remote.read
+        def recorded_update(files,**kwargs):
+            if new_path in files: events.append('new_published')
+            return original_update(files,**kwargs)
+        def recorded_read(commit,path):
+            if path==receipt_path: events.append('old_receipt_read')
+            return original_read(commit,path)
+        with patch.object(self.remote,'update',side_effect=recorded_update), \
+             patch.object(self.remote,'read',side_effect=recorded_read):
+            member.deliver_outbox(self.remote.head())
+        self.assertEqual(read_json(fresh)['state'],'awaiting_receipt')
+        self.assertEqual(read_json(old_path)['state'],'accepted')
+        self.assertLess(events.index('new_published'),events.index('old_receipt_read'))
+
     def test_leader_local_fastpath_validates_fixed_commit_and_keeps_remote_delivery(self):
         import os,subprocess
         repo=self.root/'source';repo.mkdir()
