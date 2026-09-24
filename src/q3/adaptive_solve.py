@@ -37,7 +37,9 @@ def stage_request(index, cores):
     }
 
 
-def evaluate_candidates(index, cores, evaluate, save):
+def evaluate_candidates(index, cores, evaluate, save, *, fallback=None):
+    # Optional extension point; the historical entrypoint retains its policy.
+    fallback = guarded_candidates if fallback is None else fallback
     request = stage_request(index, cores)
     routing = {"stage_request": request, "migration_construct_attempts": 0,
                "migration_candidate_plans": 0, "stage_construct_attempts": 0,
@@ -75,7 +77,7 @@ def evaluate_candidates(index, cores, evaluate, save):
             plan, metadata = attention_construct(index, cores, cross_delay=delay, pack_ffn=True)
         except UnsupportedStructure as attention_error:
             routing.update(attention_guard_reason=str(attention_error))
-            winner, calls, records, selection = guarded_candidates(index, cores, evaluate, save)
+            winner, calls, records, selection = fallback(index, cores, evaluate, save)
             routing.update(route="guarded", guarded_policy_invocations=1,
                            route_e0_limit=2, evaluation_calls=calls,
                            count_scope="Router attempts only; guarded internal construction/decision records are preserved unchanged.")
