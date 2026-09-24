@@ -3,6 +3,9 @@
 2026-09-24 后续用户已授权依据 Pro 与方案成绩台进行新一轮研发/子代理评测，并与 Fang 的 Q3 专项互通。
 新阶段六字段和事前清单见 [反馈迭代01](../../docs/a/q3/FEEDBACK_ITERATION_01.md)；下文首批预算为历史，保持封存。
 
+用户随后明确要求持续研发，当前推进[反馈迭代02](../../docs/a/q3/FEEDBACK_ITERATION_02.md)：
+有证明的容量阈值子步骤及每核多片段分配，与旧树构造作独立在线对照。阶段交付不表示停止研发。
+
 负责人：@NikolaStarx；session `nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc`。
 分支：`codex/q3-core-nikolastarx`，起点 `6a7c678df58613445efaf89d9a5221702955fa22`。
 沟通：[Issue 51](https://github.com/huaweibei123/huaweicup2026/issues/51)。
