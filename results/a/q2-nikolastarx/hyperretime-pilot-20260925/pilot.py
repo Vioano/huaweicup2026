@@ -65,6 +65,29 @@ def archive_file(path):
     return {'raw_sha256': sha(raw), 'gzip_sha256': sha(zipped), 'raw_bytes': len(raw)}
 
 
+def import_preflight(executable, e2_root):
+    """Check only imports; never construct or call the evaluator."""
+    code = '''import json, pathlib, sys
+root = pathlib.Path(sys.argv[1]).resolve()
+sys.path.insert(0, str(root))
+import numpy
+import research.a.e2_search as package
+import research.a.e2_search.scene_b as scene_b
+import src.eval_exact._official as official
+modules = (package, scene_b, official)
+if any(not pathlib.Path(m.__file__).resolve().is_relative_to(root) for m in modules):
+    raise RuntimeError("foreign E2 import")
+print(json.dumps({"python": sys.executable, "numpy": numpy.__version__,
+                  "modules": [str(pathlib.Path(m.__file__).resolve()) for m in modules]}))
+'''
+    result = subprocess.run([str(executable), '-B', '-c', code, str(e2_root)],
+                            text=True, capture_output=True, timeout=10)
+    if result.returncode:
+        raise RuntimeError(f'E2 import preflight failed: returncode={result.returncode}; '
+                           f'stdout={result.stdout!r}; stderr={result.stderr!r}')
+    return json.loads(result.stdout)
+
+
 def manifest_inputs(args):
     manifest_raw = (ROOT / 'docs/a/source-manifest.json').read_bytes()
     manifest = json.loads(manifest_raw)
@@ -152,9 +175,18 @@ def worker(args):
                         'native_returns': 0, 'E0_fallback': 0}, 'attempts': []}
     save(ledger_path, ledger)
     at = time.perf_counter()
+    def checked_native(p):
+        try:
+            return native_e2(args.e2_root, graph, config_path, p,
+                             timeout=max(0.001, 60 - (time.perf_counter() - started)))
+        except subprocess.CalledProcessError as error:
+            save(path / 'native-subprocess-error.json', {
+                'kind': 'CalledProcessError', 'returncode': error.returncode,
+                'stdout': error.stdout, 'stderr': error.stderr})
+            raise
+
     oracle = score_adapter(
-        lambda p: native_e2(args.e2_root, graph, config_path, p,
-                            timeout=max(0.001, 60 - (time.perf_counter() - started))),
+        checked_native,
         ledger, ledger_path, remaining_wall=lambda: 60 - (time.perf_counter() - started))
     score = oracle(selected)
     stages['native_e2_seconds'] = time.perf_counter() - at
@@ -192,12 +224,16 @@ def main():
     parser.add_argument('--e2-root', required=True, type=Path)
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--runner-commit', required=True)
+    parser.add_argument('--python', required=True, type=Path)
     parser.add_argument('--worker', action='store_true')
     parser.add_argument('--case', choices=CASES)
     args = parser.parse_args()
     args.raw_root, args.old_run, args.e2_root = (p.resolve(strict=True) for p in
                                                 (args.raw_root, args.old_run, args.e2_root))
     args.output = args.output.resolve()
+    args.python = args.python.resolve(strict=True)
+    if Path(sys.executable).resolve() != args.python:
+        raise ValueError('parent and native worker must use requested Python')
     if args.worker:
         worker(args)
         return
@@ -219,11 +255,16 @@ def main():
         source_hashes[relative] = sha(raw)
     started = time.perf_counter()
     identities = manifest_inputs(args)
+    e2_imports = import_preflight(args.python, args.e2_root)
     old = {case: old_cell(args, case) for case in CASES}
     args.output.mkdir(parents=True, exist_ok=False)
     receipt = {'status': 'running', 'started_at': datetime.now(timezone.utc).isoformat(),
                'runner_commit': args.runner_commit, 'limits': LIMITS,
                'source': identities, 'source_hashes': source_hashes, 'old': old,
+               'python': str(args.python), 'e2_import_preflight': e2_imports,
+               'prior_batch': {'status': 'stopped_uncertain_native_e2',
+                               'E2_api_attempted': 1, 'possible_E0_fallback_calls': 1,
+                               'independent_E0_calls': 0},
                'calls': {'E2': 0, 'E0': 0, 'E1': 0}, 'cells': []}
     save(args.output / 'batch.json', receipt)
     deadline = started + LIMITS['batch_seconds']
@@ -234,10 +275,10 @@ def main():
             folder = args.output / f'{case}-k5'
             folder.mkdir(exist_ok=False)
             save(folder / 'old.json', old[case])
-            command = [sys.executable, '-B', str(Path(__file__).resolve()), '--worker',
+            command = [str(args.python), '-B', str(Path(__file__).resolve()), '--worker',
                        '--case', case, '--raw-root', str(args.raw_root), '--old-run', str(args.old_run),
                        '--e2-root', str(args.e2_root), '--output', str(args.output),
-                       '--runner-commit', args.runner_commit]
+                       '--runner-commit', args.runner_commit, '--python', str(args.python)]
             process = monitored(command, folder / 'candidate-process',
                                 min(deadline, time.perf_counter() + 60), 4 << 30)
             receipt['cells'].append({'case': case, 'candidate_process': process})
@@ -261,7 +302,7 @@ def main():
             if candidate['needs_independent_E0']:
                 e0 = folder / 'e0'
                 e0.mkdir()
-                argv = [sys.executable, '-B', str(ROOT / 'data/raw/a/official/code/multicore_cut_evaluate_problem_2.py'),
+                argv = [str(args.python), '-B', str(ROOT / 'data/raw/a/official/code/multicore_cut_evaluate_problem_2.py'),
                         str(args.raw_root / f'case_{case}.json'), str(folder / 'plan.json'),
                         '--config', str(args.raw_root / 'config.txt'),
                         '--output', str(e0 / 'result.json'), '--trace-output', str(e0 / 'trace.json'),

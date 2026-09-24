@@ -22,12 +22,13 @@ the old `adaptive_budget` route. It is not a full production solver or a
 Inputs are passed at run time; the script contains no machine-specific paths:
 
 ```sh
-python3 results/a/q2-nikolastarx/hyperretime-pilot-20260925/pilot.py \
+"/path/to/verified-venv/bin/python" results/a/q2-nikolastarx/hyperretime-pilot-20260925/pilot.py \
   --runner-commit "$(git rev-parse HEAD)" \
+  --python /path/to/verified-venv/bin/python \
   --raw-root /path/to/official/data \
   --old-run /path/to/old-gap-full500-run \
   --e2-root /path/to/isolated-603b-export \
-  --output results/a/q2-nikolastarx/hyperretime-pilot-20260925/run
+  --output results/a/q2-nikolastarx/hyperretime-pilot-20260925/run-v2
 ```
 
 The runner checks the fixed script and constructor bytes against its full
@@ -56,3 +57,9 @@ loading. This supports an import-stage cause but does not recover the lost E2
 stderr or resolve the uncertain ledger. See `run/batch.json`,
 `run/003-k5/e2-ledger.json`, `run/003-k5/failure-receipt.json`, and the process
 stdout/stderr receipts for the exact evidence.
+
+The authorized second batch uses a verified environment for both parent and
+native worker, checks only E2 package/NumPy imports before the batch, and
+records nested subprocess stdout/stderr on `CalledProcessError`. It writes to
+the separate `run-v2` directory. The first batch remains one attempted E2
+request plus one possible E0 fallback in the cumulative call account.
