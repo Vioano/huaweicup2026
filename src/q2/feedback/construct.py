@@ -228,6 +228,15 @@ class Index:
         raise ValueError(f"unknown strategy: {strategy}")
 
     def build(self, cores=4, strategy="pipe_window", window=None):
+        if type(cores) is not int or not 1 <= cores <= 5:
+            raise ValueError("cores must be an integer in 1..5")
+        if strategy == "tree_dp":
+            if len(self.components) != 1 or any(len(s) > 1 for s in self.succ.values()):
+                raise UnsupportedStructure("tree_dp requires one connected in-tree, outdegree <= 1")
+            from .tree import build_tree_plan
+            plan, meta = build_tree_plan(self, cores)
+            derive_multicore_plan(self.graph, plan)
+            return plan, meta
         if window is not None and (type(window) is not int or window < 1 or window > 8):
             raise ValueError("window must be an integer in 1..8")
         if strategy == "resource_word":
@@ -251,7 +260,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("graph", type=Path)
     parser.add_argument("--cores", type=int, default=4)
-    parser.add_argument("--strategy", choices=("component", "affine_eighth", "resource_word", "pipe_window", "pipe_window_fill"), default="pipe_window")
+    parser.add_argument("--strategy", choices=("component", "affine_eighth", "resource_word", "pipe_window", "pipe_window_fill", "tree_dp"), default="pipe_window")
     parser.add_argument("--window", type=int)
     parser.add_argument("-o", "--output", type=Path, required=True)
     args = parser.parse_args()
