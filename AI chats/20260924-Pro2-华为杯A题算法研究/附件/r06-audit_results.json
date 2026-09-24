@@ -1,0 +1,91 @@
+{
+  "environment": {
+    "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41"
+  },
+  "official_evaluator_calls_this_round": 0,
+  "original_case_JSONs_fully_read_this_round": 0,
+  "plan_byte_verification": {
+    "word": {
+      "sha256": "1935d89ad16a59a52ad62b2e00b4b43f30e783ade40fe481fc6063d905da64ce",
+      "git_blob_sha1": "9a1fd3849389fb0155d82d02a91d87c1bf967410",
+      "bytes": 12057
+    },
+    "component": {
+      "sha256": "c9e86dae0d8290112a9a8ec8a2fe1052f6edd18f0a1765706c7f0351cf70fdf9",
+      "git_blob_sha1": "0644ab8189f4cffc94d577c9cd76e47a9f46347b"
+    },
+    "affine": {
+      "sha256": "40ec77159696d284091f6926aab72b711ec682769434a32e14b54229b4ec7357",
+      "git_blob_sha1": "100e7b3e71af4247f24fceab8a4a6f347a771d35"
+    },
+    "single_task_k4": {
+      "sha256": "2d285913c029b56a5383d8624afb44ea4230ed1b3f480d65adf9856f74aa49ae",
+      "git_blob_sha1": "5a6d6cae9a0765605173fdcea7afd695ca2e0b3b"
+    }
+  },
+  "plan_diffs": {
+    "component_to_word": {
+      "changed_positions": 596,
+      "Kendall_pairs": 1116
+    },
+    "affine_to_word": {
+      "changed_positions": 720,
+      "Kendall_pairs": 3716
+    },
+    "partition_changes": 0,
+    "assignment_changes": 0
+  },
+  "derived_arithmetic": {
+    "reported_singletask_baseline": 487605,
+    "baseline_is_new_CLI": false,
+    "word_makespan_from_E0_header": 63768,
+    "CRG19_speedup_conditional_on_reported_baseline": 7.646546857357922,
+    "same_core_component_gain": 1.9298080541964622,
+    "ordinary_scale_factor": 3.962335446123842,
+    "component_minus_word": 59292,
+    "27_times_reported_V_work": 59292,
+    "reported_M_work_4core": 62532,
+    "word_vs_compute_LB": 0.01976587986950684
+  },
+  "integer_sort_fixture_check": {
+    "models": 120,
+    "comparisons": 9600,
+    "failures": 0,
+    "seed": 20260924,
+    "scope": "pure integer affine sorting; NOT official graphs or evaluator tests"
+  },
+  "binary_E0_read_limit": "Only a prefix of each of two compressed E0 outputs was decoded. No full gzip CRC, full JSON or trace verification.",
+  "proposed_counterfactual": {
+    "status": "PROPOSED_UNVALIDATED; not an E0 witness",
+    "primitive_candidate": "within-core insertion",
+    "parent_sha256": "1935d89ad16a59a52ad62b2e00b4b43f30e783ade40fe481fc6063d905da64ce",
+    "child_sha256": "0dad817e56e5252cf16f6887360597dbb59bcad2e3225c6b660fd3092f66cfb1",
+    "parameters": {
+      "core": 0,
+      "subgraph_id": 96,
+      "remove_index": 14,
+      "insert_before_subgraph": 7,
+      "final_index": 10
+    },
+    "modified_fields": [
+      "core_schedules[0]"
+    ],
+    "unmodified_fields": [
+      "ordered node_to_subgraph",
+      "all core assignments",
+      "core_schedules[1:]"
+    ],
+    "edit_signature": {
+      "partition": 0,
+      "assignment": 0,
+      "changed_positions": 5,
+      "Kendall_pairs": 4
+    },
+    "original_graph_coverage_check": "not performed; complete G unavailable this round",
+    "task_order_check": "not performed",
+    "execution_check": "not performed",
+    "makespan": null,
+    "purpose": "PB00 counterfactual candidate; validate before any mechanistic claim"
+  }
+}
