@@ -21,18 +21,20 @@ BUDGET = {'task_builds': 2, 'local_step3_simulations': 10, 'new_multicore_e0': 0
           'per_build_seconds': 90, 'whole_batch_seconds': 180}
 
 
-def rebuild(graph_path, plan_path, result_path, output_path):
+def rebuild(graph_path, plan_path, result_path, output_path, expected_cores=5):
     from evaluation_validation import read_evaluation_config
     from multicore_cut_evaluate_problem_3 import _build_scene_b_tasks
     graph, plan, result = read(graph_path), read(plan_path), read(result_path)
     cfg = read_evaluation_config(ROOT / 'data/raw/a/official/data/config.txt')
     before = time.monotonic()
     tasks, links, _, traffic, _ = _build_scene_b_tasks(graph, plan, **cfg)
-    assert len(tasks) == 5 and not links and not result['cross_core_transfers']
+    assert len(tasks) == expected_cores and not links and not result['cross_core_transfers']
     assert traffic == result['data_movement_bytes']
+    timelines = {entry['core_id']: entry['ops'] for entry in result['per_core_timeline']}
+    assert set(timelines) == set(tasks)
     summaries = []
     for core, task in tasks.items():
-        timeline = result['per_core_timeline'][core]['ops']
+        timeline = timelines[core]
         observed = {r['op_id']: r for r in timeline}
         assert set(observed) == set(task['op_by_id'])
         assert len(task['step3']['memory_dependencies']) == result['step3_by_core'][str(core)]['memory_dependency_count']
