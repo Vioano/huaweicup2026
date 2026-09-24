@@ -8,6 +8,8 @@ E0 Makespan **234536**，比既有 C 的253856降低 **19320周期（7.6106%）*
 
 原件在 `run/`；[逐例比较](run/comparison.csv)、[静态DDR分析](run/ddr-analysis.json)、[COPY多重集对照](run/copy-signature-comparison.json)、[完整报告](REPORT.md)。标准feed为 [board-feed-20260924T175725Z-stage-g.json](board-feed-20260924T175725Z-stage-g.json)，[本地预检](precheck-local.json) `valid=true, eligible=1`。单例不代表全100均值；未代签成绩台接收、上台或独立复跑。
 
+原件固定 `45fde88569b4ce877bda397ae32bc9a1b4abf082`，对应 [固定Git字节预检](precheck-fixed-45fde88.json) 亦为 `valid=true, records=1, eligible=1`；该预检不执行solver/E0或写中央服务。
+
 ## 原准备记录（保留）
 
 新族 `q1-guarded-intact-prefetch / fixed-root-four-two-v1`，作者固定 `e29685da0268420f2d881246603763d6bf8baf5b`。只准备这一个真实单格，没有求解、评分或Task编译，F预算保持封存；完整零评分身份预检后仍需父审阅与START。
