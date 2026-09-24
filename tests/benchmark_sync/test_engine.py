@@ -177,3 +177,52 @@ class EngineTests(unittest.TestCase):
         self.assertTrue(leader.errors)
         write_json(leader.state/'receive-progress.json',[]) # Corrupt hints do not block revalidation.
         leader.receive_submissions(self.remote.head());self.assertIsInstance(read_json(leader.state/'receive-progress.json'),dict)
+
+    def test_downloads_overlap_but_request_waits_for_all_verified_bytes(self):
+        import threading
+        from concurrent.futures import ThreadPoolExecutor
+        p,_=self.queue();entry=read_json(p);payload=entry['payload']
+        refs={f'results/file-{i}.json':digest(str(i).encode()) for i in range(9)}
+        feed={'schema_version':1,'records':[{'provenance':{'producer_session':'member/s-test'},
+              'artifacts':{str(i):{'path':name,'sha256':sha} for i,(name,sha) in enumerate(refs.items())}}]}
+        data=canonical(feed);self.remote.commits['a'*40].update({name:str(i).encode() for i,name in enumerate(refs)})
+        self.remote.commits['a'*40]['results/board-feed.json']=data
+        payload.update(feed_sha256=digest(data),artifacts=refs);identity=digest(canonical(payload))
+        self.remote.update({f'submissions/member/{identity}.json':canonical(self.engines['member'].sign('submission',payload))})
+        ready=threading.Event();release=threading.Event();lock=threading.Lock();counts={'active':0,'maximum':0}
+        original=self.remote.read
+        def slow(commit,path):
+            if path in refs:
+                with lock:
+                    counts['active']+=1;counts['maximum']=max(counts['maximum'],counts['active'])
+                    if counts['active']==4:ready.set()
+                try:
+                    if not release.wait(3):raise RuntimeError('Test transfer gate timed out')
+                    return original(commit,path)
+                finally:
+                    with lock:counts['active']-=1
+            return original(commit,path)
+        self.remote.read=slow
+        with ThreadPoolExecutor(max_workers=1) as caller:
+            future=caller.submit(self.engines['leader'].receive_submissions,self.remote.head())
+            try:
+                self.assertTrue(ready.wait(3));self.assertFalse((self.root/'inbox'/identity/'request.json').exists())
+            finally:release.set()
+            future.result(timeout=5)
+        self.assertEqual(counts['maximum'],4)
+        self.assertTrue((self.root/'inbox'/identity/'request.json').exists())
+        for name,sha in refs.items():self.assertEqual(digest((self.root/'inbox'/identity/'artifacts'/name).read_bytes()),sha)
+
+    def test_parallel_partial_files_resume_without_redownloading(self):
+        import time
+        leader=self.engines['leader'];target=self.root/'partial';refs={f'r/{i}':digest(str(i).encode()) for i in range(7)}
+        self.remote.commits['b'*40]={p:str(i).encode() for i,p in enumerate(refs)}
+        self.remote.fail_path='r/3'
+        with self.assertRaises(RemoteError):leader.download_artifacts('b'*40,refs,target,time.monotonic()+5)
+        saved={p for p in refs if (target/'artifacts'/p).exists()};self.assertTrue(saved)
+        self.remote.fail_path=None;original=self.remote.read;retried=[]
+        def record(commit,path):retried.append(path);return original(commit,path)
+        self.remote.read=record
+        self.assertTrue(leader.download_artifacts('b'*40,refs,target,time.monotonic()+5))
+        self.assertFalse(saved.intersection(retried))
+        self.assertFalse((target/'request.json').exists())

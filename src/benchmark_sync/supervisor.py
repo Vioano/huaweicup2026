@@ -20,9 +20,10 @@ def free_port():
 
 def ensure_no_listener(port):
     # bind() without SO_REUSEADDR also rejects a closed server's TIME_WAIT sockets.
-    # Check an actual listener instead; the board's own bind remains the final guard.
+    # Windows may take ~2 s to return ECONNREFUSED on loopback. Allow that response;
+    # a genuine timeout still fails closed. The board bind remains the final guard.
     try:
-        with socket.create_connection(('127.0.0.1',port),timeout=1): pass
+        with socket.create_connection(('127.0.0.1',port),timeout=5): pass
     except ConnectionRefusedError:
         return
     except OSError as error:

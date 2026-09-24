@@ -69,3 +69,10 @@ class SupervisorTests(unittest.TestCase):
    replacement.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
    replacement.bind(('127.0.0.1',port));replacement.listen()
    with self.assertRaisesRegex(RuntimeError,'already in use'):ensure_no_listener(port)
+
+ def test_port_probe_allows_windows_refusal_delay_but_not_unknown_timeout(self):
+  from src.benchmark_sync.supervisor import ensure_no_listener
+  with patch('src.benchmark_sync.supervisor.socket.create_connection',side_effect=ConnectionRefusedError) as probe:
+   ensure_no_listener(12345);self.assertEqual(probe.call_args.kwargs['timeout'],5)
+  with patch('src.benchmark_sync.supervisor.socket.create_connection',side_effect=TimeoutError):
+   with self.assertRaisesRegex(RuntimeError,'Cannot verify'):ensure_no_listener(12345)

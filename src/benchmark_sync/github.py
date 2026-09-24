@@ -1,11 +1,15 @@
 """Small-branch GitHub transport. Never checks out or downloads research history."""
 from __future__ import annotations
 import base64
+from collections import OrderedDict
 import json
+import http.client
+import ssl
 from pathlib import Path, PurePosixPath
 import re
 import subprocess
 import time
+import threading
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -42,7 +46,9 @@ class GitHub:
         self.repository, self.branch, self.cache, self.gh = repository, branch, Path(cache), gh
         self.cache.mkdir(parents=True,exist_ok=True)
         self.token = subprocess.check_output([gh,'auth','token','--hostname','github.com'],stderr=subprocess.DEVNULL,text=True).strip()
-        self.trees = {}
+        self.trees = OrderedDict()
+        self.tree_lock=threading.Lock()
+        self.cooldown_lock=threading.Lock()
         self.cooldown_file=self.cache/'cooldown.json'
         self.cooldown_until=json.loads(self.cooldown_file.read_bytes()).get('until',0) if self.cooldown_file.exists() else 0
         if self.request('GET','/user')['login'].lower() != actor.lower():
@@ -57,17 +63,29 @@ class GitHub:
             data=None if body is None else canonical(body),method=method,
             headers={'Authorization':'Bearer '+self.token,'Accept':'application/vnd.github.raw+json' if raw else 'application/vnd.github+json',
                      'X-GitHub-Api-Version':'2022-11-28','User-Agent':'benchmark-sync/1','Content-Type':'application/json'})
-        try:
-            with urllib.request.urlopen(req,timeout=45) as res:
-                data=res.read(limit+1)
-        except urllib.error.HTTPError as e:
-            retry=max(float(e.headers.get('Retry-After','0')),0)
-            if e.headers.get('X-RateLimit-Remaining')=='0':
-                retry=max(retry,float(e.headers.get('X-RateLimit-Reset','0'))-time.time())
-            if e.code in (403,429):
-                retry=max(retry,60);self.cooldown_until=time.time()+retry
-                atomic_write(self.cooldown_file,canonical({'until':self.cooldown_until}))
-            raise RemoteError(e.code,retry) from None
+        for attempt in range(3 if method=='GET' else 1):
+            if time.time()<self.cooldown_until: raise RemoteError(429,self.cooldown_until-time.time())
+            try:
+                with urllib.request.urlopen(req,timeout=45) as res:
+                    data=res.read(limit+1)
+                break
+            except urllib.error.HTTPError as e:
+                retry=max(float(e.headers.get('Retry-After','0')),0)
+                if e.headers.get('X-RateLimit-Remaining')=='0':
+                    retry=max(retry,float(e.headers.get('X-RateLimit-Reset','0'))-time.time())
+                if e.code in (403,429):
+                    retry=max(retry,60)
+                    with self.cooldown_lock:
+                        self.cooldown_until=max(self.cooldown_until,time.time()+retry)
+                        atomic_write(self.cooldown_file,canonical({'until':self.cooldown_until}))
+                raise RemoteError(e.code,retry) from None
+            except (urllib.error.URLError,ConnectionError,TimeoutError,ssl.SSLEOFError,http.client.IncompleteRead) as error:
+                # A transient read disconnect is safe to retry. Never replay an uncertain
+                # POST/PATCH, retry HTTP rejection, or weaken certificate verification.
+                reason=getattr(error,'reason',error)
+                if method!='GET' or attempt==2 or isinstance(reason,(ssl.SSLCertVerificationError,TimeoutError)): raise
+                if time.time()<self.cooldown_until: raise RemoteError(429,self.cooldown_until-time.time()) from None
+                time.sleep(.25*2**attempt)
         if len(data)>limit: raise ValueError('GitHub response exceeds byte limit')
         return data if raw else json.loads(data)
 
@@ -79,15 +97,21 @@ class GitHub:
 
     def tree(self, commit):
         fixed_sha(commit)
-        if commit not in self.trees:
-            # A recursive Git tree is bounded; fail closed on GitHub truncation.
-            # request() intentionally accepts no arbitrary query strings.
-            meta=self.request('GET','/git/commits/'+commit)
-            obj=self.request('GET','/git/trees/'+fixed_sha(meta['tree']['sha']),params={'recursive':'1'})
-            if obj.get('truncated') or len(obj['tree'])>100000: raise ValueError('Truncated or excessive Git tree')
-            entries={item['path']:item for item in obj['tree'] if item['type']=='blob'}
+        with self.tree_lock:
+            if commit in self.trees:
+                self.trees.move_to_end(commit)
+                return self.trees[commit]
+        # Fixed Git commit trees never change. A small LRU keeps active source trees
+        # across snapshot/receipt publications without growing for every channel head.
+        meta=self.request('GET','/git/commits/'+commit)
+        obj=self.request('GET','/git/trees/'+fixed_sha(meta['tree']['sha']),params={'recursive':'1'})
+        if obj.get('truncated') or len(obj['tree'])>100000: raise ValueError('Truncated or excessive Git tree')
+        entries={item['path']:item for item in obj['tree'] if item['type']=='blob'}
+        with self.tree_lock:
             self.trees[commit]=entries
-        return self.trees[commit]
+            self.trees.move_to_end(commit)
+            while len(self.trees)>16: self.trees.popitem(last=False)
+        return entries
 
     def blob(self, sha, size=None):
         fixed_sha(sha)
@@ -140,9 +164,7 @@ class GitHub:
             try:
                 if head: self.request('PATCH','/git/refs/heads/'+self.branch,{'sha':commit,'force':False})
                 else: self.request('POST','/git/refs',{'ref':'refs/heads/'+self.branch,'sha':commit})
-                self.trees.clear()
                 return commit
             except RemoteError as e:
                 if e.status not in (409,422): raise
-                self.trees.clear()
         raise RuntimeError('Concurrent sync updates; retry on next cycle')
