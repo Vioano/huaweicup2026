@@ -32,8 +32,8 @@
   ],
   "algorithm_id": "q2-adaptive-budget",
   "algorithm_name": "P2 structural frontier with guarded active-core choice",
-  "variant": "frozen-active-core-wave-v1",
-  "method_description": "One structural wave plan; O(log k) compute/input-traffic core choice with raw private lifetime capacity guard. No stored scores or online evaluation.",
+  "variant": "frozen-active-core-wave-v2-no-balance-split",
+  "method_description": "One structural wave plan with guarded active-core choice; component fallback defers balance-only splitting. No stored scores or online evaluation.",
   "output_prefix": "results/a/q2-nikolastarx/active-core-pilot-20260925/run/044-k4",
   "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
   "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
@@ -50,7 +50,7 @@
   "case_selection": "One shared-input core-count mechanism: 044/k4. Distinct from ee1 full500.",
   "failure_policy": "First unsuccessful or unverified attempt stops; no retry.",
   "resources": "One macOS worker, 1solver+1finalE0, 90s aggregate, sampled4GiB; wait for explicit resource release after P3. No Colab.",
-  "offline_costs": "23 targeted tests; read-only 3graph workload/capacity diagnostic0.379s. No new original-graph solver before this pilot.",
+  "offline_costs": "Prior source-development evidence is separate; this pinned 044/k4 pilot has 0 dispatch and no solver/E0 result.",
   "authors": [
     "NikolaStarx"
   ],

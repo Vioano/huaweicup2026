@@ -13,7 +13,7 @@ def wave_route(index, cores, config):
 
 def component_route(index, cores, config):
     return adaptive_frontier.component_route(index, cores, config,
-                                             wave_builder=wave_route)
+                                             wave_builder=wave_route, allow_component_split=False)
 
 
 def build(graph, cores, config):

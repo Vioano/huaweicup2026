@@ -42,9 +42,11 @@ def component_pressure(index, cores, capacity):
             'shared_external_exceeds_capacity': any(shared[p] > capacity[p] for p in capacity)}
 
 
-def component_route(index, cores, config, *, wave_builder=None):
+def component_route(index, cores, config, *, wave_builder=None, allow_component_split=True):
     pressure = component_pressure(index, cores, config['capacity'])
-    if cores > 1 and pressure['component_exceeds_balanced_pipe_work']:
+    if not allow_component_split and pressure['component_exceeds_balanced_pipe_work']:
+        pressure['component_split_deferred'] = 'compute imbalance alone omits COPY and memory costs'
+    if allow_component_split and cores > 1 and pressure['component_exceeds_balanced_pipe_work']:
         plan, detail = index.build(cores, bandwidth=config['bandwidth'],
                                   cross_core_delay=config['cross_core_copy_delay_cycles'])
         return plan, {**detail, 'selected_strategy': 'dominant_component_dag',
