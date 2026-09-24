@@ -32,6 +32,8 @@ class Engine:
         self._accepted_payload_cache=None
         self._upload_thread=None
         self._upload_status={'stage':'idle','started_at':None,'finished_at':None,'errors':[]}
+        self._receive_thread=None
+        self._receive_worker_status={'stage':'idle','started_at':None,'finished_at':None,'pending':0,'errors':[]}
 
     def sign(self,domain,payload): return self.signatures.sign(domain,self.actor,payload,self.key)
     def verify(self,envelope,domain,*,central=False):
@@ -268,7 +270,8 @@ class Engine:
                 for future in done: future.result()
         return index==len(missing)
 
-    def receive_submissions(self,head):
+    def receive_submissions(self,head,errors=None):
+        if errors is None: errors=self.errors
         inbox=Path(self.config['central']['inbox'])
         if not head: return
         tree=self.remote.tree(head)
@@ -343,11 +346,24 @@ class Engine:
             except Exception as error:
                 if verified_delivery and isinstance(error,(ValueError,KeyError,TypeError,FileNotFoundError)):
                     write_json(result_file,{'schema_version':1,'id':identity,'state':'rejected','receipt':None,'stage':'transport','error':str(error)})
-                self.errors.append({'stage':'receive','message':str(error),'submission':path})
+                errors.append({'stage':'receive','message':str(error),'submission':path})
             finally:
                 # Advance even on a partial download, rejection or transient error. A restart
                 # must give the next pending batch a turn before retrying this one.
                 write_json(progress_file,progress)
+
+    def receive_pass(self,head):
+        """Run one serialized inbox pass without holding up signed snapshot polling."""
+        errors=[];started=now()
+        self._receive_worker_status={'stage':'receive_submissions','started_at':started,
+                                     'finished_at':None,'pending':self.receive_status.get('pending',0),'errors':[]}
+        try:
+            self.receive_submissions(head,errors)
+        except Exception as error:
+            errors.append({'stage':'receive','message':str(error)})
+        finally:
+            self._receive_worker_status={'stage':'idle','started_at':started,'finished_at':now(),
+                'pending':self.receive_status.get('pending',0),'errors':errors[:20]}
 
     def outbox_counts(self):
         counts={}
@@ -359,7 +375,7 @@ class Engine:
             except (OSError,ValueError,KeyError,TypeError): pass
         return counts
 
-    def cycle(self,*,background_upload=False):
+    def cycle(self,*,background_upload=False,background_receive=False):
         self.errors=[]; status_path=self.state/'status.json'
         previous=read_json(status_path) if status_path.exists() else {}
         cycle_started=time.monotonic(); timings={}
@@ -386,8 +402,18 @@ class Engine:
             head=stage('remote_head',self.remote.head)
             if head: stage('accept_snapshot',lambda:self.accept_snapshot(head))
             if self.role=='leader':
-                stage('receive_submissions',lambda:self.receive_submissions(head))
-                status['receive']=self.receive_status
+                if background_receive:
+                    if self._receive_thread is None or not self._receive_thread.is_alive():
+                        self._receive_worker_status={'stage':'receive_submissions','started_at':now(),
+                            'finished_at':None,'pending':self.receive_status.get('pending',0),'errors':[]}
+                        self._receive_thread=threading.Thread(target=self.receive_pass,args=(head,),
+                            name='benchmark-receiver',daemon=True)
+                        self._receive_thread.start()
+                    status['receive']=dict(self.receive_status)
+                    status['receive_worker']=dict(self._receive_worker_status)
+                else:
+                    stage('receive_submissions',lambda:self.receive_submissions(head))
+                    status['receive']=self.receive_status
                 stage('publish_snapshot',lambda:self.publish_snapshot(head))
             if background_upload:
                 if self._upload_thread is None or not self._upload_thread.is_alive():

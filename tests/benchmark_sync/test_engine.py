@@ -334,3 +334,29 @@ class EngineTests(unittest.TestCase):
         finally:
             release.set()
             if member._upload_thread: member._upload_thread.join(5)
+
+    def test_slow_leader_receive_does_not_block_snapshot_publication(self):
+        leader=self.engines['leader'];entered=threading.Event();release=threading.Event()
+        heads=[];published=[]
+        def slow_receive(head,errors=None):
+            entered.set()
+            if not release.wait(5):raise RuntimeError('Test receive gate timed out')
+        def next_head():
+            value='a'*40 if not heads else 'b'*40
+            heads.append(value);return value
+        try:
+            from unittest.mock import patch
+            with patch.object(leader.remote,'head',side_effect=next_head), \
+                 patch.object(leader,'accept_snapshot'), \
+                 patch.object(leader,'receive_submissions',side_effect=slow_receive) as receive, \
+                 patch.object(leader,'publish_snapshot',side_effect=published.append):
+                first=leader.cycle(background_receive=True)
+                self.assertTrue(entered.wait(1))
+                second=leader.cycle(background_receive=True)
+                self.assertEqual(published,['a'*40,'b'*40])
+                self.assertEqual(receive.call_count,1)
+                self.assertEqual(first['state'],'online')
+                self.assertEqual(second['state'],'online')
+        finally:
+            release.set()
+            if leader._receive_thread:leader._receive_thread.join(5)
