@@ -58,3 +58,15 @@ python -X utf8 -B src/member_board_sync/audit.py `
 正式控制器和双方真实部署、成员新提交到中央签名回执再回到页面、中央新记录到成员页面、连续两次版本热更新、网络断开恢复、重复交付不增记、坏签名/历史回滚拒绝及持久防回退、软件更新失败回滚、Windows 登录自启动。静态报告 `passed` 仅限它声明的固定快照范围。
 
 P1 完整固定64统计是此前独立交付 [PR101](https://github.com/huaweibei123/huaweicup2026/pull/101)，本次没有新增求解或科学复跑。
+
+## 另发现 PR112 接收队列饥饿反例
+
+固定 `577a9a6130279acc93db8b386949a7445e22eb5b` 的 `src/benchmark_sync/engine.py`，SHA256 `484d22eed2f54449301ac4a5f29fed9d819a18917e69554ea0f7a74ac302b82b`。`receive_submissions` 每轮从相同排序开头重新验签已经有回执的提交，8 秒预算到期后直接 break，没有记录续扫位置。
+
+独立最小复现抽取并执行该固定函数，使用纯内存远端、虚拟时钟和 64 条模拟传输信封（63 个已完成回执，最后一个待处理）。每次信封读取/校核模拟 2 秒，连续 3 轮都只读相同前 3 个已完成提交；最后一个永远没被读取，errors 仍为空。**这是调度反例，不是真机传输延迟测量，也没有写入任何科研成绩。** 具体原始输出为 `receive-starvation-577a9a61.json`。
+
+```powershell
+python -X utf8 -B tests/member_board_sync/reproduce_receive_starvation.py --engine $ReviewedEnginePy
+```
+
+脚本严格核对源码 SHA，不会对其他版本冒称同一复现。建议实现带持久位置的公平续扫，或经过验签的完成项按不可变 blob 身份缓存跳过；不能仅提高单轮时间预算。修复后还应保证网络慢/大批次不能饿死其他成员提交。

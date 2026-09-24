@@ -138,16 +138,17 @@ def read_database(path):
 def audit(args):
     root = args.bootstrap
     manifest = json.loads((root / 'central/current.json').read_bytes())
-    envelope = json.loads((root / 'central/accepted-envelope.json').read_bytes())
+    envelope = manifest.get('_channel') or json.loads((root / 'central/accepted-envelope.json').read_bytes())
     signed = verify_envelope(envelope, (root / 'central-public.pem').read_bytes(), args.key_sha256)
-    require(signed == manifest, 'installed manifest differs from signed envelope')
+    public_manifest = {k: v for k, v in manifest.items() if k not in ('_channel', 'verified_at')}
+    require(signed == public_manifest, 'installed manifest differs from signed envelope')
     name = manifest['payload_file']
     require(re.fullmatch(r'snapshot-[0-9a-f]{64}\.json\.gz', name), 'unsafe payload name')
     payload = verify_snapshot(manifest, (root / 'central' / name).read_bytes())
     report = {'checked_at': datetime.now(timezone.utc).isoformat(), 'schema_version': 1,
               'scope': 'Fixed snapshot equality; not original artifact re-evaluation or live-update acceptance',
               'key_sha256': args.key_sha256, 'generation': envelope['payload']['generation'],
-              'snapshot': manifest, 'checks': {}}
+              'snapshot': public_manifest, 'checks': {}}
     checks = report['checks']
     requests = 0
     def get(path, query=None, raw=False):
