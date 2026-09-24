@@ -71,7 +71,12 @@ def _merge_heads(index, jobs):
 
 
 def build(graph, cores, config):
-    index = DAGIndex(graph)
+    return build_from_index(DAGIndex(graph), cores, config)
+
+
+def build_from_index(index, cores, config):
+    """Reuse an immutable prepared index; semantics match build(graph, ...)."""
+    graph = index.graph
     if type(cores) is not int or cores < 1:
         raise ValueError('cores must be a positive integer')
     if len(index.components) < cores:
