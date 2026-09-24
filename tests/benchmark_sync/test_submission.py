@@ -11,6 +11,11 @@ from src.benchmark_sync.submission import discover, parse_worktree_heads
 
 class SubmissionDiscoveryTests(unittest.TestCase):
     @staticmethod
+    def worktree_key(repo):
+        output=subprocess.check_output(['git','-C',str(repo),'worktree','list','--porcelain','-z'])
+        return parse_worktree_heads(output.decode('utf-8'))[0][0]
+
+    @staticmethod
     def commit(repo, message):
         subprocess.run(['git','-C',str(repo),'add','-A'],check=True,stdout=subprocess.DEVNULL)
         subprocess.run(['git','-C',str(repo),'commit','-q','-m',message],check=True)
@@ -66,7 +71,7 @@ class SubmissionDiscoveryTests(unittest.TestCase):
             self.assertEqual(len(enqueue_call.call_args_list),2)
             # A pruned or stale cursor must rescan the reachable tree, not lose
             # batches while attempting a diff against a nonexistent object.
-            write_json(state/'watch-cursors.json',{str(repo.resolve()):'0'*40})
+            write_json(state/'watch-cursors.json',{self.worktree_key(repo):'0'*40})
             with patch('src.benchmark_sync.submission.enqueue') as enqueue_call:
                 self.assertEqual(discover(state,[str(repo)],'member',known_record_ids=set()),[])
             self.assertEqual({call.args[3] for call in enqueue_call.call_args_list},
@@ -84,7 +89,7 @@ class SubmissionDiscoveryTests(unittest.TestCase):
             self.commit(repo,'first')
             with patch('src.benchmark_sync.submission.enqueue'):
                 self.assertEqual(discover(state,[str(repo)],'member',known_record_ids=set()),[])
-            cursor_key=str(repo.resolve())
+            cursor_key=self.worktree_key(repo)
             first=json.loads((state/'watch-cursors.json').read_text())[cursor_key]
             self.feed(repo/'results/board-feed-second.json',2)
             self.commit(repo,'second')
@@ -115,9 +120,17 @@ class SubmissionDiscoveryTests(unittest.TestCase):
             # An older watcher could skip this type change and advance a cursor
             # at a symlink tree. The next regular feed must still be discovered.
             symlink_head=subprocess.check_output(['git','-C',str(repo),'rev-parse','HEAD'],text=True).strip()
-            write_json(state/'watch-cursors.json',{str(repo.resolve()):symlink_head})
+            write_json(state/'watch-cursors.json',{self.worktree_key(repo):symlink_head})
             self.feed(path,1)
-            self.commit(repo,'new regular feed')
+            regular_blob=subprocess.check_output(['git','-C',str(repo),'hash-object','-w','--stdin'],
+                                                 input=path.read_bytes()).decode().strip()
+            subprocess.run(['git','-C',str(repo),'update-index','--add','--cacheinfo',
+                            f'100644,{regular_blob},results/board-feed-type.json'],check=True)
+            subprocess.run(['git','-C',str(repo),'commit','-q','-m','new regular feed'],check=True)
+            type_change=subprocess.check_output(['git','-C',str(repo),'diff','--name-status',
+                                                 symlink_head,'HEAD','--',
+                                                 'results/board-feed-type.json'],text=True)
+            self.assertTrue(type_change.startswith('T\t'),type_change)
             with patch('src.benchmark_sync.submission.enqueue') as enqueue_call:
                 self.assertEqual(discover(state,[str(repo)],'member',known_record_ids=set()),[])
             self.assertEqual(enqueue_call.call_count,1)
