@@ -105,7 +105,7 @@ def main():
                     scenarios=SCENARIOS, variants=VARIANTS, budget=BUDGET, environment=environment(),
                     parameters={VARIANTS[0]: {"packet_factor": 4, "trigger_ops": 4096, "chunk_ops": 1024},
                                 VARIANTS[1]: {"grain": 4}},
-                    preparation="Reuse Stage A/B uv sync --locked environment. Initial 14-package install reported 43.79s before A; no new training, compile, or graph-specific precomputation.",
+                    preparation="Reuse Stage A/B uv sync --locked environment. Initial 14-package install reported 43.79s before A. Author reports 14 tests and seven graph-specific in-memory construction checks on 002/008/016/024/048/051/071 before freeze (0 E0/E1/E2; their complete wall cost not recorded here), disclosed in docs/a/q1-yuanzhifang/FORK_FRONTIER.md at solver_commit. Public development panel. No training, compilation or precomputed graph products reused by these cold processes.",
                     solver_scope="Outer subprocess.run from new process launch, imports, graph/config input, all graph analysis/construction/validation, final plan and diagnostics writing to process exit. No online E0/E1/E2 calls. OS caches not flushed.",
                     evaluation_scope="Separate unmodified official E0 CLI process launch through full result, trace, text log creation and exit; outside solver wall.",
                     source_control="Both solver and runner sources checked against fixed Git objects before launch; output directory and files exclusive-create.",
