@@ -1,6 +1,6 @@
-"""Append-only benchmark ledger. No solver/evaluator execution, no third-party dependencies."""
+"""Append-only benchmark ledger. No solver/evaluator execution."""
 from __future__ import annotations
-import hashlib, json, math, sqlite3, re, gzip, io
+import hashlib, json, math, sqlite3, re, gzip, io, threading
 from collections import Counter
 from pathlib import PurePosixPath
 from datetime import datetime, timezone
@@ -46,6 +46,9 @@ class Ledger:
         (state / 'blobs').mkdir(exist_ok=True)
         self.manifest = manifest; self.calibrations = calibrations or {}
         self.expected = {f['path']: f['sha256'] for f in manifest['files']}
+        self._records_lock = threading.RLock()
+        self._records_cache_seq = None
+        self._records_cache = ()
         with self.connect() as db:
             db.executescript('''PRAGMA journal_mode=WAL;
             CREATE TABLE IF NOT EXISTS records(seq INTEGER PRIMARY KEY AUTOINCREMENT, id TEXT UNIQUE, attempt TEXT, revision INTEGER, body TEXT, UNIQUE(attempt,revision));
@@ -66,12 +69,13 @@ class Ledger:
         target = self.state / 'blobs' / spec['sha256']
         if not target.exists():
             temp = target.with_suffix('.tmp'); temp.write_bytes(data); temp.replace(target)
-        # A full 500-cell feed repeats each official single-core baseline five
-        # times. Verify every reference's bytes, then parse identical content once.
+        # Verify every reference's bytes. Only the paired denominator may use
+        # this one-object cache; retaining every full timeline would use GiB.
         if parsed is not None and spec['sha256'] in parsed:
             return parsed[spec['sha256']]
         value = read_json_blob(data, path)
         if parsed is not None:
+            parsed.clear()
             parsed[spec['sha256']] = value
         return value
     def validate(self, raw, loader, source, parsed=None):
@@ -107,11 +111,11 @@ class Ledger:
                 c=self.calibrations.get(ev.get('calibration_id'))
                 if not c or any(c.get(a)!=b for a,b in [('commit',ev['commit']),('problem',p),('config_sha256',identity['config_sha256']),('runtime_id',r.get('runtime_id'))]) or case not in c.get('cases',[]) or k not in c.get('cores',[]): raise ValueError('E1 不在队长固定校准准入范围')
             arts=r.get('artifacts',{})
-            plan=self.artifact(arts.get('plan'),loader,source,parsed)
+            plan=self.artifact(arts.get('plan'),loader,source)
             if arts['plan']['sha256']!=identity.get('plan_sha256'): raise ValueError('plan identity mismatch')
             if set(plan)!={'node_to_subgraph','core_schedules'}: raise ValueError('plan shape mismatch')
-            result=self.artifact(arts.get('result'),loader,source,parsed)
-            self.artifact(arts.get('run'),loader,source,parsed)  # real receipt bytes; semantics remain source-reported
+            result=self.artifact(arts.get('result'),loader,source)
+            self.artifact(arts.get('run'),loader,source)  # real receipt bytes; semantics remain source-reported
             if type(result.get('makespan')) is not type(metrics['makespan_cycles']) or result['makespan']!=metrics['makespan_cycles']: raise ValueError('result/makespan or number type mismatch')
             if not official_scene(result,p) or result.get('num_cores')!=k: raise ValueError('result problem/cache/scene/core mismatch')
             # Derive memory metrics from official result, never caller's prettier numbers.
@@ -158,9 +162,9 @@ class Ledger:
         batch=digest(packed({'feed':feed,'source':source}).encode())
         with self.connect() as db:
             if db.execute('SELECT 1 FROM batches WHERE id=?',(batch,)).fetchone(): return {'duplicate':True,'added':0}
-        rows=[]; parsed={}
+        rows=[]; pair_cache={}
         for raw in feed['records']:
-            rid=digest(packed(raw).encode()); r=self.validate(raw,loader,source,parsed); r['id']=rid; rows.append(r)
+            rid=digest(packed(raw).encode()); r=self.validate(raw,loader,source,pair_cache); r['id']=rid; rows.append(r)
         with self.connect() as db:
             # Another importer may have committed this batch during byte validation.
             db.execute('BEGIN IMMEDIATE')
@@ -182,8 +186,21 @@ class Ledger:
         return {'added':count,'batch':batch}
     def source_status(self, name, data):
         with self.connect() as db: db.execute('INSERT OR REPLACE INTO sources VALUES(?,?)',(name,packed(data)))
+    def _cached_records(self, db):
+        # Browser tabs poll every second. Reuse immutable normalized rows until
+        # the append-only record cursor advances; SQLite reads remain consistent.
+        seq = db.execute('SELECT COALESCE(MAX(seq),0) FROM records').fetchone()[0]
+        with self._records_lock:
+            if self._records_cache_seq != seq:
+                parse = _fast_json.loads if _fast_json is not None else json.loads
+                self._records_cache = tuple(dict(parse(x['body']),sequence=x['seq'])
+                                            for x in db.execute('SELECT seq,body FROM records ORDER BY seq'))
+                self._records_cache_seq = seq
+            return self._records_cache
     def records(self, filters=None):
-        with self.connect() as db: rows=[dict(json.loads(x['body']),sequence=x['seq']) for x in db.execute('SELECT * FROM records ORDER BY seq')]
+        with self.connect() as db:
+            db.execute('BEGIN')
+            rows = list(self._cached_records(db))
         for key,value in (filters or {}).items():
             if value not in (None,'','all'): rows=[r for r in rows if str(r.get(key))==str(value)]
         return rows
@@ -196,7 +213,8 @@ class Ledger:
                 chunk=ids[start:start+400]
                 marks=','.join('?' for _ in chunk)
                 for item in db.execute(f'SELECT seq,body FROM records WHERE id IN ({marks})',chunk):
-                    rows.append(dict(json.loads(item['body']),sequence=item['seq']))
+                    parse = _fast_json.loads if _fast_json is not None else json.loads
+                    rows.append(dict(parse(item['body']),sequence=item['seq']))
         return rows
     def compatible(self, r):
         ident=r.get('identity',{})
@@ -209,7 +227,7 @@ class Ledger:
     def snapshot(self, algorithm=None, run=None, include_reported=False):
         with self.connect() as db:
             db.execute('BEGIN')
-            rows=[dict(json.loads(x['body']),sequence=x['seq']) for x in db.execute('SELECT * FROM records ORDER BY seq')]
+            rows=self._cached_records(db)
             cursor=db.execute('SELECT COALESCE(MAX(seq),0) FROM events').fetchone()[0]
             sources={x['id']:json.loads(x['body']) for x in db.execute('SELECT * FROM sources')}
         return project_records(rows,self.manifest,cursor,sources,algorithm,run,include_reported)
