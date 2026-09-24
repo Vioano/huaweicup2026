@@ -1,0 +1,39 @@
+{
+  "commit": "741fc585c5b5e3514c32be7ac51618c399c5916b",
+  "platform": "Windows 11 / Python 3.12.14",
+  "source_files": 47,
+  "source_bytes": 399701,
+  "source_verification": "All materialized bytes matched the fixed Git tree blob hash and size.",
+  "python_initial_run": {
+    "command": "python -X utf8 -B -m unittest discover -s tests/benchmark_board -v",
+    "tests": 44,
+    "passed": 42,
+    "errors": 2,
+    "seconds": 9.976,
+    "errors_detail": [
+      "Legacy feed fixture was omitted from the thin review tree; restored from the same fixed Git revision and retested below.",
+      "test_escaping_artifact_symlink_rejected_and_unpublished_directory_ignored could not create its symlink fixture: Windows WinError1314 (privilege unavailable). This test's assertions did not run."
+    ]
+  },
+  "fixture_followup": {
+    "path": "results/benchmark-board/feeds/board-feed-initial-20260924.json",
+    "git_blob": "95e4db16e65ccbcd74c5744dd9a6ec16595d0209",
+    "size": 14349,
+    "git_bytes_verified": true,
+    "command": "python -X utf8 -B -m unittest discover -s tests/benchmark_board -v -k test_complete_template_and_legacy_real_feed",
+    "tests": 1,
+    "passed": 1,
+    "seconds": 0.034
+  },
+  "python_distinct_tests_passed": 43,
+  "python_environment_blocked_tests": 1,
+  "node": {
+    "command": "node --test tests/benchmark_board/cache_refresh.test.cjs tests/benchmark_board/detail_refresh.test.cjs",
+    "tests": 11,
+    "passed": 11,
+    "milliseconds": 778.9769
+  },
+  "javascript_syntax_check": true,
+  "production_modified": false,
+  "limitations": "Not a 44/44 Windows pass. No privilege/security settings were changed and no test assertion was bypassed. The existing symlink-escape case remains unexecuted here; the new batch/focus cases and all 11 Node cases passed. Actual deployment, browser layout, focus tabs and automatic UI update require separate evidence."
+}
