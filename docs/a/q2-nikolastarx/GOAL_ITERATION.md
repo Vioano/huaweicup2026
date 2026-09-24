@@ -64,3 +64,31 @@ under `AI chats/20260924-P2-异构流水与最优性界/`. It asks about heterog
 reentrant pipeline construction and optimality certificates. The request is
 in flight; no answer or experiment from it is yet accepted. Local falsification
 continues while it runs. Any answer needs its assumptions checked before use.
+
+## First official feedback, 2026-09-24 15:09 UTC
+
+The frozen direct pilot completed all 24 cells successfully with 24 external E0
+calls, zero online evaluations and no retries. Data commit is
+`81219bf923524fb60616e39b5ad2dced67aec3e2`; the comparison source/report is
+`debfa9f067364c5ffa6b5feef89a000c5fb631a1`. Every result, including regressions,
+is retained. Against fixed Fang the count is 16 wins / 8 losses; against the
+earlier historical snapshot it is 14 wins / 1 tie / 9 losses. The same eight-case
+k4 mean is 2.903777, below the historical mixture's 2.981852. This does not
+establish a full-suite curve or justify promoting this route everywhere.
+
+016/k4 improves 2,556,787 to 2,250,687 cycles while decreasing extra DDR by
+657,164 bytes. In contrast 025 regresses at every tested core count, and 016/k2
+spills 379,715,584 bytes. The full comparisons and identity checks are in
+`results/a/q2-nikolastarx/direct-pilot-20260924/comparison/ANALYSIS.md`.
+
+This feedback redirects the next construction toward memory pressure: preserve
+independent components within one core and bound the raw tensor frontier of
+interleaved component cohorts. Shared graph inputs can remain live across
+cohorts and must be reserved explicitly. This is a new, separately frozen
+mechanism experiment, not an extension or rerun of the 24-cell batch. Single
+connected graphs need a different treatment; a whole-component guard must not
+silently serialize them onto one core.
+
+Scale/Windows verification of stable candidates is routed through the existing
+scoreboard coordinator s7c98 for LYX/farmer. This owner keeps algorithm work and
+authorized local mechanism samples; it will not send competing member batches.
