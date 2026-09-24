@@ -141,6 +141,9 @@ def construct(index, cores):
     """Return a legal plan preserving Index.assignment ownership and IDs."""
     if type(cores) is not int or not 1 <= cores <= 5:
         raise ValueError("official requested cores must be 1..5")
+    if (len(index.components) < 2 or any(len(index.succ[u]) > 1 for u in index.ops)
+            or not any(len(index.pred[u]) > 1 for u in index.ops)):
+        raise UnsupportedStructure("requires multiple reduction trees with a join and no fanout")
     tensors, output_tensors, records, joined_nodes = _original_tree(index)
     assignment = index.assignment(cores)
     component_for = {u: cid for cid, component in enumerate(index.components) for u in component}
