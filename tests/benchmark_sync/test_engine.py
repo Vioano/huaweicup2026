@@ -7,7 +7,7 @@ import tempfile
 import threading
 import unittest
 from src.benchmark_sync.engine import Engine, write_json, read_json
-from src.benchmark_sync.snapshot import canonical, digest
+from src.benchmark_sync.snapshot import canonical, digest, snapshot_id, unpack
 from src.benchmark_sync.snapshot import publish_files, read_central
 from src.benchmark_sync.signing import Signatures
 from src.benchmark_sync.github import RemoteError
@@ -20,8 +20,9 @@ class Remote:
     def tree(self,commit): return {p:{'sha':hashlib.sha1(b'blob '+str(len(v)).encode()+b'\0'+v).hexdigest()} for p,v in self.commits[commit].items()}
     def read(self,commit,path):
         if path==self.fail_path: raise RemoteError(503)
-        if path not in self.commits[commit]: raise FileNotFoundError(path)
+        if commit not in self.commits or path not in self.commits[commit]: raise FileNotFoundError(path)
         return self.commits[commit][path]
+    def read_path(self,commit,path): return self.read(commit,path)
     def update(self,files,parents=(),expected=None,branch=None):
         head=self.current if branch is None else self.branches.get(branch)
         values=dict(self.commits.get(head,{}));values.update(files)
@@ -36,6 +37,21 @@ class Remote:
     def request(self,method,path):
         if path.rsplit('/',1)[-1] not in self.commits: raise RemoteError(404)
         return {}
+
+
+def snapshot_payload(count):
+    records=[{'id':f'{i:064x}','attempt_id':f'attempt-{i}','revision':1,
+              'problem':'P1','case_id':'001','cores':1,'metrics':{'makespan_cycles':i},
+              'eligible':True,'sequence':i} for i in range(1,count+1)]
+    payload={'schema_version':1,'generated_at':f'2026-09-24T20:00:{count:02d}+00:00',
+             'central_url':'https://github.com/test/repository','sequence':count,
+             'records':records,'source_status':{},'manifest':{},'algorithms':{},
+             'publisher':{'actor':'leader','board_code_commit':'a'*40}}
+    payload['record_count']=count
+    payload['record_ids_sha256']=digest(('\n'.join(sorted(r['id'] for r in records))+'\n').encode())
+    payload['records_sha256']=digest(canonical(records))
+    payload['snapshot_id']=snapshot_id(payload)
+    return payload
 
 class EngineTests(unittest.TestCase):
     def setUp(self):
@@ -571,6 +587,151 @@ class EngineTests(unittest.TestCase):
             file.write_bytes(file.read_bytes()+b'x')
             with self.assertRaisesRegex(ValueError,'compressed bytes/hash'):
                 self.engines['member'].accepted_payload(manifest)
+
+    def test_signed_delta_arrives_before_full_snapshot_and_full_catches_up(self):
+        from unittest.mock import patch
+        leader=self.engines['leader'];member=self.engines['member']
+        base=snapshot_payload(1);base_manifest=publish_files(base,self.root/'base-published')
+        base_object='objects/'+base_manifest['payload_sha256']
+        base_channel={'generation':1,'manifest':base_manifest,'object':base_object}
+        self.remote.update({base_object:(self.root/'base-published'/base_manifest['payload_file']).read_bytes(),
+                            'channels/central.json':canonical(leader.sign('snapshot',base_channel))})
+        member.accept_snapshot(self.remote.head())
+        target=snapshot_payload(2);target_manifest=publish_files(target,self.root/'target-published')
+        leader.publish_fast_delta(self.remote.head(),base_channel,base,target,target_manifest)
+        fast_head=self.remote.head()
+        member.accept_snapshot(fast_head)  # The old full channel cannot undo the newer fast target.
+        member.accept_fast_snapshot(fast_head)
+        current=read_json(member.state/'accepted/current.json')
+        self.assertEqual(current['snapshot_id'],target['snapshot_id'])
+        self.assertIn('_fast_channel',current)
+        self.assertEqual(unpack((member.state/'accepted'/current['payload_file']).read_bytes(),current),target)
+        # A second small update can remain cumulative against the same full
+        # base while the first large full upload is still pending.
+        target=snapshot_payload(3);target_manifest=publish_files(target,self.root/'third-published')
+        leader.publish_fast_delta(self.remote.head(),base_channel,base,target,target_manifest)
+        member.accept_fast_snapshot(self.remote.head())
+        self.assertEqual(read_json(member.state/'accepted/current.json')['record_count'],3)
+        target_object='objects/'+target_manifest['payload_sha256']
+        full={'generation':2,'manifest':target_manifest,'object':target_object}
+        self.remote.update({target_object:(self.root/'third-published'/target_manifest['payload_file']).read_bytes(),
+                            'channels/central.json':canonical(leader.sign('snapshot',full))})
+        original_read=self.remote.read
+        def no_full_download(commit,path):
+            if path==target_object: raise AssertionError('Full snapshot was unnecessarily downloaded')
+            return original_read(commit,path)
+        with patch.object(self.remote,'read',side_effect=no_full_download):
+            member.accept_snapshot(self.remote.head())
+        self.assertIn('_channel',read_json(member.state/'accepted/current.json'))
+
+    def test_fast_snapshot_rejects_tampered_delta_without_changing_current(self):
+        leader=self.engines['leader'];member=self.engines['member']
+        base=snapshot_payload(1);base_manifest=publish_files(base,self.root/'base-published')
+        base_object='objects/'+base_manifest['payload_sha256']
+        base_channel={'generation':1,'manifest':base_manifest,'object':base_object}
+        self.remote.update({base_object:(self.root/'base-published'/base_manifest['payload_file']).read_bytes(),
+                            'channels/central.json':canonical(leader.sign('snapshot',base_channel))})
+        member.accept_snapshot(self.remote.head())
+        original=(member.state/'accepted/current.json').read_bytes()
+        target=snapshot_payload(2);manifest=publish_files(target,self.root/'target-published')
+        leader.publish_fast_delta(self.remote.head(),base_channel,base,target,manifest)
+        fast,_=leader.channel(self.remote.head(),'fast','snapshot-delta')
+        self.remote.update({fast['delta_object']:b'tampered'})
+        with self.assertRaisesRegex(ValueError,'bytes/hash'):
+            member.accept_fast_snapshot(self.remote.head())
+        self.assertEqual((member.state/'accepted/current.json').read_bytes(),original)
+        target_object='objects/'+manifest['payload_sha256']
+        self.remote.update({target_object:(self.root/'target-published'/manifest['payload_file']).read_bytes(),
+                            'channels/central.json':canonical(leader.sign('snapshot',
+                                {'generation':2,'manifest':manifest,'object':target_object}))})
+        status=member.cycle()
+        self.assertEqual(status['error']['stage'],'fast_snapshot')
+        self.assertEqual(read_json(member.state/'accepted/current.json')['snapshot_id'],target['snapshot_id'])
+
+    def test_member_cycle_uses_fast_delta_when_full_channel_is_already_new(self):
+        from unittest.mock import patch
+        leader=self.engines['leader'];member=self.engines['member']
+        base=snapshot_payload(1);base_manifest=publish_files(base,self.root/'base-published')
+        base_object='objects/'+base_manifest['payload_sha256']
+        base_channel={'generation':1,'manifest':base_manifest,'object':base_object}
+        self.remote.update({base_object:(self.root/'base-published'/base_manifest['payload_file']).read_bytes(),
+                            'channels/central.json':canonical(leader.sign('snapshot',base_channel))})
+        member.accept_snapshot(self.remote.head())
+        target=snapshot_payload(2);manifest=publish_files(target,self.root/'target-published')
+        leader.publish_fast_delta(self.remote.head(),base_channel,base,target,manifest)
+        target_object='objects/'+manifest['payload_sha256']
+        self.remote.update({target_object:(self.root/'target-published'/manifest['payload_file']).read_bytes(),
+                            'channels/central.json':canonical(leader.sign('snapshot',
+                                {'generation':2,'manifest':manifest,'object':target_object}))})
+        original_read=self.remote.read
+        def no_full_download(commit,path):
+            if path==target_object: raise AssertionError('Full snapshot download preceded the fast delta')
+            return original_read(commit,path)
+        with patch.object(self.remote,'read',side_effect=no_full_download):
+            status=member.cycle()
+        self.assertEqual(status['state'],'online')
+        self.assertEqual(read_json(member.state/'accepted/current.json')['snapshot_id'],target['snapshot_id'])
+        self.assertIn('_channel',read_json(member.state/'accepted/current.json'))
+
+    def test_fast_delta_accepts_cross_platform_gzip_header_difference(self):
+        from unittest.mock import patch
+        import gzip
+        leader=self.engines['leader'];member=self.engines['member']
+        base=snapshot_payload(1);base_manifest=publish_files(base,self.root/'base-published')
+        base_object='objects/'+base_manifest['payload_sha256']
+        base_channel={'generation':1,'manifest':base_manifest,'object':base_object}
+        self.remote.update({base_object:(self.root/'base-published'/base_manifest['payload_file']).read_bytes(),
+                            'channels/central.json':canonical(leader.sign('snapshot',base_channel))})
+        member.accept_snapshot(self.remote.head())
+        target=snapshot_payload(2);manifest=publish_files(target,self.root/'target-published')
+        leader.publish_fast_delta(self.remote.head(),base_channel,base,target,manifest)
+        full_object='objects/'+manifest['payload_sha256']
+        self.remote.update({full_object:(self.root/'target-published'/manifest['payload_file']).read_bytes(),
+                            'channels/central.json':canonical(leader.sign('snapshot',
+                                {'generation':2,'manifest':manifest,'object':full_object}))})
+        original_compress=gzip.compress
+        def other_os_header(raw,mtime=0):
+            data=original_compress(raw,mtime=mtime)
+            return data[:9]+bytes([data[9]^1])+data[10:]
+        original_read=self.remote.read
+        def no_full_download(commit,path):
+            if path==full_object: raise AssertionError('Full snapshot download hid cross-platform delta')
+            return original_read(commit,path)
+        with patch('src.benchmark_sync.engine.gzip.compress',side_effect=other_os_header), \
+             patch.object(self.remote,'read',side_effect=no_full_download):
+            status=member.cycle()
+        self.assertEqual(status['state'],'online')
+        current=read_json(member.state/'accepted/current.json')
+        self.assertEqual(current['snapshot_id'],target['snapshot_id'])
+        self.assertNotEqual(current['payload_sha256'],manifest['payload_sha256'])
+        self.assertIn('_fast_channel',current)
+        self.assertEqual(unpack((member.state/'accepted'/current['payload_file']).read_bytes(),current),target)
+
+    def test_fast_snapshot_detects_locally_rewritten_unsigned_status_timestamp(self):
+        import gzip
+        leader=self.engines['leader'];member=self.engines['member']
+        base=snapshot_payload(1);base_manifest=publish_files(base,self.root/'base-published')
+        base_object='objects/'+base_manifest['payload_sha256']
+        base_channel={'generation':1,'manifest':base_manifest,'object':base_object}
+        self.remote.update({base_object:(self.root/'base-published'/base_manifest['payload_file']).read_bytes(),
+                            'channels/central.json':canonical(leader.sign('snapshot',base_channel))})
+        member.accept_snapshot(self.remote.head())
+        target=snapshot_payload(2)
+        target['source_status']={'feed':{'checked_at':'2026-09-24T20:00:01+00:00'}}
+        target['snapshot_id']=snapshot_id(target)
+        manifest=publish_files(target,self.root/'target-published')
+        leader.publish_fast_delta(self.remote.head(),base_channel,base,target,manifest)
+        member.accept_fast_snapshot(self.remote.head())
+        current_path=member.state/'accepted/current.json'
+        current=read_json(current_path)
+        altered=member.accepted_payload(current).copy()
+        altered['source_status']={'feed':{'checked_at':'2026-09-24T20:00:02+00:00'}}
+        self.assertEqual(snapshot_id(altered),target['snapshot_id'])
+        compressed=gzip.compress(canonical(altered),mtime=0)
+        (member.state/'accepted'/current['payload_file']).write_bytes(compressed)
+        write_json(current_path,dict(current,payload_sha256=digest(compressed),payload_size=len(compressed)))
+        with self.assertRaisesRegex(ValueError,'signed canonical content'):
+            member.accept_snapshot(self.remote.head())
 
     def test_slow_upload_does_not_block_next_signed_snapshot_poll(self):
         from unittest.mock import patch

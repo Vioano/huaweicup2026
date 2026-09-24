@@ -6,6 +6,7 @@ import tempfile
 import unittest
 
 from src.benchmark_sync.snapshot import publish_files, read_central, unpack, validate_payload, canonical, digest, snapshot_id
+from src.benchmark_sync.delta import pack_delta, unpack_delta
 
 
 class SnapshotTests(unittest.TestCase):
@@ -38,6 +39,24 @@ class SnapshotTests(unittest.TestCase):
         self.assertTrue(publish_files(self.read(), output)["unchanged"])
         self.add(2)
         self.assertEqual(publish_files(self.read(), output)["record_count"], 2)
+
+    def test_delta_reconstructs_exact_append_and_rejects_wrong_base(self):
+        base=self.read();self.add(2);target=self.read()
+        data=pack_delta(base,target)
+        self.assertEqual(unpack_delta(base,data),target)
+        self.assertIsNone(pack_delta(target,target))
+        with self.assertRaisesRegex(ValueError,'base or shape'):
+            unpack_delta(target,data)
+        forged=bytearray(data);forged[-5]^=1
+        with self.assertRaises(ValueError): unpack_delta(base,bytes(forged))
+
+    def test_delta_cannot_rewrite_old_record(self):
+        base=self.read();self.add(2);target=self.read()
+        target['records'][0]['metrics']['makespan_cycles']=900
+        target['records_sha256']=digest(canonical(target['records']))
+        target['snapshot_id']=snapshot_id(target)
+        with self.assertRaisesRegex(ValueError,'rewrote'):
+            pack_delta(base,target)
 
     def test_missing_history_cannot_replace_last_good(self):
         output = self.root / "published"

@@ -1,5 +1,6 @@
 """Non-LLM durable bidirectional synchronization. The board remains the sole ledger writer."""
 from __future__ import annotations
+import gzip
 import json
 import re
 from pathlib import Path
@@ -13,9 +14,16 @@ from .github import fixed_sha, path_ok, RemoteError, MAX_FILE
 from .snapshot import (atomic_write, canonical, digest, now, read_central, publish_files,
                        unpack, reject_history_regression, payload_name, git_json)
 from .submission import discover, references, MAX_FEED
+from .delta import pack_delta, unpack_delta
 
 OUTBOX_PUBLISH_BATCH_SIZE = 16
 OUTBOX_RECEIPT_CHECK_BATCH_SIZE = 16
+SNAPSHOT_SEMANTIC_FIELDS = ('schema_version','generated_at','sequence','snapshot_id',
+                            'record_count','record_ids_sha256','records_sha256','publisher','payload_file','decoded_size')
+
+
+def same_snapshot_semantics(left,right):
+    return all(left.get(key)==right.get(key) for key in SNAPSHOT_SEMANTIC_FIELDS)
 
 
 def submission_lane(actor):
@@ -74,6 +82,10 @@ class Engine:
         if self._accepted_cache_key==key and self._accepted_payload_cache is not None:
             return self._accepted_payload_cache
         payload=unpack(data,manifest)
+        if '_fast_channel' in manifest:
+            fast=self.verify(manifest['_fast_channel'],'snapshot-delta',central=True)
+            if digest(canonical(payload))!=fast.get('target_canonical_sha256'):
+                raise ValueError('Accepted fast snapshot differs from signed canonical content')
         self._accepted_cache_key=key;self._accepted_payload_cache=payload
         return payload
 
@@ -88,6 +100,26 @@ class Engine:
         if channel is None: return
         output=self.state/'accepted'; current=output/'current.json'
         previous=read_json(current) if current.exists() else None
+        if previous and '_fast_channel' in previous:
+            fast=self.verify(previous['_fast_channel'],'snapshot-delta',central=True)
+            if (set(previous)!=(set(fast['target_manifest'])|{'_fast_channel','verified_at'}) or
+                    not same_snapshot_semantics(previous,fast['target_manifest'])):
+                raise ValueError('Accepted fast snapshot metadata does not match its signed channel')
+            manifest=channel['manifest']
+            if channel['generation']<fast['base_generation']:
+                raise ValueError('Full snapshot generation rollback behind fast base')
+            if channel['generation']==fast['base_generation'] and manifest!=fast['base_manifest']:
+                raise ValueError('Full snapshot base generation reused for different content')
+            if channel['generation']==fast['base_generation'] or manifest['sequence']<previous['sequence']:
+                self.accepted_payload(previous)
+                return
+            if manifest['sequence']==previous['sequence'] and manifest['records_sha256']!=previous['records_sha256']:
+                raise ValueError('Full snapshot rewrote fast accepted records')
+            if same_snapshot_semantics(manifest,previous):
+                self.accepted_payload(previous)
+                if manifest=={k:v for k,v in previous.items() if k not in ('_fast_channel','verified_at')}:
+                    write_json(current,dict(manifest,_channel=envelope,verified_at=now()))
+                return
         if previous and '_channel' in previous:
             prior=self.verify(previous['_channel'],'snapshot',central=True)
             if previous!=dict(prior['manifest'],_channel=previous['_channel'],verified_at=previous.get('verified_at')):
@@ -113,6 +145,70 @@ class Engine:
         write_json(current,dict(manifest,_channel=envelope,verified_at=now()))
         self._accepted_cache_key=(manifest.get('payload_sha256'),manifest.get('payload_size'),manifest.get('snapshot_id'))
         self._accepted_payload_cache=payload
+
+    def accept_fast_snapshot(self,head):
+        """Install a signed small change while the full object is still uploading."""
+        fast,envelope=self.channel(head,'fast','snapshot-delta')
+        if fast is None: return
+        if fast.get('schema_version')!=1 or type(fast.get('base_generation')) is not int or fast['base_generation']<1:
+            raise ValueError('Invalid fast snapshot channel')
+        base_manifest=fast.get('base_manifest');target_manifest=fast.get('target_manifest')
+        if not isinstance(base_manifest,dict) or not isinstance(target_manifest,dict):
+            raise ValueError('Fast snapshot manifests missing')
+        base_object=path_ok(fast.get('base_object'));delta_object=path_ok(fast.get('delta_object'))
+        if base_object!='objects/'+base_manifest.get('payload_sha256','') or delta_object!='deltas/'+fast.get('delta_sha256','')+'.json.gz':
+            raise ValueError('Fast snapshot object identity mismatch')
+        if type(fast.get('delta_size')) is not int or fast['delta_size']<1:
+            raise ValueError('Fast snapshot delta size invalid')
+        output=self.state/'accepted';current=output/'current.json'
+        previous=read_json(current) if current.exists() else None
+        if previous and '_fast_channel' in previous:
+            prior=self.verify(previous['_fast_channel'],'snapshot-delta',central=True)
+            if fast['generation']<prior['generation'] or (fast['generation']==prior['generation'] and fast!=prior):
+                raise ValueError('Fast snapshot generation rollback')
+        if previous:
+            if previous['sequence']>target_manifest['sequence']:
+                self.accepted_payload(previous);return
+            if (previous['sequence']==target_manifest['sequence'] and
+                    previous['records_sha256']!=target_manifest['records_sha256']):
+                raise ValueError('Fast snapshot rewrote accepted records')
+            if '_channel' in previous:
+                full=self.verify(previous['_channel'],'snapshot',central=True)
+                if full['generation']>fast['base_generation'] and previous['sequence']>=target_manifest['sequence']:
+                    self.accepted_payload(previous);return
+            if previous['snapshot_id']==target_manifest['snapshot_id']:
+                self.accepted_payload(previous);return
+        base_path=output/payload_name(base_manifest)
+        if previous and previous['snapshot_id']==base_manifest.get('snapshot_id'):
+            base=self.accepted_payload(previous)
+        elif base_path.exists():
+            try: base=unpack(base_path.read_bytes(),base_manifest)
+            except ValueError:
+                data=self.remote.read_path(head,base_object)
+                base=unpack(data,base_manifest)
+                atomic_write(base_path,data)
+        else:
+            data=self.remote.read_path(head,base_object)
+            base=unpack(data,base_manifest)
+            atomic_write(base_path,data)
+        delta=self.remote.read_path(head,delta_object)
+        if len(delta)!=fast['delta_size'] or digest(delta)!=fast['delta_sha256']:
+            raise ValueError('Fast snapshot delta bytes/hash mismatch')
+        target=unpack_delta(base,delta)
+        raw=canonical(target)
+        if digest(raw)!=fast.get('target_canonical_sha256'):
+            raise ValueError('Fast snapshot canonical content mismatch')
+        compressed=gzip.compress(raw,mtime=0)
+        if target['snapshot_id']!=target_manifest.get('snapshot_id'):
+            raise ValueError('Fast snapshot target identity mismatch')
+        local_manifest=dict(target_manifest,payload_sha256=digest(compressed),payload_size=len(compressed))
+        if unpack(compressed,local_manifest)!=target:
+            raise ValueError('Fast snapshot reconstruction mismatch')
+        if previous: reject_history_regression(self.accepted_payload(previous),target)
+        atomic_write(output/payload_name(local_manifest),compressed)
+        write_json(current,dict(local_manifest,_fast_channel=envelope,verified_at=now()))
+        self._accepted_cache_key=(local_manifest['payload_sha256'],local_manifest['payload_size'],local_manifest['snapshot_id'])
+        self._accepted_payload_cache=target
 
     def publish_snapshot(self,head):
         previous,envelope=self.channel(head,'central','snapshot') if head else (None,None)
@@ -141,11 +237,37 @@ class Engine:
             if old['snapshot_id']==payload['snapshot_id']: return
         manifest=publish_files(payload,self.state/'published')
         manifest={k:v for k,v in manifest.items() if k!='unchanged'}
+        if previous:
+            self.publish_fast_delta(head,previous,old,payload,manifest)
         path='objects/'+manifest['payload_sha256']
         channel={'generation':(previous['generation']+1 if previous else 1),'manifest':manifest,'object':path}
         self.remote.update({path:(self.state/'published'/payload_name(manifest)).read_bytes(),
                             'channels/central.json':canonical(self.sign('snapshot',channel))},
                            expected={'channels/central.json':canonical(envelope) if envelope else None})
+
+    def publish_fast_delta(self,head,base_channel,base_payload,target,manifest):
+        """Publish a small signed change before the legacy full object upload."""
+        data=pack_delta(base_payload,target)
+        if data is None: return
+        prior,prior_envelope=self.channel(head,'fast','snapshot-delta') if head else (None,None)
+        if prior:
+            prior_manifest=prior.get('target_manifest',{})
+            if prior_manifest.get('sequence',-1)>manifest['sequence']:
+                raise ValueError('Fast snapshot sequence rollback')
+            if (prior_manifest.get('sequence')==manifest['sequence'] and
+                    prior_manifest.get('records_sha256')!=manifest['records_sha256']):
+                raise ValueError('Fast snapshot rewrote records at the same sequence')
+            if prior_manifest==manifest: return
+        object_path='deltas/'+digest(data)+'.json.gz'
+        fast={'schema_version':1,'generation':prior['generation']+1 if prior else 1,
+              'base_generation':base_channel['generation'],
+              'base_manifest':base_channel['manifest'],'base_object':base_channel['object'],
+              'target_manifest':manifest,'delta_object':object_path,
+              'delta_sha256':digest(data),'delta_size':len(data),
+              'target_canonical_sha256':digest(canonical(target))}
+        self.remote.update({object_path:data,
+                            'channels/fast.json':canonical(self.sign('snapshot-delta',fast))},
+                           expected={'channels/fast.json':canonical(prior_envelope) if prior_envelope else None})
 
     @staticmethod
     def _local_commit_files(repo,commit,paths,max_bytes=128*1024*1024):
@@ -699,7 +821,16 @@ class Engine:
                 write_json(status_path,status)
         try:
             head=stage('remote_head',self.remote.head)
+            had_accepted=(self.state/'accepted/current.json').exists()
+            if head and self.role!='leader' and had_accepted:
+                try: stage('accept_fast_snapshot',lambda:self.accept_fast_snapshot(head))
+                except Exception as error:
+                    self.errors.append({'stage':'fast_snapshot','message':str(error)})
             if head: stage('accept_snapshot',lambda:self.accept_snapshot(head))
+            if head and self.role!='leader' and not had_accepted:
+                try: stage('accept_fast_snapshot',lambda:self.accept_fast_snapshot(head))
+                except Exception as error:
+                    self.errors.append({'stage':'fast_snapshot','message':str(error)})
             if self.role=='leader':
                 if background_receive:
                     if self._receive_thread is None or not self._receive_thread.is_alive():
