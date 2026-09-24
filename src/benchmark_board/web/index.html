@@ -1,10 +1,19 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>方案成绩台 · Huawei Cup</title><link rel="stylesheet" href="/style.css"><script defer src="/app.js"></script></head><body>
 <header><div class="brand"><span class="mark">▦</span><div><span class="eyebrow">HUAWEI CUP · RESEARCH OBSERVATORY</span><h1>方案成绩台</h1></div></div><div class="header-copy"><h2>每一次改进，都有来处。</h2><p>三个问题 · 100 个算例 · 1–5 核。<br>保留历史，持续接收，查看当前最优。</p></div><div id="counts" aria-live="polite"></div><div class="topright"><span id="connection" role="status">连接中</span><a href="/agent" target="_blank">Agent 接口 ↗</a><a href="/protocol">交付协议 ↗</a><button id="theme" aria-label="切换浅色模式">☀</button></div></header>
+<nav id="focus-nav" hidden aria-label="题目导航"><a href="/" target="_blank" rel="noopener">方案成绩台总览 ↗</a><strong id="focus-title"></strong><div><a href="/?problem=P1">P1</a><a href="/?problem=P2">P2</a><a href="/?problem=P3">P3</a></div></nav>
 <section class="toolbar" aria-label="成绩筛选"><label>显示指标<select id="metric"><option value="makespan_cycles">Makespan · 周期 ↓</option><option value="baseline_speedup" selected>相对官方单核 · × ↑</option><option value="solver_wall_seconds">求解耗时 · 秒 ↓</option><option value="evaluation_wall_seconds">外部复评耗时 · 秒 ↓</option><option value="ddr_bytes">调度搬运 · 字节 ↓</option><option value="extra_ddr_bytes">额外搬运 · 字节 ↓</option><option value="spill_bytes">溢出搬运 · 字节 ↓</option><option value="cache_gain">P3 Cache 对照 · 打开面板 ↗</option><option value="cache_hit_rate">P3 字节命中率 · 打开面板 ↗</option></select></label><label>算法<select id="algorithm"><option value="">历史最优组合</option></select></label><label>实验批次<select id="run"><option value="">所有已接收批次</option></select></label><label>算例<input id="search" type="search" placeholder="001 或 001–025" aria-label="筛选算例编号"></label><label class="check"><input id="reported" type="checkbox">预览仅报告数据</label><button id="refresh">刷新</button></section>
 <div id="mode-banner" class="mode-banner" role="status" hidden></div>
 <div class="notice"><span class="dot"></span><span id="selection-note">按 Makespan 最低选择方案；切换指标仍展示同一方案。历史最优组合不是单一算法的全量成绩。列均值按当前筛选逐例算术平均，仅计原件已核且指标完整的样本。</span></div>
 <section class="legend"><span id="metric-label">相对官方单核 / ×</span><span id="scale-ticks" class="scale-ticks"></span><span id="scale-note"></span><span class="rank-key"><i></i>格底细条：同题同核的数值分位，越长数值越大</span><span class="quiet">灰色 = 未测 / 缺项 · ! = 失败 · 虚线 = 仅报告</span></section>
-<main><div id="boards" aria-label="三问题热力成绩表"></div><aside id="detail" hidden aria-label="方案与历史"></aside></main>
+<main><section id="batch-panel" class="batch-browser" aria-labelledby="batch-title" hidden>
+<div class="batch-heading"><h2 id="batch-title">本题全部批次</h2><button id="batch-retry" aria-label="更新批次列表">更新</button></div>
+<div class="batch-controls"><label>比较核数<select id="batch-cores"><option value="1">1 核</option><option value="2">2 核</option><option value="3">3 核</option><option value="4">4 核</option><option value="5" selected>5 核</option></select></label><label>展示<select id="batch-filter"><option value="all">所有批次</option><option value="top">优秀批次 · 完整前三</option></select></label></div>
+<label class="batch-search-label">查找批次或算法<input id="batch-search" type="search" placeholder="批次名称 / 算法 / 源码版本"></label>
+<div id="batch-scope"></div><p id="batch-status" role="status">正在读取本题批次…</p>
+<button id="history-view" aria-pressed="true">历史最优组合 · 跨批次逐格选优</button>
+<div id="batch-results" class="batch-results" aria-label="选择本题批次"></div>
+<p class="batch-footnote">优秀批次按相同核数、相同算例范围的平均单核加速比排名。缺例不补值；未完整与混合来源不参与排名。求解时间单列。</p>
+</section><div id="boards" aria-label="三问题热力成绩表"></div><aside id="detail" hidden role="dialog" aria-modal="false" aria-labelledby="detail-title"></aside></main>
 <dialog id="cache-dialog" aria-labelledby="cache-title"></dialog>
 <footer><details><summary>接收状态与数据边界 <span id="source-summary"></span></summary><div id="sources"></div><p id="polling-note">页面每 5 秒检查本地变化；指定 Git 分支每 120 秒检查已发布的数据包。收信、实际运行、数据发布、原件核对和算法验收是不同状态。没有启动任何求解器或评估器。</p><p>默认排名仅接收当前冻结图、配置、官方源码身份且原件匹配的 E0，或明确准入的 E1。E2 不参与排名。原件核对不等于重新执行或正式算法终验。</p></details><span id="freshness"></span></footer>
 </body></html>

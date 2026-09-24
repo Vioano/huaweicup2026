@@ -4,7 +4,7 @@ import argparse, fnmatch, json, html, mimetypes, re, subprocess, threading, time
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
-from core import Ledger, now, packed, sha, safe_path, MAX_BLOB, digest
+from core import Ledger, now, packed, sha, safe_path, MAX_BLOB, digest, batch_candidates
 
 ROOT=Path(__file__).resolve().parents[2]
 WEB=Path(__file__).parent/'web'
@@ -53,11 +53,13 @@ def sync_once(ledger,repo,sources,on_progress=None):
         finally:
             if on_progress: on_progress()
 
-def ui_bundle():
+def ui_bundle(problem=None):
     files={name:(WEB/name).read_bytes() for name in ('index.html','app.js','style.css')}
     hashes={name:digest(data) for name,data in files.items()}
     asset_id=digest(packed(hashes).encode())
     rendered=files['index.html'].replace(b'</head>',f'<meta name="board-assets" content="{asset_id}"></head>'.encode(),1)
+    if problem in ('P1','P2','P3'):
+        rendered=rendered.replace(b'<html lang="zh-CN">',f'<html lang="zh-CN" data-problem="{problem}">'.encode(),1)
     return rendered,{'ui_asset_id':asset_id,'file_hashes':hashes,'served_html_sha256':digest(rendered)}
 
 def sync_state(path):
@@ -102,6 +104,9 @@ def make_handler(ledger,sync_status=None):
                     for key in ('problem','case_id','cores'):
                         if q.get(key): data['cells']=[c for c in data['cells'] if str(c[key])==q[key]]
                     return self.send(annotate(data))
+                if path=='/api/v1/batches':
+                    cases=q['cases'].split(',') if 'cases' in q else [f'{n:03d}' for n in range(1,101)]
+                    return self.send(batch_candidates(ledger.records(),q.get('problem','P1'),int(q.get('cores',5)),cases))
                 if path=='/api/v1/events':
                     after=max(0,int(q.get('after',0)));deadline=time.monotonic()+min(25,max(0,int(q.get('wait',0))))
                     while True:
@@ -134,7 +139,7 @@ def make_handler(ledger,sync_status=None):
                     return self.send((ledger.state/'blobs'/key).read_bytes(),ctype='application/octet-stream',headers={'Content-Disposition':'attachment; filename="'+key+'"'})
                 files={'/':'index.html','/app.js':'app.js','/style.css':'style.css','/agent':'agent.html'}
                 if path in files:
-                    if path=='/': return self.send(ui_bundle()[0],ctype='text/html; charset=utf-8')
+                    if path=='/': return self.send(ui_bundle(q.get('problem'))[0],ctype='text/html; charset=utf-8')
                     f=WEB/files[path];return self.send(f.read_bytes(),ctype={'html':'text/html; charset=utf-8','js':'text/javascript; charset=utf-8','css':'text/css; charset=utf-8'}[f.suffix[1:]])
                 self.send({'error':'not found'},404)
             except (ValueError,KeyError) as e: self.send({'error':str(e)},400)

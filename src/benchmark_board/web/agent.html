@@ -1,5 +1,6 @@
 <!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Agent interface · 方案成绩台</title><link rel="stylesheet" href="/style.css"><body class="agent"><a href="/">← 方案成绩台</a><h1>Agent interface / v1</h1><p>与网页共用同一份追加式成绩库。HTTP 只读；无工具执行、求解或评价副作用。</p><h2>发现与查询</h2><pre>GET /api/v1/health
 GET /api/v1/catalog
+GET /api/v1/batches?problem=P1&amp;cores=5&amp;cases=001,002,003
 GET /api/v1/schema
 GET /api/v1/cells?problem=P1&amp;case_id=002&amp;cores=4
 GET /api/v1/cells?algorithm=q1-bounded-search&amp;run=RUN_ID
