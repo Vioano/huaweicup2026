@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import argparse
 import fcntl
+import gc
 from datetime import datetime, timezone
 import json
 import os
@@ -202,6 +203,10 @@ def watch(args):
             if summary['status'] != 'completed' or done != 500:
                 raise ValueError(f'Scoring summary stopped: {summary["status"]}; accepted={done}')
             return
+        # Do not retain a multi-GB decoded trace between polls, or while the
+        # next snapshot is decoded. All durable progress is in the journal.
+        del prefix, summary
+        gc.collect()
         time.sleep(5)
 
 
