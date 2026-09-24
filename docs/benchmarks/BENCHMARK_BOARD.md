@@ -107,6 +107,9 @@ python3 src/benchmark_board/app.py --state output/benchmark-board serve --port 5
 
 网页与 Agent 同数据/同选择器，HTTP 只读，无 POST 执行入口。发现页 `/agent`，机器 schema `/api/v1/schema`。
 
+- `GET /api/v1/runtime` 返回实际提供的UI资源指纹、各文件SHA256、实际HTML响应SHA256与独立同步器的software状态。`ui_asset_id = sha256(packed({"index.html":sha256(原文件),"app.js":sha256(原文件),"style.css":sha256(原文件)}).encode())`，packed与账本相同，UTF-8、排序键、无多余空白。根HTML在第一个`</head>`前插入`<meta name="board-assets" content="<ui_asset_id>">`，JS/CSS原字节不改。监督器应依据受信发布包本机字节复算指纹/实际渲染HTML，不把服务自报hash当发布者认证；每个release目录保持不可变。
+- 页面每5秒比较当前文档标记和实际资源指纹；新版已在本机提供时保存查看状态到当前站点sessionStorage并重载。恢复指标、算法/run、算例筛选、报告预览、详情、三表滚动和Cache面板，失败的版本请求不会丢弃当前页面。生产与镜像模式都可读`--sync-status`，但网页不下载代码或控制服务进程。已打开的旧版页面若尚不含此检测逻辑，首次安装新版仍需刷新一次，之后更新自动检测；不能把首次部署前的旧JS说成已能热更新。
+
 - `GET /api/v1/cells?problem=P1&case_id=002&cores=4&algorithm=...&run=...`：最优和覆盖；无筛选完整1500格。`include_reported=true` 只预览，不替换已入榜方案。
 - `GET /api/v1/records?problem=P1&case_id=002&cores=4&offset=0&limit=100`：全部历史，含失败、旧版本和拒绝入榜理由，limit≤500及next_offset。
 - `GET /api/v1/records/<id>`：完整来源、指标、参数与证据。
