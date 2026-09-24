@@ -1,0 +1,215 @@
+{
+  "case_id": "090",
+  "cores": 3,
+  "variant": "unified-attention-calendar-e0",
+  "solver_args": [],
+  "parameters": {
+    "structural_router": "expanded_then_one_attention_calendar_proposal",
+    "candidate_limit": 2,
+    "selection": "strictly smaller official makespan than fresh attention anchor; single-core identical ownership skip"
+  },
+  "e0_call_limit": 2,
+  "job_key": "090-k3-unified-attention-calendar-e0",
+  "stage_id": "shard-08",
+  "started_at": "2026-09-24T19:08:34.782894Z",
+  "status": "ok",
+  "calls": {
+    "solver": 1,
+    "E0": 2,
+    "E1": 0,
+    "E2": 0
+  },
+  "e0_reserved": 2,
+  "artifacts": {
+    "plan": {
+      "path": "results/a/q3-nikolastarx/calendar-full500-20260925-s59/20260924T1905Z-s59ee/s08/cells/090-k3-unified-attention-calendar-e0/case_090_multicore_res.json",
+      "sha256": "748e039ecf84133eee593bee91cc1245ca59f0b408ed6d587931967805d8e2e6"
+    },
+    "result": {
+      "path": "results/a/q3-nikolastarx/calendar-full500-20260925-s59/20260924T1905Z-s59ee/s08/cells/090-k3-unified-attention-calendar-e0/evidence/result.json.gz",
+      "sha256": "aa889e7e59478a2ed9520c55f7ed211c7a0b0a134cd3b248207bd87bd33c072d"
+    },
+    "trace": {
+      "path": "results/a/q3-nikolastarx/calendar-full500-20260925-s59/20260924T1905Z-s59ee/s08/cells/090-k3-unified-attention-calendar-e0/evidence/receipt.json",
+      "sha256": "2113d24c8c9612629a1c5bea9aa364322a573b51281c8e62db09863205241608"
+    }
+  },
+  "run_path": "results/a/q3-nikolastarx/calendar-full500-20260925-s59/20260924T1905Z-s59ee/s08/cells/090-k3-unified-attention-calendar-e0/run.json",
+  "failure": null,
+  "solver_process": {
+    "status": "ok",
+    "reason": null,
+    "exit_code": 0,
+    "wall_seconds": 0.7425615829997696,
+    "argv": [
+      "python",
+      "-B",
+      "-m",
+      "src.q3.calendar_solve",
+      "data/raw/a/official/data/case_090.json",
+      "--cores",
+      "3",
+      "-o",
+      "results/a/q3-nikolastarx/calendar-full500-20260925-s59/20260924T1905Z-s59ee/s08/cells/090-k3-unified-attention-calendar-e0/case_090_multicore_res.json",
+      "--evidence",
+      "results/a/q3-nikolastarx/calendar-full500-20260925-s59/20260924T1905Z-s59ee/s08/cells/090-k3-unified-attention-calendar-e0/evidence"
+    ],
+    "process_tree_cleanup": "POSIX process group",
+    "memory": {
+      "limit_bytes": null,
+      "sampled_peak_rss_bytes": null,
+      "poll_seconds": null,
+      "scope": "sum of process-group RSS / Windows job WorkingSetSize; sampled tripwire, not OS hard limit; shared pages may be counted more than once"
+    },
+    "log_derivation": "stdout/stderr preserve bytes except repository and interpreter absolute paths replaced by markers"
+  },
+  "identity": {
+    "graph_sha256": "a91d3ad4c40e53d5731b81b3eb72bcf922f5ef06094e860b5c5729619cb2d312",
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+    "plan_sha256": "748e039ecf84133eee593bee91cc1245ca59f0b408ed6d587931967805d8e2e6"
+  },
+  "makespan_cycles": 321050,
+  "data_movement_bytes": {
+    "original_graph_copy_bytes": 2228352,
+    "scheduled_copy_bytes": 9144408,
+    "added_copy_bytes": 6916056,
+    "partition_added_copy_bytes": 5074008,
+    "spill_added_copy_bytes": 1842048
+  },
+  "cache_stats": {
+    "copy_in_hits": 105,
+    "copy_in_misses": 459,
+    "hit_bytes": 3140640,
+    "miss_bytes": 5520888,
+    "hits": 105,
+    "accesses": 564,
+    "hit_rate": 0.36259653031197264
+  },
+  "solver_receipt": {
+    "strategy": "dag_join_gap_list",
+    "selected_strategy": "dag_join_gap_list",
+    "official_e0_calls": 2,
+    "candidate_limit": 2,
+    "seed_selection": {
+      "rule": "general_affine",
+      "word_declined": "requires M -> V* -> M components",
+      "general_proposal": "frozen_fang_gap_insertion",
+      "acceptance": "strictly_lower_official_makespan_than_fresh_anchor",
+      "router": {
+        "stage_request": {
+          "collector_policy": "fixed",
+          "source_count": 13,
+          "lanes_by_core": [
+            5,
+            4,
+            4
+          ],
+          "heaviest_lane_cores": [
+            0
+          ],
+          "feature_scope": "Provisional source-count partition; lane/load meaning is confirmed only by the strict stage guard."
+        },
+        "migration_construct_attempts": 0,
+        "migration_candidate_plans": 0,
+        "stage_construct_attempts": 1,
+        "stage_candidate_plans": 0,
+        "attention_construct_attempts": 1,
+        "attention_candidate_plans": 0,
+        "guarded_policy_invocations": 0,
+        "stage_guard_reason": "requires one weak component",
+        "attention_cross_delay_cycles": 500,
+        "attention_guard_reason": "no closed attention query row matched",
+        "route": "general_gap",
+        "route_e0_limit": 2,
+        "evaluation_calls": 2,
+        "count_scope": "Router attempts only; guarded internal construction/decision records are preserved unchanged.",
+        "general_gap_policy_invocations": 1
+      }
+    },
+    "candidates": [
+      {
+        "name": "seed",
+        "strategy": "affine_eighth",
+        "status": "ok",
+        "makespan": 453637,
+        "metadata": {
+          "strategy": "affine_eighth",
+          "components": 13,
+          "eligible_ops": 1664,
+          "cores": 3
+        },
+        "artifacts": {
+          "plan": {
+            "path": "seed/plan.json",
+            "sha256": "79924cb8b9d83f536214e906c1c9e4b46f429dfbccdbe019fa391be6f8620c02"
+          },
+          "result": {
+            "path": "seed/result.json.gz",
+            "sha256": "b26905c058371748901f5ff469592cdce13128c9f7e61a4acdad1da8b861c180"
+          }
+        }
+      },
+      {
+        "name": "gap",
+        "strategy": "dag_join_gap_list",
+        "metadata": {
+          "guard": true,
+          "selected": "dag_join_gap_list",
+          "strategy": "dag_join_gap_list",
+          "cores": 3,
+          "upstream_commit": "a37eb931a22fb7df7e0d00d193538ce5289ae045",
+          "official_e0_calls": 0,
+          "chains": 689,
+          "paired_joins": 260,
+          "operations_inserted_before_tail": 40,
+          "modeled_compute_finish": 289386,
+          "cross_chain_edges": 553,
+          "assumption": "persistent idle calendars; no official COPY/cache/capacity simulation"
+        },
+        "makespan": 321050,
+        "certified_lower_bound_cycles": 289386,
+        "status": "ok",
+        "artifacts": {
+          "plan": {
+            "path": "gap/plan.json",
+            "sha256": "748e039ecf84133eee593bee91cc1245ca59f0b408ed6d587931967805d8e2e6"
+          },
+          "result": {
+            "path": "gap/result.json.gz",
+            "sha256": "aa889e7e59478a2ed9520c55f7ed211c7a0b0a134cd3b248207bd87bd33c072d"
+          }
+        }
+      }
+    ],
+    "makespan": 321050,
+    "data_movement_bytes": {
+      "original_graph_copy_bytes": 2228352,
+      "scheduled_copy_bytes": 9144408,
+      "added_copy_bytes": 6916056,
+      "partition_added_copy_bytes": 5074008,
+      "spill_added_copy_bytes": 1842048
+    },
+    "cache_stats": {
+      "copy_in_hits": 105,
+      "copy_in_misses": 459,
+      "hit_bytes": 3140640,
+      "miss_bytes": 5520888,
+      "hits": 105,
+      "accesses": 564,
+      "hit_rate": 0.36259653031197264
+    },
+    "graph_sha256": "a91d3ad4c40e53d5731b81b3eb72bcf922f5ef06094e860b5c5729619cb2d312",
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "plan_sha256": "748e039ecf84133eee593bee91cc1245ca59f0b408ed6d587931967805d8e2e6",
+    "result_sha256": "aa889e7e59478a2ed9520c55f7ed211c7a0b0a134cd3b248207bd87bd33c072d",
+    "evaluation_seconds": 0.3022610000043642,
+    "main_until_evidence_seconds": 0.554492625000421,
+    "timing_note": "All E0 calls are online; use outer subprocess wall for full solver cost."
+  },
+  "evaluation_ledger": {
+    "path": "results/a/q3-nikolastarx/calendar-full500-20260925-s59/20260924T1905Z-s59ee/s08/cells/090-k3-unified-attention-calendar-e0/evidence/evaluations.json",
+    "sha256": "ded9de8eabca0a859ba2831109fe98639bb9e66d31d25e1b6ea8d89ce919ba29"
+  },
+  "finished_at": "2026-09-24T19:08:35.703656Z"
+}
