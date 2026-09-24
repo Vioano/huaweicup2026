@@ -43,7 +43,11 @@ def main():
         raise RuntimeError("ten-shard dispatch has not completed on fixed source")
     if len(dispatch["shards"]) != 10 or any(x["status"] != "stage_complete" for x in dispatch["shards"].values()):
         raise RuntimeError("shard missing or incomplete")
-    controller_sha = sha(dispatch_path)
+    controller_path = ROOT / dispatch["controller_path"]
+    controller_source_sha = sha(controller_path)
+    if dispatch["controller_sha256"] != controller_source_sha:
+        raise RuntimeError("as-run controller source bytes changed")
+    dispatch_receipt_sha = sha(dispatch_path)
     rows = []
     all_coords = set()
     calls = {"solver": 0, "E0": 0, "E1": 0, "E2": 0}
@@ -66,11 +70,13 @@ def main():
             record["run_id"] = GROUP_RUN
             record["parameters"].update(native_shard_run_id=native_run,
                                         global_max_shards=dispatch["max_workers"],
-                                        controller_sha256=controller_sha)
+                                        controller_source_sha256=controller_source_sha,
+                                        dispatch_receipt_sha256=dispatch_receipt_sha)
             record["notes"].append(
                 "This complete algorithm run groups ten disjoint, fixed 50-cell shards. "
                 f"Native shard run_id={native_run}; its manifest and per-cell original receipts retain that identity. "
-                "One worker executes cells serially within each shard, with up to eight shards active together."
+                "One worker executes cells serially within each shard, with up to eight shards active together. "
+                "Controller source and final dispatch receipt use separately labeled SHA-256 fields."
             )
             rows.append(record)
         for item in source_batch["records"]:
