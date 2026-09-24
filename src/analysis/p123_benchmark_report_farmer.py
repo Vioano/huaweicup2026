@@ -81,7 +81,11 @@ _FAIL_RE = re.compile(r"^case(\d+) c1official: FAIL rc=(\d+) (.+)$", re.M)
 def load_farmer_q1_v3(root: Path, run_id: str = "farmer-q1-v3",
                       algorithm_id: str = "q1-propose-e0",
                       solver_commit: str = "4dff90ef699fd51845cf482951e8477066f5f566",
-                      runtime_id: str = "windows-x64-cpython-3.13") -> list[dict]:
+                      runtime_id: str = "windows-x64-cpython-3.13",
+                      include_denominator: bool = True,
+                      case_range: tuple[int, int] | None = None) -> list[dict]:
+    """include_denominator=False 用于分片合并：分母以主工作区（全 100 例）为准，
+    其他分片只贡献多核分子行，避免同一分母格出现重复键。"""
     """读取 farmer Q1 v3 批次目录，返回规范化行。
 
     目录约定（v3/README.md）：
@@ -111,9 +115,9 @@ def load_farmer_q1_v3(root: Path, run_id: str = "farmer-q1-v3",
         case_id = case_dir.name.replace("case", "")
 
         # ---- 分母行（含 baseline 元数据）----
-        d1 = case_dir / "c1official"
-        s1 = d1 / "summary.json"
-        if s1.exists():
+        d1 = case_dir / "c1official" if include_denominator else None
+        s1 = (d1 / "summary.json") if d1 is not None else None
+        if d1 is not None and s1.exists():
             meta = json.loads(s1.read_text(encoding="utf-8"))
             baseline = _new_row(
                 run_id=run_id, algorithm_id=algorithm_id, solver_commit=solver_commit,
@@ -132,7 +136,7 @@ def load_farmer_q1_v3(root: Path, run_id: str = "farmer-q1-v3",
                     root.parent.parent / "data/raw/a/official/code/singlecore_evaluate.py") \
                     if (root.parent.parent / "data/raw/a/official/code/singlecore_evaluate.py").exists() else None
             rows.append(baseline)
-        elif d1.exists():
+        elif d1 is not None and d1.exists():
             status, detail = denom_status.get(case_id, ("failed", "no summary; no log entry"))
             rows.append(_new_row(
                 run_id=run_id, algorithm_id=algorithm_id, solver_commit=solver_commit,
@@ -146,6 +150,10 @@ def load_farmer_q1_v3(root: Path, run_id: str = "farmer-q1-v3",
         # 无 c1official 目录 → 分母"未运行"，不在本源产行（由跨源聚合报告缺口）
 
         # ---- 多核分子行 ----
+        case_no = int(case_id)
+        in_range = case_range is None or (case_range[0] <= case_no <= case_range[1])
+        attempt_suffix = "sweep" if in_range else "v2-archive"
+        row_run_id = run_id if in_range else f"{run_id}-v2-archive"
         for cores in (2, 3, 4, 5):
             dn = case_dir / f"c{cores}"
             sn = dn / "summary.json"
@@ -153,7 +161,7 @@ def load_farmer_q1_v3(root: Path, run_id: str = "farmer-q1-v3",
                 meta = json.loads(sn.read_text(encoding="utf-8"))
                 best_result = dn / "best-result.json"
                 rows.append(_new_row(
-                    run_id=run_id, algorithm_id=algorithm_id, solver_commit=solver_commit,
+                    run_id=row_run_id, algorithm_id=algorithm_id, solver_commit=solver_commit,
                     problem="P1", case_id=case_id, cores=cores,
                     status="success", evaluation_status="success",
                     makespan_cycles=meta["makespan"],
@@ -161,10 +169,30 @@ def load_farmer_q1_v3(root: Path, run_id: str = "farmer-q1-v3",
                     result_ref=str(best_result) if best_result.exists() else str(sn),
                     solver_wall_seconds=meta.get("elapsed_s"),
                     timing_includes_evaluation=True,  # 60s 预算含内部 E0
-                    attempt_id=f"{run_id}-sweep",
+                    attempt_id=f"{row_run_id}-{attempt_suffix}",
                 ))
-            # cN 目录存在但无 summary：本源不产行；若曾有 best_plan.json 属中断残留，
-            # 由 interrupted-v2-attempts 与日志账反映，避免把中断当完成。
+            elif in_range or (case_dir / f"c{cores}").exists():
+                # 无 summary：查 case 级 summary 的 null 值 → 该格为 failed（无成功评价）
+                case_summary = None
+                for name in (f"case{case_id}-summary-v3.json", f"case{case_id}-summary.json"):
+                    csp = root / name
+                    if csp.exists():
+                        case_summary = json.loads(csp.read_text(encoding="utf-8"))
+                        break
+                if case_summary is not None and case_summary.get(f"c{cores}") is None:
+                    rows.append(_new_row(
+                        run_id=row_run_id, algorithm_id=algorithm_id,
+                        solver_commit=solver_commit,
+                        problem="P1", case_id=case_id, cores=cores,
+                        status="failed", evaluation_status="failed_no_best",
+                        evaluator_route="E0", runtime_id=runtime_id,
+                        result_ref=str(dn) if dn.exists() else None,
+                        attempt_id=f"{row_run_id}-{attempt_suffix}",
+                        official_confirmation_status=(
+                            "no-best：全部候选 E0 评价失败/超时（30s），无成功 makespan"),
+                    ))
+            # cN 目录存在但无 summary 且 case 级 summary 也没有：本源不产行；
+            # 中断残留由 interrupted-v2-attempts 与日志账反映，避免把中断当完成。
         # v2 的 stub 行不读取：口径作废，仅目录保留。
 
     # ---- v2 被中断旧尝试（旧身份，明确区分）----
@@ -228,7 +256,12 @@ def aggregate(rows: list[dict], problems=("P1",), cores_list=(1, 2, 3, 4, 5),
         if r.get("cores") == 1 and r.get("status") == "success" and r.get("makespan_cycles"):
             baselines[(r["problem"], r["case_id"])] = (r["makespan_cycles"], r.get("baseline_source"))
         elif r.get("cores") != 1:
-            solvers[(r["problem"], r["case_id"], r["cores"])] = r
+            key = (r["problem"], r["case_id"], r["cores"])
+            prev = solvers.get(key)
+            is_archive = str(r.get("run_id", "")).endswith("-v2-archive")
+            prev_archive = prev is not None and str(prev.get("run_id", "")).endswith("-v2-archive")
+            if prev is None or (prev_archive and not is_archive):
+                solvers[key] = r
 
     out = {}
     for problem in problems:
@@ -398,17 +431,24 @@ def plot_mean_curve(agg: dict, problem: str, out_path: Path, title: str) -> None
 def _parse_sources(items: list[str]):
     out = []
     for item in items:
-        kind, _, root = item.partition("=")
-        out.append((kind, Path(root)))
+        kind, _, rest = item.partition("=")
+        root_spec, _, rng = rest.partition("#")
+        case_range = None
+        if rng:
+            a, _, b = rng.partition("-")
+            case_range = (int(a), int(b))
+        out.append((kind, Path(root_spec), case_range))
     return out
 
 
 def build(sources, run_id: str, tables_dir: Path, figures_dir: Path,
           total_cases: int = 100) -> dict:
     rows: list[dict] = []
-    for kind, root in sources:
+    for kind, root, case_range in sources:
         if kind == "farmer-q1-v3":
-            rows.extend(load_farmer_q1_v3(root, run_id=run_id))
+            rows.extend(load_farmer_q1_v3(
+                root, run_id=run_id, case_range=case_range,
+                include_denominator=not any(r for r in rows if r.get("cores") == 1)))
         else:
             raise SystemExit(f"未知数据源类型: {kind}（当前支持 farmer-q1-v3）")
     audit = validate_rows(rows)
