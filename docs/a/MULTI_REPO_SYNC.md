@@ -14,7 +14,7 @@
 
 1. 本机 primary 是 `~/Projects/huaweicup2026`。未提交的工作只存在于相应工作区；不得以整目录复制把缓存、密钥和未验收改动当作远端已发布材料。
 2. 成员在本人分支提交到组织仓库，通过 PR 汇合；队长公共资料通过检查后合入 main。算法 PR 未验收时保留独立分支。
-3. 队长将组织仓库已经发布的 heads/tags 单向同步到 Vioano 公开镜像，保留相同提交 SHA。Vioano 副本供公开读取及研究连接使用，不另开独立开发或第二套 Issues/PR。
+3. 队长将组织仓库已经发布的研究 heads/tags 单向同步到 Vioano 公开镜像，保留相同提交 SHA。成绩台 `benchmark-sync-v1`、`benchmark-fast-v1`、`benchmark-submissions/*` 和 `benchmark-delivery/*` 是签名快照或交付传输状态，不是研究资料；镜像脚本不拉取、推送或以它们的变化阻塞研究 refs，并在回执列明排除项。成绩台成员仍从组织主库接收这些通道；组织主库上的原传输历史保留。Vioano 副本供公开读取及研究连接使用，不另开独立开发或第二套 Issues/PR。
 4. 不使用强推、`push --mirror`、远端清理或自动删除；出现分叉先报告，不能用同步覆盖另一端变化。已发布的 Atlas 签名分支可以复制，但 Atlas 实际同步 remote、project、epoch、私有状态和授权不变。
 5. 共享资料更新、阶段交付、合并后尽快同步；队长周期跟进时检查是否落后。按每次成功回执记录具体 refs/SHA，不声称各端时时相同。
 6. 队友收到固定 commit 后保留改动、fetch、补读并回报实际 HEAD/已读/影响。队长不能从 push、HTTP 200、邮箱发信推断成员电脑已同步。
@@ -28,7 +28,7 @@ python3 scripts/sync_vioano_mirror.py
 python3 scripts/sync_vioano_mirror.py --push --receipt output/sync/<unique-run-id>.json
 ```
 
-默认只拉取组织发布的 Git 对象、检查两端并预演推送。`--push` 使用非强制、原子推送并逐 ref 回读。脚本锁位于 Git common dir，防止本机多个 worktree 同时同步；异常遗留锁须先确认没有同步进程，不能盲删。脚本核对目标为指定的公开镜像，回执记录实际可见性；不修改工作区、不合并分支、不上传未提交文件。
+默认只拉取组织发布的研究 Git 对象、检查两端并预演推送。`--push` 使用非强制、原子推送并逐 ref 回读；回执中的 `all_source_refs_match` 指未排除的研究 refs，`excluded_transport_refs` 列出当次实际存在但不再同步的传输 refs。镜像中此前已有的传输 refs 不删除，其旧状态不得用作最新成绩台。脚本锁位于 Git common dir，防止本机多个 worktree 同时同步；异常遗留锁须先确认没有同步进程，不能盲删。脚本核对目标为指定的公开镜像，回执记录实际可见性；不修改工作区、不合并分支、不上传未提交文件。
 
 ## Pro 文件完整性
 
