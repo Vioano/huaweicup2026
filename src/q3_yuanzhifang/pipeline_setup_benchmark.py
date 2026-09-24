@@ -322,7 +322,7 @@ class PipelineSetupPilot(Pilot):
                 self.save()
                 if not c["historical_control_comparison"]["exact_compute_coverage"] or not singleton:
                     raise Stopped("expected 1364 compute ops and singleton mapping; no E0")
-                if c["historical_control_comparison"]["full_two_field_json_equal"]:
+                if c["historical_control_comparison"]["bytes_equal"]:
                     c["alias_of"] = dict(commit=CONTROL_COMMIT, plan=control["artifacts"]["plan"],
                                          attempts={p:r["attempt_id"] for p,r in control["scenarios"].items()})
                     c["reused_evaluations"] = control["scenarios"]
@@ -349,7 +349,7 @@ class PipelineSetupPilot(Pilot):
                     self.evaluations.append(e)
                     c["evaluation_ids"].append(e["evaluation_id"])
                     self.save()
-            reason = ("one cold construction; complete plan equals frozen pipeline control, reused with zero new E0"
+            reason = ("one cold construction; plan bytes equal frozen pipeline control, reused with zero new E0"
                       if any(c["alias_of"] for c in self.constructions)
                       else "one guarded cold-setup pipeline construction and two external E0s completed")
             self.info.update(status="ok", stop_reason=reason)

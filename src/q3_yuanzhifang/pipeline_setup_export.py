@@ -150,7 +150,8 @@ def export(folder):
                     comparison=c["historical_control_comparison"], reused_evaluations=c["reused_evaluations"])
                for c in m["constructions"] if c.get("alias_of")]
     write_json(folder / "alias-reuse.json", dict(schema="q3-pipeline-setup-alias-v1", aliases=aliases,
-               note="Identical complete plans reference the existing P2/P3 attempts only. "
+               note="Byte-identical plans reference the existing P2/P3 attempts only. "
+                    "Parsed JSON equality alone never permits reuse. "
                     "New cold wall retained; no separate feed record or new E0 claimed for an alias."))
     write_json(folder / "export-receipt.json", dict(exported_at=utc(), feed=artifact(feed), records=len(rows),
                calls=m["calls"], aliases=len(aliases), template_source=PILOT_FEED.as_posix(),
