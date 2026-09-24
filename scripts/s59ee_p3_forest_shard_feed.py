@@ -49,6 +49,8 @@ def main():
     actual = {(r['case_id'],r['cores']) for r in rows}
     if len(rows) != 50 or actual != wanted or any(r['status'] != 'ok' or r['solver_commit'] != SOURCE for r in rows):
         raise ValueError('shard does not contain 50 unique successful fixed-source cells')
+    if any(r.get('baseline') is None for r in rows):
+        raise ValueError('baseline evidence absent; do not silently publish an unscored forest shard')
     calls = {key:sum(x['calls'][key] for x in source_batch['records']) for key in ['solver','E0','E1','E2']}
     if calls['solver'] != 50 or not 50 <= calls['E0'] <= 150 or calls['E1'] or calls['E2']:
         raise ValueError('native call ledger outside frozen budget')
