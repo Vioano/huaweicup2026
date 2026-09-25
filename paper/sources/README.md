@@ -51,3 +51,7 @@
 ## P3最终归档补记
 
 固定提交 `8416300c7245925795aaa3acc64d4d5b31fa13d5` 的[最终报告](https://github.com/huaweibei123/huaweicup2026/blob/8416300c7245925795aaa3acc64d4d5b31fa13d5/results/a/q3-nikolastarx/r9f-final-full500-20260926/FINAL_REPORT.md)、CSV、summary、决策表、图元数据/脚本/三种导出已补入manifest；[本次只读检查收据](p3-final-update-validation.json)记录范围。作者的500份原计划字节审计不冒充整稿者再次独立复核。Forest仍为主算法，R9F作为选择政策的负结果；新增图不自动完成全部正式图需求。
+
+## P3同计划主曲线补记
+
+[d80134d图件说明](https://github.com/huaweibei123/huaweicup2026/blob/d80134dca183abfcc2e2125d43d116036bd3877d/results/a/q3-nikolastarx/r9f-final-full500-20260926/SAME_PLAN_FIGURES.md)补齐按K1～5的两配置研究主曲线，另有逐case附录；12个源/图文件已登记manifest。[检查收据](p3-same-plan-figure-validation.json)记录500配对CSV/共用基线/五点复算、输入脚本及6个导出哈希和两PNG视觉检查。统计与初步视觉检查通过，正式图主责与整稿验收待完成。
