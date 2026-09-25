@@ -84,7 +84,7 @@ def main():
                "historical_winner_selection": False}
     (HERE / "comparison.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n")
     with (HERE / "numeric-differences.csv").open("w", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=list(gaps[0]))
+        writer = csv.DictWriter(stream, fieldnames=list(gaps[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(gaps)
     print(json.dumps({"figure1": figure1, "figure2": figure2}, ensure_ascii=False, indent=2))
