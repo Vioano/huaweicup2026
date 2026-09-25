@@ -12,6 +12,8 @@
 
 另读取新发布 `e96a8551d6b3c92bbf00285376ce950f9246c0dc` 的前缀 Linux 机制报告及 `62c69b20ab887c76567dbab5fcce6eef30107b5c` 的静态构造说明，加入 §6.4.3、§6.6.3。该项是 044/k5 单格 38390→38024，0 P2、solver wall 未知；只按已发布报告引用，未独立核全部原件，不替换完整主表。完整算法最新可用版本仍为下表所列固定版本。
 
+2026-09-25T04:32Z 后继续跟进到 `28e8c7ddfe2223b2261056f554259c43d5bba272`。新增的是对已保存044/k5结果的 Cache 事件和实际路径分析，0新官方调用，不是新统一算法。本稿在 §6.5.4–6.5.5、§6.6.4 加入固定读取集合的命中上界、取整共享服务研究界及启动竞争分解；主表保持原版本。
+
 ## 主算法与数据身份
 
 | 项目 | 固定版本或内容 | 本稿采用方式 |
@@ -54,7 +56,9 @@ Luna medium 的第一份[feed 审阅](../drafts/p3-forest500-audit.json)保留�
 | §6.5.3 阈值 DP | [TAIL_CUT_DP.md](https://github.com/huaweibei123/huaweicup2026/blob/2ec2ab12e1becdd600198eeb85deefc464678e9e/docs/a/q3-yuanzhifang/TAIL_CUT_DP.md) | 固定区间四系数表内精确；小表合成穷举对照；真实全区间表未完成 |
 | §6.6.2 完整算法均值与墙钟 | [统一算法审计](https://github.com/huaweibei123/huaweicup2026/blob/cf4d77a018def540358c3b4667c2d2466390981a/results/a/q3-nikolastarx/forest-full500-feedback-20260925/independent-audit.json) | 500 格、973 在线 E0；本次独立重算 feed 墙钟/计数一致；共享主机单次分布 |
 | §6.6.2 Cache 配对主表 | [配对审计](https://github.com/huaweibei123/huaweicup2026/blob/cf4d77a018def540358c3b4667c2d2466390981a/results/a/q3-nikolastarx/forest-cachepair-delta-20260925/independent-audit.json) | 476 同字节 P2 复用 + 24 新 P2，完整 500 对；不声称本批重新跑500个P2 |
-| §6.6.4 非单调反例 | [CACHE_NONMONOTONE_021.md](https://github.com/huaweibei123/huaweicup2026/blob/f26704ed8748f0a575b55f1a02b83d7335a1083f/docs/a/q3-yuanzhifang/CACHE_NONMONOTONE_021.md)，同提交 `audit_021.py`/`audit.json` | 同 plan 2140720→2140863、同 COPY/字节；已核字节原件及逐操作观察；尚非完整退化因果链 |
+| §6.5.4、§6.6.4 命中饱和 | [固定 Cache 事件审计](https://github.com/huaweibei123/huaweicup2026/blob/28e8c7ddfe2223b2261056f554259c43d5bba272/results/a/q3-nikolastarx/prefix-cache-critical-audit-20260925/REPORT.md)及 `summary.json` | 两份044/k5原结果在本次重新核 SHA、键大小/次数和事件：171首次miss、11重复hit、0淘汰；上界只针对固定读取集合 |
+| §6.5.5、§6.6.4 共享前缀与路径 | [固定实际路径审计](https://github.com/huaweibei123/huaweicup2026/blob/28e8c7ddfe2223b2261056f554259c43d5bba272/results/a/q3-nikolastarx/prefix-realized-path-20260925/README.md)及 `audit.json`/`test_math.py` | 1678操作开始时间重现为团队已发布结论；本次复核分项算术，不重新构建准备图。36592仅有理数共享取整模型界，不登记为官方浮点剪枝证书 |
+| §6.6.5 非单调反例 | [CACHE_NONMONOTONE_021.md](https://github.com/huaweibei123/huaweicup2026/blob/f26704ed8748f0a575b55f1a02b83d7335a1083f/docs/a/q3-yuanzhifang/CACHE_NONMONOTONE_021.md)，同提交 `audit_021.py`/`audit.json` | 同 plan 2140720→2140863、同 COPY/字节；已核字节原件及逐操作观察；尚非完整退化因果链 |
 
 ## 公式审阅与图件计划
 
@@ -79,14 +83,17 @@ Sol medium 只读复核了式（6-6）至（6-16）及相关小源文件，未�
 
 P1 正文核编号从 1 起，P3 对齐接口从 0 起；只是编号映射，合稿时需统一，不应改变各自等待语义。P2 的整体方案符号和时间符号可由队长最后统一，不为了形式一致改写它的实质模型。主表数据和源 JSON 字段未因记号调整改变。
 
+新增小范围原件复核：`python -B paper/tools/audit_p3_prefix_cache.py`，输出[前缀 Cache 核验](../drafts/p3-prefix-cache-audit.json)。只读取固定提交中的两份 P3 压缩结果（48,921 B 和 50,375 B）、一份计划、两个审计小文件；结果/计划 SHA 与已发布绑定一致。独立核实了完整键—大小—次数多重集相等、首次/重复读取、命中字节上界取等、零淘汰和搬运字段一致。对路径部分只核来源绑定、38024分项和、8244差值及四个前缀完成下限算术；未重新加载完整准备图，也未调用Task/Step/E0。七处图占位与18个公式对应最新稿，旧“六图/16式”是上一版检查记录。
+
 | 图号 | 目前状态 | 最终绘制需要 |
 |---|---|---|
 | 6-1 技术路线 | 文字占位 | 冻结入口及模块归属；可编辑结构图 |
 | 6-2 容量与切点 | 文字占位 | 044/k4 各候选固定元数据与真实峰值；估计/实测分开 |
 | 6-3 核数与质量 | 文字占位 | 最终单版本完整100×5与基线绑定 |
 | 6-4 Cache 分布 | 文字占位 | 同计划P2/P3；逐格 hit/miss 字节；保留负例 |
-| 6-5 021 事件差异 | 文字占位 | 对齐原 timeline；未有关键路径证明时不能画成因果结论 |
-| 6-6 质量—墙钟 | 文字占位 | 固定硬件/worker 的端到端计时；重复试验与跨用例分布分开 |
+| 6-5 044 启动竞争 | 文字占位 | 实际时间轴、独占乐观值、条件共享模型界分别标识；不画成三个实测算法 |
+| 6-6 021 事件差异 | 文字占位 | 对齐原 timeline；未有关键路径证明时不能画成因果结论 |
+| 6-7 质量—墙钟 | 文字占位 | 固定硬件/worker 的端到端计时；重复试验与跨用例分布分开 |
 
 按用户要求，当前不生成看似实测的示意数据。最终科研图使用项目 `scientific-figures`/Matplotlib 工作流，保留绘图输入、脚本和可编辑来源，待算法冻结后绘制与视觉验收。
 
