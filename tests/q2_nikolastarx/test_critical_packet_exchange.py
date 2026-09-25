@@ -1,0 +1,78 @@
+"""Synthetic C01 packet exchange tests; no official prepare/evaluation."""
+import copy
+import unittest
+
+from src.q2_nikolastarx.critical_packet_exchange import construct
+from src.q2_nikolastarx.direct import derive_multicore_plan
+
+
+def scene():
+    graph = {'ops': [
+        {'id': 1, 'op': 'CONV', 'pipe': 'PIPE_M', 'cycles': 2},
+        {'id': 2, 'op': 'RELU', 'pipe': 'PIPE_V', 'cycles': 2},
+        {'id': 3, 'op': 'RELU', 'pipe': 'PIPE_V', 'cycles': 2}],
+        'tensors': [{'id': 10, 'size': 4, 'pos': 'UB'},
+                    {'id': 20, 'size': 4, 'pos': 'UB'}],
+        'edges': [{'source': 1, 'target': 10}, {'source': 10, 'target': 2},
+                  {'source': 2, 'target': 3, 'data_size': 0},
+                  {'source': 3, 'target': 20}]}
+    plan = {'node_to_subgraph': {'1': 0, '2': 1, '3': 2},
+            'core_schedules': [[0], [1, 2]]}
+    config = {'capacity': {'L1': 100, 'UB': 100}, 'bandwidth': 60}
+    link = {'tensor_id': 10, 'source_core': 0, 'target_core': 1,
+            'exposed_delay': 500}
+    return graph, plan, config, link
+
+
+class CriticalPacketTests(unittest.TestCase):
+    def test_downstream_critical_closure_reaches_sink(self):
+        graph, plan, config, link = scene()
+        original = copy.deepcopy((graph, plan, config, link))
+        out, meta = construct(graph, plan, config, [link], {3})
+        self.assertIsNotNone(out, meta)
+        self.assertEqual(meta['selected']['packet'], [2, 3])
+        self.assertEqual(meta['selected']['packet_size'], 2)
+        self.assertEqual(meta['selected']['receiver_count'], 1)
+        self.assertEqual(meta['selected']['critical_downstream_added'], 1)
+        self.assertLessEqual(meta['candidates_checked'], 2)
+        view = derive_multicore_plan(graph, out)
+        self.assertEqual([view['core_by_subgraph'][view['mapping'][u]] for u in (1, 2, 3)],
+                         [0, 0, 0])
+        self.assertEqual((graph, plan, config, link), original)
+
+    def test_topological_merge_interleaves_packet(self):
+        graph, plan, config, link = scene()
+        # Both 2 and 3 consume the tensor. Old constraints require
+        # 1 -> 2 -> 4 -> 3, so X=[2,3] cannot be one contiguous block.
+        graph['edges'].remove({'source': 2, 'target': 3, 'data_size': 0})
+        graph['edges'] += [{'source': 10, 'target': 3},
+                           {'source': 2, 'target': 4, 'data_size': 0},
+                           {'source': 4, 'target': 3, 'data_size': 0}]
+        graph['ops'].append({'id': 4, 'op': 'CONV', 'pipe': 'PIPE_M', 'cycles': 2})
+        plan['node_to_subgraph']['4'] = 3
+        plan['core_schedules'][0].append(3)
+        out, meta = construct(graph, plan, config, [link], set())
+        self.assertIsNotNone(out, meta)
+        self.assertEqual(out['core_schedules'][0], [0, 1, 3, 2])
+        self.assertEqual(out['core_schedules'][1], [])
+
+    def test_load_envelope_rejects(self):
+        graph, plan, config, link = scene()
+        graph['ops'].append({'id': 5, 'op': 'RELU', 'pipe': 'PIPE_V', 'cycles': 4})
+        plan['node_to_subgraph']['5'] = 3
+        plan['core_schedules'][0].append(3)
+        out, meta = construct(graph, plan, config, [link], {3})
+        self.assertIsNone(out)
+        self.assertIn('no_load_envelope', meta['rejections'])
+
+    def test_alias_and_capacity_abstain(self):
+        graph, plan, config, link = scene()
+        graph['tensors'][0]['logical_tid'] = 10
+        self.assertEqual(construct(graph, plan, config, [link], {3})[1]['status'], 'unsupported')
+        del graph['tensors'][0]['logical_tid']
+        config['capacity']['UB'] = 1
+        self.assertEqual(construct(graph, plan, config, [link], {3})[1]['status'], 'unsupported')
+
+
+if __name__ == '__main__':
+    unittest.main()
