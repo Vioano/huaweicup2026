@@ -1,0 +1,85 @@
+{
+  "all_same_pgid_residual_empty": true,
+  "child_processes": 3,
+  "scope": "three tiny Python children; no construct or scoring",
+  "stages": [
+    {
+      "argv": [
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/../../.venv/bin/python",
+        "-B",
+        "-c",
+        "pass"
+      ],
+      "expected_pgid": 51989,
+      "finished_utc": "2026-09-25T12:29:59+00:00",
+      "name": "fast",
+      "peak_group_rss_kib": 0,
+      "pgid": 51989,
+      "pid": 51989,
+      "ps_lstart": "Fri Sep 25 20:29:59 2026",
+      "reason": "complete",
+      "returncode": 0,
+      "same_pgid_residual": [],
+      "sample_interval_seconds": 0.25,
+      "started_utc": "2026-09-25T12:29:59+00:00",
+      "timeout_seconds": 2.0,
+      "wall_seconds": 0.3706332500441931
+    },
+    {
+      "argv": [
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/../../.venv/bin/python",
+        "-B",
+        "-c",
+        "import sys; sys.exit(3)"
+      ],
+      "cleanup": {
+        "confirmed": true,
+        "reason": "already exited and group empty",
+        "signals": []
+      },
+      "expected_pgid": 52000,
+      "finished_utc": "2026-09-25T12:30:00+00:00",
+      "name": "nonzero",
+      "peak_group_rss_kib": 0,
+      "pgid": 52000,
+      "pid": 52000,
+      "ps_lstart": "Fri Sep 25 20:29:59 2026",
+      "reason": "child returned 3",
+      "returncode": 3,
+      "same_pgid_residual": [],
+      "sample_interval_seconds": 0.25,
+      "started_utc": "2026-09-25T12:29:59+00:00",
+      "timeout_seconds": 2.0,
+      "wall_seconds": 0.35067104100016877
+    },
+    {
+      "argv": [
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/../../.venv/bin/python",
+        "-B",
+        "-c",
+        "import time; time.sleep(3)"
+      ],
+      "cleanup": {
+        "confirmed": true,
+        "reason": null,
+        "signals": [
+          "SIGTERM"
+        ]
+      },
+      "expected_pgid": 52012,
+      "finished_utc": "2026-09-25T12:30:00+00:00",
+      "name": "timeout",
+      "peak_group_rss_kib": 14928,
+      "pgid": 52012,
+      "pid": 52012,
+      "ps_lstart": "Fri Sep 25 20:30:00 2026",
+      "reason": "stage timeout",
+      "returncode": -15,
+      "same_pgid_residual": [],
+      "sample_interval_seconds": 0.25,
+      "started_utc": "2026-09-25T12:30:00+00:00",
+      "timeout_seconds": 0.4,
+      "wall_seconds": 0.8732174169854261
+    }
+  ]
+}

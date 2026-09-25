@@ -91,6 +91,16 @@ def leader_identity(pid, expected_start, expected_pgid):
     return start == expected_start and group == str(expected_pgid)
 
 
+def settled_exit(child, expected_pgid):
+    """Accept a fast exit only after reaping and two empty group snapshots."""
+    rc = child.poll()
+    if rc is None:
+        return False, None
+    if group_table(expected_pgid) or group_table(expected_pgid):
+        return False, rc
+    return True, rc
+
+
 def cleanup_group(child, identity):
     """TERM, wait up to 2s, then KILL only while the leader still matches."""
     result = {"confirmed": False, "signals": [], "reason": None}
@@ -145,14 +155,25 @@ def run_stage(name, argv, cap, output, overall_start):
             child = subprocess.Popen(argv, cwd=ROOT, env=env, stdout=out,
                                      stderr=err, start_new_session=True)
             stage["pid"] = child.pid
-            stage["pgid"] = os.getpgid(child.pid)
-            stage["ps_lstart"] = ps_value(child.pid, "lstart")
-            if stage["pgid"] != child.pid or not stage["ps_lstart"] or not leader_identity(
-                    child.pid, stage["ps_lstart"], stage["pgid"]):
-                stage["reason"] = "new group identity could not be confirmed"
-            else:
-                identity = {"pid": child.pid, "pgid": stage["pgid"],
-                            "lstart": stage["ps_lstart"]}
+            stage["expected_pgid"] = child.pid
+            try:
+                stage["pgid"] = os.getpgid(child.pid)
+                stage["ps_lstart"] = ps_value(child.pid, "lstart")
+                if stage["pgid"] == child.pid and stage["ps_lstart"] and leader_identity(
+                        child.pid, stage["ps_lstart"], stage["pgid"]):
+                    identity = {"pid": child.pid, "pgid": stage["pgid"],
+                                "lstart": stage["ps_lstart"]}
+                else:
+                    stage["reason"] = "new group identity could not be confirmed"
+            except (OSError, subprocess.SubprocessError, ValueError) as exc:
+                stage["identity_error"] = f"{type(exc).__name__}: {exc}"
+                stage["reason"] = "new group identity acquisition failed"
+            if stage["reason"] is not None:
+                settled, rc = settled_exit(child, child.pid)
+                if settled:
+                    stage["returncode"] = rc
+                    stage["reason"] = "complete" if rc == 0 else f"child returned {rc}"
+                    stage["fast_exit_after_identity_failure"] = True
             while stage["reason"] is None:
                 # A completed leader does not prove its process group is gone.
                 rc = child.poll()
@@ -175,7 +196,14 @@ def run_stage(name, argv, cap, output, overall_start):
                         stage["reason"] = "complete"
                     break
                 if not leader_identity(identity["pid"], identity["lstart"], identity["pgid"]):
-                    stage["reason"] = "leader identity changed during execution"
+                    settled, final_rc = settled_exit(child, child.pid)
+                    if settled:
+                        stage["returncode"] = final_rc
+                        stage["reason"] = ("complete" if final_rc == 0
+                                           else f"child returned {final_rc}")
+                        stage["fast_exit_during_identity_check"] = True
+                    else:
+                        stage["reason"] = "leader identity changed during execution"
                     break
                 if time.monotonic() - started >= cap:
                     stage["reason"] = "stage timeout"
@@ -187,10 +215,17 @@ def run_stage(name, argv, cap, output, overall_start):
             if child is not None:
                 stage["returncode"] = child.poll()
                 if stage["reason"] != "complete":
-                    stage["cleanup"] = cleanup_group(child, identity)
+                    try:
+                        settled, _ = settled_exit(child, child.pid)
+                    except (OSError, subprocess.SubprocessError, ValueError) as exc:
+                        settled = False
+                        stage["settled_exit_error"] = f"{type(exc).__name__}: {exc}"
+                    stage["cleanup"] = (
+                        {"confirmed": True, "signals": [], "reason": "already exited and group empty"}
+                        if settled else cleanup_group(child, identity))
                     stage["returncode"] = child.poll()
                 try:
-                    stage["same_pgid_residual"] = group_table(stage.get("pgid", -1))
+                    stage["same_pgid_residual"] = group_table(child.pid)
                 except (OSError, subprocess.SubprocessError, ValueError) as exc:
                     stage["same_pgid_residual_error"] = str(exc)
                     stage["same_pgid_residual"] = None
