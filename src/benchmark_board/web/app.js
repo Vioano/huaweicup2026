@@ -289,7 +289,7 @@ function selectMetric(chosen){
     const url=new URL(location.href);
     if(['cache_gain','cache_hit_rate'].includes(chosen))url.searchParams.set('metric',chosen);
     else url.searchParams.delete('metric');
-    history.replaceState(null,'',url);
+    window.history.replaceState(null,'',url);
   }
   $('#metric').value=chosen;mainMetric=chosen;render();if(selection)detail(false);
 }
