@@ -14,6 +14,12 @@
 
 已有索引与计划验证后，物理弧构建、Pipe投影及两次拓扑最长路径扫描为O(V+E+I)，FIFO新增弧至多V，辅助空间同阶。服务统计的按核tensor对及官方计划验证、TensorIndex的构建/排序成本另计；不能把扫描复杂度称为整个求解器端到端复杂度。
 
+## 与队长已有方法的关系
+
+本轮随后实际补读固定c665下的 [fifo_bound.py](https://github.com/huaweibei123/huaweicup2026/blob/c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f/src/q2_nikolastarx/fifo_bound.py)、[FIFO_BOUND.md](https://github.com/huaweibei123/huaweicup2026/blob/c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f/docs/a/q2-nikolastarx/FIFO_BOUND.md) 与 [global_bounds.py](https://github.com/huaweibei123/huaweicup2026/blob/c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f/src/q2_nikolastarx/global_bounds.py)。队长已有同一D_exec/FIFO计算先后的必要下界及COPY收缩反例；该部分是已有团队成果，不把本次独立推导/实现当作首次发现。已有global_bounds还包含不依赖分核的不可分工作量与head/tail窗口界，不能用R5的固定分核量替换它。
+
+R5在本会话适用域内另计基础DDR工作W，并对真实跨核边加入COPY独占服务与500-cycle等待，形成带通信权的候选路径诊断。这个增强引入DDR浮点语义缺口，所以比现有纯计算FIFO证书的结论更有条件，尚未证实在真实图上比它紧多少或能省掉多少评分。未来集成应先核对此增量是否有用，避免同时维护两套相同的计算FIFO原理；本轮未修改队长模块或其证书。
+
 ## 检查与后续诊断
 
 新增8项手算/反例检查，联同R4/F1为19项通过：509周期tensor路径及并行direct取max、504周期多输入汇合、不同Pipe不串行、原COPY链不产生假lag、同核传输无lag、FIFO把509加强到511、四节点跨核/FIFO等待环拒绝，以及别名/多producer/数值域拒绝。均0真实图构造、0 Step2/Step3/E0。Sol medium先做FIFO窄审（软预算4500 tokens），再做实现窄审（软预算3000）；未使用Astra、未递归；软预算不是工具级已核算token账单。
@@ -21,3 +27,7 @@
 `results/a/q2-yuanzhifang/feedback-20260924/ideal-bound-r5-static/probe.py` 准备对100个已保存五核tensor/F1方案对做静态核验，核对图、配置、计划与结果哈希、基础COPY字节；记录理想界是否高于已有E0、旧/新判据能触发哪些保存方案对及容量证书。它不构造新方案、不调用Step2/3/E0，也不将事后选择保存方案的分数拼成新的算法均值。输入已用于研发，不能称留出或盲测。
 
 P2核查03:15:54.4062372Z本人0评分进程且R4未START，并给P1暂让资源。P1随后回报03:16:57.6324379Z其RAM门未通过、0solver/0E0且释放窗口；P203:19:05.3946213Z实查空闲1163673600 B。静态诊断仍需派发时复核资源，实际结果另补，未运行前不预报增益；R4真实评分仍按原Issue33排程，不复活已封存预算。
+
+实际派发结果：Luna在03:21:28.5870923Z的一次入口读取仅有366104576 B，低于本次静态扫描768 MiB门（805306368 B），故probe启动0次、T0/T1为空、无report.json、无重试。源固定为`1acc50a7f8290fd98fa94a12113281728705d7ca`，程序SHA为`48cc32c52b10059510e23ad5495226c4764e221960d3738c63a1ac955a98a8bd`；[去个人路径的入口收据](../../../../results/a/q2-yuanzhifang/feedback-20260924/ideal-bound-r5-static/preflight-stop.json)记录原始收据SHA。本次没有100对静态结果，更没有新增官方成绩。不能把几分钟前可用内存较高当作实际入口已通过。
+
+已实际读队长协调 [Issue33 #5826046123](https://github.com/huaweibei123/huaweicup2026/issues/33#issuecomment-5826046123)：当前没有释放的共享主机窗口或R4评分T0，继续保持007/020/045固定三格包，准入与唯一派单齐备前不启动。该消息不影响上述零评分方法/材料工作，也不新增实验预算。
