@@ -112,6 +112,23 @@ class AdaptiveGuardedTests(unittest.TestCase):
                 scorer({})
             self.assertEqual(state['calls']['E2_api_attempted'], 2)
 
+    def test_six_request_portfolio_cap_is_recorded(self):
+        with tempfile.TemporaryDirectory() as folder:
+            state = ledger()
+            scorer = adaptive_guarded.score_adapter(
+                lambda _: {'route': 'native', 'status': 'ok', 'problem': 2,
+                           'makespan': 100,
+                           'data_movement_bytes': {'added_copy_bytes': 0}},
+                state, Path(folder)/'ledger.json', max_requests=6)
+            for number in range(6):
+                self.assertEqual(scorer({'candidate': number})['makespan'], 100)
+            with self.assertRaisesRegex(RuntimeError, '6-request E2 cap'):
+                scorer({'candidate': 6})
+            self.assertEqual(state['calls']['E2_api_attempted'], 6)
+            self.assertEqual(state['calls']['native_returns'], 6)
+            self.assertEqual(len(state['attempts']), 6)
+            self.assertFalse(state['request_in_flight'])
+
     def test_preparation_and_wall_failure_do_not_reserve_request(self):
         with tempfile.TemporaryDirectory() as folder:
             state = ledger()

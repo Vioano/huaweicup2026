@@ -189,8 +189,8 @@ def native_e2(e2_root, graph, config_path, plan, timeout):
 def score_adapter(evaluator, ledger, ledger_path, *, prepare=None, remaining_wall=None,
                   max_requests=2):
     """Reserve and persist a request before crossing the evaluator boundary."""
-    if max_requests not in (2, 3, 4):
-        raise ValueError('only fixed two-, three-, or four-request routes are supported')
+    if max_requests not in (2, 3, 4, 6):
+        raise ValueError('only fixed two-, three-, four-, or six-request routes are supported')
     def oracle(plan):
         calls = ledger['calls']
         if ledger['request_in_flight']:
