@@ -46,6 +46,28 @@ def pinned_records(repo):
     return table
 
 
+def necessary_bounds(repo, old):
+    raw = (repo / 'results/a/q2-nikolastarx/goal-20260924/global-bounds.json').read_bytes()
+    certificate = decode(raw)
+    require(sha((repo / 'src/q2_nikolastarx/global_bounds.py').read_bytes()) ==
+            certificate['certificate_source_sha256'], 'bound implementation identity differs')
+    for name, expected in certificate['official_source_sha256'].items():
+        require(sha((repo / 'data/raw/a/official/code' / name).read_bytes()) == expected,
+                'bound official source differs: ' + name)
+    table = {}
+    for graph in certificate['records']:
+        case = graph['graph_file'].removeprefix('case_').removesuffix('.json')
+        require(graph['supported'] and graph['precedence_supported'] and
+                graph['graph_sha256'] == old[(case, 1)]['identity']['graph_sha256'],
+                'bound graph identity/domain differs')
+        for bound in graph['by_core_count']:
+            key = (case, bound['cores']); value = bound['makespan_lower_bound_cycles']
+            require(key not in table and type(value) is int and value > 0, 'invalid bound')
+            table[key] = value
+    require(set(table) == GRID, 'bound grid differs')
+    return table, sha(raw)
+
+
 def artifact(repo, ref):
     path = (repo / ref['path']).resolve()
     require(path.is_relative_to(repo), 'artifact outside repo')
@@ -168,8 +190,12 @@ def main():
     require({(r['case'], r['cores']) for r in rows} == GRID, 'summary grid differs')
     feeds, run_id = collect_feeds(repo, a.archive_root.resolve(), summary)
     old = pinned_records(repo)
+    lower_bounds, bounds_sha = necessary_bounds(repo, old)
     values = [validate_cell(repo, row, feeds[(row['case'], row['cores'])],
                             old[(row['case'], row['cores'])], summary) for row in rows]
+    for value in values:
+        value['LB'] = lower_bounds[(value['case'], value['cores'])]
+        require(value['new_M'] >= value['LB'], 'official result contradicts necessary bound')
     total_e2 = sum(v['E2'] for v in values); calls = summary['calls']
     require(calls['solver_started'] == calls['E0_independent_started'] == 500
             and calls['E2_api_attempted'] == calls['native_returns'] == total_e2
@@ -180,18 +206,21 @@ def main():
         v = [x for x in values if x['cores'] == k]
         comparison[str(k)] = {'n': len(v), 'new_mean_B_over_M': statistics.fmean(x['B']/x['new_M'] for x in v),
             'old_mean_B_over_M': statistics.fmean(x['B']/x['old_M'] for x in v),
+            'relaxation_ceiling_mean_B_over_LB': statistics.fmean(x['B']/x['LB'] for x in v),
+            'certified_within_5pct_of_optimum_count': sum(100*x['new_M'] <= 105*x['LB'] for x in v),
+            'meets_lower_bound_exactly_count': sum(x['new_M'] == x['LB'] for x in v),
             'wins_ties_losses': [sum(x['new_M'] < x['old_M'] for x in v),
                                 sum(x['new_M'] == x['old_M'] for x in v),
                                 sum(x['new_M'] > x['old_M'] for x in v)]}
     print(json.dumps({'status': 'complete', 'cells': 500, 'run_id': run_id,
-        'summary_sha256': sha(sraw), 'solver_commit': SOLVER, 'runner_commit': RUNNER,
+        'summary_sha256': sha(sraw), 'bounds_certificate_sha256': bounds_sha, 'solver_commit': SOLVER, 'runner_commit': RUNNER,
         'core_comparison': comparison,
         'cases_improved_makespan_any_core': len({x['case'] for x in values if x['new_M'] < x['old_M']}),
         'cases_with_plan_change_any_core': len({x['case'] for x in values if x['plan_changed']}),
         'solver_wall_seconds': stats([x['solver_wall'] for x in values]),
         'external_E0_wall_seconds': stats([x['external_E0_wall'] for x in values]),
         'calls': calls, 'peer_targets_reference_only': [2.26, 3.18, 3.96, 4.53],
-        'limitations': 'No new evaluator calls; archived evidence audit does not prove global optimality or reproduce the peer report.'}, indent=2))
+        'limitations': 'No new evaluator calls. The necessary-bound ceiling may be unattainable; within-5pct counts rely on the stated source-checked bound proof. No global optimality or peer reproduction claim.'}, indent=2))
     return 0
 
 
