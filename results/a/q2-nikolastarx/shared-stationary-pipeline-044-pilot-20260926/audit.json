@@ -1,0 +1,81 @@
+{
+  "status": "verified_single_cell_primary_improvement",
+  "case": "044",
+  "cores": 5,
+  "fixed_package_commit": "1e9188e41ca54ef3baa3c265d14fb0d2f99c7b3c",
+  "solver_source_commit": "cbad84f726fecd997eeb76f3735ce5a2269225cb",
+  "control_solver_commit": "c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f",
+  "capsule_sha256": "89ca3a845d3381881ec7fd076655b74cb87f066a76efbc1445cdbe3ba070a43b",
+  "result_zip_sha256": "c639330713bf80f4b1eee639c1aef1879bbc764e212a890aa387740edd7633b7",
+  "plan_sha256": "5a472c8644065169b9d5078e5f7010ad8f3627db0a674c2caa2dcfe7b24c9b4a",
+  "official_result_sha256": "a8486a4daf65308fa8891d93e77b61d1ed41bb6427f94483cbd6e8e7bb0f6b92",
+  "calls": {
+    "construct": 1,
+    "E0": 1,
+    "E1": 0,
+    "E2": 0
+  },
+  "old_official": {
+    "makespan_cycles": 43795,
+    "added_copy_bytes": 930400
+  },
+  "new_official": {
+    "makespan_cycles": 39681,
+    "added_copy_bytes": 129536,
+    "spill_added_copy_bytes": 0,
+    "task_count": 5,
+    "cross_core_transfer_count": 132
+  },
+  "difference": {
+    "makespan_cycles": -4114,
+    "makespan_percent": -9.39376641169083,
+    "added_copy_bytes": -800864
+  },
+  "core_task_intervals": [
+    [
+      0,
+      29349
+    ],
+    [
+      3209,
+      30911
+    ],
+    [
+      9250,
+      32059
+    ],
+    [
+      15020,
+      35487
+    ],
+    [
+      20377,
+      39681
+    ]
+  ],
+  "processes": {
+    "launcher-process": {
+      "status": "ok",
+      "wall_seconds": 0.6173551310000676,
+      "observed_peak_rss_bytes": 48607232,
+      "surviving_pids": []
+    },
+    "output/construct-process": {
+      "status": "ok",
+      "wall_seconds": 0.21068758199999138,
+      "observed_peak_rss_bytes": 25878528,
+      "surviving_pids": []
+    },
+    "output/e0-process": {
+      "status": "ok",
+      "wall_seconds": 0.32039832899999965,
+      "observed_peak_rss_bytes": 30285824,
+      "surviving_pids": []
+    }
+  },
+  "limits_and_caveats": [
+    "This is one official case and one core count, not a full-algorithm score.",
+    "The strict constructor is statically eligible on only 3 of 100 official graphs at K5.",
+    "Colab timing is not directly comparable with the old Mac batch."
+  ]
+}

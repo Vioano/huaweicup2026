@@ -1,6 +1,6 @@
 # P2 shared stationary pipeline: 044/K5 Colab capsule
 
-This is a frozen one-cell qualification package. The earlier [stage-major negative result](../shared-stationary-044-pilot-20260926/RESULTS.md) motivated job-major ordering; it is not a result for this candidate.
+This is the frozen one-cell qualification package. Its complete official outcome is in [RESULTS.md](RESULTS.md). The earlier [stage-major negative result](../shared-stationary-044-pilot-20260926/RESULTS.md) motivated job-major ordering.
 
 At packaging time, local `pack.py` performed a hash-only preflight and wrote `capsule.zip`; that step ran no constructor, E0, E1 or E2. The job-major source is fixed at `cbad84f726fecd997eeb76f3735ce5a2269225cb`. Old c665 official 044/K5 is Makespan 43795 and added COPY bytes 930400. This one-cell pilot is a mechanism test, not a full500 score or an online selector.
 
