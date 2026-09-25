@@ -89,3 +89,40 @@ python -m src.q1_yuanzhifang.audit_team_priority --output NEW_PRIORITIES_JSON
 The fixed source/data hashes and all 500 bound comparisons are in the JSON.
 No lower bound exceeds the corresponding current v4 Makespan in this check;
 that absence of a counterexample is not a general proof of a bound.
+
+## Resumed-work update, 2026-09-25
+
+The preceding unstarted-L statements describe the original assessment time.
+Stage L later completed as a negative two-cell trial, archived separately; its
+execution after the UI goal pause was a controller error already disclosed in
+GOAL.md. The user subsequently resumed the goal, and the parent directly
+verified authoritative active status before this new read-only research.
+
+The captain accepted the P1/P2/P3 joint priority recommendation in Issue26
+comment 5823085955. Formal paper sections remain captain-owned; this P1 session
+owns its member draft, diagnostics and proposed mechanisms. The current team
+protocol at `2da54f2bc` makes total coordination responsible for resource
+priorities, and the board owner reacts to new official data or concrete faults.
+Repeated board status queries and duplicate personal full batches are not the
+next useful deliverables.
+
+| Workstream | Current evidence | Next useful action |
+| --- | --- | --- |
+| Final unified P1 release | v4 has full500; H/J subsequently integrated into a research entry | Validate that fixed entry's coverage and failures before replacing the v4 main means |
+| Low-core quality | v4 still below the 2/3-core numerical targets | Investigate a mechanism with measurable aggregate potential, not only another 051 variant |
+| Shared-input windows | Zero-score audit finds two conservative-capacity merge pairs in 044 | Freeze a general guarded constructor and one minimal paired check before any larger batch |
+| Theory | Captain Pro R4 has qualified fixed-MEM FIFO/credit and restricted return-cut arguments | Use proved assumptions and explicit unresolved gaps; do not duplicate that consultation |
+| Program efficiency | New research full500 attempt: 68 ok, 1 external E0 timeout, 431 not run | Separate cold generation from external evaluation and preserve the timeout; use strict identity reuse where permitted |
+
+The last row is the captain's fixed `ce8afb23032c1e26c2f9e427d4e1f838557ce9ac`
+report, actually read in Issue98 comment 5825614861. The solver for 014/k4
+completed in 76.2345 seconds; its external E0 hit the 900-second timeout. Its
+plan was reported byte-identical to old v4, but the new failed evaluation is
+retained and is not silently changed into a fresh success. This is not evidence
+that the solver itself timed out, nor a new all100 mean.
+
+The detailed next mechanism, restricted proof, identities and reproduction
+command are in `../shared-window-audit-20260925/README.md`. This resumed round
+has zero new solver, Task compilation, E0/E1/E2 or Pro calls. There is no global
+optimality certificate; the full goal is neither declared achieved nor reduced
+to the completion of this audit.
