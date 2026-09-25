@@ -1,5 +1,7 @@
 # Hypergap full500 audit
 
+**Completed and independently audited:** [full500 results and limitations](RESULTS.md), [machine-readable report](report.json).
+
 Read-only, fail-closed paired audit for the frozen `c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f` run and runner `ff47cbca4a953602dec7e4b959bbb10a016eca9a`. It requires the completed runtime summary and the 10 archived 10-case groups; it does not invoke a solver or evaluator and never creates or repairs missing artifacts.
 
 Run from the repository root:
