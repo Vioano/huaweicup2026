@@ -84,6 +84,35 @@ def objective(diag):
     return tuple(value)
 
 
+def selected_objective(diag):
+    """A sole unchanged candidate requires E0 acceptance, not online ranking."""
+    if diag.get("selected_objective") is not None:
+        return objective(diag)
+    structural = diag["parent"]
+    response = structural["parent"]
+    base = response["baseline"]["diagnostics"]
+    candidates = base.get("candidates")
+    digest = diag.get("selected_plan_sha256")
+    if (diag.get("selected") != "parent"
+            or diag.get("stop_reason") not in (
+                "single-core-or-invalid", "parent-objective-unavailable-or-invalid")
+            or diag.get("parent_plan_sha256") != digest
+            or structural.get("selected_plan_sha256") != digest
+            or structural.get("selected_objective") is not None
+            or diag.get("actual_e1_calls_total") != 0
+            or diag.get("attempt", {}).get("constructor_attempts") != 0
+            or structural.get("extra") != []
+            or response.get("refinement", {}).get("child_attempts") != 0
+            or base.get("stop_reason") != "single-distinct-plan"
+            or not isinstance(candidates, list) or len(candidates) != 1
+            or candidates[0].get("plan_sha256") != digest
+            or candidates[0].get("name") != base.get("selected")
+            or response.get("selected") != base.get("selected")
+            or structural.get("selected") != base.get("selected")):
+        raise RuntimeError("unscored output is not a verified sole unchanged candidate")
+    return None
+
+
 def checked_diagnostics(diag, plan_sha256):
     if diag.get("selected_plan_sha256") != plan_sha256:
         raise RuntimeError("selected plan bytes differ")
@@ -103,12 +132,7 @@ def checked_diagnostics(diag, plan_sha256):
                            or attempt["score"]["worker_pid"] <= 0))
             or diag.get("known_e1_calls_lower_bound") != ledger["total"]):
         raise RuntimeError("branch E1 worker identity/count uncertain")
-    if diag.get("stop_reason") == "single-core-or-invalid":
-        if (diag.get("selected_objective") is not None or ledger["total"] != 0
-                or attempt.get("constructor_attempts") != 0):
-            raise RuntimeError("single-core must retain parent without online E1")
-    else:
-        objective(diag)
+    selected_objective(diag)
     return ledger["total"]
 
 
@@ -121,6 +145,8 @@ def checked_plan(plan, diag, cores):
         raise RuntimeError("plan two-key/core count mismatch")
     if sha(plan) != diag.get("selected_plan_sha256"):
         raise RuntimeError("selected plan hash mismatch")
+    if (diag.get("stop_reason") == "single-core-or-invalid") != (cores == 1):
+        raise RuntimeError("single-core diagnostic differs from requested core count")
 
 
 def reconcile_process_calls(row):
@@ -155,8 +181,9 @@ def install_checks():
         diag = json.loads((folder / "diagnostics.json").read_text())
         checked_plan(plan, diag, row["cores"])
         reused = prior_reuse(row, plan, graph_hash, config_hash, official_hash, folder)
-        if (reused and row["cores"] > 1
-                and (reused["makespan_cycles"], reused["scheduled_copy_bytes"]) != objective(diag)):
+        selected = selected_objective(diag)
+        if (reused and selected is not None
+                and (reused["makespan_cycles"], reused["scheduled_copy_bytes"]) != selected):
             raise RuntimeError("reused E0 differs from selected objective")
         return reused
 
@@ -180,7 +207,7 @@ def install_checks():
                 if (type(official[0]) is not int or official[0] <= 0
                         or type(official[1]) is not int or official[1] < 0):
                     raise RuntimeError("official E0 objective invalid")
-                selected = None if cell[1] == 1 else objective(diag)
+                selected = selected_objective(diag)
                 if selected is not None and official != selected:
                     raise RuntimeError("official E0 differs from selected objective")
                 row["selected_objective"] = list(selected) if selected else None

@@ -11,23 +11,39 @@ from src.q1_benchmarks import s6607_branch_full500 as runner
 
 
 def single_core_diag(plan_sha):
-    return {"selected_plan_sha256": plan_sha, "selected_objective": None,
+    return {"selected": "parent", "parent_plan_sha256": plan_sha,
+            "selected_plan_sha256": plan_sha, "selected_objective": None,
             "stop_reason": "single-core-or-invalid", "actual_e1_calls_total": 0,
             "known_e1_calls_lower_bound": 0,
             "attempt": {"score_attempts": 0, "constructor_attempts": 0,
                         "actual_e1_worker_calls": 0},
-            "parent": {"actual_e1_calls_total": 0, "known_e1_calls_lower_bound": 0,
+            "parent": {"selected": "sole", "selected_plan_sha256": plan_sha,
+                       "selected_objective": None,
+                       "actual_e1_calls_total": 0, "known_e1_calls_lower_bound": 0,
                        "extra": [], "extra_score_attempts": 0,
                        "extra_actual_e1_calls": 0,
-                       "parent": {"baseline": {"actual_e1_calls": 0,
+                       "parent": {"selected": "sole", "baseline": {"actual_e1_calls": 0,
                                                "diagnostics": {"actual_e1_calls": 0,
+                                                               "selected": "sole",
+                                                               "stop_reason": "single-distinct-plan",
+                                                               "candidates": [{"name": "sole", "plan_sha256": plan_sha}],
                                                                "online_scores": [],
                                                                "online_score_attempts": 0}},
-                                  "refinement": {"actual_e1_calls": 0,
+                                  "refinement": {"child_attempts": 0, "actual_e1_calls": 0,
                                                  "score_attempts": 0}}}}
 
 
 class BranchFull500Tests(unittest.TestCase):
+    def test_multicore_single_distinct_path_is_unscored_but_identity_checked(self):
+        diag = single_core_diag("sole-sha")
+        diag["stop_reason"] = "parent-objective-unavailable-or-invalid"
+        self.assertEqual(runner.checked_diagnostics(diag, "sole-sha"), 0)
+        self.assertIsNone(runner.selected_objective(diag))
+        base = diag["parent"]["parent"]["baseline"]["diagnostics"]
+        base["candidates"][0]["plan_sha256"] = "wrong-sha"
+        with self.assertRaises(RuntimeError):
+            runner.checked_diagnostics(diag, "sole-sha")
+
     def test_prelaunch_resource_rejection_is_zero_dispatch(self):
         row = {"calls": {"solver": 1, "E1": None, "E0": 0},
                "solver": {"supervision": {"reason": "resource guard before Popen: pressure"}}}
