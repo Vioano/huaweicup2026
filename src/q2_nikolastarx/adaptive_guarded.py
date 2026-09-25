@@ -201,7 +201,15 @@ def score_adapter(evaluator, ledger, ledger_path, *, prepare=None, remaining_wal
             prepare()
         if remaining_wall is not None and remaining_wall() <= 0:
             raise TimeoutError('no solver wall time remains before E2 request')
-        attempt = {'plan_sha256': _sha(json.dumps(plan, sort_keys=True, allow_nan=False).encode()),
+        plan_raw = json.dumps(plan, sort_keys=True, allow_nan=False).encode()
+        plan_relative = f"oracle-plans/{len(ledger.get('attempts', [])) + 1:03d}.json"
+        plan_path = Path(ledger_path).parent / plan_relative
+        plan_path.parent.mkdir(parents=True, exist_ok=True)
+        # Preserve the complete input before crossing the evaluator boundary.
+        # Exclusive creation also prevents accidental reuse of an evidence dir.
+        with plan_path.open('xb') as stream:
+            stream.write(plan_raw)
+        attempt = {'plan_sha256': _sha(plan_raw), 'plan_file': plan_relative,
                    'started_at': datetime.now(timezone.utc).isoformat(), 'status': 'in_flight'}
         attempt_start = time.perf_counter()
         ledger.setdefault('attempts', []).append(attempt)
