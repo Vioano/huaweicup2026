@@ -1,0 +1,186 @@
+{
+  "scope": "097 recovered official result from a stopped tail4 producer; not a completed tail4 batch",
+  "source_commit": "15d86e13b4a8abb4bce445ac241aecac13f553bf",
+  "case": "097",
+  "cores": 5,
+  "original_summary_preserved": true,
+  "original_summary_status": "stopped",
+  "original_summary_call_count_complete": false,
+  "correction": "E0 successfully completed; parent result read failed because relative output resolved under child cwd. Original result, trace, log and both source folders preserved. No retry.",
+  "calls_this_window": {
+    "new_solver": 0,
+    "E2": 0,
+    "independent_E0": 1,
+    "fallback": 0,
+    "retry": 0
+  },
+  "later_cases_not_started": [
+    "076",
+    "003",
+    "084"
+  ],
+  "old_M": 2102348,
+  "new_M": 2102348,
+  "old_extra_DDR": 21311488,
+  "new_extra_DDR": 21311488,
+  "movement": {
+    "original_graph_copy_bytes": 5046272,
+    "scheduled_copy_bytes": 26357760,
+    "added_copy_bytes": 21311488,
+    "partition_added_copy_bytes": 17039360,
+    "spill_added_copy_bytes": 4272128
+  },
+  "solver_wall_seconds_from_previous_window": 0.46739249996608123,
+  "new_solver_wall_seconds": null,
+  "e0_process": {
+    "argv": [
+      "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/.venv/bin/python",
+      "-B",
+      "/Users/nikolastar/.codex/worktrees/p2-bidirectional-full500-s7d28/huaweicup2026/data/raw/a/official/code/multicore_cut_evaluate_problem_2.py",
+      "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/data/raw/a/official/data/case_097.json",
+      "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/bidirectional-holdout12-runtimefix-run-20260925/results/097-k5/plan.json",
+      "--config",
+      "/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/data/raw/a/official/data/config.txt",
+      "--output",
+      "output/holdout-tail4-run-20260925/097-k5/result.json",
+      "--trace-output",
+      "output/holdout-tail4-run-20260925/097-k5/trace.json",
+      "--log-output",
+      "output/holdout-tail4-run-20260925/097-k5/official.log"
+    ],
+    "started_at": "2026-09-25T14:38:37.627548Z",
+    "status": "ok",
+    "sample_interval_seconds": 0.05,
+    "observed_peak_rss_bytes": 144932864,
+    "rss_samples": 17,
+    "cleanup_killed_pids": [],
+    "pid": 24300,
+    "observer_inclusive_peak_rss_bytes": 306511872,
+    "exit_code": 0,
+    "surviving_pids": [],
+    "finished_at": "2026-09-25T14:38:39.013598Z",
+    "wall_seconds": 1.3860717079951428
+  },
+  "result_sha256": "8f056db7a02330fa055af60f9ce2a9c32f5e58933328bea85523708e12ae249c",
+  "trace_sha256": "a7e63c3e17abc16b618cd20ebda62cd34b2fa885815ac17979b904fe28c68674",
+  "plan_sha256": "ad8ff5ccfaf31dc24e4a28a8fb424c43deec27a80cd5798ef23d860c2046c111",
+  "archive_sha256": "e221f206b5f528fda10ea71ce535264ddbc65ce8cb5dc165eae173b9adcd6308",
+  "archive_files": {
+    "producer/097-k5/e0-process/process.json": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/holdout-tail4-run-20260925/097-k5/e0-process/process.json",
+      "bytes": 1292,
+      "sha256": "b73c41cfe0b97d337431eebcfc0c140017f3af3eaa98cc563ca61cdca43b2bb3"
+    },
+    "producer/097-k5/e0-process/stderr.txt": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/holdout-tail4-run-20260925/097-k5/e0-process/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "producer/097-k5/e0-process/stdout.txt": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/holdout-tail4-run-20260925/097-k5/e0-process/stdout.txt",
+      "bytes": 166,
+      "sha256": "ef83bcd239640ea0ceac5bed0325884cead8b213793fcf3c2147b75124511ff8"
+    },
+    "producer/summary.json": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/holdout-tail4-run-20260925/summary.json",
+      "bytes": 979,
+      "sha256": "b35bd77a8047ca275fd626da9020cfb4d2895451801a4d24942ad111ab761968"
+    },
+    "official-output-actual-cwd/official.log": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/p2-bidirectional-full500-s7d28/huaweicup2026/output/holdout-tail4-run-20260925/097-k5/official.log",
+      "bytes": 291,
+      "sha256": "0e9f58f271415d805c30d3f4282f93928f7f797fce6cc287c9c938fa7d28866a"
+    },
+    "official-output-actual-cwd/result.json": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/p2-bidirectional-full500-s7d28/huaweicup2026/output/holdout-tail4-run-20260925/097-k5/result.json",
+      "bytes": 3805391,
+      "sha256": "8f056db7a02330fa055af60f9ce2a9c32f5e58933328bea85523708e12ae249c"
+    },
+    "official-output-actual-cwd/trace.json": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/p2-bidirectional-full500-s7d28/huaweicup2026/output/holdout-tail4-run-20260925/097-k5/trace.json",
+      "bytes": 5712152,
+      "sha256": "a7e63c3e17abc16b618cd20ebda62cd34b2fa885815ac17979b904fe28c68674"
+    },
+    "saved-solver097/cell.json": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/bidirectional-holdout12-runtimefix-run-20260925/results/097-k5/cell.json",
+      "bytes": 849,
+      "sha256": "75418ce656a70130547e934b83921c09e7b7e82ec443aa4bd577616293a9fbe7"
+    },
+    "saved-solver097/online/solver.json": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/bidirectional-holdout12-runtimefix-run-20260925/results/097-k5/online/solver.json",
+      "bytes": 44307,
+      "sha256": "8760c1dbdb07f081f428d19c34d5f60493729ccfc4e1053ef5260475c5a963a9"
+    },
+    "saved-solver097/plan.json": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/bidirectional-holdout12-runtimefix-run-20260925/results/097-k5/plan.json",
+      "bytes": 195490,
+      "sha256": "ad8ff5ccfaf31dc24e4a28a8fb424c43deec27a80cd5798ef23d860c2046c111"
+    },
+    "saved-solver097/solver-process/process.json": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/bidirectional-holdout12-runtimefix-run-20260925/results/097-k5/solver-process/process.json",
+      "bytes": 1333,
+      "sha256": "c0665644c6ce2708d5fe979fcdb6224b51c61a5e9ff8a8e3f05df9c5bea54bd5"
+    },
+    "saved-solver097/solver-process/stderr.txt": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/bidirectional-holdout12-runtimefix-run-20260925/results/097-k5/solver-process/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "saved-solver097/solver-process/stdout.txt": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/bidirectional-holdout12-runtimefix-run-20260925/results/097-k5/solver-process/stdout.txt",
+      "bytes": 162,
+      "sha256": "774abf70d71c0ba36808b0cd4022883a5c13b6bebcbb1ea43e919d493c725d19"
+    },
+    "preparation/README.md": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/holdout-tail4-preparation-20260925/README.md",
+      "bytes": 1464,
+      "sha256": "c15350ac81ac4a33590f049ce52089a85c7dee9857e5ae2dbcab4c5d3e4494af"
+    },
+    "preparation/compare_all12.py": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/holdout-tail4-preparation-20260925/compare_all12.py",
+      "bytes": 5092,
+      "sha256": "39588e56b4217112e9c500f0a7943a4ba05bc99b17acc04e965b4a682fda0b7a"
+    },
+    "preparation/execution-exitcode.txt": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/holdout-tail4-preparation-20260925/execution-exitcode.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    "preparation/execution-host-t0.json": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/holdout-tail4-preparation-20260925/execution-host-t0.json",
+      "bytes": 3011,
+      "sha256": "0c813a6d22039506ef173136c56f02accc069cf9db593a1e52459fe75a548a55"
+    },
+    "preparation/execution-receipt.json": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/holdout-tail4-preparation-20260925/execution-receipt.json",
+      "bytes": 3166,
+      "sha256": "85aaf5c369dca9ae7110346302ace6412261bd062441ef1e84f9d86aea6c60a4"
+    },
+    "preparation/execution-stderr.txt": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/holdout-tail4-preparation-20260925/execution-stderr.txt",
+      "bytes": 1385,
+      "sha256": "49b2f1cd9c013b68058638a02aac2f6e96fb77bd74aed07f3410a146bfb28730"
+    },
+    "preparation/execution-stdout.txt": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/holdout-tail4-preparation-20260925/execution-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "preparation/gate-template.json": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/holdout-tail4-preparation-20260925/gate-template.json",
+      "bytes": 294,
+      "sha256": "5874d60b13751523e95dfa99669bfa01aea9ea2a5686092bdd59c57f9af67cf8"
+    },
+    "preparation/manifest.json": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/holdout-tail4-preparation-20260925/manifest.json",
+      "bytes": 1951,
+      "sha256": "fbfac3f65113c52d7792a7bcfa49527773c673db9153459b9150f9a09e3c1bb0"
+    },
+    "preparation/run_tail4.py": {
+      "original_path": "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/holdout-tail4-preparation-20260925/run_tail4.py",
+      "bytes": 10103,
+      "sha256": "be1eb85fa9287346a36348abd16149d5b252b505d5c72365ca0d43fefaa1982f"
+    }
+  },
+  "conclusion": "9/12 preselected holdout cells now have official results; all nine tie c665. Not evidence of whole-suite improvement."
+}
