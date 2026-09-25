@@ -1,0 +1,135 @@
+{
+  "schema": "convex-safe-sequence-static-v1",
+  "input_sha256": {
+    "prepared": "91c9e4ff2995d091922f7ae1b0975de98174a9487a1d0458a05c60535beb5c44",
+    "old": "2885b28a512598e4bae525c7bf4b214ac9b2452de19425603fcdea2ae8e7038a",
+    "new": "549519032c0ae7b78957463d0b6189d30184bcfd46e06fa60fc2c1fcc7dc6615",
+    "old201": "f4c58ccf77f5a8add20687eb20247ede169ff34b78a0f24e1c8bda805f1c75a2",
+    "step1_result": "25e3148631efc5a4186a980a8669c00d9e06756541de1f2c38fafe55e790781f"
+  },
+  "source_sha256": {
+    "step1_only": "ab029d2afc54d7ca415d2c2c835d987936a0fe9e049acc83d258fc4f314b675a",
+    "prior_guard": "7c4116c6a076ccbba22725594a27a0c99aeed7cb08f27891985d1403ede80931",
+    "official_p2": "0b39f84d5ec0a7fba9a4c92a598a9044b97ab79c71393824c1ba130ecfe6c464",
+    "official_step1": "d8fe721ff3dbe036e34a20c00cce6430960860000a49eb467e63465f76b84034",
+    "official_p3": "eab1504dead881f4b67c0f0498cbc2dbbd9039dc3c9d198c6af58773c127eeb0"
+  },
+  "official_calls_this_process": {
+    "Task": 0,
+    "Step1": 0,
+    "Step2": 0,
+    "Step3": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "old_seq_exact": true,
+  "old201_seq_exact": true,
+  "new_local_topological": true,
+  "other_core_owner_schedule_fifo_unchanged": true,
+  "new_core0_seq_ops": 795,
+  "new_core0_sg_count": 401,
+  "candidate_seq_sha256": "21d235d23884039f0f14f00890f72360ce0d43789aae48edff694a6ab2132d52",
+  "pilot_copy_id": 1000004471,
+  "pilot_copy_full_seq_pos": 280,
+  "pilot_copy_mte2_rank": 46,
+  "mte2_count": 116,
+  "capacity_interval_peak": {
+    "L1": {
+      "bytes": 19008,
+      "capacity_bytes": 524288,
+      "within_capacity": true,
+      "at_seq_pos": 281,
+      "tensor_count": 236
+    },
+    "UB": {
+      "bytes": 21844,
+      "capacity_bytes": 131072,
+      "within_capacity": true,
+      "at_seq_pos": 487,
+      "tensor_count": 474
+    }
+  },
+  "capacity_sufficient_for_no_spill": true,
+  "local_coverage": [
+    {
+      "core": 0,
+      "ops": 795,
+      "tensors": 911,
+      "edges": 1992,
+      "producer_tensor_keys": 911,
+      "consumer_tensor_keys": 911
+    },
+    {
+      "core": 1,
+      "ops": 749,
+      "tensors": 864,
+      "edges": 2624,
+      "producer_tensor_keys": 864,
+      "consumer_tensor_keys": 864
+    },
+    {
+      "core": 2,
+      "ops": 749,
+      "tensors": 864,
+      "edges": 2622,
+      "producer_tensor_keys": 864,
+      "consumer_tensor_keys": 864
+    },
+    {
+      "core": 3,
+      "ops": 1422,
+      "tensors": 1566,
+      "edges": 5440,
+      "producer_tensor_keys": 1566,
+      "consumer_tensor_keys": 1566
+    },
+    {
+      "core": 4,
+      "ops": 1420,
+      "tensors": 1564,
+      "edges": 5394,
+      "producer_tensor_keys": 1564,
+      "consumer_tensor_keys": 1564
+    }
+  ],
+  "pipe_counts": [
+    {
+      "PIPE_MTE2": 116,
+      "PIPE_M": 123,
+      "PIPE_MTE3": 85,
+      "PIPE_V": 471
+    },
+    {
+      "PIPE_MTE2": 115,
+      "PIPE_V": 471,
+      "PIPE_M": 114,
+      "PIPE_MTE3": 49
+    },
+    {
+      "PIPE_MTE2": 115,
+      "PIPE_V": 471,
+      "PIPE_M": 114,
+      "PIPE_MTE3": 49
+    },
+    {
+      "PIPE_MTE2": 144,
+      "PIPE_M": 233,
+      "PIPE_MTE3": 103,
+      "PIPE_V": 942
+    },
+    {
+      "PIPE_MTE2": 144,
+      "PIPE_M": 232,
+      "PIPE_MTE3": 102,
+      "PIPE_V": 942
+    }
+  ],
+  "cross_links": 381,
+  "joint_op_vertices": 5135,
+  "joint_arcs": 17083,
+  "joint_dag": true,
+  "cycle_witness": null,
+  "elapsed_seconds": 0.08289250003872439,
+  "limitation": "Static necessary graph only; new core0 Step3 memory edges, issue time and official Makespan are unknown."
+}

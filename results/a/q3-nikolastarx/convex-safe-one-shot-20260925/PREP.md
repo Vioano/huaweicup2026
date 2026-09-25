@@ -1,0 +1,7 @@
+# 005/K5 convex safe interval: proposed single diagnostic
+
+Not admitted or run. One fixed candidate only: core0 ranks9..202 (194 compute ops), owner unchanged. Both full-envelope quotient and actual necessary pipe/data/cross-link graph are DAGs. Complete-sequence capacity guard passes. MTE2 target ordinal remains46; managed-allocation ordinal improves248->244 and all four FIFO words change. This is a falsifiable issue-time hypothesis, not a score prediction. The earlier201-op candidate is rejected by a real71-edge cycle and must not be scored.
+
+Proposed: one official P3, then exactly one same-plan P2 only if P3 guards pass and M3<24522. Joint acceptance additionally requires M2<=29026 and G>=max(29026/24522,37327/30642). Save each actual number even if rejected. At most2 new E0; 1worker;90s/phase;600s total; first exception stop;0retry. Existing budgets remain spent. No constructor timing measured; diagnostic wall is not cold solver wall. Runtime resource policy and single dispatch belong to coordinator. No admission exists yet.
+
+Runner derives from frozen R9 probe: the only behavior changes are fixed candidate SHA, multi-op prepared guard with observed (not asserted<=4) crossing count, stricter G threshold and new entrypoint. Prepared identity, dependency, capacity, traffic, no-spill, exact FIFO, memory and union checks remain. Final official source is unmodified. New multi guard testing must finish before freeze/admission.

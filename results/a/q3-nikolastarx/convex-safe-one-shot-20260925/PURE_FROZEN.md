@@ -1,0 +1,1 @@
+One pure control/hash and five gate checks. No worker/oracle/source verification call. Source runner SHA583c48fd2db8fda38b8af3cf6e0c12a640945f08ac2741bc24c61b17eb822212; test SHAfe34b9e6c7c207bdd984e2ba8e80e16082b386db5cfb5fcf085d5ab64b392184. 1process30s/0retry/0official. Run with PYTHONPATH=repo-root.

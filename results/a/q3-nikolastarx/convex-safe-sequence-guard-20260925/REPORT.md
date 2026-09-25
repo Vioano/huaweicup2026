@@ -1,0 +1,11 @@
+# 194-op convex safe-cut: necessary static checks pass
+
+The **single** frozen static process exited 0 with empty stderr and no retry. `RESULT.json` SHA-256 `2a4075c35355d9e9a2df3cf28bf99f555073da3ad484afc54652c8473ce47414`; complete derived `candidate_seq.json` SHA-256 `21d235d23884039f0f14f00890f72360ce0d43789aae48edff694a6ab2132d52`; stdout SHA-256 `e9278f0edbd7b158eed79546c6382b928e89a9b08174af4103f138aac1b15e37`. No official Task, Step1, Step2, Step3, E0, E1 or E2 was called in this process. Runtime inside the script was 0.083 s; this is analysis time, not solver time.
+
+The script verified all frozen byte hashes and the official priority source's stable-sort rule. Applying that rule to the *saved* sole official Step1 `raw_seq` exactly reproduced the archived old sequence and the older 201-op candidate sequence before deriving the 194-op sequence. This is a pure sequence transformation, not another Step1 run. The 194-op core-0 priority word has 401 subgraphs and produces a full 795-op sequence covering the recovered Task once. Every recovered original local producer-to-consumer/direct arc points forward. All compute owners and cores 1–4's subgraph words, sequences and FIFO remain unchanged.
+
+The target COPY `1000004471` is at full-sequence position **280** and MTE2 rank **46** among 116 MTE2 ops. The old rank was 46; the rejected 201-op proposal had rank 40. These are positions in a priority sequence, not issue times, Cache behavior or Makespan evidence.
+
+Inclusive full-use tensor intervals give core-0 L1 peak **19,008 / 524,288 bytes** at sequence position 281 and UB peak **21,844 / 131,072 bytes** at position 487. This is a no-spill capacity sufficiency check for Step2 under the interval model, not a runtime memory peak or an observed new Step2 result.
+
+The five-core necessary graph covers **5,135** namespaced op vertices, **17,083** directed arcs and all **381** saved cross links. Core 0 uses recovered original Task edges plus new per-pipe FIFO; cores 1–4 keep saved graph edges/FIFO. Tensor contraction preserves every producer and consumer. DFS found **no cycle**. This removes the structural obstruction seen for the 201-op proposal, but new core-0 Step3 memory edges, issue times and official P3/P2 results remain unknown. The static pass does not make this candidate a valid scored plan or authorize a new evaluation batch.

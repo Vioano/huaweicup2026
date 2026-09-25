@@ -1,0 +1,23 @@
+{
+  "hypothesis": "Only repository import path caused prior import failure. Corrected fixtures and guard unchanged.",
+  "command": [
+    "python3",
+    "-B",
+    "results/a/q3-nikolastarx/multibucket-guard-20260925/import-path-recovery/verify.py"
+  ],
+  "environment": {
+    "PYTHONPATH": "repository root"
+  },
+  "source_sha256": {
+    "src/q3/layered_prepared_guard.py": "804e122433fb3e6e90d28d984c3204a8ca195364f32674511d679554c43ef5f2",
+    "tests/test_q3_multibucket_guard.py": "ad37d3dd1d31e390ea1cfb0ca7c20743613a8de55cd80d9a33e51bf5edebab4a",
+    "results/a/q3-nikolastarx/multibucket-guard-20260925/import-path-recovery/verify.py": "d61ed090b5d58648787fd11afcea74217058b8ae2fc5713fb427ff600d722494"
+  },
+  "budget": {
+    "processes": 1,
+    "wall_seconds": 30,
+    "official_calls": 0,
+    "automatic_retries": 0
+  },
+  "stop": "first test/import/readback failure; old failures retained"
+}

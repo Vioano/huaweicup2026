@@ -1,4 +1,8 @@
-"""Pure audit of a saved P3 singleton Task/Step2/Step3 capture.
+"""Pure audit of a saved P3 Task/Step2/Step3 capture.
+
+Default mode certifies singleton buckets. Explicit ``allow_multi=True`` checks
+multi-compute buckets against actual prepared Task order and full local tensor
+intervals; it does not extend the legacy raw direct-op-edge scope.
 
 This module never imports or invokes the official evaluator. It accepts the
 ``captured`` dictionary saved by query_flow_probe (native or JSON-decoded),
@@ -11,6 +15,7 @@ from collections import Counter, defaultdict, deque
 
 PIPES = ('PIPE_MTE2', 'PIPE_MTE3', 'PIPE_M', 'PIPE_V')
 COPY = {'COPY_IN', 'COPY_OUT'}
+_DEFAULT_CROSSING = object()
 
 
 class PreparedGuardError(ValueError):
@@ -60,29 +65,40 @@ def _graph_ports(graph):
     return ops, tensors, producer, consumers, in_tids, out_tids, direct
 
 
-def check_layered_prepared(graph, plan, captured, *, layers: int):
+def check_layered_prepared(graph, plan, captured, *, layers: int,
+                           allow_multi: bool = False, crossing_limit=_DEFAULT_CROSSING):
     """Return a checked report or raise :class:`PreparedGuardError`.
 
     ``layers`` is the already established structural layer count. This guard
-    verifies the prepared crossing limit against ``layers+1``; it does not
-    re-recognize attention rows or prove the raw-graph layer decomposition.
+    verifies the prepared crossing limit against ``layers+1`` by default.
+    ``crossing_limit=None`` reports the observed crossing without that bound.
+    It does not re-recognize rows, certify a raw layer decomposition, or
+    accept original direct op-op edges.
     """
     require(type(layers) is int and layers >= 0, 'invalid_layers', layers=layers)
+    require(type(allow_multi) is bool, 'invalid_allow_multi')
+    if crossing_limit is _DEFAULT_CROSSING:
+        crossing_limit = layers + 1
+    require(crossing_limit is None or (type(crossing_limit) is int and crossing_limit >= 0),
+            'invalid_crossing_limit', crossing_limit=crossing_limit)
     require(set(plan) == {'node_to_subgraph', 'core_schedules'}, 'plan_fields')
     raw_ops, raw_tensors, raw_prod, raw_cons, _, raw_out, raw_direct = _graph_ports(graph)
     require(not raw_direct, 'raw_direct_edge')
     compute = {u for u, op in raw_ops.items() if op['op'] not in COPY}
     require(all(raw_out[u] for u in compute), 'compute_without_output')
     mapping = ids(plan['node_to_subgraph'])
-    require(set(mapping) == compute and len(set(mapping.values())) == len(mapping),
-            'singleton_mapping', expected=len(compute), actual=len(mapping))
+    require(set(mapping) == compute and (allow_multi or len(set(mapping.values())) == len(mapping)),
+            'compute_mapping' if allow_multi else 'singleton_mapping',
+            expected=len(compute), actual=len(mapping))
     schedules = plan['core_schedules']
     require(isinstance(schedules, list) and schedules, 'core_schedules')
     flat = [sg for order in schedules for sg in order]
-    require(len(flat) == len(set(flat)) == len(mapping) and set(flat) == set(mapping.values()),
-            'singleton_schedule', scheduled=len(flat), expected=len(mapping))
+    require(len(flat) == len(set(flat)) == len(mapping.values() if not allow_multi else set(mapping.values()))
+            and set(flat) == set(mapping.values()),
+            'multi_schedule' if allow_multi else 'singleton_schedule',
+            scheduled=len(flat), expected=len(set(mapping.values())))
     core_of_sg = {sg: c for c, order in enumerate(schedules) for sg in order}
-    op_of_sg = {sg: u for u, sg in mapping.items()}
+    op_of_sg = {sg: u for u, sg in mapping.items()} if not allow_multi else None
     core_of = {u: core_of_sg[sg] for u, sg in mapping.items()}
     bucket = {u: (core_of[u], schedules[core_of[u]].index(mapping[u])) for u in compute}
     count_cores = len(schedules)
@@ -135,7 +151,8 @@ def check_layered_prepared(graph, plan, captured, *, layers: int):
             'task_core_coverage', cores=count_cores, tasks=sorted(tasks), steps=len(steps))
     require(set(capacity) == {'L1', 'UB'}, 'capacity_pools')
     peaks = []
-    for c, row in enumerate(diff):
+    frontier_rows = [] if allow_multi else diff
+    for c, row in enumerate(frontier_rows):
         result = {}
         for pool, deltas in row.items():
             amount = maximum = 0
@@ -147,6 +164,7 @@ def check_layered_prepared(graph, plan, captured, *, layers: int):
                     pool=pool, peak=maximum, capacity=capacity[pool])
         peaks.append(result)
 
+    closed_peaks = []
     nodes = set()
     edges = defaultdict(dict)
     edge_counts = Counter()
@@ -159,7 +177,8 @@ def check_layered_prepared(graph, plan, captured, *, layers: int):
         step = steps[c]
         require(not step.get('spill_records') and not step.get('overflow_log')
                 and not step.get('new_ops') and not step.get('new_tensors')
-                and not step.get('new_edges'), 'step2_spill', core=c,
+                and not step.get('new_edges') and not step.get('removed_edges'),
+                'step2_spill', core=c,
                 spills=len(step.get('spill_records', [])),
                 overflows=len(step.get('overflow_log', [])))
         task = tasks[c]
@@ -187,6 +206,45 @@ def check_layered_prepared(graph, plan, captured, *, layers: int):
                 extra=sorted(set(found)-set(wanted))[:10])
         # _graph_ports already rejects multiple producers for each tensor.
         require(all(tid in prod for tid in found), 'local_tensor_producer', core=c)
+        seq_rank = {u: i for i, u in enumerate(seq)}
+        if allow_multi:
+            require(all(out_tids[u] & set(found) for u in actual_compute),
+                    'compute_managed_output', core=c,
+                    missing=sorted(u for u in actual_compute if not out_tids[u] & set(found))[:10])
+            # Step2's ext_edges are the pre-Step3 graph when no spill/rewrite
+            # fields exist. Step3 may only add MEMORY_REUSE op arcs.
+            def edge_key(e):
+                return (e['source'], e['target'], e.get('dependency'))
+            graph_edges = Counter(map(edge_key, task_graph['edges']))
+            ext_edges = Counter(map(edge_key, step['ext_edges']))
+            extra = graph_edges - ext_edges
+            require(not (ext_edges - graph_edges)
+                    and all(kind == 'MEMORY_REUSE' for _, _, kind in extra),
+                    'step3_graph_extension', core=c)
+            for tid in found:
+                uses = {prod[tid]} | cons[tid]
+                require(uses <= set(seq_rank), 'closed_interval_coverage', core=c, tid=tid)
+            delta = {pool: [0] * (len(seq) + 1) for pool in capacity}
+            for tid, (pool, size) in found.items():
+                uses = {prod[tid]} | cons[tid]
+                first = min(seq_rank[u] for u in uses)
+                last = max(seq_rank[u] for u in uses)
+                delta[pool][first] += size
+                delta[pool][last + 1] -= size
+            local_peak = {}
+            for pool, row in delta.items():
+                used = peak = 0
+                for d in row[:-1]:
+                    used += d
+                    peak = max(peak, used)
+                require(peak <= capacity[pool], 'closed_interval_capacity',
+                        core=c, pool=pool, peak=peak, capacity=capacity[pool])
+                local_peak[pool] = peak
+            closed_peaks.append(local_peak)
+            for tid, source in prod.items():
+                for target in cons[tid]:
+                    require(seq_rank[source] < seq_rank[target],
+                            'task_data_topology', core=c, source=source, target=target)
         step3 = task['step3']
         # This is the local Step3 preparation simulation, not the final
         # multicore event trace's peak. The latter needs a separate P3 result.
@@ -199,10 +257,11 @@ def check_layered_prepared(graph, plan, captured, *, layers: int):
                     and step3['pipe_orders'][p] == projected[p] for p in PIPES),
                 'pipe_fifo', core=c)
         require(sum(map(len, projected.values())) == len(seq), 'pipe_coverage', core=c)
-        for p in ('PIPE_M', 'PIPE_V'):
-            word = [op_of_sg[sg] for sg in schedules[c] if raw_ops[op_of_sg[sg]]['pipe'] == p]
-            require([u for u in projected[p] if u in compute] == word,
-                    'original_pipe_fifo', core=c, pipe=p)
+        if not allow_multi:
+            for p in ('PIPE_M', 'PIPE_V'):
+                word = [op_of_sg[sg] for sg in schedules[c] if raw_ops[op_of_sg[sg]]['pipe'] == p]
+                require([u for u in projected[p] if u in compute] == word,
+                        'original_pipe_fifo', core=c, pipe=p)
         sg_index = {sg: i for i, sg in enumerate(schedules[c])}
         op_sg = ids(task['op_subgraph'])
         require(set(op_sg) == set(ops) and set(op_sg.values()) <= set(sg_index),
@@ -243,18 +302,31 @@ def check_layered_prepared(graph, plan, captured, *, layers: int):
                     kind=kind, tid=tid, expected=expected_b, actual=b)
             observed_copies[(kind, c, tid)] += 1
             copy_by_id[(c, u)] = (kind, tid)
-        require(all(sum(u in compute for u in seq if op_bucket[(c,u)] == i) == 1
-                    for i in range(len(schedules[c]))), 'bucket_compute_count', core=c)
+        bucket_compute_counts = Counter(op_bucket[(c, u)] for u in seq if u in compute)
+        require(all(bucket_compute_counts[i] >= 1 if allow_multi
+                    else bucket_compute_counts[i] == 1
+                    for i in range(len(schedules[c]))),
+                'bucket_compute_count', core=c)
         seq_rank = {u: i for i,u in enumerate(seq)}
         for u in seq:
             if (c,u) not in copy_by_id:
                 continue
             kind, _ = copy_by_id[(c,u)]
             b = op_bucket[(c,u)]
-            anchor = op_of_sg[schedules[c][b]]
-            require((seq_rank[u] < seq_rank[anchor] if kind == 'COPY_IN'
-                     else seq_rank[anchor] < seq_rank[u]),
-                    'copy_within_bucket_order', core=c, op=u, anchor=anchor, kind=kind)
+            if allow_multi:
+                tid = copy_by_id[(c,u)][1]
+                neighbors = ([v for v in cons[tid] if v in compute]
+                             if kind == 'COPY_IN' else
+                             [v for v in ops if v in compute and tid in out_tids[v]])
+                require(bool(neighbors) and
+                        all((seq_rank[u] < seq_rank[v] if kind == 'COPY_IN'
+                             else seq_rank[v] < seq_rank[u]) for v in neighbors),
+                        'copy_all_endpoint_order', core=c, op=u, tid=tid, kind=kind)
+            else:
+                anchor = op_of_sg[schedules[c][b]]
+                require((seq_rank[u] < seq_rank[anchor] if kind == 'COPY_IN'
+                         else seq_rank[anchor] < seq_rank[u]),
+                        'copy_within_bucket_order', core=c, op=u, anchor=anchor, kind=kind)
         for tid in touched[c]:
             actual_compute_users = cons[tid] & compute
             expected_compute_users = {u for u in raw_cons[tid]
@@ -283,7 +355,7 @@ def check_layered_prepared(graph, plan, captured, *, layers: int):
         for u, v in reported_mem:
             require(u in ops and v in ops, 'memory_endpoint', core=c, source=u, target=v)
             bu, bv = op_bucket[(c,u)], op_bucket[(c,v)]
-            require(bu < bv, 'memory_backward_bucket', core=c,
+            require(bu <= bv if allow_multi else bu < bv, 'memory_backward_bucket', core=c,
                     source=u, target=v, source_bucket=bu, target_bucket=bv)
             memory_pairs.add(((c,u),(c,v)))
             edges[(c,u)][(c,v)] = 0
@@ -346,12 +418,13 @@ def check_layered_prepared(graph, plan, captured, *, layers: int):
     require(processed == len(nodes), 'union_cycle', nodes=len(nodes), processed=processed,
             edge_counts=dict(edge_counts))
     max_crossing = max(crossing.values(), default=0)
-    require(max_crossing <= layers + 1, 'crossing_bound',
-            actual=max_crossing, limit=layers+1, edge_counts=dict(edge_counts))
+    if crossing_limit is not None:
+        require(max_crossing <= crossing_limit, 'crossing_bound',
+                actual=max_crossing, limit=crossing_limit, edge_counts=dict(edge_counts))
     return {'schema': 'q3-layered-prepared-guard-v1', 'status': 'passed',
             'scope': 'captured official Task/Step2/Step3 bytes; no evaluator invoked',
             'cores': count_cores, 'compute_ops': len(compute), 'prepared_ops': len(nodes),
-            'frontier_peaks': peaks,
+            'frontier_peaks': peaks if not allow_multi else None,
             'step3_local_memory_peaks': [tasks[c]['step3']['memory_peak']
                                          for c in range(count_cores)],
             'copy_ops': sum(observed_copies.values()), 'cross_links': len(links),
@@ -359,4 +432,7 @@ def check_layered_prepared(graph, plan, captured, *, layers: int):
             'scheduled_copy_bytes': task_copy_bytes,
             'memory_dependencies': len(memory_pairs), 'edge_counts': dict(edge_counts),
             'union_unique_edges': sum(map(len, edges.values())),
-            'max_crossing': max_crossing, 'crossing_limit': layers + 1}
+            'max_crossing': max_crossing, 'crossing_limit': crossing_limit,
+            'crossing_bound_certified': crossing_limit is not None,
+            'allow_multi': allow_multi,
+            'complete_seq_closed_interval_peaks': closed_peaks if allow_multi else None}

@@ -1,0 +1,5 @@
+# Fixed stronger envelope check
+
+Before execution, script SHA256 ec13d838f74a25b0c5e685add3cd1b9bf56fd5c39c73e0d29ca1893d6285c054. Same exact 005 convex candidate f4c58ccf77f5a8add20687eb20247ede169ff34b78a0f24e1c8bda805f1c75a2; input hashes enforced in script. One pure graph analysis process, one worker, 60 seconds, no retry; 0 candidate construction and 0 official Task/Step/evaluator calls.
+
+Question: does this already built single merge preserve a DAG after adding all five base core-word adjacency edges? This stronger direction envelope accounts for other cores' word order. Passing is a sufficient static direction condition only; a failure rejects this certificate, not every possible runtime. No performance score or capacity assertion. Exact command: `python3 -B results/a/q3-nikolastarx/convex-envelope-guard-20260925/guard.py`. Output RESULT plus raw stdout/stderr and process receipt. The active P1 scoring window is not used: this is a tiny read-only static graph check with no scorer dispatch.

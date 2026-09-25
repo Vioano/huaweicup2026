@@ -1,0 +1,1052 @@
+{
+  "schema": "convex-sequence-static-guard-v1",
+  "input_sha256": {
+    "prepared": "91c9e4ff2995d091922f7ae1b0975de98174a9487a1d0458a05c60535beb5c44",
+    "old_plan": "2885b28a512598e4bae525c7bf4b214ac9b2452de19425603fcdea2ae8e7038a",
+    "new_plan": "f4c58ccf77f5a8add20687eb20247ede169ff34b78a0f24e1c8bda805f1c75a2",
+    "step1_result": "25e3148631efc5a4186a980a8669c00d9e06756541de1f2c38fafe55e790781f"
+  },
+  "official_calls_this_process": {
+    "Task": 0,
+    "Step": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "other_core_owner_and_schedule_unchanged": true,
+  "core0_recovered_original_edges": 1992,
+  "core0_excluded_old_memory_edges": 730,
+  "core0_candidate_seq_ops": 795,
+  "capacity_interval_peak": {
+    "L1": {
+      "bytes": 18624,
+      "capacity_bytes": 524288,
+      "within_capacity": true,
+      "at_seq_pos": 241,
+      "tensor_count": 236
+    },
+    "UB": {
+      "bytes": 21844,
+      "capacity_bytes": 131072,
+      "within_capacity": true,
+      "at_seq_pos": 487,
+      "tensor_count": 474
+    }
+  },
+  "capacity_sufficient_for_no_spill": true,
+  "local_coverage": [
+    {
+      "core": 0,
+      "ops": 795,
+      "tensors": 911,
+      "graph_edges": 1992,
+      "tensor_keys_with_producers": 911,
+      "tensor_keys_with_consumers": 911
+    },
+    {
+      "core": 1,
+      "ops": 749,
+      "tensors": 864,
+      "graph_edges": 2624,
+      "tensor_keys_with_producers": 864,
+      "tensor_keys_with_consumers": 864
+    },
+    {
+      "core": 2,
+      "ops": 749,
+      "tensors": 864,
+      "graph_edges": 2622,
+      "tensor_keys_with_producers": 864,
+      "tensor_keys_with_consumers": 864
+    },
+    {
+      "core": 3,
+      "ops": 1422,
+      "tensors": 1566,
+      "graph_edges": 5440,
+      "tensor_keys_with_producers": 1566,
+      "tensor_keys_with_consumers": 1566
+    },
+    {
+      "core": 4,
+      "ops": 1420,
+      "tensors": 1564,
+      "graph_edges": 5394,
+      "tensor_keys_with_producers": 1564,
+      "tensor_keys_with_consumers": 1564
+    }
+  ],
+  "pipe_counts": [
+    {
+      "PIPE_MTE2": 116,
+      "PIPE_M": 123,
+      "PIPE_MTE3": 85,
+      "PIPE_V": 471
+    },
+    {
+      "PIPE_MTE2": 115,
+      "PIPE_V": 471,
+      "PIPE_M": 114,
+      "PIPE_MTE3": 49
+    },
+    {
+      "PIPE_MTE2": 115,
+      "PIPE_V": 471,
+      "PIPE_M": 114,
+      "PIPE_MTE3": 49
+    },
+    {
+      "PIPE_MTE2": 144,
+      "PIPE_M": 233,
+      "PIPE_MTE3": 103,
+      "PIPE_V": 942
+    },
+    {
+      "PIPE_MTE2": 144,
+      "PIPE_M": 232,
+      "PIPE_MTE3": 102,
+      "PIPE_V": 942
+    }
+  ],
+  "cross_links": 381,
+  "joint_op_vertices": 5135,
+  "joint_arcs": 17083,
+  "joint_dag": false,
+  "cycle_witness": [
+    {
+      "source": [
+        4,
+        1000004696
+      ],
+      "target": [
+        4,
+        1000004699
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004699
+      ],
+      "target": [
+        4,
+        1000004858
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004858
+      ],
+      "target": [
+        4,
+        1000004861
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004861
+      ],
+      "target": [
+        4,
+        1000004864
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004864
+      ],
+      "target": [
+        4,
+        1000004867
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004867
+      ],
+      "target": [
+        4,
+        1000004654
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004654
+      ],
+      "target": [
+        4,
+        1000004657
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004657
+      ],
+      "target": [
+        4,
+        1000004660
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004660
+      ],
+      "target": [
+        4,
+        1000004663
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004663
+      ],
+      "target": [
+        4,
+        1000004822
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004822
+      ],
+      "target": [
+        4,
+        1000004825
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004825
+      ],
+      "target": [
+        4,
+        1000004828
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004828
+      ],
+      "target": [
+        4,
+        1000004831
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004831
+      ],
+      "target": [
+        4,
+        1000004702
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004702
+      ],
+      "target": [
+        4,
+        1000004705
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004705
+      ],
+      "target": [
+        4,
+        1000004708
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004708
+      ],
+      "target": [
+        4,
+        1000004711
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004711
+      ],
+      "target": [
+        4,
+        1000004870
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004870
+      ],
+      "target": [
+        0,
+        1000004871
+      ],
+      "types": [
+        "cross_link"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000004871
+      ],
+      "target": [
+        0,
+        788
+      ],
+      "types": [
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        0,
+        788
+      ],
+      "target": [
+        0,
+        793
+      ],
+      "types": [
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        0,
+        793
+      ],
+      "target": [
+        0,
+        794
+      ],
+      "types": [
+        "fifo:PIPE_V",
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        0,
+        794
+      ],
+      "target": [
+        0,
+        795
+      ],
+      "types": [
+        "fifo:PIPE_V",
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        0,
+        795
+      ],
+      "target": [
+        0,
+        1277
+      ],
+      "types": [
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1277
+      ],
+      "target": [
+        0,
+        1278
+      ],
+      "types": [
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1278
+      ],
+      "target": [
+        0,
+        1280
+      ],
+      "types": [
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1280
+      ],
+      "target": [
+        0,
+        1281
+      ],
+      "types": [
+        "fifo:PIPE_V",
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1281
+      ],
+      "target": [
+        0,
+        1282
+      ],
+      "types": [
+        "fifo:PIPE_V",
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1282
+      ],
+      "target": [
+        0,
+        1283
+      ],
+      "types": [
+        "fifo:PIPE_V",
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1283
+      ],
+      "target": [
+        0,
+        1284
+      ],
+      "types": [
+        "fifo:PIPE_V",
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1284
+      ],
+      "target": [
+        0,
+        1285
+      ],
+      "types": [
+        "fifo:PIPE_V",
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1285
+      ],
+      "target": [
+        0,
+        1286
+      ],
+      "types": [
+        "fifo:PIPE_V",
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1286
+      ],
+      "target": [
+        0,
+        1287
+      ],
+      "types": [
+        "fifo:PIPE_V",
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1287
+      ],
+      "target": [
+        0,
+        1288
+      ],
+      "types": [
+        "fifo:PIPE_V",
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1288
+      ],
+      "target": [
+        0,
+        1289
+      ],
+      "types": [
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1289
+      ],
+      "target": [
+        0,
+        1410
+      ],
+      "types": [
+        "fifo:PIPE_M"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1410
+      ],
+      "target": [
+        0,
+        1000004890
+      ],
+      "types": [
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000004890
+      ],
+      "target": [
+        0,
+        1000004893
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000004893
+      ],
+      "target": [
+        0,
+        1000004898
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000004898
+      ],
+      "target": [
+        0,
+        1000004901
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000004901
+      ],
+      "target": [
+        0,
+        1000004904
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000004904
+      ],
+      "target": [
+        0,
+        1000004907
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000004907
+      ],
+      "target": [
+        0,
+        1000004912
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000004912
+      ],
+      "target": [
+        0,
+        1000004915
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000004915
+      ],
+      "target": [
+        0,
+        1000004918
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000004918
+      ],
+      "target": [
+        0,
+        1000004921
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000004921
+      ],
+      "target": [
+        0,
+        1000005417
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000005417
+      ],
+      "target": [
+        0,
+        1000005420
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000005420
+      ],
+      "target": [
+        0,
+        1000005423
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000005423
+      ],
+      "target": [
+        0,
+        1000005426
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000005426
+      ],
+      "target": [
+        0,
+        1000005431
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000005431
+      ],
+      "target": [
+        0,
+        1000005434
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000005434
+      ],
+      "target": [
+        0,
+        1000005437
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000005437
+      ],
+      "target": [
+        0,
+        1000005440
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000005440
+      ],
+      "target": [
+        0,
+        1000005445
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000005445
+      ],
+      "target": [
+        0,
+        1000005448
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000005448
+      ],
+      "target": [
+        0,
+        1000005451
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000005451
+      ],
+      "target": [
+        0,
+        1000005454
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        0,
+        1000005454
+      ],
+      "target": [
+        4,
+        1000005455
+      ],
+      "types": [
+        "cross_link"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000005455
+      ],
+      "target": [
+        4,
+        1000005570
+      ],
+      "types": [
+        "fifo:PIPE_MTE2"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000005570
+      ],
+      "target": [
+        4,
+        1000004399
+      ],
+      "types": [
+        "fifo:PIPE_MTE2"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004399
+      ],
+      "target": [
+        4,
+        126
+      ],
+      "types": [
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        4,
+        126
+      ],
+      "target": [
+        4,
+        127
+      ],
+      "types": [
+        "fifo:PIPE_M"
+      ]
+    },
+    {
+      "source": [
+        4,
+        127
+      ],
+      "target": [
+        4,
+        1000004651
+      ],
+      "types": [
+        "tensor_contract"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004651
+      ],
+      "target": [
+        4,
+        1000004810
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004810
+      ],
+      "target": [
+        4,
+        1000004813
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004813
+      ],
+      "target": [
+        4,
+        1000004816
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004816
+      ],
+      "target": [
+        4,
+        1000004819
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004819
+      ],
+      "target": [
+        4,
+        1000004690
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004690
+      ],
+      "target": [
+        4,
+        1000004693
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    },
+    {
+      "source": [
+        4,
+        1000004693
+      ],
+      "target": [
+        4,
+        1000004696
+      ],
+      "types": [
+        "fifo:PIPE_MTE3"
+      ]
+    }
+  ],
+  "elapsed_seconds": 0.07716808299301192,
+  "interpretation": "Cycle plus no-spill capacity rules out the candidate under this necessary union graph; DAG only leaves new core0 Step3 memory dependencies unresolved. Interval peak is not runtime memory peak."
+}

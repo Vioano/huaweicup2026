@@ -1,0 +1,5 @@
+# Root readback of the actual necessary cycle
+
+Root inspected the frozen script, all 71 saved cycle edges, and the official priority and Task source. The witness includes cross links (4,1000004870) -> (0,1000004871) and (0,1000005454) -> (4,1000005455). It returns through core 4 MTE2 FIFO and compute 126/127; the forward core 0 section uses compute 788 through 1289, then M FIFO to 1410 and the output FIFO. All listed edge types are local tensor contraction, actual pipe FIFO or cross_link; no saved memory edge is required. This is stronger than failure of the all-core serial envelope: these are necessary execution precedences, hence a real candidate rejection under the recovered no-spill Task identity. Local capacity peaks are far below limits, so merely adding capacity does not fix the cycle. No rerun was performed for this readback.
+
+This finding does not reject the separately constructed 194-op interval. That interval removes the earliest seven operations from the merge and passed the stronger envelope quotient. Its actual-sequence verification has a separate frozen record and budget. Neither record is a Makespan measurement.

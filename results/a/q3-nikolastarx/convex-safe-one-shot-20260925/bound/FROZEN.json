@@ -1,0 +1,27 @@
+{
+  "hypothesis": "Check whether valid optimistic COPY-duration plus raw/FIFO/cross-link lower bound already excludes M3<24522 for this exact194-op no-spill word. Not E2 or score.",
+  "source_sha256": {
+    "results/a/q3-nikolastarx/convex-safe-one-shot-20260925/bound/analyze.py": "f0982ab473032417f066f9e221df02790d3f63516c2c565b6c6e13cedaff79dc",
+    "src/q3/static_task_bound.py": "c9f4f44b7569b96eb6e1a6218c7af22a00a693ae4303417d444a5190938656c2",
+    "src/q3/pipeline_prefix.py": "c15888c23629eea70abf26e675cae099fe751350a0f55e38cb8b6538469fe190"
+  },
+  "budget": {
+    "static_processes": 1,
+    "wall_seconds": 30,
+    "official_calls": 0,
+    "retries": 0
+  },
+  "command": [
+    "python3",
+    "-B",
+    "analyze.py"
+  ],
+  "environment": {
+    "PYTHONPATH": "repository root"
+  },
+  "inputs_sha256": {
+    "prepared": "91c9e4ff2995d091922f7ae1b0975de98174a9487a1d0458a05c60535beb5c44",
+    "seq": "21d235d23884039f0f14f00890f72360ce0d43789aae48edff694a6ab2132d52"
+  },
+  "stop": "first exception"
+}

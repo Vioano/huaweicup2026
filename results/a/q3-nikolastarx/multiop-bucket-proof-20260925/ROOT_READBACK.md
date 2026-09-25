@@ -1,0 +1,5 @@
+# Root source readback
+
+Root read the review and the frozen Step3 implementation: all sources of each free credit are added (lines144–185); release follows every consumer or the dead producer (lines261–278); allocation_order includes any managed output including size zero (lines281–294). The per-pipe head restriction is actually enforced by queue_if_ready and retired-cursor advancement (lines407–444), so a successful local trace respects the planned FIFO as well as the memory-augmented graph. The conditional direction proof is accepted for continued research, not as case-specific official acceptance.
+
+The proposed201-op candidate fails the sufficient all-core-word envelope. Its actual Step1 sequence nevertheless replays successfully and advances the target MTE2 ordinal46→40. Thus we must check the actual forced FIFO/data/cross-link graph and complete-sequence capacities before requesting any Step3 or scoring; a strong-envelope failure alone cannot reject a plan or supply a cycle lower bound. No additional program evaluation or graph run was made for this source review.
