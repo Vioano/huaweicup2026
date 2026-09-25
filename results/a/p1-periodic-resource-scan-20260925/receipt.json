@@ -1,0 +1,32 @@
+{
+  "kind": "pure-periodic-resource-diagnostic-NOT-E0",
+  "source_commit": "00c0d9d55f6c58eaffb5e0d8d3fb5849a4cb96d3",
+  "recorded_at": "2026-09-25T04:48:21.124571+00:00",
+  "python": "3.12.13",
+  "hashes": {
+    "src/review/p1_periodic_resource_scan.py": "7dafb50d903ba508db2c30da4ba0790c2ad28a62b07e782ab1d27fbe3d08359b",
+    "src/review/p1_packet_edge_bound.py": "2d1116d177e78f0592b6c000f71ae71c1c0549ce339a2c9825b72144f7a3c784",
+    "src/review/p1_packet_seed.py": "24b55dcc5bbcf829a6bf7df343b4c338b4cc3c7a7b3ed5fd51f2c8a648f1fd8f",
+    "tests/q1/test_p1_periodic_resource_scan.py": "cb32427a99e9860bc15131b861d2caec780e4aef63dae8172903e73a2a5ce3df",
+    "results/a/p1-two-task-bound-20260925/structural-audit.json": "eefc9998e577b6cfbbedff9d7974fec64466c1a080249d8453e988239bcf5cb9"
+  },
+  "scan_sha256": "96bc4014a211b1dc851f71180955fe278906b6aab67c85af9644868e1a2d863b",
+  "tests_passed": 29,
+  "test_suite_reported_seconds": 0.07,
+  "commands": [
+    "python -B -m src.review.p1_periodic_resource_scan --output results/a/p1-periodic-resource-scan-20260925/scan.json",
+    "python -B -m unittest tests.q1.test_p1_periodic_resource_scan tests.q1.test_p1_lazy_memory_probe tests.q1.test_p1_packet_seed tests.q1.test_p1_lazy_packet_search tests.q1.test_p1_packet_edge_bound tests.q1.test_p1_two_task_resource_bound tests.q1.test_p1_return_cut_resource_bound"
+  ],
+  "real_calls": {
+    "candidate_constructor": 0,
+    "Task_compile": 0,
+    "Fraction_response": 0,
+    "solver": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "VM": 0
+  },
+  "production_adopted": false,
+  "interpretation": "Lower resource bounds identify unexcluded hypotheses, not feasible scores, true candidate ranking or improvement guarantees. No actual candidate was compiled."
+}
