@@ -1,0 +1,1062 @@
+{
+  "scope": "Static topology only; three fixed orders are not an exhaustive cut search or an E0 guarantee.",
+  "input_zip": "data/raw/a/official-cases.zip",
+  "input_zip_sha256": "e9c33753eb4c0caddc1ff8f05065144f762189d5071476611de1f7bb5887e528",
+  "graph_count_in_zip": 100,
+  "selected_graph_count": 31,
+  "selection": "Largest weak contracted compute component has at least 1000 eligible operations; ties by cycles then first component.",
+  "prefix_rule": "Both prefix and suffix have at least 10% of selected component max(1, cycles) work.",
+  "denominator": "Sum size over distinct physical tensor IDs with eligible producer AND consumer in selected component.",
+  "order_rules": {
+    "existing": "DAGIndex component order",
+    "longest_tail_first": "ready queue by descending DAGIndex.tail then op ID",
+    "shortest_tail_first": "ready queue by ascending DAGIndex.tail then op ID"
+  },
+  "coverage": {
+    "existing": {
+      "at_most_one_prefixes": 4,
+      "at_most_four_prefixes": 10,
+      "at_most_one_percent_bytes_prefixes": 28
+    },
+    "longest_tail_first": {
+      "at_most_one_prefixes": 3,
+      "at_most_four_prefixes": 4,
+      "at_most_one_percent_bytes_prefixes": 27
+    },
+    "shortest_tail_first": {
+      "at_most_one_prefixes": 3,
+      "at_most_four_prefixes": 6,
+      "at_most_one_percent_bytes_prefixes": 11
+    },
+    "union": {
+      "at_most_one_prefixes": 4,
+      "at_most_four_prefixes": 13,
+      "at_most_one_percent_bytes_prefixes": 31
+    }
+  },
+  "cases": [
+    {
+      "case": "case_002",
+      "max_component_ops": 1798,
+      "max_component_cycles": 275928,
+      "internal_tensor_count": 1797,
+      "internal_tensor_bytes": 2760192,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 1314,
+          "minimum_crossing_tensors": 21,
+          "minimum_crossing_bytes": 32256,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 1255,
+          "minimum_crossing_tensors": 88,
+          "minimum_crossing_bytes": 135168,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 1434,
+          "minimum_crossing_tensors": 2,
+          "minimum_crossing_bytes": 3072,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 144,
+          "at_most_one_percent_bytes_prefixes": 1434
+        }
+      }
+    },
+    {
+      "case": "case_003",
+      "max_component_ops": 13194,
+      "max_component_cycles": 687373,
+      "internal_tensor_count": 13186,
+      "internal_tensor_bytes": 6997526,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 10468,
+          "minimum_crossing_tensors": 9,
+          "minimum_crossing_bytes": 18432,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 10148
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 10543,
+          "minimum_crossing_tensors": 9,
+          "minimum_crossing_bytes": 18432,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 2084
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 10459,
+          "minimum_crossing_tensors": 153,
+          "minimum_crossing_bytes": 84482,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_005",
+      "max_component_ops": 4113,
+      "max_component_cycles": 124812,
+      "internal_tensor_count": 4106,
+      "internal_tensor_bytes": 2884032,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 3428,
+          "minimum_crossing_tensors": 7,
+          "minimum_crossing_bytes": 14592,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 477
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 3448,
+          "minimum_crossing_tensors": 11,
+          "minimum_crossing_bytes": 17856,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 40
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 3397,
+          "minimum_crossing_tensors": 63,
+          "minimum_crossing_bytes": 61728,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_009",
+      "max_component_ops": 4774,
+      "max_component_cycles": 113888,
+      "internal_tensor_count": 4768,
+      "internal_tensor_bytes": 1182420,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 3788,
+          "minimum_crossing_tensors": 6,
+          "minimum_crossing_bytes": 2560,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 2303
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 3778,
+          "minimum_crossing_tensors": 10,
+          "minimum_crossing_bytes": 4608,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 2074
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 3741,
+          "minimum_crossing_tensors": 66,
+          "minimum_crossing_bytes": 16128,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_016",
+      "max_component_ops": 17995,
+      "max_component_cycles": 7714975,
+      "internal_tensor_count": 17994,
+      "internal_tensor_bytes": 359806668,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 14396,
+          "minimum_crossing_tensors": 1,
+          "minimum_crossing_bytes": 2,
+          "at_most_one_prefixes": 244,
+          "at_most_four_prefixes": 3904,
+          "at_most_one_percent_bytes_prefixes": 14396
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 14396,
+          "minimum_crossing_tensors": 1,
+          "minimum_crossing_bytes": 2,
+          "at_most_one_prefixes": 244,
+          "at_most_four_prefixes": 1708,
+          "at_most_one_percent_bytes_prefixes": 14396
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 14396,
+          "minimum_crossing_tensors": 1,
+          "minimum_crossing_bytes": 2,
+          "at_most_one_prefixes": 244,
+          "at_most_four_prefixes": 10492,
+          "at_most_one_percent_bytes_prefixes": 14396
+        }
+      }
+    },
+    {
+      "case": "case_024",
+      "max_component_ops": 5959,
+      "max_component_cycles": 2554795,
+      "internal_tensor_count": 5958,
+      "internal_tensor_bytes": 119149092,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 4759,
+          "minimum_crossing_tensors": 1,
+          "minimum_crossing_bytes": 2,
+          "at_most_one_prefixes": 80,
+          "at_most_four_prefixes": 1288,
+          "at_most_one_percent_bytes_prefixes": 4759
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 4759,
+          "minimum_crossing_tensors": 1,
+          "minimum_crossing_bytes": 2,
+          "at_most_one_prefixes": 80,
+          "at_most_four_prefixes": 560,
+          "at_most_one_percent_bytes_prefixes": 4759
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 4766,
+          "minimum_crossing_tensors": 1,
+          "minimum_crossing_bytes": 2,
+          "at_most_one_prefixes": 80,
+          "at_most_four_prefixes": 3475,
+          "at_most_one_percent_bytes_prefixes": 4766
+        }
+      }
+    },
+    {
+      "case": "case_031",
+      "max_component_ops": 2147,
+      "max_component_cycles": 112556,
+      "internal_tensor_count": 2143,
+      "internal_tensor_bytes": 1349338,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 1769,
+          "minimum_crossing_tensors": 4,
+          "minimum_crossing_bytes": 7680,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 2,
+          "at_most_one_percent_bytes_prefixes": 245
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 1744,
+          "minimum_crossing_tensors": 6,
+          "minimum_crossing_bytes": 10944,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 28
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 1751,
+          "minimum_crossing_tensors": 35,
+          "minimum_crossing_bytes": 28834,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_035",
+      "max_component_ops": 2430,
+      "max_component_cycles": 123306,
+      "internal_tensor_count": 2426,
+      "internal_tensor_bytes": 1745548,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 1949,
+          "minimum_crossing_tensors": 4,
+          "minimum_crossing_bytes": 3584,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 7,
+          "at_most_one_percent_bytes_prefixes": 1245
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 1933,
+          "minimum_crossing_tensors": 6,
+          "minimum_crossing_bytes": 4640,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 1093
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 1858,
+          "minimum_crossing_tensors": 35,
+          "minimum_crossing_bytes": 23136,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_040",
+      "max_component_ops": 2194,
+      "max_component_cycles": 140854,
+      "internal_tensor_count": 2189,
+      "internal_tensor_bytes": 1728008,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 1745,
+          "minimum_crossing_tensors": 5,
+          "minimum_crossing_bytes": 7168,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 622
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 1746,
+          "minimum_crossing_tensors": 7,
+          "minimum_crossing_bytes": 8256,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 200
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 1706,
+          "minimum_crossing_tensors": 44,
+          "minimum_crossing_bytes": 35728,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_043",
+      "max_component_ops": 4910,
+      "max_component_cycles": 301883,
+      "internal_tensor_count": 4901,
+      "internal_tensor_bytes": 3908364,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 3943,
+          "minimum_crossing_tensors": 9,
+          "minimum_crossing_bytes": 11520,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 1212
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 3807,
+          "minimum_crossing_tensors": 19,
+          "minimum_crossing_bytes": 13872,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 609
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 3981,
+          "minimum_crossing_tensors": 88,
+          "minimum_crossing_bytes": 98082,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_047",
+      "max_component_ops": 13710,
+      "max_component_cycles": 413130,
+      "internal_tensor_count": 13703,
+      "internal_tensor_bytes": 4507264,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 10969,
+          "minimum_crossing_tensors": 7,
+          "minimum_crossing_bytes": 6656,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 10969
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 10968,
+          "minimum_crossing_tensors": 9,
+          "minimum_crossing_bytes": 7424,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 4368
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 10901,
+          "minimum_crossing_tensors": 99,
+          "minimum_crossing_bytes": 35776,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 2293
+        }
+      }
+    },
+    {
+      "case": "case_048",
+      "max_component_ops": 1728,
+      "max_component_cycles": 259596,
+      "internal_tensor_count": 1725,
+      "internal_tensor_bytes": 1606752,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 1402,
+          "minimum_crossing_tensors": 3,
+          "minimum_crossing_bytes": 4608,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 36,
+          "at_most_one_percent_bytes_prefixes": 905
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 1404,
+          "minimum_crossing_tensors": 5,
+          "minimum_crossing_bytes": 4736,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 592
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 1308,
+          "minimum_crossing_tensors": 23,
+          "minimum_crossing_bytes": 16032,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 1
+        }
+      }
+    },
+    {
+      "case": "case_049",
+      "max_component_ops": 3952,
+      "max_component_cycles": 223656,
+      "internal_tensor_count": 3944,
+      "internal_tensor_bytes": 3144208,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 3128,
+          "minimum_crossing_tensors": 8,
+          "minimum_crossing_bytes": 7680,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 1123
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 3075,
+          "minimum_crossing_tensors": 10,
+          "minimum_crossing_bytes": 8736,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 781
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 3126,
+          "minimum_crossing_tensors": 72,
+          "minimum_crossing_bytes": 86624,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_050",
+      "max_component_ops": 4011,
+      "max_component_cycles": 141131,
+      "internal_tensor_count": 4001,
+      "internal_tensor_bytes": 1829412,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 3299,
+          "minimum_crossing_tensors": 8,
+          "minimum_crossing_bytes": 5120,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 1082
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 3143,
+          "minimum_crossing_tensors": 12,
+          "minimum_crossing_bytes": 5696,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 476
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 3295,
+          "minimum_crossing_tensors": 73,
+          "minimum_crossing_bytes": 33956,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_051",
+      "max_component_ops": 1416,
+      "max_component_cycles": 607080,
+      "internal_tensor_count": 1415,
+      "internal_tensor_bytes": 28312654,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 1130,
+          "minimum_crossing_tensors": 1,
+          "minimum_crossing_bytes": 2,
+          "at_most_one_prefixes": 19,
+          "at_most_four_prefixes": 304,
+          "at_most_one_percent_bytes_prefixes": 1130
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 1130,
+          "minimum_crossing_tensors": 1,
+          "minimum_crossing_bytes": 2,
+          "at_most_one_prefixes": 19,
+          "at_most_four_prefixes": 133,
+          "at_most_one_percent_bytes_prefixes": 532
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 1131,
+          "minimum_crossing_tensors": 1,
+          "minimum_crossing_bytes": 2,
+          "at_most_one_prefixes": 19,
+          "at_most_four_prefixes": 827,
+          "at_most_one_percent_bytes_prefixes": 1131
+        }
+      }
+    },
+    {
+      "case": "case_053",
+      "max_component_ops": 9853,
+      "max_component_cycles": 616327,
+      "internal_tensor_count": 9846,
+      "internal_tensor_bytes": 6415586,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 7865,
+          "minimum_crossing_tensors": 7,
+          "minimum_crossing_bytes": 19584,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 4601
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 7865,
+          "minimum_crossing_tensors": 11,
+          "minimum_crossing_bytes": 22416,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 1083
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 7866,
+          "minimum_crossing_tensors": 109,
+          "minimum_crossing_bytes": 85776,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_054",
+      "max_component_ops": 15390,
+      "max_component_cycles": 694067,
+      "internal_tensor_count": 15382,
+      "internal_tensor_bytes": 8744978,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 12519,
+          "minimum_crossing_tensors": 9,
+          "minimum_crossing_bytes": 12800,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 12519
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 12066,
+          "minimum_crossing_tensors": 13,
+          "minimum_crossing_bytes": 14976,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 5126
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 12378,
+          "minimum_crossing_tensors": 153,
+          "minimum_crossing_bytes": 94786,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_056",
+      "max_component_ops": 7464,
+      "max_component_cycles": 364080,
+      "internal_tensor_count": 7445,
+      "internal_tensor_bytes": 5079422,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 6031,
+          "minimum_crossing_tensors": 9,
+          "minimum_crossing_bytes": 7680,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 6031
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 6010,
+          "minimum_crossing_tensors": 16,
+          "minimum_crossing_bytes": 10368,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 2591
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 5920,
+          "minimum_crossing_tensors": 130,
+          "minimum_crossing_bytes": 94786,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_062",
+      "max_component_ops": 19636,
+      "max_component_cycles": 3011088,
+      "internal_tensor_count": 19635,
+      "internal_tensor_bytes": 30159360,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 14338,
+          "minimum_crossing_tensors": 225,
+          "minimum_crossing_bytes": 345600,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 13670,
+          "minimum_crossing_tensors": 1001,
+          "minimum_crossing_bytes": 1537536,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 15703,
+          "minimum_crossing_tensors": 2,
+          "minimum_crossing_bytes": 3072,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 421,
+          "at_most_one_percent_bytes_prefixes": 15703
+        }
+      }
+    },
+    {
+      "case": "case_063",
+      "max_component_ops": 7360,
+      "max_component_cycles": 1128768,
+      "internal_tensor_count": 7359,
+      "internal_tensor_bytes": 11303424,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 5375,
+          "minimum_crossing_tensors": 84,
+          "minimum_crossing_bytes": 129024,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 5124,
+          "minimum_crossing_tensors": 372,
+          "minimum_crossing_bytes": 571392,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 5882,
+          "minimum_crossing_tensors": 2,
+          "minimum_crossing_bytes": 3072,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 211,
+          "at_most_one_percent_bytes_prefixes": 5882
+        }
+      }
+    },
+    {
+      "case": "case_066",
+      "max_component_ops": 3675,
+      "max_component_cycles": 122908,
+      "internal_tensor_count": 3668,
+      "internal_tensor_bytes": 1420366,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 3010,
+          "minimum_crossing_tensors": 9,
+          "minimum_crossing_bytes": 6912,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 503
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 3053,
+          "minimum_crossing_tensors": 9,
+          "minimum_crossing_bytes": 6912,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 286
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 2949,
+          "minimum_crossing_tensors": 73,
+          "minimum_crossing_bytes": 32496,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_068",
+      "max_component_ops": 4176,
+      "max_component_cycles": 340912,
+      "internal_tensor_count": 4172,
+      "internal_tensor_bytes": 2772104,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 3270,
+          "minimum_crossing_tensors": 4,
+          "minimum_crossing_bytes": 10752,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 5,
+          "at_most_one_percent_bytes_prefixes": 856
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 3292,
+          "minimum_crossing_tensors": 6,
+          "minimum_crossing_bytes": 12480,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 265
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 3212,
+          "minimum_crossing_tensors": 45,
+          "minimum_crossing_bytes": 39344,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_069",
+      "max_component_ops": 1032,
+      "max_component_cycles": 31962,
+      "internal_tensor_count": 1026,
+      "internal_tensor_bytes": 724672,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 905,
+          "minimum_crossing_tensors": 7,
+          "minimum_crossing_bytes": 5568,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 7
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 927,
+          "minimum_crossing_tensors": 15,
+          "minimum_crossing_bytes": 30720,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 850,
+          "minimum_crossing_tensors": 20,
+          "minimum_crossing_bytes": 18384,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_072",
+      "max_component_ops": 6140,
+      "max_component_cycles": 287950,
+      "internal_tensor_count": 6131,
+      "internal_tensor_bytes": 3254512,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 5325,
+          "minimum_crossing_tensors": 1,
+          "minimum_crossing_bytes": 2,
+          "at_most_one_prefixes": 3,
+          "at_most_four_prefixes": 9,
+          "at_most_one_percent_bytes_prefixes": 2522
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 4736,
+          "minimum_crossing_tensors": 14,
+          "minimum_crossing_bytes": 8976,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 879
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 5381,
+          "minimum_crossing_tensors": 24,
+          "minimum_crossing_bytes": 1106,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 288
+        }
+      }
+    },
+    {
+      "case": "case_075",
+      "max_component_ops": 7410,
+      "max_component_cycles": 1752180,
+      "internal_tensor_count": 7405,
+      "internal_tensor_bytes": 9218432,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 5929,
+          "minimum_crossing_tensors": 5,
+          "minimum_crossing_bytes": 17408,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 5929
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 5928,
+          "minimum_crossing_tensors": 7,
+          "minimum_crossing_bytes": 19584,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 2656
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 5833,
+          "minimum_crossing_tensors": 61,
+          "minimum_crossing_bytes": 72160,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 1300
+        }
+      }
+    },
+    {
+      "case": "case_077",
+      "max_component_ops": 2096,
+      "max_component_cycles": 134904,
+      "internal_tensor_count": 2092,
+      "internal_tensor_bytes": 1295340,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 1768,
+          "minimum_crossing_tensors": 4,
+          "minimum_crossing_bytes": 9216,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 2,
+          "at_most_one_percent_bytes_prefixes": 119
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 1906,
+          "minimum_crossing_tensors": 4,
+          "minimum_crossing_bytes": 9216,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 2,
+          "at_most_one_percent_bytes_prefixes": 69
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 1763,
+          "minimum_crossing_tensors": 27,
+          "minimum_crossing_bytes": 25136,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_082",
+      "max_component_ops": 4113,
+      "max_component_cycles": 927702,
+      "internal_tensor_count": 4106,
+      "internal_tensor_bytes": 4998080,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 3429,
+          "minimum_crossing_tensors": 7,
+          "minimum_crossing_bytes": 25600,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 461
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 3618,
+          "minimum_crossing_tensors": 9,
+          "minimum_crossing_bytes": 27776,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 34
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 3372,
+          "minimum_crossing_tensors": 62,
+          "minimum_crossing_bytes": 104320,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_085",
+      "max_component_ops": 19737,
+      "max_component_cycles": 4289922,
+      "internal_tensor_count": 19728,
+      "internal_tensor_bytes": 23620800,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 15605,
+          "minimum_crossing_tensors": 9,
+          "minimum_crossing_bytes": 33792,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 15605
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 15721,
+          "minimum_crossing_tensors": 11,
+          "minimum_crossing_bytes": 34944,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 5613
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 15590,
+          "minimum_crossing_tensors": 152,
+          "minimum_crossing_bytes": 205248,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 2386
+        }
+      }
+    },
+    {
+      "case": "case_086",
+      "max_component_ops": 5274,
+      "max_component_cycles": 157242,
+      "internal_tensor_count": 5266,
+      "internal_tensor_bytes": 3655872,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 4364,
+          "minimum_crossing_tensors": 8,
+          "minimum_crossing_bytes": 16896,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 672
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 4384,
+          "minimum_crossing_tensors": 12,
+          "minimum_crossing_bytes": 20160,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 158
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 4310,
+          "minimum_crossing_tensors": 81,
+          "minimum_crossing_bytes": 78480,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_087",
+      "max_component_ops": 12693,
+      "max_component_cycles": 722903,
+      "internal_tensor_count": 12685,
+      "internal_tensor_bytes": 6308110,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 10159,
+          "minimum_crossing_tensors": 8,
+          "minimum_crossing_bytes": 21504,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 4535
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 10162,
+          "minimum_crossing_tensors": 12,
+          "minimum_crossing_bytes": 24960,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 503
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 10179,
+          "minimum_crossing_tensors": 132,
+          "minimum_crossing_bytes": 91072,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    },
+    {
+      "case": "case_088",
+      "max_component_ops": 2798,
+      "max_component_cycles": 227697,
+      "internal_tensor_count": 2794,
+      "internal_tensor_bytes": 1851498,
+      "orders": {
+        "existing": {
+          "eligible_prefixes": 2282,
+          "minimum_crossing_tensors": 4,
+          "minimum_crossing_bytes": 10752,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 3,
+          "at_most_one_percent_bytes_prefixes": 288
+        },
+        "longest_tail_first": {
+          "eligible_prefixes": 2268,
+          "minimum_crossing_tensors": 6,
+          "minimum_crossing_bytes": 12480,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 18
+        },
+        "shortest_tail_first": {
+          "eligible_prefixes": 2301,
+          "minimum_crossing_tensors": 36,
+          "minimum_crossing_bytes": 37042,
+          "at_most_one_prefixes": 0,
+          "at_most_four_prefixes": 0,
+          "at_most_one_percent_bytes_prefixes": 0
+        }
+      }
+    }
+  ]
+}
