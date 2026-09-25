@@ -1,0 +1,5 @@
+# Stopped before graph analysis on frozen hash mismatch
+
+The single allowed script process exited at `audit.py:190` with `ValueError: frozen source or input hash changed`; its original traceback is preserved in `stderr.txt` and `stdout.txt` is empty. A read-only post-failure hash check isolated the mismatch to parent `FRONTIER_LEMMA.md`: frozen SHA-256 `45e98edda00d56ec9a716716e0bac6157320eae493fcb8473db08f5d809d6bbc`, current SHA-256 `42cc2baa8224940066486a0d486e03c48715188ba3500f0c874a770850743914`. All other frozen parent data/source and original graph hashes still matched. The parent lemma was not edited by this task.
+
+No 005/086 quotient, exact component count, cycle counterexample, or theorem validation was produced. This failure is an input-version change, not a mathematical counterexample. Per the frozen first-error/zero-retry rule, neither script nor frozen manifest was altered and no second process was run. Task, Step, construct, pipe_bound, E0/E1/E2 and other scoring calls: zero. Actual token use unavailable.
