@@ -1,0 +1,768 @@
+{
+  "scope": "static readback of uploaded original artifacts; NO new plan or official run",
+  "archive": {
+    "bytes": 1884075,
+    "sha256": "82378c8534c0bdd4b2c56b9b8b315b406d752f2b16d77f0402d6da32b4ab44ac",
+    "members": 137,
+    "manifest_payload_records": 136,
+    "all_payload_identities_match": true,
+    "no_duplicates": true,
+    "safe_paths": true,
+    "crc_ok": true
+  },
+  "source_commit": "f02ad87e27a926cbb3a45458c4cbc82651652b4a",
+  "current_session_calls": {
+    "solver": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "prepare": 0
+  },
+  "archived_calls_NOT_current_session": {
+    "propose_started": 3,
+    "E2_reserved": 26,
+    "E2_native_returned": 26,
+    "E0_fallback": 0,
+    "E0_started": 3,
+    "separate_prepare": 0
+  },
+  "saved_results": [
+    {
+      "case": "005",
+      "eligible_ops": 4113,
+      "retained_compute_edges": 6258,
+      "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+      "saved_baseline_vector_count": 5752,
+      "saved_native_baseline_equals_saved_E0": true,
+      "candidate_count": 8,
+      "all_candidate_hashes_match_ledger": true,
+      "winner_ordinal": 2,
+      "winner_plan_sha256": "d2c1b4e3fa59c1302954a69fb2d36e53cc78f79bde60244baff9b1e6e2958da6",
+      "winner_saved_E0_sha256": "ff338b6a4233cf326be58798cabc56c1f2a94cc2e6326b1f52055917747f0752",
+      "winner_saved_native_metrics_equal_saved_E0": true,
+      "old_M": 33515,
+      "new_M": 33436,
+      "old_added_DDR": 1410582,
+      "new_added_DDR": 1410486,
+      "old_spill": 0,
+      "new_spill": 0,
+      "actual_movers": [
+        [
+          955,
+          3,
+          1
+        ]
+      ],
+      "packet_size": 1,
+      "pipe_peaks_before": {
+        "PIPE_M": 13878,
+        "PIPE_V": 12833
+      },
+      "pipe_peaks_after": {
+        "PIPE_M": 13878,
+        "PIPE_V": 12833
+      },
+      "memory_dependency_counts": {
+        "0": 979,
+        "1": 1421,
+        "2": 1513,
+        "3": 1337,
+        "4": 1448
+      },
+      "concrete_prepared_contract_saved_in_diagnostic": false,
+      "removed_original_tensor_cross_pairs": [
+        {
+          "tensor_id": 1000000977,
+          "source_core": 1,
+          "target_core": 3,
+          "size": 48,
+          "producers": [
+            941
+          ],
+          "consumers": [
+            955
+          ]
+        },
+        {
+          "tensor_id": 1000000990,
+          "source_core": 1,
+          "target_core": 3,
+          "size": 1152,
+          "producers": [
+            954
+          ],
+          "consumers": [
+            955
+          ]
+        }
+      ],
+      "added_original_tensor_cross_pairs": [
+        {
+          "tensor_id": 1000000991,
+          "source_core": 1,
+          "target_core": 3,
+          "size": 1152,
+          "producers": [
+            955
+          ],
+          "consumers": [
+            1315
+          ]
+        }
+      ],
+      "local_saved_times": [
+        {
+          "op": 955,
+          "old": [
+            3,
+            9316,
+            9358
+          ],
+          "new": [
+            1,
+            8824,
+            8866
+          ],
+          "end_change": -492
+        },
+        {
+          "op": 1315,
+          "old": [
+            3,
+            9472,
+            9586
+          ],
+          "new": [
+            3,
+            9496,
+            9610
+          ],
+          "end_change": 24
+        }
+      ],
+      "candidate_fifo_bounds_and_actual_M": [
+        [
+          0,
+          21799,
+          33675
+        ],
+        [
+          1,
+          21613,
+          33777
+        ],
+        [
+          2,
+          21775,
+          33436
+        ],
+        [
+          3,
+          21775,
+          33535
+        ],
+        [
+          4,
+          21775,
+          33487
+        ],
+        [
+          5,
+          21760,
+          33649
+        ],
+        [
+          6,
+          21677,
+          33736
+        ],
+        [
+          7,
+          21775,
+          33833
+        ]
+      ]
+    },
+    {
+      "case": "069",
+      "eligible_ops": 1032,
+      "retained_compute_edges": 1548,
+      "graph_sha256": "9632392d98cfc04291ba0546accf1f4c3ede8ff71befd3cd0ae67caf27659e52",
+      "saved_baseline_vector_count": 1479,
+      "saved_native_baseline_equals_saved_E0": true,
+      "candidate_count": 7,
+      "all_candidate_hashes_match_ledger": true,
+      "winner_ordinal": 2,
+      "winner_plan_sha256": "7b12d50bc622280772cf14798fe29fbb12ff72d5106679a1771ed3768c62fe99",
+      "winner_saved_E0_sha256": "b3721b3e95b4e4cd5a67e8d7e8a2cc4bbc9784a95ab670f15ca700b2e0fd3583",
+      "winner_saved_native_metrics_equal_saved_E0": true,
+      "old_M": 11962,
+      "new_M": 11801,
+      "old_added_DDR": 321938,
+      "new_added_DDR": 321938,
+      "old_spill": 0,
+      "new_spill": 0,
+      "actual_movers": [
+        [
+          151,
+          4,
+          3
+        ],
+        [
+          152,
+          4,
+          3
+        ],
+        [
+          153,
+          4,
+          3
+        ]
+      ],
+      "packet_size": 24,
+      "pipe_peaks_before": {
+        "PIPE_M": 3978,
+        "PIPE_V": 3940
+      },
+      "pipe_peaks_after": {
+        "PIPE_M": 3978,
+        "PIPE_V": 3940
+      },
+      "memory_dependency_counts": {
+        "0": 0,
+        "1": 0,
+        "2": 25,
+        "3": 0,
+        "4": 0
+      },
+      "concrete_prepared_contract_saved_in_diagnostic": false,
+      "removed_original_tensor_cross_pairs": [
+        {
+          "tensor_id": 1000000185,
+          "source_core": 3,
+          "target_core": 4,
+          "size": 48,
+          "producers": [
+            150
+          ],
+          "consumers": [
+            151
+          ]
+        },
+        {
+          "tensor_id": 1000000188,
+          "source_core": 4,
+          "target_core": 3,
+          "size": 48,
+          "producers": [
+            153
+          ],
+          "consumers": [
+            154,
+            156,
+            158,
+            160,
+            162,
+            164
+          ]
+        }
+      ],
+      "added_original_tensor_cross_pairs": [
+        {
+          "tensor_id": 1000000182,
+          "source_core": 4,
+          "target_core": 3,
+          "size": 48,
+          "producers": [
+            147
+          ],
+          "consumers": [
+            151,
+            153
+          ]
+        },
+        {
+          "tensor_id": 1000000188,
+          "source_core": 3,
+          "target_core": 4,
+          "size": 48,
+          "producers": [
+            153
+          ],
+          "consumers": [
+            154,
+            156,
+            158,
+            160,
+            162,
+            164
+          ]
+        }
+      ],
+      "local_saved_times": [
+        {
+          "op": 151,
+          "old": [
+            4,
+            6043,
+            6050
+          ],
+          "new": [
+            3,
+            5560,
+            5567
+          ],
+          "end_change": -483
+        },
+        {
+          "op": 152,
+          "old": [
+            4,
+            6050,
+            6057
+          ],
+          "new": [
+            3,
+            5567,
+            5574
+          ],
+          "end_change": -483
+        },
+        {
+          "op": 153,
+          "old": [
+            4,
+            6071,
+            6078
+          ],
+          "new": [
+            3,
+            5589,
+            5596
+          ],
+          "end_change": -482
+        },
+        {
+          "op": 154,
+          "old": [
+            3,
+            6583,
+            6598
+          ],
+          "new": [
+            3,
+            6109,
+            6124
+          ],
+          "end_change": -474
+        },
+        {
+          "op": 175,
+          "old": [
+            3,
+            7484,
+            7491
+          ],
+          "new": [
+            3,
+            7329,
+            7336
+          ],
+          "end_change": -155
+        },
+        {
+          "op": 176,
+          "old": [
+            4,
+            8021,
+            8028
+          ],
+          "new": [
+            4,
+            7854,
+            7861
+          ],
+          "end_change": -167
+        },
+        {
+          "op": 187,
+          "old": [
+            4,
+            7865,
+            7880
+          ],
+          "new": [
+            4,
+            7521,
+            7536
+          ],
+          "end_change": -344
+        },
+        {
+          "op": 188,
+          "old": [
+            4,
+            8035,
+            8077
+          ],
+          "new": [
+            4,
+            7868,
+            7910
+          ],
+          "end_change": -167
+        }
+      ],
+      "candidate_fifo_bounds_and_actual_M": [
+        [
+          0,
+          8311,
+          12026
+        ],
+        [
+          1,
+          8229,
+          12075
+        ],
+        [
+          2,
+          8336,
+          11801
+        ],
+        [
+          3,
+          9213,
+          12574
+        ],
+        [
+          4,
+          8030,
+          12157
+        ],
+        [
+          5,
+          8216,
+          12334
+        ],
+        [
+          6,
+          8311,
+          12179
+        ]
+      ]
+    },
+    {
+      "case": "071",
+      "eligible_ops": 741,
+      "retained_compute_edges": 1100,
+      "graph_sha256": "437cc74cae9e0fc0cb89b05403c62062ceff8d5bc2224c8834c519e69524e897",
+      "saved_baseline_vector_count": 1109,
+      "saved_native_baseline_equals_saved_E0": true,
+      "candidate_count": 8,
+      "all_candidate_hashes_match_ledger": true,
+      "winner_ordinal": 7,
+      "winner_plan_sha256": "025d02ddcb7fca444469e9f9531b733a9e33c877633462708970230227eab09b",
+      "winner_saved_E0_sha256": "6dda8f99e9afefc188ca577027ec539b388b3c903926982521d18356479f7c80",
+      "winner_saved_native_metrics_equal_saved_E0": true,
+      "old_M": 9465,
+      "new_M": 9394,
+      "old_added_DDR": 273776,
+      "new_added_DDR": 271472,
+      "old_spill": 0,
+      "new_spill": 0,
+      "actual_movers": [
+        [
+          145,
+          1,
+          2
+        ],
+        [
+          149,
+          1,
+          2
+        ]
+      ],
+      "packet_size": 2,
+      "pipe_peaks_before": {
+        "PIPE_M": 3843,
+        "PIPE_V": 3078
+      },
+      "pipe_peaks_after": {
+        "PIPE_M": 3843,
+        "PIPE_V": 3056
+      },
+      "memory_dependency_counts": {
+        "0": 0,
+        "1": 0,
+        "2": 7,
+        "3": 0,
+        "4": 0
+      },
+      "concrete_prepared_contract_saved_in_diagnostic": false,
+      "removed_original_tensor_cross_pairs": [
+        {
+          "tensor_id": 1000000171,
+          "source_core": 2,
+          "target_core": 1,
+          "size": 1152,
+          "producers": [
+            137
+          ],
+          "consumers": [
+            145,
+            154
+          ]
+        },
+        {
+          "tensor_id": 1000000183,
+          "source_core": 1,
+          "target_core": 2,
+          "size": 48,
+          "producers": [
+            149
+          ],
+          "consumers": [
+            151
+          ]
+        }
+      ],
+      "added_original_tensor_cross_pairs": [
+        {
+          "tensor_id": 1000000178,
+          "source_core": 1,
+          "target_core": 2,
+          "size": 48,
+          "producers": [
+            144
+          ],
+          "consumers": [
+            149
+          ]
+        }
+      ],
+      "local_saved_times": [
+        {
+          "op": 145,
+          "old": [
+            1,
+            5869,
+            5884
+          ],
+          "new": [
+            2,
+            5773,
+            5788
+          ],
+          "end_change": -96
+        },
+        {
+          "op": 149,
+          "old": [
+            1,
+            5884,
+            5891
+          ],
+          "new": [
+            2,
+            6302,
+            6309
+          ],
+          "end_change": 418
+        },
+        {
+          "op": 151,
+          "old": [
+            2,
+            6396,
+            6403
+          ],
+          "new": [
+            2,
+            6590,
+            6597
+          ],
+          "end_change": 194
+        }
+      ],
+      "candidate_fifo_bounds_and_actual_M": [
+        [
+          0,
+          5812,
+          9863
+        ],
+        [
+          1,
+          5812,
+          9479
+        ],
+        [
+          2,
+          5812,
+          10395
+        ],
+        [
+          3,
+          5833,
+          9452
+        ],
+        [
+          4,
+          5812,
+          9739
+        ],
+        [
+          5,
+          5812,
+          10721
+        ],
+        [
+          6,
+          5812,
+          9668
+        ],
+        [
+          7,
+          5961,
+          9394
+        ]
+      ]
+    }
+  ],
+  "069_original_closed_region_observation": {
+    "case": "069",
+    "scope": "manual set inspection only, no recoloring/constructor/evaluation",
+    "ops": [
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161,
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172,
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      180,
+      181,
+      182,
+      183,
+      184,
+      185,
+      186,
+      187,
+      188
+    ],
+    "exit": 188,
+    "old_exit_core": 4,
+    "external_original_compute_edges": [
+      [
+        188,
+        955
+      ]
+    ],
+    "external_consumer_core": 4,
+    "no_mandatory_DDR_output_at_interior": true,
+    "all_interior_eligible_consumers_remain_in_set": true,
+    "pipe_work": {
+      "PIPE_M": 324,
+      "PIPE_V": 569
+    },
+    "old_core_counts": {
+      "4": 16,
+      "3": 22
+    },
+    "producer_153_all_consumers": [
+      154,
+      156,
+      158,
+      160,
+      162,
+      164
+    ],
+    "interior_input_producers_not_in_region": [
+      105,
+      108,
+      111,
+      114,
+      117,
+      120,
+      122,
+      124,
+      126,
+      128,
+      130,
+      132,
+      147,
+      150
+    ]
+  },
+  "044_control": {
+    "old_M": 43795,
+    "compute_loads": {
+      "0": {
+        "PIPE_M": 40584,
+        "PIPE_V": 5448
+      },
+      "1": {
+        "PIPE_M": 33820,
+        "PIPE_V": 4540
+      },
+      "2": {
+        "PIPE_M": 0,
+        "PIPE_V": 0
+      },
+      "3": {
+        "PIPE_M": 0,
+        "PIPE_V": 0
+      },
+      "4": {
+        "PIPE_M": 0,
+        "PIPE_V": 0
+      }
+    },
+    "fixed_owner_work_floor": 40584,
+    "remaining_fixed_owner_noncompute_margin": 3211
+  },
+  "frozen_official_files": {
+    "multicore_cut_evaluate_problem_2.py": {
+      "path": "data/raw/a/official/code/multicore_cut_evaluate_problem_2.py",
+      "bytes": 26123,
+      "sha256": "0b39f84d5ec0a7fba9a4c92a598a9044b97ab79c71393824c1ba130ecfe6c464",
+      "git_blob_sha": "bc4840ad10fca27ba6e66397d4dc5f44abc8ff45"
+    },
+    "schedule_step2.py": {
+      "path": "data/raw/a/official/code/schedule_step2.py",
+      "bytes": 23989,
+      "sha256": "2836baac176f4e0bdd9eec59b8d9ce254e209e5f7a251e23837ab684312fa0c3",
+      "git_blob_sha": "60db783355cdd63ff50e59b8ceecb534c2ddb8e8"
+    },
+    "schedule_step3.py": {
+      "path": "data/raw/a/official/code/schedule_step3.py",
+      "bytes": 30834,
+      "sha256": "50053db0436f1d166dd75436693ba3af49b5c339576beb6e7299477f6b69fc7a",
+      "git_blob_sha": "8ad659e93a9c66b2aca28ad3eaca98522777305c"
+    }
+  },
+  "saved_complete_contract_schema_files": [],
+  "not_independently_read_shifted_raw_batch": true,
+  "no_new_regional_plan_or_prediction_for_official_graphs": true
+}

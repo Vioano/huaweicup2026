@@ -1,0 +1,457 @@
+结论与实际读取范围, Value: 2
+							822 text 结论与实际读取范围
+						823 text A 中的公式在所述受限模型下成立，而且可以进一步压缩：不必为每个断点维护不同的后缀状态，最终只需一个“尚不能被计算隐藏的加载量”。
+						824 container
+							825 text 但不能把各核按这个公式独立选出的断点拼起来。  即使只有两个 DDR 流、没有容量问题，同样的局部摘要也可能对应相反的最优选择。我给出一个可检查反例，并将主构造收缩为：
+						826 text 只允许一个核进行额外预加载，用上游串行供给过程的服务曲线，联合计算“预加载完成”和“激活被推迟”。在这个受限族中，最优合法断点可以线性求出，不需要 E0 扫参。
+						827 container
+							828 text 这不是对 044 直接给出一组猜测的 h。044 有多路启动流、中途残差和后续作业；现有摘要尚不足以证明它满足这个受限族。 本轮最实质的排除结论是：不能把旧激活时刻 R 当成免费预取窗口，也不能只给每核局部公式乘一个拥塞系数。
+						829 container
+							830 text 材料均从 组织主库、指定提交 
+							831 text 28e8c7ddfe2223b2261056f554259c43d5bba272
+							832 text  读取，无镜像缺件：
+						833 container
+							834 table
+								835 row
+									836 cell
+										837 text 读取范围
+									838 cell
+										839 text 文件
+								840 row
+									841 cell
+										842 text 完整
+									843 cell
+										844 text prefix-realized-path/README.md
+										845 text 、
+										846 text analyze.py
+										847 text 、
+										848 text test_math.py
+										849 text ；Cache 审计 
+										850 text REPORT.md
+								851 row
+									852 cell
+										853 text 完整，源码长文件分段读完
+									854 cell
+										855 text pipeline_prefix.py
+										856 text 、
+										857 text pipeline_prefix_static.py
+										858 text 、
+										859 text shared_pipeline_capacity.py
+								860 row
+									861 cell
+										862 text 局部
+									863 cell
+										864 text audit.json
+										865 text  前 155 行，含来源身份、统计和四条前缀；未重读完整关键路径
+								866 row
+									867 cell
+										868 text 局部
+									869 cell
+										870 text P3 的 Task/COPY 归桶、共享服务、Cache、释放判定；Step1 核心 DFS；Step2 spill/backing；Step3 FIFO、分配和额度复用
+								871 row
+									872 cell
+										873 text 完整
+									874 cell
+										875 text 固定 
+										876 text config.txt
+								877 row
+									878 cell
+										879 text 本轮未读取
+									880 cell
+										881 text 原始 044 JSON、完整 prepared 压缩原件及官方结果压缩原件
+							882 button Copy table
+						883 container
+							884 text 本轮没有调用官方 Task、Step1/2/3 或 E0。新代码只做了九项小型有理数模型检查。已读材料确认：38024 的精确事后路径还原、8244 的搬运时长超额，以及固定读取集合的命中字节上限，都是 当前固定计划的证据 ，不能沿用实际持续时间评价新计划。
+						885 heading 一、A：公式正确，而且只有两个有必要比较的断点位置, Value: 2
+							886 text 一、A：公式正确，而且只有两个有必要比较的断点位置
+						887 heading 1. 先明确公式成立的模型, Value: 3
+							888 text 1. 先明确公式成立的模型
+						889 text 需要同时满足：冷读输入一开始就可访问；只有一个激活传输；预加载、激活、其余冷读共用同一串行搬运通道；尾部冷读在激活完成后立即可发射，没有额外分配前驱；计算是一条串行原依赖链，没有其他作业占用其计算资源；所有搬运服务时间和激活释放 R 不受本次选择影响。
+						890 container
+							891 text 设冷读按首次使用位置排序，累计服务为 
+							892 container U_r
+							893 text ，首次消费前的纯计算量为 
+							894 container P_r
+							895 text 。预加载前 q 笔后，激活完成时刻与阶段结束时刻分别为：
+						896 container \begin{aligned} t_0(q)&=\max(R,U_q)+d,\\ T(q)&=t_0(q)+C+ \max\left\{0,\max_{r>q}(U_r-U_q-P_r)\right\}. \end{aligned} \tag{R7.1}
+						897 container
+							898 text 证明。  预加载部分在激活开始前已经完成。其余第 r 笔冷读在激活完成后，经过累计尾部服务完成；无停顿计算会在 
+							899 container t_0+P_r
+							900 text  需要它。计算链被任一输入迫使向后平移后，这个平移也会给后续输入更多加载时间，因此最终累计停顿是所有输入欠账的最大值，而不是正欠账之和。
+						901 text 这个推导保留了每个输入的首次消费位置。只有总输入字节数和总计算量，无法得到式（R7.1）。
+						902 heading 2. 后缀最大值还能合并成一个全局量, Value: 3
+							903 text 2. 后缀最大值还能合并成一个全局量
+						904 text 定义：
+						905 container H=\max\left\{0,\max_r(U_r-P_r)\right\}. \tag{R7.2}
+						906 container
+							907 text 对于已经提前的前 q 笔，其欠账不可能大于 
+							908 container U_q
+							909 text 。所以：
+						910 container \boxed{ T(q)=d+C+\max(R,U_q)+(H-U_q)_+. } \tag{R7.3}
+						911 container
+							912 text 这比“每个 q 做一次后缀计算”更清楚： H 才是该模型中真正需要被启动预加载消化的量，而不是全部输入服务 
+							913 container U_N
+							914 text 。
+						915 text 令预加载服务量为 x，去掉固定常数后：
+						916 container \phi_R(x)= \begin{cases} \max\{H,\ R+H-x\},&x\le H,\\ \max\{R,x\},&x\ge H. \end{cases} \tag{R7.4}
+						917 text 于是它在 H 左侧不增、右侧不减。
+						918 text **精确选择规则：**在真正合法的累计服务集合中，只需比较 H 两侧最近的两个值。若存在达到 H 的合法断点，它对所有外生 R 都最优。相同目标值时，选择最小的预加载量，再选择最短合桶长度。
+						919 text 这给出线性时间算法：一次累计服务、一次计算 H、一次扫描合法断点。没有必要为这个受限问题搜索排列。
+						920 heading 3. R 未知时，什么仍然有效, Value: 3
+							921 text 3. R 未知时，什么仍然有效
+						922 text 若 R 未知，但确实外生且服务固定，H 两侧的支配关系仍成立。存在左右两个相邻合法值时，取离 H 更近者，可以控制相对“知道 R 后再选”的最坏遗憾；上界是两侧距离中的较小者。
+						923 container
+							924 text 但在真实共享 DDR 中， R 是选择的结果之一 。上述支配关系和遗憾界不能直接升级成官方保证。原计算依赖给出的 R 下界，能证明“激活不可能早于某时刻”，却不能证明“预加载不会把激活推迟”。
+						925 heading 二、q 不是自由变量：必须先由真实合桶确定可达断点, Value: 2
+							926 text 二、q 不是自由变量：必须先由真实合桶确定可达断点
+						927 heading 1. 合并前 h 个计算操作，实际提前的是一个输入集合, Value: 3
+							928 text 1. 合并前 h 个计算操作，实际提前的是一个输入集合
+						929 container
+							930 text 固定 owner、cuts、统一作业排列和 R6 的原序较晚首批作业。对一份共有冷输入，记其在该阶段首批中的首次消费者位置为 
+							931 container \ell(t)
+							932 text 。合并前 h 个原计算操作时，可能提前的集合是：
+						933 container \mathcal I(h)=\{t:\ell(t)<h\}. \tag{R7.5}
+						934 container
+							935 text P3 将输入 COPY 归入最早消费子图，再对原 Step1 序稳定分桶。因此，只要 R6 的原序守卫成立——这些 COPY 在原序中都早于首批激活 COPY——合桶后，它们就进入首桶中的激活之前。未被合入的输入仍随各自后面的 singleton 桶出现。这个可提交机制由当前 P3 源码和  pipeline_prefix.py  的局部变换直接支持。
+						936 text 由此有三个不能省略的限制。
+						937 container
+							938 text 同一原操作首次使用的多份输入不能拆开选择。  它们必须整体进入或离开首桶。
+						939 container
+							940 text 不合桶未必等于 q 为零。  若段头 singleton 自己就消费共有输入，而这些 COPY 在桶内早于激活，它们已经是不可避免的前缀。应检查实际词，不能人为给选择集合加一个“零预取”选项。
+						941 container
+							942 text 中途残差会破坏单激活模型。  若合桶还把另一个跨核输入带入头部，得到的可能是“共有输入—激活一—计算—激活二……”，不是式（R7.1）的队列。不能把多个释放时刻压成一个最大 R 后继续套公式。
+						943 container
+							944 text 一个小反例是：两笔服务分别为 4、5 的冷读，都在计算位置 6 首次使用。在激活释放 6、计算总长 7、激活服务 1 的模型里，允许只提前第一笔会得到结束时间 14；但真正的消费者断点只允许两笔都不提前或两笔都提前，两者结束时间都是 17。 “选到了更好的 q”可能只是选到了不可提交的 q。
+						945 heading 2. 容量和 COPY_OUT 也需要一起核对, Value: 3
+							946 text 2. 容量和 COPY_OUT 也需要一起核对
+						947 text 部分合桶改变的不只是 MTE2。头部原操作的 COPY_OUT 归桶也可能改变，中途残差发送顺序尤其需要检查。当前通用代码已经明确对 COPY_OUT 使用实际 producer 子图归属，而不是保持一份任意人工 COPY 词。
+						948 text 对最终选中的 h，必须在同 owner 的精确 pre-Step2 图上重新检查：
+						949 container \max_j \sum_{\substack{t:\operatorname{pos}(t)=P}} s_t\,\mathbf1[\operatorname{first}(t)\le j\le\operatorname{last}(t)] \le C_P, \qquad P\in\{L1,UB\}. \tag{R7.6}
+						950 container
+							951 text 它包括真实生成的 COPY、所有输入输出及闭区间瞬态。这可以证明该序列不触发 Step2 spill，但 不证明新 Step3 复用边没有延迟 。当前源码确实分开处理 alloc-before-free、backing 复用与读者额度依赖。
+						952 heading 三、B 的最小反例：相同局部摘要，最优选择可以相反, Value: 2
+							953 text 三、B 的最小反例：相同局部摘要，最优选择可以相反
+						954 text 考虑一个待启动的目标阶段，只有一笔可提前的冷读：服务 5，首次使用前有 1 cycle 计算，计算总长 2，激活传输服务 1。
+						955 text 它的上游必须先完成一段供给过程，再经过相同的 500-cycle 固定释放等待。比较两种上游原顺序：
+						956 container
+							957 table
+								958 row
+									959 cell
+										960 text 模型
+									961 cell
+										962 text 上游供给顺序
+									963 cell
+										964 text 不预加载时的激活释放
+									965 cell
+										966 text 不预加载的结束时间
+									967 cell
+										968 text 提前该笔的结束时间
+								969 row
+									970 cell
+										971 text A
+									972 cell
+										973 text DDR 10 → 计算 10 → 固定等待 500
+									974 cell
+										975 text 520
+									976 cell
+										977 text 527
+									978 cell
+										979 text 528
+								980 row
+									981 cell
+										982 text B
+									983 cell
+										984 text 计算 10 → DDR 10 → 固定等待 500
+									985 cell
+										986 text 520
+									987 cell
+										988 text 527
+									989 cell
+										990 text 523
+							991 button Copy table
+						992 text 两者的上游总 DDR 工作、总计算、固定等待、目标的输入字节和首次消费位置，以及不预加载时的 R 都相同。所有服务使用同一个等份共享 DDR 池。
+						993 text 但在 A 中，提前读取会与最初的上游 DDR 竞争：目标预读获得 5 个单位服务，上游也因此晚 5。预加载量又略超过真正欠账，最终反而慢 1。
+						994 text 在 B 中，这 5 个单位全部藏在上游计算期间，不推迟激活，目标快 4。
+						995 container
+							996 text 这是共享资源数学模型反例，不是新的官方原图成绩。  它实质排除了：
+						997 text 只凭每段总计算、总冷读、原激活 R、目标首次使用位置，给各核独立选择 q，再将结果拼接为“拥塞感知最优方案”。
+						998 container
+							999 text 缺少的不是一个更好的带宽常数，而是 上游何时必须占用 DDR、何时原依赖允许它不占用 DDR 。这不否定使用完整图构造，只否定这些局部摘要足够。
+						1000 heading 四、唯一主构造：单个预加载核＋上游服务曲线, Value: 2
+							1001 text 四、唯一主构造：单个预加载核＋上游服务曲线
+						1002 text 我不建议这轮直接求所有核的 q 向量。先保留一个仍然能捕捉上述拥塞反馈、但可精确求解的族。
+						1003 heading 1. 适用族与最小足够状态, Value: 3
+							1004 text 1. 适用族与最小足够状态
+						1005 text 在目标激活之前，要求共享 DDR 上只有两类活动：
+						1006 text **上游供给流：**一条串行过程，由原 DDR 传输和原计算／固定依赖等待交替组成；至多一笔供给传输在途。它可以经过不同物理核，但逻辑上是串行的。
+						1007 text **预加载流：**只有一个目标核提前读取连续前缀，至多一笔在途；这些输入已经可读，不依赖上游激活。
+						1008 text 上游不能反向依赖目标。两者结束后，目标的激活传输和尾部冷读没有第三路 DDR 竞争，也没有被省略的内存或计算资源等待。
+						1009 container
+							1010 text 这里的“不使用 DDR 时段”必须来自 原计算和原固定延迟 ，不能添加等待算子。源 COPY_OUT 服务属于上游 DDR 段，500-cycle 释放等待属于随后不使用 DDR 的段。
+						1011 text 设上游全部 DDR 工作为 W、不使用 DDR 的时长为 G。不预加载时：
+						1012 container R_0=W+G. \tag{R7.7}
+						1013 container
+							1014 text 光保留 W、G 仍然不够。  还必须保留它们的交替顺序。这个顺序可以压成下面的一条分段线性曲线，而不必保留一份旧实测时间线。
+						1015 heading 2. 以“目标已获得多少预读服务”为横轴, Value: 3
+							1016 text 2. 以“目标已获得多少预读服务”为横轴
+						1017 text 假想目标一直有尚未完成的预加载，观察上游：
+						1018 content list
+							1019 container
+								1020 AXListMarker • 
+								1021 text 上游在做 DDR 时，两流获得相同服务；目标增加一个单位服务，上游也增加一个；
+							1022 container
+								1023 AXListMarker • 
+								1024 text 上游在计算或等待时，目标独占 DDR；目标服务增加，上游 DDR 工作不增加。
+						1025 container
+							1026 text 定义 
+							1027 container Y(x)
+							1028 text ：目标获得 x 个预读服务单位时，已经与它同时服务的上游 DDR 工作。
+						1029 text 因此，顺次扫描上游原过程即可建立 Y：
+						1030 container Y'(x)= \begin{cases} 1,&对应上游 DDR 段,\\ 0,&对应上游不使用 DDR 的段, \end{cases} \qquad Y(x)=W\quad\text{当 }x\ge R_0. \tag{R7.8}
+						1031 container
+							1032 text 不需要运行事件模拟器来生成这条曲线。每段长度来自原工作量、原计算量和固定延迟， 不是旧 trace 中被竞争拉长的时长 。
+						1033 heading 3. 同时求出新 R 和前缀结束时间, Value: 3
+							1034 text 3. 同时求出新 R 和前缀结束时间
+						1035 text 当实际提前量为 x 时：
+						1036 container \boxed{ R(x)=R_0+Y(x),\qquad F_{\mathrm{prefix}}(x)=x+Y(x). } \tag{R7.9}
+						1037 text 证明可以直接按服务守恒给出。
+						1038 container
+							1039 text 前缀完成之前，目标一直有工作，DDR 不会空转。这段时间总共服务目标 x、上游 
+							1040 container Y(x)
+							1041 text ，所以前缀完成于两者之和。上游与目标同时活跃时，其速率减半：完成 
+							1042 container Y(x)
+							1043 text  的上游工作额外用了同样多的时间；目标结束以后，上游恢复独占服务，因而整个激活释放恰好被推迟 
+							1044 container Y(x)
+							1045 text 。
+						1046 container
+							1047 text 这一步把最关键的反馈显式纳入了选择： 预加载并不是在固定的 R 前免费塞进一些读取。
+						1048 text 结合 A 的公式：
+						1049 container \boxed{ \mathcal T(x)= d+C+Y(x)+\max(R_0,x)+(H-x)_+. } \tag{R7.10}
+						1050 text 这是所述两流、串行供给模型的精确目标。
+						1051 heading 4. 有收益的部分，恰好是借到了上游的非 DDR 时间, Value: 3
+							1052 text 4. 有收益的部分，恰好是借到了上游的非 DDR 时间
+						1053 container
+							1054 text 当预加载量不超过 H 和 
+							1055 container R_0
+							1056 text  中较小者时：
+						1057 container \boxed{ \mathcal T(0)-\mathcal T(x)=x-Y(x). } \tag{R7.11}
+						1058 container
+							1059 text 右边不是全部预读量，而是其中 没有占用上游所需 DDR 服务 的那部分。
+						1060 text 由此得到一个有用的不可能性结论：
+						1061 container
+							1062 text 若上游在这段供给过程中完全由持续 DDR 工作构成，没有可利用的计算／依赖等待，那么预加载不可能严格缩短该模型的最终时间。  提前读到的服务全部等量推迟了激活；提前超过所需量还可能更慢。
+						1063 text 这排除了“看到下游尚未激活，就把这段时间全部当作预取预算”的做法。下游未激活可能正是因为上游还在抢同一条 DDR。
+						1064 heading 5. 仍然只需线性选择，而不是多核网格, Value: 3
+							1065 text 5. 仍然只需线性选择，而不是多核网格
+						1066 text 定义转折位置：
+						1067 container B=\min(H,R_0). \tag{R7.12}
+						1068 text 式（R7.10）在 B 左侧不增，右侧不减：
+						1069 content list
+							1070 container
+								1071 AXListMarker • 
+								1072 text 左侧目标等于一个常数减去 
+								1073 container x-Y(x)
+								1074 text ；这项可隐藏服务不减；
+							1075 container
+								1076 AXListMarker • 
+								1077 text 超过 H 后，继续提前不能再减少加载欠账；
+							1078 container
+								1079 AXListMarker • 
+								1080 text 超过 
+								1081 container R_0
+								1082 text  后，上游已在对应饱和过程里完成全部工作，Y 不再增加。
+						1083 container
+							1084 text 所以， 最优合法断点仍在 B 两侧最近的两个可达累计服务值中 。平手取最小预读量；曲线与断点都已排序，一次合并扫描即可。
+						1085 text 这个族的足够状态是：合法前缀服务集合、H、C、d，以及上游有序服务曲线 Y。它不能再压成上游总工作和一个旧 R。
+						1086 heading 6. 一个“部分严格胜过两端”的完整小例, Value: 3
+							1087 text 6. 一个“部分严格胜过两端”的完整小例
+						1088 text 目标三笔冷读的服务为 8、8、14，首次使用前的计算量为 1、2、15，计算总长 20，激活服务 2。上游为：
+						1089 container
+							1090 button Copy
+							1091 text DDR 10 → 原计算 10 → DDR 10
+						1092 text 此时加载欠账为 15。精确结果为：
+						1093 container
+							1094 table
+								1095 row
+									1096 cell
+										1097 text 提前笔数
+									1098 cell
+										1099 text 提前服务 x
+									1100 cell
+										1101 text 对上游造成的延迟 Y
+									1102 cell
+										1103 text 新激活释放
+									1104 cell
+										1105 text 前缀完成
+									1106 cell
+										1107 text 目标结束
+								1108 row
+									1109 cell
+										1110 text 0
+									1111 cell
+										1112 text 0
+									1113 cell
+										1114 text 0
+									1115 cell
+										1116 text 30
+									1117 cell
+										1118 text 0
+									1119 cell
+										1120 text 67
+								1121 row
+									1122 cell
+										1123 text 1
+									1124 cell
+										1125 text 8
+									1126 cell
+										1127 text 8
+									1128 cell
+										1129 text 38
+									1130 cell
+										1131 text 16
+									1132 cell
+										1133 text 67
+								1134 row
+									1135 cell
+										1136 text 2
+									1137 cell
+										1138 text 16
+									1139 cell
+										1140 text 10
+									1141 cell
+										1142 text 40
+									1143 cell
+										1144 text 26
+									1145 cell
+										1146 text 62
+								1147 row
+									1148 cell
+										1149 text 3
+									1150 cell
+										1151 text 30
+									1152 cell
+										1153 text 20
+									1154 cell
+										1155 text 50
+									1156 cell
+										1157 text 50
+									1158 cell
+										1159 text 72
+							1160 button Copy table
+						1161 text 部分预加载是严格最优；全预加载甚至不如不预加载。这里所有行的服务都是从同一个共享模型重新推导的，没有复用某个旧候选的持续时间。
+						1162 heading 五、如何写进求解器，以及为什么我不直接给 044 一组 h, Value: 2
+							1163 text 五、如何写进求解器，以及为什么我不直接给 044 一组 h
+						1164 heading 1. 构造流程, Value: 3
+							1165 text 1. 构造流程
+						1166 container
+							1167 button Copy
+							1168 text 固定原图、owner、cuts、统一作业排列和原序较晚首批
+
+从保存的同身份 pre-Step2 快照：
+    按最早消费者规则提取真正可达的合桶断点
+    排除被同一消费者绑定、不可单独选择的读取子集
+    核对真实 MTE2 词，不假定“未合桶”等于零前缀
+
+只考虑一个目标核：
+    提取激活前的串行供给过程
+    检查是否确实只有供给流与该预加载流
+    检查是否只有一个目标激活、无未建模中途残差
+    建立 Y 曲线
+    由合法断点在 min(H,R0) 两侧选择唯一 q
+    同分时选更少预读、更短合桶
+
+编译：
+    只把首批 stage 的前 h 个原计算操作共用一个 sgid
+    其他操作保持原节点和归属
+    按最早消费者/最晚生产者重新归桶
+    稳定投影保存的 Step1 原序
+
+核对全部四条 pipe、原依赖、COPY 集合、容量区间
+失败则停止，返回已有方案；不扫更多 h 组合
+						1169 text 数学选择器的成本为：
+						1170 container T_{\mathrm{select}}=O(n_{\mathrm{read}}+n_{\mathrm{feeder\ phase}}), \qquad S_{\mathrm{select}}=O(n_{\mathrm{read}}+n_{\mathrm{feeder\ phase}}). \tag{R7.13}
+						1171 text 从已有原序快照编译最终单份候选及检查端口、区间，是图规模的线性扫描；官方构图／准备成本另计。这不是同时为五个核排列冷读，也不是在多个官方候选中选赢家。
+						1172 heading 2. 哪个结论是 Makespan 保证, Value: 3
+							1173 text 2. 哪个结论是 Makespan 保证
+						1174 container
+							1175 text 式（R7.10）精确给出 这个封闭启动过程的出口时间 。
+						1176 text 只有当它包含整个被比较过程的最终出口，或者已证明后续是状态相同、只随该出口整体平移的延续时，才能直接得到 Makespan 改善。多作业流水中，源核因预读推迟其他作业、目标提前却改变稳态间隔，均可能抵消首批改善。
+						1177 text 因此，不能把一个较小的首批出口自动当作较小的全图 M。
+						1178 heading 3. 044 目前不能直接套入这个定理, Value: 3
+							1179 text 3. 044 目前不能直接套入这个定理
+						1180 container
+							1181 text 已有材料确认的是 四条同时启动的预加载前缀 ；原流水还有多条中途残差和后续作业。即使把其他核改回 singleton，也不能推出“剩下的所有 DDR 工作就变成了一条串行供给流”：普通冷读、后续作业与 MTE3 写回仍可能并发。
+						1182 text 所以，对 044：
+						1183 text 我不提供一个由旧 R 或旧关键路径时长算出的“已证最优 h 向量”，本轮也没有生成新的 044 计划。
+						1184 text 应先用保存的原序和依赖资料检查能否找到上述封闭片段。若不存在，这个线性选择器应拒绝，而不是将分支负载相加、换算成一个虚假的供给曲线。
+						1185 container
+							1186 text 这不是说所有 partial 构造无效；它实质排除的是当前最容易走错的路线： 局部欠账最优＋冻结激活时刻＋各核独立拼接。  要跨出这个限制，至少需要候选自身的活动流、当前传输剩余工作、计算／释放时钟以及中途残差依赖，而不能继续只用各段总量。
+						1187 heading 六、取整界、最小证伪路径与交付, Value: 2
+							1188 text 六、取整界、最小证伪路径与交付
+						1189 heading 1. 本构造不使用 36592 作剪枝, Value: 3
+							1190 text 1. 本构造不使用 36592 作剪枝
+						1191 container
+							1192 text 我已读完  test_math.py  的有理数反例。你们指出的整数退休空隙确实不是可以忽略的实现细节；当前报告也正确将 36592 限定为固定前缀的有理数模型界，而非浮点实现或全部方案的严格门槛。
+						1193 text 本轮选择器不依赖该界。
+						1194 container
+							1195 text 另有一个更窄的事实：在上述 仅两流、整数服务工作、整数原计算／等待、没有第三路到达事件 的模型里，完成事件保持整数。两流同活跃时，到下一次完成所需时间是最小剩余整数工作的两倍；单流与计算阶段也保持整数。因而这些小例没有一般多流模型中的分数退休空隙。
+						1196 container
+							1197 text 这不是官方浮点稳健性证明。  一旦允许第三路流、额外到达或其他阻塞，就不能继续用这一特例消去取整问题。当前 P3 的实际共享服务和容差逻辑仍须按冻结源码处理。
+						1198 heading 2. 最小证伪路径, Value: 3
+							1199 text 2. 最小证伪路径
+						1200 text 先零 E0 地做两个检查。
+						1201 text **可提交检查：**所选 h 是否真的产生预期冷读前缀；是否夹带了新的激活、改变残差 COPY_OUT 顺序，或选了同消费者绑定中的非法 q。
+						1202 text **共享过程检查：**预测的上游过程是否完整；是否漏掉第三路流、后续作业、其他 MTE3 传输或内存复用前驱。上游总工作和旧 R 对得上，不足以通过这个检查，第三节反例已经说明原因。
+						1203 text 只有一个候选通过后，才值得由本机另定预算做一次新 prepare／完整依赖核验，再至多一次新 P3。需要保存实际：
+						1204 content list
+							1205 container
+								1206 AXListMarker • 
+								1207 text 预加载期间活动的 DDR 流集合与每笔剩余服务；
+							1208 container
+								1209 AXListMarker • 
+								1210 text 新激活释放，而不是沿用旧释放；
+							1211 container
+								1212 AXListMarker • 
+								1213 text 各输入首次消费之前的实际等待；
+							1214 container
+								1215 AXListMarker • 
+								1216 text 首批输出与后续批次输出间隔；
+							1217 container
+								1218 AXListMarker • 
+								1219 text COPY 集合、spill/backing、四条 FIFO 和新内存复用边。
+						1220 text 若模型认为“借到了计算空档”，实际却主要等量推迟上游激活，便推翻该收益机制；若首批下降但全图 M 上升，也不接受。
+						1221 container
+							1222 text 新 P3 的 M 下降只能说明周期改善。固定读取集合已没有增加命中字节的空间，但改序仍可能让重复读取过早发射、失去原有 hit；不能默认新统计对象不变。 新 G 必须另有同计划、同核 P2/P3 配对才能报告。  当前 full-prefix 没有该配对，不能由 38024 或相同 hit 字节推算其 G。
+						1223 heading 3. 数学内核与小模型证书, Value: 3
+							1224 text 3. 数学内核与小模型证书
+						1225 button 下载线性断点选择器和有理数检查
+							1226 text 下载线性断点选择器和有理数检查
+						1227 button 查看完整小模型参数、释放变化与结果证书
+							1228 text 查看完整小模型参数、释放变化与结果证书
+						1229 container
+							1230 text 代码包含固定 R 选择器、显式计算 R 反馈的供给曲线选择器，以及独立的两流有理数事件递推。九项命名检查通过； 官方 Task、Step1/2/3、E0 调用均为零。  原图守卫提取和官方适配不在数学内核中，不能把它直接包装成已经验证的 044 求解器。
+						1231 text 本轮的核心判断是：部分预加载值得选择的，不是“下游还有多久才激活”，而是“这次提前读取中，有多少服务真正来自上游原本不使用 DDR 的时段”。A 的加载欠账 H 决定需要提前多少；B 的服务曲线 Y 决定提前这些服务要付出多少上游延迟。两者缺一，都会把共享 DDR 的工作重新排队误判成被隐藏了。
+						1232 container
+							1233 button math_certificates.json
+								1234 text math_certificates.json
+								1235 text Code
+							1236 button Download file
+						1237 container Response actions
+							1238 button Copy response
+							1239 pop up button (collapsed) Description: Rate response, ID: radix-_r_ko_, Secondary Actions: Expand
+							1240 pop up button (collapsed) Description: Pro feedback, Secondary Actions: Expand
+							1241 button Add to project sources
+							1242 pop up button (collapsed) Description: Switch model, ID: radix-_r_l0_, Secondary Actions: Expand
+							1243 pop up button (collapsed) Description: More actions, ID: radix-_r_l3_, Secondary Actions: Expand
+					1244 text ChatGPT can make mistakes. Check important info.
+				1245 container thread-bottom-container
+					1246 container
+						1247 container
+							1248 pop up button (collapsed) Description: Add files and more, ID: composer-plus-btn, Secondary Actions: Expand
+							1249 text entry area (settable) Description: Chat with ChatGPT, ID: prompt-textarea
+								1250 text Ask ChatGPT
+							1251 pop up button (collapsed) 6 Pro, ID: radix-_r_l6_, Secondary Actions: Expand
+							1252 button Start dictation
+							1253 button Start Voice
+
+The focused UI element is 1249 text entry area (settable) Description: Chat with ChatGPT, ID: prompt-textarea

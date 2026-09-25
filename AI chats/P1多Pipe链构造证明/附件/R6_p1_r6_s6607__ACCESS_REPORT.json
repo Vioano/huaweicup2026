@@ -1,0 +1,46 @@
+{
+  "input_zip": {
+    "bytes": 1033161,
+    "sha256": "4924c14414e59bedaa67d880344278099d23936aa3435ab42490c93c622b6d97"
+  },
+  "payloads_hashed": 27,
+  "all_matched": true,
+  "fully_parsed": [
+    "MANIFEST.json",
+    "audit/README.md",
+    "audit/timeline-audit.json",
+    "data/case_005.json",
+    "data/case_085.json",
+    "v4/005/plan.json",
+    "v4/005/result.json.gz",
+    "v4/005/run-derived.json",
+    "v4/085/plan.json",
+    "v4/085/result.json.gz",
+    "v4/085/run-derived.json"
+  ],
+  "source_read": [
+    "src/q1/heavy_suffix.py",
+    "src/q1/sink_peel.py",
+    "src/q1/unified.py (generation/scoring-controller sections)",
+    "src/q1/component_pack.py",
+    "src/q1/fork_frontier.py (first sections)",
+    "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py (boundary, compilation and release/event-loop sections)",
+    "data/raw/a/official/code/schedule_step1.py (ordering)",
+    "data/raw/a/official/code/schedule_step2.py (capacity/spill/lifecycle sections)",
+    "data/raw/a/official/code/schedule_step3.py (FIFO/allocation/reuse/export sections)",
+    "data/raw/a/official/data/config.txt"
+  ],
+  "not_semantically_reviewed": [
+    "multicore_cut_evaluate_problem_2.py",
+    "multicore_cut_evaluate_problem_3.py",
+    "singlecore_evaluate.py"
+  ],
+  "missing": [
+    "Full unified solver dependency closure (bounded_tasks, component_overload, shared_input_budget, capacity_return, src/eval_exact, etc.)",
+    "Separate trace.json.gz files (full result ops are present)",
+    "Original Fang lower-bound CSV/certificates",
+    "Raw E0 files for separately reported 016/024/051/084 improvements and full500 aggregate"
+  ],
+  "additional_connector_read": "Vioano/huaweicup2026@00e65cbe3f0fa4679e626798bb42fc957c47070d:results/a/p1-wave-bottleneck-audit-20260925/README.md",
+  "retrieval_note": "Files search returned no indexed ZIP content; exact mounted ZIP was read and verified instead. No inferred file paths or library substitutions."
+}

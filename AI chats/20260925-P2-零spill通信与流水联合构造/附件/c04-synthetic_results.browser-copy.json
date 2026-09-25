@@ -1,0 +1,92 @@
+{
+  "errors": 0,
+  "failures": 0,
+  "observations": {
+    "four_compute_counterexample": {
+      "official_evaluator_calls": 0,
+      "replicated": {
+        "copy_bytes": 12002,
+        "ideal_fair_model_M": 204,
+        "input_replicas": 2,
+        "per_core_M_V_work": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      },
+      "stationary": {
+        "copy_bytes": 6006,
+        "ideal_fair_model_M": 606,
+        "input_replicas": 1,
+        "per_core_M_V_work": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      },
+      "validation": "handwritten timelines checked with rational service integrals"
+    },
+    "heterogeneous_connected_fixture": {
+      "boundary_replica_counts": {
+        "1000": 1,
+        "1100": 2,
+        "1101": 2,
+        "1102": 2
+      },
+      "core_operation_counts": [
+        11,
+        10,
+        6
+      ],
+      "note": "a structural witness, NOT a score or performance result",
+      "operations": 27,
+      "packet_count": 13,
+      "pre_step2_copy_bytes": 4352
+    },
+    "random_structural_checks": {
+      "checked": [
+        "coverage",
+        "DAG + full core-priority acyclicity",
+        "exact tensor/core byte accounting",
+        "COPY-bucket sequential lifetimes below prefix envelope",
+        "arithmetic pair budget"
+      ],
+      "family_abstentions": {},
+      "fixtures": 400,
+      "not_checked": [
+        "official makespan",
+        "official prepared memory edges"
+      ],
+      "returned_witnesses": 400
+    },
+    "separate_ports": {
+      "early_output": 2,
+      "unrelated_late_output": 1001
+    },
+    "tight_capacity_checks": {
+      "family_abstentions": {
+        "bounded ready window has no memory/work-admissible pair": 10,
+        "single-operation incident-footprint screen failed": 29
+      },
+      "fixtures": 150,
+      "note": "abstention is not a P2 infeasibility claim",
+      "returned_witnesses": 111
+    },
+    "two_resource_column_identity_checks": 1600
+  },
+  "official_evaluator_calls": 0,
+  "official_graphs_constructed": 0,
+  "passed": true,
+  "scope": "synthetic mathematical/structural checks ONLY",
+  "tests_run": 9
+}

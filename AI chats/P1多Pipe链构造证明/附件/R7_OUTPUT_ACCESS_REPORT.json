@@ -1,0 +1,61 @@
+{
+  "archive": "P1_R7_shared_input_static_20260925.zip",
+  "archive_sha256": "6d461d4c092166363b211f45bbbf36c5627a51abe89ef491257b8cbd4b3a4a49",
+  "entries": 27,
+  "manifest_hashed_payloads": 26,
+  "verification": "all passed",
+  "read_full": [
+    "README.md",
+    "MANIFEST.json",
+    "case044/case_044.json",
+    "v4-k5/plan.json",
+    "v4-k5/result.json.gz",
+    "v4-k5/trace.json.gz",
+    "v4-k5/run-derived.json",
+    "prior-k3/plan.json",
+    "prior-k3/result.json.gz",
+    "prior-k3/trace.json.gz",
+    "prior-k3/diagnostics.json",
+    "prior-k3/README.md",
+    "analysis/README.md",
+    "analysis/derived.json",
+    "analysis/analyze_saved.py",
+    "official/config.txt",
+    "official/schedule_step1.py"
+  ],
+  "read_relevant_sections": [
+    "analysis/shared_input_budget.py",
+    "official/multicore_cut_evaluate_problem_1.py",
+    "official/schedule_step2.py",
+    "official/schedule_step3.py",
+    "official/stub_multicore_cut_and_schedule.py",
+    "official/evaluation_validation.py"
+  ],
+  "hash_only": [
+    "official/contest_io.py",
+    "official/multicore_cut_evaluate_problem_2.py",
+    "official/multicore_cut_evaluate_problem_3.py",
+    "official/singlecore_evaluate.py"
+  ],
+  "source_distinction": {
+    "saved_v4_objects": "9c5f87548cc7588465a638e032993969b5cac891 per MANIFEST",
+    "analysis_readme_derived_analyze": "untracked worktree files; NOT contents of HEAD",
+    "official_and_shared_input_budget": "clean tracked worktree files at manifest head 6caeddd18d7bedf6e70dd17afb86413075be2a2d; no live Git verification",
+    "prior_k3": "prior published distinct run; no new evaluation"
+  },
+  "not_in_packet": [
+    "unified.py and its full baseline dependency tree",
+    "other official graphs and full500 raw evidence",
+    "R6 new E0 original",
+    "prior-k3 README referenced receipt.json/manifest.json/e0.log/baseline-044-singlecore.json.gz"
+  ],
+  "not_attempted": [
+    "web/connector retrieval",
+    "constructor execution",
+    "official compilation",
+    "response scoring",
+    "E0",
+    "E1",
+    "E2"
+  ]
+}

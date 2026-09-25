@@ -1,0 +1,414 @@
+							786 heading 一、实际读取范围与本轮结论, Value: 2
+								787 text 一、实际读取范围与本轮结论
+							788 container
+								789 text 已完整读取固定提交  845846b38f4d7cc2b5dc11a2fe8d10027560edcd  的两份机制报告、时差审计的  reproduce.py/summary.json 、 shared_pipeline.py 、 shared_pipeline_capacity.py 、 pipeline_startup.py 、 PIPELINE_STARTUP.md ，以及本轮需要额外核对的官方  schedule_step1.py 。P3 读取了完整 Task/COPY 构造段和就绪判定段；Step2、Step3 读取了容量、分桶、FIFO、额度复用相关段落；配置已完整读取。两次官方机制结果及其统计边界，与用户反馈一致。
+							790 container
+								791 text 原始 044、046 从已挂载官方附件 ZIP 读取，字节 SHA 与同提交  source-manifest.json  一致。 没有读取官方结果 JSON.gz，也没有运行官方 prepare、Step2、Step3 或 E0。  044 做了一次静态 Task/COPY 骨架提取和五次 Step1，详见后面的调用账单。
+							792 text 本轮找到了一个不改 owner、不改 cuts、不增加 COPY 的构造：把 Step1 原序中较晚的一条作业放到实际首批，并将其各下游阶段合成一个子图，借官方稳定分桶生成“共有输入 COPY_IN 前缀”。
+							793 container
+								794 text 它跨出的最小自由度是： 不再要求首批的每个计算操作都是 singleton。  计算操作没有融合；只是若干原计算操作获得同一 sgid。该变化能让下游共有输入在跨核激活 COPY 之前进入 MTE2 队列。
+							795 container
+								796 text 对原 044 的静态核验已确认： core1–4 的全部共有输入都能变成这种无激活依赖的前缀；原计算 FIFO 只发生统一的作业置换，计算下界仍为 26842，整段容量的无 spill 输入证书通过。  这证明了启动加载存在可提交的结构自由度，但尚不证明官方 Makespan 会下降。
+							797 heading 二、现有方案为何不能更早加载：要分清三个不同的“就绪”, Value: 2
+								798 text 二、现有方案为何不能更早加载：要分清三个不同的“就绪”
+							799 heading 1. P3 没有“等前段完成才激活整个下游 Task”的统一屏障, Value: 3
+								800 text 1. P3 没有“等前段完成才激活整个下游 Task”的统一屏障
+							801 text 冻结 P3 在零时刻初始化所有核的操作，并尝试将就绪操作入队。一个 COPY 能否发射，实际取决于：
+							802 content list
+								803 container
+									804 AXListMarker • 
+									805 text 它在准备图中的前驱是否完成；
+								806 container
+									807 AXListMarker • 
+									808 text 它是不是该 pipe 当前队首；
+								809 container
+									810 AXListMarker • 
+									811 text 若它本身是跨核激活 COPY_IN，源 COPY_OUT 是否完成并经过 500 cycles。
+							812 container
+								813 text 因此，“下游 Task 未激活，所以不能读权重”不是这里的准确解释。 共有输入 COPY 本身可以没有跨核前驱，却排在一个未释放的激活 COPY 后面。  后者通过固定 MTE2 FIFO 阻塞前者。
+							814 text 再加上第三层：Step3 可能给共有输入 COPY 的输出分配添加内存额度复用前驱。这时，即使它已经是 MTE2 队首，也可能还要等某个旧 tensor 的读者。
+							815 container
+								816 text 准备阶段的  allocation_order  与最终执行中的  MEMORY_REUSE  边不能混为一谈：前者参与生成准备图；最终 P3 应检查实际输出的依赖图，而不是把全部准备阶段分配顺序直接当作新的完成依赖。
+							817 heading 2. singleton 的“首次消费者桶”确实限制了预加载, Value: 3
+								818 text 2. singleton 的“首次消费者桶”确实限制了预加载
+							819 container
+								820 text P3 对一个共有外部输入，在每个消费核生成一次 COPY_IN，并把它归入该核 提交顺序最早的消费者子图 。随后，对 Step1 的原序按子图优先级稳定分桶；桶内保留 Step1 顺序。
+							821 text 于是有一个限定族的不可能性结论。
+							822 text 固定连续 stage owner、保留 singleton 时：一个仅在 stage 内部位置首次使用的共有输入，不可能被提前到所有入段激活 COPY 之前。
+							823 container
+								824 text 证明：设该输入最早提交的消费者属于作业 
+								825 container j
+								826 text 。它前面的本地链头必须更早提交；链头的激活 COPY 属于更早的 singleton 桶。因此该激活 COPY 必然先于共有输入 COPY 出现在 MTE2 投影中。仅改变 job-major 的作业排列，不能消除这个约束。
+							827 text **例外必须保留：**如果共有输入在段头就被消费，它与激活 COPY 可能在同一桶，桶内顺序决定谁在前。不能说所有共有输入都必然被挡住。
+							828 heading 3. 原 044 第三段有一个比纯计算量更强的启动下界, Value: 3
+								829 text 3. 原 044 第三段有一个比纯计算量更强的启动下界
+							830 text 静态原图核验显示：第三段的七个共有 key 都在段头之后首次使用，每个 73728 B；它们没有其他阶段的消费者。对当前无 reload 的 anchor，其首次读取必为 cold miss。
+							831 container
+								832 text 记该段首批入段激活 COPY 完成时刻为 
+								833 container R_s
+								834 text 。按 MTE2 顺序，第 
+								835 container r
+								836 text  个共有输入的最短服务周期为 
+								837 container \tau_r
+								838 text ，其第一次消费者到该段末尾的原链计算后缀为 
+								839 container Q_r
+								840 text 。那么：
+							841 container \boxed{ T_{s,1}\ge R_s+ \max\left\{ C_s,\; \max_r\left(\sum_{\ell\le r}\tau_\ell+Q_r\right) \right\}. } \tag{P6.1}
+							842 container
+								843 text 这是 被激活 COPY 挡住的固定顺序族 的下界，不是全部合法提交的下界。它保留了每份输入自己的首次消费位置，也没有使用代理 F。
+							844 text 044 第三段中：
+							845 container \tau_r=\left\lceil\frac{73728}{60}\right\rceil=1229, \qquad \sum_{r=1}^{7}\tau_r=8603, \qquad Q_7=150. \tag{P6.2}
+							846 text 因此：
+							847 container \boxed{T_{2,1}\ge R_2+8753,} \tag{P6.3}
+							848 text 而该段纯计算只有 1120 cycles。
+							849 container
+								850 text 这说明该 singleton 族确有明显的启动限制。  但它仍不能把 trace 中全部 9402-cycle 窗口逐项归因为某一原因：额外跨核输入、带宽争用、内存补边仍须检查。
+							851 heading 三、唯一新构造：利用“原序较晚的作业”形成共有输入前缀, Value: 2
+								852 text 三、唯一新构造：利用“原序较晚的作业”形成共有输入前缀
+							853 heading 1. 为什么合并首批子图能改变 COPY 顺序, Value: 3
+								854 text 1. 为什么合并首批子图能改变 COPY 顺序
+							855 text 考虑两个原作业，均有：
+							856 container
+								857 button Copy
+								858 text 上游 A_j → 下游 B_j → 下游 C_j
+                         ↑
+                    共有输入 W
+							859 container
+								860 text 下游部分由两个原计算操作组成，W 只在后一个操作使用。记激活 COPY 为  G_j ，W 的共有 COPY 为  I_W 。
+							861 text 如果 Step1 先遍历作业 d，再遍历作业 p，其原序可以是：
+							862 container
+								863 button Copy
+								864 text G_d, B_d, I_W, C_d, OUT_d,
+G_p, B_p,      C_p, OUT_p
+							865 text W 的 COPY 只生成一次；遍历第二条作业时，它已经出现在原序中。
+							866 text 现在做两件事：
+							867 text 把 p 放到实际提交顺序的第一条；把 p 的下游两个计算操作放入同一子图。
+							868 container
+								869 text W 的首次提交消费者现在属于 p 的子图，于是  I_W  被归入 p 的桶。稳定分桶得到：
+							870 container
+								871 button Copy
+								872 text I_W, G_p, B_p, C_p, OUT_p,
+G_d, B_d, C_d, OUT_d
+							873 text 共有输入到了激活 COPY 之前。
+							874 text 这里没有执行额外的“暖机作业”。d 只是 Step1 编译遍历中较早出现的作业；真正执行时仍然只计算原来两条作业各一次。Step1 的原序规则及 P3 的稳定分桶规则，正好提供了这种可利用的差异。
+							875 heading 2. 一般化的原序守卫, Value: 3
+								876 text 2. 一般化的原序守卫
+							877 container
+								878 text 固定 owner 后，未标注子图归属的 Task/COPY 图不变：共有输入 COPY、跨核 COPY 的数量、端点、ID 都由原图和 owner 决定。改变子图映射和  core_schedules ，改变的是 COPY 所属桶及稳定分桶结果。
+							879 text 令：
+							880 content list
+								881 container
+									882 AXListMarker • 
+									883 container I_s
+									884 text ：阶段 
+									885 container s
+									886 text  的全部共有输入 COPY_IN；
+								887 container
+									888 AXListMarker • 
+									889 container G_{j,s}
+									890 text ：作业 
+									891 container j
+									892 text  在该阶段的全部跨核激活 COPY_IN；
+								893 container
+									894 AXListMarker • 
+									895 container \rho_s
+									896 text ：该核 Step1 原序中的位置。
+							897 text 选择一条作业作为加载锚，使所有下游阶段满足：
+							898 container \boxed{ \max_{x\in I_s}\rho_s(x) < \min_{g\in G_{j,s}}\rho_s(g). } \tag{P6.4}
+							899 text 然后：
+							900 content list
+								901 container
+									902 AXListMarker 1. 
+									903 text 所有核使用同一个“加载锚作业在前”的作业排列；
+								904 container
+									905 AXListMarker 2. 
+									906 text core0 保留 singleton；
+								907 container
+									908 AXListMarker 3. 
+									909 text 每个下游核只将加载锚作业的整段原计算操作合为一个子图；
+								910 container
+									911 AXListMarker 4. 
+									912 text 其他作业仍保留 singleton。
+							913 container
+								914 text 最后直接检查稳定分桶后的词：首段是否确实为全部共有输入 COPY，且不混入计算或激活 COPY。 不满足就拒绝，不改 ID，不搜索一串备用分组。
+							915 text 所有被合并集合都是同一原作业的连续位置区间，故原子图 DAG 仍无环。原 owner 和 cuts 不变；不同阶段之间的原依赖仍只向后，统一作业排列也不会反转本地链。
+							916 heading 3. 为什么这个前缀不会再被 Step3 的额度复用边挡住, Value: 3
+								917 text 3. 为什么这个前缀不会再被 Step3 的额度复用边挡住
+							918 text 仅有共有输入总量不超过容量还不够，必须同时检查整份新序列。
+							919 container
+								920 text 对精确的  pre-Step2 Task 图和新分桶词 ，用 tensor 的首次、末次 use 构造闭区间，包括 COPY、生产者和所有消费者：
+							921 container P_{c,\ell} = \max_i \sum_{\substack{t:\operatorname{pos}(t)=\ell}} s_t\,\mathbf1[\operatorname{first}(t)\le i\le\operatorname{last}(t)]. \tag{P6.5}
+							922 text 若全部 L1/UB 的这个量均不超过容量，并核对没有未建模的初始驻留 tensor，则 Step2 不触发 spill。必须使用闭区间，因为输入末次使用与输出分配在同一步共存。
+							923 container
+								924 text 此外，共有输入前缀是该 Task 的第一批分配。其总量装得下时，Step3 使用初始未占用额度完成这些分配， 不存在需要从后续激活或计算读者回收额度的理由 。因此，不会生成从后续读者指向这些前缀 COPY 的内存复用边。
+							925 text 在这些条件下：
+							926 text 该核的第一条共有输入 COPY 在零时刻即可发射；后续共有输入 COPY 只需等待同 pipe 的前一条完成，不再等待跨核激活。
+							927 text 它们仍共享 DDR 或 Cache 资源池。这个结论没有指定完成时间，也没有保证全部加载能在激活到达前结束。
+							928 heading 四、原 044 的静态证书：启动次序变了，计算切点和搬运数量没变, Value: 2
+								929 text 四、原 044 的静态证书：启动次序变了，计算切点和搬运数量没变
+							930 container
+								931 text 我按原图和原容量构造重新生成 anchor。其 JSON 字节 SHA 与已归档计划  e959272c…  完全一致，因此本次静态核验不是另一个“近似相同”的 anchor。原件身份来自已读审计脚本和摘要。
+							932 text 原序守卫选择了原编号第二条作业，其首计算节点为 177。实际作业排列变为：
+							933 container
+								934 button Copy
+								935 text [1, 0, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+							936 text 这不是按 case 编号选择；规则是选择第一个同时通过所有阶段原序守卫的作业。
+							937 container
+								938 table
+									939 row
+										940 cell
+											941 text 核
+										942 cell
+											943 text 共有输入前缀
+										944 cell
+											945 text 前缀字节数
+										946 cell
+											947 text 新词的精确 pre-Step2 L1 区间峰值
+									948 row
+										949 cell
+											950 text 0
+										951 cell
+											952 text 保留 singleton，不要求形成完整前缀
+										953 cell
+											954 text —
+										955 cell
+											956 text 12,768 B
+									957 row
+										958 cell
+											959 text 1
+										960 cell
+											961 text 全部 12 个共有 COPY_IN
+										962 cell
+											963 text 214,272 B
+										964 cell
+											965 text 215,808 B
+									966 row
+										967 cell
+											968 text 2
+										969 cell
+											970 text 全部 7 个共有 COPY_IN
+										971 cell
+											972 text 516,096 B
+										973 cell
+											974 text 516,480 B
+									975 row
+										976 cell
+											977 text 3
+										978 cell
+											979 text 全部 11 个共有 COPY_IN
+										980 cell
+											981 text 186,368 B
+										982 cell
+											983 text 187,904 B
+									984 row
+										985 cell
+											986 text 4
+										987 cell
+											988 text 全部 10 个共有 COPY_IN
+										989 cell
+											990 text 7,040 B
+										991 cell
+											992 text 13,184 B
+								993 button Copy table
+							994 container
+								995 text UB 区间峰值均为零。这些是 新序列的静态容量值，不是官方异步执行峰值 。044 每条作业还有一份独有初始输入，没有被误并入共有输入集合，其生命周期同样参与检查。
+							996 text 同时核对了：
+							997 container
+								998 text 原节点 owner、cuts 和计算量不变。  原计算 M/V FIFO 仅作上述统一作业置换，独立增强 DAG 计算仍为 26842。
+							999 container
+								1000 text 原始 Task/COPY 骨架不变。  仍为 121 条跨核连接、182 个 COPY_IN、132 个 COPY_OUT；before-spill 的总 COPY 为 1116256 B，额外结构 COPY 为 140800 B。因为式（P6.5）通过，这份输入序列具有 Step2 无 spill 证书； 不是本轮测得的新 spill 指标。
+							1001 container
+								1002 text 还有一个实现边界：这份计划已经不是全 singleton。现有  pipe_bound.analyze  的 singleton guard 应继续保留；此次 26842 是依据明确重建的原计算 pipe 投影独立复算，不能通过删掉 guard 把任意分组纳入原定理。
+							1003 text 本轮调用账单为：
+							1004 container
+								1005 table
+									1006 row
+										1007 cell
+											1008 text 操作
+										1009 cell
+											1010 text 次数
+									1011 row
+										1012 cell
+											1013 text 官方构造前半段的静态 Task/COPY 骨架提取
+										1014 cell
+											1015 text 1 次，覆盖五核
+									1016 row
+										1017 cell
+											1018 text 官方 Step1
+										1019 cell
+											1020 text 5
+									1021 row
+										1022 cell
+											1023 text 静态 
+											1024 text derive_multicore_plan
+										1025 cell
+											1026 text 2，含骨架内部一次
+									1027 row
+										1028 cell
+											1029 text Step2 / Step3 / 官方 prepare / P2 / P3 E0
+										1030 cell
+											1031 text 均为 0
+								1032 button Copy table
+							1033 text 静态骨架提取停在官方构造的调度循环之前；它不是一次完整官方 prepare，也不是另写的评分器。
+							1034 heading 五、何时它能降低启动时间，何时会反而变慢, Value: 2
+								1035 text 五、何时它能降低启动时间，何时会反而变慢
+							1036 container
+								1037 text 提前发射资格不等于 Makespan 改善。  本构造还有一个代价：把整个输入前缀放到激活 COPY 前，可能失去“先运行本段前几个计算，同时加载后部输入”的机会。
+							1038 text 可以在一个受限模型中精确描述这项取舍。
+							1039 heading 1. 保留逐输入位置的充分条件, Value: 3
+								1040 text 1. 保留逐输入位置的充分条件
+							1041 container
+								1042 text 假设只有一个入段激活，其外部释放时刻为 
+								1043 container R
+								1044 text ，服务为 
+								1045 container d
+								1046 text ；其余外部输入均可读取，加载使用给定、未受本次修改影响的服务时间。原计算是一条 Hamiltonian 链，总计算量为 
+								1047 container C
+								1048 text 。
+							1049 container
+								1050 text 记共有输入依 FIFO 顺序的累计服务为 
+								1051 container U_r
+								1052 text ，总加载为 
+								1053 container L
+								1054 text ，输入 
+								1055 container r
+								1056 text  第一次使用之前的计算量为 
+								1057 container P_r
+								1058 text 。定义原方案无法由前段计算覆盖的加载量：
+							1059 container H=\max\left\{0,\max_r(U_r-P_r)\right\}. \tag{P6.6}
+							1060 text 在该模型中：
+							1061 container T_{\mathrm{gated}}=R+d+C+H, \qquad T_{\mathrm{prefix}}=\max(R,L)+d+C. \tag{P6.7}
+							1062 text 因此：
+							1063 container \boxed{ T_{\mathrm{gated}}-T_{\mathrm{prefix}} = H-(L-R)_+. } \tag{P6.8}
+							1064 container
+								1065 text 收益条件是未被本段计算覆盖的加载，大于提前加载后仍暴露在激活到达之后的部分。  它不是比较总 B 和总 C，也不是“核空闲就预取”。
+							1066 container
+								1067 text 这个定理明确不包含两类 044 的复杂性：共有 DDR 争用会改变 
+								1068 container R
+								1069 text  和各 COPY 服务；原阶段还可能有多个中途跨核输入。它是构造机制的充分条件，不是把旧 trace 数字直接代入后得到的新官方预测。
+							1070 heading 2. 最小正反例, Value: 3
+								1071 text 2. 最小正反例
+							1072 container
+								1073 text 若只有一份后部输入，加载耗时 
+								1074 container L
+								1075 text ，其使用前计算量为 
+								1076 container x
+								1077 text ，则式（P6.8）化成：
+							1078 container \boxed{ T_{\mathrm{gated}}-T_{\mathrm{prefix}} = \min(R,L)-\min(x,L). } \tag{P6.9}
+							1079 container
+								1080 text 在 
+								1081 container L=1000,\ x=100
+								1082 text  的人工模型中：
+							1083 content list
+								1084 container
+									1085 AXListMarker • 
+									1086 text 激活在 2000 才释放：提前加载节省 900 cycles；
+								1087 container
+									1088 AXListMarker • 
+									1089 text 激活在零时刻已就绪：提前完整加载反而损失 100 cycles；
+								1090 container
+									1091 AXListMarker • 
+									1092 text 若原本使用前计算就有 1200 cycles，晚激活时两者也只能持平。
+							1093 container
+								1094 text 这些是小型代数反例，不是官方图成绩。它们说明 即使无容量问题、无额外 COPY，也不能保证完整预加载前缀更快。
+							1095 text 实际还可能有两种反转：
+							1096 text 共有输入同时提早读取，挤占 core0 首批输入和跨核 COPY_OUT 的 DDR 份额；或者合桶改变了首批残差输出 COPY_OUT 在原序中的位置，使另一阶段需要的数据更晚发出。后一风险对 044 尤其要检查，因为其跨核连接不只是四个段头交接。
+							1097 container
+								1098 text 所以，本轮推荐的是 一份可验证候选 ，不是默认覆盖 anchor。
+							1099 heading 六、构造、复杂度与唯一验证路径, Value: 2
+								1100 text 六、构造、复杂度与唯一验证路径
+							1101 heading 1. 伪代码, Value: 3
+								1102 text 1. 伪代码
+							1103 container
+								1104 button Copy
+								1105 text 输入：原图、已有容量切点、已有 job-major anchor
+
+核对：
+    原始输入端口、独立作业、Hamiltonian 链、相同共有输入位置
+    每棵作业各段 owner 与 cuts 固定
+    每个 tensor 的实际 producer/consumer 与位置明确
+
+取得同 owner 的 pre-Step2 Task 图及 Step1 raw_seq
+
+在全部下游阶段：
+    找到共有输入 COPY 集合和每条作业的激活 COPY 集合
+    按式(P6.4)求共同可用作业集合
+
+若集合为空：停止，返回 anchor
+取确定的第一条作业为加载锚
+
+所有核统一把加载锚排在第一条
+core0 保留 singleton
+每个下游核将加载锚的整段合为一个子图
+其余计算仍为 singleton
+
+按官方规则重新归属 COPY 桶，并稳定分桶
+检查：
+    共有输入构成不含激活/计算的前缀
+    原计算词仅发生统一作业置换
+    原依赖和子图 DAG 正确
+    全序列闭区间容量证书通过
+
+任一失败：停止，不试下一串作业或分组
+全部通过：输出唯一两字段候选及证书
+							1106 text 拿到 raw 序后，变换、桶归属、容量扫描都可线性实现：
+							1107 container T_{\mathrm{transform}}=O(N+E+kJ), \qquad \text{额外空间}=O(N+E+kJ). \tag{P6.10}
+							1108 text 原 Step1 和官方验证成本另计。这里只扫描符合原序条件的作业，不枚举排列，不改计算切点，也不增加在线评分候选数。
+							1109 heading 2. 一次 prepare 要导出什么, Value: 3
+								1110 text 2. 一次 prepare 要导出什么
+							1111 container
+								1112 text 建议对 这份候选 做一次完整官方 prepare 和联合依赖检查。至少保存：
+							1113 container
+								1114 text **编译身份：**原图、方案、配置、源码 SHA；未标注与已标注 Task 图；Step1  raw_seq 、重排后的 pre-Step2  seq 、 op_subgraph 。
+							1115 container
+								1116 text **真实展开：**Step2  seq_ext 、spill records、backing/incarnation 对应、完整扩展边；Step3  pipe_ops 、 execution_graph 、 memory_dependencies  及其  previous_tensor_ids/reused_bytes/kind ；全部  cross_links 。
+							1117 text 对每个共有输入 COPY，分别回答三个布尔问题：
+							1118 content list
+								1119 container
+									1120 AXListMarker 1. 
+									1121 text 原数据边是否本来就绪，有无真实跨核释放前驱？
+								1122 container
+									1123 AXListMarker 2. 
+									1124 text 在 MTE2 上，它之前是否还有激活 COPY？
+								1125 container
+									1126 AXListMarker 3. 
+									1127 text 是否存在任何由激活或计算读者进入它的额度复用路径？
+							1128 text 这就能区分“输入本来可读”“被队首挡住”“被内存复用前驱挡住”，不需要从 COPY 与计算窗口重叠长度猜因果。
+							1129 heading 3. 停止与评分规则, Value: 3
+								1130 text 3. 停止与评分规则
+							1131 text 若 prepare 显示所谓前缀仍有激活或计算前驱、出现 spill、或 COPY 骨架/计算投影不符合静态证书，先停止，核对编译与守卫；不再搜索新的分组。
+							1132 container
+								1133 text 通过后，最多做 一份候选的 P3 验证 ，直接对照同身份保存的 38390 anchor。额外 prepare 单列一次；新 P3 内部还会正常 prepare 一次，不能漏记后者的五个本地 Step3。
+							1134 text 支持机制改善的证据应同时包括：
+							1135 content list
+								1136 container
+									1137 AXListMarker • 
+									1138 text 共有输入首次 COPY 的确在激活之前启动，而不是只改变 metadata；
+								1139 container
+									1140 AXListMarker • 
+									1141 text 首批最终 COPY_OUT 更早；
+								1142 container
+									1143 AXListMarker • 
+									1144 text 最终 Makespan 改善，且首批收益没有被后续吞吐退化抵消。
+							1145 text 如果输入前缀提前成立，但 upstream DDR 被挤占、首批或最终 Makespan 反而恶化，应停止“完整共有输入前缀”这条候选，而不是继续微调切点凑正例。没有同计划 P2 配对时，不报告 CacheGain。
+							1146 heading 交付, Value: 2
+								1147 text 交付
+							1148 button 下载首批合桶构造、静态证书与小模型检查
+								1149 text 下载首批合桶构造、静态证书与小模型检查
+							1150 button 查看原 044 的静态证书和调用账单
+								1151 text 查看原 044 的静态证书和调用账单
+							1152 button 下载唯一的新 044/k5 两字段候选——未评分
+								1153 text 下载唯一的新 044/k5 两字段候选——未评分
+							1154 container
+								1155 text 包内  prefix_bucket.py  从精确 pre-Step2 快照做变换，本身不调用评价器；固定 044 的诊断脚本与通用变换分开，人工例也明确标为原序/代数检查。
+							1156 text 本轮最重要的结论不是“已经找到了更低的官方时间”，而是排除了“下游输入只能等激活后才加载”这一接口层面的误判：它在固定 singleton 族里确实被首次消费者桶限制，但合法合桶可以跨过该限制。现在需要官方验证的，是提前加载获得的重叠，能否超过它对共享 DDR 和原 COPY 顺序造成的新代价。
+							1157 container
+								1158 button static_certificate.json
+									1159 text static_certificate.json
+									1160 text Code
+								1161 button Download file
+							1162 container
+								1163 button case044_bucket_candidate.json
+									1164 text case044_bucket_candidate.json
+									1165 text Code
+								1166 button Download file

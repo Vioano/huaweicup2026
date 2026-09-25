@@ -4,7 +4,22 @@
 
 ## 实际可用的导出方式
 
-本次 IAB 的 `tab.content.export()` 返回不支持；“Copy response”与剪贴板读取也没有可靠返回完整内容。因此采用**公开网页 DOM 累计采集 + 独立消息清单交叉核对**。不读取 cookie、token、隐藏应用状态或私有接口，不需要 Chrome 扩展。
+2026-09-25 再核时，IAB 的 `tab.content.export()` 仍不支持；下列 `capture_chatgpt_dom.js` 所依赖的旧 `group/scroll-root` 与 `data-message-id` 已不在当前 ChatGPT 页面中。它是**旧版页面的历史工具**，不能直接用于这次 project 全量复核。旧版已取得的独立消息清单仍可逐 ID 对照；本次新会话只能取得当前网页公开 DOM，未获得独立服务端全页清单。不读取 cookie、token、隐藏应用状态或私有接口。
+
+### 2026-09-25 当前页面复核
+
+1. 先在 project 列表清点所有可见 chat，再逐个打开，核对 URL 与 project 面包屑。在内置浏览器用实际滚轮向上触发历史分页，直到首条用户消息可见、`Loading older messages` 消失；随后逐步向下遍历至末条。只设 `scrollTop` 可能不触发旧页加载。
+2. 累计当前分支每轮可见的用户 ID、最终答复 ID、正文 DOM、文件控件与停止/无答复状态。虚拟列表会卸载离屏内容；采集顺序可能是“首次遇见顺序”，**不能直接当会话时间顺序**。必须用首末 ID、网页顺序与已有独立清单/旧快照校正。`AI chats/PROJECT_INDEX_20260925.md` 记录本次实际边界。
+3. 经检查的本地 v2 capture 由 `scripts/archive_project_chat_v2.py` 渲染为追加的 Markdown 和 `消息校验-<UTC>.json`。例如：
+
+   ```sh
+   python3 scripts/archive_project_chat_v2.py capture.json 'AI chats/<Chat>/完整问答-<UTC>.md' 'AI chats/<Chat>/消息校验-<UTC>.json'
+   ```
+
+   脚本拒绝覆盖文件、未到末尾、未核首轮、轮数/首末 ID 不符或明显截短的正文。P3 首轮使用此前独立消息清单补齐，逐轮注明来源；不能将这个合成快照标成全 DOM 原件。
+4. `top_stable`、末尾遍历和逐 ID 核验仍只是**当前选中分支的可见公开内容**。不包括隐藏推理、已删除消息、未选中再生成版本、将来的新增轮次。没有独立服务端清单时，必须在 README 和 manifest 明示，不能声称服务器端绝对完整。
+
+### 旧版页面使用记录
 
 1. 打开目标 ChatGPT 会话并等回答结束。检查 URL，保持该会话选中分支不变。
 2. 在该页面执行 [capture_chatgpt_dom.js](../scripts/capture_chatgpt_dom.js)。普通浏览器可以在开发者控制台运行自己审阅过的脚本；有受支持 Browser 工具的 Agent 可通过其文档公开的 CDP `Runtime.evaluate` 执行同一脚本。脚本只滚动读取当前聊天，最后恢复滚动位置并下载 JSON，不发送消息或改聊天内容。

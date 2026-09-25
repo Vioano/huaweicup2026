@@ -1,0 +1,50 @@
+{
+  "environment": {
+    "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41"
+  },
+  "runs": [
+    {
+      "variant": "whole_seed",
+      "argv": [
+        "/opt/pyvenv/bin/python",
+        "-B",
+        "/mnt/data/p1_r5_s6607/src/replay_once.py",
+        "whole_seed",
+        "--root",
+        "/mnt/data/p1_r5_s6607",
+        "--out",
+        "/mnt/data/p1_r5_s6607/results/whole_seed.json"
+      ],
+      "started_utc": "2026-09-25T05:49:54.973958+00:00",
+      "timeout_seconds": 30,
+      "worker_count": 1,
+      "retries": 0,
+      "returncode": 0,
+      "stdout": "{\"variant\": \"whole_seed\", \"makespan\": 101836, \"service_cycles\": 44604, \"ddr_retirement_union\": 44604, \"events\": 288, \"per_core_finish\": [101836, 101836, 101836, 96297, 96297], \"simulate_wall_seconds\": 0.007691888000010749, \"calls\": {\"fixed_plan_Fraction_keep_trace\": 1, \"Task_compile\": 0, \"E0\": 0, \"E1\": 0, \"E2\": 0, \"retry\": 0}}\n",
+      "stderr": "",
+      "wall_seconds": 0.5540407640000069
+    },
+    {
+      "variant": "period7_seed",
+      "argv": [
+        "/opt/pyvenv/bin/python",
+        "-B",
+        "/mnt/data/p1_r5_s6607/src/replay_once.py",
+        "period7_seed",
+        "--root",
+        "/mnt/data/p1_r5_s6607",
+        "--out",
+        "/mnt/data/p1_r5_s6607/results/period7_seed.json"
+      ],
+      "started_utc": "2026-09-25T05:49:55.529388+00:00",
+      "timeout_seconds": 30,
+      "worker_count": 1,
+      "retries": 0,
+      "returncode": 0,
+      "stdout": "{\"variant\": \"period7_seed\", \"makespan\": 109412, \"service_cycles\": 72324, \"ddr_retirement_union\": 72324, \"events\": 319, \"per_core_finish\": [109412, 109412, 109412, 108114, 108114], \"simulate_wall_seconds\": 0.010285251999988532, \"calls\": {\"fixed_plan_Fraction_keep_trace\": 1, \"Task_compile\": 0, \"E0\": 0, \"E1\": 0, \"E2\": 0, \"retry\": 0}}\n",
+      "stderr": "",
+      "wall_seconds": 0.5539085530000136
+    }
+  ]
+}

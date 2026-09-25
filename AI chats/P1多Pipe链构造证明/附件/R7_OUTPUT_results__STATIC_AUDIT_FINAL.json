@@ -1,0 +1,1472 @@
+{
+  "kind": "static graph/saved-record/witness analysis; NOT a constructed or evaluated plan",
+  "input": {
+    "zip_sha256": "6d461d4c092166363b211f45bbbf36c5627a51abe89ef491257b8cbd4b3a4a49",
+    "zip_bytes": 231829,
+    "entries": 27,
+    "verified_manifest_payloads": 26,
+    "graph_sha256": "9abd4468a4be365e384de47431ac914ee44fd6e7b6221dffc584561f388cd57e"
+  },
+  "graph": {
+    "components": 11,
+    "component_compute_ops": 124,
+    "component_work": {
+      "PIPE_M": 6764,
+      "PIPE_V": 908
+    },
+    "unique_spine_and_aligned_patterns": true,
+    "all_tensor_producers_unique": true,
+    "shared_input_tensors": 50,
+    "shared_input_bytes": 930400,
+    "private_input_bytes": 22528,
+    "all_shared_inputs_have_one_consumer_per_component": true
+  },
+  "saved": {
+    "v4-k5": {
+      "makespan": 64624,
+      "movement": {
+        "original_graph_copy_bytes": 975456,
+        "scheduled_copy_bytes": 2026944,
+        "added_copy_bytes": 1051488,
+        "partition_added_copy_bytes": 1051488,
+        "spill_added_copy_bytes": 0
+      },
+      "memory_peak_by_core": {
+        "0": {
+          "L1": 264192,
+          "UB": 0
+        },
+        "1": {
+          "L1": 264192,
+          "UB": 0
+        },
+        "2": {
+          "L1": 0,
+          "UB": 0
+        },
+        "3": {
+          "L1": 0,
+          "UB": 0
+        },
+        "4": {
+          "L1": 0,
+          "UB": 0
+        }
+      },
+      "task_dependencies": [
+        {
+          "source": 0,
+          "target": 2
+        },
+        {
+          "source": 0,
+          "target": 4
+        },
+        {
+          "source": 0,
+          "target": 5
+        },
+        {
+          "source": 1,
+          "target": 6
+        },
+        {
+          "source": 1,
+          "target": 8
+        },
+        {
+          "source": 1,
+          "target": 9
+        },
+        {
+          "source": 2,
+          "target": 3
+        },
+        {
+          "source": 3,
+          "target": 4
+        },
+        {
+          "source": 4,
+          "target": 5
+        },
+        {
+          "source": 6,
+          "target": 7
+        },
+        {
+          "source": 7,
+          "target": 8
+        },
+        {
+          "source": 8,
+          "target": 9
+        }
+      ],
+      "external_bytes_by_task_count": {
+        "2": 930400,
+        "1": 22528
+      },
+      "per_core": [
+        {
+          "core": 0,
+          "tasks": [
+            {
+              "task_id": 0,
+              "subgraph_id": 0,
+              "start": 0,
+              "end": 25442,
+              "duration": 25442
+            },
+            {
+              "task_id": 2,
+              "subgraph_id": 2,
+              "start": 25542,
+              "end": 33374,
+              "duration": 7832
+            },
+            {
+              "task_id": 3,
+              "subgraph_id": 3,
+              "start": 33474,
+              "end": 41521,
+              "duration": 8047
+            },
+            {
+              "task_id": 4,
+              "subgraph_id": 4,
+              "start": 41621,
+              "end": 55683,
+              "duration": 14062
+            },
+            {
+              "task_id": 5,
+              "subgraph_id": 5,
+              "start": 55783,
+              "end": 64624,
+              "duration": 8841
+            }
+          ],
+          "pipe_duration_sums": {
+            "PIPE_M": 40584,
+            "PIPE_V": 5448,
+            "PIPE_MTE2": 23902,
+            "PIPE_MTE3": 1305
+          },
+          "component_count": 6,
+          "task_interval_sum": 64224
+        },
+        {
+          "core": 1,
+          "tasks": [
+            {
+              "task_id": 1,
+              "subgraph_id": 1,
+              "start": 0,
+              "end": 21555,
+              "duration": 21555
+            },
+            {
+              "task_id": 6,
+              "subgraph_id": 6,
+              "start": 21655,
+              "end": 28054,
+              "duration": 6399
+            },
+            {
+              "task_id": 7,
+              "subgraph_id": 7,
+              "start": 28154,
+              "end": 35315,
+              "duration": 7161
+            },
+            {
+              "task_id": 8,
+              "subgraph_id": 8,
+              "start": 35415,
+              "end": 49280,
+              "duration": 13865
+            },
+            {
+              "task_id": 9,
+              "subgraph_id": 9,
+              "start": 49380,
+              "end": 56767,
+              "duration": 7387
+            }
+          ],
+          "pipe_duration_sums": {
+            "PIPE_M": 33820,
+            "PIPE_V": 4540,
+            "PIPE_MTE2": 24145,
+            "PIPE_MTE3": 792
+          },
+          "component_count": 5,
+          "task_interval_sum": 56367
+        },
+        {
+          "core": 2,
+          "tasks": [],
+          "pipe_duration_sums": {
+            "PIPE_M": 0,
+            "PIPE_V": 0,
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0
+          },
+          "component_count": 0,
+          "task_interval_sum": 0
+        },
+        {
+          "core": 3,
+          "tasks": [],
+          "pipe_duration_sums": {
+            "PIPE_M": 0,
+            "PIPE_V": 0,
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0
+          },
+          "component_count": 0,
+          "task_interval_sum": 0
+        },
+        {
+          "core": 4,
+          "tasks": [],
+          "pipe_duration_sums": {
+            "PIPE_M": 0,
+            "PIPE_V": 0,
+            "PIPE_MTE2": 0,
+            "PIPE_MTE3": 0
+          },
+          "component_count": 0,
+          "task_interval_sum": 0
+        }
+      ],
+      "compressed_result_sha256": "2c0408591dd5db062dc0dcf2c3a5ecbc11ad4787a531e5e7b48026353508f8f4",
+      "result_sha256": "d643087533f28c64bc313434c0bdbcf5fe9fad260468355748a06c9fca3fbc50"
+    },
+    "prior-k3": {
+      "makespan": 68109,
+      "movement": {
+        "original_graph_copy_bytes": 975456,
+        "scheduled_copy_bytes": 2957344,
+        "added_copy_bytes": 1981888,
+        "partition_added_copy_bytes": 1981888,
+        "spill_added_copy_bytes": 0
+      },
+      "memory_peak_by_core": {
+        "0": {
+          "L1": 264192,
+          "UB": 0
+        },
+        "1": {
+          "L1": 264192,
+          "UB": 0
+        },
+        "2": {
+          "L1": 264192,
+          "UB": 0
+        }
+      },
+      "task_dependencies": [
+        {
+          "source": 0,
+          "target": 3
+        },
+        {
+          "source": 0,
+          "target": 5
+        },
+        {
+          "source": 0,
+          "target": 6
+        },
+        {
+          "source": 1,
+          "target": 7
+        },
+        {
+          "source": 1,
+          "target": 9
+        },
+        {
+          "source": 1,
+          "target": 10
+        },
+        {
+          "source": 2,
+          "target": 11
+        },
+        {
+          "source": 2,
+          "target": 13
+        },
+        {
+          "source": 2,
+          "target": 14
+        },
+        {
+          "source": 3,
+          "target": 4
+        },
+        {
+          "source": 4,
+          "target": 5
+        },
+        {
+          "source": 5,
+          "target": 6
+        },
+        {
+          "source": 7,
+          "target": 8
+        },
+        {
+          "source": 8,
+          "target": 9
+        },
+        {
+          "source": 9,
+          "target": 10
+        },
+        {
+          "source": 11,
+          "target": 12
+        },
+        {
+          "source": 12,
+          "target": 13
+        },
+        {
+          "source": 13,
+          "target": 14
+        }
+      ],
+      "external_bytes_by_task_count": {
+        "3": 930400,
+        "1": 22528
+      },
+      "per_core": [
+        {
+          "core": 0,
+          "tasks": [
+            {
+              "task_id": 0,
+              "subgraph_id": 0,
+              "start": 0,
+              "end": 22378,
+              "duration": 22378
+            },
+            {
+              "task_id": 3,
+              "subgraph_id": 3,
+              "start": 22478,
+              "end": 34564,
+              "duration": 12086
+            },
+            {
+              "task_id": 4,
+              "subgraph_id": 4,
+              "start": 34664,
+              "end": 47139,
+              "duration": 12475
+            },
+            {
+              "task_id": 5,
+              "subgraph_id": 5,
+              "start": 47239,
+              "end": 62003,
+              "duration": 14764
+            },
+            {
+              "task_id": 6,
+              "subgraph_id": 6,
+              "start": 62103,
+              "end": 68109,
+              "duration": 6006
+            }
+          ],
+          "pipe_duration_sums": {
+            "PIPE_M": 27056,
+            "PIPE_V": 3632,
+            "PIPE_MTE2": 43026,
+            "PIPE_MTE3": 1429
+          },
+          "component_count": 4,
+          "task_interval_sum": 67709
+        },
+        {
+          "core": 1,
+          "tasks": [
+            {
+              "task_id": 1,
+              "subgraph_id": 1,
+              "start": 0,
+              "end": 22378,
+              "duration": 22378
+            },
+            {
+              "task_id": 7,
+              "subgraph_id": 7,
+              "start": 22478,
+              "end": 34564,
+              "duration": 12086
+            },
+            {
+              "task_id": 8,
+              "subgraph_id": 8,
+              "start": 34664,
+              "end": 47139,
+              "duration": 12475
+            },
+            {
+              "task_id": 9,
+              "subgraph_id": 9,
+              "start": 47239,
+              "end": 62003,
+              "duration": 14764
+            },
+            {
+              "task_id": 10,
+              "subgraph_id": 10,
+              "start": 62103,
+              "end": 68109,
+              "duration": 6006
+            }
+          ],
+          "pipe_duration_sums": {
+            "PIPE_M": 27056,
+            "PIPE_V": 3632,
+            "PIPE_MTE2": 43026,
+            "PIPE_MTE3": 1429
+          },
+          "component_count": 4,
+          "task_interval_sum": 67709
+        },
+        {
+          "core": 2,
+          "tasks": [
+            {
+              "task_id": 2,
+              "subgraph_id": 2,
+              "start": 0,
+              "end": 18351,
+              "duration": 18351
+            },
+            {
+              "task_id": 11,
+              "subgraph_id": 11,
+              "start": 18451,
+              "end": 24289,
+              "duration": 5838
+            },
+            {
+              "task_id": 12,
+              "subgraph_id": 12,
+              "start": 24389,
+              "end": 34990,
+              "duration": 10601
+            },
+            {
+              "task_id": 13,
+              "subgraph_id": 13,
+              "start": 35090,
+              "end": 50617,
+              "duration": 15527
+            },
+            {
+              "task_id": 14,
+              "subgraph_id": 14,
+              "start": 50717,
+              "end": 55342,
+              "duration": 4625
+            }
+          ],
+          "pipe_duration_sums": {
+            "PIPE_M": 20292,
+            "PIPE_V": 2724,
+            "PIPE_MTE2": 37892,
+            "PIPE_MTE3": 756
+          },
+          "component_count": 3,
+          "task_interval_sum": 54942
+        }
+      ],
+      "compressed_result_sha256": "f2cd9fe83f6189bb0119bbd7dce4c8f4dd68a9a7435e6cf13475ec6ac47348ec",
+      "result_sha256": "bf043aef58099632088b8a2b4f8d3f679de8da8cb612a002004243a2d9fb2015"
+    }
+  },
+  "witness": {
+    "rank_origin": "zero-based rank in each ORIGINAL unique compute spine; not changed IDs",
+    "core_budget": 5,
+    "cohort_size_cap": 3,
+    "peripheral_cohorts": 4,
+    "pooled_owner": "one otherwise unused core",
+    "columns": [
+      {
+        "start_rank": 0,
+        "end_rank_exclusive": 2,
+        "shared_tensors": [
+          1000000001
+        ],
+        "shared_bytes": 288,
+        "service": 5,
+        "serial_compute": 172,
+        "pooled_proxy": 1892,
+        "replicated_proxy": 516,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 2,
+        "end_rank_exclusive": 4,
+        "shared_tensors": [
+          1000000003
+        ],
+        "shared_bytes": 288,
+        "service": 5,
+        "serial_compute": 172,
+        "pooled_proxy": 1892,
+        "replicated_proxy": 516,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 4,
+        "end_rank_exclusive": 7,
+        "shared_tensors": [
+          1000000005
+        ],
+        "shared_bytes": 288,
+        "service": 5,
+        "serial_compute": 194,
+        "pooled_proxy": 2134,
+        "replicated_proxy": 582,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 7,
+        "end_rank_exclusive": 9,
+        "shared_tensors": [
+          1000000007
+        ],
+        "shared_bytes": 288,
+        "service": 5,
+        "serial_compute": 172,
+        "pooled_proxy": 1892,
+        "replicated_proxy": 516,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 9,
+        "end_rank_exclusive": 12,
+        "shared_tensors": [
+          1000000009
+        ],
+        "shared_bytes": 288,
+        "service": 5,
+        "serial_compute": 194,
+        "pooled_proxy": 2134,
+        "replicated_proxy": 582,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 12,
+        "end_rank_exclusive": 14,
+        "shared_tensors": [
+          1000000011
+        ],
+        "shared_bytes": 576,
+        "service": 10,
+        "serial_compute": 92,
+        "pooled_proxy": 1012,
+        "replicated_proxy": 276,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 14,
+        "end_rank_exclusive": 16,
+        "shared_tensors": [
+          1000000013
+        ],
+        "shared_bytes": 1152,
+        "service": 20,
+        "serial_compute": 164,
+        "pooled_proxy": 1804,
+        "replicated_proxy": 492,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 16,
+        "end_rank_exclusive": 19,
+        "shared_tensors": [
+          1000000015
+        ],
+        "shared_bytes": 1152,
+        "service": 20,
+        "serial_compute": 178,
+        "pooled_proxy": 1958,
+        "replicated_proxy": 534,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 19,
+        "end_rank_exclusive": 21,
+        "shared_tensors": [
+          1000000017
+        ],
+        "shared_bytes": 1152,
+        "service": 20,
+        "serial_compute": 164,
+        "pooled_proxy": 1804,
+        "replicated_proxy": 492,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 21,
+        "end_rank_exclusive": 24,
+        "shared_tensors": [
+          1000000019
+        ],
+        "shared_bytes": 1152,
+        "service": 20,
+        "serial_compute": 178,
+        "pooled_proxy": 1958,
+        "replicated_proxy": 534,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 24,
+        "end_rank_exclusive": 26,
+        "shared_tensors": [
+          1000000021
+        ],
+        "shared_bytes": 2304,
+        "service": 39,
+        "serial_compute": 88,
+        "pooled_proxy": 968,
+        "replicated_proxy": 264,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 26,
+        "end_rank_exclusive": 28,
+        "shared_tensors": [
+          1000000023
+        ],
+        "shared_bytes": 4608,
+        "service": 77,
+        "serial_compute": 160,
+        "pooled_proxy": 1760,
+        "replicated_proxy": 480,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 28,
+        "end_rank_exclusive": 31,
+        "shared_tensors": [
+          1000000025
+        ],
+        "shared_bytes": 4608,
+        "service": 77,
+        "serial_compute": 170,
+        "pooled_proxy": 1870,
+        "replicated_proxy": 510,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 31,
+        "end_rank_exclusive": 33,
+        "shared_tensors": [
+          1000000027
+        ],
+        "shared_bytes": 4608,
+        "service": 77,
+        "serial_compute": 160,
+        "pooled_proxy": 1760,
+        "replicated_proxy": 480,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 33,
+        "end_rank_exclusive": 36,
+        "shared_tensors": [
+          1000000029
+        ],
+        "shared_bytes": 4608,
+        "service": 77,
+        "serial_compute": 170,
+        "pooled_proxy": 1870,
+        "replicated_proxy": 510,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 36,
+        "end_rank_exclusive": 38,
+        "shared_tensors": [
+          1000000031
+        ],
+        "shared_bytes": 9216,
+        "service": 154,
+        "serial_compute": 86,
+        "pooled_proxy": 946,
+        "replicated_proxy": 616,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 38,
+        "end_rank_exclusive": 40,
+        "shared_tensors": [
+          1000000033
+        ],
+        "shared_bytes": 18432,
+        "service": 308,
+        "serial_compute": 158,
+        "pooled_proxy": 1738,
+        "replicated_proxy": 1232,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 40,
+        "end_rank_exclusive": 43,
+        "shared_tensors": [
+          1000000035
+        ],
+        "shared_bytes": 18432,
+        "service": 308,
+        "serial_compute": 166,
+        "pooled_proxy": 1826,
+        "replicated_proxy": 1232,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 43,
+        "end_rank_exclusive": 45,
+        "shared_tensors": [
+          1000000037
+        ],
+        "shared_bytes": 18432,
+        "service": 308,
+        "serial_compute": 158,
+        "pooled_proxy": 1738,
+        "replicated_proxy": 1232,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 45,
+        "end_rank_exclusive": 48,
+        "shared_tensors": [
+          1000000039
+        ],
+        "shared_bytes": 18432,
+        "service": 308,
+        "serial_compute": 166,
+        "pooled_proxy": 1826,
+        "replicated_proxy": 1232,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 48,
+        "end_rank_exclusive": 50,
+        "shared_tensors": [
+          1000000041
+        ],
+        "shared_bytes": 36864,
+        "service": 615,
+        "serial_compute": 85,
+        "pooled_proxy": 935,
+        "replicated_proxy": 2460,
+        "pool_proxy_preferred": true
+      },
+      {
+        "start_rank": 50,
+        "end_rank_exclusive": 52,
+        "shared_tensors": [
+          1000000043
+        ],
+        "shared_bytes": 73728,
+        "service": 1229,
+        "serial_compute": 157,
+        "pooled_proxy": 1727,
+        "replicated_proxy": 4916,
+        "pool_proxy_preferred": true
+      },
+      {
+        "start_rank": 52,
+        "end_rank_exclusive": 55,
+        "shared_tensors": [
+          1000000045
+        ],
+        "shared_bytes": 73728,
+        "service": 1229,
+        "serial_compute": 164,
+        "pooled_proxy": 1804,
+        "replicated_proxy": 4916,
+        "pool_proxy_preferred": true
+      },
+      {
+        "start_rank": 55,
+        "end_rank_exclusive": 57,
+        "shared_tensors": [
+          1000000047
+        ],
+        "shared_bytes": 73728,
+        "service": 1229,
+        "serial_compute": 157,
+        "pooled_proxy": 1727,
+        "replicated_proxy": 4916,
+        "pool_proxy_preferred": true
+      },
+      {
+        "start_rank": 57,
+        "end_rank_exclusive": 60,
+        "shared_tensors": [
+          1000000049
+        ],
+        "shared_bytes": 73728,
+        "service": 1229,
+        "serial_compute": 164,
+        "pooled_proxy": 1804,
+        "replicated_proxy": 4916,
+        "pool_proxy_preferred": true
+      },
+      {
+        "start_rank": 60,
+        "end_rank_exclusive": 62,
+        "shared_tensors": [
+          1000000051
+        ],
+        "shared_bytes": 73728,
+        "service": 1229,
+        "serial_compute": 157,
+        "pooled_proxy": 1727,
+        "replicated_proxy": 4916,
+        "pool_proxy_preferred": true
+      },
+      {
+        "start_rank": 62,
+        "end_rank_exclusive": 65,
+        "shared_tensors": [
+          1000000053
+        ],
+        "shared_bytes": 73728,
+        "service": 1229,
+        "serial_compute": 164,
+        "pooled_proxy": 1804,
+        "replicated_proxy": 4916,
+        "pool_proxy_preferred": true
+      },
+      {
+        "start_rank": 65,
+        "end_rank_exclusive": 67,
+        "shared_tensors": [
+          1000000055
+        ],
+        "shared_bytes": 73728,
+        "service": 1229,
+        "serial_compute": 157,
+        "pooled_proxy": 1727,
+        "replicated_proxy": 4916,
+        "pool_proxy_preferred": true
+      },
+      {
+        "start_rank": 67,
+        "end_rank_exclusive": 70,
+        "shared_tensors": [
+          1000000057
+        ],
+        "shared_bytes": 73728,
+        "service": 1229,
+        "serial_compute": 164,
+        "pooled_proxy": 1804,
+        "replicated_proxy": 4916,
+        "pool_proxy_preferred": true
+      },
+      {
+        "start_rank": 70,
+        "end_rank_exclusive": 72,
+        "shared_tensors": [
+          1000000059
+        ],
+        "shared_bytes": 73728,
+        "service": 1229,
+        "serial_compute": 157,
+        "pooled_proxy": 1727,
+        "replicated_proxy": 4916,
+        "pool_proxy_preferred": true
+      },
+      {
+        "start_rank": 72,
+        "end_rank_exclusive": 75,
+        "shared_tensors": [
+          1000000061
+        ],
+        "shared_bytes": 16384,
+        "service": 274,
+        "serial_compute": 54,
+        "pooled_proxy": 594,
+        "replicated_proxy": 1096,
+        "pool_proxy_preferred": true
+      },
+      {
+        "start_rank": 75,
+        "end_rank_exclusive": 77,
+        "shared_tensors": [
+          1000000063
+        ],
+        "shared_bytes": 18432,
+        "service": 308,
+        "serial_compute": 158,
+        "pooled_proxy": 1738,
+        "replicated_proxy": 1232,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 77,
+        "end_rank_exclusive": 80,
+        "shared_tensors": [
+          1000000065
+        ],
+        "shared_bytes": 18432,
+        "service": 308,
+        "serial_compute": 166,
+        "pooled_proxy": 1826,
+        "replicated_proxy": 1232,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 80,
+        "end_rank_exclusive": 82,
+        "shared_tensors": [
+          1000000067
+        ],
+        "shared_bytes": 18432,
+        "service": 308,
+        "serial_compute": 158,
+        "pooled_proxy": 1738,
+        "replicated_proxy": 1232,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 82,
+        "end_rank_exclusive": 85,
+        "shared_tensors": [
+          1000000069
+        ],
+        "shared_bytes": 18432,
+        "service": 308,
+        "serial_compute": 166,
+        "pooled_proxy": 1826,
+        "replicated_proxy": 1232,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 85,
+        "end_rank_exclusive": 88,
+        "shared_tensors": [
+          1000000071
+        ],
+        "shared_bytes": 4096,
+        "service": 69,
+        "serial_compute": 58,
+        "pooled_proxy": 638,
+        "replicated_proxy": 276,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 88,
+        "end_rank_exclusive": 90,
+        "shared_tensors": [
+          1000000073
+        ],
+        "shared_bytes": 4608,
+        "service": 77,
+        "serial_compute": 160,
+        "pooled_proxy": 1760,
+        "replicated_proxy": 480,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 90,
+        "end_rank_exclusive": 93,
+        "shared_tensors": [
+          1000000075
+        ],
+        "shared_bytes": 4608,
+        "service": 77,
+        "serial_compute": 170,
+        "pooled_proxy": 1870,
+        "replicated_proxy": 510,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 93,
+        "end_rank_exclusive": 95,
+        "shared_tensors": [
+          1000000077
+        ],
+        "shared_bytes": 4608,
+        "service": 77,
+        "serial_compute": 160,
+        "pooled_proxy": 1760,
+        "replicated_proxy": 480,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 95,
+        "end_rank_exclusive": 98,
+        "shared_tensors": [
+          1000000079
+        ],
+        "shared_bytes": 4608,
+        "service": 77,
+        "serial_compute": 170,
+        "pooled_proxy": 1870,
+        "replicated_proxy": 510,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 98,
+        "end_rank_exclusive": 101,
+        "shared_tensors": [
+          1000000081
+        ],
+        "shared_bytes": 1024,
+        "service": 18,
+        "serial_compute": 66,
+        "pooled_proxy": 726,
+        "replicated_proxy": 198,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 101,
+        "end_rank_exclusive": 103,
+        "shared_tensors": [
+          1000000083
+        ],
+        "shared_bytes": 1152,
+        "service": 20,
+        "serial_compute": 164,
+        "pooled_proxy": 1804,
+        "replicated_proxy": 492,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 103,
+        "end_rank_exclusive": 106,
+        "shared_tensors": [
+          1000000085
+        ],
+        "shared_bytes": 1152,
+        "service": 20,
+        "serial_compute": 178,
+        "pooled_proxy": 1958,
+        "replicated_proxy": 534,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 106,
+        "end_rank_exclusive": 108,
+        "shared_tensors": [
+          1000000087
+        ],
+        "shared_bytes": 1152,
+        "service": 20,
+        "serial_compute": 164,
+        "pooled_proxy": 1804,
+        "replicated_proxy": 492,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 108,
+        "end_rank_exclusive": 111,
+        "shared_tensors": [
+          1000000089
+        ],
+        "shared_bytes": 1152,
+        "service": 20,
+        "serial_compute": 178,
+        "pooled_proxy": 1958,
+        "replicated_proxy": 534,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 111,
+        "end_rank_exclusive": 114,
+        "shared_tensors": [
+          1000000091
+        ],
+        "shared_bytes": 256,
+        "service": 5,
+        "serial_compute": 82,
+        "pooled_proxy": 902,
+        "replicated_proxy": 246,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 114,
+        "end_rank_exclusive": 116,
+        "shared_tensors": [
+          1000000093
+        ],
+        "shared_bytes": 288,
+        "service": 5,
+        "serial_compute": 172,
+        "pooled_proxy": 1892,
+        "replicated_proxy": 516,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 116,
+        "end_rank_exclusive": 119,
+        "shared_tensors": [
+          1000000095
+        ],
+        "shared_bytes": 288,
+        "service": 5,
+        "serial_compute": 194,
+        "pooled_proxy": 2134,
+        "replicated_proxy": 582,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 119,
+        "end_rank_exclusive": 121,
+        "shared_tensors": [
+          1000000097
+        ],
+        "shared_bytes": 288,
+        "service": 5,
+        "serial_compute": 172,
+        "pooled_proxy": 1892,
+        "replicated_proxy": 516,
+        "pool_proxy_preferred": false
+      },
+      {
+        "start_rank": 121,
+        "end_rank_exclusive": 124,
+        "shared_tensors": [
+          1000000099
+        ],
+        "shared_bytes": 288,
+        "service": 5,
+        "serial_compute": 194,
+        "pooled_proxy": 2134,
+        "replicated_proxy": 582,
+        "pool_proxy_preferred": false
+      }
+    ],
+    "regions": {
+      "prefix": {
+        "start_rank": 0,
+        "end_rank_exclusive": 48,
+        "representative_original_ops": [
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99
+        ],
+        "per_component_work": {
+          "PIPE_M": 2784,
+          "PIPE_V": 378
+        },
+        "replication": 4,
+        "max_components_per_task": 3,
+        "footprint_max": {
+          "L1": 254688,
+          "UB": 0
+        },
+        "shared_unique_bytes": 110304,
+        "shared_unique_service": 1848,
+        "copy_bytes": 505984,
+        "copy_service": 8514,
+        "stage_lower_no_gates": 8514,
+        "stage_serial_service_upper_no_gates": 18000
+      },
+      "pool_A": {
+        "start_rank": 48,
+        "end_rank_exclusive": 65,
+        "representative_original_ops": [
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116
+        ],
+        "per_component_work": {
+          "PIPE_M": 978,
+          "PIPE_V": 70
+        },
+        "replication": 1,
+        "max_components_per_task": 11,
+        "footprint_max": {
+          "L1": 505984,
+          "UB": 0
+        },
+        "shared_unique_bytes": 479232,
+        "shared_unique_service": 7989,
+        "copy_bytes": 483456,
+        "copy_service": 8077,
+        "stage_lower_no_gates": 10758,
+        "stage_serial_service_upper_no_gates": 19605
+      },
+      "pool_B": {
+        "start_rank": 65,
+        "end_rank_exclusive": 75,
+        "representative_original_ops": [
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126
+        ],
+        "per_component_work": {
+          "PIPE_M": 488,
+          "PIPE_V": 44
+        },
+        "replication": 1,
+        "max_components_per_task": 11,
+        "footprint_max": {
+          "L1": 260096,
+          "UB": 0
+        },
+        "shared_unique_bytes": 237568,
+        "shared_unique_service": 3961,
+        "copy_bytes": 244608,
+        "copy_service": 4104,
+        "stage_lower_no_gates": 5368,
+        "stage_serial_service_upper_no_gates": 9956
+      },
+      "suffix": {
+        "start_rank": 75,
+        "end_rank_exclusive": 124,
+        "representative_original_ops": [
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152,
+          153,
+          154,
+          155,
+          156,
+          157,
+          158,
+          159,
+          160,
+          161,
+          162,
+          163,
+          164,
+          165,
+          166,
+          167,
+          168,
+          169,
+          170,
+          171,
+          172,
+          173,
+          174,
+          175
+        ],
+        "per_component_work": {
+          "PIPE_M": 2514,
+          "PIPE_V": 416
+        },
+        "replication": 4,
+        "max_components_per_task": 3,
+        "footprint_max": {
+          "L1": 262272,
+          "UB": 0
+        },
+        "shared_unique_bytes": 103296,
+        "shared_unique_service": 1732,
+        "copy_bytes": 477952,
+        "copy_service": 8050,
+        "stage_lower_no_gates": 8050,
+        "stage_serial_service_upper_no_gates": 16840
+      }
+    },
+    "interfaces": [
+      {
+        "representative_tensor_id": 1000000113,
+        "size": 2048,
+        "source": "prefix",
+        "targets": [
+          "suffix"
+        ],
+        "copies_per_component": 2,
+        "bytes_per_component": 4096,
+        "service_per_component": 70
+      },
+      {
+        "representative_tensor_id": 1000000125,
+        "size": 1024,
+        "source": "prefix",
+        "targets": [
+          "suffix"
+        ],
+        "copies_per_component": 2,
+        "bytes_per_component": 2048,
+        "service_per_component": 36
+      },
+      {
+        "representative_tensor_id": 1000000137,
+        "size": 512,
+        "source": "prefix",
+        "targets": [
+          "suffix"
+        ],
+        "copies_per_component": 2,
+        "bytes_per_component": 1024,
+        "service_per_component": 18
+      },
+      {
+        "representative_tensor_id": 1000000149,
+        "size": 256,
+        "source": "prefix",
+        "targets": [
+          "pool_A",
+          "pool_B"
+        ],
+        "copies_per_component": 3,
+        "bytes_per_component": 768,
+        "service_per_component": 15
+      },
+      {
+        "representative_tensor_id": 1000000166,
+        "size": 128,
+        "source": "pool_A",
+        "targets": [
+          "pool_B"
+        ],
+        "copies_per_component": 2,
+        "bytes_per_component": 256,
+        "service_per_component": 6
+      },
+      {
+        "representative_tensor_id": 1000000176,
+        "size": 256,
+        "source": "pool_B",
+        "targets": [
+          "suffix"
+        ],
+        "copies_per_component": 2,
+        "bytes_per_component": 512,
+        "service_per_component": 10
+      }
+    ],
+    "predicted_task_count_by_definition": 10,
+    "proven_unspilled_boundary_bytes": 1712000,
+    "added_boundary_bytes_vs_original": 736544,
+    "needed_copy_service": 28745,
+    "no_spill_no_MEM": "Sufficient total-managed-footprint theorem only; no compiler validation executed",
+    "mathematical_time_envelope": {
+      "lower": 34790,
+      "upper": 66501,
+      "scope": "Fixed declared partition in exact work-conserving DDR service model; NOT E0/model replay or timing prediction"
+    }
+  },
+  "bounds": {
+    "shared_once_service": 15530,
+    "necessary_private_input_output_service": 770,
+    "global_resource_lower": 16300,
+    "component_to_single_core_replication_service": {
+      "1": 16300,
+      "2": 31830,
+      "3": 47360,
+      "4": 62890,
+      "5": 78420
+    },
+    "all_shared_consumers_coalesced_M_serial_lower": 74404
+  },
+  "calls": {
+    "new_plan_generators": 0,
+    "new_plans": 0,
+    "Task_compiles": 0,
+    "response": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  }
+}

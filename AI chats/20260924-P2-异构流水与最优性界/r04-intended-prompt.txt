@@ -1,0 +1,34 @@
+P2 第四轮：请深度思考一个具体构造问题——在不退回暴力搜索的前提下，把精确的 tensor 复用成本融入异构流水分核。不要再写通用优化综述，也不要等待全量跑分才能研究。
+
+材料仍只用已授权 Vioano 镜像。以下提交已经由本机镜像回执确认同步：
+https://github.com/Vioano/huaweicup2026/blob/923b25ecb0b9d6d0e2d3f149fccef431b5403f99/src/q2_nikolastarx/gap_candidate.py
+https://github.com/Vioano/huaweicup2026/blob/923b25ecb0b9d6d0e2d3f149fccef431b5403f99/src/q2_nikolastarx/candidate_ddr.py
+https://github.com/Vioano/huaweicup2026/blob/923b25ecb0b9d6d0e2d3f149fccef431b5403f99/data/raw/a/official/code/multicore_cut_evaluate_problem_2.py
+https://github.com/Vioano/huaweicup2026/blob/923b25ecb0b9d6d0e2d3f149fccef431b5403f99/docs/a/q2-nikolastarx/PRO_R03_REVIEW.md
+请首先报告实际读到哪些文件；打不开就按下列自包含语义分析，不声称读过。
+
+真实可提交自由度仍只有 node_to_subgraph、core_schedules；每个核由官方合成一个 Task，Step2 插 spill/MEMORY_REUSE 后才进入带共享DDR的异构Pipe FIFO模拟。不能提交任意开始时间、加虚拟依赖或修改官方带宽/容量。E2公共接口目前没有稳定prepared图/MEMORY_REUSE导出，所以上一轮基于完整prepared图的证书尚不能直接落地。已有闭合单分支迁移判据覆盖面也很窄。
+
+已经落地的新构造借鉴Fang及P3同伴的chain+join联合分核：最大非分支链为单元，critical-tail优先；新释放join与链最多k²对核联合考虑，用每Pipe持久interval calendar填空闲段。该模型没有共享DDR争用、spill和memory credit，绝非官方Makespan上/下界。当前cut tie-break计跨核父单元数量，没计tensor字节和同目标核复用。完整求解器在线构造baseline与此候选，最多两次公共E2评分后择优，没有读取历史赢家。
+
+四个定向坐标已本机独立E0复核（不是全量均值、不是单独增加运行时限的消融）：
+003/k2：M 511949→248166，额外DDR 98304→5067158 B，完整求解5.058s。
+005/k3：M 80167→49426，额外DDR 3101386→2394028 B，1.738s。
+056/k5：M 253392→96280，额外DDR 0→4863236 B，3.837s。
+008/k5：候选变差，选择baseline，M52291不变，0.927s。
+8次E2全部native，选中四计划与E0一致；全部zero spill。已完成的旧算法全500格平均求解0.434s、P95 1.143s。新完整500尚待测试。上述新数据尚未包含在给定923b提交中，是本次人工提供的实测事实。
+
+静态源码计数与8份旧/新E0的scheduled_copy_bytes一致。003新增DDR约4.97MB，其中跨核tensor新增4.64MB，分散于3544个tensor；056新增约4.86MB，其中跨核tensor4.62MB，分散于2309个tensor/3000源目标核连接；两者top10仅占正跨核增量约1.8%。因此“找几个大tensor修一下”未必抓住主因。
+
+待审计命题（请反驳或证明，而非顺着假设）：
+限制每个physical tensor至多一个eligible producer、无logical alias。令C_t为消费者所处核集合、p_t为生产者核、s_t为字节数：
+- 外部输入成本 s_t |C_t|；
+- 内部tensor跨核成本 2s_t |C_t\{p_t}|，因为每实际源核→目标核一OUT一IN，同目标核多消费者去重；
+- 满足官方输出条件时另加s_t，与去重后的跨核OUT不能合并；
+- 直接op边跨核另加2*data_size。
+因此Step2前总COPY字节是常数边界项加weighted hypergraph connectivity：内部超边{producer,consumers}权2s、输入消费者超边权s，成本w(λ−1)。同核整体单元U从a移到b时，对incident超边有Δλ=1[n_t(b)=0]−1[n_t(a)=|t∩U|]。这里仅声称精确字节成本，不把sum ceil(s/B)未经数值分析当作官方浮点实现的严格时间证书。
+
+请集中回答三件事：
+1. 精确成立域及边界反例。上述hypergraph归约/增量是否正确？如何处理输入输出重叠、零字节COPY、direct edges、同一tensor fanout、链合并后pin计数？是否有可利用的子模/二元min-cut结构；若需平衡/多Pipe约束使其变难，明确指出。
+2. 给出一个现在能实现的、超越“任意加通信惩罚系数”的有理据构造。可选(但不限定)容量/负载约束的区域二分、局部精确cut、frontier DP、沿fork-join结构分解；必须说明可提交计划如何恢复、复杂度、停止条件、守住哪些性质，以及为什么能减少数千碎片通信同时保留并行机会。不能假定prepared接口存在，也不能把代理时间改善当官方M改善。若根本不存在便宜的普遍双指标保证，请给最小反例并选最有价值的受限结构。
+3. 只提出一个下一步最小可证伪实验及结构外推办法。我们关心同一固定算法全100图×1–5核，不拼历史最优、不按case ID特判；允许几秒至几十秒的合理结构化计算，但不为了耗满5–10分钟扩大搜索。请说明更多求解时间应该用于哪项数学计算、有何可检查收益，如何以低成本停止无价值细化。正式M与DDR取舍公开，不把曲线“有锯齿”当泛化证据。
