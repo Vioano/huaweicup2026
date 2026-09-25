@@ -1,0 +1,62 @@
+{
+  "source_commit": "8416300c7245925795aaa3acc64d4d5b31fa13d5",
+  "check": "read-only CSV arithmetic, input/source/output hashes and PNG inspection; not raw 500-plan independent audit",
+  "cells": 500,
+  "coordinates_unique_and_complete": true,
+  "unchanged_plan_flags": 500,
+  "equal_p3_and_p2_metrics": 500,
+  "by_core": {
+    "1": {
+      "n": 100,
+      "b_over_m3": 1.1997595678587545,
+      "same_plan_g": 1.0023396456088587,
+      "mean_byte_hit_rate": 0.0646551326108523
+    },
+    "2": {
+      "n": 100,
+      "b_over_m3": 2.312002295129782,
+      "same_plan_g": 1.0079236454663982,
+      "mean_byte_hit_rate": 0.16252184505246103
+    },
+    "3": {
+      "n": 100,
+      "b_over_m3": 3.258687134445883,
+      "same_plan_g": 1.0313799262555163,
+      "mean_byte_hit_rate": 0.2595899594952508
+    },
+    "4": {
+      "n": 100,
+      "b_over_m3": 4.091503001561421,
+      "same_plan_g": 1.0512016361351884,
+      "mean_byte_hit_rate": 0.2452898357447949
+    },
+    "5": {
+      "n": 100,
+      "b_over_m3": 4.7576166788448955,
+      "same_plan_g": 1.082917172693062,
+      "mean_byte_hit_rate": 0.3136333185938237
+    }
+  },
+  "fifth_core_status": {
+    "unsupported": 96,
+    "bound_pruned": 1,
+    "paired_gate_rejected": 3
+  },
+  "wall_seconds": {
+    "mean": 3.20264900033013,
+    "median": 1.1579350004612934,
+    "p95_type7": 15.235049179822056,
+    "max": 36.89668687497033
+  },
+  "plot_hashes_verified": true,
+  "png_inspected": true,
+  "plot_paper_width_acceptance": false,
+  "new_evaluations": 0,
+  "raw_plan_byte_identity": "reported by author; no independent rehash of all 500 raw plans in this task",
+  "figure_limits": [
+    "panel a compares two P3 solver outputs; not no-L2 versus Cache curves",
+    "panel b is k5 G ECDF; no byte-hit scatter",
+    "panel c is final selector latency; not earlier Forest latency",
+    "11.1-inch width/9pt main font becomes about 4.68pt at 146.6mm; needs paper-layout review"
+  ]
+}

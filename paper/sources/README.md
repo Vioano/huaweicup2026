@@ -34,7 +34,7 @@
 - [p3-pair](https://github.com/huaweibei123/huaweicup2026/blob/e70e74e53133856865f4c490cfdb28709a7f1795/results/a/q3-nikolastarx/forest-cachepair-delta-20260925/REPORT.md)：`results/a/q3-nikolastarx/forest-cachepair-delta-20260925/REPORT.md`。
 - [p1-r7](https://github.com/huaweibei123/huaweicup2026/blob/1b1e439c0eb056a7e1567de0d72a6a987684e645/results/a/p1-r7-construction-probe-20260926/RUN_RESULT_044_K5.md)：`results/a/p1-r7-construction-probe-20260926/RUN_RESULT_044_K5.md`。
 - [p2-c04](https://github.com/huaweibei123/huaweicup2026/blob/00d311ed0eea0fd86f9840df406956041a7c192a/results/a/q2-nikolastarx/c04-six-e0-20260926/README.md)：`results/a/q2-nikolastarx/c04-six-e0-20260926/README.md`。
-- [p3-final](https://github.com/huaweibei123/huaweicup2026/blob/e70e74e53133856865f4c490cfdb28709a7f1795/paper/notes/p3-final-round-method-handoff-20260926.md)：`paper/notes/p3-final-round-method-handoff-20260926.md`。
+- [p3-final](https://github.com/huaweibei123/huaweicup2026/blob/8416300c7245925795aaa3acc64d4d5b31fa13d5/paper/notes/p3-final-round-method-handoff-20260926.md)：`paper/notes/p3-final-round-method-handoff-20260926.md`。
 - [coherent-index](https://github.com/huaweibei123/huaweicup2026/blob/e82c20098eb53cfb00d5f2287173f6894b3fb291/docs/a/research/20260924-coherent-pro/README.md)：`docs/a/research/20260924-coherent-pro/README.md`。
 - [control-contract](https://github.com/huaweibei123/huaweicup2026/blob/e82c20098eb53cfb00d5f2287173f6894b3fb291/docs/a/coherent/control-contract-s8ee-20260924/CONTROL_CONTRACT.md)：`docs/a/coherent/control-contract-s8ee-20260924/CONTROL_CONTRACT.md`。
 - [theory-final](https://github.com/huaweibei123/huaweicup2026/blob/229b322a9778093782683841f3050db1dbdaabfc/paper/notes/a-theory-coherence-final.md)：`paper/notes/a-theory-coherence-final.md`。
@@ -47,3 +47,7 @@
 执行 `python3 paper/sources/verify_sources.py` 可在已取得相应Git对象的仓库中只读复查原稿字节、导入一致性、固定对象及新增Markdown文件链接。脚本不联网、不fetch、不运行论文或附件代码。缺少未合并分支对象时会报告缺件，不能因此断言远端原件不存在。
 
 检查结果与未验证项见 [VALIDATION.md](VALIDATION.md)。科学审计、绘图重生成、Web Clip网页全量核验、外部文献核验、LaTeX编译均未由本次检查代替。
+
+## P3最终归档补记
+
+固定提交 `8416300c7245925795aaa3acc64d4d5b31fa13d5` 的[最终报告](https://github.com/huaweibei123/huaweicup2026/blob/8416300c7245925795aaa3acc64d4d5b31fa13d5/results/a/q3-nikolastarx/r9f-final-full500-20260926/FINAL_REPORT.md)、CSV、summary、决策表、图元数据/脚本/三种导出已补入manifest；[本次只读检查收据](p3-final-update-validation.json)记录范围。作者的500份原计划字节审计不冒充整稿者再次独立复核。Forest仍为主算法，R9F作为选择政策的负结果；新增图不自动完成全部正式图需求。
