@@ -118,7 +118,7 @@ function renderBatchList(restoreScroll){
     const score=r.full_complete?r.full_mean_speedup:r.mean_speedup;
     const label=r.composite?r.composite_label:r.run_id;
     const source=r.composite?r.component_runs.map(run=>run.slice(-3)).join(' / ')+' · 固定原始记录指纹':r.solver_commits.map(c=>c.slice(0,8)).join(' / ')||'来源待补';
-    return `<div class="batch-entry"><button class="batch-item" data-batch-run="${esc(r.run_id)}" aria-pressed="${$('#run').value===r.run_id}" title="${esc(r.run_id)}"><span class="batch-item-top"><span class="batch-badge ${r.full_complete?'complete':''}">${status}</span><strong>${score===null?'NA':score.toFixed(3)+'×'}</strong></span><b>${esc(label)}</b><span class="batch-algorithm">${esc(r.algorithm_ids.join(' / '))}</span><span class="batch-source">${esc(source)}</span><span class="batch-item-bottom"><span>全题已核 ${r.full_valid_count}/500 · 当前范围 ${r.scored_count}/${r.target_count}</span><span>${r.mean_solver_seconds===null?'求解耗时 NA':r.mean_solver_seconds.toFixed(3)+' s / '+r.solver_count+'例'}</span></span><span class="batch-subset">${r.full_complete?(r.full_mean_speedup===null?'所选核数缺少完整单核分母，暂不比较加速比':'上方为所选核数全100图均值'):'上方均值仅代表当前已测子集；不可作全量比较'}</span></button>${r.composite?`<a class="batch-manifest" href="${esc(r.manifest_url)}" target="_blank" rel="noopener">四分片固定 manifest ↗</a>`:''}</div>`;
+    return `<div class="batch-entry"><button class="batch-item" data-batch-run="${esc(r.run_id)}" aria-pressed="${$('#run').value===r.run_id}" title="${esc(r.run_id)}"><span class="batch-item-top"><span class="batch-badge ${r.full_complete?'complete':''}">${status}</span><strong>${score===null?'NA':score.toFixed(3)+'×'}</strong></span><b>${esc(label)}</b><span class="batch-algorithm">${esc(r.algorithm_ids.join(' / '))}</span><span class="batch-source">${esc(source)}</span><span class="batch-item-bottom"><span>全题已核 ${r.full_valid_count}/500 · 当前范围 ${r.scored_count}/${r.target_count}</span><span>${r.mean_solver_seconds===null?'求解耗时 NA':r.mean_solver_seconds.toFixed(3)+' s / '+r.solver_count+'例'}</span></span><span class="batch-subset">${r.full_complete?(r.full_mean_speedup===null?'所选核数缺少完整单核分母，暂不比较加速比':'上方为所选核数相对官方单核均值'):'上方为相对官方单核的已测子集均值；不可作全量比较'}</span></button>${r.composite?`<a class="batch-manifest" href="${esc(r.manifest_url)}" target="_blank" rel="noopener">四分片固定 manifest ↗</a>`:''}</div>`;
   }).join(''):`<div class="batch-empty">${search?'没有匹配的批次。':top?'当前没有本题500/500的同源完整批次。切换“所有批次”查看已测结果。':'本题尚无批次。'}</div>`;
   $('#batch-status').textContent=`${batchRows.length} 个批次 · ${batchResult.full_complete_count||0} 个全题同源完整批次 · 显示 ${rows.length} 个`;
   container.scrollTop=scroll;
@@ -169,7 +169,12 @@ function inkFor(rgb){const lum=rgb.map(v=>{v/=255;return v<=.04045?v/12.92:((v+.
 function absoluteColor(value,metric,low,high){
   const palette=[[45,54,77],[47,87,144],[29,145,147],[119,199,137],[239,226,132]];
   let t;
-  if(metric==='baseline_speedup'||metric==='cache_gain'){
+  if(metric==='cache_gain'){
+    if(value<1)return mixColor([192,87,39],palette[0],Math.max(0,Math.min(1,1+Math.log2(Math.max(value,.000001)))));
+    const stops=[1,1.05,1.2,1.5,2];
+    const band=stops.findIndex((stop,index)=>index<stops.length-1&&value<stops[index+1]);
+    t=band<0?1:(band+(value-stops[band])/(stops[band+1]-stops[band]))/(stops.length-1);
+  }else if(metric==='baseline_speedup'){
     if(value<1)return mixColor([192,87,39],palette[0],Math.max(0,Math.min(1,1+Math.log2(Math.max(value,.000001)))));
     t=Math.log2(value)/3;
   }else if(metric==='cache_hit_rate'){t=value;}
@@ -184,9 +189,9 @@ const chosen=batchRows.find(r=>r.run_id===selectedRun);
 $('#selection-note').textContent=(selectedRun?(focusProblem?`当前${chosen?.composite?'四分片复合':'固定'}批次：${chosen?.composite_label||selectedRun} · 全题已核 ${chosen?.full_valid_count??'待核'}/500。${chosen?.full_complete?'五个核数均有100图有效数据。':'均值只作已测样本预览。'}`:`当前批次：${selectedRun}。请进入对应题目的专注页核查是否同源全题500/500。`):selectedAlgorithm?'探索：当前算法跨批次逐格选优，可能混合不同版本；不作最终成绩。':'探索：历史逐格最佳混合不同算法和批次，不作最终成绩；请在专注页选全题500/500的固定批次。')+' 切换指标仍展示同一方案。'+(metric==='cache_gain'?' Cache 加速比只统计当前方案有无 Cache 配对原件的格；缺配对不计入均值，也不代表已独立复跑。':'');
 const ratio=metric==='baseline_speedup'||metric==='cache_gain';
 $('#metric-label').textContent=(metrics()[metric]?.[0]||metric)+' / '+(metrics()[metric]?.[1]||'');
-const ticks=ratio?[.5,1,2,4,8]:metric==='cache_hit_rate'?[0,.25,.5,.75,1]:[low,low===null?null:Math.expm1((Math.log1p(low)+Math.log1p(high))/2),high];
-$('#scale-ticks').innerHTML=ticks.filter(x=>x!==null).map((v,i)=>{const rgb=absoluteColor(v,metric,low,high);return `<span class="scale-tick"><i style="background:rgb(${rgb});border-color:${inkFor(rgb)}33"></i>${esc(ratio?(i===0?'≤0.5×':i===4?'≥8×':v+'×'):fmt(Number(v.toFixed(3)),metric))}</span>`;}).join('');
-$('#scale-note').textContent=metric==='cache_gain'?'无 Cache 周期 ÷ 有 Cache 周期 · 1× 为无收益 · 固定对数色阶；格底细条显示同核相对位置':ratio?'固定对数色阶 · 1× 为基准，暖色低于基准；等色距表示倍数变化':metric==='cache_hit_rate'?'固定 0–100% 色阶':'当前全表范围的对数色阶 · 跨图规模不同，颜色不表示算法优劣';
+const ticks=metric==='cache_gain'?[1,1.05,1.2,1.5,2]:ratio?[.5,1,2,4,8]:metric==='cache_hit_rate'?[0,.25,.5,.75,1]:[low,low===null?null:Math.expm1((Math.log1p(low)+Math.log1p(high))/2),high];
+$('#scale-ticks').innerHTML=ticks.filter(x=>x!==null).map((v,i)=>{const rgb=absoluteColor(v,metric,low,high);return `<span class="scale-tick"><i style="background:rgb(${rgb});border-color:${inkFor(rgb)}33"></i>${esc(metric==='cache_gain'?(i===0?'≤1×':i===4?'≥2×':v+'×'):ratio?(i===0?'≤0.5×':i===4?'≥8×':v+'×'):fmt(Number(v.toFixed(3)),metric))}</span>`;}).join('');
+$('#scale-note').textContent=metric==='cache_gain'?'无 Cache 周期 ÷ 有 Cache 周期 · 固定分段色阶：1× 无收益，暖色低于 1×；格底细条显示同核相对位置':ratio?'固定对数色阶 · 1× 为基准，暖色低于基准；等色距表示倍数变化':metric==='cache_hit_rate'?'固定 0–100% 色阶':'当前全表范围的对数色阶 · 跨图规模不同，颜色不表示算法优劣';
 const groups=new Map();for(const c of data.cells){const v=c.best?.metrics[metric];if(c.best?.eligible&&(metric!=='cache_gain'||c.best.cache_pair_verified)&&Number.isFinite(v)&&visibleCase(c.case_id)){const key=c.problem+'-'+c.cores;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(v);}}
 const cellStyle=v=>{const rgb=absoluteColor(v,metric,low,high);return `background:rgb(${rgb});color:${inkFor(rgb)}`;};
 const scrolls=Array.isArray(pendingRestore?.scrolls)?pendingRestore.scrolls:[...document.querySelectorAll('.board-scroll')].map(x=>({top:x.scrollTop,left:x.scrollLeft}));
