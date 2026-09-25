@@ -1,0 +1,61 @@
+--- a/src/q2_nikolastarx/exit_sealed_candidate.py
++++ b/src/q2_nikolastarx/exit_sealed_candidate.py
+@@ -25,12 +25,53 @@
+         raise ValueError('non_MV_eligible_op_outside_guard')
+     if any(len(index.producers[tid]) > 1 for tid in index.tensors):
+         raise ValueError('multiple_eligible_tensor_producers')
+-    # An excluded original consumer other than mandatory COPY_OUT means the
+-    # original tensor view cannot safely be represented by this kernel.
++    # An original COPY_IN is ignorable only when it is an independent graph
++    # input: source DDR tensor has no original producer, and its sole output
++    # local tensor is consumed exclusively by eligible operations. In P2 this
++    # is rebuilt as one boundary COPY_IN per consumer core, with no predecessor
++    # relation from an eligible producer. Any COPY_IN used as a relay fails.
++    tensor_producers = {tid: set() for tid in index.tensors}
++    tensor_consumers = {tid: set() for tid in index.tensors}
++    op_in_tensors = {u: set() for u in original_ops}
++    op_out_tensors = {u: set() for u in original_ops}
++    op_in_direct = {u: set() for u in original_ops}
++    op_out_direct = {u: set() for u in original_ops}
+     for edge in graph['edges']:
+-        tid, target = edge['source'], edge['target']
+-        if tid in index.tensors and target in original_ops and target not in eligible:
+-            if original_ops[target].get('op') != 'COPY_OUT':
++        source, target = edge['source'], edge['target']
++        if source in original_ops and target in index.tensors:
++            tensor_producers[target].add(source)
++            op_out_tensors[source].add(target)
++        elif source in index.tensors and target in original_ops:
++            tensor_consumers[source].add(target)
++            op_in_tensors[target].add(source)
++        elif source in original_ops and target in original_ops:
++            op_in_direct[target].add(source)
++            op_out_direct[source].add(target)
++    standard_copyins = set()
++    for u, op in original_ops.items():
++        if op.get('op') != 'COPY_IN':
++            continue
++        incoming, outgoing = op_in_tensors[u], op_out_tensors[u]
++        if (op_in_direct[u] or op_out_direct[u]
++                or len(incoming) != 1 or len(outgoing) != 1):
++            raise ValueError('nonstandard_COPY_IN_incidence')
++        source_tid = next(iter(incoming))
++        output_tid = next(iter(outgoing))
++        if (index.tensors[source_tid].get('pos') != 'DDR'
++                or tensor_producers[source_tid]
++                or index.tensors[output_tid].get('pos') not in ('L1', 'UB')
++                or index.tensors[source_tid].get('size') != index.tensors[output_tid].get('size')
++                or tensor_producers[output_tid] != {u}
++                or not tensor_consumers[output_tid]
++                or not tensor_consumers[output_tid] <= eligible):
++            raise ValueError('COPY_IN_not_independent_graph_input')
++        standard_copyins.add(u)
++    for edge in graph['edges']:
++        source, target = edge['source'], edge['target']
++        if source in index.tensors and target in original_ops and target not in eligible:
++            if original_ops[target].get('op') == 'COPY_OUT':
++                continue
++            if target not in standard_copyins:
+                 raise ValueError('unrepresented_excluded_tensor_consumer')
+     retained = {u: set() for u in eligible}
+     for v, incoming in index.direct_inputs.items():

@@ -1,0 +1,67 @@
+{
+  "t0_utc": "2026-09-25T12:10:17Z",
+  "head": "15d86e13b4a8abb4bce445ac241aecac13f553bf",
+  "manifest_sha256": "a7b4e9b02c781610e9920b3856d187ca2196e1cb93db32e46040302baaf53a39",
+  "runner_sha256": "9f8e8a2db14481ad7bd0707b28ed5be5666b81634828f83b567fba2391165452",
+  "python_binary_sha256": "a395f264e5612a2819662ed3e37fd30d39ed61179b98e5f86c3c783a008d8623",
+  "python_version_output": "Python 3.12.13",
+  "architecture": "arm64",
+  "checks": {
+    "vm_stat": {
+      "argv": [
+        "vm_stat"
+      ],
+      "returncode": 0,
+      "stdout": "Mach Virtual Memory Statistics: (page size of 16384 bytes)\nPages free:                                   744136.\nPages active:                                 971504.\nPages inactive:                               954071.\nPages speculative:                             16578.\nPages throttled:                                   0.\nPages wired down:                             272492.\nPages purgeable:                                9174.\n\"Translation faults\":                    10514481563.\nPages copy-on-write:                       623149408.\nPages zero filled:                        6201385471.\nPages reactivated:                         152649962.\nPages purged:                               31277037.\nFile-backed pages:                            409521.\nAnonymous pages:                             1532632.\nPages stored in compressor:                   234339.\nPages occupied by compressor:                 126451.\nDecompressions:                            181771164.\nCompressions:                              206673073.\nPageins:                                   103903799.\nPageouts:                                      29078.\nSwapins:                                      388487.\nSwapouts:                                    1242433.\nPages tagged:                                 177862.\nPages tagged resident:                        162783.\nPages tagged compressed:                       15079.\nPages tag-storage:                             98304.\nPages tag-storage holding tags:                10326.\nPages tag-storage free:                        14726.\nPages tag-storage non-tag pageable:            73121.\nPages tag-storage non-tag wired:                   8.\nBytes of compressed tags:                    2224064.\nTagged compressions:                         2835675.\nTagged decompressions:                       2557066.\n",
+      "stderr": ""
+    },
+    "swap": {
+      "argv": [
+        "sysctl",
+        "vm.swapusage"
+      ],
+      "returncode": 0,
+      "stdout": "vm.swapusage: total = 2048.00M  used = 1295.12M  free = 752.88M  (encrypted)\n",
+      "stderr": ""
+    },
+    "disk": {
+      "argv": [
+        "df",
+        "-k",
+        "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026"
+      ],
+      "returncode": 0,
+      "stdout": "Filesystem   1024-blocks      Used Available Capacity iused      ifree %iused  Mounted on\n/dev/disk3s5   971298980 719712780 222737844    77% 6068568 2227378440    0%   /System/Volumes/Data\n",
+      "stderr": ""
+    },
+    "ps": {
+      "argv": [
+        "ps",
+        "-axo",
+        "pid=,command="
+      ],
+      "returncode": 0,
+      "relevant_scoring_processes": []
+    },
+    "python_version": {
+      "argv": [
+        "/Users/nikolastar/.codex/worktrees/p2-gap500-s59ee-20260925/huaweicup2026/.venv/bin/python",
+        "-B",
+        "-V"
+      ],
+      "returncode": 0,
+      "stdout": "Python 3.12.13\n",
+      "stderr": ""
+    }
+  },
+  "derived": {
+    "vm_page_size_bytes": 16384,
+    "vm_pages_free": 744136,
+    "physical_free_bytes": 12191924224,
+    "swap_free_mib": 752.88,
+    "disk_free_bytes": 228083552256,
+    "scoring_processes": [],
+    "run_output_preexisting": false
+  },
+  "passed": false
+}
