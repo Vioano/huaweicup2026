@@ -1,5 +1,7 @@
 # P2 容量 / DDR 专项 Pro 会话
 
+> **第四轮已发问，回答尚在生成。** 2026-09-25T07:19:35.625Z 用户授权“理论上界、剩余空间与迭代方向证明”咨询，沿用本对话最高 Pro 强度及每 20 分钟监听。[在途记录](round4-pending-20260925T071935Z.md)、[最新完整公开历史快照](snapshot-20260925T072225Z.md)。新快照含 4 问 3 答；上一轮的已完成全文与缺失附件状态仍保留，不把新问后的 completed/idle 当作答复完成。
+
 - 来源：[P2容量DDR算法审计](https://chatgpt.com/g/g-p-6ab540961238819181aa53e685fdb456-huaweicup/c/6ab57979-aa78-83ee-bc0d-da8c426d737a)，位于用户本次指定的 huaweicup project，最高 Pro 档位。
 - 负责人：session=yuanzhifang30-sudo/s-eb28fa11a5664fdfbdd29b3d6e38ca24；仅 P2。未复用或向 P1/P3 网页会话发问。
 - 前两轮完整公开问答：[snapshot-20260924T202923Z.md](snapshot-20260924T202923Z.md)；包含 2 次用户提问、2 次公开最终回答。第一轮是研究，第二轮仅补交已有代码。保留上一快照，未导出折叠思考内容。
