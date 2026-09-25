@@ -6,17 +6,17 @@
     {
       "name": "fig4-1-p1-two-layer-flow.svg",
       "role": "svg",
-      "sha256": "c221cc1cf878ca13f956bd87820b118eab7c51edfef78da9618e98d11ebc61eb"
+      "sha256": "e769316d9be8384e3fefdef58674fab24cd5d3ea5831d141e183ada8f9311bde"
     },
     {
       "name": "fig4-1-p1-two-layer-flow.png",
       "role": "png",
-      "sha256": "88122e4f371291e62e904bf8c7db7204dca2ed1b59bcf2db935b2a3dffb90775"
+      "sha256": "165dbd4d3431343fa22c4db6c170da9316008f9dda8fbe446ff4709ac19ab8d5"
     },
     {
       "name": "fig4-1-p1-two-layer-flow.drawio",
       "role": "source",
-      "sha256": "a75d554b098c07edbb4c5ce7c38d7b4ef8861f023bfe4dc6ec2947456bf4cc3d"
+      "sha256": "2d8da20a1399a1a192ec47e7693d9f3f85fcc2d00cbad719c9fe1d0bb9b1e260"
     },
     {
       "name": "caption.md",
@@ -31,30 +31,55 @@
     {
       "name": "nodes.csv",
       "role": "input",
-      "sha256": "bb769b4b1b9b2f2be2813852db3376859d3738dd8cdbbb52eb6b30c32aa92a46"
+      "sha256": "2327cf28b782d83dce0eaf4eb7fb923215ae9523d35805203d487aed020842be"
     },
     {
       "name": "edges.csv",
       "role": "input",
-      "sha256": "e89cc15b5433798a1db9acd949f9810ae95dc3f1697de33ff31efc15b688d674"
+      "sha256": "e286ca075a7bdfb03da7d409c9c1c098cd077f0eba9682ce73843aa5a0f54d4c"
+    },
+    {
+      "name": "DELIVERY.md",
+      "role": "notes",
+      "sha256": "37a666ddaa6b11d28bd114bdd1c35bf7013b0a1e9a211e1dae1596ecf7110045"
+    },
+    {
+      "name": "audit.json",
+      "role": "manifest",
+      "sha256": "a2493786fc85b4eee5d408e26b7e35463aeec4e3ab615dcf0b1c5b4651f79c18"
     }
   ],
-  "command": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f svg -o fig4-1-p1-two-layer-flow.svg fig4-1-p1-two-layer-flow.drawio （png 加 -f png -s 2）；校验：python skills/drawio-skill/scripts/validate.py fig4-1-p1-two-layer-flow.drawio",
+  "command": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f svg -o fig4-1-p1-two-layer-flow.svg fig4-1-p1-two-layer-flow.drawio；PNG：同命令加 -f png -s 2；结构校验：.venv/Scripts/python.exe F:/WorkBuddyData/skills/drawio-skill/scripts/validate.py fig4-1-p1-two-layer-flow.drawio",
   "sources": [
     {
-      "path": "paper/sections/P1-问题一论文初稿.md（4.1、4.4.1~4.4.4）",
+      "path": "paper/sections/P1-问题一论文初稿.md",
       "commit": "67c0f603960fddf86416d23ca3e85e53561c3c3a",
-      "sha256": "见固定 blob（GitHub Contents API 核对）"
+      "sha256": "10d0dc195e138c42f7507ca12c8619ebdf46c4df54ca38b31fe353fc886ef8ef"
     },
     {
-      "path": "src/q1/unified.py（v4 统一入口）",
+      "path": "src/q1/unified.py",
       "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
-      "sha256": "见固定 blob"
+      "sha256": "3c571f6c9c0ef2a956268abf9129d557f2d087e783b4e621c2917279fa13e985"
     },
     {
-      "path": "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py 等",
-      "commit": "data/raw/a/official 冻结原件（a0537aeb 目录）",
-      "sha256": "本地只读原件"
+      "path": "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+      "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
+      "sha256": "2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f"
+    },
+    {
+      "path": "data/raw/a/official/code/schedule_step1.py",
+      "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
+      "sha256": "d8fe721ff3dbe036e34a20c00cce6430960860000a49eb467e63465f76b84034"
+    },
+    {
+      "path": "data/raw/a/official/code/schedule_step2.py",
+      "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
+      "sha256": "2836baac176f4e0bdd9eec59b8d9ce254e209e5f7a251e23837ab684312fa0c3"
+    },
+    {
+      "path": "data/raw/a/official/code/schedule_step3.py",
+      "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
+      "sha256": "50053db0436f1d166dd75436693ba3af49b5c339576beb6e7299477f6b69fc7a"
     }
   ],
   "units": {
@@ -65,7 +90,7 @@
   "panels": [
     {
       "id": "1",
-      "title": "上层｜求解器决策（v4 统一入口）"
+      "title": "上层｜求解器决策（v4 统一入口 unified.py）"
     },
     {
       "id": "2",
@@ -92,6 +117,7 @@
     "在线 E1 评分与独立最终 E0 复评分开表示。",
     "后续局部研究模块未混入当前完整 v4 主线，流程和主结果属于同一版本。"
   ],
-  "head": "879c3dc3500d5b1bc258a8c6bc9ce22662603e83",
+  "version_note": "v3：修正XML缺陷(46行孤立</mxCell>)；新增单候选直接输出分支；连线改为候选→去重→(单候选|E1)；诊断--diagnostics独立旁支；方案文件严格两字段；nodes.csv stage改用required_stages标准标记；sources填真实40位commit与64位SHA256；DELIVERY.md纳入notes角色",
+  "head_commit": "本次交付评论中提供",
   "branch": "a-r1-farmeruncle123"
 }

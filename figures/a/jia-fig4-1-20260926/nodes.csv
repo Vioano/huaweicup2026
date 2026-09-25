@@ -1,14 +1,21 @@
 id,stage,module
-in,上层-输入,-
-identify,上层-结构识别,src/q1/unified.py（依赖提取与结构识别，a0537aeb）
-cand,上层-候选构造,src/q1/unified.py generate_candidates：bounded/heavy-or-sink/overload/shared-input/capacity-return/fork-frontier
-dedup,上层-检查去重,src/q1/unified.py plan_bytes（SHA-256）
-e1,上层-在线选优(E1),src/q1/unified.py choose + src.eval_exact.P1BatchEvaluator
-plan,接口-方案文件,"unified.py main --output（node_to_subgraph, core_schedules）/ --diagnostics"
-read,下层-读入方案,data/raw/a/official/code/multicore_cut_evaluate_problem_1.py
-copy,下层-边界COPY重建,data/raw/a/official/code/multicore_cut_evaluate_problem_1.py
-steps,下层-核内调度Step1/2/3,data/raw/a/official/code/schedule_step1.py / schedule_step2.py / schedule_step3.py
-sim,下层-多核事件模拟,data/raw/a/official/code/multicore_cut_evaluate_problem_1.py
-out1,出口-Makespan,官方评估器输出（cycles）
-out2,出口-额外DDR,官方评估器输出（B）
-e0,标注-E0独立复评,官方评估器（未修改，实验阶段，与在线E1分开）
+in,structure,输入：原始计算图 G · 核数 K · 冻结配置 Θ
+identify,structure,结构特征识别：弱连通分量 · Pipe 工作量(4-10) · 分叉阶段(4-11) · 共享输入 · 同型链
+c1,candidate_select,候选①完整分量+有界树前沿（bounded，必需）
+c2,candidate_select,候选②重分量+独占后缀（heavy-or-sink）
+c3,candidate_select,候选③超载分量分解（overload）
+c4,candidate_select,候选④输入预算+活跃核选择（shared-input）
+c5,candidate_select,候选⑤容量约束回转分组（capacity-return）
+c6,candidate_select,"候选⑥分叉阶段前沿（fork-frontier, grain=4）"
+dedup,candidate_select,构造输出候选 plan → plan_bytes → 按输出字节 SHA-256 去重
+single,node_to_subgraph;core_schedules,去重后仅1个候选→直接选定输出（不启动在线E1；仍由E0独立复评）
+e1,online_e1,"多候选→固定E1在线选优：P1BatchEvaluator 1worker/16MiB/60s/项，(Makespan, scheduled COPY B) 择优，失败即停"
+plan,node_to_subgraph;core_schedules,官方方案文件：严格仅 node_to_subgraph 与 core_schedules 两字段
+diag,,诊断记录 --diagnostics（求解器自留，不提交官方）
+read,copy_rebuild,官方评估器读入方案文件（两键）重建子图/Task
+copy,copy_rebuild,边界 COPY 重建：Task 边界数据搬运 COPY_OUT→DDR→COPY_IN
+steps,official_schedule,官方核内调度：Step1 拓扑顺序 / Step2 缓存换入换出 / Step3 四 Pipe 时间线
+sim,official_schedule,多核事件模拟：DDR 60 B/cycle，同核/跨核 Task 门控 100/1000 cycles
+out1,makespan,评价出口①：Makespan（cycles）
+out2,extra_ddr,评价出口②：额外数据搬运量（B）
+e0,final_e0,E0 独立最终复评（实验阶段，未修改官方评估器；与在线E1分开）
