@@ -57,6 +57,7 @@ Luna medium 的第一份[feed 审阅](../drafts/p3-forest500-audit.json)保留�
 | §6.5.3 响应压缩 | `1b70dd6076430230c531b10e3e403e88474179cc` 的 `tail_response_model.py`；[真实图静态审阅](https://github.com/huaweibei123/huaweicup2026/blob/6152817144576bec9918a2ae59ef54e42352b21e/results/a/q3-yuanzhifang/tail-response-static-followup-20260925/REPORT.md) | 8804 操作与完整计算/FIFO DAG 一致；零 COPY/零额外 lag 模型，不是缓存模拟 |
 | §6.5.3 阈值 DP | [TAIL_CUT_DP.md](https://github.com/huaweibei123/huaweicup2026/blob/2ec2ab12e1becdd600198eeb85deefc464678e9e/docs/a/q3-yuanzhifang/TAIL_CUT_DP.md) | 固定区间四系数表内精确；小表合成穷举对照；真实全区间表未完成 |
 | §6.6.2 完整算法均值与墙钟 | [统一算法审计](https://github.com/huaweibei123/huaweicup2026/blob/cf4d77a018def540358c3b4667c2d2466390981a/results/a/q3-nikolastarx/forest-full500-feedback-20260925/independent-audit.json) | 500 格、973 在线 E0；本次独立重算 feed 墙钟/计数一致；共享主机单次分布 |
+| §6.6.2 版本差异 | 同一固定审计的 `forest_vs_c2_counts`，旧结果来源 `c2d628ba0fe8dce4630e5f9c0a5c8fb810fcd41a` | 引用已发布500格版本差异；本次核分类计数合计与单位，不重新读取旧版500份原件；不是森林模块单因素消融 |
 | §6.6.2 Cache 配对主表 | [配对审计](https://github.com/huaweibei123/huaweicup2026/blob/cf4d77a018def540358c3b4667c2d2466390981a/results/a/q3-nikolastarx/forest-cachepair-delta-20260925/independent-audit.json) | 476 同字节 P2 复用 + 24 新 P2，完整 500 对；不声称本批重新跑500个P2 |
 | §6.5.4、§6.6.4 命中饱和 | [固定 Cache 事件审计](https://github.com/huaweibei123/huaweicup2026/blob/28e8c7ddfe2223b2261056f554259c43d5bba272/results/a/q3-nikolastarx/prefix-cache-critical-audit-20260925/REPORT.md)及 `summary.json` | 两份044/k5原结果在本次重新核 SHA、键大小/次数和事件：171首次miss、11重复hit、0淘汰；上界只针对固定读取集合 |
 | §6.5.5、§6.6.4 共享前缀与路径 | [固定实际路径审计](https://github.com/huaweibei123/huaweicup2026/blob/28e8c7ddfe2223b2261056f554259c43d5bba272/results/a/q3-nikolastarx/prefix-realized-path-20260925/README.md)及 `audit.json`/`test_math.py` | 1678操作开始时间重现为团队已发布结论；本次复核分项算术，不重新构建准备图。36592仅有理数共享取整模型界，不登记为官方浮点剪枝证书 |
@@ -103,6 +104,10 @@ P1 正文核编号从 1 起，P3 对齐接口从 0 起；只是编号映射，�
 按用户要求，当前不生成看似实测的示意数据。最终科研图使用项目 `scientific-figures`/Matplotlib 工作流，保留绘图输入、脚本和可编辑来源，待算法冻结后绘制与视觉验收。
 
 ## 后续更新规则
+
+本轮续读核对：队长算法分支仍为 `734914db51cecf094453c2b02e67fc5f5619b090`，主库 `c1c2c7947de6bd3459f87f6b3cbbb2ba52ce3084` 的新增内容为成绩台展示与文档，不是新算法或实验。对照冻结 `schedule_step3._op_duration` 与 P3 的 `issue`/`advance_pool_work`/`reschedule_pool`，正文补清“每笔 COPY 先取整为服务量、共享服务后再按事件退休”的两个层次。另实际读取官方 P2 结果构造与[成绩台配对边界](https://github.com/huaweibei123/huaweicup2026/blob/c1c2c7947de6bd3459f87f6b3cbbb2ba52ce3084/docs/benchmarks/BENCHMARK_BOARD.md)，说明结果 JSON 不自带计划散列，原件/收据互校不等于本会话重新运行。
+
+新增版本比较表直接来自上述固定团队审计，`audit_p3_chapter.py` 将其原始计数与差值保存到 `published_version_comparison`，仅核各行总计500，不冒称重新计算旧版逐格差值。3格额外搬运上升和9格命中字节下降保留，命中字节不称作命中率，额外搬运与spill减少量不相加。此轮无新求解、Task/Step或官方评分。
 
 1. 先取得队长发布的固定算法 SHA、入口与完整结果版本，再检查其相对于本稿的模块和语义差异。新研究分支、少量成功格或成绩台逐格最佳，不能自动替换完整主表。
 2. 结构改动同步修改假设、公式、伪代码和复杂度；对旧证明审查是否仍适用，不只更新结果数字。

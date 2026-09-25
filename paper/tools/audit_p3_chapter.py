@@ -76,6 +76,9 @@ def main():
     assert pairs["validation"]["all_500_coordinates"] is True
     assert pairs["validation"]["same_plan_reuse"] == 476
     assert pairs["validation"]["new_p2_calls_succeeded"] == 24
+    comparison = uniform["forest_vs_c2_counts"]
+    for counts in comparison.values():
+        assert sum(counts[key] for key in ("better", "equal", "worse")) == len(cells)
     calls = {kind: sum(r["provenance"]["measurement"]["calls"][kind]
                        for r in cells.values()) for kind in ("solver", "E0", "E1", "E2")}
     assert calls == uniform["coverage"]["call_ledger"]
@@ -111,6 +114,10 @@ def main():
         schema="p3-paper-evidence-audit-v1", source_files=sources,
         solver_commit=SOLVER_SHA, solver_entrypoint="src.q3.forest_solve.main",
         feed_cells=500, exact_100x5=True, revisions=[2], declared_online_calls=calls,
+        published_version_comparison={
+            "reference_results_commit": uniform["result_checks"]["paired_c2_source"],
+            "counts_and_sums": comparison,
+            "scope": "Copied from pinned team audit; category-count totals checked here, deltas not recomputed from old raw results. Version comparison, not a single-module ablation."},
         per_core=per_core, solver_wall_seconds=wall_stats,
         environment_from_feeds={
             "cpu": sorted({r["provenance"]["environment"]["cpu"] for r in cells.values()}),
