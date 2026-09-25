@@ -1,0 +1,36 @@
+{
+  "kind": "R4_actual_call_ledger",
+  "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "calls": {
+    "candidate_constructors_on_official_graphs": 0,
+    "official_static_task_compiles": 2,
+    "standalone_response_simulations": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "retries": 0
+  },
+  "micro_program_invocations": [
+    {
+      "script": "src/memory_order_counterexample.py",
+      "status": "success",
+      "static_task_compiles": 2,
+      "program_measured_seconds": 0.0037671189999741728,
+      "measurement_scope": "inside micro script, not full solver/process startup wall"
+    },
+    {
+      "script": "src/test_pure_metadata.py",
+      "status": "success",
+      "static_task_compiles": 0,
+      "integer_bound_checks": 69,
+      "program_measured_seconds": null
+    }
+  ],
+  "not_executed": [
+    "full lazy search controller",
+    "official-case expansion candidates",
+    "token-label capacity verifier",
+    "E0/binary64 response differential"
+  ]
+}

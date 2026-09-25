@@ -1,0 +1,216 @@
+{
+  "ops": [
+    {
+      "id": 100,
+      "op": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "cycles": 1
+    },
+    {
+      "id": 10,
+      "op": "MATMUL",
+      "pipe": "PIPE_M",
+      "cycles": 100
+    },
+    {
+      "id": 11,
+      "op": "ADD",
+      "pipe": "PIPE_V",
+      "cycles": 100
+    },
+    {
+      "id": 12,
+      "op": "MATMUL",
+      "pipe": "PIPE_M",
+      "cycles": 100
+    },
+    {
+      "id": 101,
+      "op": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "cycles": 1
+    },
+    {
+      "id": 102,
+      "op": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "cycles": 1
+    },
+    {
+      "id": 20,
+      "op": "MATMUL",
+      "pipe": "PIPE_M",
+      "cycles": 100
+    },
+    {
+      "id": 21,
+      "op": "ADD",
+      "pipe": "PIPE_V",
+      "cycles": 100
+    },
+    {
+      "id": 22,
+      "op": "MATMUL",
+      "pipe": "PIPE_M",
+      "cycles": 100
+    },
+    {
+      "id": 103,
+      "op": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "cycles": 1
+    }
+  ],
+  "tensors": [
+    {
+      "id": 999,
+      "pos": "DDR",
+      "size": 32768
+    },
+    {
+      "id": 1000,
+      "pos": "UB",
+      "size": 32768
+    },
+    {
+      "id": 1001,
+      "pos": "UB",
+      "size": 32768
+    },
+    {
+      "id": 1002,
+      "pos": "UB",
+      "size": 32768
+    },
+    {
+      "id": 1003,
+      "pos": "UB",
+      "size": 32768
+    },
+    {
+      "id": 1004,
+      "pos": "DDR",
+      "size": 32768
+    },
+    {
+      "id": 1099,
+      "pos": "DDR",
+      "size": 32768
+    },
+    {
+      "id": 1100,
+      "pos": "UB",
+      "size": 32768
+    },
+    {
+      "id": 1101,
+      "pos": "UB",
+      "size": 32768
+    },
+    {
+      "id": 1102,
+      "pos": "UB",
+      "size": 32768
+    },
+    {
+      "id": 1103,
+      "pos": "UB",
+      "size": 32768
+    },
+    {
+      "id": 1104,
+      "pos": "DDR",
+      "size": 32768
+    }
+  ],
+  "edges": [
+    {
+      "source": 999,
+      "target": 100
+    },
+    {
+      "source": 100,
+      "target": 1000
+    },
+    {
+      "source": 1000,
+      "target": 10
+    },
+    {
+      "source": 10,
+      "target": 1001
+    },
+    {
+      "source": 1000,
+      "target": 11
+    },
+    {
+      "source": 1001,
+      "target": 11
+    },
+    {
+      "source": 11,
+      "target": 1002
+    },
+    {
+      "source": 1002,
+      "target": 12
+    },
+    {
+      "source": 12,
+      "target": 1003
+    },
+    {
+      "source": 1003,
+      "target": 101
+    },
+    {
+      "source": 101,
+      "target": 1004
+    },
+    {
+      "source": 1099,
+      "target": 102
+    },
+    {
+      "source": 102,
+      "target": 1100
+    },
+    {
+      "source": 1100,
+      "target": 20
+    },
+    {
+      "source": 20,
+      "target": 1101
+    },
+    {
+      "source": 1100,
+      "target": 21
+    },
+    {
+      "source": 1101,
+      "target": 21
+    },
+    {
+      "source": 21,
+      "target": 1102
+    },
+    {
+      "source": 1102,
+      "target": 22
+    },
+    {
+      "source": 22,
+      "target": 1103
+    },
+    {
+      "source": 1103,
+      "target": 103
+    },
+    {
+      "source": 103,
+      "target": 1104
+    }
+  ]
+}
