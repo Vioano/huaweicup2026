@@ -42,6 +42,7 @@ Luna medium 的第一份[feed 审阅](../drafts/p3-forest500-audit.json)保留�
 |---|---|---|
 | §6.2 官方目标、输出与计时 | [官方目标核验](https://github.com/huaweibei123/huaweicup2026/blob/2da54f2bcfb85e033df900b03b4d181a698fd012/docs/a/OFFICIAL_OBJECTIVES.md)；冻结 `multicore_cut_evaluate_problem_3.py`、`config.txt` | Makespan 与求解墙钟分开；P3 Cache 字节口径；配置不能改 |
 | §6.3 路由与接受策略 | [forest_solve](https://github.com/huaweibei123/huaweicup2026/blob/311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1/src/q3/forest_solve.py)，同提交 witness/pipeline/calendar/expanded/adaptive 及 guarded 模块 | 新基准、固定结构候选、总在线 E0 ≤ 3、仅严格 M 改进接受 |
+| §6.3.1 一般 DAG 日历 | [gap_dag.py](https://github.com/huaweibei123/huaweicup2026/blob/311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1/src/q3/gap_dag.py)，同提交 `gap_calendar.py`/`GENERAL_GAP.md` | 凝聚链、固定就绪秩、至多两链联合归核、持久 AVL；复杂度不含输入展开与官方评价 |
 | §6.3.2 连续划分 | [shared_pipeline.py](https://github.com/huaweibei123/huaweicup2026/blob/311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1/src/q3/shared_pipeline.py) | 精确解固定串行阶段最小最大段和；不等于原题最优 |
 | §6.3.3 森林交换证明 | [FOREST_FRONTIER_ORDER.md](https://github.com/huaweibei123/huaweicup2026/blob/311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1/docs/a/q3/FOREST_FRONTIER_ORDER.md)，同提交 `forest_memory_order.py` | 固定树、子树不交错、内部输出标量峰值；不覆盖真实 Cache/双池/跨流水线 |
 | §6.3.4 条件下界 | [pipe_bound.py](https://github.com/huaweibei123/huaweicup2026/blob/311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1/src/q3/pipe_bound.py) | 单节点子图、整数 M/V、已证明原依赖与 FIFO；不支持 COPY 收缩歧义；不证明合法执行 |
@@ -60,6 +61,23 @@ Luna medium 的第一份[feed 审阅](../drafts/p3-forest500-audit.json)保留�
 Sol medium 只读复核了式（6-6）至（6-16）及相关小源文件，未运行真实图或 E0。两项意见已采纳：连续流水公式就地明确不同阶段使用不同核、同序通过且每阶段单作业串行；森林最优性在结论句中限定固定树/归核和不交错内部峰值模型。峰值符号改为 $h_i$，避免与计算时间 $p_i$ 混淆。此为团队内部复核，不标为独立盲审。
 
 文档检查：正文16个公式编号连续、显示公式分隔符成对、六处图占位均明确标注，正文与索引的相对链接目标存在；小文件聚合脚本执行成功，正文数表和墙钟与固定输出一致。新增文件已检查个人绝对路径及凭据形态。当前平台为 Windows，没有 `dot_clean`；对本次写入的具体目录只读扫描，未发现 `._*`、`.DS_Store` 或 `__MACOSX`。未生成正式图片、PDF 或 TeX 排版，因此未声称这些产物通过视觉/版式验收。
+
+2026-09-25T04:20Z 后续修订：再次核对 `311322b` 的 adaptive/guarded/gap/calendar/pipeline/witness/forest 实际调用关系，补入按顺序的结构路由表、一般 DAG 链与汇聚联合放置和构造复杂度边界。明确“严格接受”只相对于本次已成功评价的基准，基础路由没有跨历史算法的不退化保证；初始评价或程序错误不属于可静默回退的候选拒绝。同时补出首次装入闭式的递推与归纳理由，明确装入不能提前与上游重叠的抽象前提。均为已有源码/数学说明的完善，无新构造或官方调用。
+
+本次完整 Mailbox 抓取 6 话题/667 评论、读取整个索引；继续仅按 P3 与公共协议清单补读，不宣称导入同账号所有专项历史。队长算法 HEAD 核对仍为 `e96a8551d6b3c92bbf00285376ce950f9246c0dc`，完整统一版本未变；保留本稿已有主表。
+
+实际读取 [P1 固定 ad168d9e 的符号与跨问节](https://github.com/huaweibei123/huaweicup2026/blob/ad168d9e8dfe9e36a75503788a9f4852a1946729/paper/sections/P1-%E9%97%AE%E9%A2%98%E4%B8%80%E8%AE%BA%E6%96%87%E5%88%9D%E7%A8%BF.md)及 [P2 固定 87cd5d2d 的对应段落](https://github.com/huaweibei123/huaweicup2026/blob/87cd5d2d14db8de9ad0d7ab44f5e3a36c4ae6537/paper/sections/a-q2.md)后，发现各初稿尚未完全同名。P3 已在本人章节内消除与 P1 的 $\mathcal T$ 冲突，并与两问共有记号对齐；未修改他人文稿。合稿映射为：
+
+| 对象 | P1 固定初稿 | P2 固定初稿 | 本 P3 修订稿 |
+|---|---|---|---|
+| 可提交方案 | $P=(\phi,\kappa,\sigma)$ | $\Pi=(\mathcal S,c,\sigma)$ | $P=(\phi,\kappa,\sigma)$ |
+| 分区含义 | $\phi$ 的非空原像组成 Task 集合 | $\mathcal S$ 为子图分区 | $\phi$ 的非空原像对应 $\mathcal S$；每核合并 Task |
+| 张量集合 | 与 Task 集合 $\mathcal T$ 分开 | $T$ | $T$，不再用 $\mathcal T$ 表张量 |
+| Pipe 与有效周期 | $p(v),d_v$ | $p(v),d_v$ | $p(v),d_v$ |
+| 固定 A 场景单核分母 | 固定官方基线 | $A_i$ | $A_i$；JSON 源字段 `B_over_M` 是同一分母的旧命名 |
+| 求解、外部复评墙钟 | $T_{\mathrm{solve}},T_{\mathrm{E0}}$ | $\tau_{\mathrm{solve}},\tau_{\mathrm{E0}}$ | $T_{\mathrm{solve}},T_{\mathrm{E0}}$ |
+
+P1 正文核编号从 1 起，P3 对齐接口从 0 起；只是编号映射，合稿时需统一，不应改变各自等待语义。P2 的整体方案符号和时间符号可由队长最后统一，不为了形式一致改写它的实质模型。主表数据和源 JSON 字段未因记号调整改变。
 
 | 图号 | 目前状态 | 最终绘制需要 |
 |---|---|---|
