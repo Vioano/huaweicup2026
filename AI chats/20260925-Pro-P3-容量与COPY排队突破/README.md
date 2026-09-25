@@ -30,3 +30,15 @@ Pro报告对旧067完整Cache事件做了共享权重重复读分账，提出完
 本轮Pro承认完整归核路线不能赢当前067/k5，保留单尾但建议首波容量阶梯、同位置尾操作优先。它报告的新增必要界/容量峰值/研究耗时均是作者报告，不是本机E0成绩；新增COPY界尚未本机重建。已将边界与后续检查留入 `docs/a/q3-yuanzhifang/PRO_R2_READBACK.md`。
 
 `p3-pro`心跳已确认PAUSED。根随后直接核对到旧长期竞速goal也是PAUSED（2026-09-24T21:52:18Z更新），恢复摘要中的active为错误。此心跳仅新增问答归档和已经结束的Sol纯次序原型/3项合成测试，0真实067分析、0cold、0E0；保留既成产物并停止后续研发派发。联合建议不表示旧目标恢复。
+
+## 第三轮：理论性能界与三问数学框架（生成中）
+
+2026-09-25用户明确要求恢复本专项理论咨询：推导性能界、量化真实成绩剩余空间、审查迭代的数学依据，并在P1/P2/P3新答案齐全后由本session发起第四个综合Pro会话。该授权不恢复无预算实验。三方分工及后续步骤见 [交接记录](../../docs/a/q3-yuanzhifang/PRO_R3_COHERENCE_HANDOFF.md)。
+
+约07:22Z在原会话发送R3，UI为用户当地15:22，精确服务端时间未知。发送前确认模型菜单为“Pro，第5项，共5项”，前两轮已结束，无其他在途提问；上传完成后才发送。已见本轮附件、提问、“ChatGPT正在回应”和停止按钮。页面复制的实际提问1053字符，与 [r3-user-original.md](r3-user-original.md) 去除末尾换行后相同；包内完整题纲为 [r3-user-prepared.md](r3-user-prepared.md)。用户消息ID在已检查的DOM祖先属性未暴露；本轮assistant ID及最终原文尚未取得，不能宣称已完成答复归档。
+
+上传 `q3-theoretical-bound-r3.zip`，11,309,176 bytes、104项，SHA256 `9d50a4260ff72981ea902c115cd39aa109f6fc8f88ee69ae0c0e9f759295ea4f`。包内含原100图ZIP/官方源码、统一算法500格与旧全局松弛证书、更新后的同身份差距表、论文及最新044/R8机制证据；详细逐文件大小、SHA、来源提交在 [input-manifest-r3.json](input-manifest-r3.json)，整包身份在 [input-package-r3.json](input-package-r3.json)。用户上传的已有资料仅记入口，不复制进附件目录；临时导出包放本机workspace artifacts。可复现只读打包/算术脚本 [r3-build-input.py](r3-build-input.py) 不调用solver/Task/Step/E0。
+
+五核统一 mean(B/M3)=4.7576166788448955，复用的计算松弛上界6.140526035014712，差额1.382909356169817。500个图/config/official连接及baseline结果SHA全部一致；原界证明与强化正在交Pro审查，差额不能当可达到的提升，不能当CacheGain的上界。完整算术见 [r3-current-gap.csv](r3-current-gap.csv) 和 [r3-current-gap-summary.json](r3-current-gap-summary.json)。044新单格37060不混入统一500表。
+
+既有心跳 `p3-pro` 已按用户要求改为每20分钟、ACTIVE；新完整回答后读取正文与附件并追加全对话快照，状态不变保持安静。此状态覆盖前述历史PAUSED记录，不覆盖旧轮原件。三问未齐时不提前发第四轮，也不由本session重复控制P1/P2会话。
