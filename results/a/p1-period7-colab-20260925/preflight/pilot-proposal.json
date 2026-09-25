@@ -1,0 +1,141 @@
+{
+  "kind": "single_explicit_periodic_path_NOT_official_benchmark",
+  "source": "030f2b8aff4dc5e6b1acf9d88dc4984e54f1b5fa",
+  "case": "008",
+  "cores": 5,
+  "graph_sha256": "c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d",
+  "command": [
+    ".venv/bin/python",
+    "-B",
+    "-m",
+    "src.review.p1_lazy_memory_probe",
+    "case_008.json",
+    "--cores",
+    "5",
+    "--capacity-l1",
+    "524288",
+    "--capacity-ub",
+    "131072",
+    "--bandwidth",
+    "60",
+    "--gate",
+    "100",
+    "--task-limit",
+    "40",
+    "--final-max-tasks",
+    "20",
+    "--response-limit",
+    "5",
+    "--oracle-limit",
+    "4",
+    "--expansion-limit",
+    "10",
+    "--seconds",
+    "30",
+    "--period-q",
+    "7",
+    "--period-s",
+    "3",
+    "--output-root",
+    "evidence/period7-008",
+    "--execute"
+  ],
+  "path": [
+    [
+      "normal",
+      [
+        0,
+        0
+      ],
+      [
+        7,
+        3
+      ]
+    ],
+    [
+      "normal",
+      [
+        7,
+        3
+      ],
+      [
+        7,
+        3
+      ]
+    ],
+    [
+      "normal",
+      [
+        14,
+        3
+      ],
+      [
+        7,
+        3
+      ]
+    ],
+    [
+      "terminal",
+      [
+        21,
+        3
+      ],
+      "merge"
+    ]
+  ],
+  "why_this_path": {
+    "conditional_resource_lower_NOT_Makespan": 86631,
+    "normal_stages": 3,
+    "return_cuts": 45,
+    "q4s2_comparator": {
+      "conditional_resource_lower_NOT_Makespan": 84994,
+      "normal_stages": 6,
+      "return_cuts": 55,
+      "complete_Task_compiles": 70
+    },
+    "tradeoff": "fewer stages, cuts and validation calls; lower-bound ordering does not rank actual plans",
+    "bridge_tensor_bytes": 18432,
+    "no_spill_predicted_extra_DDR_bytes": 1658880,
+    "actual_cuts_bytes_and_model_pending": true
+  },
+  "conditional_zero_cut_reasoning": {
+    "N": 108,
+    "K": 5,
+    "per_chain_compute": 4512,
+    "whole_chain_FIFO_model_lower": 99264,
+    "scope": "private whole-chain class under documented M/FIFO obstruction; ignores DDR/MEM, not a new official E0/global certificate"
+  },
+  "budgets": {
+    "VM_seconds": 300,
+    "independent_watchdog_seconds_from_T0": 270,
+    "programs": 1,
+    "workers": 1,
+    "process_seconds": 45,
+    "constructor_seconds": 30,
+    "address_space_and_sampled_RSS_MiB": 512,
+    "Task_compiles_total": 40,
+    "final_Task_reservation": 20,
+    "Fraction_responses_total": 5,
+    "oracle_queries": 4,
+    "expansions_max": 10,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "retry": 0
+  },
+  "stop_conditions": [
+    "explicit period rejects or unknown: no alternate candidate search",
+    "per-core signature mismatch or spill/unsupported compilation: record and stop",
+    "full original graph signatures/DDR/full response mismatch: no accepted plan",
+    "budget/time/resource/source or cleanup/archive uncertainty: preserve attempt, no retry"
+  ],
+  "full500_or_unified_adoption": false,
+  "resource_window_authorized": false,
+  "new_actual_calls": 0,
+  "test_receipt": {
+    "pure_fake_tests": 32,
+    "wall_seconds": 0.066,
+    "python": "3.12.13",
+    "scope": "pure arithmetic and fake interfaces only"
+  }
+}
