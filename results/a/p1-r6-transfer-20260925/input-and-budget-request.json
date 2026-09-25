@@ -1,0 +1,131 @@
+{
+  "source_reference_commit": "9c5f87548cc7588465a638e032993969b5cac891",
+  "graph_archive_sha256": "e9c33753eb4c0caddc1ff8f05065144f762189d5071476611de1f7bb5887e528",
+  "budget_request_only": true,
+  "rows": [
+    {
+      "case": "082",
+      "cores": 5,
+      "graph_zip_entry": "data/case_082.json",
+      "files": {
+        "graph.json": {
+          "bytes": 1498341,
+          "sha256": "f230fbc200ad75797f3024f84431d1d26f7747d6a284378ee83eabde77b7e70c"
+        },
+        "reference-plan.json": {
+          "bytes": 40167,
+          "sha256": "4fc8631b0234c22388411c083354e9edd2bf6d94090f226eb0416853576e7926"
+        },
+        "reference-result.json.gz": {
+          "bytes": 84066,
+          "sha256": "315c4b1328edacec66089f1d90010b2164936c6bc41d851f163f427a82674747"
+        }
+      },
+      "reference_path": "results/a/q1-unified-v4-full500-20260925-s59/20260924T1952Z-s59ee/cells/082/k5"
+    },
+    {
+      "case": "075",
+      "cores": 5,
+      "graph_zip_entry": "data/case_075.json",
+      "files": {
+        "graph.json": {
+          "bytes": 2745416,
+          "sha256": "5c24beddea6d09e1df3c8f8843d3593b90affb117ba38450fa9bea8a8db3351c"
+        },
+        "reference-plan.json": {
+          "bytes": 74074,
+          "sha256": "af70c21c3d654ce4a5562215d3e1e985be79604333c2c6dceddecea6e56edf43"
+        },
+        "reference-result.json.gz": {
+          "bytes": 191627,
+          "sha256": "36a7eb44160628ecf0244e1afd903043d7a5fe8c5bf5e75aeee0a63a1f64f236"
+        }
+      },
+      "reference_path": "results/a/q1-unified-v4-full500-20260925-s59/20260924T1952Z-s59ee/cells/075/k5"
+    },
+    {
+      "case": "047",
+      "cores": 5,
+      "graph_zip_entry": "data/case_047.json",
+      "files": {
+        "graph.json": {
+          "bytes": 4991726,
+          "sha256": "7c6328650b8e50e4d15a0ddf1ad0715a40d64d51f3c86c2c3b9c22e4cbb6a83f"
+        },
+        "reference-plan.json": {
+          "bytes": 141563,
+          "sha256": "9ee6679b254932b7f7ab79b1e7901971e962d284bff8cf57261791288e2c10b9"
+        },
+        "reference-result.json.gz": {
+          "bytes": 267126,
+          "sha256": "4c3b49b060765af3e58cd31e0e49fbf133ee8cbae4b6a3782436d318316da857"
+        }
+      },
+      "reference_path": "results/a/q1-unified-v4-full500-20260925-s59/20260924T1952Z-s59ee/cells/047/k5"
+    },
+    {
+      "case": "005",
+      "cores": 5,
+      "graph_zip_entry": "data/case_005.json",
+      "files": {
+        "graph.json": {
+          "bytes": 1495150,
+          "sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f"
+        },
+        "reference-plan.json": {
+          "bytes": 40185,
+          "sha256": "b862f2d665a928e58bed3b6d6dd9be44a809cb4d432531c98193ea863829654c"
+        },
+        "reference-result.json.gz": {
+          "bytes": 83591,
+          "sha256": "55c126d01bcc13177acd54e742b542e35c51457a23be8256b1e56ff3fd1fc11b"
+        }
+      },
+      "reference_path": "results/a/q1-unified-v4-full500-20260925-s59/20260924T1952Z-s59ee/cells/005/k5"
+    }
+  ],
+  "kind": "requested-bounded-transfer",
+  "status": "prepared-not-executed",
+  "algorithm_source_commit": "db64a9375ffda535736ac54031a1184ee9f8f3d9",
+  "entrypoint": "src.review.p1_r6_pilot_once",
+  "prior_test_receipt": "results/a/p1-r6-pilot-20260925/official-085-k5/supervisor-receipt.original.json",
+  "frozen_order": [
+    "082",
+    "075",
+    "047",
+    "005"
+  ],
+  "budget": {
+    "workers": 1,
+    "heavy_construct_max": 4,
+    "branch_construct_max": 4,
+    "E0_max": 4,
+    "E1": 0,
+    "E2": 0,
+    "retries": 0,
+    "new_structure_tests": 0,
+    "per_cell_total_seconds": 180,
+    "all_cells_total_seconds": 720,
+    "per_probe_seconds": 30,
+    "per_E0_seconds": 120,
+    "sampled_group_rss_stop_mib": 1536
+  },
+  "conditions": [
+    "Separate scheduler admission and fresh T0 guard before first child",
+    "Freeze source HEAD after runner-only test reuse addition; source/config hashes must match current admitted manifest",
+    "Current-input reconstructed base plan must exactly match the fixed saved plan before branch construction",
+    "E0 only on distinct structurally valid candidate; byte mismatch/unsupported records preserved with no E0",
+    "Identity or cleanup failure, timeout or resource limit stops the batch; no rerun or substitute input",
+    "Each child is isolated with existing owned Popen supervisor; no other participant scoring job may overlap",
+    "Formal 500-cell score unchanged; these are transfer mechanism tests only"
+  ],
+  "source_sha256": {
+    "src/review/p1_r6_pilot_once.py": "2dc0fbeb29bf43928f22871d376f10552f76e4ee8713895e1744579e88e1d48c",
+    "src/review/p1_r6_candidate_probe.py": "6f62e39ea8743f0a903b1ba51ee65c50e9678daf12a5a8b097a875b10ad9d4ac",
+    "src/q1/branch_aid.py": "3fb2dfa40aae066d23fb48b5120a732fb18e2bfba2e5f3b27af9e27245149725",
+    "tests/q1/test_branch_aid.py": "d8353a2b684012da68bcaa9b793ce4c2ad699f3ac1a6e5431980a759ef56f9e0",
+    "tests/q1/test_r6_skip_validated_tests.py": "2ac6f8b2be6af02fdce8d8843b6490107582b0875b0750b7850570e10ddd5685",
+    "data/raw/a/official/data/config.txt": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9"
+  },
+  "prior_test_receipt_sha256": "07e5ea758670bcaea484fd0e78c36f0d65f5365e9750ccf9eb7051cab6ebd910"
+}

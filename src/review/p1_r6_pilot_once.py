@@ -34,6 +34,13 @@ SOURCE_FILES = (
     "data/raw/a/official/code/evaluation_validation.py",
     "data/raw/a/official/data/config.txt",
 )
+STRUCTURE_TEST_SOURCES = (
+    "tests/q1/test_branch_aid.py",
+    "src/q1/branch_aid.py",
+    "data/raw/a/official/code/evaluation_validation.py",
+    "data/raw/a/official/code/stub_multicore_cut_and_schedule.py",
+    "data/raw/a/official/data/config.txt",
+)
 STAGES = (("tests", 10.0), ("probe", 30.0), ("E0", 120.0))
 TOTAL_SECONDS = 180.0
 SAMPLE_SECONDS = 0.25
@@ -313,7 +320,47 @@ def artifact_hashes(output):
             for p in sorted(output.rglob("*")) if p.is_file() and p.name != "receipt.json"}
 
 
-def pilot(graph, reference_plan, output, expected_head):
+def validated_prior_structure_tests(path):
+    """Read-only gate for reusing one previously supervised structure test."""
+    raw = path.read_bytes()
+    prior = json.loads(raw)
+    stages = prior.get("stages")
+    if not isinstance(stages, list):
+        raise ValueError("prior structure-test receipt lacks stages")
+    tests = [stage for stage in stages if isinstance(stage, dict)
+             and stage.get("name") == "tests"]
+    if (len(tests) != 1 or tests[0].get("reason") != "complete"
+            or tests[0].get("returncode") != 0
+            or tests[0].get("same_pgid_residual") != []
+            or prior.get("calls", {}).get("test_process") != 1):
+        raise ValueError("prior supervised tests lack complete/rc0/empty-residual evidence")
+    saved = prior.get("source_sha256")
+    if not isinstance(saved, dict):
+        raise ValueError("prior structure-test receipt lacks source hashes")
+    for name in STRUCTURE_TEST_SOURCES:
+        current = file_sha(ROOT / name)
+        if saved.get(name) != current:
+            raise ValueError(f"prior structure-test source hash absent or changed: {name}")
+    artifacts = prior.get("artifact_hashes")
+    if not isinstance(artifacts, dict):
+        raise ValueError("prior structure-test receipt lacks artifact hashes")
+    for name in ("tests.stdout.raw", "tests.stderr.raw"):
+        item = artifacts.get(name)
+        file = path.parent / name
+        if (not isinstance(item, dict) or not file.is_file()
+                or item.get("bytes") != file.stat().st_size
+                or item.get("sha256") != file_sha(file)):
+            raise ValueError(f"prior supervised test output missing or changed: {name}")
+    return {"receipt_path": str(path.resolve()), "receipt_sha256": sha(raw),
+            "reused_scope": "one prior tests stage for unchanged R6 structural test/code/official imports/config",
+            "prior_source_head": prior.get("source_head"),
+            "source_sha256": {name: saved[name] for name in STRUCTURE_TEST_SOURCES},
+            "test_stdout_sha256": artifacts["tests.stdout.raw"]["sha256"],
+            "test_stderr_sha256": artifacts["tests.stderr.raw"]["sha256"]}
+
+
+def pilot(graph, reference_plan, output, expected_head,
+          prior_structure_test_receipt=None):
     begun = time.monotonic()
     output.mkdir(parents=True, exist_ok=False)
     receipt = {"status": "started", "started_utc": utc(),
@@ -324,6 +371,11 @@ def pilot(graph, reference_plan, output, expected_head):
                          "E0_process": 0, "E1": 0, "E2": 0, "retry": 0,
                          "baseline_E0": 0}}
     try:
+        if prior_structure_test_receipt is not None:
+            # Reject stale or incomplete proof before preflight launches git
+            # and before any supervised worker child can be started.
+            receipt["structure_tests_reused"] = validated_prior_structure_tests(
+                prior_structure_test_receipt)
         receipt["graph_sha256"] = file_sha(graph)
         receipt["reference_plan_sha256"] = file_sha(reference_plan)
         receipt["source_head"] = preflight(expected_head)
@@ -347,9 +399,12 @@ def pilot(graph, reference_plan, output, expected_head):
                    "--output", str(e0_dir / "result.json"),
                    "--trace-output", str(e0_dir / "trace.json"),
                    "--log-output", str(e0_dir / "official.log")]
-        for name, argv, timeout in (("tests", test_argv, 10.0),
-                                    ("probe", probe_argv, 30.0),
-                                    ("E0", e0_argv, 120.0)):
+        stages_to_run = (("tests", test_argv, 10.0),
+                         ("probe", probe_argv, 30.0),
+                         ("E0", e0_argv, 120.0))
+        if prior_structure_test_receipt is not None:
+            stages_to_run = stages_to_run[1:]
+        for name, argv, timeout in stages_to_run:
             if time.monotonic() - begun >= TOTAL_SECONDS - 4.0:
                 receipt["status"] = "stopped"
                 receipt["reason"] = "total budget reached cleanup reserve before stage"
@@ -401,9 +456,10 @@ def main():
     parser.add_argument("--reference-plan", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--expected-head", required=True)
+    parser.add_argument("--prior-structure-test-receipt", type=Path)
     args = parser.parse_args()
     record = pilot(args.graph, args.reference_plan, args.output_dir,
-                   args.expected_head)
+                   args.expected_head, args.prior_structure_test_receipt)
     print(json.dumps({"status": record["status"], "reason": record.get("reason"),
                       "receipt": str(args.output_dir / "receipt.json")}))
     return 0 if record["status"] == "candidate-E0-collected" else 1
