@@ -1,0 +1,98 @@
+{
+  "kind": "read-only proposed P1 coalesced 008/K5 single-E0 handoff",
+  "captured_at_utc": "2026-09-25T07:45:32+00:00",
+  "data_head": "a008dfb8f1b5b881844af312be0b7246b2c6b025",
+  "tracked_diff_from_head": [],
+  "plan": {
+    "path": "results/a/p1-coalesced-phase-colab-20260925/run-0738Z/workspace/evidence/coalesced-008-k5/phase-plan.json",
+    "sha256": "e9327269bc95a81d17ca907a617aed896fd6fdde2a3174044d975f746569f9ce",
+    "cores": 5
+  },
+  "graph_source": {
+    "bundle_path": "results/a/p1-coalesced-phase-colab-20260925/preflight/coalesced-source-bundle.tar.gz",
+    "bundle_sha256": "f680062c292bae1a679c9253cc8bd8ef578b72a1dfe203d50b0ce9fa6c54a89d",
+    "member": "case_008.json",
+    "sha256": "c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d"
+  },
+  "official": {
+    "source_manifest_path": "docs/a/source-manifest.json",
+    "source_manifest_sha256": "713792d81693757a71cb29b9daea7434192d1bf14fcb8efd25165e6f68d9cffc",
+    "config_path": "data/raw/a/official/data/config.txt",
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "evaluator_path": "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+    "evaluator_sha256": "2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f",
+    "official_code_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0"
+  },
+  "runtime": {
+    "path": ".venv/bin/python",
+    "version": "Python 3.12.13",
+    "scope": "locked Python 3.12.13 in admitted execution environment; Mac E0 currently on hold"
+  },
+  "existing_process_helper": {
+    "path": "src/q1_benchmarks/bounded_probe_e0.py",
+    "entrypoint": "process(argv, folder, name, timeout, input_root)",
+    "source_sha256": "08f86b1e95dbed9f0c3d82c4005cbf85d81e0164493fc4fc51542ced9035011c",
+    "behavior": "process-group child, monotonic wall, 1-thread env, stdout/stderr capture, SIGKILL timeout cleanup"
+  },
+  "reuse_assessment": "Helper process() can supervise the proposed evaluator argv. Existing bounded_probe_e0.py CLI is not directly reusable for E0-only: its run() always invokes its frozen solver before E0 and is pinned to a different solver/cell. response_contract_probe.run() also invokes three synthetic E0 fixtures, so it is not an exact one-cell entrypoint. Minimal difference is a single call-site invoking existing process() with this argv; no duplicated supervisor framework.",
+  "proposed_command": [
+    ".venv/bin/python",
+    "-B",
+    "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+    "results/a/p1-coalesced-e0-20260925/run-first-e0/case_008.json",
+    "results/a/p1-coalesced-phase-colab-20260925/run-0738Z/workspace/evidence/coalesced-008-k5/phase-plan.json",
+    "--config",
+    "data/raw/a/official/data/config.txt",
+    "--output",
+    "results/a/p1-coalesced-e0-20260925/run-first-e0/result.json",
+    "--trace-output",
+    "results/a/p1-coalesced-e0-20260925/run-first-e0/trace.json",
+    "--log-output",
+    "results/a/p1-coalesced-e0-20260925/run-first-e0/official.log"
+  ],
+  "proposed_limits": {
+    "E0_calls": 1,
+    "solver": 0,
+    "E1": 0,
+    "E2": 0,
+    "retry": 0,
+    "workers": 1,
+    "E0_timeout_seconds": 60,
+    "wrapper_wall_seconds": 120,
+    "status": "proposed only; requires resource admission"
+  },
+  "resource_hold": "P2 has stopped and fresh sessions were reported idle by the owner boundary. This preparation does not grant E0 admission; await coordinator review/explicit one-shot admission and recheck resource state at execution.",
+  "output_directory": "results/a/p1-coalesced-e0-20260925/run-first-e0",
+  "output_directory_exists": false,
+  "owner_boundary": {
+    "path": "output/handoffs/disk-audit-20260925/P1_SINGLE_E0_OWNER_20260925.md",
+    "read_at_utc": "2026-09-25T07:46:16+00:00",
+    "execution_owner": "root P1 session nikolastarx/s-6607cb2735304751b36662035723372b",
+    "fixed_head": "a008dfb8f1b5b881844af312be0b7246b2c6b025",
+    "plan_independently_verified_by_coordinator": true,
+    "p2_status": "stopped and fresh sessions idle per owner boundary",
+    "admission_status": "not yet granted; wait handoff review",
+    "do_not_contact": "s59ee remains stopped"
+  },
+  "supervision_detail": {
+    "reusable_helper": "src/q1_benchmarks/bounded_probe_e0.py:process",
+    "child_timeout_seconds": 60,
+    "process_group_cleanup": "SIGKILL then wait/reap up to 10 seconds; helper raises if cleanup cannot be confirmed",
+    "wrapper_budget_seconds": 120,
+    "status": "proposed; the helper is callable but its batch CLI also performs a pinned solver first. No runner was created or modified.",
+    "preferred_runner": "Existing standalone e0_run_once.py or process() primitive provide reusable child supervision logic; they are independent alternatives, not a call hierarchy."
+  },
+  "preferred_existing_runner": {
+    "path": "results/a/p1-memory-packet-probe-20260925/008-k5/e0_run_once.py",
+    "reuse": "minimal parameterization only: worktree/input/plan/output paths and plan/input SHA; preserve child 60s timeout, process-group cleanup, official file hashes and receipt logic",
+    "reason": "existing one-cell E0 driver with exact CLI and evidence capture",
+    "do_not_copy_framework": true,
+    "wrapper_deadline_note": "Existing script records process wall but has no separate 120-second parent watchdog; add a minimal outer guard only if hard enforcement is required."
+  },
+  "handoff_artifact": {
+    "path": "results/a/p1-coalesced-e0-20260925/HANDOFF.md",
+    "bytes": 4134,
+    "sha256": "af62729960af7c4467f254dd7e7ae066489467c109f23c488ddda433ecfaba2d"
+  },
+  "readiness": "input/official-command identities fixed; cloud supervisor binding and hard outer deadline remain pending; not launch-ready"
+}

@@ -1,0 +1,20 @@
+# Proposed one-time E0 handoff: coalesced 008/K5
+
+This is read-only preparation. The fixed data HEAD is `a008dfb8f1b5b881844af312be0b7246b2c6b025`; the plan SHA-256 is `e9327269bc95a81d17ca907a617aed896fd6fdde2a3174044d975f746569f9ce` and the source-bundle `case_008.json` SHA-256 is `c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d`. The frozen model passed its 98932 vs 99264 proxy threshold, but the official Makespan remains unknown until a separately admitted E0. No evaluator was run here.
+
+Official identity checks passed against the tracked source manifest at this HEAD: evaluator entrypoint SHA-256 `2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f`, config SHA-256 `dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9`, aggregate official code SHA-256 `de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0`. Runtime is Python 3.12.13.
+
+The closest existing one-cell supervisor is `results/a/p1-memory-packet-probe-20260925/008-k5/e0_run_once.py`. It already performs frozen official identity checks, launches the exact evaluator CLI, captures stdout/stderr/result/trace/log, uses a 60-second child timeout with process-group kill/reap, and writes a wall-clock receipt. It cannot run unchanged: it hard-codes the previous worktree/output paths, local graph/plan paths and prior plan SHA. Before execution admission, minimally parameterize those locations and replace the plan SHA/input SHA with this frozen plan and graph; keep the 60-second wait/cleanup and full official-hash checks. It records wall time but has no separate hard 120-second parent watchdog; if 120s must be enforced rather than observed, add only a small outer deadline guard. Do not clone its framework. The lower-level reusable primitive is `src/q1_benchmarks/bounded_probe_e0.py:process`; that file’s batch CLI is not E0-only because it runs a pinned solver first. `response_contract_probe.run()` is unsuitable because it runs three synthetic fixtures.
+
+After resource admission, extract `case_008.json` from the fixed source bundle to `results/a/p1-coalesced-e0-20260925/run-first-e0/case_008.json`, then invoke exactly one evaluator child:
+
+```sh
+.venv/bin/python -B data/raw/a/official/code/multicore_cut_evaluate_problem_1.py results/a/p1-coalesced-e0-20260925/run-first-e0/case_008.json results/a/p1-coalesced-phase-colab-20260925/run-0738Z/workspace/evidence/coalesced-008-k5/phase-plan.json --config data/raw/a/official/data/config.txt --output results/a/p1-coalesced-e0-20260925/run-first-e0/result.json --trace-output results/a/p1-coalesced-e0-20260925/run-first-e0/trace.json --log-output results/a/p1-coalesced-e0-20260925/run-first-e0/official.log
+```
+
+Proposed limits: 1 E0, 0 solver/E1/E2/retries, 1 worker, 60 s child timeout, 120 s wrapper wall. This remains pending handoff review and explicit one-shot admission. The owner boundary says P2 has stopped and fresh sessions are idle, and names root P1 session s6607 as the executor; recheck resource state at execution. No E0 is authorized yet, and s59ee remains stopped.
+
+
+Coordinator boundary read: `P1_SINGLE_E0_OWNER_20260925.md` confirms plan identity and execution ownership, but explicitly leaves E0 admission pending handoff review. The existing helper kills the child process group with SIGKILL on the 60-second timeout and waits up to 10 seconds for reaping; it raises if cleanup cannot be confirmed. The 120-second wrapper budget is proposed, not yet measured or exercised.
+
+Execution remains on hold for the local Mac. A CPU Standard run must reuse an existing monitored cloud executor and explicitly preserve its independent VM cutoff/cleanup; neither a bare CLI timeout nor this handoff document proves that supervision. Before launching, verify fixed input bytes, exactly empty fresh sessions, CPU Standard/one worker, no competing owner, and a new output directory. Unknown resource or cleanup state stops the attempt; no retry. Preserve raw failure artifacts and separately time environment setup, evaluator, cleanup and overall window. This document requests review; it is not a launch-ready cloud controller.
