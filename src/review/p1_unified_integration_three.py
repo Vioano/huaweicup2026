@@ -6,6 +6,7 @@ source/input manifest. This is three mechanism cells, not a full-matrix result.
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 import json
 import os
 from pathlib import Path
@@ -37,14 +38,41 @@ REQUIRED_SOURCES = {
     "data/raw/a/official/code/stub_multicore_cut_and_schedule.py",
     "data/raw/a/official/data/config.txt",
 }
+BUDGET = {
+    "workers": 1, "solver_max": 3, "E1_max": 30, "E0_max": 3,
+    "E2": 0, "retry": 0, "per_solver_seconds": 300,
+    "per_E0_seconds": 120, "total_seconds": 1320,
+    "sampled_group_RSS_limit_MiB": 1536,
+    "variable_optional_representative_compiles_per_cell_max": 512,
+    "variable_optional_final_compiles_per_cell_max": 2048,
+    "new_external_Task_experiments": 0,
+}
+OWNER = "nikolastarx/s-6607cb2735304751b36662035723372b"
+SCOPE = "p1-unified-integration-three"
 
 
-def checked_manifest(path, expected_head, admission):
+def _budget_matches(value):
+    return (isinstance(value, dict) and set(value) == set(BUDGET)
+            and all(type(value[k]) is int and value[k] == expected
+                    for k, expected in BUDGET.items()))
+
+
+def _output_target(output):
+    if (not output.is_absolute() or output.exists() or output.is_symlink()
+            or output.resolve() != output):
+        raise ValueError("output directory must be absent, absolute, and non-symlink")
+    return str(output)
+
+
+def checked_manifest(path, expected_head, admission, output):
     manifest = json.loads(path.read_text())
+    target = _output_target(output)
     if tuple(manifest.get("order", ())) != ORDER or manifest.get("cores") != 5:
         raise ValueError("frozen three-cell order/K5 mismatch")
     if manifest.get("source_head") != expected_head:
         raise ValueError("manifest HEAD differs from requested HEAD")
+    if not _budget_matches(manifest.get("budget")):
+        raise ValueError("manifest budget differs from fixed integration budget")
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     if head != expected_head:
         raise ValueError("current HEAD differs from requested HEAD")
@@ -74,8 +102,23 @@ def checked_manifest(path, expected_head, admission):
             raise ValueError(f"graph SHA/size mismatch: {case}")
         checked.append({"case": case, "graph": graph,
                         "sha256": row["sha256"], "bytes": row["bytes"]})
-    if not admission.is_file() or not admission.read_bytes():
-        raise ValueError("separate scheduler admission missing/empty")
+    gate = json.loads(admission.read_text())
+    if not isinstance(gate, dict) or any((gate.get(k) != value for k, value in {
+            "status": "admitted", "scope": SCOPE, "owner_session": OWNER,
+            "source_head": expected_head, "manifest_sha256": file_sha(path),
+            "runner_sha256": file_sha(Path(__file__)),
+            "output_dir": target}.items())):
+        raise ValueError("scheduler admission identity/hash/output mismatch")
+    if not _budget_matches(gate.get("budget")):
+        raise ValueError("scheduler admission budget mismatch")
+    try:
+        expiry = datetime.fromisoformat(gate["expires_at_utc"].replace("Z", "+00:00"))
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError("scheduler admission expiry missing/invalid") from exc
+    if (expiry.tzinfo is None or expiry.utcoffset() is None
+            or expiry.utcoffset().total_seconds() != 0
+            or expiry <= datetime.now(timezone.utc)):
+        raise ValueError("scheduler admission expired or lacks timezone")
     return {"head": head, "manifest_sha256": file_sha(path),
             "admission_path": str(admission.resolve()),
             "admission_sha256": file_sha(admission), "graphs": checked}
@@ -136,7 +179,6 @@ def run(manifest_path, output, expected_head, admission, *,
         manifest_check=checked_manifest, stage_fn=_stage,
         guard=None, clock=time.monotonic):
     begun = clock()
-    output.mkdir(parents=True, exist_ok=False)
     guard = guard or ResourceGuard()
     result = {"status": "started", "order": list(ORDER), "cells": [],
               "limits": {"worker": 1, "total_seconds": TOTAL,
@@ -145,8 +187,9 @@ def run(manifest_path, output, expected_head, admission, *,
                          "E0_calls": 3, "E2_calls": 0, "retry_calls": 0},
               "calls": {"solver_process": 0, "online_E1_exact": 0,
                         "E0_process": 0, "E2": 0, "retry": 0}}
+    frozen = manifest_check(manifest_path, expected_head, admission, output)
+    output.mkdir(parents=True, exist_ok=False)
     try:
-        frozen = manifest_check(manifest_path, expected_head, admission)
         result["frozen"] = {k: v for k, v in frozen.items() if k != "graphs"}
         for row in frozen["graphs"]:
             if TOTAL - (clock() - begun) < CELL_RESERVE:
@@ -249,17 +292,16 @@ def run(manifest_path, output, expected_head, admission, *,
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, required=True)
-    parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--expected-head", required=True)
     parser.add_argument("--admission", type=Path, required=True)
     parser.add_argument("--prepare-only", action="store_true")
     args = parser.parse_args()
     if args.prepare_only:
-        record = checked_manifest(args.manifest, args.expected_head, args.admission)
+        record = checked_manifest(args.manifest, args.expected_head, args.admission,
+                                  args.output_dir)
         print(json.dumps(record, default=str, sort_keys=True))
         return 0
-    if args.output_dir is None:
-        parser.error("--output-dir is required unless --prepare-only")
     record = run(args.manifest, args.output_dir, args.expected_head, args.admission)
     print(json.dumps({"status": record["status"], "reason": record.get("reason"),
                       "receipt": str(args.output_dir / "receipt.json")}))

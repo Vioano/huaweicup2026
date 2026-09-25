@@ -1,8 +1,10 @@
 """Pure mock control tests: no constructor, Task, scorer, or child process."""
 import json
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from src.review import p1_unified_integration_three as runner
 
@@ -35,7 +37,7 @@ class RunnerTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
-        self.base = Path(self.tmp.name)
+        self.base = Path(self.tmp.name).resolve()
         self.manifest = self.base / "manifest.json"
         self.manifest.write_text("{}")
         self.admission = self.base / "admission.json"
@@ -136,6 +138,70 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(result["status"], "stopped")
         self.assertIn("selected plan bytes", result["reason"])
         self.assertEqual(result["calls"]["E0_process"], 0)
+
+    def formal_gate(self):
+        names = runner.REQUIRED_SOURCES | {
+            p.relative_to(runner.ROOT).as_posix()
+            for folder in (runner.ROOT / "src/q1", runner.ROOT / "src/eval_exact")
+            for p in folder.rglob("*.py")}
+        manifest = {"order": list(runner.ORDER), "cores": 5,
+                    "source_head": "head", "budget": dict(runner.BUDGET),
+                    "source_sha256": {name: runner.file_sha(runner.ROOT / name)
+                                      for name in names},
+                    "graphs": [{"case": r["case"], "path": str(r["graph"]),
+                                "bytes": r["bytes"], "sha256": r["sha256"]}
+                               for r in self.graphs]}
+        self.manifest.write_text(json.dumps(manifest))
+        gate = {"status": "admitted", "scope": runner.SCOPE,
+                "owner_session": runner.OWNER, "source_head": "head",
+                "manifest_sha256": runner.file_sha(self.manifest),
+                "runner_sha256": runner.file_sha(Path(runner.__file__)),
+                "budget": dict(runner.BUDGET),
+                "expires_at_utc": (datetime.now(timezone.utc) + timedelta(hours=1)).isoformat(),
+                "output_dir": str((self.base / "out").resolve())}
+        self.admission.write_text(json.dumps(gate))
+        return gate
+
+    def test_formal_gate_rejects_missing_pending_expired_and_mismatches(self):
+        gate = self.formal_gate()
+        output = self.base / "out"
+        cases = [
+            {}, {**gate, "status": "pending"},
+            {**gate, "expires_at_utc": "2000-01-01T00:00:00Z"},
+            {**gate, "expires_at_utc": "2099-01-01T00:00:00"},
+            {**gate, "scope": "wrong"}, {**gate, "source_head": "wrong"},
+            {**gate, "owner_session": "wrong"},
+            {**gate, "manifest_sha256": "wrong"},
+            {**gate, "runner_sha256": "wrong"},
+            {**gate, "budget": {**gate["budget"], "E0_max": True}},
+            {**gate, "output_dir": str(self.base / "wrong")},
+        ]
+        with patch.object(runner.subprocess, "check_output", return_value="head\n"):
+            for bad in ["", "   ", *cases]:
+                with self.subTest(bad=bad):
+                    self.admission.write_text(bad if isinstance(bad, str) else json.dumps(bad))
+                    with self.assertRaises((ValueError, KeyError)):
+                        runner.run(self.manifest, output, "head", self.admission,
+                                   stage_fn=self.stage, guard=Guard(), clock=lambda: 0.0)
+                    self.assertFalse(output.exists())
+                    self.assertEqual(self.stages, [])
+            self.admission.write_text(json.dumps(gate))
+            self.assertEqual(runner.checked_manifest(self.manifest, "head",
+                                                     self.admission, output)["head"], "head")
+            output.symlink_to(self.base / "missing-target")
+            with self.assertRaises(ValueError):
+                runner.checked_manifest(self.manifest, "head", self.admission, output)
+
+    def test_formal_gate_allows_one_output_only(self):
+        self.formal_gate()
+        with patch.object(runner.subprocess, "check_output", return_value="head\n"):
+            first = runner.run(self.manifest, self.base / "out", "head", self.admission,
+                               stage_fn=self.stage, guard=Guard(), clock=lambda: 0.0)
+            self.assertEqual(first["status"], "complete")
+            with self.assertRaises(ValueError):
+                runner.run(self.manifest, self.base / "out", "head", self.admission,
+                           stage_fn=self.stage, guard=Guard(), clock=lambda: 0.0)
+        self.assertEqual(len(self.stages), 6)
 
 
 if __name__ == "__main__":

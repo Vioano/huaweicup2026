@@ -1,0 +1,43 @@
+test_formal_gate_allows_one_output_only (test_p1_unified_integration_three.RunnerTests.test_formal_gate_allows_one_output_only) ... ERROR
+test_formal_gate_rejects_missing_pending_expired_and_mismatches (test_p1_unified_integration_three.RunnerTests.test_formal_gate_rejects_missing_pending_expired_and_mismatches) ... ERROR
+test_insufficient_batch_budget_does_not_launch (test_p1_unified_integration_three.RunnerTests.test_insufficient_batch_budget_does_not_launch) ... ok
+test_plan_hash_mismatch_blocks_e0 (test_p1_unified_integration_three.RunnerTests.test_plan_hash_mismatch_blocks_e0) ... ok
+test_three_cells_and_separate_e0 (test_p1_unified_integration_three.RunnerTests.test_three_cells_and_separate_e0) ... ok
+test_unified_score_without_worker_identity_blocks_e0 (test_p1_unified_integration_three.RunnerTests.test_unified_score_without_worker_identity_blocks_e0) ... ok
+test_unknown_e1_stops_with_null (test_p1_unified_integration_three.RunnerTests.test_unknown_e1_stops_with_null) ... ok
+
+======================================================================
+ERROR: test_formal_gate_allows_one_output_only (test_p1_unified_integration_three.RunnerTests.test_formal_gate_allows_one_output_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/tests/q1/test_p1_unified_integration_three.py", line 194, in test_formal_gate_allows_one_output_only
+    first = runner.run(self.manifest, self.base / "out", "head", self.admission,
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/src/review/p1_unified_integration_three.py", line 190, in run
+    frozen = manifest_check(manifest_path, expected_head, admission, output)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/src/review/p1_unified_integration_three.py", line 69, in checked_manifest
+    target = _output_target(output)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/src/review/p1_unified_integration_three.py", line 63, in _output_target
+    raise ValueError("output directory must be absent, absolute, and non-symlink")
+ValueError: output directory must be absent, absolute, and non-symlink
+
+======================================================================
+ERROR: test_formal_gate_rejects_missing_pending_expired_and_mismatches (test_p1_unified_integration_three.RunnerTests.test_formal_gate_rejects_missing_pending_expired_and_mismatches)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/tests/q1/test_p1_unified_integration_three.py", line 185, in test_formal_gate_rejects_missing_pending_expired_and_mismatches
+    self.assertEqual(runner.checked_manifest(self.manifest, "head",
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/src/review/p1_unified_integration_three.py", line 69, in checked_manifest
+    target = _output_target(output)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/src/review/p1_unified_integration_three.py", line 63, in _output_target
+    raise ValueError("output directory must be absent, absolute, and non-symlink")
+ValueError: output directory must be absent, absolute, and non-symlink
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.029s
+
+FAILED (errors=2)
