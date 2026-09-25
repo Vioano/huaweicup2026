@@ -8,6 +8,7 @@
 - [机器汇总](final-export-20260926/summary.json)、[逐格数据](final-export-20260926/comparison.csv)、[图件](figures/p3-final-full500.pdf)、[实际第五核决策](FIFTH_CORE_DECISIONS.json)。
 - 400+100是同算法两个互斥执行段，原run_id、每格墙钟与预算都保留；不是历史逐格选优。
 - 大批次JSON使用同目录lossless gzip与archive清单保全，按清单可恢复原hash。
+- [同计划P2/P3主对照图与附录](SAME_PLAN_FIGURES.md)：主图横轴核数，两条逐图mean(B/M)曲线；均由已审500格数据离线生成。
 - 中央接收/镜像同步属于后续交付核验，不能从本地预检代签。
 
 [最初冻结计划与预算](https://github.com/huaweibei123/huaweicup2026/blob/65c07e062ed9be78dda32ef4bb58a9891f373de9/results/a/q3-nikolastarx/r9f-final-full500-20260926/README.md) 保留于原固定版本；[缺格100单独执行说明](COMPLETION_100_PROPOSAL.md) 保留补段授权与范围。
