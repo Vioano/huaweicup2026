@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/src/q3/query_flow_static.py", line 90, in <module>
+    main()
+    ~~~~^^
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/src/q3/query_flow_static.py", line 60, in main
+    plan, info = construct(index, 5, cross_delay=delay, capacity=cfg['capacity'])
+                 ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/src/q3/query_flow.py", line 304, in construct
+    label, flow_keys, rows = _decompose(index, ports, rows)
+                             ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/src/q3/query_flow.py", line 125, in _decompose
+    raise UnsupportedStructure("unclassified branch joins private flows")
+src.q3.construct.UnsupportedStructure: unclassified branch joins private flows
