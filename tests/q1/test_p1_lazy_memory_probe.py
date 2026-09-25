@@ -28,6 +28,72 @@ class FakeKernel:
 
 
 class LazyMemoryProbeTests(unittest.TestCase):
+    def test_periodic_seed_path_and_invalid_parameters(self):
+        self.assertEqual(probe.periodic_seed_path(20, 7, 3),
+                         (('normal', (0, 0), (7, 3)),
+                          ('normal', (7, 3), (7, 3)),
+                          ('normal', (14, 3), (6, 3)),
+                          ('terminal', (20, 3), 'merge')))
+        self.assertEqual(probe.periodic_seed_path(9, 4, 3)[-2:],
+                         (('normal', (8, 3), (1, 1)),
+                          ('terminal', (9, 1), 'merge')))
+        for B, q, s in ((20, 0, 0), (20, 21, 0), (20, 7, 8),
+                        (20, 7, -1), (20, True, 0), (20, 7, 1.0)):
+            with self.subTest(B=B, q=q, s=s), self.assertRaises(ValueError):
+                probe.periodic_seed_path(B, q, s)
+
+    def test_periodic_pair_rejected_before_family_construction(self):
+        for q, s in ((7, None), (None, 3), (0, 0), (7, True)):
+            with self.subTest(q=q, s=s), self.assertRaises(ValueError):
+                probe.construct({}, 1, {'L1': 1, 'UB': 1}, 60, 100,
+                                task_limit=10, final_max_tasks=2, response_limit=5,
+                                oracle_limit=4, expansion_limit=2, seconds=1,
+                                family_factory=lambda *args: self.fail('family called'),
+                                period_q=q, period_s=s)
+
+    def test_periodic_seed_uses_complete_exact_budget_or_skips(self):
+        class Family:
+            B = 20
+            cores = 1
+        class Kernel(FakeKernel):
+            def __init__(self, *args):
+                self.deadline = float('inf')
+                self.calls = []
+            def profile(self, n, r, q, s, drain=False):
+                self.calls.append(('normal', (n, r), (q, s)))
+                return {'cost': 1, 'groups': [[]], 'bytes': 0}
+            def suffix(self, r, policy):
+                self.calls.append(('terminal', (20, r), policy))
+                return {'cost': 2, 'groups': [[]], 'bytes': 0}
+        def run(budget):
+            state = {}
+            def fake_search(B, exact, bound, remaining, **kwargs):
+                self.assertEqual(remaining, budget - (4 if budget >= 4 else 0))
+                if budget >= 4:
+                    self.assertEqual(kwargs['incumbent'], (5, probe.periodic_seed_path(20, 7, 3)))
+                else:
+                    self.assertIsNone(kwargs['incumbent'])
+                return {'best_path': None, 'upper': None, 'lower': 0, 'optimal': False}
+            with patch.object(probe, 'guard'), patch.object(probe, 'graph_resources', return_value={}), \
+                 patch.object(probe, 'Resources'), patch.object(probe, 'search', fake_search), \
+                 patch.object(probe, 'choose_return_seed', side_effect=AssertionError('default selector called')):
+                with self.assertRaises(UnknownResult):
+                    probe.construct({}, 1, {'L1': 1, 'UB': 1}, 60, 100,
+                                    task_limit=40, final_max_tasks=20, response_limit=5,
+                                    oracle_limit=budget, expansion_limit=2, seconds=1,
+                                    family_factory=lambda *args: Family(),
+                                    kernel_factory=Kernel, state=state,
+                                    period_q=7, period_s=3)
+            return state
+        enough = run(4)
+        self.assertEqual(enough['kernel'].calls, list(probe.periodic_seed_path(20, 7, 3)))
+        self.assertEqual(enough['seed']['oracle_calls'], 4)
+        self.assertEqual(enough['seed']['status'], 'model_candidate')
+        short = run(3)
+        self.assertEqual(short['kernel'].calls, [])
+        self.assertEqual(short['seed']['oracle_calls'], 0)
+        self.assertEqual(short['seed']['status'], 'insufficient_oracle_budget')
+
     def test_partial_compile_accounting_is_unknown_with_known_lower_bound(self):
         kernel = FakeKernel()
         kernel.compiles, kernel.completed = 3, 1

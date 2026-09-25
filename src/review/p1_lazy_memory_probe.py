@@ -39,6 +39,22 @@ def charge(kind, n, nonempty, makespan, gate):
                                          kind == "terminal" and n == 0) else 0)
 
 
+def periodic_seed_path(B, q, s):
+    """Complete explicit periodic packet path; no resource claim is implied."""
+    if (type(B) is not int or B < 1 or type(q) is not int or
+            type(s) is not int or not 1 <= q <= B or not 0 <= s <= q):
+        raise ValueError('period needs integer B>=q>=1 and integer 0<=s<=q')
+    n = r = 0
+    path = []
+    while n < B:
+        width = min(q, B - n)
+        next_r = min(s, width)
+        path.append(('normal', (n, r), (width, next_r)))
+        n, r = n + width, next_r
+    path.append(('terminal', (B, r), 'merge'))
+    return tuple(path)
+
+
 def accounting(kernel):
     known = kernel.completed + (kernel.full_confirmed or 0)
     return dict(task_compile_attempts_reserved=kernel.compiles,
@@ -197,7 +213,13 @@ def verify_final(graph, plan, expected, expected_bytes, upper, kernel, capacity,
 
 def construct(graph, cores, capacity, bandwidth, gate, *, task_limit, final_max_tasks,
               response_limit, oracle_limit, expansion_limit, seconds,
-              family_factory=MemoryFamily, kernel_factory=BoundedKernel, state=None):
+              family_factory=MemoryFamily, kernel_factory=BoundedKernel, state=None,
+              period_q=None, period_s=None):
+    if (period_q is None) != (period_s is None):
+        raise ValueError('period_q and period_s must be supplied together')
+    if period_q is not None and (type(period_q) is not int or type(period_s) is not int or
+                                 period_q < 1 or period_s < 0 or period_s > period_q):
+        raise ValueError('period needs integer q>=1 and integer 0<=s<=q')
     if (type(cores) is not int or not 1 <= cores <= 5 or
             set(capacity) != {'L1', 'UB'} or
             any(type(v) is not int or v <= 0 for v in capacity.values()) or
@@ -210,6 +232,8 @@ def construct(graph, cores, capacity, bandwidth, gate, *, task_limit, final_max_
         raise ValueError("explicit bounded budgets required")
     start = time.perf_counter()
     family = family_factory(graph, cores, capacity, bandwidth)
+    if period_q is not None and (type(family.B) is not int or period_q > family.B):
+        raise ValueError('period_q exceeds family B')
     guard(family)
     resources = Resources(**graph_resources(graph, cores, bandwidth), gate=gate)
     kernel = kernel_factory(family, gate, task_limit-final_max_tasks,
@@ -247,11 +271,20 @@ def construct(graph, cores, capacity, bandwidth, gate, *, task_limit, final_max_
     incumbent = None
     if state is not None:
         state['seed'] = seed
-    if family.B and oracle_limit >= 2:
+    if period_q is not None:
+        seed_path = periodic_seed_path(family.B, period_q, period_s)
+        seed['selection'] = dict(policy='explicit_periodic', q=period_q, s=period_s)
+        seed['required_oracle_queries'] = len(seed_path)
+        if oracle_limit < len(seed_path):
+            seed['status'] = 'insufficient_oracle_budget'
+    elif family.B and oracle_limit >= 2:
         seed['selection'] = choose_return_seed(resources, family.B)
         s = seed['selection']['s']
         seed_path = (('normal', (0, 0), (family.B, s)),
                      ('terminal', (family.B, s), 'merge'))
+    else:
+        seed_path = ()
+    if seed_path and oracle_limit >= len(seed_path):
         total = 0
         for action in seed_path:
             seed['oracle_calls'] += 1
@@ -328,10 +361,16 @@ def main():
                  'expansion-limit', 'seconds'):
         p.add_argument('--'+name, type=int, required=True)
     p.add_argument('--output-root', type=Path, required=True)
+    p.add_argument('--period-q', type=int)
+    p.add_argument('--period-s', type=int)
     p.add_argument('--execute', action='store_true', required=True)
     a = p.parse_args()
     if not 0 < a.seconds <= 60:
         p.error('--seconds must be in 1..60')
+    if (a.period_q is None) != (a.period_s is None):
+        p.error('--period-q and --period-s must be supplied together')
+    if a.period_q is not None and (a.period_q < 1 or not 0 <= a.period_s <= a.period_q):
+        p.error('period needs q>=1 and 0<=s<=q')
     if not a.execute or a.output_root.exists():
         raise SystemExit('explicit --execute and fresh output directory required')
     before = hashes()
@@ -345,6 +384,8 @@ def main():
                   graph_sha256=hashlib.sha256(graph_raw).hexdigest(),
                   cores=a.cores, capacity={'L1': a.capacity_l1, 'UB': a.capacity_ub},
                   bandwidth=a.bandwidth, gate=a.gate,
+                  period_seed=(None if a.period_q is None else
+                               {'q': a.period_q, 's': a.period_s}),
                   budgets=dict(task_limit=a.task_limit, final_max_tasks=a.final_max_tasks,
                                response_limit=a.response_limit, oracle_limit=a.oracle_limit,
                                expansion_limit=a.expansion_limit, seconds=a.seconds))
@@ -364,7 +405,7 @@ def main():
                                a.gate, task_limit=a.task_limit, final_max_tasks=a.final_max_tasks,
                                response_limit=a.response_limit, oracle_limit=a.oracle_limit,
                                expansion_limit=a.expansion_limit, seconds=a.seconds,
-                               state=state)
+                               state=state, period_q=a.period_q, period_s=a.period_s)
         if hashes() != before or source_scope({'L1': a.capacity_l1, 'UB': a.capacity_ub}, a.bandwidth) != official_before:
             raise UnknownResult('source changed during construction')
         report.update(status='verified_model', **info)
