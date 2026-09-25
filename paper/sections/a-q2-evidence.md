@@ -8,7 +8,7 @@
 | --- | --- | --- |
 | 主方法 | `c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f` | 结构初解 + gap + hypergap，最多三个不同完整计划的原生 E2 评分 |
 | 主结果发布 | `1c00079aadbd071de62db17686d5ba3fed1da0f2` | 完整 100×1–5 核，500 次独立 E0；并非本会话重新运行 |
-| 最新已读算法资料 | `fff17b9e116ed98c0c0cc5dd04944102f7f98978`，继承 7c9b648 / e4f7b13 / 9404635 | 新增分组容量、重入阶段及通信界勘误；主算法与完整均值不变 |
+| 最新已读算法资料 | `afabca83ffa941f988cae0680a4d99760018d580`，继承 fff17b9 / 7c9b648 / e4f7b13 / 9404635 | 新增当前完整方案重构入口及 R05 固定顺序余量；主算法与完整均值不变 |
 | 成员 tensor/gap/F1 数据 | 读取提交 `178a3673bd238b20772211427b8134b6db35f5af` 的冻结 CSV | 各自独立固定算法的对照；F1 只列五核完整均值 |
 | R5 保存方案静态诊断 | 源码 `1acc50a7f8290fd98fa94a12113281728705d7ca`；本次归档完成结果 | 100 对、200 个条件下界、0 新评分，仅用于研究边界 |
 | 外部截图成绩 | 身份与未四舍五入数值未核实 | 不作论文正式同行基线，不写“已超越外部最优” |
@@ -154,6 +154,18 @@
 
 原型 ZIP 未取得，Pro 自报的 2204/2204/1203/45/40 次检查只是作者报告，本会话未执行该原型或 Fraction 探针。此修订仅阅读固定文件及修改论文，0 新 solver/Step2/Step3/E0/E1/E2；不改变 c665 / 1c00079 的固定成绩身份。003/K2 的 R05 配对实验在此版本仍待资源窗口，且没有被论文会话启动。
 
+<a id="s14"></a>
+
+### S14：当前方案重构入口与 R05 固定顺序余量
+
+依照队长 [Issue 33 #5826959849](https://github.com/huaweibei123/huaweicup2026/issues/33#issuecomment-5826959849)，读取固定 `afabca83ffa941f988cae0680a4d99760018d580` 的 [静态界 README](https://github.com/huaweibei123/huaweicup2026/blob/afabca83ffa941f988cae0680a4d99760018d580/results/a/q2-nikolastarx/pro-r05-pair-static-20260925/README.md)、完整 report、静态界脚本与 `fifo_bound.py`，以及完整 [ready_exchange.py](https://github.com/huaweibei123/huaweicup2026/blob/afabca83ffa941f988cae0680a4d99760018d580/src/q2_nikolastarx/ready_exchange.py)、[ready_exchange_candidate.py](https://github.com/huaweibei123/huaweicup2026/blob/afabca83ffa941f988cae0680a4d99760018d580/src/q2_nikolastarx/ready_exchange_candidate.py)。正文 5.7.4 区分就绪单射匹配中的条件字节精确性、静态时序代理、最终代理回退与官方结果；新入口要求调用者在线提供 singleton 完整方案，没有历史成绩查表，也未接入冻结 full500 主求解器。
+
+本会话新增 [保存证据复核脚本](../../results/a/q2-yuanzhifang/feedback-20260924/paper-draft-20260925/check_r05_headroom.py) 与 [复核 JSON](../../results/a/q2-yuanzhifang/feedback-20260924/paper-draft-20260925/r05-headroom-check.json)，后者 SHA-256 为 `1b7e3f7ea1e8e485d52c9a8810339c4d2c38ee4f1e445011b099d244529f5d91`。实际核对原图/config、两份 R05 方案、压缩界记录、当前 c665 方案/E0 原件的固定哈希；按原图与顺序逐条验证旧初解 3310 节点、恢复候选 3638 节点的路径见证及边理由，重算每核 Pipe 工作、路径长度与三份方案的基础字节量。没有重跑最长路生成器，没有执行官方计划合法性或完整执行验证。
+
+复核命令：仓库根目录运行 `python -B results/a/q2-yuanzhifang/feedback-20260924/paper-draft-20260925/check_r05_headroom.py`，要求固定提交可读及 case_003 原件已解出。恢复方案的条件界为 240126 cycles，当前保存 E0 为 245150 cycles，最大相对 Makespan 降幅精确为 `2512/122575`，约 2.0494%。这个数不是加速比增幅、预测收益或全图全核均值，也不限制其他归属及顺序。6351422→5207554 B 的约 18% 下降相对旧初解；当前 c665 重算基础字节及官方 scheduled COPY 都为 4262874 B，spill 为零。
+
+另读同提交的 [R05 pair 协议](https://github.com/huaweibei123/huaweicup2026/blob/afabca83ffa941f988cae0680a4d99760018d580/results/a/q2-nikolastarx/pro-r05-pair-pilot-20260925/README.md)：仍为 frozen/no dispatch；七项匹配合成检查及五项主机派发模拟检查是作者报告，论文会话没有重跑或启动云端派发。此复核全部为保存数据读取和算术，0 新 constructor/solver/Step2/Step3/E0/E1/E2。表 5-7 是诊断及已有参照，不能写成新增配对成绩或新主算法行。
+
 ## 图件与最终补证清单
 
 | 图号 | 本次状态 | 最终输入与检查 |
@@ -177,4 +189,4 @@
 
 交付检查：表格重算脚本通过；本地文档链接及 11 个资料锚点、20 个连续编号公式、8 节标题、6 个图占位检查通过；示例 007/020/045 的五核数字再次与冻结 CSV 核对。Markdown 解析后的 6 张表（含符号表）列数一致，已视觉查看正文开头及主结果表；预览保留 TeX 文本，不称作最终数学排版验收。Git 空白检查、文件编码、个人路径及凭据模式检查通过。Windows 无 dot_clean，已对本次 paper/结果具体目录做只读元数据扫描，无 `._*`、`.DS_Store` 或 `__MACOSX` 项；未作跨目录清理。
 
-后续版本在此基础上新增 5.6.6 与资料 S12/S13，并展开 5.4.3 的最小割证明；旧“11 个资料锚点/6 张表”是首次交付记录。当前 13 个资料锚点、42 个本地链接、20 个连续编号公式、8 节和 6 个图占位检查通过；7 张表（含符号表）的列数一致，新增表 5-6 的三行与复核结果逐项核对，并查看了实际渲染预览。图件仍未正式绘制。
+后续版本新增 5.6.6、5.7.4 与资料 S12–S14，并展开 5.4.3 的最小割证明；旧“11 个资料锚点/6 张表”是首次交付记录。当前 14 个资料锚点、44 个本地链接、21 个连续编号公式、8 节和 6 个图占位检查通过；8 张表（含符号表）的列数一致，表 5-6/5-7 的数值与各自复核结果对应。图件仍未正式绘制。
