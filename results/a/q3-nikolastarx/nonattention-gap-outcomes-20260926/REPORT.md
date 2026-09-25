@@ -1,0 +1,30 @@
+# P3 non-R9 top-ten outcome audit (saved evidence only)
+
+Scope: the ten K=5 cases frozen in `../nonattention-headroom-20260926/REPORT.md`, in its rank order. `expanded500-feedback-20260925/cells.csv` reports one fixed 500-cell algorithm (`a5dafdf94d0694132fb9ec7121f5fe1fe0d6ee3b`); `calendar500-feedback-20260925/cells.csv` reports another (`8314351854c716091bc6d31215569825ae45ec55`); `forest-current-headroom-20260925/{summary.json,cells-snapshot.json}` reports the selected cells of one Forest500 run (`311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1`, run `q3-forest-full500-20260925-s59`). Graph/config/official identities and full-500 coverage are reported by the respective feedback/readback audits. The columns below are separate fixed-version outcomes, **not a hand-picked combined algorithm**. All M values are saved official P3 makespan cycles.
+
+| Case | Expanded selected mechanism | Expanded M | Calendar M | Forest M | Forest minus expanded |
+|---|---|---:|---:|---:|---:|
+| 044 | `dag_join_gap_list` | 83958 | 83958 | 41205 | −42753 |
+| 065 | `affine_eighth` | 11270 | 11270 | 11270 | 0 |
+| 015 | `dag_join_gap_list` | 38938 | 38938 | 38938 | 0 |
+| 012 | `dag_join_gap_list` | 13175 | 13175 | 13175 | 0 |
+| 026 | `dag_join_gap_list` | 30256 | 30256 | 30256 | 0 |
+| 010 | `dag_join_gap_list` | 20608 | 20608 | 20608 | 0 |
+| 055 | `affine_eighth` | 23526 | 23526 | 23526 | 0 |
+| 096 | `dag_join_gap_list` | 18812 | 18812 | 18812 | 0 |
+| 046 | `affine_eighth` | 88200 | 88200 | 83050 | −5150 |
+| 100 | `dag_join_gap_list` | 33676 | 33676 | 33676 | 0 |
+
+The expanded algorithm therefore **selected** the existing general gap-DAG candidate in seven of ten, and retained the affine anchor in three. Its complete 500 run includes online evaluation/selection, so R9 recognition failure did not mean these graphs were unscheduled. The later calendar version changed none of these ten M values. The Forest source calls the fresh witness/pipeline solver first and may construct/evaluate one guarded reduction-forest order within a three-E0 ceiling. Its saved Forest snapshot gives final M and artifact hashes, but not the per-cell candidate ledger. Thus equal Forest M in eight cases does **not** prove the Forest candidate was not constructed/evaluated, nor by itself identify the final strategy.
+
+For 044, the saved Forest receipt was previously read back in `../pipeline-capacity-direction-20260925/REPORT.md`: `selected_strategy=shared_input_pipeline`, plan SHA `a16abc2c…`, M=41205. For 046, Forest snapshot plan/result SHA (`2598fca2…` / `5933e6d2…`) match the archived witness run; the tracked two-case `../shared-pipeline-probe-20260925/RESULTS-v2.md` gives the same 88200→83050 pipeline outcome. This identifies the pipeline mechanism for those two selected Forest plans, not a new Forest-order win. Exact Forest selected strategy and candidate status for the other eight require each archived `evidence/receipt.json` fields `selected_strategy`, `selection.forest_policy`, and the candidate records/status, or an equivalent verified extraction; the local selected-cell snapshot omits them. The Forest full-500 independent audit says candidate selection was checked for all 500, but does not publish this per-case extraction.
+
+The three-cell `../gap-probe-20260925/` is an earlier mechanism test at the expanded source: 010 30674→20608, 044 85406→83958, 100 61639→33676. These outcomes subsequently appear within the expanded full-500 run; they are not extra rows to splice in. Likewise the capacity-DP two-shot reports 044 41205→38390 and 046 83050→82505 at separate fixed source `78d82a99…`, with 2 external E0 and no solver/full-500 run. Those promising values are **not** the Forest500 M or a new full-500 score.
+
+## One remaining structural hypothesis
+
+The current general gap builder condenses linear chains and places them at joins using pipe calendars and an approximate transfer term; its documented model omits shared DDR contention, cache, and capacity. The guarded Forest order rejects compute fanout, while the shared-input pipeline requires uniform Hamiltonian job chains. A distinct, still uncovered problem is **multi-consumer produced tensors in mixed reduction DAGs**: a placement can make one tensor feed several downstream branches on different cores, paying repeated boundary transfers and possibly delaying their reconvergence. Direct inspection of the frozen raw graphs found 26–92 such produced tensors in each of the eight non-pipeline cases, with maximum consumer fanout 5–14 (010: 58 tensors/max13; 100: 64/max14). This count demonstrates structure, not that it dominates their official M.
+
+Hypothesis for a future *single fixed* solver: before gap-calendar placement, form deterministic fanout affinity groups around each produced tensor and its immediate consumer branches; assign each whole group to a core when its exact live-byte envelope fits L1, choosing by descending avoided cross-core tensor bytes per added M/V work, with a fixed tie rule and a dependency-preserving fallback to the current gap plan. This is a direct construction, not a per-case cut search or an offline winner table. First falsify statically on the same frozen ten: every op appears once, all original tensor dependencies remain, the proposed groups fit the stated capacity envelope, and at least one of the eight mixed cases has strictly fewer inter-core copies while its frozen compute/critical-path lower bound does not rise beyond the incumbent M. If no group survives, or all such groups violate the bound, reject this mechanism before any E0. Those checks do not establish faster official M; a separately frozen, authorized official comparison and then a complete 500-cell run would be needed for a score claim. The hypothesis must also account for added per-core pipe load and live-input pressure; transfer reduction alone is not an acceptance rule.
+
+No solver, E0, Task, Step, network call, or failed probe rerun was made for this audit. Only saved reports/CSV/snapshot and raw graph topology were read.
