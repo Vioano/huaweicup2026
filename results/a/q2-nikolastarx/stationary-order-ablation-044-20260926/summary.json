@@ -1,0 +1,249 @@
+{
+  "scope": "Static same-owner priority ablation; no E0/E1/E2, Makespan, or DDR score.",
+  "case": "044",
+  "cores": 5,
+  "graph_sha256": "9abd4468a4be365e384de47431ac914ee44fd6e7b6221dffc584561f388cd57e",
+  "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+  "same_owner": true,
+  "same_singleton_mapping": true,
+  "core_stage_bounds": [
+    0,
+    17,
+    24,
+    28,
+    39,
+    51
+  ],
+  "plans": {
+    "job-major": {
+      "path": "results/a/q2-nikolastarx/stationary-order-ablation-044-20260926/job-major-plan.json",
+      "bytes": 37828,
+      "sha256": "5a472c8644065169b9d5078e5f7010ad8f3627db0a674c2caa2dcfe7b24c9b4a",
+      "canonical_plan_sha256": "2496af22ab6966f73900f48bbca6646c7c2dd060338386381c913e39db1c2ca8",
+      "zero_spill_certificate": {
+        "supported": true,
+        "reason": null,
+        "peaks": [
+          {
+            "L1": 61152,
+            "UB": 0
+          },
+          {
+            "L1": 314112,
+            "UB": 0
+          },
+          {
+            "L1": 295296,
+            "UB": 0
+          },
+          {
+            "L1": 257024,
+            "UB": 0
+          },
+          {
+            "L1": 17792,
+            "UB": 0
+          }
+        ],
+        "per_core": [
+          {
+            "core": 0,
+            "eligible_operations": 429,
+            "tensor_intervals": 457,
+            "cross_direct_point_intervals": 0,
+            "peak_bytes": {
+              "L1": 61152,
+              "UB": 0
+            },
+            "peak_at_original_op": {
+              "L1": 180,
+              "UB": null
+            },
+            "fits_capacity": true
+          },
+          {
+            "core": 1,
+            "eligible_operations": 187,
+            "tensor_intervals": 216,
+            "cross_direct_point_intervals": 0,
+            "peak_bytes": {
+              "L1": 314112,
+              "UB": 0
+            },
+            "peak_at_original_op": {
+              "L1": 219,
+              "UB": null
+            },
+            "fits_capacity": true
+          },
+          {
+            "core": 2,
+            "eligible_operations": 110,
+            "tensor_intervals": 136,
+            "cross_direct_point_intervals": 0,
+            "peak_bytes": {
+              "L1": 295296,
+              "UB": 0
+            },
+            "peak_at_original_op": {
+              "L1": 236,
+              "UB": null
+            },
+            "fits_capacity": true
+          },
+          {
+            "core": 3,
+            "eligible_operations": 308,
+            "tensor_intervals": 363,
+            "cross_direct_point_intervals": 0,
+            "peak_bytes": {
+              "L1": 257024,
+              "UB": 0
+            },
+            "peak_at_original_op": {
+              "L1": 263,
+              "UB": null
+            },
+            "fits_capacity": true
+          },
+          {
+            "core": 4,
+            "eligible_operations": 330,
+            "tensor_intervals": 385,
+            "cross_direct_point_intervals": 0,
+            "peak_bytes": {
+              "L1": 17792,
+              "UB": 0
+            },
+            "peak_at_original_op": {
+              "L1": 173,
+              "UB": null
+            },
+            "fits_capacity": true
+          }
+        ],
+        "zero_spill_certificate": true,
+        "capacity_bytes": {
+          "L1": 524288,
+          "UB": 131072
+        },
+        "scope": "Exact Step2 no-spill test under guarded singleton P2 pre-Step2 task rules; not a Step3, shared-DDR, or Makespan guarantee."
+      }
+    },
+    "stage-major-same-owner": {
+      "path": "results/a/q2-nikolastarx/stationary-order-ablation-044-20260926/stage-major-same-owner-plan.json",
+      "bytes": 37828,
+      "sha256": "89a201afbd6c498f302fdd3eb628df9755ed7d3a55408f78616f86054d083531",
+      "canonical_plan_sha256": "cca49635b09e5cf0012f4b00b14f01d3ef878064f3fd1331238284272f3fa777",
+      "zero_spill_certificate": {
+        "supported": true,
+        "reason": null,
+        "peaks": [
+          {
+            "L1": 47392,
+            "UB": 0
+          },
+          {
+            "L1": 76672,
+            "UB": 0
+          },
+          {
+            "L1": 76672,
+            "UB": 0
+          },
+          {
+            "L1": 75392,
+            "UB": 0
+          },
+          {
+            "L1": 47392,
+            "UB": 0
+          }
+        ],
+        "per_core": [
+          {
+            "core": 0,
+            "eligible_operations": 429,
+            "tensor_intervals": 457,
+            "cross_direct_point_intervals": 0,
+            "peak_bytes": {
+              "L1": 47392,
+              "UB": 0
+            },
+            "peak_at_original_op": {
+              "L1": 56,
+              "UB": null
+            },
+            "fits_capacity": true
+          },
+          {
+            "core": 1,
+            "eligible_operations": 187,
+            "tensor_intervals": 216,
+            "cross_direct_point_intervals": 0,
+            "peak_bytes": {
+              "L1": 76672,
+              "UB": 0
+            },
+            "peak_at_original_op": {
+              "L1": 104,
+              "UB": null
+            },
+            "fits_capacity": true
+          },
+          {
+            "core": 2,
+            "eligible_operations": 110,
+            "tensor_intervals": 136,
+            "cross_direct_point_intervals": 0,
+            "peak_bytes": {
+              "L1": 76672,
+              "UB": 0
+            },
+            "peak_at_original_op": {
+              "L1": 1361,
+              "UB": null
+            },
+            "fits_capacity": true
+          },
+          {
+            "core": 3,
+            "eligible_operations": 308,
+            "tensor_intervals": 363,
+            "cross_direct_point_intervals": 0,
+            "peak_bytes": {
+              "L1": 75392,
+              "UB": 0
+            },
+            "peak_at_original_op": {
+              "L1": 246,
+              "UB": null
+            },
+            "fits_capacity": true
+          },
+          {
+            "core": 4,
+            "eligible_operations": 330,
+            "tensor_intervals": 385,
+            "cross_direct_point_intervals": 0,
+            "peak_bytes": {
+              "L1": 47392,
+              "UB": 0
+            },
+            "peak_at_original_op": {
+              "L1": 1414,
+              "UB": null
+            },
+            "fits_capacity": true
+          }
+        ],
+        "zero_spill_certificate": true,
+        "capacity_bytes": {
+          "L1": 524288,
+          "UB": 131072
+        },
+        "scope": "Exact Step2 no-spill test under guarded singleton P2 pre-Step2 task rules; not a Step3, shared-DDR, or Makespan guarantee."
+      }
+    }
+  }
+}
