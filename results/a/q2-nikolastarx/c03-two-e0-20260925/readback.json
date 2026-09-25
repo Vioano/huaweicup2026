@@ -1,0 +1,61 @@
+{
+  "scope": "Two fixed069/K5 saved-trace mechanism candidates; not online solver or full500 benchmark",
+  "producer_commit": "0f8dd8b619154dac539f887d660dab15441c9cc0",
+  "actual_T0": "2026-09-25T14:29:57.362443+00:00",
+  "actual_T1": "2026-09-25T14:29:57.855008+00:00",
+  "runtime": "CPython3.14.5 macOS ARM64 for these two official E0; earlier C02/reference evidence runtime retained separately, no isolated timing comparison",
+  "rows": [
+    {
+      "candidate": 0,
+      "makespan": 12105,
+      "previous_C02_makespan": 12154,
+      "incumbent_makespan": 11962,
+      "reverse_makespan": 10577,
+      "delta_vs_incumbent": 143,
+      "delta_vs_corresponding_C02": -49,
+      "data_movement_bytes": {
+        "original_graph_copy_bytes": 126054,
+        "scheduled_copy_bytes": 464216,
+        "added_copy_bytes": 338162,
+        "partition_added_copy_bytes": 338162,
+        "spill_added_copy_bytes": 0
+      },
+      "copy_bytes_equal_to_corresponding_C02": true,
+      "cross_task_traffic": 142912,
+      "E0_wall_seconds": 0.22237666603177786,
+      "result_sha256": "3b4603cbdf0ab503b899be4e79cf7fb2ad44b4a5164c7caa50bad61b5f9b4721",
+      "process_sha256": "510fa2ed5c609738a94dacf6fc520517a236d3729eeacf4c3a0afeb691ba8121"
+    },
+    {
+      "candidate": 1,
+      "makespan": 12050,
+      "previous_C02_makespan": 11838,
+      "incumbent_makespan": 11962,
+      "reverse_makespan": 10577,
+      "delta_vs_incumbent": 88,
+      "delta_vs_corresponding_C02": 212,
+      "data_movement_bytes": {
+        "original_graph_copy_bytes": 126054,
+        "scheduled_copy_bytes": 461720,
+        "added_copy_bytes": 335666,
+        "partition_added_copy_bytes": 335666,
+        "spill_added_copy_bytes": 0
+      },
+      "copy_bytes_equal_to_corresponding_C02": true,
+      "cross_task_traffic": 141664,
+      "E0_wall_seconds": 0.21791687502991408,
+      "result_sha256": "d8bcfe3579c87cd07c9b45868d922c8c41a898134ff79448e67d7f9fa915cb5d",
+      "process_sha256": "11cadf2b09bbf6b4548193505bab621d235e4f3f8b4e1906a428dc6d441bd0aa"
+    }
+  ],
+  "calls": {
+    "solver": 0,
+    "E0": 2,
+    "E1": 0,
+    "E2": 0,
+    "retry": 0
+  },
+  "decision": "Do not promote these two C03 candidates or continue midpoint tuning. Both lose to incumbent and reverse. Fixed-service theorem is not refuted; its transfer to official performance was not guaranteed.",
+  "originals_sha256": "134de9b37d324e468627da79aa62a0d236b91d2699a70d3d7f5fb32eb1bf41cb",
+  "readback_new_evaluation_calls": 0
+}
