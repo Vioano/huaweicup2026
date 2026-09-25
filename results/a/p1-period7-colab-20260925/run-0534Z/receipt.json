@@ -1,0 +1,106 @@
+{
+  "kind": "actual-cloud-periodic-model-negative-NOT-E0",
+  "algorithm_source": "030f2b8aff4dc5e6b1acf9d88dc4984e54f1b5fa",
+  "admission_head": "fcfb539b9963191117545c49997253cbc34b5023",
+  "case": "008",
+  "cores": 5,
+  "t0_utc": "2026-09-25T05:34:16.994755+00:00",
+  "session": "p1-period7-008-20260925",
+  "archive": {
+    "path": "evidence.tar.gz",
+    "bytes": 34883,
+    "sha256": "2f532445fc63bd655bd00dba05da5cb8abcaf4875d1d359ce89506c70ebd4965",
+    "verified_files": 5
+  },
+  "evidence_files": [
+    {
+      "path": "evidence/probe.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/probe.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/setup.json",
+      "bytes": 3374,
+      "sha256": "b9f30847b80478eed3eb38de355325d4f39d88094c1613e686e768ab1d15497f"
+    },
+    {
+      "path": "workspace/evidence/period7-008/plan.json",
+      "bytes": 7464,
+      "sha256": "f9f72874e6257b7dcef222115fa7e2f733c0633e7f41a76e930c1504fa414063"
+    },
+    {
+      "path": "workspace/evidence/period7-008/report.json",
+      "bytes": 561591,
+      "sha256": "5a730e50ea279bfd45bbae63232a61c5508778f95a723a39ab1e8a6da8e6eb60"
+    }
+  ],
+  "graph_sha256": "c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d",
+  "plan_sha256": "f9f72874e6257b7dcef222115fa7e2f733c0633e7f41a76e930c1504fa414063",
+  "status": "verified_model",
+  "model_upper": 109412,
+  "model_frontier_lower": 52146,
+  "model_optimal": false,
+  "official_Makespan": null,
+  "official_score_claim": false,
+  "baseline_same_model_upper": 101836,
+  "model_regression_cycles": 7576,
+  "model_regression_percent": 7.43941238854629,
+  "calls": {
+    "Task_compile_attempts_reserved": 40,
+    "Task_compile_confirmed_completed": 40,
+    "Fraction_response_attempts": 4,
+    "Fraction_response_completed": 4,
+    "solver_process": 1,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "retry": 0
+  },
+  "probe": {
+    "returncode": 0,
+    "stop_reason": null,
+    "wall_seconds": 1.325489389999973,
+    "sampled_max_tree_rss_bytes": 38023168,
+    "remaining_owned_pids": []
+  },
+  "VM_window_seconds": 43.42235020798398,
+  "compiler_traffic": {
+    "original_graph_copy_bytes": 2654424,
+    "scheduled_copy_bytes": 4313304,
+    "added_copy_bytes": 1658880,
+    "partition_added_copy_bytes": 1658880,
+    "spill_added_copy_bytes": 0
+  },
+  "full_plan_tasks": 20,
+  "source_scope_unchanged": true,
+  "root_archive_plan_check": {
+    "two_keys_exactly": true,
+    "compute_ops": 864,
+    "task_schedule_bijection": true,
+    "manifest_payloads_verified": 5
+  },
+  "stop_returncode": 0,
+  "VM_stopped_readback": true,
+  "fresh_stop_readback": {
+    "checked_at": "2026-09-25T05:35:20.787259+00:00",
+    "returncode": 0,
+    "stdout": "[colab] No active sessions found on server.\n",
+    "stderr": "",
+    "watchdog_residual": false
+  },
+  "source_package_hashes": {
+    "bundle_sha256": "49550ba410f732c2cc4032adca58765f33f76685a642280039455a18a958abb5",
+    "manifest_sha256": "e09471fe0faa121505153f8c10bd2ae631e3f58dda5b29cf58346ac563a220dc",
+    "remote_sha256": "ec09c2b5ff23428ca7df0791c6a9c3d6d600bd29d165764c342983664f5dbb22",
+    "controller_sha256": "a940cbc913a9bc40fad8f8ecd2c4230e0949603962e2c8681b3f891a1762f09e",
+    "verifier_sha256": "6fc493b39c04281a1df4de077a58030d8c7b5a35d2c7c986562232caf87d968f"
+  },
+  "raw_host_receipt_sha256": "c158d50d35c3bcd64a097014b47c1eee592a1df16c0784593559d07749744e4d",
+  "raw_host_receipt_note": "kept locally; public derivative excludes VM connection outputs and local CLI paths",
+  "next": "causal bottleneck diagnosis and focused Pro consultation; no additional execution window"
+}
