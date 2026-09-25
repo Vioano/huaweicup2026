@@ -9,3 +9,9 @@ Do not substitute this call into`safe_solve.evaluate` blindly: that path preserv
 The current complete calendar batch has861 onlineE0 evaluations over500solvers and reuses the winner result, without500 additional external confirmations. In the illustrative constant-per-call-cost model, replacing all861 calls with E2 plus500 final E0 calls only wins if cold E2 is faster by more than861/(861-500)=2.385x. This is not a measured whole-solver prediction: actual costs vary by graph/plan and must be time-weighted.
 
 Decision: preserve E0 selection for the current bounded pipeline/witness experiments. Investigate exact byte-preserving result serialization reuse first. Reconsider E2 when the applicable domain/equivalence evidence or end-to-end cold cost changes; no new E2 benchmark or development was requested for this audit.
+
+## 2026-09-25 所有者只读复核
+
+E2 专项会话再次确认：P3 接口/适用域没有新证据，PR46 的固定HEAD仍为603b074；32计划差分、1.55–1.58倍冷完整评分及紧凑输出/fallback边界不变。P2 native全量不能外推至P3的forest/容量分段计划。此次未启动评分、开发或本机差分复测。
+
+已完成forest500实际使用973次在线E0/500solver；同一等成本示意下，E2加500次最终E0的盈亏阈值为973/(973-500)≈2.057倍，不能沿用旧calendar的2.385倍。下一容量策略最多4次E0仅是上限，实际分布未测，不能用2000次上限代入宣称值得集成。仍先保留官方E0赢家选择与剪枝；若后续在该固定分布上证明关键字段/排序等价并计入冷启动、fallback、最终确认，再单独评估速度路线。

@@ -1,0 +1,60 @@
+{
+  "feed": "board-feed-20260925T004004Z-s3172.json",
+  "feed_sha256": "a418d8a4c2d09bb7129f81492d67c31c0021d8ceb6ca90d20023f2af92cd575d",
+  "record_count": 2,
+  "run_id": "q3-pipeline-capacity-two-20260925-s3172",
+  "manifest_sha256": "7591f1f41ca3eb49401105117b27e9ff9a278727246f7f9d3d3af5b76d44d88b",
+  "current_run_sha256": "83d7c81e6d2906612099f38164dbf5cf1dd27b4797f284f6d4f865165b54f763",
+  "records": [
+    {
+      "attempt_id": "nikolastarx-pipeline-capacity-044-k5-20260925-s3172",
+      "case_id": "044",
+      "cores": 5,
+      "makespan_cycles": 38390,
+      "extra_ddr_bytes": 140800,
+      "spill_bytes": 0,
+      "cache_hit_rate": 0.011007223490415585,
+      "evaluation_wall_seconds": 0.18375233298866078,
+      "solver_wall_seconds": null,
+      "artifact_hashes": {
+        "plan": "e959272c4330eb75e524190eadaee382c85263896c82dfc910ecffc31bb40c44",
+        "result": "506a8d65c65b7bcd2957e2b20f31ba117fb3a244b9c366ff2342c421df626cd5",
+        "run": "83d7c81e6d2906612099f38164dbf5cf1dd27b4797f284f6d4f865165b54f763",
+        "manifest": "7591f1f41ca3eb49401105117b27e9ff9a278727246f7f9d3d3af5b76d44d88b"
+      }
+    },
+    {
+      "attempt_id": "nikolastarx-pipeline-capacity-046-k5-20260925-s3172",
+      "case_id": "046",
+      "cores": 5,
+      "makespan_cycles": 82505,
+      "extra_ddr_bytes": 466944,
+      "spill_bytes": 0,
+      "cache_hit_rate": 0.0,
+      "evaluation_wall_seconds": 0.17833850003080443,
+      "solver_wall_seconds": null,
+      "artifact_hashes": {
+        "plan": "5c05041646e382308d8bfe6a2a5a641b7cbbfb9e75e278dd0c20ef492ce564bd",
+        "result": "b84451d14a60de6589da5b4fa778607a7c82758acb058c13d015efce97e30023",
+        "run": "83d7c81e6d2906612099f38164dbf5cf1dd27b4797f284f6d4f865165b54f763",
+        "manifest": "7591f1f41ca3eb49401105117b27e9ff9a278727246f7f9d3d3af5b76d44d88b"
+      }
+    }
+  ],
+  "scope": "Two measured P3 mechanism cells only; not full500 or complete solver evidence.",
+  "environment_note": "As-run OS/CPU/GPU/RAM/Python unavailable from manifest/run and left null with reasons; workers and uv.lock identity were recorded.",
+  "preflight_command": "python3 src/benchmark_board/protocol.py .worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/board-feed-20260925T004004Z-s3172.json --repo .worktrees/q3-core-nikolastarx --submission",
+  "limitations": [
+    "Local protocol preflight only; not upload/admission.",
+    "No P2 or complete solver run; solver_wall_seconds is null."
+  ],
+  "preflight_result": {
+    "valid": true,
+    "submission": true,
+    "records": 2,
+    "eligible": 2,
+    "scope": "format and available bytes only; no solver/evaluator execution or production write"
+  },
+  "producer_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+  "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51"
+}

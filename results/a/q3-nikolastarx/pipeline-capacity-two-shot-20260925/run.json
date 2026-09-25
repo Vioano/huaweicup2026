@@ -1,0 +1,217 @@
+{
+  "status": "complete",
+  "started_at": "2026-09-25T00:40:04.493252Z",
+  "source_commit": "78d82a99ba00f07e2890c87a7132955369efa73b",
+  "manifest_sha256": "7591f1f41ca3eb49401105117b27e9ff9a278727246f7f9d3d3af5b76d44d88b",
+  "budget": {
+    "new_p3": 2,
+    "new_p2": 0,
+    "solver_calls": 0,
+    "workers": 1,
+    "retries": 0,
+    "per_call_seconds": 60,
+    "whole_batch_seconds": 120,
+    "sampled_group_rss_tripwire_bytes": 536870912
+  },
+  "admission_reference": "coordinator nikolastarx/s-a5bdb19389ee43d686b7976d3bcdf766 2026-09-25T00:39Z fixed044046 two P3 only",
+  "resource_preflight": {
+    "observations": [
+      {
+        "utc": "2026-09-25T00:40:03.079230+00:00",
+        "pressure": 2,
+        "unused_mib": 1976.0,
+        "swapouts": 845228,
+        "physmem": "PhysMem: 45G used (4985M wired, 20G compressor), 1976M unused."
+      },
+      {
+        "utc": "2026-09-25T00:40:04.407194+00:00",
+        "pressure": 2,
+        "unused_mib": 2009.0,
+        "swapouts": 845228,
+        "physmem": "PhysMem: 45G used (4952M wired, 20G compressor), 2009M unused."
+      }
+    ],
+    "ready": true,
+    "supervisor_sha256": "13608d3c662b9cb90eed5e1935f696e82b269240902e3f418ff9a5862d98d8e3",
+    "start_min_unused_mib": 1536,
+    "run_min_unused_mib": 1024
+  },
+  "resource_preflight_sha256": "20246c24797d3dbe4aa9b5654dc14732e8bc1b8b631288fa97d06c496f283353",
+  "new_p3_reserved": 2,
+  "new_p2": 0,
+  "solver_calls": 0,
+  "jobs": [
+    {
+      "case_id": "044",
+      "cores": 5,
+      "plan_file": "case_044_multicore_res.json",
+      "plan_sha256": "e959272c4330eb75e524190eadaee382c85263896c82dfc910ecffc31bb40c44",
+      "metadata": {
+        "guard": true,
+        "selected": "pipeline_l1_capacity",
+        "requested_cores": 5,
+        "active_cores": 5,
+        "jobs": 11,
+        "positions": 124,
+        "cuts": [
+          0,
+          24,
+          51,
+          68,
+          96,
+          124
+        ],
+        "stage_compute_cycles": [
+          1680,
+          1717,
+          1120,
+          1571,
+          1584
+        ],
+        "bottleneck_cycles": 1717,
+        "ideal_flowshop_cycles": 24842,
+        "shared_input_bytes_by_stage": [
+          6624,
+          214272,
+          516096,
+          186368,
+          7040
+        ],
+        "shared_input_capacity_bytes": 524288,
+        "assumption": "distinct common original L1 inputs only; not a spill or E0 bound"
+      },
+      "static_plan_lower_bound": 26842,
+      "bound_pruned": false,
+      "status": "ok",
+      "child": {
+        "status": "ok",
+        "reason": null,
+        "exit_code": 0,
+        "wall_seconds": 0.18375233298866078,
+        "argv": [
+          "python",
+          "-B",
+          "-m",
+          "src.q3.oracle",
+          "data/raw/a/official/data/case_044.json",
+          "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/case_044_multicore_res.json",
+          "3",
+          "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/evaluation/044/result.json.gz"
+        ],
+        "process_tree_cleanup": "POSIX process group",
+        "memory": {
+          "limit_bytes": 536870912,
+          "sampled_peak_rss_bytes": 36831232,
+          "poll_seconds": 0.1,
+          "scope": "sum of process-group RSS / Windows job WorkingSetSize; sampled tripwire, not OS hard limit; shared pages may be counted more than once"
+        },
+        "log_derivation": "stdout/stderr preserve bytes except repository and interpreter absolute paths replaced by markers"
+      },
+      "result_sha256": "506a8d65c65b7bcd2957e2b20f31ba117fb3a244b9c366ff2342c421df626cd5",
+      "makespan": 38390,
+      "movement": {
+        "original_graph_copy_bytes": 975456,
+        "scheduled_copy_bytes": 1116256,
+        "added_copy_bytes": 140800,
+        "partition_added_copy_bytes": 140800,
+        "spill_added_copy_bytes": 0
+      },
+      "cache_stats": {
+        "copy_in_hits": 11,
+        "copy_in_misses": 171,
+        "hit_bytes": 11264,
+        "miss_bytes": 1012064,
+        "hits": 11,
+        "accesses": 182,
+        "hit_rate": 0.011007223490415585
+      }
+    },
+    {
+      "case_id": "046",
+      "cores": 5,
+      "plan_file": "case_046_multicore_res.json",
+      "plan_sha256": "5c05041646e382308d8bfe6a2a5a641b7cbbfb9e75e278dd0c20ef492ce564bd",
+      "metadata": {
+        "guard": true,
+        "selected": "pipeline_l1_capacity",
+        "requested_cores": 5,
+        "active_cores": 5,
+        "jobs": 8,
+        "positions": 124,
+        "cuts": [
+          0,
+          22,
+          49,
+          67,
+          96,
+          124
+        ],
+        "stage_compute_cycles": [
+          6212,
+          5866,
+          4184,
+          6362,
+          5832
+        ],
+        "bottleneck_cycles": 6362,
+        "ideal_flowshop_cycles": 72990,
+        "shared_input_bytes_by_stage": [
+          6624,
+          140544,
+          516096,
+          260096,
+          7040
+        ],
+        "shared_input_capacity_bytes": 524288,
+        "assumption": "distinct common original L1 inputs only; not a spill or E0 bound"
+      },
+      "static_plan_lower_bound": 74990,
+      "bound_pruned": false,
+      "status": "ok",
+      "child": {
+        "status": "ok",
+        "reason": null,
+        "exit_code": 0,
+        "wall_seconds": 0.17833850003080443,
+        "argv": [
+          "python",
+          "-B",
+          "-m",
+          "src.q3.oracle",
+          "data/raw/a/official/data/case_046.json",
+          "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/case_046_multicore_res.json",
+          "3",
+          "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/evaluation/046/result.json.gz"
+        ],
+        "process_tree_cleanup": "POSIX process group",
+        "memory": {
+          "limit_bytes": 536870912,
+          "sampled_peak_rss_bytes": 33832960,
+          "poll_seconds": 0.1,
+          "scope": "sum of process-group RSS / Windows job WorkingSetSize; sampled tripwire, not OS hard limit; shared pages may be counted more than once"
+        },
+        "log_derivation": "stdout/stderr preserve bytes except repository and interpreter absolute paths replaced by markers"
+      },
+      "result_sha256": "b84451d14a60de6589da5b4fa778607a7c82758acb058c13d015efce97e30023",
+      "makespan": 82505,
+      "movement": {
+        "original_graph_copy_bytes": 1061472,
+        "scheduled_copy_bytes": 1528416,
+        "added_copy_bytes": 466944,
+        "partition_added_copy_bytes": 466944,
+        "spill_added_copy_bytes": 0
+      },
+      "cache_stats": {
+        "copy_in_hits": 0,
+        "copy_in_misses": 146,
+        "hit_bytes": 0,
+        "miss_bytes": 1229408,
+        "hits": 0,
+        "accesses": 146,
+        "hit_rate": 0.0
+      }
+    }
+  ],
+  "finished_at": "2026-09-25T00:40:04.863680Z",
+  "wall_seconds": 0.3704511249670759
+}

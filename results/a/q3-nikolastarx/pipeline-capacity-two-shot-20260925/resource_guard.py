@@ -1,0 +1,108 @@
+"""External macOS resource supervision for this single frozen experiment.
+
+No evaluator modification. It monitors the host and terminates only process
+groups in the fresh probe process tree if the admitted resource window closes.
+"""
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import signal
+import subprocess
+import sys
+import time
+from datetime import datetime, timezone
+
+OUT = Path(__file__).resolve().parent
+ROOT = OUT.parents[3]
+SOURCE = '78d82a99ba00f07e2890c87a7132955369efa73b'
+MANIFEST = '7591f1f41ca3eb49401105117b27e9ff9a278727246f7f9d3d3af5b76d44d88b'
+
+
+def observation():
+    pressure = int(subprocess.check_output(['sysctl', '-n', 'kern.memorystatus_vm_pressure_level'], text=True))
+    top = subprocess.check_output(['top', '-l', '1', '-n', '0'], text=True)
+    line = next(x for x in top.splitlines() if x.startswith('PhysMem:'))
+    size, unit = re.search(r'([0-9.]+)([MG]) unused', line).groups()
+    free = float(size) * (1024 if unit == 'G' else 1)
+    vm = subprocess.check_output(['vm_stat'], text=True)
+    swapouts = int(re.search(r'^Swapouts:\s+(\d+)', vm, re.M).group(1))
+    return {'utc': datetime.now(timezone.utc).isoformat(), 'pressure': pressure,
+            'unused_mib': free, 'swapouts': swapouts, 'physmem': line}
+
+
+def groups(root_pid):
+    table = [tuple(map(int, line.split())) for line in subprocess.check_output(
+        ['ps', '-axo', 'pid=,ppid=,pgid='], text=True).splitlines()]
+    members = {root_pid}
+    while True:
+        more = {pid for pid, ppid, _ in table if ppid in members} - members
+        if not more:
+            break
+        members.update(more)
+    return {pgid for pid, _, pgid in table if pid in members and pgid in members}
+
+
+def main():
+    p = __import__('argparse').ArgumentParser()
+    p.add_argument('--forest-root', required=True)
+    p.add_argument('--admission-reference', required=True)
+    a = p.parse_args()
+    if (OUT / 'evaluation').exists():
+        raise RuntimeError('one-shot call already reserved; no retries')
+    before = [observation(), observation()]
+    ready = (all(x['pressure'] != 4 and x['unused_mib'] >= 1536 for x in before)
+             and before[0]['swapouts'] == before[1]['swapouts'])
+    preflight = {'observations': before, 'ready': ready,
+                 'supervisor_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                 'start_min_unused_mib': 1536, 'run_min_unused_mib': 1024}
+    stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
+    raw = json.dumps(preflight, indent=2) + '\n'
+    (OUT / f'resource-preflight-{stamp}.json').write_text(raw)
+    (OUT / 'resource-preflight.json').write_text(raw)
+    if not ready:
+        print(json.dumps({'started': False, **preflight}))
+        return
+    argv = [sys.executable, '-B', '-m', 'src.q3.pipeline_capacity_probe', 'run', str(OUT),
+            '--source', SOURCE, '--forest-root', a.forest_root,
+            '--manifest-sha256', MANIFEST,
+            '--resource-preflight', str(OUT / 'resource-preflight.json'),
+            '--admission-reference', a.admission_reference]
+    known = set()
+    samples = []
+    reason = None
+    start = time.monotonic()
+    with (OUT / 'driver.stdout.txt').open('xb') as stdout, (OUT / 'driver.stderr.txt').open('xb') as stderr:
+        child = subprocess.Popen(argv, cwd=ROOT, stdout=stdout, stderr=stderr, start_new_session=True)
+        try:
+            while child.poll() is None:
+                known.update(groups(child.pid))
+                x = observation()
+                samples.append(x)
+                if (x['pressure'] == 4 or x['unused_mib'] < 1024
+                        or x['swapouts'] > before[-1]['swapouts']
+                        or time.monotonic() - start > 130):
+                    reason = 'host resource gate closed or supervisor deadline'
+                    break
+        except BaseException as error:
+            reason = f'supervision failed: {type(error).__name__}: {error}'
+        finally:
+            if reason:
+                known.update(groups(child.pid))
+                for pgid in sorted(known, reverse=True):
+                    try:
+                        os.killpg(pgid, signal.SIGKILL)
+                    except ProcessLookupError:
+                        pass
+            exit_code = child.wait(timeout=10)
+    report = {'started': True, 'exit_code': exit_code, 'stop_reason': reason,
+              'driver_wall_seconds': time.monotonic() - start, 'samples': samples,
+              'after': observation(), 'pid': child.pid,
+              'scope': 'external host observations; no evaluator changes; sampled not continuous'}
+    (OUT / 'resource-run.json').write_text(json.dumps(report, indent=2) + '\n')
+    print(json.dumps(report))
+
+
+if __name__ == '__main__':
+    main()

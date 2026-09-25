@@ -1,0 +1,300 @@
+{
+  "schema_version": 1,
+  "submission_version": 1,
+  "records": [
+    {
+      "attempt_id": "nikolastarx-pipeline-capacity-044-k5-20260925-s3172",
+      "revision": 1,
+      "run_id": "q3-pipeline-capacity-two-20260925-s3172",
+      "algorithm_id": "q3-capacity-shared-pipeline",
+      "algorithm_name": "Q3 capacity-constrained shared-pipeline mechanism",
+      "variant": "capacity-dp-single-plan-one-shot-e0",
+      "solver_commit": "78d82a99ba00f07e2890c87a7132955369efa73b",
+      "parameters": {
+        "requested_cores": 5,
+        "candidate_count": 1,
+        "selection": "single constructed plan per case; no online selection"
+      },
+      "problem": "P3",
+      "case_id": "044",
+      "cores": 5,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 38390,
+        "solver_wall_seconds": null,
+        "evaluation_wall_seconds": 0.18375233298866078,
+        "ddr_bytes": 1116256,
+        "extra_ddr_bytes": 140800,
+        "spill_bytes": 0,
+        "cache_hit_rate": 0.011007223490415585
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "78d82a99ba00f07e2890c87a7132955369efa73b",
+        "entrypoint": "multicore_cut_evaluate_problem_3.evaluate_problem_3"
+      },
+      "identity": {
+        "graph_sha256": "9abd4468a4be365e384de47431ac914ee44fd6e7b6221dffc584561f388cd57e",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "e959272c4330eb75e524190eadaee382c85263896c82dfc910ecffc31bb40c44"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/case_044_multicore_res.json",
+          "sha256": "e959272c4330eb75e524190eadaee382c85263896c82dfc910ecffc31bb40c44"
+        },
+        "result": {
+          "path": "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/evaluation/044/result.json.gz",
+          "sha256": "506a8d65c65b7bcd2957e2b20f31ba117fb3a244b9c366ff2342c421df626cd5"
+        },
+        "run": {
+          "path": "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/run.json",
+          "sha256": "83d7c81e6d2906612099f38164dbf5cf1dd27b4797f284f6d4f865165b54f763"
+        },
+        "manifest": {
+          "path": "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/manifest.json",
+          "sha256": "7591f1f41ca3eb49401105117b27e9ff9a278727246f7f9d3d3af5b76d44d88b"
+        }
+      },
+      "runtime_id": "unknown",
+      "observed_at": "2026-09-25T00:40:04.863680Z",
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "child wall_seconds preserved from run.json",
+        "utc": "UTC timestamps in run.json"
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "78d82a99ba00f07e2890c87a7132955369efa73b",
+            "path": "src/q3/shared_pipeline_capacity.py",
+            "entrypoint": "construct"
+          },
+          "authors": [
+            "nikolastarx"
+          ],
+          "method": "Capacity-constrained dynamic programming constructs one contiguous shared-pipeline partition plan; static mechanism probe, not a general end-to-end solver.",
+          "references": [],
+          "upstream": [],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "78d82a99ba00f07e2890c87a7132955369efa73b",
+            "path": "src/q3/pipeline_capacity_probe.py",
+            "entrypoint": "src.q3.pipeline_capacity_probe"
+          },
+          "argv": [],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": null,
+          "cpu": null,
+          "gpu": null,
+          "ram_bytes": null,
+          "python": null,
+          "dependencies": "uv.lock sha256:7b03fee57044ac272d8895533cbdca6d70a29d2da955f98a5552e72ef944fdc4",
+          "threads": null,
+          "workers": 1,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": "2026-09-25T00:40:04.493252Z",
+          "finished_at": "2026-09-25T00:40:04.863680Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": null,
+          "evaluation_scope": "Independent official P3 E0 subprocess only; this child wall does not include complete solver startup/read/construct/cleanup.",
+          "budget": {
+            "wall_seconds": 60,
+            "candidate_limit": 1,
+            "stop_reason": "One preauthorized P3 E0 completed for this cell; no P2/solver call."
+          },
+          "calls": {
+            "solver": 0,
+            "E0": 1,
+            "E1": 0,
+            "E2": 0
+          },
+          "offline_costs": "No training/compilation/precompute; two-case plan preparation took 0.053101 s total, not solver wall.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.runner.argv": "Outer runner argv was not retained; exact child evaluator argv is preserved in run.json per job.",
+          "provenance.environment.os": "As-run OS was not recorded in manifest/run.",
+          "provenance.environment.cpu": "As-run CPU model was not recorded in manifest/run.",
+          "provenance.environment.gpu": "GPU use/availability was not recorded in manifest/run.",
+          "provenance.environment.ram_bytes": "Total physical RAM was not recorded in manifest/run.",
+          "provenance.environment.python": "As-run Python version was not recorded in manifest/run.",
+          "provenance.environment.threads": "Thread count was not recorded in manifest/run.",
+          "provenance.environment.peak_rss_bytes": "Only sampled process-group RSS values were recorded; they are not actual peaks.",
+          "provenance.measurement.solver_scope": "No end-to-end solver was run, so solver wall scope is unavailable.",
+          "provenance.measurement.seed": "No random seed is recorded; the capacity construction is deterministic.",
+          "provenance.measurement.cold_start": "Cold/warm process and filesystem cache state was not recorded."
+        }
+      },
+      "notes": [
+        "Mechanism-only P3 cell 044-k5; not a full-suite algorithm score.",
+        "solver_wall_seconds is null: no end-to-end solver was executed; preparation timing is not a solver runtime.",
+        "Independent official E0 wall time: 0.183752333 s.",
+        "Sampled RSS 36831232 bytes is a sampled process-group tripwire observation, not an actual peak.",
+        "No P2 cache_pair is included."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/blob/78d82a99ba00f07e2890c87a7132955369efa73b/src/q3/shared_pipeline_capacity.py"
+    },
+    {
+      "attempt_id": "nikolastarx-pipeline-capacity-046-k5-20260925-s3172",
+      "revision": 1,
+      "run_id": "q3-pipeline-capacity-two-20260925-s3172",
+      "algorithm_id": "q3-capacity-shared-pipeline",
+      "algorithm_name": "Q3 capacity-constrained shared-pipeline mechanism",
+      "variant": "capacity-dp-single-plan-one-shot-e0",
+      "solver_commit": "78d82a99ba00f07e2890c87a7132955369efa73b",
+      "parameters": {
+        "requested_cores": 5,
+        "candidate_count": 1,
+        "selection": "single constructed plan per case; no online selection"
+      },
+      "problem": "P3",
+      "case_id": "046",
+      "cores": 5,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 82505,
+        "solver_wall_seconds": null,
+        "evaluation_wall_seconds": 0.17833850003080443,
+        "ddr_bytes": 1528416,
+        "extra_ddr_bytes": 466944,
+        "spill_bytes": 0,
+        "cache_hit_rate": 0.0
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "78d82a99ba00f07e2890c87a7132955369efa73b",
+        "entrypoint": "multicore_cut_evaluate_problem_3.evaluate_problem_3"
+      },
+      "identity": {
+        "graph_sha256": "1917fbb2bfe1141fd8dc4bdac6119dd44014df9a13eb18faa3e55f25bcc91659",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "5c05041646e382308d8bfe6a2a5a641b7cbbfb9e75e278dd0c20ef492ce564bd"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/case_046_multicore_res.json",
+          "sha256": "5c05041646e382308d8bfe6a2a5a641b7cbbfb9e75e278dd0c20ef492ce564bd"
+        },
+        "result": {
+          "path": "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/evaluation/046/result.json.gz",
+          "sha256": "b84451d14a60de6589da5b4fa778607a7c82758acb058c13d015efce97e30023"
+        },
+        "run": {
+          "path": "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/run.json",
+          "sha256": "83d7c81e6d2906612099f38164dbf5cf1dd27b4797f284f6d4f865165b54f763"
+        },
+        "manifest": {
+          "path": "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/manifest.json",
+          "sha256": "7591f1f41ca3eb49401105117b27e9ff9a278727246f7f9d3d3af5b76d44d88b"
+        }
+      },
+      "runtime_id": "unknown",
+      "observed_at": "2026-09-25T00:40:04.863680Z",
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "child wall_seconds preserved from run.json",
+        "utc": "UTC timestamps in run.json"
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "78d82a99ba00f07e2890c87a7132955369efa73b",
+            "path": "src/q3/shared_pipeline_capacity.py",
+            "entrypoint": "construct"
+          },
+          "authors": [
+            "nikolastarx"
+          ],
+          "method": "Capacity-constrained dynamic programming constructs one contiguous shared-pipeline partition plan; static mechanism probe, not a general end-to-end solver.",
+          "references": [],
+          "upstream": [],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "78d82a99ba00f07e2890c87a7132955369efa73b",
+            "path": "src/q3/pipeline_capacity_probe.py",
+            "entrypoint": "src.q3.pipeline_capacity_probe"
+          },
+          "argv": [],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": null,
+          "cpu": null,
+          "gpu": null,
+          "ram_bytes": null,
+          "python": null,
+          "dependencies": "uv.lock sha256:7b03fee57044ac272d8895533cbdca6d70a29d2da955f98a5552e72ef944fdc4",
+          "threads": null,
+          "workers": 1,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": "2026-09-25T00:40:04.493252Z",
+          "finished_at": "2026-09-25T00:40:04.863680Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": null,
+          "evaluation_scope": "Independent official P3 E0 subprocess only; this child wall does not include complete solver startup/read/construct/cleanup.",
+          "budget": {
+            "wall_seconds": 60,
+            "candidate_limit": 1,
+            "stop_reason": "One preauthorized P3 E0 completed for this cell; no P2/solver call."
+          },
+          "calls": {
+            "solver": 0,
+            "E0": 1,
+            "E1": 0,
+            "E2": 0
+          },
+          "offline_costs": "No training/compilation/precompute; two-case plan preparation took 0.053101 s total, not solver wall.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.runner.argv": "Outer runner argv was not retained; exact child evaluator argv is preserved in run.json per job.",
+          "provenance.environment.os": "As-run OS was not recorded in manifest/run.",
+          "provenance.environment.cpu": "As-run CPU model was not recorded in manifest/run.",
+          "provenance.environment.gpu": "GPU use/availability was not recorded in manifest/run.",
+          "provenance.environment.ram_bytes": "Total physical RAM was not recorded in manifest/run.",
+          "provenance.environment.python": "As-run Python version was not recorded in manifest/run.",
+          "provenance.environment.threads": "Thread count was not recorded in manifest/run.",
+          "provenance.environment.peak_rss_bytes": "Only sampled process-group RSS values were recorded; they are not actual peaks.",
+          "provenance.measurement.solver_scope": "No end-to-end solver was run, so solver wall scope is unavailable.",
+          "provenance.measurement.seed": "No random seed is recorded; the capacity construction is deterministic.",
+          "provenance.measurement.cold_start": "Cold/warm process and filesystem cache state was not recorded."
+        }
+      },
+      "notes": [
+        "Mechanism-only P3 cell 046-k5; not a full-suite algorithm score.",
+        "solver_wall_seconds is null: no end-to-end solver was executed; preparation timing is not a solver runtime.",
+        "Independent official E0 wall time: 0.178338500 s.",
+        "Sampled RSS 33832960 bytes is a sampled process-group tripwire observation, not an actual peak.",
+        "No P2 cache_pair is included."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/blob/78d82a99ba00f07e2890c87a7132955369efa73b/src/q3/shared_pipeline_capacity.py"
+    }
+  ]
+}
