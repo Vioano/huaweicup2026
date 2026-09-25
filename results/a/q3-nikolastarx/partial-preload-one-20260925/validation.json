@@ -1,0 +1,36 @@
+{
+  "source_commit": "817e9e399f5efaf66cea6ddc495fe444950e43f2",
+  "manifest_sha256": "b36ef3ae7b974b139d9f7d5969a27df7868ebfba9d69818d26055bc83bd310a4",
+  "checks": {
+    "pure_fixture_tests": 6,
+    "saved_old_prepared_replay": {
+      "nodes": 1678,
+      "edges": 3992,
+      "scope": "old control only; JSON numeric keys restored; old Step2 graph substituted for old missing Step1 graph capture"
+    },
+    "source_validate_only": "passed in local CPython3.12.13",
+    "controller_conflict_mock": "blocked nonempty sessions without allocating or cleanup of another session",
+    "routing_mocks": {
+      "count": 3,
+      "results": "passed: prepare failure skips E0; no gain skips P2; strict gain runs candidate/control P2",
+      "scope": "fake process/evaluation data only, no performance claims"
+    }
+  },
+  "corrected_before_freeze": [
+    "official tasks dictionary vs list fixture",
+    "official module import before source validation",
+    "supervisor cwd binding",
+    "watchdog launch failure receipt"
+  ],
+  "local_resource": {
+    "observed_utc": "2026-09-25T05:17:19.496343Z",
+    "pressure": 2,
+    "unused_mib": 615,
+    "swapouts": 858500,
+    "action": "no local official workload"
+  },
+  "new_official_calls": 0,
+  "new_cloud_instances": 0,
+  "status": "awaiting fixed host watchdog review; no cloud admission",
+  "actual_subagent_tokens": null
+}
