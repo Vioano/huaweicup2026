@@ -1,5 +1,5 @@
 {
-  "schema": "p3-paper-release-envelope-audit-v1",
+  "schema": "p3-paper-release-envelope-audit-v2",
   "source_files": [
     {
       "commit": "3d22453deb0d2e3618f9d6cb41795ff164c6c84e",
@@ -72,6 +72,42 @@
       "path": "AI chats/20260924-Pro-P3-归约森林切分/FINAL-r07-bb41cb93.rendered.txt",
       "bytes": 19805,
       "sha256": "1b5519801e99614842802c72cdeed4a3541ff5a4144952b756ab261f6cff67ff"
+    },
+    {
+      "commit": "a35d384653d175bf36a59f7d7bed26c19979d3cc",
+      "path": "results/a/q3-nikolastarx/partial-preload-one-20260925/manifest.json",
+      "bytes": 2879,
+      "sha256": "b36ef3ae7b974b139d9f7d5969a27df7868ebfba9d69818d26055bc83bd310a4"
+    },
+    {
+      "commit": "a35d384653d175bf36a59f7d7bed26c19979d3cc",
+      "path": "results/a/q3-nikolastarx/partial-preload-one-20260925/transport.json",
+      "bytes": 437,
+      "sha256": "c224bca9020879854930dd5b7abbf25f57e8f0c63736a152ebf2f9404256bd64"
+    },
+    {
+      "commit": "a35d384653d175bf36a59f7d7bed26c19979d3cc",
+      "path": "results/a/q3-nikolastarx/partial-preload-one-20260925/case_044_multicore_res.json",
+      "bytes": 36888,
+      "sha256": "0a75e3613ad5f69e293e45e6c1cfc1545b3b1036245ebc7bf0af75b3321df0fd"
+    },
+    {
+      "commit": "a35d384653d175bf36a59f7d7bed26c19979d3cc",
+      "path": "results/a/q3-nikolastarx/partial-preload-one-20260925/predicted-words.json",
+      "bytes": 17743,
+      "sha256": "5d5035ebbc9e767035564e5c2c2aa45c5e7c7ebae04d2df9db75ee91ca5a7946"
+    },
+    {
+      "commit": "a35d384653d175bf36a59f7d7bed26c19979d3cc",
+      "path": "results/a/q3-nikolastarx/partial-preload-one-20260925/expected-prefixes.json",
+      "bytes": 690,
+      "sha256": "77e265de039889ac9be9051e9999c12cf26c2cf6fcff89e65b54600244858bb3"
+    },
+    {
+      "commit": "a35d384653d175bf36a59f7d7bed26c19979d3cc",
+      "path": "results/a/q3-nikolastarx/partial-preload-one-20260925/facts.json",
+      "bytes": 3694,
+      "sha256": "aa9f94a002ad53f57348abf3dc17d659dcaf14fb0c47cfe2fd00e8b72080dec5"
     }
   ],
   "fixed_commit": "3d22453deb0d2e3618f9d6cb41795ff164c6c84e",
@@ -234,6 +270,48 @@
     "math_kernel_archive": "not acquired: generated download button produced no verified local file",
     "math_certificates.json": "preview opens and shows model JSON, but card and preview Download produced no verified local file; truncated preview not saved as full original",
     "executed": false
+  },
+  "frozen_probe": {
+    "artifact_commit": "a35d384653d175bf36a59f7d7bed26c19979d3cc",
+    "execution_source_commit": "817e9e399f5efaf66cea6ddc495fe444950e43f2",
+    "manifest_sha256": "b36ef3ae7b974b139d9f7d5969a27df7868ebfba9d69818d26055bc83bd310a4",
+    "plan_sha256": "0a75e3613ad5f69e293e45e6c1cfc1545b3b1036245ebc7bf0af75b3321df0fd",
+    "selected": {
+      "core": 2,
+      "head_count": 15,
+      "input_sizes": [
+        73728,
+        73728,
+        73728,
+        73728,
+        73728,
+        73728,
+        73728
+      ],
+      "first_use_positions": [
+        1,
+        4,
+        6,
+        9,
+        11,
+        14,
+        16
+      ],
+      "prefix_nominal_cycles": 8603
+    },
+    "declared_budget": {
+      "workers": 1,
+      "max_prepare": 1,
+      "max_P3": 1,
+      "max_P2": 2,
+      "max_E0": 3,
+      "per_phase_seconds": 90,
+      "total_seconds": 600,
+      "memory_limit_bytes": 536870912,
+      "retries": 0
+    },
+    "status": "frozen design only; no runtime result in the audited commit",
+    "scope": "Artifact hashes, declared selection arithmetic, node ownership and frozen prefix lists checked; no official prepare or score."
   },
   "new_calls": {
     "solver": 0,

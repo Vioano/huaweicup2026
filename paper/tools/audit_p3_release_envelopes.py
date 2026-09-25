@@ -13,33 +13,35 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
 SHA = "3d22453deb0d2e3618f9d6cb41795ff164c6c84e"
+PROBE_SHA = "a35d384653d175bf36a59f7d7bed26c19979d3cc"
 BASE = "results/a/q3-nikolastarx/"
 FAMILY = BASE + "release-envelope-model-20260925/"
 COMPILER = BASE + "partial-bucket-compile-20260925/"
 INPUTS = BASE + "pipeline-prefix-static-20260925/"
 CHAT = "AI chats/20260924-Pro-P3-归约森林切分/"
+PROBE = BASE + "partial-preload-one-20260925/"
 
 
 def main():
     sources = []
     hashes = {}
 
-    def raw(path):
+    def raw(path, commit=SHA):
         data = subprocess.run(
-            ["git", "show", f"{SHA}:{path}"], cwd=ROOT,
+            ["git", "show", f"{commit}:{path}"], cwd=ROOT,
             check=True, capture_output=True).stdout
         digest = hashlib.sha256(data).hexdigest()
         hashes[path] = digest
-        sources.append(dict(commit=SHA, path=path, bytes=len(data), sha256=digest))
+        sources.append(dict(commit=commit, path=path, bytes=len(data), sha256=digest))
         return data
 
-    def read(path):
-        return json.loads(raw(path))
+    def read(path, commit=SHA):
+        return json.loads(raw(path, commit))
 
     family = read(FAMILY + "saved-family.json")
     structure = read(COMPILER + "structure-table.json")
     plan = read(INPUTS + "case_044_multicore_res.json")
-    read(INPUTS + "certificate.json")
+    certificate = read(INPUTS + "certificate.json")
     example = read(COMPILER + "example-plan.json")
     word = read(COMPILER + "example-predicted-word.json")
     for path in (COMPILER + "compile.py", FAMILY + "model.py",
@@ -118,12 +120,54 @@ def main():
                  if x["path"] == "FINAL-r07-bb41cb93.rendered.txt")
     assert len(answer) == entry["bytes"]
     assert hashlib.sha256(answer).hexdigest() == entry["sha256"]
+
+    frozen = read(PROBE + "manifest.json", PROBE_SHA)
+    transport = read(PROBE + "transport.json", PROBE_SHA)
+    assert transport["sha256"]["manifest.json"] == hashes[PROBE + "manifest.json"]
+    assert set(frozen["artifacts"]) == {
+        "case_044_multicore_res.json", "predicted-words.json", "expected-prefixes.json", "facts.json"}
+    probe_data = {}
+    for name, expected in frozen["artifacts"].items():
+        probe_data[name] = read(PROBE + name, PROBE_SHA)
+        assert hashes[PROBE + name] == expected, name
+    facts = probe_data["facts.json"]
+    candidates = facts["selection"]["eligible_stages"]
+    for stage in candidates:
+        uses = stage["first_use_positions"]
+        assert uses == sorted(uses) and uses[-2] < uses[-1]
+        assert stage["head_count"] == uses[-2] + 1
+        work = sum(max(1, (b + 59) // 60) for b in stage["input_sizes"])
+        assert work == stage["prefix_nominal_cycles"]
+    selected = max(candidates, key=lambda s: (s["prefix_nominal_cycles"], -s["core"]))
+    assert selected == facts["selection"]["selected"]
+    assert (selected["core"], selected["head_count"]) == (2, 15)
+    new_plan = probe_data["case_044_multicore_res.json"]
+    assert set(new_plan) == set(plan)
+    assert set(new_plan["node_to_subgraph"]) == set(plan["node_to_subgraph"])
+    old_owners = {sg: c for c, order in enumerate(plan["core_schedules"]) for sg in order}
+    new_owners = {sg: c for c, order in enumerate(new_plan["core_schedules"]) for sg in order}
+    assert all(old_owners[sg] == new_owners[new_plan["node_to_subgraph"][u]]
+               for u, sg in plan["node_to_subgraph"].items())
+    prefixes = probe_data["expected-prefixes.json"]
+    for row in certificate["cores"]:
+        core = row["core"]
+        expected = row["prefix_copy_ids"][:-1] if core == 2 else row["prefix_copy_ids"]
+        assert prefixes[str(core)] == expected
+    assert facts["pilot_activation_positions"] == [6, 7]
+
     output = dict(
-        schema="p3-paper-release-envelope-audit-v1", source_files=sources,
+        schema="p3-paper-release-envelope-audit-v2", source_files=sources,
         fixed_commit=SHA, profiles=profiles, model_frontier=frontier,
         example_h=10, declared_static_passes=len(structure["breakpoints"]),
         pro_message_id=manifest["assistant_message_id"],
         pro_attachment_status=manifest["attachment_status"],
+        frozen_probe=dict(
+            artifact_commit=PROBE_SHA, execution_source_commit=transport["source_commit"],
+            manifest_sha256=hashes[PROBE + "manifest.json"],
+            plan_sha256=hashes[PROBE + "case_044_multicore_res.json"],
+            selected=selected, declared_budget=frozen["budget"],
+            status="frozen design only; no runtime result in the audited commit",
+            scope="Artifact hashes, declared selection arithmetic, node ownership and frozen prefix lists checked; no official prepare or score."),
         new_calls=dict(solver=0, Task=0, Step=0, E0=0, candidates=0),
         limitations=[
             "Eight published transfer profiles were used to recompute coefficient arithmetic and model dominance only.",

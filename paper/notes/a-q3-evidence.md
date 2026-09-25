@@ -2,7 +2,7 @@
 
 对应正文：[问题三 Markdown 初稿](../sections/a-q3.md)。本文件为合稿与复核记录，不直接作为参赛论文正文。
 
-最新研究来源已跟进至 `3d22453deb0d2e3618f9d6cb41795ff164c6c84e`：新增 §6.4.4 离线分桶、§6.5.7 多释放包络及 §6.5.8 共享服务反馈，正文现为24式、7处文字图占位。完整统一算法仍为311322b，主表仍为19bebf；没有将新结构或模型系数替换为官方成绩。
+最新理论来源为 `3d22453deb0d2e3618f9d6cb41795ff164c6c84e`，另跟进 `a35d384653d175bf36a59f7d7bed26c19979d3cc` 的唯一机制候选冻结。正文包含 §6.4.4 离线分桶、§6.5.7 多释放包络、§6.5.8 共享服务反馈及 §6.6.7 事前验证规则，仍为24式、7处文字图占位。完整统一算法仍为311322b，主表仍为19bebf；没有将新结构、模型系数或冻结预算替换为官方成绩。
 
 ## 写作范围与衔接
 
@@ -68,6 +68,7 @@ Luna medium 的第一份[feed 审阅](../drafts/p3-forest500-audit.json)保留�
 | §6.5.7 多释放函数 | [模型、测试与保存签名](https://github.com/huaweibei123/huaweicup2026/tree/3d22453deb0d2e3618f9d6cb41795ff164c6c84e/results/a/q3-nikolastarx/release-envelope-model-20260925) | 固定服务下的完整释放函数；在相同独立非负变量域内的模型支配，不是官方剪枝；本次独立重算8个已保存签名和支配表 |
 | §6.5.8 共享供给反馈 | [R7正文及清单目录](https://github.com/huaweibei123/huaweicup2026/tree/3d22453deb0d2e3618f9d6cb41795ff164c6c84e/AI%20chats/20260924-Pro-P3-%E5%BD%92%E7%BA%A6%E6%A3%AE%E6%9E%97%E5%88%87%E5%88%86) | 阅读本轮问答正文并核回答字节哈希；反例及两流推导经代数/手算审阅，九项测试仅Pro自述，附件未取得，不能称本机复现 |
 | §6.6.5 非单调反例 | [CACHE_NONMONOTONE_021.md](https://github.com/huaweibei123/huaweicup2026/blob/f26704ed8748f0a575b55f1a02b83d7335a1083f/docs/a/q3-yuanzhifang/CACHE_NONMONOTONE_021.md)，同提交 `audit_021.py`/`audit.json` | 同 plan 2140720→2140863、同 COPY/字节；已核字节原件及逐操作观察；尚非完整退化因果链 |
+| §6.4.4、§6.6.7 唯一机制候选 | [冻结目录](https://github.com/huaweibei123/huaweicup2026/tree/a35d384653d175bf36a59f7d7bed26c19979d3cc/results/a/q3-nikolastarx/partial-preload-one-20260925)，执行源码固定 `817e9e399f5efaf66cea6ddc495fe444950e43f2` | 结构规则得到core2/h15；事前最多1prepare/1P3/2条件P2，未读取到本候选的正式运行原件，不代表正在运行或已经通过 |
 
 ## 公式审阅与图件计划
 
@@ -94,7 +95,7 @@ P1 正文核编号从 1 起，P3 对齐接口从 0 起；只是编号映射，�
 
 新增小范围原件复核：`python -B paper/tools/audit_p3_prefix_cache.py`，输出[前缀 Cache 核验](../drafts/p3-prefix-cache-audit.json)。只读取固定提交中的两份 P3 压缩结果（48,921 B 和 50,375 B）、一份计划、两个审计小文件；结果/计划 SHA 与已发布绑定一致。独立核实了完整键—大小—次数多重集相等、首次/重复读取、命中字节上界取等、零淘汰和搬运字段一致。对路径部分只核来源绑定、38024分项和、8244差值及四个前缀完成下限算术；未重新加载完整准备图，也未调用Task/Step/E0。七处图占位与18个公式对应最新稿，旧“六图/16式”是上一版检查记录。
 
-部分预加载修订增加式（6-19），最新稿共19式、7处文字图占位；上述18式/7图及16式/6图保留为各版的实际检查记录。森林节点孩子数改记为 $a_v$，消除与有效计算时长 $d_v$ 的同名冲突。
+bf583f1版部分预加载修订增加式（6-19），截至该版共19式、7处文字图占位；上述18式/7图及16式/6图保留为各版的实际检查记录。森林节点孩子数改记为 $a_v$，消除与有效计算时长 $d_v$ 的同名冲突。
 
 | 图号 | 目前状态 | 最终绘制需要 |
 |---|---|---|
@@ -112,15 +113,19 @@ P1 正文核编号从 1 起，P3 对齐接口从 0 起；只是编号映射，�
 
 实际读取3d22453d的离线分桶README/AUDIT/compile.py/test_compile.py、完整结构表，以及多释放README/model.py/test_model.py/task_profile.py/audit_saved_family.py和保存签名字段。没有运行这些候选编译器、模型选择器或测试。发布的6项编译测试、4项/20次模型递推检查按队长结果归属，原数据依赖、内存峰值和上游COPY_OUT先后也未在本次重建完整Task图验证。
 
-根会话新增 `python -B paper/tools/audit_p3_release_envelopes.py`，输出[只读包络核验](../drafts/p3-release-envelope-audit.json)。共读取12个固定Git文件：重算8份已保存传输记录对应的系数和全部模型支配关系，得到h=2/15/17；核对构造/模型源码、结构表、原计划与容量证书的已发布散列，检查示例仍为两字段且其他核提交列表不变。没有加载完整Task压缩快照，没有重新验证预估峰值或依赖无环，也没有产生新候选。模型周期绝不登记为官方Makespan。
+8c4907b4版首次新增 `python -B paper/tools/audit_p3_release_envelopes.py`，首次输出[只读包络核验](../drafts/p3-release-envelope-audit.json)。共读取12个固定Git文件：重算8份已保存传输记录对应的系数和全部模型支配关系，得到h=2/15/17；核对构造/模型源码、结构表、原计划与容量证书的已发布散列，检查示例仍为两字段且其他核提交列表不变。没有加载完整Task压缩快照，没有重新验证预估峰值或依赖无环，也没有产生新候选。模型周期绝不登记为官方Makespan。
 
 R7本轮问答和manifest已读取，回答 `bb41cb93-c330-4de4-bda1-78825d4aa74f` 的保存正文为19,805 B，SHA-256为 `1b5519801e99614842802c72cdeed4a3541ff5a4144952b756ab261f6cff67ff`，本次按Git字节重新核实。Pro自述完整/局部读文件范围保留在正文开头；归档只核该轮可见回答，不代表重新验证全部七轮历史。清单明确数学内核压缩包和证书JSON未取得可验证原件，本会话未下载或执行这些附件；“九项检查通过”只能作作者报告，不当作本机测试。新章节主要采用可从文字逐步复核的推导、反例及保存代码中已明确的适用条件。
 
 ## 后续更新规则
 
-本轮续读核对：队长算法分支仍为 `734914db51cecf094453c2b02e67fc5f5619b090`，主库 `c1c2c7947de6bd3459f87f6b3cbbb2ba52ce3084` 的新增内容为成绩台展示与文档，不是新算法或实验。对照冻结 `schedule_step3._op_duration` 与 P3 的 `issue`/`advance_pool_work`/`reschedule_pool`，正文补清“每笔 COPY 先取整为服务量、共享服务后再按事件退休”的两个层次。另实际读取官方 P2 结果构造与[成绩台配对边界](https://github.com/huaweibei123/huaweicup2026/blob/c1c2c7947de6bd3459f87f6b3cbbb2ba52ce3084/docs/benchmarks/BENCHMARK_BOARD.md)，说明结果 JSON 不自带计划散列，原件/收据互校不等于本会话重新运行。
+本轮进一步实际读取a35d3846的冻结README、build.py、manifest/transport、prepare/probe入口及其判定分支。只读核验脚本扩展为v2，原12文件复核之外增加6个冻结文件，共18个固定Git文件；核实4个候选产物散列、名义工作量选择算术、节点归核与前缀清单。新计划SHA-256为 `0a75e3613ad5f69e293e45e6c1cfc1545b3b1036245ebc7bf0af75b3321df0fd`，manifest为 `b36ef3ae7b974b139d9f7d5969a27df7868ebfba9d69818d26055bc83bd310a4`；运输声明的执行源码为817e9e39。本会话没有导入或启动这些执行入口，不把已冻结的启动方式视作进程存活证据。
 
-新增版本比较表直接来自上述固定团队审计，`audit_p3_chapter.py` 将其原始计数与差值保存到 `published_version_comparison`，仅核各行总计500，不冒称重新计算旧版逐格差值。3格额外搬运上升和9格命中字节下降保留，命中字节不称作命中率，额外搬运与spill减少量不相加。此轮无新求解、Task/Step或官方评分。
+§6.6.7明确准备与评分的事前停止条件，以及严格M改善后才补两组P2的条件采样范围；尚无固定执行结果时不填新M、G、命中率或solver wall。当前有界脚本只重核保存字节/元数据与结构选择算术，未生成新候选、Task或任何官方评分。
+
+b0b3414版续读核对时，队长算法分支为 `734914db51cecf094453c2b02e67fc5f5619b090`，主库 `c1c2c7947de6bd3459f87f6b3cbbb2ba52ce3084` 的新增内容为成绩台展示与文档，不是新算法或实验。对照冻结 `schedule_step3._op_duration` 与 P3 的 `issue`/`advance_pool_work`/`reschedule_pool`，正文补清“每笔 COPY 先取整为服务量、共享服务后再按事件退休”的两个层次。另实际读取官方 P2 结果构造与[成绩台配对边界](https://github.com/huaweibei123/huaweicup2026/blob/c1c2c7947de6bd3459f87f6b3cbbb2ba52ce3084/docs/benchmarks/BENCHMARK_BOARD.md)，说明结果 JSON 不自带计划散列，原件/收据互校不等于本会话重新运行。
+
+b0b3414版新增的版本比较表直接来自上述固定团队审计，`audit_p3_chapter.py` 将其原始计数与差值保存到 `published_version_comparison`，仅核各行总计500，不冒称重新计算旧版逐格差值。3格额外搬运上升和9格命中字节下降保留，命中字节不称作命中率，额外搬运与spill减少量不相加。此轮无新求解、Task/Step或官方评分。
 
 1. 先取得队长发布的固定算法 SHA、入口与完整结果版本，再检查其相对于本稿的模块和语义差异。新研究分支、少量成功格或成绩台逐格最佳，不能自动替换完整主表。
 2. 结构改动同步修改假设、公式、伪代码和复杂度；对旧证明审查是否仍适用，不只更新结果数字。
