@@ -8,7 +8,7 @@
 | --- | --- | --- |
 | 主方法 | `c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f` | 结构初解 + gap + hypergap，最多三个不同完整计划的原生 E2 评分 |
 | 主结果发布 | `1c00079aadbd071de62db17686d5ba3fed1da0f2` | 完整 100×1–5 核，500 次独立 E0；并非本会话重新运行 |
-| 最新已读算法资料 | `afabca83ffa941f988cae0680a4d99760018d580`，继承 fff17b9 / 7c9b648 / e4f7b13 / 9404635 | 新增当前完整方案重构入口及 R05 固定顺序余量；主算法与完整均值不变 |
+| 最新已读算法资料 | `70f2e8bd8e850f1d49c924a86b654b29c24e087f`，继承 e6ae369 / afabca8 / fff17b9 | R05 配对官方负结果、完整 500 格 DDR 取舍；主算法与完整均值不变 |
 | 成员 tensor/gap/F1 数据 | 读取提交 `178a3673bd238b20772211427b8134b6db35f5af` 的冻结 CSV | 各自独立固定算法的对照；F1 只列五核完整均值 |
 | R5 保存方案静态诊断 | 源码 `1acc50a7f8290fd98fa94a12113281728705d7ca`；本次归档完成结果 | 100 对、200 个条件下界、0 新评分，仅用于研究边界 |
 | 外部截图成绩 | 身份与未四舍五入数值未核实 | 不作论文正式同行基线，不写“已超越外部最优” |
@@ -17,6 +17,8 @@
 主方法是“当前已有完整验证证据的主线”，不是声称它已被队长冻结为最终提交算法。本会话已通过 [Issue 33 的论文范围通知](https://github.com/huaweibei123/huaweicup2026/issues/33#issuecomment-5826333267) 联系 P2 队长与协调者，请其给新固定版与采用范围；通知已发出不等于对方已读或验收。正式 TeX 单写归属不变。
 
 随后实际读到队长 [Issue 33 #5826526478](https://github.com/huaweibei123/huaweicup2026/issues/33#issuecomment-5826526478) 的定向证据更新：完整成绩仍为 c665，新增 e4f7b13 没有新正式成绩。已读取所给三个 README 的原文并修订 5.7；这是已读材料回执，仍不是章节验收。该通知时 Pro R06 尚在生成；其后已按 [#5826838909](https://github.com/huaweibei123/huaweicup2026/issues/33#issuecomment-5826838909) 读取完成归档及限定审阅，见 S13。当前不将旧“正在生成”状态当作活任务或等待凭据。
+
+最新按队长 [#5827059774](https://github.com/huaweibei123/huaweicup2026/issues/33#issuecomment-5827059774) 与 [#5827163275](https://github.com/huaweibei123/huaweicup2026/issues/33#issuecomment-5827163275) 读取 e6ae369 的 R05 已完成官方配对和 70f2e8 的完整 DDR 对照，分别见 S15、S16。S11–S14 中的“未测、未派发、等待窗口”均是各自固定版本的历史状态，已被 S15 的完成证据更新；本会话没有新发起实验，也不据旧状态等待已结束的任务。
 
 ## 结构参考与正文组织
 
@@ -126,7 +128,7 @@
 
 - [preparation-profile README](https://github.com/huaweibei123/huaweicup2026/blob/e4f7b13e4af04914a1264a650831a3959f14a373/results/a/q2-nikolastarx/preparation-profile-20260925/README.md)：014/K1 保存计划，Linux 单次 preparation-only，0 E0/native、0 重试；52.521 s 的 profiler 准备中 list.index 自身时间 24.301 s。这不是新求解器成绩或替代实现提速。
 - [template-opportunity README](https://github.com/huaweibei123/huaweicup2026/blob/e4f7b13e4af04914a1264a650831a3959f14a373/results/a/q2-nikolastarx/template-opportunity-20260925/README.md)：九图识别域、其余输出不变条件下的五核均值贡献上限 +0.155990，不是可达预测、留出测试或新均值。
-- [pro-r05-recovered README](https://github.com/huaweibei123/huaweicup2026/blob/e4f7b13e4af04914a1264a650831a3959f14a373/results/a/q2-nikolastarx/pro-r05-recovered-20260925/README.md)：按保存 owner/start 和原始 witness 恢复 003/K2 被代理拒绝的原始计划，基础 COPY 为 5207554 B。官方 Makespan 尚无测量，因此不能把静态代理 230838→241374 的拒绝当成官方退化；本文未把该计划列入正负实测例。
+- [pro-r05-recovered README](https://github.com/huaweibei123/huaweicup2026/blob/e4f7b13e4af04914a1264a650831a3959f14a373/results/a/q2-nikolastarx/pro-r05-recovered-20260925/README.md)：按保存 owner/start 和原始 witness 恢复 003/K2 被代理拒绝的原始计划，基础 COPY 为 5207554 B。该固定版本尚无官方 Makespan，不能只凭静态代理 230838→241374 的拒绝认定官方退化；随后完成的实际对照见 S15。
 
 本会话读取上述原报告，未重复 profiler、算法、评分或逐字节恢复验证。准备层语义保持优化属于基础设施会话，不由论文写作会话并行修改共享 evaluator。
 
@@ -164,7 +166,33 @@
 
 复核命令：仓库根目录运行 `python -B results/a/q2-yuanzhifang/feedback-20260924/paper-draft-20260925/check_r05_headroom.py`，要求固定提交可读及 case_003 原件已解出。恢复方案的条件界为 240126 cycles，当前保存 E0 为 245150 cycles，最大相对 Makespan 降幅精确为 `2512/122575`，约 2.0494%。这个数不是加速比增幅、预测收益或全图全核均值，也不限制其他归属及顺序。6351422→5207554 B 的约 18% 下降相对旧初解；当前 c665 重算基础字节及官方 scheduled COPY 都为 4262874 B，spill 为零。
 
-另读同提交的 [R05 pair 协议](https://github.com/huaweibei123/huaweicup2026/blob/afabca83ffa941f988cae0680a4d99760018d580/results/a/q2-nikolastarx/pro-r05-pair-pilot-20260925/README.md)：仍为 frozen/no dispatch；七项匹配合成检查及五项主机派发模拟检查是作者报告，论文会话没有重跑或启动云端派发。此复核全部为保存数据读取和算术，0 新 constructor/solver/Step2/Step3/E0/E1/E2。表 5-7 是诊断及已有参照，不能写成新增配对成绩或新主算法行。
+另读同提交的 [R05 pair 协议](https://github.com/huaweibei123/huaweicup2026/blob/afabca83ffa941f988cae0680a4d99760018d580/results/a/q2-nikolastarx/pro-r05-pair-pilot-20260925/README.md)：当时仍为 frozen/no dispatch；七项匹配合成检查及五项主机派发模拟检查是作者报告，论文会话没有重跑或启动云端派发。此静态复核全部为保存数据读取和算术，0 新 constructor/solver/Step2/Step3/E0/E1/E2。当前表 5-7 的两份新增官方结果来自随后完成的 S15；仍不是新主算法成绩。
+
+<a id="s15"></a>
+
+### S15：R05 两份保存方案的官方配对负结果
+
+实际读取固定 `e6ae3699870c78b11c8c47b0fa9001249a428e1c` 的 [完成说明](https://github.com/huaweibei123/huaweicup2026/blob/e6ae3699870c78b11c8c47b0fa9001249a428e1c/results/a/q2-nikolastarx/pro-r05-official-pair-20260925/README.md)、完整 `verification.json`、`batch.json` 及 [原始结果 ZIP](https://github.com/huaweibei123/huaweicup2026/blob/e6ae3699870c78b11c8c47b0fa9001249a428e1c/results/a/q2-nikolastarx/pro-r05-official-pair-20260925/result.zip)。ZIP 为 2835556 B，SHA-256 为 `c90065d9d90aae3be4144080483e3ac394a6ef150f92fc7d4450d81114ba2c66`。
+
+本会话新增 [官方配对与 DDR 复核脚本](../../results/a/q2-yuanzhifang/feedback-20260924/paper-draft-20260925/check_official_pair_and_ddr.py) 与 [复核 JSON](../../results/a/q2-yuanzhifang/feedback-20260924/paper-draft-20260925/official-pair-and-ddr-check.json)，后者 SHA-256 为 `54d2c4222f783cc7907be184cb20ba55b43e0e7f254757bb343b9da4f86f3573`。实际核对 ZIP 全部 23 个成员的 CRC、SHA，原图/config、两份计划与旧静态复核的身份一致性，清单中的全部官方源码与固定胶囊源 7c9b648 的逐字节哈希。解析两份 result/Trace，核对最大执行结束时间、搬运量、进程终态、退出码及记录中无残留进程；没有重新执行评价器，也没有查询当前云端状态。队长归档中的 VM 停止及空 session 记录不冒充本会话的实时查询。
+
+003/K2 的旧初解与恢复候选分别为 248166、254508 cycles，scheduled COPY 为 6351422、5207554 B，spill 均为零。候选相对旧初解减少 COPY 18.00964%，却增加 Makespan 2.55555%；相对此前已保存的 c665 245150 cycles 慢 3.81725%。固定 FIFO 界增加 9371 cycles，官方值减去界的残差减少 3029 cycles，两者合计等于官方退化 6342 cycles；该残差不是实测 DDR 等待时间。本例否定了该候选的官方收益，不能证明所有代理拒绝都安全。
+
+原实验在 2026-09-25T04:54:48.715344Z 进入 T0，只对这两份保存计划串行执行两次 E0，0 E1/E2、0 新构造、0 重试；worker 批次为 21.27858728399997 s。环境准备与外部 E0 成本单列，均不作为新 solver 墙钟。本文表 5-7 纳入结果，表 5-2 的 c665 完整成绩不变；新 singleton 入口依旧没有真实图增益证据。
+
+复核入口：仓库根目录执行 `python -B results/a/q2-yuanzhifang/feedback-20260924/paper-draft-20260925/check_official_pair_and_ddr.py`，要求所列固定 Git 对象及同目录旧证据可读。全程仅解析保存数据，0 新 constructor/solver/Step2/Step3/E0/E1/E2。
+
+<a id="s16"></a>
+
+### S16：完整 500 格的次要 DDR 指标与跨版本取舍
+
+实际读取固定 `70f2e8bd8e850f1d49c924a86b654b29c24e087f` 的 [次要 DDR 指标说明](https://github.com/huaweibei123/huaweicup2026/blob/70f2e8bd8e850f1d49c924a86b654b29c24e087f/results/a/q2-nikolastarx/secondary-ddr-full500-20260925/README.md)、完整 [report.json](https://github.com/huaweibei123/huaweicup2026/blob/70f2e8bd8e850f1d49c924a86b654b29c24e087f/results/a/q2-nikolastarx/secondary-ddr-full500-20260925/report.json) 和 `scripts/q2_secondary_ddr_audit.py`。对照为前版 `2794ceba93acc1f7fc119154f61082511843d4b3` 与主方法 c665，不能将前版称为所有 c665 求解调用中实际参与评分的初始候选。
+
+使用 S15 同一复核脚本，从固定 `60afc38b327680fbda0ff10182e3e05a01edd72d` 的旧完整 board feed 和新 completed-summary 逐格核对两侧各 500 个唯一坐标、算法身份、图/config、接受状态、前版 E0 路由及字节分解恒等式，再重算全部 500 行与发布报告的一致性、分核/总量、均值、计数和增量集中程度。这是固定 feed 与已审计摘要的再核对，没有重新审计全部 500 份 raw 结果或运行评分。
+
+全部额外 DDR 从 3043860416 增至 4159738560 B，即 +36.65996%；55 格 Makespan/DDR 同降、199 格 Makespan 降但 DDR 升、14 格 Makespan 降且 DDR 不变、232 格两项均不变。净增量中切分新增搬运占 77.66135%，spill 占 22.33865%；014 与 072 合占净增量 77.09089%。正文表 5-4 的分核变化率均按总量比计算，不是逐图百分比均值。案例集中性用于诊断，不产生针对用例编号的例外规则。
+
+正文表 5-3 同步更正解释：268/232/0 是前版与主方法在此批次的配对观察，不是任意前版均由候选选择器包含所带来的理论保证。Makespan 为主的字典序规则不会限制已改善 Makespan 时的 DDR 增幅。当前继续报告真实取舍，不以任意加权分数掩盖通信退化，也不因次要字节指标单独否定首要目标的实测改善。
 
 ## 图件与最终补证清单
 
@@ -173,7 +201,7 @@
 | 5-1 | 文字占位 | 最终主程序调用关系；尚未接入的模块不能画进执行主线 |
 | 5-2 | 文字占位 | 手算合成例或完整实际物理序列；区分静态容量与运行峰值 |
 | 5-3 | 文字占位 | 固定版本 100×5 逐格结果、固定分母；缺测不连线 |
-| 5-4 | 文字占位 | 同图同核同配置的固定 plan/trace；正负案例均保留，COPY 区间活跃与带宽利用率分开 |
+| 5-4 | 文字占位 | 同图同核同配置的固定 plan/trace；含 R05 负结果及完整配对取舍，COPY 区间活跃与带宽利用率分开 |
 | 5-5 | 文字占位 | 同硬件同并发的完整求解墙钟及质量，不混内核时间 |
 | 5-6 | 文字占位 | 有适用域的全局界证书；与固定 FIFO 界分离 |
 
@@ -189,4 +217,4 @@
 
 交付检查：表格重算脚本通过；本地文档链接及 11 个资料锚点、20 个连续编号公式、8 节标题、6 个图占位检查通过；示例 007/020/045 的五核数字再次与冻结 CSV 核对。Markdown 解析后的 6 张表（含符号表）列数一致，已视觉查看正文开头及主结果表；预览保留 TeX 文本，不称作最终数学排版验收。Git 空白检查、文件编码、个人路径及凭据模式检查通过。Windows 无 dot_clean，已对本次 paper/结果具体目录做只读元数据扫描，无 `._*`、`.DS_Store` 或 `__MACOSX` 项；未作跨目录清理。
 
-后续版本新增 5.6.6、5.7.4 与资料 S12–S14，并展开 5.4.3 的最小割证明；旧“11 个资料锚点/6 张表”是首次交付记录。当前 14 个资料锚点、44 个本地链接、21 个连续编号公式、8 节和 6 个图占位检查通过；8 张表（含符号表）的列数一致，表 5-6/5-7 的数值与各自复核结果对应。图件仍未正式绘制。
+后续版本新增 5.6.6、5.7.4 与资料 S12–S16，并展开 5.4.3 的最小割证明；旧“11 个资料锚点/6 张表”是首次交付记录。最新检查通过：16 个资料锚点、48 个本地链接、21 个连续编号公式、8 节、6 个图占位，以及 8 张表（含符号表）的列数；表 5-4/5-7 的新增数值与保存数据复核对应，并已查看这两张表的渲染预览。详细图仍为文字占位，预览不包含最终公式排版。
