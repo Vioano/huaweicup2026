@@ -1,0 +1,291 @@
+{
+  "Task_Step_solver_evaluator_calls": 0,
+  "after": {
+    "frontier_peaks": [
+      {
+        "L1": {
+          "bucket": 766,
+          "bytes": 43008,
+          "op": 726
+        },
+        "UB": {
+          "bucket": 47,
+          "bytes": 114716,
+          "op": 4623
+        }
+      },
+      {
+        "L1": {
+          "bucket": 440,
+          "bytes": 43968,
+          "op": 747
+        },
+        "UB": {
+          "bucket": 46,
+          "bytes": 43048,
+          "op": 5361
+        }
+      },
+      {
+        "L1": {
+          "bucket": 182,
+          "bytes": 43008,
+          "op": 768
+        },
+        "UB": {
+          "bucket": 184,
+          "bytes": 17476,
+          "op": 770
+        }
+      },
+      {
+        "L1": {
+          "bucket": 411,
+          "bytes": 40896,
+          "op": 789
+        },
+        "UB": {
+          "bucket": 93,
+          "bytes": 22144,
+          "op": 4561
+        }
+      },
+      {
+        "L1": {
+          "bucket": 0,
+          "bytes": 0,
+          "op": 4510
+        },
+        "UB": {
+          "bucket": 71,
+          "bytes": 212992,
+          "op": 4540
+        }
+      }
+    ],
+    "per_core_M_V_cycles": [
+      [
+        66600,
+        49357
+      ],
+      [
+        66600,
+        35487
+      ],
+      [
+        66600,
+        28657
+      ],
+      [
+        49301,
+        25590
+      ],
+      [
+        0,
+        15605
+      ]
+    ],
+    "per_core_schedule_lengths": [
+      1624,
+      1298,
+      1044,
+      1269,
+      116
+    ],
+    "step2_no_spill_certificate": false,
+    "violations": [
+      {
+        "bucket": 71,
+        "capacity_bytes": 131072,
+        "core": 4,
+        "excess_bytes": 81920,
+        "op": 4540,
+        "peak_bytes": 212992,
+        "pool": "UB"
+      }
+    ]
+  },
+  "attribution": {
+    "live_interval_count": 81,
+    "ranked_components": [
+      {
+        "component_index": 21,
+        "contributed_bytes": 40960,
+        "min_op_id": 4510,
+        "ops": 49
+      },
+      {
+        "component_index": 19,
+        "contributed_bytes": 32768,
+        "min_op_id": 4444,
+        "ops": 29
+      },
+      {
+        "component_index": 20,
+        "contributed_bytes": 24576,
+        "min_op_id": 4473,
+        "ops": 38
+      },
+      {
+        "component_index": 31,
+        "contributed_bytes": 14348,
+        "min_op_id": 4601,
+        "ops": 88
+      },
+      {
+        "component_index": 34,
+        "contributed_bytes": 14348,
+        "min_op_id": 4838,
+        "ops": 89
+      },
+      {
+        "component_index": 32,
+        "contributed_bytes": 14336,
+        "min_op_id": 4680,
+        "ops": 80
+      },
+      {
+        "component_index": 33,
+        "contributed_bytes": 14336,
+        "min_op_id": 4759,
+        "ops": 87
+      }
+    ],
+    "selected_contributed_bytes": 98304,
+    "selected_prefix_component_indices": [
+      21,
+      19,
+      20
+    ],
+    "selected_prefix_min_op_ids": [
+      4510,
+      4444,
+      4473
+    ],
+    "unattributed_bytes_remaining_core0": 65536
+  },
+  "before": {
+    "frontier_peaks": [
+      {
+        "L1": {
+          "bucket": 882,
+          "bytes": 43008,
+          "op": 726
+        },
+        "UB": {
+          "bucket": 145,
+          "bytes": 221208,
+          "op": 4551
+        }
+      },
+      {
+        "L1": {
+          "bucket": 440,
+          "bytes": 43968,
+          "op": 747
+        },
+        "UB": {
+          "bucket": 46,
+          "bytes": 43048,
+          "op": 5361
+        }
+      },
+      {
+        "L1": {
+          "bucket": 182,
+          "bytes": 43008,
+          "op": 768
+        },
+        "UB": {
+          "bucket": 184,
+          "bytes": 17476,
+          "op": 770
+        }
+      },
+      {
+        "L1": {
+          "bucket": 411,
+          "bytes": 40896,
+          "op": 789
+        },
+        "UB": {
+          "bucket": 93,
+          "bytes": 22144,
+          "op": 4561
+        }
+      },
+      {
+        "L1": {
+          "bucket": 0,
+          "bytes": 0,
+          "op": null
+        },
+        "UB": {
+          "bucket": 0,
+          "bytes": 0,
+          "op": null
+        }
+      }
+    ],
+    "groups": [
+      [
+        0
+      ],
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      []
+    ],
+    "per_core_M_V_cycles": [
+      [
+        66600,
+        64962
+      ],
+      [
+        66600,
+        35487
+      ],
+      [
+        66600,
+        28657
+      ],
+      [
+        49301,
+        25590
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "per_core_schedule_lengths": [
+      1740,
+      1298,
+      1044,
+      1269,
+      0
+    ],
+    "violations": [
+      {
+        "bucket": 145,
+        "capacity_bytes": 131072,
+        "core": 0,
+        "excess_bytes": 90136,
+        "op": 4551,
+        "peak_bytes": 221208,
+        "pool": "UB"
+      }
+    ]
+  },
+  "construct_layered_calls": 0,
+  "derive_multicore_plan_calls": 0,
+  "graph_sha256": "dfd9a58ef9d26a8a4567026b50af8b4499d87eebb3d98f8208b909b11e963c6d",
+  "retry_count": 0,
+  "status": "FAILED_STATIC_CAPACITY"
+}

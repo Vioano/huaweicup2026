@@ -1,0 +1,12 @@
+{
+  "worktree_head": "7fccc879e53d0ffd06f521bd5c4ee43a229d7304",
+  "coverage_rows": 100,
+  "unsupported_structure_rows": 78,
+  "selection_rule": "After joining by case_id and requiring coverage graph_sha256 == bounds graph_sha256, restrict to the 78 status=unsupported_structure rows; use cores=5 only; per case optimistic K5 slack = B/L - B/T where B=official_baseline_cycles, L=lower_bound_cycles, T=snapshot_best_cycles (Forest current best, not an attainable guarantee). Rank descending by unrounded slack, tie by numeric case_id ascending; select first 10. No raw graph was inspected before this freeze. Structural descriptions will be read-only explanations after selection.",
+  "inputs": {
+    "results/a/q3-nikolastarx/forest-current-headroom-20260925/summary.json": "cdd72e75b5d1b98dfb1273fb1d923f7bbf52e8a7db18db4f0b85335809d109d3",
+    "results/a/q3-nikolastarx/forest-current-headroom-20260925/cells-snapshot.json": "cf6021229b57458db772920faf8cdf995c0dc35a381d8f043254aa6a99f341cb",
+    "results/a/q3-nikolastarx/global-bounds-20260925/bounds.csv": "bb8a21066f228f428ca2cab3d742c2eb6247cfbf1b281b30c588029a6ba9cd86",
+    "results/a/q3-nikolastarx/layered-coverage-static-20260925/coverage.jsonl": "7c16f4bfb5eead50b68e1af18e1e40b30d01d72f627dd79eb0f7a8462db4ccfc"
+  }
+}

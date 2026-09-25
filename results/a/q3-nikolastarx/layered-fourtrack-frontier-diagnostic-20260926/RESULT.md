@@ -1,0 +1,11 @@
+# 068/K5 static UB frontier diagnostic
+
+The original graph has 4 persistent tracks, 4,158 private compute ops, and 1,193 shared compute ops in 49 components. K5 partition groups are `[[0],[1],[2],[3],[]]`. `assign_shared` places all 49 components on cores 0–3, with counts 15/9/6/19; core 4 receives no op or work. Per-core M/V cycles are `(66600,64962)`, `(66600,35487)`, `(66600,28657)`, `(49301,25590)`, `(0,0)`. Schedule lengths are 1740/1298/1044/1269/0.
+
+The static `interval_certificate` fails only on **core 0 UB**: 221,208 B at local bucket 145, op 4551, versus 131,072 B capacity, an excess of **90,136 B**. It counts 81 live tensor intervals there; their bytes independently sum to 221,208. The 25 largest account for exactly 131,072 B: 13 intervals of 8,192 B and 12 of 2,048 B. Among those 25, 108,544 B have a producer in a shared component and 22,528 B do not. The other 56 intervals contribute the 90,136 B excess. `result.json` records each of the 25 largest tensor IDs, local lifetime endpoints, producer, and owner, plus all per-core peaks and shared placements. Core 0 L1 peaks at 43,008 B, below its 524,288 B capacity; the other UB peaks are at most 43,048 B.
+
+The one K4 comparison yields exactly the same four nonempty groups, per-core work, schedule lengths, shared placements, and peaks. Thus the new fifth-core padding did **not** cause this failure, and the current shared assignment does not use the fifth core. The failure is a wide core-0 UB frontier in the existing direct priority word, with large shared-produced tensors among its largest contributors. Whether the interval model is conservative relative to actual Step2 cannot be resolved from this probe; no Task/Step was called. This is not a plan, official legality certificate, or score.
+
+One process; one 068 decomposition; one K5 helper pass and one K4 helper pass; zero exceptions or retries; zero `construct_layered`, `derive_multicore_plan`, Task, Step, solver, or evaluator calls. Source and input hashes are frozen in `FROZEN.md`.
+
+The temporary idle-core source edit was archived as [rejected-idlecore-extension.patch.gz](rejected-idlecore-extension.patch.gz) and restored to the committed version after this diagnostic. It produced no valid 068 plan, and its fifth core received no work; this exact padding mechanism is not being promoted into the solver.

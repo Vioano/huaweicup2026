@@ -1,0 +1,9 @@
+# Frozen single-move shared-component mechanism probe
+
+Input is only original `data/raw/a/official/data/case_068.json`, SHA-256 `dfd9a58ef9d26a8a4567026b50af8b4499d87eebb3d98f8208b909b11e963c6d`. Official fixed `config.txt` SHA-256 `dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9`: L1 524288 B, UB 131072 B, scene-B cross delay 500 cycles. Current restored `src/q3/layered_query_flow.py` SHA-256 `db197556787c7818cad21c47dca52e497ba84ba56e1717d4616977fda0556d33`; base HEAD `7fccc879e53d0ffd06f521bd5c4ee43a229d7304`.
+
+Prior diagnostic found a 90,136 B core-0 UB interval excess, with K5's fifth core empty and K4/K5 static placement identical. Hypothesis: moving the shared weak components assigned to the single worst frontier core to that free core can reduce the frontier, but may increase remote communication and whole-path cost.
+
+One deterministic rule, frozen before execution: decompose 068 once; run original `partition_tracks(..., K=4)`, append one empty group, and run original `assign_shared` on five groups. Build baseline `priority_words` and `interval_certificate`. Select the sole worst `(excess_bytes, core, pool)` violation, with core/pool deterministic tie break. Move **all** shared components currently assigned to that core to core 4, without moving private ops or selecting a subset. Recompute per-core work, priority words, interval certificate, compute/FIFO and whole-path guards, and source-rule traffic. Compare before and after. No other candidate, no retry or search. First exception stops.
+
+Execute once in one Python process with `PYTHONPATH=. PYTHONDONTWRITEBYTECODE=1 python3 -B results/a/q3-nikolastarx/layered-shared-core-repair-20260926/probe.py`. No production source edits, `construct_layered`, `derive_multicore_plan`, official Task/Step/E0/E1/E2, or solver calls. Evidence is a static mechanism probe, not official legality or Makespan. Failed guards and missing downstream metrics remain explicit.

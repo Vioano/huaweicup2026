@@ -1,0 +1,1669 @@
+{
+  "Task_Step_solver_evaluator_calls": 0,
+  "construct_layered_calls": 0,
+  "decomposition": {
+    "private_ops": 4158,
+    "rows": 72,
+    "shared_components": 49,
+    "shared_ops": 1193,
+    "track_count": 4,
+    "tracks": [
+      [
+        [
+          0,
+          1000000171
+        ],
+        [
+          1,
+          1000000933
+        ],
+        [
+          2,
+          1000001695
+        ],
+        [
+          3,
+          1000002457
+        ],
+        [
+          4,
+          1000003219
+        ],
+        [
+          5,
+          1000003981
+        ]
+      ],
+      [
+        [
+          0,
+          1000000181
+        ],
+        [
+          1,
+          1000000943
+        ],
+        [
+          2,
+          1000001705
+        ],
+        [
+          3,
+          1000002467
+        ],
+        [
+          4,
+          1000003229
+        ],
+        [
+          5,
+          1000003991
+        ]
+      ],
+      [
+        [
+          0,
+          1000000191
+        ],
+        [
+          1,
+          1000000953
+        ],
+        [
+          2,
+          1000001715
+        ],
+        [
+          3,
+          1000002477
+        ],
+        [
+          4,
+          1000003239
+        ],
+        [
+          5,
+          1000004001
+        ]
+      ],
+      [
+        [
+          0,
+          1000000201
+        ],
+        [
+          1,
+          1000000963
+        ],
+        [
+          2,
+          1000001725
+        ],
+        [
+          3,
+          1000002487
+        ],
+        [
+          4,
+          1000003249
+        ],
+        [
+          5,
+          1000004011
+        ]
+      ]
+    ]
+  },
+  "derive_multicore_plan_calls": 0,
+  "graph_sha256": "dfd9a58ef9d26a8a4567026b50af8b4499d87eebb3d98f8208b909b11e963c6d",
+  "helper_calls": {
+    "assign_shared": 2,
+    "interval_certificate": 2,
+    "partition_tracks": 2,
+    "priority_words": 2
+  },
+  "retries": 0,
+  "runs": [
+    {
+      "cores": 5,
+      "frontier_peaks": [
+        {
+          "L1": {
+            "bucket": 882,
+            "bytes": 43008,
+            "op": 726
+          },
+          "UB": {
+            "bucket": 145,
+            "bytes": 221208,
+            "op": 4551
+          }
+        },
+        {
+          "L1": {
+            "bucket": 440,
+            "bytes": 43968,
+            "op": 747
+          },
+          "UB": {
+            "bucket": 46,
+            "bytes": 43048,
+            "op": 5361
+          }
+        },
+        {
+          "L1": {
+            "bucket": 182,
+            "bytes": 43008,
+            "op": 768
+          },
+          "UB": {
+            "bucket": 184,
+            "bytes": 17476,
+            "op": 770
+          }
+        },
+        {
+          "L1": {
+            "bucket": 411,
+            "bytes": 40896,
+            "op": 789
+          },
+          "UB": {
+            "bucket": 93,
+            "bytes": 22144,
+            "op": 4561
+          }
+        },
+        {
+          "L1": {
+            "bucket": 0,
+            "bytes": 0,
+            "op": null
+          },
+          "UB": {
+            "bucket": 0,
+            "bytes": 0,
+            "op": null
+          }
+        }
+      ],
+      "groups": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        []
+      ],
+      "max_excess_bytes": 90136,
+      "no_spill_guard": false,
+      "per_core_M_V_cycles": [
+        [
+          66600,
+          64962
+        ],
+        [
+          66600,
+          35487
+        ],
+        [
+          66600,
+          28657
+        ],
+        [
+          49301,
+          25590
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "per_core_schedule_lengths": [
+        1740,
+        1298,
+        1044,
+        1269,
+        0
+      ],
+      "shared_component_counts_by_core": {
+        "0": 15,
+        "1": 9,
+        "2": 6,
+        "3": 19
+      },
+      "shared_component_placements": [
+        {
+          "M_cycles": 5400,
+          "V_cycles": 914,
+          "component_index": 0,
+          "ops": 44,
+          "owner": 3
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 1,
+          "ops": 1,
+          "owner": 0
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 2,
+          "ops": 1,
+          "owner": 1
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 3,
+          "ops": 1,
+          "owner": 2
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 4,
+          "ops": 1,
+          "owner": 0
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 5,
+          "ops": 1,
+          "owner": 1
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 6,
+          "ops": 1,
+          "owner": 2
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 7,
+          "ops": 1,
+          "owner": 0
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 8,
+          "ops": 1,
+          "owner": 1
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 9,
+          "ops": 1,
+          "owner": 2
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 10,
+          "ops": 1,
+          "owner": 0
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 11,
+          "ops": 1,
+          "owner": 1
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 12,
+          "ops": 1,
+          "owner": 2
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 13,
+          "ops": 1,
+          "owner": 0
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 14,
+          "ops": 1,
+          "owner": 1
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 15,
+          "ops": 1,
+          "owner": 2
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 16,
+          "ops": 1,
+          "owner": 0
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 17,
+          "ops": 1,
+          "owner": 1
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 18,
+          "ops": 1,
+          "owner": 2
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 4060,
+          "component_index": 19,
+          "ops": 29,
+          "owner": 0
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 5193,
+          "component_index": 20,
+          "ops": 38,
+          "owner": 0
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 6352,
+          "component_index": 21,
+          "ops": 49,
+          "owner": 0
+        },
+        {
+          "M_cycles": 377,
+          "V_cycles": 132,
+          "component_index": 22,
+          "ops": 3,
+          "owner": 3
+        },
+        {
+          "M_cycles": 377,
+          "V_cycles": 132,
+          "component_index": 23,
+          "ops": 3,
+          "owner": 3
+        },
+        {
+          "M_cycles": 377,
+          "V_cycles": 132,
+          "component_index": 24,
+          "ops": 3,
+          "owner": 3
+        },
+        {
+          "M_cycles": 377,
+          "V_cycles": 132,
+          "component_index": 25,
+          "ops": 3,
+          "owner": 3
+        },
+        {
+          "M_cycles": 377,
+          "V_cycles": 132,
+          "component_index": 26,
+          "ops": 3,
+          "owner": 3
+        },
+        {
+          "M_cycles": 377,
+          "V_cycles": 132,
+          "component_index": 27,
+          "ops": 3,
+          "owner": 3
+        },
+        {
+          "M_cycles": 377,
+          "V_cycles": 132,
+          "component_index": 28,
+          "ops": 3,
+          "owner": 3
+        },
+        {
+          "M_cycles": 377,
+          "V_cycles": 132,
+          "component_index": 29,
+          "ops": 3,
+          "owner": 3
+        },
+        {
+          "M_cycles": 377,
+          "V_cycles": 132,
+          "component_index": 30,
+          "ops": 3,
+          "owner": 3
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 3552,
+          "component_index": 31,
+          "ops": 88,
+          "owner": 0
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 3448,
+          "component_index": 32,
+          "ops": 80,
+          "owner": 0
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 3539,
+          "component_index": 33,
+          "ops": 87,
+          "owner": 0
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 3565,
+          "component_index": 34,
+          "ops": 89,
+          "owner": 0
+        },
+        {
+          "M_cycles": 2660,
+          "V_cycles": 909,
+          "component_index": 35,
+          "ops": 52,
+          "owner": 3
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 2229,
+          "component_index": 36,
+          "ops": 81,
+          "owner": 0
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 4419,
+          "component_index": 37,
+          "ops": 159,
+          "owner": 0
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 2255,
+          "component_index": 38,
+          "ops": 83,
+          "owner": 1
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 2320,
+          "component_index": 39,
+          "ops": 88,
+          "owner": 1
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 2307,
+          "component_index": 40,
+          "ops": 87,
+          "owner": 1
+        },
+        {
+          "M_cycles": 240,
+          "V_cycles": 411,
+          "component_index": 41,
+          "ops": 12,
+          "owner": 3
+        },
+        {
+          "M_cycles": 240,
+          "V_cycles": 424,
+          "component_index": 42,
+          "ops": 13,
+          "owner": 3
+        },
+        {
+          "M_cycles": 240,
+          "V_cycles": 385,
+          "component_index": 43,
+          "ops": 10,
+          "owner": 3
+        },
+        {
+          "M_cycles": 240,
+          "V_cycles": 385,
+          "component_index": 44,
+          "ops": 10,
+          "owner": 3
+        },
+        {
+          "M_cycles": 240,
+          "V_cycles": 398,
+          "component_index": 45,
+          "ops": 11,
+          "owner": 3
+        },
+        {
+          "M_cycles": 240,
+          "V_cycles": 385,
+          "component_index": 46,
+          "ops": 10,
+          "owner": 3
+        },
+        {
+          "M_cycles": 240,
+          "V_cycles": 437,
+          "component_index": 47,
+          "ops": 14,
+          "owner": 3
+        },
+        {
+          "M_cycles": 240,
+          "V_cycles": 437,
+          "component_index": 48,
+          "ops": 14,
+          "owner": 3
+        }
+      ],
+      "union_guard": false,
+      "violations": [
+        {
+          "all_live_bytes_checked": 221208,
+          "bucket": 145,
+          "capacity_bytes": 131072,
+          "core": 0,
+          "excess_bytes": 90136,
+          "live_tensor_count": 81,
+          "op": 4551,
+          "peak_bytes": 221208,
+          "pool": "UB",
+          "top25_bytes": 131072,
+          "top25_live_intervals": [
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 101,
+              "last_bucket": 212,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4465,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004691
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 102,
+              "last_bucket": 212,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4466,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004692
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 103,
+              "last_bucket": 213,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4467,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004693
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 104,
+              "last_bucket": 213,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4468,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004694
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 14,
+              "last_bucket": 196,
+              "local_consumer_count": 9,
+              "pool": "UB",
+              "producer_op": 4472,
+              "producer_owner": null,
+              "shared_producer": false,
+              "tid": 1000004699
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 98,
+              "last_bucket": 196,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4499,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004726
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 99,
+              "last_bucket": 197,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4505,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004732
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 100,
+              "last_bucket": 197,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4506,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004733
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 94,
+              "last_bucket": 145,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4543,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004771
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 95,
+              "last_bucket": 145,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4548,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004776
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 96,
+              "last_bucket": 146,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4549,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004777
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 97,
+              "last_bucket": 146,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4550,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004778
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 145,
+              "last_bucket": 342,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4551,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004779
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 105,
+              "last_bucket": 301,
+              "local_consumer_count": 3,
+              "pool": "UB",
+              "producer_op": 4594,
+              "producer_owner": null,
+              "shared_producer": false,
+              "tid": 1000004833
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 106,
+              "last_bucket": 365,
+              "local_consumer_count": 3,
+              "pool": "UB",
+              "producer_op": 4595,
+              "producer_owner": null,
+              "shared_producer": false,
+              "tid": 1000004835
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 107,
+              "last_bucket": 302,
+              "local_consumer_count": 3,
+              "pool": "UB",
+              "producer_op": 4596,
+              "producer_owner": null,
+              "shared_producer": false,
+              "tid": 1000004837
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 108,
+              "last_bucket": 273,
+              "local_consumer_count": 3,
+              "pool": "UB",
+              "producer_op": 4597,
+              "producer_owner": null,
+              "shared_producer": false,
+              "tid": 1000004839
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 109,
+              "last_bucket": 366,
+              "local_consumer_count": 3,
+              "pool": "UB",
+              "producer_op": 4598,
+              "producer_owner": null,
+              "shared_producer": false,
+              "tid": 1000004841
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 110,
+              "last_bucket": 303,
+              "local_consumer_count": 3,
+              "pool": "UB",
+              "producer_op": 4599,
+              "producer_owner": null,
+              "shared_producer": false,
+              "tid": 1000004843
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 117,
+              "last_bucket": 367,
+              "local_consumer_count": 3,
+              "pool": "UB",
+              "producer_op": 4600,
+              "producer_owner": null,
+              "shared_producer": false,
+              "tid": 1000004845
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 105,
+              "last_bucket": 148,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4616,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004862
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 106,
+              "last_bucket": 149,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4617,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004863
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 107,
+              "last_bucket": 150,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4618,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004864
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 108,
+              "last_bucket": 151,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4619,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004865
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 109,
+              "last_bucket": 152,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4620,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004866
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "cores": 4,
+      "frontier_peaks": [
+        {
+          "L1": {
+            "bucket": 882,
+            "bytes": 43008,
+            "op": 726
+          },
+          "UB": {
+            "bucket": 145,
+            "bytes": 221208,
+            "op": 4551
+          }
+        },
+        {
+          "L1": {
+            "bucket": 440,
+            "bytes": 43968,
+            "op": 747
+          },
+          "UB": {
+            "bucket": 46,
+            "bytes": 43048,
+            "op": 5361
+          }
+        },
+        {
+          "L1": {
+            "bucket": 182,
+            "bytes": 43008,
+            "op": 768
+          },
+          "UB": {
+            "bucket": 184,
+            "bytes": 17476,
+            "op": 770
+          }
+        },
+        {
+          "L1": {
+            "bucket": 411,
+            "bytes": 40896,
+            "op": 789
+          },
+          "UB": {
+            "bucket": 93,
+            "bytes": 22144,
+            "op": 4561
+          }
+        }
+      ],
+      "groups": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "max_excess_bytes": 90136,
+      "no_spill_guard": false,
+      "per_core_M_V_cycles": [
+        [
+          66600,
+          64962
+        ],
+        [
+          66600,
+          35487
+        ],
+        [
+          66600,
+          28657
+        ],
+        [
+          49301,
+          25590
+        ]
+      ],
+      "per_core_schedule_lengths": [
+        1740,
+        1298,
+        1044,
+        1269
+      ],
+      "shared_component_counts_by_core": {
+        "0": 15,
+        "1": 9,
+        "2": 6,
+        "3": 19
+      },
+      "shared_component_placements": [
+        {
+          "M_cycles": 5400,
+          "V_cycles": 914,
+          "component_index": 0,
+          "ops": 44,
+          "owner": 3
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 1,
+          "ops": 1,
+          "owner": 0
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 2,
+          "ops": 1,
+          "owner": 1
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 3,
+          "ops": 1,
+          "owner": 2
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 4,
+          "ops": 1,
+          "owner": 0
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 5,
+          "ops": 1,
+          "owner": 1
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 6,
+          "ops": 1,
+          "owner": 2
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 7,
+          "ops": 1,
+          "owner": 0
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 8,
+          "ops": 1,
+          "owner": 1
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 9,
+          "ops": 1,
+          "owner": 2
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 10,
+          "ops": 1,
+          "owner": 0
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 11,
+          "ops": 1,
+          "owner": 1
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 12,
+          "ops": 1,
+          "owner": 2
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 13,
+          "ops": 1,
+          "owner": 0
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 14,
+          "ops": 1,
+          "owner": 1
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 15,
+          "ops": 1,
+          "owner": 2
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 16,
+          "ops": 1,
+          "owner": 0
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 17,
+          "ops": 1,
+          "owner": 1
+        },
+        {
+          "M_cycles": 84,
+          "V_cycles": 0,
+          "component_index": 18,
+          "ops": 1,
+          "owner": 2
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 4060,
+          "component_index": 19,
+          "ops": 29,
+          "owner": 0
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 5193,
+          "component_index": 20,
+          "ops": 38,
+          "owner": 0
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 6352,
+          "component_index": 21,
+          "ops": 49,
+          "owner": 0
+        },
+        {
+          "M_cycles": 377,
+          "V_cycles": 132,
+          "component_index": 22,
+          "ops": 3,
+          "owner": 3
+        },
+        {
+          "M_cycles": 377,
+          "V_cycles": 132,
+          "component_index": 23,
+          "ops": 3,
+          "owner": 3
+        },
+        {
+          "M_cycles": 377,
+          "V_cycles": 132,
+          "component_index": 24,
+          "ops": 3,
+          "owner": 3
+        },
+        {
+          "M_cycles": 377,
+          "V_cycles": 132,
+          "component_index": 25,
+          "ops": 3,
+          "owner": 3
+        },
+        {
+          "M_cycles": 377,
+          "V_cycles": 132,
+          "component_index": 26,
+          "ops": 3,
+          "owner": 3
+        },
+        {
+          "M_cycles": 377,
+          "V_cycles": 132,
+          "component_index": 27,
+          "ops": 3,
+          "owner": 3
+        },
+        {
+          "M_cycles": 377,
+          "V_cycles": 132,
+          "component_index": 28,
+          "ops": 3,
+          "owner": 3
+        },
+        {
+          "M_cycles": 377,
+          "V_cycles": 132,
+          "component_index": 29,
+          "ops": 3,
+          "owner": 3
+        },
+        {
+          "M_cycles": 377,
+          "V_cycles": 132,
+          "component_index": 30,
+          "ops": 3,
+          "owner": 3
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 3552,
+          "component_index": 31,
+          "ops": 88,
+          "owner": 0
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 3448,
+          "component_index": 32,
+          "ops": 80,
+          "owner": 0
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 3539,
+          "component_index": 33,
+          "ops": 87,
+          "owner": 0
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 3565,
+          "component_index": 34,
+          "ops": 89,
+          "owner": 0
+        },
+        {
+          "M_cycles": 2660,
+          "V_cycles": 909,
+          "component_index": 35,
+          "ops": 52,
+          "owner": 3
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 2229,
+          "component_index": 36,
+          "ops": 81,
+          "owner": 0
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 4419,
+          "component_index": 37,
+          "ops": 159,
+          "owner": 0
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 2255,
+          "component_index": 38,
+          "ops": 83,
+          "owner": 1
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 2320,
+          "component_index": 39,
+          "ops": 88,
+          "owner": 1
+        },
+        {
+          "M_cycles": 0,
+          "V_cycles": 2307,
+          "component_index": 40,
+          "ops": 87,
+          "owner": 1
+        },
+        {
+          "M_cycles": 240,
+          "V_cycles": 411,
+          "component_index": 41,
+          "ops": 12,
+          "owner": 3
+        },
+        {
+          "M_cycles": 240,
+          "V_cycles": 424,
+          "component_index": 42,
+          "ops": 13,
+          "owner": 3
+        },
+        {
+          "M_cycles": 240,
+          "V_cycles": 385,
+          "component_index": 43,
+          "ops": 10,
+          "owner": 3
+        },
+        {
+          "M_cycles": 240,
+          "V_cycles": 385,
+          "component_index": 44,
+          "ops": 10,
+          "owner": 3
+        },
+        {
+          "M_cycles": 240,
+          "V_cycles": 398,
+          "component_index": 45,
+          "ops": 11,
+          "owner": 3
+        },
+        {
+          "M_cycles": 240,
+          "V_cycles": 385,
+          "component_index": 46,
+          "ops": 10,
+          "owner": 3
+        },
+        {
+          "M_cycles": 240,
+          "V_cycles": 437,
+          "component_index": 47,
+          "ops": 14,
+          "owner": 3
+        },
+        {
+          "M_cycles": 240,
+          "V_cycles": 437,
+          "component_index": 48,
+          "ops": 14,
+          "owner": 3
+        }
+      ],
+      "union_guard": false,
+      "violations": [
+        {
+          "all_live_bytes_checked": 221208,
+          "bucket": 145,
+          "capacity_bytes": 131072,
+          "core": 0,
+          "excess_bytes": 90136,
+          "live_tensor_count": 81,
+          "op": 4551,
+          "peak_bytes": 221208,
+          "pool": "UB",
+          "top25_bytes": 131072,
+          "top25_live_intervals": [
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 101,
+              "last_bucket": 212,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4465,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004691
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 102,
+              "last_bucket": 212,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4466,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004692
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 103,
+              "last_bucket": 213,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4467,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004693
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 104,
+              "last_bucket": 213,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4468,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004694
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 14,
+              "last_bucket": 196,
+              "local_consumer_count": 9,
+              "pool": "UB",
+              "producer_op": 4472,
+              "producer_owner": null,
+              "shared_producer": false,
+              "tid": 1000004699
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 98,
+              "last_bucket": 196,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4499,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004726
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 99,
+              "last_bucket": 197,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4505,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004732
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 100,
+              "last_bucket": 197,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4506,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004733
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 94,
+              "last_bucket": 145,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4543,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004771
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 95,
+              "last_bucket": 145,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4548,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004776
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 96,
+              "last_bucket": 146,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4549,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004777
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 97,
+              "last_bucket": 146,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4550,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004778
+            },
+            {
+              "bytes": 8192,
+              "core": 0,
+              "first_bucket": 145,
+              "last_bucket": 342,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4551,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004779
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 105,
+              "last_bucket": 301,
+              "local_consumer_count": 3,
+              "pool": "UB",
+              "producer_op": 4594,
+              "producer_owner": null,
+              "shared_producer": false,
+              "tid": 1000004833
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 106,
+              "last_bucket": 365,
+              "local_consumer_count": 3,
+              "pool": "UB",
+              "producer_op": 4595,
+              "producer_owner": null,
+              "shared_producer": false,
+              "tid": 1000004835
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 107,
+              "last_bucket": 302,
+              "local_consumer_count": 3,
+              "pool": "UB",
+              "producer_op": 4596,
+              "producer_owner": null,
+              "shared_producer": false,
+              "tid": 1000004837
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 108,
+              "last_bucket": 273,
+              "local_consumer_count": 3,
+              "pool": "UB",
+              "producer_op": 4597,
+              "producer_owner": null,
+              "shared_producer": false,
+              "tid": 1000004839
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 109,
+              "last_bucket": 366,
+              "local_consumer_count": 3,
+              "pool": "UB",
+              "producer_op": 4598,
+              "producer_owner": null,
+              "shared_producer": false,
+              "tid": 1000004841
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 110,
+              "last_bucket": 303,
+              "local_consumer_count": 3,
+              "pool": "UB",
+              "producer_op": 4599,
+              "producer_owner": null,
+              "shared_producer": false,
+              "tid": 1000004843
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 117,
+              "last_bucket": 367,
+              "local_consumer_count": 3,
+              "pool": "UB",
+              "producer_op": 4600,
+              "producer_owner": null,
+              "shared_producer": false,
+              "tid": 1000004845
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 105,
+              "last_bucket": 148,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4616,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004862
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 106,
+              "last_bucket": 149,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4617,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004863
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 107,
+              "last_bucket": 150,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4618,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004864
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 108,
+              "last_bucket": 151,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4619,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004865
+            },
+            {
+              "bytes": 2048,
+              "core": 0,
+              "first_bucket": 109,
+              "last_bucket": 152,
+              "local_consumer_count": 1,
+              "pool": "UB",
+              "producer_op": 4620,
+              "producer_owner": 0,
+              "shared_producer": true,
+              "tid": 1000004866
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "status": "COMPLETED_STATIC_ONLY"
+}
