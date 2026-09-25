@@ -1,0 +1,166 @@
+{
+  "audit_type": "paired_saved_feed_secondary_ddr_comparison",
+  "scope": "v1 versus fixed v4, same case/core cells; feeds and fixed singlecore baseline results only; no reruns",
+  "v1": {
+    "commit": "a765899917cbb068c84aeedcf6aca174443f435f",
+    "feed_path": "results/a/q1-unified-full500-20260925-s59/20260924T1810Z-s59ee/board-feed-500.json",
+    "feed_sha256": "7a3964740f35902829ae16daee3f8ce9baeeba25cfc376a03e594f54a44e68ce",
+    "solver_commit": "48faef6f1386c3dc7d037674a38af29d533ba774"
+  },
+  "v4": {
+    "feed_path": "results/a/q1-unified-v4-full500-20260925-s59/20260924T1952Z-s59ee/board-feed-500.json",
+    "feed_sha256": "4cd79828999ad56dc00d34a79cc0dcd921fff783e5aaf793b0c84924b0f10764",
+    "solver_commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
+    "commit": "0e0d7cd327c51cc6ac365e01f4b6a7d2b28f9297"
+  },
+  "paired_cells": 500,
+  "identity_checks": "all paired graph, config, and baseline result hashes equal",
+  "movement_semantics": {
+    "metrics.ddr_bytes": "result.data_movement_bytes.scheduled_copy_bytes (total scheduled copy traffic)",
+    "metrics.extra_ddr_bytes": "result.data_movement_bytes.added_copy_bytes (official added traffic; equals partition_added_copy_bytes + spill_added_copy_bytes per evaluator contract)",
+    "metrics.spill_bytes": "result.data_movement_bytes.spill_added_copy_bytes",
+    "original_graph_copy_bytes": "scheduled_copy_bytes - added_copy_bytes; do not label scheduled_copy_bytes as extra DDR"
+  },
+  "movement_schema_samples": [
+    {
+      "version": "v1",
+      "case": "001",
+      "cores": 5,
+      "scene": "A",
+      "makespan": 47502,
+      "num_cores": 5,
+      "data_movement_bytes": {
+        "original_graph_copy_bytes": 1639552,
+        "scheduled_copy_bytes": 1644160,
+        "added_copy_bytes": 4608,
+        "partition_added_copy_bytes": 4608,
+        "spill_added_copy_bytes": 0
+      }
+    },
+    {
+      "version": "v4",
+      "case": "001",
+      "cores": 5,
+      "scene": "A",
+      "makespan": 47502,
+      "num_cores": 5,
+      "data_movement_bytes": {
+        "original_graph_copy_bytes": 1639552,
+        "scheduled_copy_bytes": 1644160,
+        "added_copy_bytes": 4608,
+        "partition_added_copy_bytes": 4608,
+        "spill_added_copy_bytes": 0
+      }
+    }
+  ],
+  "per_core_extra_ddr_delta_v4_minus_v1": {
+    "1": {
+      "cells": 100,
+      "extra_ddr_increased": 0,
+      "extra_ddr_decreased": 0,
+      "extra_ddr_equal": 100,
+      "v1_total_extra_ddr_bytes": 1292384672,
+      "v4_total_extra_ddr_bytes": 1292384672,
+      "net_change_v4_minus_v1_bytes": 0
+    },
+    "2": {
+      "cells": 100,
+      "extra_ddr_increased": 11,
+      "extra_ddr_decreased": 2,
+      "extra_ddr_equal": 87,
+      "v1_total_extra_ddr_bytes": 841665004,
+      "v4_total_extra_ddr_bytes": 930997088,
+      "net_change_v4_minus_v1_bytes": 89332084,
+      "largest_increase": {
+        "case_id": "095",
+        "v1_extra_ddr_bytes": 0,
+        "v4_extra_ddr_bytes": 34062336,
+        "increase_bytes": 34062336,
+        "makespan_change_v4_minus_v1_cycles": -219938
+      }
+    },
+    "3": {
+      "cells": 100,
+      "extra_ddr_increased": 9,
+      "extra_ddr_decreased": 5,
+      "extra_ddr_equal": 86,
+      "v1_total_extra_ddr_bytes": 919622520,
+      "v4_total_extra_ddr_bytes": 962635514,
+      "net_change_v4_minus_v1_bytes": 43012994,
+      "largest_increase": {
+        "case_id": "028",
+        "v1_extra_ddr_bytes": 54484992,
+        "v4_extra_ddr_bytes": 74559744,
+        "increase_bytes": 20074752,
+        "makespan_change_v4_minus_v1_cycles": -357923
+      }
+    },
+    "4": {
+      "cells": 100,
+      "extra_ddr_increased": 5,
+      "extra_ddr_decreased": 6,
+      "extra_ddr_equal": 89,
+      "v1_total_extra_ddr_bytes": 982422478,
+      "v4_total_extra_ddr_bytes": 982414908,
+      "net_change_v4_minus_v1_bytes": -7570,
+      "largest_increase": {
+        "case_id": "028",
+        "v1_extra_ddr_bytes": 52281216,
+        "v4_extra_ddr_bytes": 78350208,
+        "increase_bytes": 26068992,
+        "makespan_change_v4_minus_v1_cycles": -603250
+      }
+    },
+    "5": {
+      "cells": 100,
+      "extra_ddr_increased": 7,
+      "extra_ddr_decreased": 4,
+      "extra_ddr_equal": 89,
+      "v1_total_extra_ddr_bytes": 996664150,
+      "v4_total_extra_ddr_bytes": 1049599886,
+      "net_change_v4_minus_v1_bytes": 52935736,
+      "largest_increase": {
+        "case_id": "028",
+        "v1_extra_ddr_bytes": 27380736,
+        "v4_extra_ddr_bytes": 80845824,
+        "increase_bytes": 53465088,
+        "makespan_change_v4_minus_v1_cycles": -51326
+      }
+    }
+  },
+  "v4_k5_absolute": {
+    "cells": 100,
+    "extra_ddr_zero_cells": 6,
+    "spill_zero_cells": 74,
+    "total_extra_ddr_bytes": 1049599886,
+    "total_scheduled_copy_bytes": 1290329940,
+    "original_graph_copy_bytes_total_from_scheduled_minus_extra": 240730054,
+    "fixed_singlecore_baseline": {
+      "cells": 100,
+      "extra_ddr_total_bytes": 1241686120,
+      "scheduled_copy_total_bytes": 1482416174,
+      "original_graph_copy_total_bytes": 240730054,
+      "spill_bytes_total": 1241686120,
+      "extra_ddr_zero_cells": 60
+    }
+  },
+  "conclusion_note": "Counts and sums describe these saved feed rows, not independent evaluation.",
+  "recorded_at": "2026-09-25T05:06:45.309846+00:00",
+  "root_independent_checks": {
+    "fixed_v4_feed_K5_sums_match": true,
+    "fixed_v1_v4_case028_match": true,
+    "case028_k5": {
+      "v1_makespan": 8331062,
+      "v4_makespan": 8279736,
+      "makespan_reduction_pct": 0.6160799187426524,
+      "extra_ddr_increase_pct": 195.26534275776956
+    },
+    "fixed_v4_policy": "choose minimizes (makespan, scheduled_copy_bytes); for fixed graph scheduled and extra have the same ordering",
+    "v4_spill_K5_total_bytes": 141471344,
+    "v4_partition_K5_total_bytes": 908128542,
+    "partition_share_of_extra_pct": 86.52140249946635,
+    "K5_extra_change_vs_v1_pct": 5.311291270986319,
+    "K5_extra_change_vs_singlecore_pct": -15.46978990149298,
+    "new_solver_or_eval_calls": 0
+  }
+}
