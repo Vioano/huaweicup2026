@@ -45,9 +45,11 @@
    P2 active-core 全量实验的四个原始分片 `s01`–`s04` 分别覆盖 001–025、026–050、051–075、076–100，每片 125 格。另造的 500 格整包复用同一批 `attempt_id/revision` 却改写 `run_id`，中央按本条拒收；不能重投、覆盖或冒充第二次测量。
 
    成绩台的 `composite:q2-activecore-full500-20260925-s59` **只是读取视图**。固定来源为[提交 60af 的 manifest](https://github.com/huaweibei123/huaweicup2026/blob/60afc38b327680fbda0ff10182e3e05a01edd72d/results/a/q2-nikolastarx/active-core-full500-20260925-s59/manifest.json)（SHA-256 `46ca4a4e77271d2051828f4fffa8df2e3cb143d098d1a683f841691efc3824ce`）；逐格原始记录 ID 的有序摘要为 `c6e658c375bd70fa085fdf737a24fdc7386bf64d729f911f74056ac4e60d2172`。仅当 500 个唯一格的官方 E0 原件、单核分母、算法/版本来源和记录摘要全部符合时进入全量排名；未补齐时只显示已核覆盖和子集预览。每条记录保留原分片 `run_id`、`attempt_id`、revision 和 Git 原件链接，账本不增新测量。
+
+   P3 R9F 完整批次同样只建立读取视图 `composite:q3-r9f-final-full500-20260926-s3172`。其[固定清单](https://github.com/huaweibei123/huaweicup2026/blob/2c24a0eec7671abf9745f48b5eea0146b98a5aae/results/a/q3-nikolastarx/r9f-final-full500-20260926/COMPOSITE_MANIFEST.json)列出原运行的 400 格、补齐运行的 100 格以及逐格来源（清单 SHA-256 `8e6bca56a9e198154ad6ca6d835a29a1081ae0a736f17bd0935637d0e1df8c96`，记录 ID 有序摘要 `f9d38c4ac668879541474c52030873ca420dd1f4355289f38b96ad1d260502b2`）。仅在 500 格的官方 E0、单核基线、同计划 Cache 配对、固定求解器来源与记录指纹均一致时，才作为全量候选展示；原记录不改写，也不产生新测量。
 4. E0 的计划、结果、运行收据须有固定 Git 原件与 SHA256；结果 Makespan/类型/问题/核数要匹配。身份与原件一致不等于重新运行或独立证实成员电脑行为。E1 另须匹配队长 `board-calibrations.json` 明确的实现、问题、图集合、核数、配置和 runtime；初版准入表为空，不因名字 exact 放行。E2 仅存来源记录，不入正式榜。
 5. 官方单核比值只由固定 `singlecore_evaluate.evaluate_singlecore` 的匹配原件计算；没有原件留 NA，不能用 stub 或优化算法 k=1 代替。
-6. P3 CacheGain = **提交者声明同图、同配置、同计划哈希、同核数的 P2 无 Cache Makespan / 当前 P3 Makespan**。成绩台校验固定方案字节、配对官方结果字节、声明哈希、场景及核数；官方 P2 结果不含所用方案哈希，现有准入不能独立证明评估时实际使用了该方案，`cache_pair_verified` 仅表示上述原件与声明一致，不表示已复跑或独立验证运行链。配对不符留 NA；不是任取最好 P2 与最好 P3 相除。Cache 命中率用官方按字节字段。P3 专注页的“显示指标”可直接选 Cache 加速比或字节命中率，在固定位置的主热力表显示逐算例 1–5 核数据及各核有效样本均值；缺配对显示“缺配对”，不作 1× 参与均值。P3 表头 Cache 按钮直接切换加速比与相对官方单核，保留滚动和筛选。总览页的 P3 专属指标仍打开独立配对明细面板，不把 P1/P2 切成 NA。选中方案详情保留双柱对照，P3 相对单核另列。
+6. P3 CacheGain = **提交者声明同图、同配置、同计划哈希、同核数的 P2 无 Cache Makespan / 当前 P3 Makespan**。成绩台校验固定方案字节、配对官方结果字节、声明哈希、场景及核数；官方 P2 结果不含所用方案哈希，现有准入不能独立证明评估时实际使用了该方案，`cache_pair_verified` 仅表示上述原件与声明一致，不表示已复跑或独立验证运行链。配对不符留 NA；不是任取最好 P2 与最好 P3 相除。Cache 命中率用官方按字节字段。P3 专注页的“显示指标”可直接选 Cache 加速比或字节命中率，在固定位置的主热力表显示逐算例 1–5 核数据及各核有效样本均值；缺配对显示“缺配对”，不作 1× 参与均值。P3 表头 Cache 按钮直接切换加速比与相对官方单核，保留滚动和筛选。总览页选择 P3 专属指标时转到 P3 专注页主表，不把 P1/P2 切成 NA。选中方案详情保留双柱对照，P3 相对单核另列。
 7. `solver_wall_seconds` 与 `evaluation_wall_seconds` 分开，`timing` 保留包含关系、精度及未知项；不据此自动相加。`ddr_bytes` 在 v1 明确映射官方 `data_movement_bytes.scheduled_copy_bytes`，UI 标“调度搬运”，**不将它宣称为 P3 实际物理 DDR 访问量**；`spill_bytes` 为 spill_added_copy_bytes。未提供物理 DDR 指标时不猜测。
 
 每列均值随当前算法、批次、算例筛选计算，并显示有效样本数/筛选内图数。相对单核逐例比值取算术平均，不能用总周期相除；只有原件已核且分母已核的有限数值参与。P3 CacheGain 另需声明同计划的配对原件匹配；缺项、失败和仅报告不作0参与。历史最优组合的均值仍是混合方案统计，不能标成单一算法成绩。默认显示相对官方单核，桌面顶部合并品牌、说明、统计及导航，窄屏换行。
@@ -113,7 +115,7 @@ python3 src/benchmark_board/app.py --state output/benchmark-board serve --port 5
 网页与 Agent 同数据/同选择器，HTTP 只读，无 POST 执行入口。发现页 `/agent`，机器 schema `/api/v1/schema`。
 
 - `GET /api/v1/runtime` 返回实际提供的UI资源指纹、各文件SHA256、实际HTML响应SHA256与独立同步器的software状态。`ui_asset_id = sha256(packed({"index.html":sha256(原文件),"app.js":sha256(原文件),"style.css":sha256(原文件)}).encode())`，packed与账本相同，UTF-8、排序键、无多余空白。根HTML在第一个`</head>`前插入`<meta name="board-assets" content="<ui_asset_id>">`，JS/CSS原字节不改。监督器应依据受信发布包本机字节复算指纹/实际渲染HTML，不把服务自报hash当发布者认证；每个release目录保持不可变。
-- 页面每5秒比较当前文档标记和实际资源指纹；新版已在本机提供时保存查看状态到当前站点sessionStorage并重载。恢复指标、算法/run、算例筛选、报告预览、详情、三表滚动和Cache面板，失败的版本请求不会丢弃当前页面。生产与镜像模式都可读`--sync-status`，但网页不下载代码或控制服务进程。已打开的旧版页面若尚不含此检测逻辑，首次安装新版仍需刷新一次，之后更新自动检测；不能把首次部署前的旧JS说成已能热更新。
+- 页面每5秒比较当前文档标记和实际资源指纹；新版已在本机提供时保存查看状态到当前站点sessionStorage并重载。恢复指标、算法/run、算例筛选、报告预览、详情和热力表滚动，失败的版本请求不会丢弃当前页面。生产与镜像模式都可读`--sync-status`，但网页不下载代码或控制服务进程。已打开的旧版页面若尚不含此检测逻辑，首次安装新版仍需刷新一次，之后更新自动检测；不能把首次部署前的旧JS说成已能热更新。
 
 - `GET /api/v1/cells?problem=P1&case_id=002&cores=4&algorithm=...&run=...`：最优和覆盖；无筛选完整1500格。`include_reported=true` 只预览，不替换已入榜方案。
 - `GET /api/v1/records?problem=P1&case_id=002&cores=4&offset=0&limit=100`：全部历史，含失败、旧版本和拒绝入榜理由，limit≤500及next_offset。
