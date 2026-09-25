@@ -66,7 +66,8 @@ def main():
             e.trusted=fresh['trusted_keys']
             e.config['poll_seconds']=min(max(fresh.get('poll_seconds',2),2),2)
             status=e.cycle(background_upload=args.command=='run',
-                           background_receive=args.command=='run' and config['role']=='leader')
+                           background_receive=args.command=='run' and config['role']=='leader',
+                           background_publish=args.command=='run' and config['role']=='leader')
             try:
                 def receive_available_release():
                     release_head=remote.head()
