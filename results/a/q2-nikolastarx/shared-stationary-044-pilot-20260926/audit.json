@@ -1,0 +1,81 @@
+{
+  "status": "verified_negative_primary_result",
+  "case": "044",
+  "cores": 5,
+  "fixed_package_commit": "65e677cd398f95bb1b273ca5a958c108ab833a05",
+  "solver_source_commit": "65b70e29e96115c1e365493a89f1e8a44339bc25",
+  "control_solver_commit": "c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f",
+  "capsule_sha256": "b62c1db041cfd2e986e2c877ac0c69b5b9584fef326385f6de5182034312865b",
+  "result_zip_sha256": "07352ae48b55d5a8e3bafc5f6e9d32bcb7fcf2b17135a8c862a4c33ce36c7d30",
+  "plan_sha256": "b96f5fe35fc7f6328245d479b4d4d4246bcec8bb16e000dcd457a7adfdb440e0",
+  "official_result_sha256": "dc755ec1cb7af1848eddedf4aa22f75f36e59534faa8fe71589717c0df659c06",
+  "calls": {
+    "construct": 1,
+    "E0": 1,
+    "E1": 0,
+    "E2": 0
+  },
+  "old_official": {
+    "makespan_cycles": 43795,
+    "added_copy_bytes": 930400
+  },
+  "new_official": {
+    "makespan_cycles": 72955,
+    "added_copy_bytes": 188672,
+    "spill_added_copy_bytes": 0,
+    "task_count": 5,
+    "cross_core_transfer_count": 121
+  },
+  "difference": {
+    "makespan_cycles": 29160,
+    "makespan_percent": 66.58294325836283,
+    "added_copy_bytes": -741728
+  },
+  "core_task_intervals": [
+    [
+      0,
+      14116
+    ],
+    [
+      13116,
+      30584
+    ],
+    [
+      30301,
+      48483
+    ],
+    [
+      47483,
+      65170
+    ],
+    [
+      64170,
+      72955
+    ]
+  ],
+  "processes": {
+    "launcher-process": {
+      "status": "ok",
+      "wall_seconds": 1.1988369290000946,
+      "observed_peak_rss_bytes": 50913280,
+      "surviving_pids": []
+    },
+    "output/construct-process": {
+      "status": "ok",
+      "wall_seconds": 0.3781579110000166,
+      "observed_peak_rss_bytes": 25972736,
+      "surviving_pids": []
+    },
+    "output/e0-process": {
+      "status": "ok",
+      "wall_seconds": 0.6460285570000224,
+      "observed_peak_rss_bytes": 31526912,
+      "surviving_pids": []
+    }
+  },
+  "limits_and_caveats": [
+    "This is one official case and one core count, not a full-algorithm score.",
+    "Colab timing is not directly comparable with the old Mac batch.",
+    "Structural cause needs inspection of frozen task scheduling rules."
+  ]
+}

@@ -1,6 +1,8 @@
 # P2 shared stationary wave: 044/K5 Colab capsule
 
-Prepared only. Local `pack.py` performed a hash-only preflight and wrote `capsule.zip`; no constructor, E0, E1 or E2 ran. The source is fixed at `65b70e29e96115c1e365493a89f1e8a44339bc25`. Old c665 official 044/K5 is Makespan 43795 and added COPY bytes 930400. This one-cell pilot is a mechanism test, not a full500 score or an online selector.
+The admitted one-cell run is complete; see [RESULTS.md](RESULTS.md) for the official negative result and preserved original ZIP. The following is the fixed pre-run protocol and command.
+
+At packaging time, local `pack.py` performed a hash-only preflight and wrote `capsule.zip`; that step ran no constructor, E0, E1 or E2. The source is fixed at `65b70e29e96115c1e365493a89f1e8a44339bc25`. Old c665 official 044/K5 is Makespan 43795 and added COPY bytes 930400. This one-cell pilot is a mechanism test, not a full500 score or an online selector.
 
 `pack.py` requires that the fixed solver source commit is an ancestor of HEAD and that all five included solver modules are byte-for-byte identical to that commit. It checks the graph/config against both c665 completed-row hashes and the official source manifest, and checks every official Python source against that manifest. The capsule contains the required five solver modules, all ten official Python modules, graph, config, runner and SHA-256 manifest. The runner verifies every payload hash before any construction. It performs exactly one cold `shared_stationary_wave.build` and one separate unmodified official P2 E0, saving complete plan, detail, construction receipt, official result, trace, log, stdout/stderr and process receipts. Its limits are one worker, construction ≤30 s, E0 ≤60 s, total ≤120 s, observed process-tree RSS ≤2 GiB, zero retries. Any failure stops the batch. Output lives outside the extracted capsule.
 
