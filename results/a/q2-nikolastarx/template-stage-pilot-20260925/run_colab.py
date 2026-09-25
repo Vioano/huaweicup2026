@@ -11,7 +11,7 @@ root = Path('/content/p2-copyevent500-s8ee-20260925')
 archive = Path('/content/p2-template-stage-plans.zip')
 sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
 assert sha(archive) == os.environ['P2_STAGE_ZIP_SHA256']
-source = Path('/content/p2-template-stage-plans')
+source = Path('/content/p2-template-stage-plans-venv')
 source.mkdir(exist_ok=False)
 with zipfile.ZipFile(archive) as z:
     assert all((source / n).resolve().is_relative_to(source) for n in z.namelist())
