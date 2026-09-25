@@ -1,0 +1,513 @@
+{
+  "scope": "Original graph + exact pre-Step2 skeleton and Step1; no prepare/Step2/Step3/E0",
+  "source_ref": "845846b38f4d7cc2b5dc11a2fe8d10027560edcd",
+  "graph_sha256": "9abd4468a4be365e384de47431ac914ee44fd6e7b6221dffc584561f388cd57e",
+  "calls": {
+    "static_extracted_Task_COPY_skeleton": 1,
+    "official_step1": 5,
+    "official_step2": 0,
+    "official_step3": 0,
+    "official_prepare": 0,
+    "E0_P3": 0,
+    "E0_P2": 0,
+    "official_derive_multicore_plan": 2
+  },
+  "cuts": [
+    0,
+    24,
+    51,
+    68,
+    96,
+    124
+  ],
+  "jobs": 11,
+  "pilot_job_index": 1,
+  "pilot_head_op": 177,
+  "permutation": [
+    1,
+    0,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "unchanged_owner": true,
+  "unchanged_original_operations": true,
+  "original_compute_FIFO_same_up_to_permutation": true,
+  "copies_before_spill_unchanged": true,
+  "cross_links": 121,
+  "baseline_serialization_hash_checks": {
+    "sort=False,newline=False": "84b0a1367d3b5b069437fb9a6f3be82d12fb1416678cb7a2d145d188f4a5e57b",
+    "sort=False,newline=True": "e959272c4330eb75e524190eadaee382c85263896c82dfc910ecffc31bb40c44",
+    "sort=True,newline=False": "3fe1a01c321ccae67936142557df52f69012a9b3183f1fb69763fb7145ed7c88",
+    "sort=True,newline=True": "c46dccb33362e15977b9cd57b7e52b264e0a1cc4c9d45004e9cd9259b27307a5"
+  },
+  "candidate_sha256": "13914b24c18b59366be17de86a26d227ff85427cb00b184799587777547a6508",
+  "cores": [
+    {
+      "core": 0,
+      "common_copy_count": 10,
+      "common_bytes": 6624,
+      "last_common_raw_rank": 31,
+      "valid_pilot_jobs": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "base_interval_peak": {
+        "L1": 12768,
+        "UB": 0
+      },
+      "candidate_interval_peak": {
+        "L1": 12768,
+        "UB": 0
+      },
+      "prefix_common_copy_ids": [
+        1000001498
+      ],
+      "prefix_covers_all_common": false,
+      "candidate_first_ops": [
+        1000001498,
+        1000001635,
+        177,
+        178,
+        1000001500,
+        179,
+        180,
+        1000001502,
+        181,
+        182,
+        183,
+        1000001504,
+        184,
+        185,
+        1000001506
+      ],
+      "compute_word_matches_permuted_anchor": true
+    },
+    {
+      "core": 1,
+      "common_copy_count": 12,
+      "common_bytes": 214272,
+      "last_common_raw_rank": 38,
+      "valid_pilot_jobs": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "base_interval_peak": {
+        "L1": 215808,
+        "UB": 0
+      },
+      "candidate_interval_peak": {
+        "L1": 215808,
+        "UB": 0
+      },
+      "prefix_common_copy_ids": [
+        1000001518,
+        1000001520,
+        1000001522,
+        1000001524,
+        1000001526,
+        1000001528,
+        1000001530,
+        1000001532,
+        1000001534,
+        1000001536,
+        1000001538,
+        1000001540
+      ],
+      "prefix_covers_all_common": true,
+      "candidate_first_ops": [
+        1000001518,
+        1000001520,
+        1000001522,
+        1000001524,
+        1000001526,
+        1000001528,
+        1000001530,
+        1000001532,
+        1000001534,
+        1000001536,
+        1000001538,
+        1000001540,
+        1000001641,
+        201,
+        202,
+        203,
+        204
+      ],
+      "compute_word_matches_permuted_anchor": true
+    },
+    {
+      "core": 2,
+      "common_copy_count": 7,
+      "common_bytes": 516096,
+      "last_common_raw_rank": 24,
+      "valid_pilot_jobs": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "base_interval_peak": {
+        "L1": 516480,
+        "UB": 0
+      },
+      "candidate_interval_peak": {
+        "L1": 516480,
+        "UB": 0
+      },
+      "prefix_common_copy_ids": [
+        1000001542,
+        1000001544,
+        1000001546,
+        1000001548,
+        1000001550,
+        1000001552,
+        1000001554
+      ],
+      "prefix_covers_all_common": true,
+      "candidate_first_ops": [
+        1000001542,
+        1000001544,
+        1000001546,
+        1000001548,
+        1000001550,
+        1000001552,
+        1000001554,
+        1000001656,
+        228,
+        229,
+        230,
+        1000001653
+      ],
+      "compute_word_matches_permuted_anchor": true
+    },
+    {
+      "core": 3,
+      "common_copy_count": 11,
+      "common_bytes": 186368,
+      "last_common_raw_rank": 41,
+      "valid_pilot_jobs": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "base_interval_peak": {
+        "L1": 187904,
+        "UB": 0
+      },
+      "candidate_interval_peak": {
+        "L1": 187904,
+        "UB": 0
+      },
+      "prefix_common_copy_ids": [
+        1000001556,
+        1000001558,
+        1000001560,
+        1000001562,
+        1000001564,
+        1000001566,
+        1000001568,
+        1000001570,
+        1000001572,
+        1000001574,
+        1000001576
+      ],
+      "prefix_covers_all_common": true,
+      "candidate_first_ops": [
+        1000001556,
+        1000001558,
+        1000001560,
+        1000001562,
+        1000001564,
+        1000001566,
+        1000001568,
+        1000001570,
+        1000001572,
+        1000001574,
+        1000001576,
+        1000001662,
+        245,
+        1000001659,
+        246,
+        247
+      ],
+      "compute_word_matches_permuted_anchor": true
+    },
+    {
+      "core": 4,
+      "common_copy_count": 10,
+      "common_bytes": 7040,
+      "last_common_raw_rank": 38,
+      "valid_pilot_jobs": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "base_interval_peak": {
+        "L1": 13184,
+        "UB": 0
+      },
+      "candidate_interval_peak": {
+        "L1": 13184,
+        "UB": 0
+      },
+      "prefix_common_copy_ids": [
+        1000001578,
+        1000001580,
+        1000001582,
+        1000001584,
+        1000001586,
+        1000001588,
+        1000001590,
+        1000001592,
+        1000001594,
+        1000001596
+      ],
+      "prefix_covers_all_common": true,
+      "candidate_first_ops": [
+        1000001578,
+        1000001580,
+        1000001582,
+        1000001584,
+        1000001586,
+        1000001588,
+        1000001590,
+        1000001592,
+        1000001594,
+        1000001596,
+        1000001668,
+        273,
+        1000001665,
+        274,
+        275
+      ],
+      "compute_word_matches_permuted_anchor": true
+    }
+  ],
+  "status": "Static prefix + Step2 no-spill input certificate; not officially evaluated",
+  "original_compute_FIFO_lower_bound": 26842,
+  "candidate_compute_FIFO_lower_bound": 26842,
+  "copy_budget_before_spill": {
+    "copy_in_count": 182,
+    "copy_out_count": 132,
+    "scheduled_copy_bytes": 1116256,
+    "added_copy_bytes": 140800
+  },
+  "common_and_private_inputs": {
+    "common_keys": 50,
+    "common_bytes": 930400,
+    "private_per_job": [
+      [
+        {
+          "tensor": 1000000101,
+          "bytes": 2048,
+          "reader_positions": [
+            0
+          ]
+        }
+      ],
+      [
+        {
+          "tensor": 1000000227,
+          "bytes": 2048,
+          "reader_positions": [
+            0
+          ]
+        }
+      ],
+      [
+        {
+          "tensor": 1000000353,
+          "bytes": 2048,
+          "reader_positions": [
+            0
+          ]
+        }
+      ],
+      [
+        {
+          "tensor": 1000000479,
+          "bytes": 2048,
+          "reader_positions": [
+            0
+          ]
+        }
+      ],
+      [
+        {
+          "tensor": 1000000605,
+          "bytes": 2048,
+          "reader_positions": [
+            0
+          ]
+        }
+      ],
+      [
+        {
+          "tensor": 1000000731,
+          "bytes": 2048,
+          "reader_positions": [
+            0
+          ]
+        }
+      ],
+      [
+        {
+          "tensor": 1000000857,
+          "bytes": 2048,
+          "reader_positions": [
+            0
+          ]
+        }
+      ],
+      [
+        {
+          "tensor": 1000000983,
+          "bytes": 2048,
+          "reader_positions": [
+            0
+          ]
+        }
+      ],
+      [
+        {
+          "tensor": 1000001109,
+          "bytes": 2048,
+          "reader_positions": [
+            0
+          ]
+        }
+      ],
+      [
+        {
+          "tensor": 1000001235,
+          "bytes": 2048,
+          "reader_positions": [
+            0
+          ]
+        }
+      ],
+      [
+        {
+          "tensor": 1000001361,
+          "bytes": 2048,
+          "reader_positions": [
+            0
+          ]
+        }
+      ]
+    ]
+  },
+  "third_stage_gated_copy_bound": {
+    "scope": "relative to first incoming activation COPY_IN end; cold, non-reloaded seven unique source keys after that FIFO gate",
+    "rows": [
+      {
+        "first_reader_position": 52,
+        "tensor": 1000000045,
+        "bytes": 73728,
+        "copy_exclusive_cycles": 1229,
+        "cumulative_copy_cycles": 1229,
+        "compute_suffix_cycles": 1113,
+        "gated_finish_bound_offset": 2342
+      },
+      {
+        "first_reader_position": 55,
+        "tensor": 1000000047,
+        "bytes": 73728,
+        "copy_exclusive_cycles": 1229,
+        "cumulative_copy_cycles": 2458,
+        "compute_suffix_cycles": 949,
+        "gated_finish_bound_offset": 3407
+      },
+      {
+        "first_reader_position": 57,
+        "tensor": 1000000049,
+        "bytes": 73728,
+        "copy_exclusive_cycles": 1229,
+        "cumulative_copy_cycles": 3687,
+        "compute_suffix_cycles": 792,
+        "gated_finish_bound_offset": 4479
+      },
+      {
+        "first_reader_position": 60,
+        "tensor": 1000000051,
+        "bytes": 73728,
+        "copy_exclusive_cycles": 1229,
+        "cumulative_copy_cycles": 4916,
+        "compute_suffix_cycles": 628,
+        "gated_finish_bound_offset": 5544
+      },
+      {
+        "first_reader_position": 62,
+        "tensor": 1000000053,
+        "bytes": 73728,
+        "copy_exclusive_cycles": 1229,
+        "cumulative_copy_cycles": 6145,
+        "compute_suffix_cycles": 471,
+        "gated_finish_bound_offset": 6616
+      },
+      {
+        "first_reader_position": 65,
+        "tensor": 1000000055,
+        "bytes": 73728,
+        "copy_exclusive_cycles": 1229,
+        "cumulative_copy_cycles": 7374,
+        "compute_suffix_cycles": 307,
+        "gated_finish_bound_offset": 7681
+      },
+      {
+        "first_reader_position": 67,
+        "tensor": 1000000057,
+        "bytes": 73728,
+        "copy_exclusive_cycles": 1229,
+        "cumulative_copy_cycles": 8603,
+        "compute_suffix_cycles": 150,
+        "gated_finish_bound_offset": 8753
+      }
+    ],
+    "stage_finish_lower_offset": 8753
+  }
+}

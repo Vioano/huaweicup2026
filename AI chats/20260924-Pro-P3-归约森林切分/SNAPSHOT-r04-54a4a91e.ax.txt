@@ -1,0 +1,1383 @@
+Browser tab: 7, Title: "huaweicup - 构造管线归约调度方案", URL: "https://chatgpt.com/g/g-p-6ab2d820c86081918067a0c6d5eb1ab6-huaweicup/c/6ab53861-15b0-83e8-9b92-8b6920472582".
+0 AXWebArea huaweicup - 构造管线归约调度方案, URL: chatgpt.com/g/g-p-6ab2d820c86081918067a0c6d5eb1ab6-huaweicup/c/6ab53861-15b0-83e8-9b92-8b6920472582
+	1 container
+		2 link Description: Skip to content, Value: chatgpt.com/g/g-p-6ab2d820c86081918067a0c6d5eb1ab6-huaweicup/c/6ab53861-15b0-83e8-9b92-8b6920472582#main
+		3 container
+			4 container Description: Sidebar, ID: stage-sidebar-tiny-bar
+				5 button (collapsed) Description: Open sidebar, Secondary Actions: Expand
+				6 link chatgpt.com/
+				7 button
+				8 link chatgpt.com/sites
+				9 pop up button (collapsed) ID: radix-_r_2b_, Secondary Actions: Expand
+				10 pop up button (collapsed) ID: radix-_R_155ld9l9l4scqj95_, Secondary Actions: Expand
+				11 pop up button (collapsed) Description: Open profile menu, ID: radix-_R_7lld9l9l4scqj95_, Secondary Actions: Expand
+			12 container
+				13 container page-header
+					14 link Description: Open huaweicup project, Value: chatgpt.com/g/g-p-6ab2d820c86081918067a0c6d5eb1ab6-huaweicup/project
+					15 container conversation-header-actions
+						16 button Share
+							17 image
+							18 text Share
+						19 button Description: More, ID: conversation-options-6ab53861-15b0-83e8-9b92-8b6920472582
+				20 container thread
+					21 container
+						22 heading 4
+						23 container
+							24 button (collapsed) Worked for 27m 14s, Secondary Actions: Expand
+							25 container
+								26 text 新证据应当终止那三份具体 DP 计划的 E0 路线，保留定理、接口和下界剪枝即可。  本轮得到的结果更直接：对这组重复阶段， 允许原操作边界迁移的 B 族，在“原计算＋单 V FIFO＋跨核 500”放松模型中的全局最优值可以确定下来 ，不是只得到一个更好的启发式。
+							27 container
+								28 text 不过， 我建议下一次官方小样本优先验证单迁移方案，而非计算模型最优方案 ：前者每阶段只增加一条 32KB 向量迁移，计算间距 6379；后者两条迁移，计算间距 6279。第二条迁移只再换来 100 cycles，是否值得取决于官方 COPY 发射和争用。
+							29 heading 一、实际读取范围, Value: 2
+								30 text 一、实际读取范围
+							31 container
+								32 text 已从组织主库、固定提交  16cf6f59aae69fe8bfd2f32e89bb823eaabb20f9  完整读取五个指定文件： stage_fork_join.py 、 STAGE_FORK_JOIN.md 、阶段结果  REPORT.md 、 pipe_bound.py 、 config.txt 。构造、下界 guard、配置和归档成绩之间的口径已核对。
+							33 container
+								34 text 另读取了  INDEPENDENT_READBACK.md 。当前已有附件 ZIP 中包含原始 case JSON，我读取了  051 原图 ；051、024、016 的原始文件字节 SHA-256 都与该回读报告一致。因此下面使用的 12 叶 ADD 树来自实际原图，不是凭空补画。024、016 本轮只核对了原始字节哈希，没有重新解析、运行它们的完整方案。
+							35 container
+								36 text 当前提交的 P3、Step2、Step3 读取了相关片段，其 blob SHA 与上轮已读版本一致。 没有运行 Step2、Step3 或 E0；运行的是整数计算模型检查，以及官方静态 
+								37 text derive_multicore_plan
+								38 text  校验。
+							39 heading 二、先给结果：A 的交替是对的，但 B 的台阶还能下降, Value: 2
+								40 text 二、先给结果：A 的交替是对的，但 B 的台阶还能下降
+							41 container
+								42 text 以下全部是 计算＋500 模型的值，不是官方成绩 。
+							43 container
+								44 table
+									45 row
+										46 cell
+											47 text 阶段数／对应图
+										48 cell
+											49 text 当前固定 lane、既定 ADD/FIFO 策略下的最优 collector 序列
+										50 cell
+											51 text 新单迁移方案
+										52 cell
+											53 text 新双迁移方案，同时达到 B 计算放松的全局下界
+									54 row
+										55 cell
+											56 text 24／051
+										57 cell
+											58 text 165369
+										59 cell
+											60 text 153096
+										61 cell
+											62 text 150196
+									63 row
+										64 cell
+											65 text 101／024
+										66 cell
+											67 text 696053
+										68 cell
+											69 text 644279
+										70 cell
+											71 text 633679
+									72 row
+										73 cell
+											74 text 305／016
+										75 cell
+											76 text 2102021
+										77 cell
+											78 text 1945595
+										79 cell
+											80 text 1914595
+								81 button Copy table
+							82 text 第一列复现了你给出的交替 collector 数字。051 两份新计划已经在原始图上通过静态覆盖、原图依赖、增强 DAG 无环及最长路检查；另外两行是阶段定理的公式值。
+							83 text 这里严格区分：
+							84 container
+								85 text A₀  是现有固定 lane 映射，再固定“完整 lane、pure ADD、mixed ADD”的顺序及归属规则，只改变每阶段 collector。它是 A 的一个子类。
+							86 container
+								87 text B 的计算＋500放松 允许每个原操作独立分核和排序，保留原依赖、不可分操作及单 V 槽，但不计 COPY 服务、内存和带宽。
+							88 container
+								89 text C  是官方完整执行。下面确定的是 B 的计算放松最优值；它给 C 下界，不给 C 性能承诺。
+							90 heading 三、一个适用于全部 B 的下界：给每个核夹出“双端时间窗”, Value: 2
+								91 text 三、一个适用于全部 B 的下界：给每个核夹出“双端时间窗”
+							92 heading 1. 原树和记号, Value: 3
+								93 text 1. 原树和记号
+							94 text 取大操作时长、标量 ADD 时长和跨核延迟：
+							95 container p=524,\qquad g=13,\qquad \delta=500. \tag{FJ.1}
+							96 container
+								97 text 给实际原节点起别名。令 lane 的 REDUCE 输出为 
+								98 container q_j
+								99 text ，则原树为：
+							100 container \begin{aligned} Q_i&=\operatorname{ADD}(q_{2i},q_{2i+1}), &&i=0,\ldots,5,\\ U_0&=\operatorname{ADD}(Q_0,Q_1),& U_1&=\operatorname{ADD}(Q_2,Q_3),\\ U_2&=\operatorname{ADD}(Q_4,Q_5),& V&=\operatorname{ADD}(U_0,U_1),\\ R&=\operatorname{ADD}(V,U_2). \end{aligned} \tag{FJ.2}
+							101 container
+								102 text 在 051 第一阶段，这些就是原 ADD 61–71。 这些等式仅给原节点命名，没有增删 ADD、改变边或重结合。  lane 0–7 到根有四个标量 ADD，lane 8–11 有三个。
+							103 heading 2. 前驱链给出的必要窗口, Value: 3
+								104 text 2. 前驱链给出的必要窗口
+							105 container
+								106 text 考虑任意后续阶段，把前一 root 完成时刻设为时间原点。其所在核为 
+								107 container a
+								108 text ，本阶段 root 所在核为 
+								109 container b
+								110 text ，本阶段间距为 
+								111 container T
+								112 text 。
+							113 container
+								114 text 对于 lane 
+								115 container j
+								116 text  的第 
+								117 container r
+								118 text  个大操作，假设它放在核 
+								119 container c
+								120 text ，原四操作链和归约路径要求：
+							121 container \begin{aligned} \operatorname{start}(j,r) &\ge (r-1)p+\delta\,\mathbf1_{c\ne a},\\ \operatorname{end}(j,r) &\le T-(4-r)p-d_jg-\delta\,\mathbf1_{c\ne b}, \end{aligned} \tag{FJ.3}
+							122 container
+								123 text 其中 
+								124 container d_j
+								125 text  是该 lane 的标量归约深度。
+							126 container
+								127 text 理由很直接：从前一 root 到这个操作的路径必须执行前面的链操作；核不同至少跨一次。该操作到当前 root 的路径必须执行剩余链操作和原 ADD；核不同又至少跨一次。 迁移再多也不能消除这两个必要条件。
+							128 container
+								129 text 暂时丢掉操作位置带来的额外限制，只保留所有 lane 都有的三个 ADD 尾部。于是核 
+								130 container c
+								131 text  上的全部大操作，都必须完整落在一个公共窗口内。每个操作不可分、长度相同、同核不重叠，因此：
+							132 container \boxed{ 48\le \sum_{c=0}^{4} \max\!\left( 0,\left\lfloor \frac{T-3g-\delta\mathbf1_{c\ne a} -\delta\mathbf1_{c\ne b}}{p} \right\rfloor \right). } \tag{FJ.4}
+							133 container
+								134 text 这不是平均工作量界。 它同时利用了操作不可分、阶段根、依赖方向和双端通信。
+							135 heading 3. 后续阶段至少 6279, Value: 3
+								136 text 3. 后续阶段至少 6279
+							137 text 假设后续阶段短于 6279 cycles。
+							138 text 若前后 root 在同一核，该核最多容纳 11 个大操作，其他四核各最多 9 个；若在不同核，两个端点核各最多 10 个，其余三核各最多 9 个：
+							139 container \begin{cases} 11+4\times9=47,&a=b,\\ 2\times10+3\times9=47,&a\ne b. \end{cases} \tag{FJ.5}
+							140 text 都放不下 48 个大操作。因此：
+							141 container \boxed{T_{\mathrm{later}}\ge6279.} \tag{FJ.6}
+							142 heading 4. 首阶段至少 5779, Value: 3
+								143 text 4. 首阶段至少 5779
+							144 text 首阶段没有前一 root 的广播释放条件，但仍然有终点 root 和标量尾部：
+							145 container 48\le \left\lfloor\frac{T-39}{524}\right\rfloor + 4\max\!\left(0,\left\lfloor\frac{T-539}{524}\right\rfloor\right). \tag{FJ.7}
+							146 text 短于 5779 时，右边至多为 46，故：
+							147 container \boxed{T_{\mathrm{first}}\ge5779.} \tag{FJ.8}
+							148 text 由于任何下一阶段计算都必须在前一 root 之后，以上下界可以逐阶段相加：
+							149 container \boxed{ \operatorname{OPT}^{\mathrm{compute}+500}_{B}(S) \ge5779+(S-1)6279 =6279S-500. } \tag{FJ.9}
+							150 container
+								151 text 虽然计数时放松了部分链窗口， 只要下一节给出遵守完整四操作链的等号构造，这个放松就已经足够证明全局最优。
+							152 heading 四、等号构造：每阶段两次原边界迁移，达到全局下界, Value: 2
+								153 text 四、等号构造：每阶段两次原边界迁移，达到全局下界
+							154 heading 1. 每核大操作顺序, Value: 3
+								155 text 1. 每核大操作顺序
+							156 container
+								157 text 用  Lj  表示 lane 
+								158 container j
+								159 text  的完整四操作词； Lj[1..2] 、 Lj[3..4]  是按原顺序取出的前两、后两操作，区间包含端点。
+							160 container
+								161 text 物理核 2、3、4 固定。物理核 0、1 扮演角色 
+								162 container a,b
+								163 text ：后续阶段的 
+								164 container a
+								165 text  是前一 root 核，本阶段 root 放到另一核 
+								166 container b
+								167 text 。
+							168 container
+								169 table
+									170 row
+										171 cell
+											172 text 核／角色
+										173 cell
+											174 text 大操作优先词
+										175 cell
+											176 text 大操作数量
+									177 row
+										178 cell
+											179 container a
+										180 cell
+											181 text L2[1..2], L0, L10
+										182 cell
+											183 text 10
+									184 row
+										185 cell
+											186 container b
+										187 cell
+											188 text L3, L4, L2[3..4]
+										189 cell
+											190 text 10
+									191 row
+										192 cell
+											193 text 核 2
+										194 cell
+											195 text L9[1..2], L5, L8
+										196 cell
+											197 text 10
+									198 row
+										199 cell
+											200 text 核 3
+										201 cell
+											202 text L1, L11, L9[3..4]
+										203 cell
+											204 text 10
+									205 row
+										206 cell
+											207 text 核 4
+										208 cell
+											209 text L6, L7
+										210 cell
+											211 text 8
+								212 button Copy table
+							213 container
+								214 text 只迁移两条原边：lane 2、lane 9 的第二操作到第三操作。  没有拆开任何一个 524-cycle 操作。
+							215 text 这里真正越过了完整 lane 的离散台阶：大操作数量从部分核上的 12 个，降为所有核最多 10 个。
+							216 heading 2. 后续阶段的 ADD 归属和 FIFO, Value: 3
+								217 text 2. 后续阶段的 ADD 归属和 FIFO
+							218 container
+								219 text 后续阶段，把全部 11 个原 ADD 放到 
+								220 container b
+								221 text ，接在该核大操作词之后，使用：
+							222 container
+								223 button Copy
+								224 text Q0, Q1, Q2, Q3, U0, U1, V, Q5, Q4, U2, R
+							225 container
+								226 text 这不是原 ID 排序。它有意先完成深的八叶部分，以及较早到达的  Q5 ，把晚到的兄弟叶 8、9 对应的  Q4  放后面。
+							227 text 以此前 root 完成为零时刻，各核大操作词结束时刻为：
+							228 container (f_a,f_b,f_2,f_3,f_4) =(5240,5740,5740,5740,4692). \tag{FJ.10}
+							229 text 两处迁移的前半段都足够早：lane 2 前半段在 1048 完成，lane 9 前半段在 1548 完成；计入 500 后，都早于目标核在 4692 开始执行后半段。没有隐藏地跨阶段执行计算。
+							230 text 标量阶段则是：
+							231 container
+								232 table
+									233 row
+										234 cell
+											235 text 原 ADD 部分
+										236 cell
+											237 text 核 
+											238 container b
+											239 text  上的时间
+									240 row
+										241 cell
+											242 text Q0,Q1,Q2,Q3,U0,U1,V
+										243 cell
+											244 text 5740–5831
+									245 row
+										246 cell
+											247 text Q5
+										248 cell
+											249 text 5831–5844
+									250 row
+										251 cell
+											252 text 等待晚到的 lane 8、9
+										253 cell
+											254 text 等至 6240
+									255 row
+										256 cell
+											257 text Q4
+										258 cell
+											259 text 6240–6253
+									260 row
+										261 cell
+											262 text U2
+										263 cell
+											264 text 6253–6266
+									265 row
+										266 cell
+											267 text R
+										268 cell
+											269 text 6266–6279
+								270 button Copy table
+							271 text 最后的关键路径就是一个非端点核上的十个大操作，加进出各一次通信，再加三个 ADD：
+							272 container 500+10\times524+500+3\times13=6279. \tag{FJ.11}
+							273 text 完整四操作链、原树和提交 FIFO 同时满足，并且碰到式（FJ.6）的全局下界。
+							274 heading 3. 首阶段必须换一个 ADD 的位置, Value: 3
+								275 text 3. 首阶段必须换一个 ADD 的位置
+							276 container
+								277 text 首阶段仍使用同一张大操作词表，令 
+								278 container a
+								279 text  为核 0、
+								280 container b
+								281 text  为核 1，所有核从零释放。
+							282 text 唯一的 ADD 归属调整是：
+							283 container
+								284 text 把原  Q5 = ADD(q10,q11)  放到核 
+								285 container a
+								286 text ，接在其大操作词后；核 
+								287 container b
+								288 text  的 ADD 词删去  Q5 ，其他不变。
+							289 container
+								290 text 此时四个十操作核都在 5240 完成大操作。核 
+								291 container a
+								292 text  的  Q5  在 5240–5253 执行，结果加 500 后于 5753 到达 
+								293 container b
+								294 text 。与此同时，
+								295 container b
+								296 text  的  Q4  在 5740–5753 执行。两边正好会合：
+							297 container f(Q_4)=5753,\qquad f(Q_5)+500=5753,\qquad f(U_2)=5766,\qquad f(R)=5779. \tag{FJ.12}
+							298 container
+								299 text 这一步说明 边界阶段和 ADD 放置不能用“负载＋500”代替 ：同样的大操作分配，通过移动一个原 ADD 的归属，才能达到首阶段下界。
+							300 text 第一阶段 root 在核 1；第二阶段交换角色，root 到核 0；之后交替。因此式（FJ.9）取到等号：
+							301 container \boxed{ \operatorname{OPT}^{\mathrm{compute}+500}_{B}(S) =6279S-500. } \tag{FJ.13}
+							302 container
+								303 text 这只证明所述计算放松。 COPY、容量、Cache 仍未进入这个最优性结论。
+							304 heading 五、交替 collector 的审查：在当前 A₀ 中确实最优，但不是一般法则, Value: 2
+								305 text 五、交替 collector 的审查：在当前 A₀ 中确实最优，但不是一般法则
+							306 heading 1. 阶段根使 collector 优化成为精确的小状态问题, Value: 3
+								307 text 1. 阶段根使 collector 优化成为精确的小状态问题
+							308 text 对于现有固定 lane 映射和既定 pure/mixed ADD 策略，前一阶段所有计算都在 root 完成之前结束。因此计算模型到下一阶段时，只需记录前一 root 所在核。
+							309 container
+								310 text 定义 
+								311 container D_{ab}
+								312 text  为前一 root 在核 
+								313 container a
+								314 text 、本阶段 collector 为核 
+								315 container b
+								316 text  时，该阶段的 精确增强 DAG 时间 。计算它时逐原操作传播依赖释放与核内 FIFO，不用总负载替代。
+							317 text 我用实际原树、当前完整 lane 顺序和 pure/mixed ADD 顺序得到：
+							318 container D= \begin{pmatrix} 7353&7353&6892&7353&7353\\ 7353&7379&7379&7379&7379\\ 6892&7379&7379&7379&7379\\ 7353&7379&7379&7379&7379\\ 7353&7379&7379&7379&7379 \end{pmatrix}, \quad \alpha=(6853,6879,6879,6879,6879). \tag{FJ.14}
+							319 container
+								320 text 行是前一 root 核，列是本阶段 collector；
+								321 container \alpha
+								322 text  是首阶段的五个选择。
+							323 text 这张表已经计入了原 ADD 的位置、每核 FIFO 和首阶段。它使用的正是代码中“完整 lane → pure ADD → mixed ADD”的策略，不是任意 A 方案。
+							324 text 唯一最小转移是 0→2 和 2→0；首阶段唯一最小是核 0。因此：
+							325 container \boxed{ \operatorname{OPT}_{A_0}^{\mathrm{compute}+500}(S) =6853+(S-1)6892 =6892S-39. } \tag{FJ.15}
+							326 container
+								327 text 这准确得到你给出的三个总值。 所以这次交替不是碰巧改善：在当前 A₀ 中，它是精确最优的 collector 序列。
+							328 text 更一般地，固定 lane/ADD/FIFO 策略的有限阶段优化就是：
+							329 container F_1(b)=\alpha_b,\qquad F_s(b)=\min_a\{F_{s-1}(a)+D_{ab}\}. \tag{FJ.16}
+							330 text 每阶段只有五个状态、25 条转移；这是结构化动态规划，不是海量试参。原策略或原树改变后，应重建这张转移表，不能沿用“两个重核交替”的口号。
+							331 heading 2. 对更大的固定 lane 子类也能给出近似保证, Value: 3
+								332 text 2. 对更大的固定 lane 子类也能给出近似保证
+							333 container
+								334 text 对于 当前具体 lane 集合及 3/2/3/2/2 映射 ，即使允许重新选择 ADD 归属及合法 FIFO，核 0、2 各自仍须执行三条完整 lane，且其 lane 的标量尾部都是四个 ADD。
+							335 container
+								336 text 设前后 root 核为 
+								337 container a,b
+								338 text ，则每个核都有必要条件：
+							339 container T\ge 4pn_c+\delta\mathbf1_{c\ne a} +\delta\mathbf1_{c\ne b} +d_c^{\min}g. \tag{FJ.17}
+							340 text 要避免某个重核支付两次 500，前后 root 必须分别覆盖核 0、2。即便这样仍有：
+							341 container T\ge 3\times2096+500+4\times13=6840. \tag{FJ.18}
+							342 container
+								343 text 因此当前 6892 的稳定间距，距离这个 更大但仍固定 lane 映射的 A 子类 的最优稳定间距，至多差 52 cycles。不能据此说它距离 B 最优只有 52；B 的最优计算间距已经是 6279。
+							344 heading 3. 适用条件与反例, Value: 3
+								345 text 3. 适用条件与反例
+							346 text 交替有效的核心条件是：两个主要重核能够分别成为前、后 root 核，其余核少做的一条 lane 足以覆盖额外通信及 ADD 差异。当前精确转移表证明条件确实兑现了。
+							347 container
+								348 text 反例：同一个原树，完整 lane 数改为 4/2/2/2/2。  此时只有一个真正重核。把 root 始终放在该核，等待其他核结果后执行全部 ADD，有一个不超过 8527 的计算模型构造；若交替到轻核，重核仅其大操作、一次必要跨核和最短标量尾部就至少需要：
+							349 container 4\times2096+500+3\times13=8923. \tag{FJ.19}
+							350 text 交替反而更差。
+							351 container
+								352 text 三核、四核有第三个同样重的核时，前后两个 root 位置不可能同时覆盖所有重核，至少一个重核仍支付双端延迟。 这说明交替的主要省时机制失效，不等于 ADD/FIFO 怎么改都绝不可能改善。
+							353 heading 六、下一次更值得先验证的 C 候选：单迁移、固定 collector，6379, Value: 2
+								354 text 六、下一次更值得先验证的 C 候选：单迁移、固定 collector，6379
+							355 text 双迁移方案解决了计算放松的最优性，但它未必最适合先跑官方。以下方案少一次大向量传输，且完全保留不可变输入的原核亲和性。
+							356 heading 1. 只切 lane 2 的一个原边界, Value: 3
+								357 text 1. 只切 lane 2 的一个原边界
+							358 container
+								359 table
+									360 row
+										361 cell
+											362 text 核
+										363 cell
+											364 text 大操作优先词
+									365 row
+										366 cell
+											367 text 0
+										368 cell
+											369 text L2[1..2], L0, L1
+									370 row
+										371 cell
+											372 text 1
+										373 cell
+											374 text L3, L4, L2[3..4]
+									375 row
+										376 cell
+											377 text 2
+										378 cell
+											379 text L5, L6, L7
+									380 row
+										381 cell
+											382 text 3
+										383 cell
+											384 text L8, L9
+									385 row
+										386 cell
+											387 text 4
+										388 cell
+											389 text L10, L11
+								390 button Copy table
+							391 text collector 永远放核 2。
+							392 container
+								393 text pure ADD 必须按 REDUCE 输出的当前 owner 判断，不能再按 lane 首操作 owner 判断。于是  Q0,Q1,Q3,Q4,Q5  分别留在核 0、1、2、3、4，其余六个 mixed ADD 都放核 2。
+							394 text 核 2 的完整 ADD 词是：
+							395 container
+								396 button Copy
+								397 text Q3, Q2, U0, U1, U2, V, R
+							398 heading 2. 为什么恰好是 6379, Value: 3
+								399 text 2. 为什么恰好是 6379
+							400 text 原来两个三-lane 重核中的核 0，被减到十个大操作；接收核 1 也正好十个。核 2 成为唯一仍执行十二个大操作的核，而它同时是前后 root 核。
+							401 text 两个远端十操作核加上本地 pure ADD，再支付进出各 500，结果到达时间不晚于：
+							402 container 10p+2\delta+g=6253. \tag{FJ.20}
+							403 container
+								404 text 核 2 自己的大操作和  Q3  则在 6301 完成，仍有 48 cycles 余量。此后六个 mixed ADD 不再等待远端，故：
+							405 container \boxed{ T_{\mathrm{one\ cut}} =12p+7g =6379. } \tag{FJ.21}
+							406 text 首阶段远端只会更早，因此首阶段也是 6379。
+							407 container
+								408 text 这份方案没有把所有核都降到十个大操作；它的技巧是让唯一剩下的十二操作重核同时承担前后 root，把其他核的双通信藏进两个操作的差额。  真正消除三-lane 计算台阶的是前面的双迁移方案。
+							409 text 相对当前 A₀ 交替方案，单迁移每个后续阶段省 513；相对 B 计算放松最优，它只差 100。
+							410 heading 3. 物理成本不能隐藏, Value: 3
+								411 text 3. 物理成本不能隐藏
+							412 text 固定配置的 DDR 带宽为 60 bytes/cycle。每条 32768-byte 向量迁移，在没有 spill 的结构重建里包含一份 COPY_OUT 和一份 COPY_IN；单次独占带宽服务各需 547 cycles，跨核 500 另外存在。Cache 命中也不取消跨核释放条件。
+							413 container
+								414 text 单迁移方案的优势是： lane 的首操作仍在原核，迁移后的后半链不需要再读不可变 L1 输入。  因而没有新增的不可变输入跨核复制。
+							415 text 在无 spill 的结构重建计数下，它每阶段有五条标量 gather，阶段间有四条 broadcast：
+							416 container \boxed{ B_{\mathrm{added,\ structural}} = 65536S+4[5S+4(S-1)] =65572S-16. } \tag{FJ.22}
+							417 container
+								418 text 051 对应 1573712 字节。 这是按原图连接推导并静态复算的搬运量，不是 E0 实测值。
+							419 text 双迁移则每阶段仅向量部分就有 131072 字节 COPY 量。核 0、1 交替角色还会使五份不可变输入最终在两个核各持有一份，增加一次性导入；不是每阶段重复导入。
+							420 container
+								421 text 不能把这些服务时间直接加到计算间距上，因为前半链安排得很早，搬运可能与其他 lane 重叠。但也不能直接认定它们完全被隐藏： Step3 的片上 allocation 严格沿扩展优先序推进，目标 COPY_IN 可能不能在源数据一产生就预取。  两份向量 COPY_IN 若被推到相近时刻，还会共享 DDR。
+							422 container
+								423 text 这正是我优先推荐单迁移做 C 检验的理由： 第二条向量迁移在计算模型里只多省 100 cycles，却增加一整对大 COPY。
+							424 text L1 亲和性和上述顺序有利于控制生命周期，但本轮没有把它称为零 spill 证书；Step2 仍要检查输入、输出同时驻留的 alloc-before-free 峰值。
+							425 heading 七、交付与最小验证动作, Value: 2
+								426 text 七、交付与最小验证动作
+							427 button 下载构造代码、完整计算证书和两份原图051计划
+								428 text 下载构造代码、完整计算证书和两份原图051计划
+							429 container
+								430 text 包内有可放入  src/q3/  的  stage_migration.py 。入口仍调用你们现有的精确  recognize(index) ，再核对本定理要求的树形、四个 524 操作、13-cycle ADD 和 tensor 尺寸；不按 case ID 分支。输出仍只有两个规定字段。
+							431 text 还包括每个小模型全部 59 个原操作的 owner、FIFO、起止时间证书、关键路径，以及按原始 051 全图另行检查得到的结果：
+							432 container
+								433 table
+									434 row
+										435 cell
+											436 text 原051静态检查
+										437 cell
+											438 text 单迁移
+										439 cell
+											440 text 双迁移
+									441 row
+										442 cell
+											443 text 官方静态 
+											444 text derive_multicore_plan
+										445 cell
+											446 text 通过
+										447 cell
+											448 text 通过
+									449 row
+										450 cell
+											451 text 原计算＋FIFO 增强 DAG
+										452 cell
+											453 text 无环
+										454 cell
+											455 text 无环
+									456 row
+										457 cell
+											458 text 严格 L500
+										459 cell
+											460 text 153096
+										461 cell
+											462 text 150196
+									463 row
+										464 cell
+											465 text 原向量边界迁移数
+										466 cell
+											467 text 24
+										468 cell
+											469 text 48
+									470 row
+										471 cell
+											472 text E0／Step2／Step3 执行次数
+										473 cell
+											474 text 0
+										475 cell
+											476 text 0
+								477 button Copy table
+							478 button 原图静态检查记录
+								479 text 原图静态检查记录
+							480 text 构造主体对阶段数线性；只有固定的 59-op 模板和原节点查找，没有参数搜索。时间证书仅供核验，不进入提交文件。
+							481 container
+								482 text 最小下一步：在原 051/k5 上先验证 
+								483 text single_cut
+								484 text  一份计划。  静态 L500 应为 153096；随后只做一次官方完整验证，重点看迁移 COPY_IN 是否晚于原本的后半链启动窗口、是否触发 spill，以及这些延迟是否进入最终 critical path。对照现有成功官方方案和你们的交替 collector 候选，不再涉及已淘汰的三份 DP 计划。
+							485 container
+								486 text 本轮最重要的结论是： 计算层面的全局下界不再停在 5059；它已被提高到首阶段 5779、后续阶段 6279，并由合法原操作优先序取到。剩下真正需要官方回答的是：为接近这个界付出的向量迁移，能否在真实搬运与内存顺序下被隐藏。
+							487 container
+								488 button raw_static_verification.json
+									489 text raw_static_verification.json
+									490 text Code
+								491 button Download file
+							492 container Response actions
+								493 button Copy response
+								494 pop up button (collapsed) Description: Rate response, ID: radix-_r_id_, Secondary Actions: Expand
+								495 pop up button (collapsed) Description: Pro feedback, Secondary Actions: Expand
+								496 button Add to project sources
+								497 pop up button (collapsed) Description: Switch model, ID: radix-_r_l6_, Secondary Actions: Expand
+								498 pop up button (collapsed) Description: More actions, ID: radix-_r_il_, Secondary Actions: Expand
+						499 splitter Today 3:08 AM
+						500 heading 4
+						501 container
+							502 container
+								503 container
+									504 text 继续本会话的P3研究，但本轮聚焦一个新数学瓶颈：闭合Attention行/FFN胶囊整块同核是否过于保守，能否以有限、可证明有意义的拆分扩展它。请用6 Pro深度思考，不重做三问综述，不自行声称跑过官方实验。前两轮stage定理/单迁移仍保留，本轮不是将旧结论一并推倒。
+
+先给真实反馈：你上一轮single_cut已在原051/k5官方得到157299、extra COPY1573712B、spill0。该特殊stage族的下界与小剩余空间已有本地审查，所以当前转向覆盖27图的Attention结构。一个固定统一算法a5daf（不是历史每格拼接）已新跑100图×1..5核，各100成功，单核基线/M逐例均值1.199407/2.287559/3.184366/3.987203/4.595235，500solver/755在线E0。这个平均不是同核CacheGain。新日历归核的下一完整500正在跑，尚无全量结论。
+
+已确认同步、你有权限的Vioano镜像固定提交6732c77c1b90f75a038122ad699baed83ef497da（仅用此材料入口；不要把链接存在当作实际读取）：
+
+									505 link Description: attention_rows.py, Value: github.com/Vioano/huaweicup2026/blob/6732c77c1b90f75a038122ad699baed83ef497da/src/q3/attention_rows.py
+									506 link Description: calendar_solve.py, Value: github.com/Vioano/huaweicup2026/blob/6732c77c1b90f75a038122ad699baed83ef497da/src/q3/calendar_solve.py
+									507 link Description: pipe_bound.py, Value: github.com/Vioano/huaweicup2026/blob/6732c77c1b90f75a038122ad699baed83ef497da/src/q3/pipe_bound.py
+									508 link Description: README.md, Value: github.com/Vioano/huaweicup2026/blob/6732c77c1b90f75a038122ad699baed83ef497da/results/a/q3-nikolastarx/expanded500-feedback-20260925/README.md
+									509 link Description: ATTENTION_GAP.md, Value: github.com/Vioano/huaweicup2026/blob/6732c77c1b90f75a038122ad699baed83ef497da/docs/a/q3/ATTENTION_GAP.md
+									510 text 
+官方冻结P3/Step2/Step3/config仍在同SHA的data/raw/a/official/。实际读取哪些文件、哪些没读到请先报告；读不到则只在下面抽象中推理，不能补造官方事实。
+
+真实可提交自由度：原图/算子/张量/配置不改，1..5核，输出只有node_to_subgraph和core_schedules。本线每个原计算op一个singleton，官方重建Task/COPY/每pipe FIFO；不能融合/克隆/重结合归约、删除边或提交起止时刻。跨核真实依赖保留500释放延迟，Cache hit不取消它；有L1/UB、DDR共享服务、spill/backing与Task边界，不能假定只按core复用，也不能将一次spill一概算一对COPY。
+
+现算法：严格识别原始张量端口闭合、相互不重叠的attention query row，内部保留原max/sum树；Q/K/V投影在row之外，多row共享K/V。另把原M→(SIGMOID,MUL)→M的闭合四op FFN diamond整块归核。其余用exclusive chains。胶囊商图ready/bottom-level选块，在k核按各op自身前驱释放和M/V资源试放，整个胶囊只确定同一owner。最终重新做固定owner的op-ready排序，允许不同胶囊交错；绝非提交整块串行屏障。旧placement只往pipe尾追加，新候选在持久M/V日历空隙试放，但最终_ready_word会丢弃placement开始时刻，只保留owner。两者都忽略真实COPY服务/Cache/容量；代理改善不是官方保证。
+
+新增本地官方机制证据（3格5核，source035a398c，3solver/6E0；此固定材料SHA中的probe还处于预登记，下列是其后测得的新反馈）：071 M8517→7782，extraDDR329012→333138，字节hit0.427220→0.401696；069 M9949→9143，extra468692→460626，hit0.445865→0.410615；005 M31468→31275，extra1768920→1803384，hit0.441096→0.431772；都spill0。这是机制小样，非全量/未见测试。不能把M下降但hit下降解释成全指标支配。我们已有60组合成结构正确性检查，但100官方图均已看过，不能重切后称隐藏集。接受锯齿，不追求按case编号补平榜单。
+
+请只集中交付：
+1) 给出整行/整FFN同核限制在M/V+真实原依赖+跨核δ抽象下的一个明确失败家族，并给一个可检查的适用条件：何时有限拆分值得考虑，何时可证明它不可能优于保持局部性。必须保留每个输入各自释放时间，不能把胶囊压成最大输入释放+总工作量；若不存在仅凭负载/边界字节数就正确的判据，给最小反例并指出缺失状态。
+2) 设计一个可实现、随图规模扩展的有限拆分构造。优先研究不改原归约树的两块切分或少量边界状态，用跨界活跃张量/双pipe时序来决定，而非海量枚举切法或不断增加E0候选。明确能证明什么、时间/状态复杂度、输入端口/未来join/共享KV如何进入状态；如果精确多项式目标不现实，给受限子类或有明确失败条件的近似。最多给一个主构造，附可编译的伪代码。
+3) 给出最小证伪验证：哪些独立结构参数变化能击穿该构造，怎样区分“选了好看的已见小样”与可迁移机制。请明确上述抽象的结论如何被官方COPY FIFO、分配顺序或Task边界破坏，列必须由E0查的量。不承诺分数、不给无根据的成功概率。
+
+预期产物是一个定理/反例加一个可实现候选及停止条件。若真正瓶颈是整块归核以外的因素，请基于已读代码/证据说清，不强行维护本提案。我们继续本地统一全量验证，不等待你重写官方程序。
+								511 button (collapsed) Show more, Secondary Actions: Expand
+							512 container
+								513 container
+									514 text 继续本会话的P3研究，但本轮聚焦一个新数学瓶颈：闭合Attention行/FFN胶囊整块同核是否过于保守，能否以有限、可证明有意义的拆分扩展它。请用6 Pro深度思考，不重做三问综述，不自行声称跑过官方实验。前两轮stage定理/单迁移仍保留，本轮不是将旧结论一并推倒。
+
+先给真实反馈：你上一轮single_cut已在原051/k5官方得到157299、extra COPY1573712B、spill0。该特殊stage族的下界与小剩余空间已有本地审查，所以当前转向覆盖27图的Attention结构。一个固定统一算法a5daf（不是历史每格拼接）已新跑100图×1..5核，各100成功，单核基线/M逐例均值1.199407/2.287559/3.184366/3.987203/4.595235，500solver/755在线E0。这个平均不是同核CacheGain。新日历归核的下一完整500正在跑，尚无全量结论。
+
+已确认同步、你有权限的Vioano镜像固定提交6732c77c1b90f75a038122ad699baed83ef497da（仅用此材料入口；不要把链接存在当作实际读取）：
+
+									515 link Description: attention_rows.py, Value: github.com/Vioano/huaweicup2026/blob/6732c77c1b90f75a038122ad699baed83ef497da/src/q3/attention_rows.py
+									516 link Description: calendar_solve.py, Value: github.com/Vioano/huaweicup2026/blob/6732c77c1b90f75a038122ad699baed83ef497da/src/q3/calendar_solve.py
+									517 link Description: pipe_bound.py, Value: github.com/Vioano/huaweicup2026/blob/6732c77c1b90f75a038122ad699baed83ef497da/src/q3/pipe_bound.py
+									518 link Description: README.md, Value: github.com/Vioano/huaweicup2026/blob/6732c77c1b90f75a038122ad699baed83ef497da/results/a/q3-nikolastarx/expanded500-feedback-20260925/README.md
+									519 link Description: ATTENTION_GAP.md, Value: github.com/Vioano/huaweicup2026/blob/6732c77c1b90f75a038122ad699baed83ef497da/docs/a/q3/ATTENTION_GAP.md
+									520 text 
+官方冻结P3/Step2/Step3/config仍在同SHA的data/raw/a/official/。实际读取哪些文件、哪些没读到请先报告；读不到则只在下面抽象中推理，不能补造官方事实。
+
+真实可提交自由度：原图/算子/张量/配置不改，1..5核，输出只有node_to_subgraph和core_schedules。本线每个原计算op一个singleton，官方重建Task/COPY/每pipe FIFO；不能融合/克隆/重结合归约、删除边或提交起止时刻。跨核真实依赖保留500释放延迟，Cache hit不取消它；有L1/UB、DDR共享服务、spill/backing与Task边界，不能假定只按core复用，也不能将一次spill一概算一对COPY。
+
+现算法：严格识别原始张量端口闭合、相互不重叠的attention query row，内部保留原max/sum树；Q/K/V投影在row之外，多row共享K/V。另把原M→(SIGMOID,MUL)→M的闭合四op FFN diamond整块归核。其余用exclusive chains。胶囊商图ready/bottom-level选块，在k核按各op自身前驱释放和M/V资源试放，整个胶囊只确定同一owner。最终重新做固定owner的op-ready排序，允许不同胶囊交错；绝非提交整块串行屏障。旧placement只往pipe尾追加，新候选在持久M/V日历空隙试放，但最终_ready_word会丢弃placement开始时刻，只保留owner。两者都忽略真实COPY服务/Cache/容量；代理改善不是官方保证。
+
+新增本地官方机制证据（3格5核，source035a398c，3solver/6E0；此固定材料SHA中的probe还处于预登记，下列是其后测得的新反馈）：071 M8517→7782，extraDDR329012→333138，字节hit0.427220→0.401696；069 M9949→9143，extra468692→460626，hit0.445865→0.410615；005 M31468→31275，extra1768920→1803384，hit0.441096→0.431772；都spill0。这是机制小样，非全量/未见测试。不能把M下降但hit下降解释成全指标支配。我们已有60组合成结构正确性检查，但100官方图均已看过，不能重切后称隐藏集。接受锯齿，不追求按case编号补平榜单。
+
+请只集中交付：
+1) 给出整行/整FFN同核限制在M/V+真实原依赖+跨核δ抽象下的一个明确失败家族，并给一个可检查的适用条件：何时有限拆分值得考虑，何时可证明它不可能优于保持局部性。必须保留每个输入各自释放时间，不能把胶囊压成最大输入释放+总工作量；若不存在仅凭负载/边界字节数就正确的判据，给最小反例并指出缺失状态。
+2) 设计一个可实现、随图规模扩展的有限拆分构造。优先研究不改原归约树的两块切分或少量边界状态，用跨界活跃张量/双pipe时序来决定，而非海量枚举切法或不断增加E0候选。明确能证明什么、时间/状态复杂度、输入端口/未来join/共享KV如何进入状态；如果精确多项式目标不现实，给受限子类或有明确失败条件的近似。最多给一个主构造，附可编译的伪代码。
+3) 给出最小证伪验证：哪些独立结构参数变化能击穿该构造，怎样区分“选了好看的已见小样”与可迁移机制。请明确上述抽象的结论如何被官方COPY FIFO、分配顺序或Task边界破坏，列必须由E0查的量。不承诺分数、不给无根据的成功概率。
+
+预期产物是一个定理/反例加一个可实现候选及停止条件。若真正瓶颈是整块归核以外的因素，请基于已读代码/证据说清，不强行维护本提案。我们继续本地统一全量验证，不等待你重写官方程序。
+								521 button (collapsed) Show more, Secondary Actions: Expand
+							522 container Your message actions
+								523 button See versions
+								524 button Copy message
+								525 button Edit message
+						526 heading 4
+						527 container
+							528 button (collapsed) Worked for 34m 3s, Secondary Actions: Expand
+							529 heading 一、实际读取范围与本轮判断, Value: 2
+								530 text 一、实际读取范围与本轮判断
+							531 container
+								532 text 已从  Vioano 镜像、固定提交 
+								533 text 6732c77c1b90f75a038122ad699baed83ef497da
+								534 text  完整读取五个指定文件： attention_rows.py 、 calendar_solve.py 、 pipe_bound.py 、全 500 反馈  README.md 、 ATTENTION_GAP.md 。其中，代码确实只把胶囊用于限制归属，最终  _ready_word  允许胶囊之间交错；日历试放的具体时间会被丢弃。
+							535 container
+								536 text 另外完整读取了  gap_calendar.py  和固定配置，局部读取了同提交 P3 的 Task/COPY 重建、Cache/跨核释放，以及 Step2 的 backing/换入换出、Step3 的 FIFO/分配/内存额度依赖代码。 本轮没有读取原始 Attention case JSON、三格新 E0 原件或正在运行的新全量结果，也没有运行官方程序。  下文的人工小模型检查与这些官方结果分开。
+							537 container
+								538 text single_cut  的新反馈支持保留上轮特殊 stage 结论。Attention 的三个新机制样本则说明： 不拆胶囊，只改善归核，已经可以改善 Makespan；尚不能据此认定“整块同核”就是主要剩余瓶颈。  命中率下降也不能称全指标支配。
+							539 text 本轮建议只有一个主构造：
+							540 text 在完整基线方案之后，做“带出口证书的单岛拆分”：Attention 只尝试迁出原分子归约树的一个根子树，FFN 只尝试迁出末尾原 MATMUL。冻结其他操作的时间见证，逐输入试放，要求出口到达不变差，最后保留见证导出的 FIFO。
+							541 container
+								542 text 它的价值不是保证官方改善，而是给有限拆分建立一个明确的门槛： 最终提交方案的计算增强 DAG 最长路不会因为这次修补而变差。  这比“试放时间更漂亮，然后重新排序”多了一层真正可检查的保证。
+							543 heading 二、整块同核确实会失败，但 Attention 与 FFN 的失败机制不同, Value: 2
+								544 text 二、整块同核确实会失败，但 Attention 与 FFN 的失败机制不同
+							545 heading 1. FFN：内部没有可挖的并行，损失来自跨胶囊的离散负载, Value: 3
+								546 text 1. FFN：内部没有可挖的并行，损失来自跨胶囊的离散负载
+							547 text 源码中的四操作 FFN 实际具有以下依赖：
+							548 container A_i(M,a)\longrightarrow S_i(V,s) \longrightarrow U_i(V,u)\longrightarrow Z_i(M,a), \qquad A_i\longrightarrow U_i, \qquad b=s+u. \tag{AT.1}
+							549 container
+								550 text 因此，SIGMOID 和 MUL  不是两个并行分支 ；后者还依赖前者。这个判断来自  _ffn_motifs  的原依赖检查，不是根据“diamond”名称猜测。
+							551 text 不过，考虑任意允许核数中的至少两核，以及比核数多一个、相互独立的同构 FFN。暂设边界输入均已可用、无 COPY 服务和容量限制。
+							552 container
+								553 text 整 FFN 同核时，至少一核承接两个 FFN，于是该核有四个时长为 
+								554 container a
+								555 text  的 M 操作。只要 M 足够长，可以交错两个 FFN，使这个下界达到。
+							556 text 现在只迁移其中一个 FFN 的末尾 MATMUL：
+							557 content list
+								558 container
+									559 AXListMarker • 
+									560 text 原重核的 M 顺序为两个前端 MATMUL，再执行其中一个尾 MATMUL；
+								561 container
+									562 AXListMarker • 
+									563 text 另一核先完成自己的 FFN，再承接被迁出的尾 MATMUL；
+								564 container
+									565 AXListMarker • 
+									566 text SIGMOID、MUL 及所有原依赖不变。
+							567 text 得到：
+							568 container \boxed{ T_{\mathrm{whole}}^*=4a,\qquad T_{\mathrm{tail}}\le 3a+b+\delta,\qquad a>b+\delta\ \Longrightarrow\ T_{\mathrm{tail}}<T_{\mathrm{whole}}^*. } \tag{AT.2}
+							569 container
+								570 text 证明要点。  重核上第二个 FFN 的 MUL 在 
+								571 container 2a+b
+								572 text  完成；接收核自己的 FFN 也已在该时刻完成。迁移后的尾 MATMUL 可在再等待一次跨核延迟后开始，故得到式（AT.2）。其他核各一个 FFN，不构成瓶颈。
+							573 container
+								574 text 这证明的是 整 FFN 同核子类本身 有损失，而不仅是某个贪心归核器失误。它还给出很有限的修复：一个原操作、一个原内部 tensor 边界。
+							575 text 人工例中，两个 M 各 2000 cycles，两个 V 各 10 cycles，跨核 500，三个 FFN 用两核：
+							576 text 整块最优 8000；迁移一个尾 MATMUL 的合法计算方案为 6520。
+							577 text 这是人工计算模型证书，不是官方成绩。
+							578 heading 2. Attention：一个原分子子树就足以产生真正的行内并行收益, Value: 3
+								579 text 2. Attention：一个原分子子树就足以产生真正的行内并行收益
+							580 container
+								581 text 设一行的原分子 ADD 根恰有两个各含 
+								582 container m
+								583 text  个 weighted MATMUL 的原子树；每个 weighted MATMUL 时长为 
+								584 container a
+								585 text 。记该行其余原操作的总时长为 
+								586 container H
+								587 text 。
+							588 container
+								589 text 考虑边界输入已在 home 核可用的受限子类。将其中一棵 原分子子树 整体迁到 helper，保留原 max、分母 sum、分子 sum 的所有节点和边，可构造：
+							590 container \boxed{ T_{\mathrm{whole}}\ge 2ma,\qquad T_{\mathrm{island}}\le ma+H+2\delta. } \tag{AT.3}
+							591 text 因此，只要一个半树节省的 M 工作超过其他工作与两次通信，拆分就严格优于任何整行同核方案。
+							592 text 这里的两个延迟分别来自 EXP 输出进入 helper，以及 helper 的分子部分和返回 home。共享 V 输入也逐个满足释放条件；在这个特例中，它们不会比 EXP 输入更晚。
+							593 container
+								594 text 式（AT.3）的上界可以用“先完成前段，再并行两个原分子子树”的保守时间见证证明。 这只是证明用见证，不要求算法添加前段屏障，更不允许把实际不平衡的原树重结合成平衡树。
+							595 container
+								596 text 我在一个保留原式 max 实现和两棵 sum 树的  20 操作、两 key 行端口抽象 上检查了这一机制：整行同核计算时间 8013，迁出一个原 weighted MATMUL 子树后为 5013。该例的整行 M 工作下界为 8002，因此改善不是单纯修复一个糟糕的同核顺序。
+							597 heading 三、什么时候不值得拆：必须区分“不存在收益”与“本构造找不到收益”, Value: 2
+								598 text 三、什么时候不值得拆：必须区分“不存在收益”与“本构造找不到收益”
+							599 heading 1. 一个可证明的“不需要拆 FFN”条件, Value: 3
+								600 text 1. 一个可证明的“不需要拆 FFN”条件
+							601 container
+								602 text 若某个 home 核对 FFN 的 每个外部输入端口 都不晚于其他核获得数据，而且该核的 M/V 在执行期间无其他工作占用，那么按原串行链递推：
+							603 container E_i= \max\!\left\{ E_{i-1}, \max_{t\in I_{\mathrm{ext}}(v_i)}\rho_{t,h} \right\} +w_{v_i}. \tag{AT.4}
+							604 text 这就是该 FFN 出口计算完成时间的全局下界，并可由整块留在 home 达到。
+							605 text 证明按四个操作归纳即可：任何拆分仍要执行同一条原链，任何端口都不比 home 更早，跨核延迟非负。因此拆分不可能使链上某一步更早。
+							606 text **适用范围必须保留：**这是孤立、无资源竞争上下文中的 FFN 出口结论。若存在其他胶囊抢占 M/V，或者比较的是向特定下游核交付的时间，就必须加入日历与出口位置，不能继续套这个结论。
+							607 heading 2. 一个最小反例：总负载、边界字节数、最大输入释放仍不足以决定拆分, Value: 3
+								608 text 2. 一个最小反例：总负载、边界字节数、最大输入释放仍不足以决定拆分
+							609 text 考虑两个原 M 操作汇入一个原 V join：
+							610 container w_x=w_y=1200,\qquad w_z=1,\qquad \delta=500, \qquad (r_x,r_y)= \begin{cases} (0,5000),\\ (5000,5000). \end{cases} \tag{AT.5}
+							611 text 所有输入的来源核相同；两例计算量、边界 tensor 大小、最大输入释放时间、空闲核资源完全相同。
+							612 container
+								613 table
+									614 row
+										615 cell
+											616 text 逐输入释放
+										617 cell
+											618 text 整块同核
+										619 cell
+											620 text 将一个 M 分支放 helper、join 留 home
+									621 row
+										622 cell
+											623 text 一个早、一个晚
+										624 cell
+											625 text 6201
+										626 cell
+											627 text 最好也只能 6201
+									628 row
+										629 cell
+											630 text 两个都晚
+										631 cell
+											632 text 7401
+										633 cell
+											634 text 有合法方案 7201
+								635 button Copy table
+							636 text 第一例已经达到“晚输入释放＋其 M 操作＋join”的依赖下界，拆分不可能改善。第二例则能通过并行消除部分同 pipe 排队。
+							637 container
+								638 text 缺失状态是“哪个输入何时到达、它约束哪个原操作”，不是再加一个负载系数。  当前代码逐操作处理前驱释放这一点是正确的；拆分扩展不能退回“整个胶囊最大输入释放＋总工作量”。
+							639 heading 3. 尾 MATMUL 有一个很实用的精确阈值, Value: 3
+								640 text 3. 尾 MATMUL 有一个很实用的精确阈值
+							641 container
+								642 text 固定 FFN 前三步和其他操作日历。假设 helper 的 M 空闲、尾 MATMUL 的其他输入已就绪，令 home 上的 M 排队等待为 
+								643 container q
+								644 text 。
+							645 text 若输出还必须返回 home 给未来 join，则这个指定尾部迁移严格有益，当且仅当：
+							646 container \boxed{q>2\delta.} \tag{AT.6}
+							647 text 一轮是 MUL 输出送去 helper，一轮是尾 MATMUL 输出送回来。若比较的只是尾操作完成、无需返回，则阈值变成一轮延迟。
+							648 container
+								649 text 更一般时不能使用这个简式，必须比较所有真实出口到达时间。原型中的一个反例是：尾操作可由 604 提前至 504 完成，但向原下游核交付要到 1004，反而晚于原来的 604。 仅比较胶囊结束时间会误选；出口证书会拒绝。
+							650 heading 四、唯一主构造：带出口证书的单岛拆分, Value: 2
+								651 text 四、唯一主构造：带出口证书的单岛拆分
+							652 heading 1. 只保留两个有语义的切法，不枚举所有割, Value: 3
+								653 text 1. 只保留两个有语义的切法，不枚举所有割
+							654 container
+								655 text Attention。  找到原 numerator ADD 根，只考虑它的两个孩子各自向下的原 MATMUL/ADD 子树。迁出的集合包含 weighted MATMUL 与其内部原 ADD，不包含 EXP、score、max、分母 sum、Q/K/V 投影。
+							656 container
+								657 text FFN。  首版只考虑末尾原 MATMUL；前三步留在原核。
+							658 text 这两个实例共用同一算法。它们都保留原操作、原端口和原归约树。
+							659 text 需要补一个严格 guard：迁出集合内部除根外不能有向集合外输出的原消费者；根可以有多个实际输出 tensor，必须逐个记录，不能擅自当作一个标量。
+							660 text 一个容易实现错的地方：Attention 的 home 剩余部分会先产生 EXP，随后又消费 helper 返回的部分和。把 home 剩余部分和 helper 子树各压成一个“原子胶囊”，商图会出现环。
+							661 text 这并不意味着原操作图有环。它意味着：
+							662 container
+								663 text 这里是两个 owner 集合，不是两个必须原子执行的调度块。不要把它们直接塞回  _capsules  当两个新节点。
+							664 text 应当在完整基线方案之后，对原操作做修补。
+							665 heading 2. 为什么要从完整基线开始, Value: 3
+								666 text 2. 为什么要从完整基线开始
+							667 container
+								668 text 先取得现有构造的最终 singleton 方案，用  pipe_bound  同类的计算模型求出完整时间见证。随后，对当前胶囊：
+							669 text 冻结胶囊外全部操作的 owner 和时间区间。
+							670 text 这一步把“未来 join”“其他行”“已经占用的 helper 空档”都纳入上下文，而不是把 helper 误当作一张空白纸。
+							671 text 然后从 M/V 日历中暂时删除当前胶囊的所有操作，比较：
+							672 content list
+								673 container
+									674 AXListMarker • 
+									675 text 保留当前方案；
+								676 container
+									677 AXListMarker • 
+									678 text 同一个 home 上重新利用空隙试放——这是
+									679 text 不拆分控制
+									680 text ；
+								681 container
+									682 AXListMarker • 
+									683 text 某个允许的原子树/尾操作迁到一个 helper，其余仍留 home。
+							684 container
+								685 text 现有  gap_calendar.py  已有持久 AVL 的最早可容纳区间查询，但只有预留接口；修补需要增加“释放区间并合并相邻空隙”，不能每处理一个胶囊就重建全图日历。
+							686 heading 3. 每个输入各自进入状态, Value: 3
+								687 text 3. 每个输入各自进入状态
+							688 text 对试放中的原操作，逐 tensor 计算到达时间：
+							689 container R_u= \max_{t\in I(u)} \left\{ F_{\operatorname{prod}(t)} +\delta\, \mathbf1_{\operatorname{owner}(\operatorname{prod}(t)) \ne\operatorname{owner}(u)} \right\}. \tag{AT.7}
+							690 container
+								691 text 胶囊内 producer 使用本次试放完成时刻，胶囊外 producer 使用当前完整见证中的完成时刻。无原计算 producer 的输入使用它自己的外部释放状态；在忽略 COPY 的计算放松里设为零时， 零只是模型假设，不是实测 COPY 完成时间 。
+							692 text 再用对应核、对应 pipe 的日历：
+							693 container S_u=\operatorname{EarliestGap} \bigl(\mathcal K_{\operatorname{owner}(u),p_u},R_u,w_u\bigr), \qquad F_u=S_u+w_u. \tag{AT.8}
+							694 text 操作按基线时间见证诱导的固定拓扑词处理。这个词不保证是所有局部词中最优，但候选数和执行过程都确定。
+							695 text 注意：一个晚到的 V 投影只约束消费它的 weighted MATMUL，不会被提升为整个行的输入屏障。
+							696 heading 4. 比较出口到达向量，不只比较行结束时间, Value: 3
+								697 text 4. 比较出口到达向量，不只比较行结束时间
+							698 text 对胶囊的每个真实外部消费者，定义：
+							699 container A_{u\to v} = F_u+ \delta\,\mathbf1_{\operatorname{owner}(u)\ne\operatorname{owner}(v)}. \tag{AT.9}
+							700 text 实际图输出另记录生产者完成时间。对相同目的核、相同出口 producer 的条目可以合并，但 tensor 身份仍须保留给搬运和内存账本。
+							701 text 一个拆分候选只有在以下条件成立时才超过同核控制：
+							702 container \boxed{ \boldsymbol A_{\mathrm{split}} \le \boldsymbol A_{\mathrm{whole}} \quad\text{逐分量成立，且至少一项严格改善。} } \tag{AT.10}
+							703 text 其他操作仍使用原日历区间，所以不会因为新候选占用了 helper 而被推迟。所有内部归约汇合也已逐操作试放，不是留到以后再猜。
+							704 container
+								705 text 这个条件是 充分条件，不是必要条件 。允许外部操作一起重排时可能有更好的解，但本轮故意不打开那个搜索空间。
+							706 heading 5. 定理：它能保证最终计算 FIFO 不退化, Value: 3
+								707 text 5. 定理：它能保证最终计算 FIFO 不退化
+							708 text 在以下条件下：
+							709 content list
+								710 container
+									711 AXListMarker • 
+									712 text 原输入依赖由真实 tensor 端口建立；
+								713 container
+									714 AXListMarker • 
+									715 text 新胶囊操作满足所有逐输入释放；
+								716 container
+									717 AXListMarker • 
+									718 text 新区间与冻结的外部区间无资源重叠；
+								719 container
+									720 AXListMarker • 
+									721 text 所有出口到达不晚于原见证；
+								722 container
+									723 AXListMarker • 
+									724 text 最后按接受后的时间见证导出每核优先词；
+							725 text 则输出方案满足：
+							726 container \boxed{ L_\delta(\pi_{\mathrm{new}}) \le \max_u F_u^{\mathrm{witness}} \le L_\delta(\pi_0). } \tag{AT.11}
+							727 container
+								728 text 证明。  胶囊外的依赖与区间未变；胶囊内依赖由试放满足；入边使用冻结前驱完成时刻；出边由出口条件保证。故拼接后的完整计算时间见证仍然可行。
+							729 text 按开始时刻排序后，同核同 pipe 的相邻操作互不重叠，因此新 FIFO 边也满足该见证。增强 DAG 的最早完成时间不可能超过一个可行见证。每次修补都满足这些条件，故可以逐胶囊组合。
+							730 container
+								731 text 关键实现约束：最后不能无条件再调用 
+								732 text _ready_word
+								733 text 。  当前代码明确会丢弃 placement 时间重新决定 FIFO；换了 FIFO，式（AT.11）的证明就不再覆盖它。应提交见证导出的词，或者对另一个新词重新验界，不通过就退回见证词。时间本身仍不进入提交 JSON。
+							734 heading 6. 可编译伪代码, Value: 3
+								735 text 6. 可编译伪代码
+							736 container
+								737 button Copy
+								738 text anchor = 当前固定构造得到的最终 singleton 方案
+W = 对 anchor 计算原依赖 + M/V FIFO + δ 的最早时间
+calendars = 用 W 的全部操作区间建立持久日历
+
+按固定顺序，对每个原闭合 row / FFN：
+    C = 胶囊原节点
+    home = C 当前共同 owner
+    local_word = W 的开始时刻顺序在 C 上的投影
+
+    private_calendars = 从 calendars 删除 C 的原区间
+    control = 在 home 上逐操作、逐输入重新试放 C
+    best = 当前方案与合法 control 中的较好者
+
+    islands = 原 numerator 根的两个孩子子树
+              或 FFN 的末尾原 MATMUL
+
+    对每个 island：
+        对每个非 home 的 helper：
+            trial_owner = C\island 留 home，island 放 helper
+            trial = 按 local_word 在私有 M/V 日历中逐操作试放
+            更新实际 tensor 连接与存活量摘要
+
+            若出口到达逐分量不劣于 control，
+               且有严格改善，
+               且通过预先规定的存活量/结构风险检查：
+                更新 best
+
+    只提交 best 的局部 owner、时间、日历和端口账本
+    每个胶囊不再访问第二轮
+
+按最终 W 的时间顺序导出 singleton 优先词
+独立复算最终增强 DAG
+若最终 Lδ 没有严格改善：返回 anchor
+否则：返回唯一新 proposal
+							739 text 每行最多两种 island，每种至多试其他核一次。识别完成后，采用局部时序覆盖层、预索引出口和增量日历，后处理复杂度为：
+							740 container T_{\mathrm{repair}} = O\!\left(k(N+E)\log N\right). \tag{AT.12}
+							741 container
+								742 text 这 不包括现有识别器的最坏复杂度 ，也不意味着只需常数个输入时钟：共享 K/V 和各 EXP 释放不同，输入端口状态必须随端口数量增长。常数的是切法数量，不是被偷偷压缩的输入信息。
+							743 heading 五、共享 K/V 与存活量不能只留一个“切边字节数”, Value: 2
+								744 text 五、共享 K/V 与存活量不能只留一个“切边字节数”
+							745 heading 1. 共享 K/V 要用全图目的 Task 集合算边际变化, Value: 3
+								746 text 1. 共享 K/V 要用全图目的 Task 集合算边际变化
+							747 container
+								748 text 当前构造的  remote_boundary_bytes_proxy  是胶囊级需求代理，不能直接当成拆分的全图新增搬运。
+							749 container
+								750 text 在当前唯一 producer guard 内，设原 tensor 的计算消费者所在核集合为 
+								751 container D_t
+								752 text ，producer 所在核为 
+								753 container c_t
+								754 text 。其 before-spill 跨核 COPY 结构量为：
+							755 container B_t^{\mathrm{cross}} = 2\,s_t\,\bigl|D_t\setminus\{c_t\}\bigr|. \tag{AT.13}
+							756 text 这是按实际 source-Task→destination-Task 连接计数，符合当前 P3 的重建循环；图输入的每目的核导入、固定图输出写回另外处理。
+							757 text 因此，迁移某个 numerator 子树时：
+							758 content list
+								759 container
+									760 AXListMarker • 
+									761 text 它不会新增 helper 对 Q、K 的需求；
+								762 container
+									763 AXListMarker • 
+									764 text 会新增对对应 EXP 输出的跨核需求；
+								765 container
+									766 AXListMarker • 
+									767 text 对 V 的需求可能新增，也可能
+									768 text 早已因其他 row 存在于该 helper Task
+									769 text ；
+								770 container
+									771 AXListMarker • 
+									772 text 分子子树根返回 home 是另一项实际 tensor 连接。
+							773 container
+								774 text 这里 numerator 部分和未必是标量，必须读真实  size 。相同边数不能代替相同字节数。
+							775 text 目的 Task 集合仍然不能推出 Cache 命中：还缺 COPY_IN 的实际访问时刻、logical key 和淘汰顺序。Cache hit 也不会取消 500 释放。
+							776 heading 2. 存活量摘要应当明确只是哪个模型的约束, Value: 3
+								777 text 2. 存活量摘要应当明确只是哪个模型的约束
+							778 text 可给每个候选维护分核、分 L1/UB 的 tensor 存活区间摘要：
+							779 container \Phi_{c,P}(\tau) = \sum_{\substack{t:\operatorname{pos}(t)=P\\ \tau\in I_{t,c}}} s_t. \tag{AT.14}
+							780 container
+								781 text 一个保守的 计算见证预留模型 是：对新增目的核副本，从 producer 开始时刻就预留空间，保持到该核最后消费者完成；源端保持到相关消费者完成。图输入和图输出采用更保守的起止约定。这样能显式惩罚“先生成一堆 EXP，helper 很晚才消费”的方案，而不是只看边界总字节。
+							782 text 但它只说明这张计算时间见证下的预留情况：
+							783 container
+								784 text 不超容量，不等于官方零 spill；超容量，也不等于所有真实执行必 spill。  官方 COPY 时刻、分配顺序和重新命名后的 physical incarnation 尚未在这个摘要中出现。
+							785 text 实际核验必须保留：
+							786 content list
+								787 container
+									788 AXListMarker • 
+									789 text pos
+									790 text ，不能把整行 tensor 默认成 UB；
+								791 container
+									792 AXListMarker • 
+									793 text source/destination Task 身份与所有消费者；
+								794 container
+									795 AXListMarker • 
+									796 text spill 后的 physical incarnation；
+								797 container
+									798 AXListMarker • 
+									799 text backing_tid
+									800 text  和 
+									801 text spill_out_id
+									802 text  是否存在。
+							803 text Step2 明确可能复用既有 backing，仅新增 COPY_IN；不能把一次 spill 一律乘二。Step3 又把真实 COPY_OUT 作为消费者，并按额度复用形成 WAR/WAW 依赖。
+							804 heading 3. 一个比“字节惩罚系数”更可靠的物理剪枝, Value: 3
+								805 text 3. 一个比“字节惩罚系数”更可靠的物理剪枝
+							806 text 对确认会重建为真实跨 Task COPY 对的原 tensor，当前固定配置下，即使 COPY_IN 获得最乐观的 Cache 服务，也至少需要：
+							807 container \underline d_t = 500+ \max\!\left(1,\left\lceil\frac{s_t}{60}\right\rceil\right) + \max\!\left(1,\left\lceil\frac{s_t}{250}\right\rceil\right). \tag{AT.15}
+							808 text 这是源 COPY_OUT 的最短服务、释放延迟和目标 COPY_IN 的最短服务之和；没有把争用计入，因此可用于下界。多个 tensor 约束同一原操作边时取约束最大值，不能重复相加。固定带宽与只读 Cache 语义由当前配置和源码给定。
+							809 container
+								810 text 对 最后唯一 proposal ，用这些必要延迟再求一次增强 DAG 下界。若：
+							811 container L_{\mathrm{copy\text{-}min}}(\pi_{\mathrm{new}}) \ge M_{\mathrm{official}}(\pi_{\mathrm{anchor}}), \tag{AT.16}
+							812 text 它就不可能严格降低 Makespan，可以免第二次 E0。这个结论针对该具体 proposal，不是对所有二分方案的否定。
+							813 heading 六、这条构造会在哪些地方失败, Value: 2
+								814 text 六、这条构造会在哪些地方失败
+							815 text 这里不提供任意二分、任意 FIFO 的精确最优算法，也不提供一般近似比。它主动限制了搜索范围，因而有清楚的失败条件：
+							816 container
+								817 text 外部区间必须联动才能改善。  两行共同重排才能腾出 helper 空档时，冻结外部区间会漏解。出口证书拒绝，不能解释为全局拆分无收益。
+							818 container
+								819 text 真正的瓶颈不在 numerator 后段。  如果主要时间位于 score/max 前段，或者原 numerator 根极不平衡而最佳切口在更深处，本轮两种根子树切法可能没有价值。不要为补某个案例不断往候选表加切口。
+							820 container
+								821 text 同核重排已经解释了全部改善。  若  whole_home  控制取得了相同的最终计算改善，而拆分没有额外贡献，应把结果归因于顺序与日历，不宣称整行限制被突破。
+							822 container
+								823 text 计算证书不能阻止官方新增阻塞。  原计算 FIFO 即使完全按见证保留，COPY FIFO、严格分配顺序和内存额度依赖仍可能增加等待。当前 Step3 的分配顺序与逐 pipe 顺序都是具体约束，不能把它们视作自由的空隙服务。
+							824 container
+								825 text 所以本方案的“停止”是有意义的： 有限切法没有通过证书，就保留局部性；不能把拒绝结果当作继续扩大枚举的自动授权。
+							826 heading 七、最小证伪验证与交付, Value: 2
+								827 text 七、最小证伪验证与交付
+							828 container
+								829 text 新增验证应检查 收益判据是否翻转 ，而不仅再补一批覆盖和无环用例。
+							830 container
+								831 table
+									832 row
+										833 cell
+											834 text 独立改变的状态
+										835 cell
+											836 text 保持不变的东西
+										837 cell
+											838 text 要击穿的错误
+									839 row
+										840 cell
+											841 text 逐输入释放由“一早一晚”变为“两者都晚”
+										842 cell
+											843 text 工作量、字节数、最大释放
+										844 cell
+											845 text 整胶囊统一输入屏障
+									846 row
+										847 cell
+											848 text M/V 空档移动位置
+										849 cell
+											850 text 每核每 pipe 总负载
+										851 cell
+											852 text 用负载代替日历
+									853 row
+										854 cell
+											855 text 下游消费者由 helper 改为 home
+										856 cell
+											857 text 尾操作本地完成时间
+										858 cell
+											859 text 忽略未来 join 的返回通信
+									860 row
+										861 cell
+											862 text 原 numerator 两子树的工作量和深度不平衡
+										863 cell
+											864 text 总工作量尽量保持
+										865 cell
+											866 text 假定根二分总能接近平衡
+									867 row
+										868 cell
+											869 text helper 已有/没有共享 V 的目的连接；边界 tensor 大小与位置变化
+										870 cell
+											871 text 计算依赖与计算代理
+										872 cell
+											873 text 用切边数预测 COPY、Cache 和容量
+								874 button Copy table
+							875 container
+								876 text 前几项可以零 E0 检查。真实小样则只需对一个按预登记结构规则选出的通过格比较基线和 唯一 proposal ；不对每个 island 单独评分。出现反转时先查机制，不新增切法。
+							877 text 必须从 E0 查的量，重点是四组：
+							878 content list
+								879 container
+									880 AXListMarker 1. 
+									881 text **时间：**最终 Makespan、实际出口到达、关键路径上的 COPY/等待，以及计算下界改善是否兑现。
+								882 container
+									883 AXListMarker 2. 
+									884 text **搬运：**每个真实 tensor/Task 连接的 COPY_OUT、500 release、COPY_IN 发射与完成，DDR/Cache 服务路径及争用。
+								885 container
+									886 AXListMarker 3. 
+									887 text **内存：**L1/UB、分配前沿阻塞、内存复用依赖、spill/backing/incarnation；准备阶段峰值与最终轨迹口径分开。
+								888 container
+									889 AXListMarker 4. 
+									890 text **次级指标：**实际额外搬运、hit bytes、miss bytes 和按字节命中率，不把 Makespan 改善说成其他指标支配。
+							891 container
+								892 text 现有 100 图已经看过，所以应叫 已见结构集上的机制验证 。新参数化人工图是压力测试，也不是隐藏官方集。固定算法发布时报告全部触发、拒绝、改善和退化，不只保留几个好看的通过格。
+							893 heading 可检查产物, Value: 3
+								894 text 可检查产物
+							895 button 下载单岛拆分的计算证书原型
+								896 text 下载单岛拆分的计算证书原型
+							897 text 包中包含逐端口释放、持久空隙日历、出口向量检查、见证 FIFO 编译和独立最长路复核，以及六个可重算人工例的完整操作时序：
+							898 button 查看人工计算证书
+								899 text 查看人工计算证书
+							900 container
+								901 text 这份代码是小模型证明检查器，不是生产补丁。  为方便独立核验，它会复制全图状态并复查，最坏可二次；正文的复杂度界对应局部覆盖层和增量生产实现。原 JSON 识别、全图 tensor/Task 账本和存活量检查留有明确接入边界，没有实现或宣称官方内存模型。
+							902 text 本轮最值得实现的不是“再多切几种”，而是这个受控扩展：只迁一个原子树或尾操作，要求它利用真实空档、保住所有出口到达，并把收益保留到最终 FIFO。若连这个证书都拿不到，就先停止拆分路线；若证书成立但 E0 反转，再把问题定位到新增 COPY、分配或存活量，而不是继续优化一个会被最后重排丢掉的 placement 时间。
+							903 container
+								904 button abstract_certificates.json
+									905 text abstract_certificates.json
+									906 text Code
+								907 button Download file
+							908 container Response actions
+								909 button Copy response
+								910 pop up button (collapsed) Description: Rate response, ID: radix-_r_gc_, Secondary Actions: Expand
+								911 pop up button (collapsed) Description: Pro feedback, Secondary Actions: Expand
+								912 button Add to project sources
+								913 pop up button (collapsed) Description: Switch model, ID: radix-_r_l9_, Secondary Actions: Expand
+								914 pop up button (collapsed) Description: More actions, ID: radix-_r_gn_, Secondary Actions: Expand
+						915 splitter Today 5:37 AM
+						916 heading 4
+						917 container
+							918 container
+								919 container
+									920 text 继续本会话P3研究。本轮只解决一个新数学瓶颈：完整Cartesian输入复用的归约森林，如何在保持计算均衡时减少输入复制，并明确这种构造与共享只读L2收益之间的冲突。请用当前6 Pro做聚焦深度研究，不重写三问综述。
+
+先反馈前轮建议：单岛拆分已实现并做静态检查，但066/082被迁移岛均不在所选最长路，最终全图计算界未降；不据此否定所有拆分。保留placement导出的FIFO后，新固定统一算法c2已完成100图×1..5核，全部合法；另用同计划、同核数无L2对照500格得到CacheGain逐例算术均值1.002349/1.008137/1.031678/1.053650/1.084465，6格轻微小于1，未裁剪。Cache hit高不保证M更低。不要把相对官方单核的旧4.7倍读成L2收益。
+
+本轮可提交自由度：原算子/张量/原树与固定配置不可改；1..5核，仅node_to_subgraph、core_schedules。使用原计算op singleton，改变归属/优先词；不能改归约结合、复制算子、提交起止时刻。每核L1=524288B、UB按固定配置；全局只读FIFO L2=1048576B，Cache250B/cycle、DDR60B/cycle是独立共享资源池。跨核依赖另有500cycle释放延迟；hit不取消延迟且不刷新FIFO；COPY_IN完成可能把已被淘汰的key重新插入。实际Task/COPY/Step2spill/backing/Step3分配补边由官方决定。以下是由原tensor读者集合识别的事实，不按case编号决定算法。
+
+结构：m*n棵相互无计算边的原归约树，每格(i,j)是一棵65原op的树，33 MATMUL叶、32原ADD；全部树每pipe计算量相同。格(i,j)恰使用外部输入组A_i和B_j，组内各33个不同logical tensor。相同组在多个树中共享相同key，不同组不混用。每棵树暂时完整放一核，内部沿原树DFS前沿序；这只是一个受限构造族，不是全部合法P3方案。
+-058型：m=17,n=15；每个A组a=270336B(33*8192)，每B组b=135168B(33*4096)，每树总计算18310cycles。5核每核51树。
+-079型：m=18,n=16；a=202752B(33*6144)，b=135168B，5核树数58/58/58/57/57；每树总计算115224cycles。
+已实现确定性候选：比较两轴优先遍历，各切成q/q+1连续段，代数上选输入覆盖字节少的一个，不E0扫参。给定格分区S_c，其必需输入COPY覆盖D=sum_c(sum_{i touched by c}a_i + sum_{j touched by c}b_j)，不含reload/output/spill，也不是物理DDR流量下界（L2可命中）。058旧owner D25006080B→候选15814656B；079 29061120→15273984B。纯重轴5条带D更低，但05845/60树、07948/64树，不能把负载退化藏掉。
+
+已有官方机制反馈，只属于旧owner上的DFS，不是上述新owner成绩：058/k5 M1486031→1004819，spill59330560→13721600B，且P2=M1004819、P3hit0；079/k5 M6084154→6075472，spill184246272→24428544B，P2=6075976，P3hit0.244161。证明减少前沿有用，但不是L2带来的收益；058/079总pipe工作量的全局计算下界分别871794/5884877，剩余空间是宽松上限非可达承诺。新owner还未E0。
+
+材料仅用已授权Vioano镜像固定提交92d454913ac4330646800cf51309a8b21842fa4f（发送前已同步）。请报告实际读取到哪些文件；未读原始图不能补造。
+
+									921 link Description: forest_reuse_grid.py, Value: github.com/Vioano/huaweicup2026/blob/92d454913ac4330646800cf51309a8b21842fa4f/src/q3/forest_reuse_grid.py
+									922 link Description: forest_memory_order.py, Value: github.com/Vioano/huaweicup2026/blob/92d454913ac4330646800cf51309a8b21842fa4f/src/q3/forest_memory_order.py
+									923 link Description: FOREST_REUSE_GRID_PROBE.md, Value: github.com/Vioano/huaweicup2026/blob/92d454913ac4330646800cf51309a8b21842fa4f/docs/a/q3/FOREST_REUSE_GRID_PROBE.md
+									924 link Description: REPORT.md, Value: github.com/Vioano/huaweicup2026/blob/92d454913ac4330646800cf51309a8b21842fa4f/results/a/q3-nikolastarx/forest-memory-probe-20260925/REPORT.md
+									925 text 
+冻结官方代码/配置仍在该SHA data/raw/a/official/。
+
+只交付一个主构造及可检查的界：
+1. 将格视为K_{m,n}的边，按q/q+1条边分到k核，目标最小化加权顶点复制D。简单必要界为f(e)=min{a*r+b*s:1<=r<=m,1<=s<=n,r*s>=e}，D>=sum_c f(|S_c|)。本地核算058该界14192640B，单核最优支持(4,13)/(5,11)/(6,9)；079该界12840960B，两种负载最优均(6,10)。只证明必要性，尚不知五份能否同时铺满。审查这个界、覆盖相容性与可达条件；给比两轴连续slice更强的低复杂度确定性构造（允许非矩形边缘），以及可证明的最优子类/近似保证或明确反例。不要靠海量assign枚举；若采用小DP，准确区分限定矩形/guillotine族和全部平衡边分区，给状态数与复杂度。可用两个参数实例做小规模证书，不能说它们就是官方全局最优。
+2. 关键是因果界限：减少D可能消灭跨核同时读取的L2机会；每组可大于L1剩余空间，树执行顺序也会诱发reload。对于固定owner，能否给一个不修改原树的输入组/整树次序构造，把L1复用与FIFO L2共享纳入一个有明确适用条件的模型？至少给能击穿“D更小必然M更好/CacheGain更高”的最小反例或不可辨识性说明。只读静态图无法预知官方访问时钟时，明确缺失状态，别把cache容量除以group大小当命中证明。
+3. 建议下一次最小证伪动作：固定原始图/核数/配置，分离归核、树序、L2三因素；怎样用尽量少的官方复评判定收益来自少复制、少spill还是Cache，出现什么证据应停用此代理。原件已见集不能重切后称隐藏集，参数化合成只做机制测试。
+
+不要承诺分数，不以提高分子/恶化无L2计划虚增CacheGain；M仍首要，额外COPY、字节hit、完整求解墙钟和同核CacheGain分别报告。我们继续本地验证，不等待你回答。
+
+								926 button (expanded) Show less, Secondary Actions: Collapse
+							927 container Your message actions
+								928 button Copy message
+								929 button Share prompt
+								930 button Edit message
+						931 heading 4
+						932 container
+							933 button (collapsed) Worked for 25m 3s, Secondary Actions: Expand
+							934 heading 读取范围与结论, Value: 2
+								935 text 读取范围与结论
+							936 container
+								937 text 四个指定文件已从  Vioano 镜像、固定提交 
+								938 text 92d454913ac4330646800cf51309a8b21842fa4f
+								939 text  完整读取： forest_reuse_grid.py 、 forest_memory_order.py 、 FOREST_REUSE_GRID_PROBE.md 、森林前沿机制实验  REPORT.md 。另读取了同提交配置，以及 P3 输入 COPY/FIFO Cache、Step2 backing、Step3 固定顺序的相关代码段。 本轮没有读取原始 058/079 JSON，没有执行官方评估器。  下面的分区证书只使用题给 Cartesian 参数。
+							940 container
+								941 text 本轮得到一个可实现的主构造： 蛇形分带—精确树数配额 DP 。它允许非矩形边缘，不搜索逐格归属；在两个参数实例上都严格改善现有两轴 slice 的输入覆盖量：
+							942 container
+								943 table
+									944 row
+										945 cell
+											946 text 参数实例，均为五核
+										947 cell
+											948 text 现有两轴 slice 的 D
+										949 cell
+											950 text 新构造 D
+										951 cell
+											952 text 对全部平衡格分区的更强下界
+									953 row
+										954 cell
+											955 text 17×15，树数均为 51
+										956 cell
+											957 text 15,814,656 B
+										958 cell
+											959 text 15,003,648 B
+										960 cell
+											961 text 14,868,480 B
+									962 row
+										963 cell
+											964 text 18×16，树数 58/58/58/57/57
+										965 cell
+											966 text 15,273,984 B
+										967 cell
+											968 text 13,246,464 B
+										969 cell
+											970 text 13,246,464 B
+								971 button Copy table
+							972 container
+								973 text 因此， 079 型参数的这个 D 已是所有平衡整树格分区中的全局最优值；058 型新构造距离该目标最优值至多 135,168 B，相对最优值不超过约 0.91%。  这不是官方 Makespan 最优性，也不适用于拆开原树的全部 singleton 族。
+							974 text 但有一个同样重要的反向结果：
+							975 text 在一个条件明确的 L1 整组驻留模型中，即使两种 owner 都使用各自最优树序，这两个更小 D 的新 owner 反而需要更多输入 reload。
+							976 container
+								977 text 所以，本轮不是建议“把 D 优化得更精确就自动接受”，而是给出 更强构造、可检查的最优性界，以及能够否决这个代理的机制 。
+							978 heading 一、逐核支持界成立，但最优支持不一定能共同覆盖, Value: 2
+								979 text 一、逐核支持界成立，但最优支持不一定能共同覆盖
+							980 container
+								981 text 以下先考虑同轴等权的模型。令每核实际接触的 A、B 组数分别为 
+								982 container r_c,s_c
+								983 text ，分配的格数为 
+								984 container e_c
+								985 text ，并定义总组副本数 
+								986 container R,S
+								987 text ：
+							988 container R=\sum_c r_c,\qquad S=\sum_c s_c,\qquad D=aR+bS,\qquad e_c\le r_cs_c. \tag{GR.1}
+							989 text 于是题给必要界正确：
+							990 container f(e)= \min_{\substack{1\le r\le m,\;1\le s\le n\\rs\ge e}} (ar+bs), \qquad D\ge\sum_c f(e_c). \tag{GR.2}
+							991 text 它只检查“每核自己的支持矩形装得下多少格”，没有检查不同核的支持能否共同覆盖全部格。
+							992 heading 1. 一个完整的支持相容性判据, Value: 3
+								993 text 1. 一个完整的支持相容性判据
+							994 container
+								995 text 给定每核 允许使用 的行集合 
+								996 container I_c
+								997 text 、列集合 
+								998 container J_c
+								999 text ，每个格可以分给同时包含该行、该列的核。存在满足所有精确树数配额的分配，当且仅当：
+							1000 container \boxed{ \left| \bigcup_{c\in U}(I_c\times J_c) \right| \ge \sum_{c\in U}e_c \qquad \text{对每个核子集 }U. } \tag{GR.3}
+							1001 text 这是一个整数流判据：每格容量一，连向允许接收它的核，每核出口容量为自己的配额。式（GR.3）正是相应的容量匹配条件。
+							1002 container
+								1003 text 五核只有 31 个非空核子集。它适合 核验给定支持 ，不意味着可以免费搜索全部支持集合。并且允许支持可能没有被全部用到，最终 D 仍应按实际分配重算。
+							1004 text 题给两个逐核最优支持已经有一个直接矛盾：所有最优支持都没有覆盖完整 B 轴，所以每个 A 组至少必须在两个核出现；然而，058 型五份逐核最优支持最多只有 30 个 A 副本，所需至少 34 个；079 型只有 30 个，所需至少 36 个。故两个原局部界都不可达。
+							1005 heading 2. 079 型：可把全局 D 下界提高到构造值, Value: 3
+								1006 text 2. 079 型：可把全局 D 下界提高到构造值
+							1007 text 以 67,584 B 为单位，A、B 权重分别为 3、2。每核至少接收 57 格，因此：
+							1008 container r_c+s_c\ge16, \qquad 3r_c+2s_c\ge38. \tag{GR.4}
+							1009 text 第一条因为支持和至多 15 时，乘积至多 56；第二条可由逐核支持界核对。
+							1010 text 分两种情况。
+							1011 container
+								1012 text 没有核接触全部 16 个 B 组。  每个 A 组至少复制到两个核，因此：
+							1013 container R\ge36,\qquad 3R+2S=R+2(R+S)\ge36+2\cdot5\cdot16=196. \tag{GR.5}
+							1014 container
+								1015 text 存在核接触全部 16 个 B 组。  它至少接触四个 A 组，代价至少 44；其他四核各至少 38：
+							1016 container 3R+2S\ge44+4\cdot38=196. \tag{GR.6}
+							1017 container
+								1018 text 下面的新构造达到 196 个单位。因此，这个下界不是只在 DP 子类中成立，而是覆盖 全部满足所述树数的格分区 。
+							1019 heading 3. 058 型：距离最优值至多一个 B 组, Value: 3
+								1020 text 3. 058 型：距离最优值至多一个 B 组
+							1021 text 以 135,168 B 为单位，权重为 2、1。每核 51 格，故每核支持和至少为 15。
+							1022 container
+								1023 text 令 
+								1024 container t
+								1025 text  为接触全部 15 个 B 组的核数。一个只出现在单核的 A 组，必须由这类核独占其完整一行；每核 51 格最多独占三行。因此：
+							1026 container R\ge34-3t. \tag{GR.7}
+							1027 text 一个全列支持核至少接触四行。结合所有核的支持和下界：
+							1028 container 2R+S \ge R+75+\sum_{c:s_c=15}r_c \ge109+t. \tag{GR.8}
+							1029 text 存在全列支持核时，代价至少 110。
+							1030 text 没有全列支持核时，尚需排除 109。等号会迫使总行支持为 34、每核支持和都为 15；能装下 51 格的这些支持，其行数至少为六。于是任意两核的行数之和至多 16，无法覆盖一列的全部 17 个格。每列至少接触三核，总列支持至少 45；但等号又要求总列支持为 41，矛盾。
+							1031 text 所以：
+							1032 container \boxed{ 14{,}868{,}480 \le D^*_{\text{058型，平衡整树}} \le15{,}003{,}648. } \tag{GR.9}
+							1033 container
+								1034 text 这里没有证明上下界中哪一个就是精确最优值； 不需要为剩下这一个输入组单位继续大搜，才能形成有效构造。
+							1035 heading 二、主构造：蛇形分带—配额 DP, Value: 2
+								1036 text 二、主构造：蛇形分带—配额 DP
+							1037 heading 1. 构造族, Value: 3
+								1038 text 1. 构造族
+							1039 text 在一个定向的网格上，先选择连续横带。每带内部逐列遍历，列内逐行；相邻带的列方向相反。把全部格串成一个词，再按固定的树数配额切给各核。
+							1040 container
+								1041 text 这产生的核区域可以含不规则边缘，也可以跨带， 不是要求每核一个矩形 。
+							1042 text 它优化的精确子类是：
+							1043 text “连续横带、带间蛇形、全局路径按固定配额切段”的分区族。
+							1044 text 它既不是全部矩形铺砌，也不是全部 guillotine 分区，更不是全部平衡边分区。
+							1045 heading 2. 为什么只需要一个小状态, Value: 3
+								1046 text 2. 为什么只需要一个小状态
+							1047 text 在完成若干整带的边界上：
+							1048 content list
+								1049 container
+									1050 AXListMarker • 
+									1051 text 已访问格数确定当前核及其剩余配额；
+								1052 container
+									1053 AXListMarker • 
+									1054 text 只有一个核可能尚未填满；
+								1055 container
+									1056 AXListMarker • 
+									1057 text 后续带使用全新的 A 行，因此 A 支持代价可以直接累加；
+								1058 container
+									1059 AXListMarker • 
+									1060 text 未填满核已有的 B 支持，是下一带起始侧的一段前缀。蛇形方向使旧、新前缀嵌套，只需保留长度。
+							1061 text 因此状态只需：
+							1062 container (x,d,t) = (\text{已经处理的行数}, \text{下一带方向}, \text{未填满核已有 B 支持宽度}). \tag{GR.10}
+							1063 text 选择下一带高度后，逐个算出该带与核配额的交段。每段的行支持、列支持，以及首个未填满核新增的列支持，都可精确计算：
+							1064 container V(x,d,t)= \min_{1\le h\le m-x} \left\{ \Delta D(x,d,t;h)+V(x+h,1-d,t') \right\}. \tag{GR.11}
+							1065 text 同轴不等权也能用前缀字节和处理；只是前面的两个实例最优性证明不自动推广到不等权情况。
+							1066 container
+								1067 text 一次定向的状态数为 
+								1068 container O(mn)
+								1069 text ，每状态尝试至多 
+								1070 container m
+								1071 text  个带高，每带最多跨 
+								1072 container k
+								1073 text  个配额。比较两种轴方向后的复杂度为：
+							1074 container \boxed{ T=O\!\left(kmn(m+n)\right),\qquad \text{状态空间}=O(mn). } \tag{GR.12}
+							1075 container
+								1076 text 另加原图识别、输出全部原操作和官方静态验证的成本。原两轴 slice 作为代数控制保留，因此 最终 D 不会比它们更差 ，但没有 Makespan 不退化保证。
+							1077 heading 3. 两份可直接重建的坐标证书, Value: 3
+								1078 text 3. 两份可直接重建的坐标证书
+							1079 text 两者都从低列号开始，逐带反向；列内行号递增。拼成全局格词后，按给定配额切段。
+							1080 container
+								1081 table
+									1082 row
+										1083 cell
+											1084 text 参数
+										1085 cell
+											1086 text 横带高度
+										1087 cell
+											1088 text 核配额
+										1089 cell
+											1090 text 各核实际支持“行数，列数”
+									1091 row
+										1092 cell
+											1093 text 17×15
+										1094 cell
+											1095 text 3、1、5、2、6
+										1096 cell
+											1097 text 51、51、51、51、51
+										1098 cell
+											1099 text (4,15)、(6,9)、(7,9)、(8,7)、(6,9)
+									1100 row
+										1101 cell
+											1102 text 18×16
+										1103 cell
+											1104 text 6、3、3、6
+										1105 cell
+											1106 text 58、58、58、57、57
+										1107 cell
+											1108 text (6,10)、(9,7)、(6,10)、(9,7)、(6,10)
+								1109 button Copy table
+							1110 text 这些信息足以唯一重建全部格归属。证书包还给出完整 owner 矩阵、逐格列表和全部 31 个相容性检查。
+							1111 container
+								1112 text 其中 079 型有一个直观解释：三份较窄行带负责左侧，两个较宽行带负责右侧，在共享的一列上分配边缘格以精确补齐 58/57 配额。 不是把 48/64 的整条带负载差藏进代理。
+							1113 text 因为每树各 pipe 工作量相同，树数配额直接保持各核的计算工作均衡。它并不保证各树时序完全相同，更不保证官方结束时间均衡；现有识别器检查的是每 pipe 工作量，而不是所有时间响应都相同。
+							1114 heading 三、最重要的反证：D 更小，最优树序的 L1 reload 也可能更多, Value: 2
+								1115 text 三、最重要的反证：D 更小，最优树序的 L1 reload 也可能更多
+							1116 heading 1. 给固定 owner 一个明确的整树排序模型, Value: 3
+								1117 text 1. 给固定 owner 一个明确的整树排序模型
+							1118 container
+								1119 text 考虑以下 受限整组驻留模型 ：
+							1120 container
+								1121 text 每树请求其完整 A、B 两组；树按原 DFS 顺序执行，树间不交错。缓存只能跨树保留当前的一份 A 和一份 B。设内部计算所需预留空间为 
+								1122 container F
+								1123 text ，一个足以描述这种整组容量情形的条件是：
+							1124 container a+b+F\le C_{L1} < \min(2a+b,\ a+2b)+F. \tag{GR.13}
+							1125 container
+								1126 text 组是这里的缓存分析单位， 不是融合 tensor 或改变操作 。真实评估器以 33 个 logical tensor 分别装载、释放和 spill；它未必满足“整组同时驻留”假设。因此下面是模型结论，不是官方流量预测。
+							1127 container
+								1128 text 固定一核的格集合，设它有 
+								1129 container e
+								1130 text  格、接触 
+								1131 container r
+								1132 text  个 A 组，且 A 不小于 B。任意两个连续不同格至少改变一个坐标；A 至少改变 
+								1133 container r-1
+								1134 text  次。因此输入搬运至少为：
+							1135 container \boxed{ Q_{\mathrm{pair}}\ge ar+b(e-r+1). } \tag{GR.14}
+							1136 text **达到方法：**逐 A 组执行其全部格，并使相邻 A 块尽量以同一个 B 结束、开始。
+							1137 container
+								1138 text 对完整矩形，普通行蛇形达到下界，因此它是该模型中的 全局最优树序 ，不是仅优于随机顺序。对不规则边缘，可固定 A 块顺序，做一个端点 DP：状态为上一块最后使用的 B；本块选择首、末 B，中间任意排。利用最大、次大转移值，排序后处理成本可做到与格数线性。
+							1139 container
+								1140 text 该排序器只排列整棵树，原树 DFS 词不动。当前  forest_memory_order.py  的内部前沿本来也明确排除了外部共享输入，不能把它当成此处全部 L1 的容量证书。
+							1141 heading 2. 两个参数实例正好给出“不靠故意坏排序”的反例, Value: 3
+								1142 text 2. 两个参数实例正好给出“不靠故意坏排序”的反例
+							1143 text 我对两轴 slice 和新 owner 都求了上述模型的最优值；两边都达到式（GR.14）的下界：
+							1144 container
+								1145 table
+									1146 row
+										1147 cell
+											1148 text 参数
+										1149 cell
+											1150 text 两轴 slice：模型最优输入字节
+										1151 cell
+											1152 text 新 owner：模型最优输入字节
+									1153 row
+										1154 cell
+											1155 text 17×15
+										1156 cell
+											1157 text 37,982,208
+										1158 cell
+											1159 text 39,333,888
+									1160 row
+										1161 cell
+											1162 text 18×16
+										1163 cell
+											1164 text 41,091,072
+										1165 cell
+											1166 text 42,037,248
+								1167 button Copy table
+							1168 container
+								1169 text 也就是说， D 下降了，但该容量模型中必需的输入加载反而上升。
+							1170 text 原因不是神秘的缓存异常，而是目标不同：新分区为了降低 B 支持总量，把更多 A 组复制到了不同核。两轴 slice 的总 A 副本数是 21、22；新构造变为 31、36。若每核只能保留当前 A/B 对，减少“最终接触过多少种 B”不一定能减少扫描期间重复装载 B 的次数，而新增 A 副本是实打实的加载。
+							1171 container
+								1172 text 这也解释了为什么  079 型即使已把 D 优化到全局最优，也不能据此结束 Makespan 研究，更不能直接替换当前 winner。
+							1173 text 对 058 型，A 加两份 B 已超过固定 L1；对 079 型，是否能同时留住额外 B，还取决于内部前沿与其他在途 tensor。固定配置本轮已核实，但没有原图生命周期，不能替你们判定该模型是否适用。
+							1174 heading 四、与只读 FIFO L2 的冲突：减少读取，与提高 CacheGain 不是同一个目标, Value: 2
+								1175 text 四、与只读 FIFO L2 的冲突：减少读取，与提高 CacheGain 不是同一个目标
+							1176 heading 1. 本族不应额外给输入复制收取 500, Value: 3
+								1177 text 1. 本族不应额外给输入复制收取 500
+							1178 container
+								1179 text 原树完整同核、树间没有计算边时，共享的是外部输入。P3 对这种输入在每个消费核建立 COPY_IN；500 等待加在计算 producer 跨核产生的 COPY_OUT→COPY_IN 链上， 不是给每个重复输入读取统一增加 500 。本族归核变化的主要冲突因此是输入副本、reload、带宽和存活量，而不是新的跨核计算同步。
+							1180 heading 2. 同时冷读不是命中条件, Value: 3
+								1181 text 2. 同时冷读不是命中条件
+							1182 text 两个核都在某 key 第一次 COPY_IN 完成之前查询它，即使 L2 容量无限，也都会 miss。第二个读取必须在插入之后、淘汰之前发射，才有共享机会。
+							1183 container
+								1184 text 对一个 key 的一次插入存活期，记插入后的实际新增缓存条目字节累计为 
+								1185 container \Sigma_x(t)
+								1186 text 。在没有该 key 再插入的这段存活期内，FIFO 条件为：
+							1187 container \boxed{ x\text{ 在查询时仍驻留} \iff s_x+\Sigma_x(t)\le C_{L2}. } \tag{GR.15}
+							1188 container
+								1189 text 这里统计的是 实际成功插入的字节 ，不是查询次数、不同输入组数或最后访问后的字节数。证明是：只要 x 还在，任何比它新插入的条目都不能先于它被 FIFO 淘汰。
+							1190 text 当前代码还有一个必须保留的细节：COPY_IN 完成时都会调用插入逻辑。一次读取发射时虽 hit，执行期间 key 若被淘汰，完成时仍可能重新插入。于是不能仅凭发射时的 key 序列模拟所有 FIFO 年龄。
+							1191 container
+								1192 text 这给出了固定树序的一个 条件式联合模型 ：树序产生 L1 请求序列；逐 tensor 的插入、查询窗口决定哪些 reload 能走 L2。没有这些窗口，就只能计算输入需求，不能给它们填上“必然命中”。
+							1193 heading 3. 一个直接说明 CacheGain 目标冲突的迹模型, Value: 3
+								1194 text 3. 一个直接说明 CacheGain 目标冲突的迹模型
+							1195 container
+								1196 text 只看同一 key 的 
+								1197 container z
+								1198 text  次串行读取，第一次 cold miss，随后均在驻留期内 hit，暂不计计算：
+							1199 container T_{\mathrm{noL2}}=\frac{zs}{60},\qquad T_{\mathrm{L2}}=\frac{s}{60}+\frac{(z-1)s}{250}. \tag{GR.16}
+							1200 container
+								1201 text 于是增加重复读取，会同时使  L2 配置下的绝对时间变长 、 CacheGain 比值变大 。反过来，消除重复读取可能让 CacheGain 接近 1，却让真正的 Makespan 更好。
+							1202 text 这只是明确限定的串行传输迹；一般执行中两个带宽池可以重叠，不能把式（GR.16）的相加当成通用预测。
+							1203 container
+								1204 text 因此，D 变小可以消灭一部分“本来会命中的读取”，但 少读一次通常比把它变成一次 cache hit 更值得追求 。是否最终更快，还必须与上一节的新增 reload、实际瓶颈一起判断。
+							1205 container
+								1206 text 缺失状态不是不可知的随机量，而是：展开后的 COPY 队列、spill incarnation/backing、实际发射与完成时钟、FIFO 内容及顺序、两个共享池的在途工作量。完整方案和冻结评估器原则上决定这些状态； D 和静态读者集合本身不决定它们 。
+							1207 heading 五、最小验证：把归核、树序、L2 分开，而不是再扩展候选搜索, Value: 2
+								1208 text 五、最小验证：把归核、树序、L2 分开，而不是再扩展候选搜索
+							1209 heading 1. 本族有一个特别有用的搬运核对式, Value: 3
+								1210 text 1. 本族有一个特别有用的搬运核对式
+							1211 text 在当前 guard 下，每个消费 Task 对外部输入的首次 COPY_IN 总量恰为 D。完整原树不拆，输出 COPY 总量保持不变。因此两份方案之间应有：
+							1212 container \boxed{ \Delta\mathrm{ExtraCopy} = \Delta D+\Delta\mathrm{SpillCopy}. } \tag{GR.17}
+							1213 text 这是 COPY 字节账本关系，不是物理 DDR 流量关系。L2 hit 改变服务路径，不会把这次 COPY 从调度字节数里删除。
+							1214 container
+								1215 text 这里的  SpillCopy  必须使用官方实际字节字段：输入已有 backing 时可能只有 reload COPY_IN；不能把每次 spill 一律计成一对 COPY。
+							1216 container
+								1217 text 式（GR.17）能直接回答： D 的减少到底被多少新增 reload 抵消了。  若对不上，应先查图、方案、输出或统计口径，而不是解释性能。
+							1218 heading 2. 最少新增四次评估，能回答顺序性的因果问题, Value: 3
+								1219 text 2. 最少新增四次评估，能回答顺序性的因果问题
+							1220 text 现有旧 owner＋DFS 已有同计划 P2/P3 配对，可核对身份后复用。新增：
+							1221 container
+								1222 table
+									1223 row
+										1224 cell
+											1225 text owner
+										1226 cell
+											1227 text 整树顺序
+										1228 cell
+											1229 text L2
+									1230 row
+										1231 cell
+											1232 text 新分带 owner
+										1233 cell
+											1234 text 原有固定 component-ID 顺序，树内 DFS 不变
+										1235 cell
+											1236 text 关、开
+									1237 row
+										1238 cell
+											1239 text 同一个新 owner
+										1240 cell
+											1241 text 本节整组模型导出的 A 块/端点顺序，树内 DFS 不变
+										1242 cell
+											1243 text 关、开
+								1244 button Copy table
+							1245 text 前一对相对于旧配对，测“在固定树序规则下改变 owner”；后一对相对于前一对，测“固定新 owner 后改变树序”。每对再给出同计划、同核 CacheGain。
+							1246 container
+								1247 text 这四次新增能回答这条具体改进路径，但不能完整识别 owner×树序交互。  只有确实需要区分该交互时，再补旧 owner＋新树序的关/开两次；这样才形成完整的八格因子对照，其中已有两格可复用。没有必要一开始就补齐。
+							1248 text 当前预登记的两轴 owner 探针也不应被新方案悄悄替换；新分带方案应有独立方案身份。已读报告只支持旧 owner 的前沿顺序收益，不支持新 owner 的成绩。
+							1249 heading 3. 停用代理的证据, Value: 3
+								1250 text 3. 停用代理的证据
+							1251 text 如果 D 减少，而输入 reload 增加超过它、关 L2 与开 L2 的 Makespan 都恶化，就停止把“更小 D”用作该机制的接受标准；不按 case 编号补例外。
+							1252 text 如果 COPY 确实减少，但 Makespan 基本不变，且时间线显示计算 pipe 才是瓶颈，就停止继续精修 D。特别是 079 型已经有这个受限目标的最优证书，继续搜索更低 D 没有空间；应转向顺序、驻留或其他合法构造族。
+							1253 text 如果 CacheGain 或字节 hit 上升而 P3 Makespan 没有下降，不接受为主要目标改善。反之，Makespan 下降而 CacheGain 下降也不应被否决。所有小于 1 的配对值照实保留。
+							1254 text 同时检查原计算 FIFO、COPY_IN 首次导入与 reload 的 logical key、分配顺序与内存补边。树优先词不是提交的起止时间；Step3 使用扩展词的固定 pipe 投影和分配顺序，不能把模型中的整树缓存窗口当作已经落实的官方时钟。
+							1255 heading 交付, Value: 2
+								1256 text 交付
+							1257 button 下载分带 DP、接入适配器与完整坐标证书
+								1258 text 下载分带 DP、接入适配器与完整坐标证书
+							1259 button 查看两参数实例的 owner 矩阵、支持与模型检查记录
+								1260 text 查看两参数实例的 owner 矩阵、支持与模型检查记录
+							1261 container
+								1262 text 包中主 DP 支持同轴不等字节权重；接入适配器复用现有 Cartesian 识别和原树 DFS，只输出规定的两个字段。 适配器本轮只做了语法检查，没有在原始官方图上执行。  已执行的是两个坐标实例的覆盖/配额/字节检查，以及 11 项小型、明确限定于分带或固定 A 块排列族的独立检查；没有官方成绩。
+							1263 text 本轮可以推进的结论是：输入副本的组合优化已经能明显强于两轴 slice，并能给出很紧甚至精确的界；但实际接受新 owner 的关键，应从“D 降了多少”改成“少掉的首次副本，是否超过新增 reload，并且是否位于 Makespan 的资源瓶颈上”。共享 L2 是对实际剩余读取的服务机制，不是需要人为增加重复读取来制造的收益来源。
+							1264 container
+								1265 button certificates.json
+									1266 text certificates.json
+									1267 text Code
+								1268 button Download file
+							1269 container Response actions
+								1270 button Copy response
+								1271 pop up button (collapsed) Description: Rate response, ID: radix-_r_kr_, Secondary Actions: Expand
+								1272 pop up button (collapsed) Description: Pro feedback, Secondary Actions: Expand
+								1273 button Add to project sources
+								1274 pop up button (collapsed) Description: Switch model, ID: radix-_r_lc_, Secondary Actions: Expand
+								1275 pop up button (collapsed) Description: More actions, ID: radix-_r_l3_, Secondary Actions: Expand
+						1276 text ChatGPT can make mistakes. Check important info.
+					1277 container thread-bottom-container
+						1278 container
+							1279 container
+								1280 pop up button (collapsed) Description: Add files and more, ID: composer-plus-btn, Secondary Actions: Expand
+								1281 text entry area (settable) Description: Chat with ChatGPT, ID: prompt-textarea
+									1282 text Ask ChatGPT
+								1283 pop up button (collapsed) 6 Pro, ID: radix-_r_gq_, Secondary Actions: Expand
+								1284 button Start dictation
+								1285 button Start Voice
+
+The focused UI element is 928 button Copy message

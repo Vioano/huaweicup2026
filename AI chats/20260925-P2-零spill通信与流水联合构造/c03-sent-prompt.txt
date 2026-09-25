@@ -1,0 +1,25 @@
+P2 C03 / s-7d28：请用 6 Pro 对一个已被实测定位的数学瓶颈做聚焦研究。沿用本 huaweicup chat 的 C01/C02 与已有附件，不再泛泛扩研究路线，也不在你的环境运行官方图、官方 evaluator 或全量搜索。我们本地继续研发，不等本轮答复才能推进。
+
+已实施 C02：使用你的 exit_sealed_rebuild 核心，完整重建 tensor consumers；适配器拒绝 alias、多 producer、D_val≠D_exec，接受严格标准外部 DDR→COPY_IN 输入；完整方案通过官方结构推导和零 spill 证书。069/K5 从同一 c665 保存基线 M=11962、addedDDR=321938B 出发，按你给的规则只生成两份完整方案，然后各用未修改官方 E0 一次验证：
+- 48-op区域、出口188、固定core4：M=12154（退化192），addedDDR338162B，spill0。出口188从8077提前至6492（提前1585），但894个区域外原计算操作更晚完成，最大延后1563。
+- 45-op区域、同出口/核：M=11838（仅改善124，1.037%），addedDDR335666B，spill0。出口从8077提前至6174（提前1903），但397个区域外操作更晚完成，最大延后1304。
+两方案均消除3个标记的内部tensor跨核连接。1032个原计算操作按ID完整配对。上述是时间差观测；没有完整prepared边表，不能唯一归因于FIFO或DDR竞争。单出口连接不变量/拓扑可恢复性仍未被推翻，但局部出口大幅提前远没有转化为全局收益。
+
+另一路直接从汇合端逆向安放串行链、恢复正向真实优先序的构造，069/K5已官方确认M10577（比11962降低11.58%），但addedDDR452436B；在005/010/086有明显退化，064/068/088有改善。因此我们正在按结构统一、最多4次完整计划在线评分的双向选择算法验证，绝不按图号或历史结果挑赢家。正式全500仍c665，K5均值4.549756997；没有新全量成绩。
+
+核心问题：能否为局部区域重构建立一个有用、可计算的“区域外干扰约束”，并把它恢复成题目真正可提交的 core_schedules，从而避免区域优先的Kahn合并把别的关键工作推迟？请不要先假定“所有区域外操作都不得晚于旧时刻”是必要或最优的，它可能极端保守。旧COPY持续时间也不能当反事实固定权重。
+
+请先审计这次真实结果究竟支持哪些解释、仍缺哪些信息，再只选一个值得实现的改动：
+1. 说明在简化双Pipe固定服务模型中，怎样用外部任务的松弛/占用窗口与区域入口/出口关系，给出足够条件或清楚标明仅必要条件；包含证明或最小反例。若保存旧外部顺序仍会造成大规模晚点，请明确指出哪个恢复步骤允许了这种干扰。
+2. 在官方共享DDR、自动COPY生成/锚点和Step3内存补边下，哪些性质能保留，哪些失效？是否存在有限保护域的非干扰证书，还是应放弃无退化证明，只设计一个更好的确定性插入构造？不能把旧trace时刻表当成能直接提交的控制变量。
+3. 给唯一推荐的可落地核心伪代码/小原型、输入字段、复杂度和停止条件。目标是一次有界构造、至多2个新完整候选，不是扫描所有插入位置或反复评价爬山。解释它相比C02“就绪区域节点优先”的实质新自由度和代价；如果局部路线没有充分理由，请直接否定并指出最小可证伪证据，不为维护旧建议继续加补丁。
+4. 给一个能推翻你的新规则的微型反例，以及最小的本机对照；只用合成数学模型检查，不在Pro运行赛题。评估是否可能只对069过拟合，要求规则仅依图/资源语义。
+
+固定材料（主库与公开镜像均已同步3bead41f7d1b98b8d78f66a2bfe74d061c1f92b4；先报实际读到的文件，未取得不要声称已读）：
+https://github.com/huaweibei123/huaweicup2026/blob/3bead41f7d1b98b8d78f66a2bfe74d061c1f92b4/results/a/q2-nikolastarx/c02-two-e0-20260925/README.md
+https://github.com/huaweibei123/huaweicup2026/blob/3bead41f7d1b98b8d78f66a2bfe74d061c1f92b4/results/a/q2-nikolastarx/c02-two-e0-20260925/timeline-comparison.json
+https://github.com/huaweibei123/huaweicup2026/blob/3bead41f7d1b98b8d78f66a2bfe74d061c1f92b4/results/a/q2-nikolastarx/c02-two-e0-20260925/run-originals.zip
+https://github.com/huaweibei123/huaweicup2026/tree/3bead41f7d1b98b8d78f66a2bfe74d061c1f92b4/results/a/q2-nikolastarx/c02-real-static-20260925
+https://github.com/huaweibei123/huaweicup2026/blob/3bead41f7d1b98b8d78f66a2bfe74d061c1f92b4/src/q2_nikolastarx/exit_sealed_kernel.py
+https://github.com/huaweibei123/huaweicup2026/blob/3bead41f7d1b98b8d78f66a2bfe74d061c1f92b4/src/q2_nikolastarx/exit_sealed_candidate.py
+同SHA src/q2_nikolastarx/reverse_gap_candidate.py可参考；原069图、旧完整native诊断与官方源码已在本chat的c02-evidence-20260925.zip。若连接只支持Vioano，请将上述owner替换为Vioano/huaweicup2026，SHA与路径不变。不要把链接可见当读取成功，也不要补造缺失的prepared契约。

@@ -1,0 +1,106 @@
+{
+  "scope": "supplied raw-word bucket algebra and exogenous-release arithmetic only",
+  "official_calls": 0,
+  "candidate": {
+    "node_to_subgraph": {
+      "10": 0,
+      "11": 1,
+      "12": 2,
+      "20": 3,
+      "21": 6,
+      "22": 6
+    },
+    "core_schedules": [
+      [
+        3,
+        0
+      ],
+      [
+        6,
+        1,
+        2
+      ]
+    ]
+  },
+  "certificate": {
+    "pilot": 1,
+    "job_permutation": [
+      1,
+      0
+    ],
+    "cuts": [
+      0,
+      1,
+      3
+    ],
+    "cores": [
+      {
+        "core": 0,
+        "prefix": [
+          1000
+        ],
+        "pre_step2_word": [
+          1000,
+          20,
+          1020,
+          10,
+          1010
+        ],
+        "interval_peak": {
+          "L1": 120,
+          "UB": 0
+        }
+      },
+      {
+        "core": 1,
+        "prefix": [
+          1002
+        ],
+        "pre_step2_word": [
+          1002,
+          1120,
+          21,
+          22,
+          2022,
+          1110,
+          11,
+          12,
+          2012
+        ],
+        "interval_peak": {
+          "L1": 60120,
+          "UB": 0
+        }
+      }
+    ],
+    "scope": "pre-Step2 prefix and no-spill INPUT certificates, not E0 timing",
+    "official_calls": 0
+  },
+  "capacity_negative_rejected": true,
+  "timing_examples": [
+    {
+      "R": 2000,
+      "local_prefix_compute": 100,
+      "cold_load": 1000,
+      "old_tail_completion": 3002,
+      "new_tail_completion": 2102,
+      "gain": 900
+    },
+    {
+      "R": 0,
+      "local_prefix_compute": 100,
+      "cold_load": 1000,
+      "old_tail_completion": 1002,
+      "new_tail_completion": 1102,
+      "gain": -100
+    },
+    {
+      "R": 2000,
+      "local_prefix_compute": 1200,
+      "cold_load": 1000,
+      "old_tail_completion": 3202,
+      "new_tail_completion": 3202,
+      "gain": 0
+    }
+  ]
+}

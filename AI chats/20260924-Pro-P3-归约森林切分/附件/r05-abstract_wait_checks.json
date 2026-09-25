@@ -1,0 +1,230 @@
+{
+  "short": {
+    "scope": "constant-duration bounds on fixed prepared execution graph; no event simulation",
+    "lower_makespan": 760,
+    "upper_makespan": 760,
+    "cores": [
+      {
+        "core": 0,
+        "M_count": 7,
+        "M_busy": 700,
+        "startup_plus_gaps_lower": 50,
+        "startup_plus_gaps_upper": 50,
+        "internal_gaps_lower": 50,
+        "internal_gaps_upper": 50,
+        "upper_model_gap_sum": 50,
+        "upper_model_gap_max": 10,
+        "upper_model_positive_gap_count": 5,
+        "upper_critical_path": [
+          "M0",
+          "M1",
+          "A1",
+          "M2",
+          "A2",
+          "M3",
+          "A3",
+          "M4",
+          "A4",
+          "M5",
+          "A5",
+          "M6"
+        ],
+        "upper_M_debt": [
+          {
+            "node": "M0",
+            "upper_start": 0,
+            "busy_prefix": 0,
+            "upper_debt": 0
+          },
+          {
+            "node": "M1",
+            "upper_start": 100,
+            "busy_prefix": 100,
+            "upper_debt": 0
+          },
+          {
+            "node": "M2",
+            "upper_start": 210,
+            "busy_prefix": 200,
+            "upper_debt": 10
+          },
+          {
+            "node": "M3",
+            "upper_start": 320,
+            "busy_prefix": 300,
+            "upper_debt": 20
+          },
+          {
+            "node": "M4",
+            "upper_start": 430,
+            "busy_prefix": 400,
+            "upper_debt": 30
+          },
+          {
+            "node": "M5",
+            "upper_start": 540,
+            "busy_prefix": 500,
+            "upper_debt": 40
+          },
+          {
+            "node": "M6",
+            "upper_start": 650,
+            "busy_prefix": 600,
+            "upper_debt": 50
+          }
+        ]
+      }
+    ],
+    "e0_calls": 0
+  },
+  "delayed": {
+    "scope": "constant-duration bounds on fixed prepared execution graph; no event simulation",
+    "lower_makespan": 710,
+    "upper_makespan": 710,
+    "cores": [
+      {
+        "core": 0,
+        "M_count": 7,
+        "M_busy": 700,
+        "startup_plus_gaps_lower": 0,
+        "startup_plus_gaps_upper": 0,
+        "internal_gaps_lower": 0,
+        "internal_gaps_upper": 0,
+        "upper_model_gap_sum": 0,
+        "upper_model_gap_max": 0,
+        "upper_model_positive_gap_count": 0,
+        "upper_critical_path": [
+          "M0",
+          "M1",
+          "M2",
+          "M3",
+          "M4",
+          "M5",
+          "M6"
+        ],
+        "upper_M_debt": [
+          {
+            "node": "M0",
+            "upper_start": 0,
+            "busy_prefix": 0,
+            "upper_debt": 0
+          },
+          {
+            "node": "M1",
+            "upper_start": 100,
+            "busy_prefix": 100,
+            "upper_debt": 0
+          },
+          {
+            "node": "M2",
+            "upper_start": 200,
+            "busy_prefix": 200,
+            "upper_debt": 0
+          },
+          {
+            "node": "M3",
+            "upper_start": 300,
+            "busy_prefix": 300,
+            "upper_debt": 0
+          },
+          {
+            "node": "M4",
+            "upper_start": 400,
+            "busy_prefix": 400,
+            "upper_debt": 0
+          },
+          {
+            "node": "M5",
+            "upper_start": 500,
+            "busy_prefix": 500,
+            "upper_debt": 0
+          },
+          {
+            "node": "M6",
+            "upper_start": 600,
+            "busy_prefix": 600,
+            "upper_debt": 0
+          }
+        ]
+      }
+    ],
+    "e0_calls": 0
+  },
+  "reader_lock": {
+    "scope": "constant-duration bounds on fixed prepared execution graph; no event simulation",
+    "lower_makespan": 750,
+    "upper_makespan": 750,
+    "cores": [
+      {
+        "core": 0,
+        "M_count": 7,
+        "M_busy": 700,
+        "startup_plus_gaps_lower": 40,
+        "startup_plus_gaps_upper": 40,
+        "internal_gaps_lower": 40,
+        "internal_gaps_upper": 40,
+        "upper_model_gap_sum": 40,
+        "upper_model_gap_max": 10,
+        "upper_model_positive_gap_count": 4,
+        "upper_critical_path": [
+          "M0",
+          "M1",
+          "M2",
+          "A1",
+          "M3",
+          "A2",
+          "M4",
+          "A3",
+          "M5",
+          "A4",
+          "M6"
+        ],
+        "upper_M_debt": [
+          {
+            "node": "M0",
+            "upper_start": 0,
+            "busy_prefix": 0,
+            "upper_debt": 0
+          },
+          {
+            "node": "M1",
+            "upper_start": 100,
+            "busy_prefix": 100,
+            "upper_debt": 0
+          },
+          {
+            "node": "M2",
+            "upper_start": 200,
+            "busy_prefix": 200,
+            "upper_debt": 0
+          },
+          {
+            "node": "M3",
+            "upper_start": 310,
+            "busy_prefix": 300,
+            "upper_debt": 10
+          },
+          {
+            "node": "M4",
+            "upper_start": 420,
+            "busy_prefix": 400,
+            "upper_debt": 20
+          },
+          {
+            "node": "M5",
+            "upper_start": 530,
+            "busy_prefix": 500,
+            "upper_debt": 30
+          },
+          {
+            "node": "M6",
+            "upper_start": 640,
+            "busy_prefix": 600,
+            "upper_debt": 40
+          }
+        ]
+      }
+    ],
+    "e0_calls": 0
+  }
+}

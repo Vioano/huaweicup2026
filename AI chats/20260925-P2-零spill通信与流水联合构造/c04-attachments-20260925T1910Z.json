@@ -1,0 +1,41 @@
+{
+  "observed_at_utc": "2026-09-25T19:10:44Z",
+  "source_assistant_message_id": "caf2a5d7-0054-4214-8060-332363bf648d",
+  "source": "ChatGPT in-app browser file preview > Copy file contents > UTF-8 TextEdit save; download clicks produced no confirmed local file bytes",
+  "original_zip": {
+    "name": "P2_C04_s7d28_port_packet_evidence.zip",
+    "state": "visible_not_acquired",
+    "bytes": null,
+    "sha256": null
+  },
+  "files": [
+    {
+      "source_name": "port_packet_stationary.py",
+      "local_path": "附件/c04-port_packet_stationary.browser-copy.py",
+      "state": "browser_preview_text_recovered_original_bytes_unverified",
+      "bytes": 21643,
+      "sha256": "ce5e9cff34922dc37a1337a721e8467555e03af201cb61d80d9a7b1b789b100a"
+    },
+    {
+      "source_name": "test_port_packet_stationary.py",
+      "local_path": "附件/c04-test_port_packet_stationary.browser-copy.py",
+      "state": "browser_preview_text_recovered_original_bytes_unverified",
+      "bytes": 15589,
+      "sha256": "f192c35abd17e5cd960e684354d8ff957616e71e294cb919fb9f0802228ffa37"
+    },
+    {
+      "source_name": "synthetic_results.json",
+      "local_path": "附件/c04-synthetic_results.browser-copy.json",
+      "state": "browser_preview_text_recovered_original_bytes_unverified",
+      "bytes": 2269,
+      "sha256": "f888af960d4d31c93c50471faf318e5923cc39de97c88293ebdb9d6cb7582124"
+    }
+  ],
+  "independent_replay": {
+    "command": "python3 -B test_port_packet_stationary.py in isolated temporary directory",
+    "tests_run": 9,
+    "passed": true,
+    "official_evaluator_calls": 0,
+    "note": "Browser-copied source; local rerun is distinct from author reported tests."
+  }
+}
