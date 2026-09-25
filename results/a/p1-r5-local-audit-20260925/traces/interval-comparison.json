@@ -1,0 +1,67 @@
+{
+  "kind": "READ_ONLY_ARCHIVED_TRACE_INTERVAL_AUDIT_NOT_E0",
+  "paired_signatures_sha256": "2a90a5b0e8b3ff19fe88a07e6580dc4899a63b7654d0d268c0941b947549c95b",
+  "diagnosis_sha256": "6df9dd78607ed5b453c7ad08d91405d7ebb896cc9251087a6dcb810232035480",
+  "rows": {
+    "whole_seed": {
+      "trace_sha256": "c277e9fd27d3807243088386d94acc7344950a3fed0ffb9753554473756d73e5",
+      "makespan": 101836,
+      "audit_status": "matched_observed_duration_DAG_only",
+      "hidden_slack": 0,
+      "critical_decomposition": {
+        "ddr_solo_work": 618,
+        "ddr_duration_excess_including_rounding": 1854,
+        "compute_work": 99264,
+        "gate": 100
+      },
+      "computed": {
+        "DDR_busy_union": 44604,
+        "DDR_no_request_window_length": 57232,
+        "core0_MV_overlap": 0,
+        "core0_MV_union": 99264,
+        "core0_MV_idle_including_Task_gates": 2572
+      },
+      "matches_archived_diagnosis": {
+        "DDR_busy_union": true,
+        "DDR_no_request_window_length": true,
+        "core0_MV_overlap": true,
+        "core0_MV_union": true,
+        "core0_MV_idle_including_Task_gates": true
+      }
+    },
+    "period7_seed": {
+      "trace_sha256": "4f837ea119cc189fd276c565d150a0a198ed6480059577cf952aa56d63e5bfa0",
+      "makespan": 109412,
+      "audit_status": "matched_observed_duration_DAG_only",
+      "hidden_slack": 0,
+      "critical_decomposition": {
+        "ddr_solo_work": 5038,
+        "ddr_duration_excess_including_rounding": 29074,
+        "compute_work": 75000,
+        "gate": 300
+      },
+      "computed": {
+        "DDR_busy_union": 72324,
+        "DDR_no_request_window_length": 37088,
+        "core0_MV_overlap": 7804,
+        "core0_MV_union": 91460,
+        "core0_MV_idle_including_Task_gates": 17952
+      },
+      "matches_archived_diagnosis": {
+        "DDR_busy_union": true,
+        "DDR_no_request_window_length": true,
+        "core0_MV_overlap": true,
+        "core0_MV_union": true,
+        "core0_MV_idle_including_Task_gates": true
+      }
+    }
+  },
+  "limitation": "Observed-duration DAG and interval equality do not validate fair DDR service or establish counterfactual causality",
+  "calls": {
+    "Task_compile": 0,
+    "response_simulate": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  }
+}

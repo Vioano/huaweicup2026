@@ -1,0 +1,30 @@
+{
+  "input_zip": "/mnt/data/r5-bottleneck-inputs-20260925.zip",
+  "bytes": 136840,
+  "sha256": "6b8110a164850b2e031555aca8b54490ae2ec291811efb1bb045e3baa1a37c32",
+  "manifest_files_verified": 18,
+  "source_commit": "5e8ab712b824c95b66b55146882e4752428cba2a",
+  "attachment_used_as_primary": true,
+  "network_source_reads": 0,
+  "files_search_note": "ZIP content not returned by Files semantic search; used exact mounted bytes, not unrelated PDF results",
+  "missing": [
+    "original graph JSON",
+    "original op ID to signature-rank map",
+    "standalone config.txt",
+    "full compilable dependency closure",
+    "v4 full500 raw results",
+    "new 084/051 E0 originals"
+  ],
+  "read_sections": {
+    "response_oracle.py": "full",
+    "compiled_memory_response.py": "full",
+    "response_compile.py": "adapter and guards",
+    "memory_packet_probe.py": "family, kernel, suffix and final verification",
+    "p1_lazy_memory_probe.py": "guard, periodic seed, compile caches, response accounting, final verifier",
+    "schedule_step1.py": "reverse DFS core",
+    "schedule_step2.py": "allocation/spill/free and insertion logic",
+    "schedule_step3.py": "credit allocation/free, MEM export, execution contract",
+    "multicore_cut_evaluate_problem_1.py": "Task building, Task release, retirement and issue"
+  },
+  "no_claim": "not a full reread of 100 raw graphs or of all missing compiler dependencies"
+}

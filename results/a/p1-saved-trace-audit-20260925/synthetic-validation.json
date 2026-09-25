@@ -1,0 +1,179 @@
+{
+  "kind": "HANDWRITTEN_SYNTHETIC_PRECEDENCE_ONLY_DELIBERATELY_UNVERIFIED_DDR_SERVICE",
+  "precedence_check": {
+    "status": "matched_observed_duration_DAG_only",
+    "makespan": 11,
+    "observed_duration_DAG_longest": 11,
+    "unexplained_gap": 0,
+    "decomposition": {
+      "ddr_solo_work": 2,
+      "ddr_duration_excess_including_rounding": 1,
+      "compute_work": 6,
+      "gate": 2
+    },
+    "max_operation_start_slack": 0,
+    "critical_chain": [
+      {
+        "kind": "DDR",
+        "weight": 3,
+        "task": 0,
+        "core": 0,
+        "pipe": "PIPE_MTE2",
+        "rank": 1,
+        "observed_start": 0,
+        "observed_end": 3,
+        "solo_work": 2,
+        "duration": 3,
+        "incoming": "root"
+      },
+      {
+        "kind": "compute",
+        "weight": 4,
+        "task": 0,
+        "core": 0,
+        "pipe": "PIPE_M",
+        "rank": 1,
+        "observed_start": 3,
+        "observed_end": 7,
+        "solo_work": 4,
+        "duration": 4,
+        "incoming": "need"
+      },
+      {
+        "kind": "task_end",
+        "weight": 0,
+        "task": 0,
+        "incoming": "task_completion"
+      },
+      {
+        "kind": "gate",
+        "weight": 2,
+        "core": 0,
+        "before_task": 1,
+        "incoming": "serial_core"
+      },
+      {
+        "kind": "task_start",
+        "weight": 0,
+        "task": 1,
+        "incoming": "gate"
+      },
+      {
+        "kind": "compute",
+        "weight": 2,
+        "task": 1,
+        "core": 0,
+        "pipe": "PIPE_V",
+        "rank": 1,
+        "observed_start": 9,
+        "observed_end": 11,
+        "solo_work": 2,
+        "duration": 2,
+        "incoming": "task_activation"
+      },
+      {
+        "kind": "task_end",
+        "weight": 0,
+        "task": 1,
+        "incoming": "task_completion"
+      }
+    ],
+    "checked_operations": 3,
+    "fair_DDR_service_validated": false,
+    "limitation": "Only observed-duration precedence algebra is checked. Fair DDR service, integer retirement legality, and counterfactual causality are NOT verified"
+  },
+  "feasible_handwritten": {
+    "status": "matched_observed_duration_DAG_only",
+    "makespan": 10,
+    "observed_duration_DAG_longest": 10,
+    "unexplained_gap": 0,
+    "decomposition": {
+      "ddr_solo_work": 2,
+      "ddr_duration_excess_including_rounding": 0,
+      "compute_work": 6,
+      "gate": 2
+    },
+    "max_operation_start_slack": 0,
+    "critical_chain": [
+      {
+        "kind": "DDR",
+        "weight": 2,
+        "task": 0,
+        "core": 0,
+        "pipe": "PIPE_MTE2",
+        "rank": 1,
+        "observed_start": 0,
+        "observed_end": 2,
+        "solo_work": 2,
+        "duration": 2,
+        "incoming": "root"
+      },
+      {
+        "kind": "compute",
+        "weight": 4,
+        "task": 0,
+        "core": 0,
+        "pipe": "PIPE_M",
+        "rank": 1,
+        "observed_start": 2,
+        "observed_end": 6,
+        "solo_work": 4,
+        "duration": 4,
+        "incoming": "need"
+      },
+      {
+        "kind": "task_end",
+        "weight": 0,
+        "task": 0,
+        "incoming": "task_completion"
+      },
+      {
+        "kind": "gate",
+        "weight": 2,
+        "core": 0,
+        "before_task": 1,
+        "incoming": "serial_core"
+      },
+      {
+        "kind": "task_start",
+        "weight": 0,
+        "task": 1,
+        "incoming": "gate"
+      },
+      {
+        "kind": "compute",
+        "weight": 2,
+        "task": 1,
+        "core": 0,
+        "pipe": "PIPE_V",
+        "rank": 1,
+        "observed_start": 8,
+        "observed_end": 10,
+        "solo_work": 2,
+        "duration": 2,
+        "incoming": "task_activation"
+      },
+      {
+        "kind": "task_end",
+        "weight": 0,
+        "task": 1,
+        "incoming": "task_completion"
+      }
+    ],
+    "checked_operations": 3,
+    "fair_DDR_service_validated": false,
+    "limitation": "Only observed-duration precedence algebra is checked. Fair DDR service, integer retirement legality, and counterfactual causality are NOT verified"
+  },
+  "premature_need_rejected": true,
+  "missing_trace_rejected": true,
+  "out_of_order_rejected": true,
+  "duplicate_schedule_rejected": true,
+  "synthetic_known_service_violation": "one DDR op with solo work 2 was assigned duration 3 without a contender",
+  "calls": {
+    "Task_compile": 0,
+    "response_simulate": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  }
+}
