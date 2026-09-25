@@ -1,0 +1,699 @@
+{
+  "scope": "044 core2 first pilot, fixed rounded exclusive DDR services and arbitrary independent upstream releases; model coefficients only, not official dominance or scores",
+  "source_sha256": {
+    "q3-core-nikolastarx/results/a/q3-nikolastarx/pipeline-prefix-static-20260925/case_044_multicore_res.json": "13914b24c18b59366be17de86a26d227ff85427cb00b184799587777547a6508",
+    "q3-core-nikolastarx/results/a/q3-nikolastarx/pipeline-prefix-static-20260925/snapshots.json.gz": "91b8aad332a276345be824ffeda799564439ca61c48a5418053eec8068e1f471",
+    "q3-core-nikolastarx/results/a/q3-nikolastarx/pipeline-prefix-static-20260925/certificate.json": "fa6689b6f8770def845138b64856b63c1f62ef3f0317c325ada2fa8a5ea56595",
+    "q3-core-nikolastarx/results/a/q3-nikolastarx/partial-bucket-compile-20260925/compile.py": "a8495db117189bc80ad55cdd1406afb05ac971521dfd6795097b85d2ef0962b2",
+    "q3-core-nikolastarx/results/a/q3-nikolastarx/release-envelope-model-20260925/model.py": "babc3b870fe47ddb15256bc025929f76f935a72fccb811e8b9f4ac38a7b105e4",
+    "q3-core-nikolastarx/results/a/q3-nikolastarx/release-envelope-model-20260925/task_profile.py": "d245316dd55ef4b830565c80a8301234c765b1514e54345d0481b2a876846e2b",
+    "q3-core-nikolastarx/results/a/q3-nikolastarx/release-envelope-model-20260925/audit_saved_family.py": "c6b2689472b846336cb9f5ebb25244fb9ae3e442aa59b4ac7019535ba3d6673d",
+    "q3-core-nikolastarx/results/a/q3-nikolastarx/partial-bucket-compile-20260925/structure-table.json": "b43c043a6b1895eaf815b4c527532a5b34829713f0350d9cf263e054b20ef284"
+  },
+  "core": 2,
+  "source_family": "cold-input breakpoint restricted family plus original full prefix",
+  "rows": [
+    {
+      "signature": {
+        "base": 9565,
+        "lags": {
+          "1:1000001655": 9565,
+          "1:1000001652": 959
+        }
+      },
+      "total_compute": 1120,
+      "fixed_input_work": 8609,
+      "transfers": [
+        {
+          "copy_id": 1000001656,
+          "size_bytes": 128,
+          "fixed_service": 3,
+          "compute_before_first_use": 0,
+          "release_key": "1:1000001655"
+        },
+        {
+          "copy_id": 1000001542,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 7,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001544,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 171,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001546,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 328,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001548,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 492,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001550,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 649,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001552,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 813,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001554,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 970,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001653,
+          "size_bytes": 128,
+          "fixed_service": 3,
+          "compute_before_first_use": 164,
+          "release_key": "1:1000001652"
+        }
+      ],
+      "release_convention": "source COPY_OUT completion plus the fixed cross-core delay; independent nonnegative variables in this mathematical model",
+      "service_convention": "all inputs use rounded exclusive DDR service, no shared pool/cache/allocator effects",
+      "h": 1,
+      "q": 0,
+      "strictly_model_dominated_by": [
+        2
+      ],
+      "same_model_signature_as": []
+    },
+    {
+      "signature": {
+        "base": 9565,
+        "lags": {
+          "1:1000001655": 8336,
+          "1:1000001652": 959
+        }
+      },
+      "total_compute": 1120,
+      "fixed_input_work": 8609,
+      "transfers": [
+        {
+          "copy_id": 1000001542,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 7,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001656,
+          "size_bytes": 128,
+          "fixed_service": 3,
+          "compute_before_first_use": 0,
+          "release_key": "1:1000001655"
+        },
+        {
+          "copy_id": 1000001544,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 171,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001546,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 328,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001548,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 492,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001550,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 649,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001552,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 813,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001554,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 970,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001653,
+          "size_bytes": 128,
+          "fixed_service": 3,
+          "compute_before_first_use": 164,
+          "release_key": "1:1000001652"
+        }
+      ],
+      "release_convention": "source COPY_OUT completion plus the fixed cross-core delay; independent nonnegative variables in this mathematical model",
+      "service_convention": "all inputs use rounded exclusive DDR service, no shared pool/cache/allocator effects",
+      "h": 2,
+      "q": 1,
+      "strictly_model_dominated_by": [],
+      "same_model_signature_as": []
+    },
+    {
+      "signature": {
+        "base": 8759,
+        "lags": {
+          "1:1000001655": 6301,
+          "1:1000001652": 6298
+        }
+      },
+      "total_compute": 1120,
+      "fixed_input_work": 8609,
+      "transfers": [
+        {
+          "copy_id": 1000001542,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 7,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001544,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 171,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001656,
+          "size_bytes": 128,
+          "fixed_service": 3,
+          "compute_before_first_use": 0,
+          "release_key": "1:1000001655"
+        },
+        {
+          "copy_id": 1000001653,
+          "size_bytes": 128,
+          "fixed_service": 3,
+          "compute_before_first_use": 164,
+          "release_key": "1:1000001652"
+        },
+        {
+          "copy_id": 1000001546,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 328,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001548,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 492,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001550,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 649,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001552,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 813,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001554,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 970,
+          "release_key": null
+        }
+      ],
+      "release_convention": "source COPY_OUT completion plus the fixed cross-core delay; independent nonnegative variables in this mathematical model",
+      "service_convention": "all inputs use rounded exclusive DDR service, no shared pool/cache/allocator effects",
+      "h": 5,
+      "q": 2,
+      "strictly_model_dominated_by": [
+        7,
+        10,
+        12,
+        15
+      ],
+      "same_model_signature_as": []
+    },
+    {
+      "signature": {
+        "base": 8759,
+        "lags": {
+          "1:1000001655": 5072,
+          "1:1000001652": 5069
+        }
+      },
+      "total_compute": 1120,
+      "fixed_input_work": 8609,
+      "transfers": [
+        {
+          "copy_id": 1000001542,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 7,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001544,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 171,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001546,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 328,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001656,
+          "size_bytes": 128,
+          "fixed_service": 3,
+          "compute_before_first_use": 0,
+          "release_key": "1:1000001655"
+        },
+        {
+          "copy_id": 1000001653,
+          "size_bytes": 128,
+          "fixed_service": 3,
+          "compute_before_first_use": 164,
+          "release_key": "1:1000001652"
+        },
+        {
+          "copy_id": 1000001548,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 492,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001550,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 649,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001552,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 813,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001554,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 970,
+          "release_key": null
+        }
+      ],
+      "release_convention": "source COPY_OUT completion plus the fixed cross-core delay; independent nonnegative variables in this mathematical model",
+      "service_convention": "all inputs use rounded exclusive DDR service, no shared pool/cache/allocator effects",
+      "h": 7,
+      "q": 3,
+      "strictly_model_dominated_by": [
+        10,
+        12,
+        15
+      ],
+      "same_model_signature_as": []
+    },
+    {
+      "signature": {
+        "base": 8759,
+        "lags": {
+          "1:1000001655": 3843,
+          "1:1000001652": 3840
+        }
+      },
+      "total_compute": 1120,
+      "fixed_input_work": 8609,
+      "transfers": [
+        {
+          "copy_id": 1000001542,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 7,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001544,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 171,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001546,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 328,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001548,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 492,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001656,
+          "size_bytes": 128,
+          "fixed_service": 3,
+          "compute_before_first_use": 0,
+          "release_key": "1:1000001655"
+        },
+        {
+          "copy_id": 1000001653,
+          "size_bytes": 128,
+          "fixed_service": 3,
+          "compute_before_first_use": 164,
+          "release_key": "1:1000001652"
+        },
+        {
+          "copy_id": 1000001550,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 649,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001552,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 813,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001554,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 970,
+          "release_key": null
+        }
+      ],
+      "release_convention": "source COPY_OUT completion plus the fixed cross-core delay; independent nonnegative variables in this mathematical model",
+      "service_convention": "all inputs use rounded exclusive DDR service, no shared pool/cache/allocator effects",
+      "h": 10,
+      "q": 4,
+      "strictly_model_dominated_by": [
+        12,
+        15
+      ],
+      "same_model_signature_as": []
+    },
+    {
+      "signature": {
+        "base": 8759,
+        "lags": {
+          "1:1000001655": 2614,
+          "1:1000001652": 2611
+        }
+      },
+      "total_compute": 1120,
+      "fixed_input_work": 8609,
+      "transfers": [
+        {
+          "copy_id": 1000001542,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 7,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001544,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 171,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001546,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 328,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001548,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 492,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001550,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 649,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001656,
+          "size_bytes": 128,
+          "fixed_service": 3,
+          "compute_before_first_use": 0,
+          "release_key": "1:1000001655"
+        },
+        {
+          "copy_id": 1000001653,
+          "size_bytes": 128,
+          "fixed_service": 3,
+          "compute_before_first_use": 164,
+          "release_key": "1:1000001652"
+        },
+        {
+          "copy_id": 1000001552,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 813,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001554,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 970,
+          "release_key": null
+        }
+      ],
+      "release_convention": "source COPY_OUT completion plus the fixed cross-core delay; independent nonnegative variables in this mathematical model",
+      "service_convention": "all inputs use rounded exclusive DDR service, no shared pool/cache/allocator effects",
+      "h": 12,
+      "q": 5,
+      "strictly_model_dominated_by": [
+        15
+      ],
+      "same_model_signature_as": []
+    },
+    {
+      "signature": {
+        "base": 8759,
+        "lags": {
+          "1:1000001655": 1385,
+          "1:1000001652": 1382
+        }
+      },
+      "total_compute": 1120,
+      "fixed_input_work": 8609,
+      "transfers": [
+        {
+          "copy_id": 1000001542,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 7,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001544,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 171,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001546,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 328,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001548,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 492,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001550,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 649,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001552,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 813,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001656,
+          "size_bytes": 128,
+          "fixed_service": 3,
+          "compute_before_first_use": 0,
+          "release_key": "1:1000001655"
+        },
+        {
+          "copy_id": 1000001653,
+          "size_bytes": 128,
+          "fixed_service": 3,
+          "compute_before_first_use": 164,
+          "release_key": "1:1000001652"
+        },
+        {
+          "copy_id": 1000001554,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 970,
+          "release_key": null
+        }
+      ],
+      "release_convention": "source COPY_OUT completion plus the fixed cross-core delay; independent nonnegative variables in this mathematical model",
+      "service_convention": "all inputs use rounded exclusive DDR service, no shared pool/cache/allocator effects",
+      "h": 15,
+      "q": 6,
+      "strictly_model_dominated_by": [],
+      "same_model_signature_as": []
+    },
+    {
+      "signature": {
+        "base": 9726,
+        "lags": {
+          "1:1000001655": 1123,
+          "1:1000001652": 959
+        }
+      },
+      "total_compute": 1120,
+      "fixed_input_work": 8609,
+      "transfers": [
+        {
+          "copy_id": 1000001542,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 7,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001544,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 171,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001546,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 328,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001548,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 492,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001550,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 649,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001552,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 813,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001554,
+          "size_bytes": 73728,
+          "fixed_service": 1229,
+          "compute_before_first_use": 970,
+          "release_key": null
+        },
+        {
+          "copy_id": 1000001656,
+          "size_bytes": 128,
+          "fixed_service": 3,
+          "compute_before_first_use": 0,
+          "release_key": "1:1000001655"
+        },
+        {
+          "copy_id": 1000001653,
+          "size_bytes": 128,
+          "fixed_service": 3,
+          "compute_before_first_use": 164,
+          "release_key": "1:1000001652"
+        }
+      ],
+      "release_convention": "source COPY_OUT completion plus the fixed cross-core delay; independent nonnegative variables in this mathematical model",
+      "service_convention": "all inputs use rounded exclusive DDR service, no shared pool/cache/allocator effects",
+      "h": 17,
+      "q": 7,
+      "strictly_model_dominated_by": [],
+      "same_model_signature_as": []
+    }
+  ],
+  "wall_seconds": 0.07203183299861848,
+  "calls": {
+    "Task": 0,
+    "Step1": 0,
+    "Step2": 0,
+    "Step3": 0,
+    "E0": 0,
+    "solver": 0,
+    "VM": 0
+  }
+}
