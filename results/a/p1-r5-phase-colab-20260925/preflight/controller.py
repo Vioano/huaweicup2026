@@ -1,10 +1,9 @@
 """Single-use Colab controller; --execute is necessary, not an authorization grant."""
 from __future__ import annotations
 import argparse,hashlib,json,pathlib,shutil,subprocess,sys,time
-from controller_draft import verify_evidence
+import select
 HERE=pathlib.Path(__file__).resolve().parent
 SESSION='p1-r5-phase-008-k5-20260925'
-REMOTE_SHA='b3823b3ded009e358bd5a37938c456a9a193ac337f42d78bdb5cc315d682e056'
 BUNDLE_REMOTE='/content/r5-source-bundle.tar.gz'
 ARCHIVE_REMOTE='/content/p1_r5_phase_window/evidence.tar.gz'
 EMPTY='No active sessions found on server.'
@@ -16,12 +15,21 @@ def empty_sessions_receipt(receipt):
  prefixed='[colab] '+EMPTY
  return receipt.get('stdout') in (plain,plain+'\n',prefixed,prefixed+'\n')
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
-def sources():
- bundle=HERE/'r5-source-bundle.tar.gz'; manifest=HERE/'bundle-manifest.json'
- if sha(bundle)!='0c5ca3078bc60f5eb6f40567be41047dfe9c655e405400bc49a9c016edd7edd8':raise ValueError('bundle SHA mismatch')
- if sha(manifest)!='f3fea5d4a42cf786ab88d59b192f537a893ed2a0b76ddc1f19ba6be3cf3f228d':raise ValueError('manifest SHA mismatch')
- if sha(HERE/'remote_setup.py')!=REMOTE_SHA:raise ValueError('remote setup SHA mismatch')
- return {'source_commit':'8e63305f86a3692b9552295c61c4f234a006c105','graph_sha256':'c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d','bundle_sha256':sha(bundle),'manifest_sha256':sha(manifest),'remote_sha256':REMOTE_SHA,'controller_sha256':sha(pathlib.Path(__file__)),'verifier_sha256':sha(HERE/'controller_draft.py')}
+def sources(pin):
+ manifest=HERE/'artifact-manifest.json';raw=manifest.read_bytes()
+ if sha(manifest)!=pin:raise ValueError('artifact manifest pin mismatch')
+ locked=json.loads(raw)
+ if locked.get('source_commit')!='8e63305f86a3692b9552295c61c4f234a006c105' or locked.get('graph_sha256')!='c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d':raise ValueError('artifact manifest identity mismatch')
+ rows=locked.get('files')
+ if not isinstance(rows,list) or len(rows)!=len({r.get('path') for r in rows}):raise ValueError('invalid artifact manifest')
+ for row in rows:
+  rel=pathlib.PurePosixPath(row['path'])
+  if rel.is_absolute() or '..' in rel.parts or len(rel.parts)!=1:raise ValueError('unsafe artifact path')
+  f=HERE/rel.name;b=f.read_bytes()
+  if len(b)!=row['bytes'] or sha(f)!=row['sha256']:raise ValueError('artifact SHA/size mismatch: '+rel.name)
+ required={'controller.py','controller_draft.py','remote_setup.py','r5-source-bundle.tar.gz','bundle-manifest.json'}
+ if {r['path'] for r in rows}!=required:raise ValueError('artifact manifest coverage mismatch')
+ return {'artifact_manifest_sha256':pin,'source_commit':'8e63305f86a3692b9552295c61c4f234a006c105','graph_sha256':'c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d','artifacts_verified':len(rows)}
 
 def actual_runner(label,argv,timeout):
  start=time.monotonic()
@@ -30,19 +38,20 @@ def actual_runner(label,argv,timeout):
   return {'step':label,'argv':argv,'returncode':p.returncode,'stdout':p.stdout,'stderr':p.stderr,'wall_seconds':time.monotonic()-start}
  except subprocess.TimeoutExpired as error:
   return {'step':label,'argv':argv,'returncode':None,'timeout_seconds':timeout,'stdout':str(error.stdout or ''),'stderr':str(error.stderr or ''),'wall_seconds':time.monotonic()-start}
-def run_once(*,runner,watchdog_start,verify,now,persist,cli,session=SESSION,archive=None):
+def run_once(*,runner,watchdog_start,verify,now,persist,cli,artifact_manifest_sha256,session=SESSION,archive=None):
  archive=archive or HERE/'evidence.tar.gz'
- log={'status':'preflight','session':session,'source':sources(),'steps':[],'VM_stopped_readback':False,'archive_collected':False,'probe_success':False}
+ log={'status':'preflight','session':session,'source':sources(artifact_manifest_sha256),'steps':[],'VM_stopped_readback':False,'archive_collected':False,'probe_success':False}
  def save():persist(log)
  def invoke(label,tail,timeout):
   rec=runner(label,[cli,'--auth','oauth2',*tail],timeout);log['steps'].append(rec);save();return rec
  pre=invoke('preflight-sessions',['sessions'],10)
  if not empty_sessions_receipt(pre):
   log.update(status='preflight-failed',error='active or unreadable sessions');save();return log
- t0=now();deadline=t0+600;log['t0_monotonic']=t0;save()
- watchdog=watchdog_start(session,t0+570)
+ t0=now();deadline=t0+600;lease=t0+570;log['t0_monotonic']=t0;log['lease_deadline_monotonic']=lease;save()
+ watchdog=watchdog_start(session,lease)
  attempted=False;download_attempted=False
  def bounded(label,tail,limit,reserve):
+  if label in ('new','exec') and now()>=lease:raise TimeoutError(f'{label} refused after monotonic lease expiry')
   available=deadline-now()-reserve
   if available<1:raise TimeoutError(f'{label} lacks reserved stop/download time')
   return invoke(label,tail,min(limit,available))
@@ -97,15 +106,23 @@ def main():
  p.add_argument('--watchdog',action='store_true')
  p.add_argument('--session',default=SESSION)
  p.add_argument('--cli',default=shutil.which('colab') or str(pathlib.Path.home()/'.local/bin/colab'))
- p.add_argument('--deadline-epoch',type=float)
+ p.add_argument('--lease-deadline-monotonic',type=float)
+ p.add_argument('--artifact-manifest-sha256',required=True)
  a=p.parse_args()
  cli=a.cli if pathlib.Path(a.cli).is_file() else None
  if a.watchdog:
-  if not a.execute or not cli or a.deadline_epoch is None:raise SystemExit('watchdog requires --execute, CLI and deadline')
-  time.sleep(max(0,a.deadline_epoch-time.time()))
-  result=actual_runner('watchdog-stop',[cli,'--auth','oauth2','stop','--session',a.session],12)
+  if not a.execute or not cli or a.lease_deadline_monotonic is None:raise SystemExit('watchdog requires --execute, CLI and monotonic deadline')
+  if a.session!=SESSION:raise SystemExit('watchdog session mismatch')
+  try: source=sources(a.artifact_manifest_sha256)
+  except Exception as error:raise SystemExit(f'watchdog artifact verification failed: {error}')
+  print(json.dumps({'ready':True,'pid':__import__('os').getpid(),'session':a.session,'deadline':a.lease_deadline_monotonic,'artifact_manifest_sha256':source['artifact_manifest_sha256']}),flush=True)
+  while time.monotonic()<a.lease_deadline_monotonic:time.sleep(max(0,min(.25,a.lease_deadline_monotonic-time.monotonic())))
+  stopped=actual_runner('watchdog-stop',[cli,'--auth','oauth2','stop','--session',a.session],12)
+  readback=actual_runner('watchdog-sessions',[cli,'--auth','oauth2','sessions'],8)
+  result={'stop':stopped,'sessions':readback,'VM_stopped_readback':empty_sessions_receipt(readback)}
   (HERE/'watchdog-stop.json').write_text(json.dumps(result,indent=2)+'\n')
   return
+ if a.session!=SESSION:raise SystemExit('session must match frozen unique session')
  if not a.execute:raise SystemExit('explicit --execute required; resource grant is separate')
  if not cli:raise SystemExit('colab CLI unavailable')
  receipt=HERE/'controller-run.json'
@@ -113,11 +130,19 @@ def main():
  def persist(log):
   temp=receipt.with_suffix('.tmp');temp.write_text(json.dumps(log,indent=2)+'\n');temp.replace(receipt)
  def watchdog_start(session,deadline):
-  proc=subprocess.Popen([sys.executable,str(pathlib.Path(__file__).resolve()),'--execute','--watchdog','--cli',cli,'--session',session,'--deadline-epoch',str(time.time()+max(0,deadline-time.monotonic()))],start_new_session=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
-  armed={'session':session,'pid':proc.pid,'armed_utc':__import__('datetime').datetime.now(__import__('datetime').timezone.utc).isoformat(),'deadline_epoch':time.time()+max(0,deadline-time.monotonic()),'deadline_monotonic':deadline}
+  proc=subprocess.Popen([sys.executable,str(pathlib.Path(__file__).resolve()),'--execute','--watchdog','--cli',cli,'--session',session,'--lease-deadline-monotonic',str(deadline),'--artifact-manifest-sha256',a.artifact_manifest_sha256],start_new_session=True,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True)
+  ready=select.select([proc.stdout],[],[],8)[0]
+  if not ready:
+   proc.terminate();proc.wait(timeout=3);raise RuntimeError('watchdog ready ACK timeout')
+  ack=json.loads(proc.stdout.readline())
+  if not ack.get('ready') or ack.get('session')!=session or ack.get('deadline')!=deadline or ack.get('artifact_manifest_sha256')!=a.artifact_manifest_sha256:
+   proc.terminate();proc.wait(timeout=3);raise RuntimeError('watchdog ready ACK mismatch')
+  armed={'session':session,'pid':proc.pid,'ready_ack':ack,'deadline_monotonic':deadline}
   (HERE/'watchdog-armed.json').write_text(json.dumps(armed,indent=2)+'\n')
   return Watchdog(proc)
- outcome=run_once(runner=actual_runner,watchdog_start=watchdog_start,verify=verify_evidence,now=time.monotonic,persist=persist,cli=cli,session=a.session)
+ sources(a.artifact_manifest_sha256)
+ from controller_draft import verify_evidence
+ outcome=run_once(runner=actual_runner,watchdog_start=watchdog_start,verify=verify_evidence,now=time.monotonic,persist=persist,cli=cli,artifact_manifest_sha256=a.artifact_manifest_sha256,session=a.session)
  print(json.dumps({'status':outcome['status'],'archive_collected':outcome['archive_collected'],'VM_stopped_readback':outcome['VM_stopped_readback']}))
  if outcome['status']!='probe-success-collected':raise SystemExit(1)
 if __name__=='__main__':main()

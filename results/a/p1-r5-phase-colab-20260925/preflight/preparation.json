@@ -40,8 +40,8 @@
     "sha256": "b3823b3ded009e358bd5a37938c456a9a193ac337f42d78bdb5cc315d682e056"
   },
   "controller.py": {
-    "bytes": 7977,
-    "sha256": "ab50065619565c48605b4d1c8fd1229c48a1624e8fa939b440f1619c3a61569a"
+    "bytes": 9930,
+    "sha256": "d5bce0a72b7616e1d648c995b40c84536118b69d09fac80246eb385dd15f4b38"
   },
   "controller_draft.py": {
     "bytes": 2769,
@@ -52,19 +52,30 @@
     "sha256": "46089a434006fe5c3d524c8377c12953482ec8661477c2a2362e8642dcb49199"
   },
   "test_controller_fake.py": {
-    "bytes": 1757,
-    "sha256": "fbdde15177df9817b5b65a297f91fbb15457e224ca18e8062396c17d8599a2fb"
+    "bytes": 4561,
+    "sha256": "e00f35bb6d9ab44075c3b5e555211fa3d2e669eb3f1c9eefe6d02d98dc43c15d"
   },
   "offline_preflight": {
-    "bundle_manifest_files_verified": 126,
-    "bundle_sha256_verified": true,
-    "case_graph_sha256_verified": true,
-    "locked_python_import_help_rc": 0,
-    "fake_success_path": true,
-    "upload_basename": "r5-source-bundle.tar.gz",
-    "watchdog_armed_before_new_fake": true,
-    "task_compile_calls": 0,
-    "fraction_calls": 0,
-    "vm_calls": 0
-  }
+    "vm_calls": 0,
+    "Task_compiles": 0,
+    "Fraction_calls": 0,
+    "fake_cli_cases": [
+      "lease expiry refuses exec; finally stop/readback retained",
+      "launcher exits 17 after ready ACK; detached watchdog stops only frozen session",
+      "one-byte verifier tamper rejected before fake CLI",
+      "artifact SHA pin required"
+    ],
+    "import_help_rc": 0
+  },
+  "artifact_manifest_sha256": "3ff23e7c05b6f80eb8318f58930be7026d18b296a3fb5185fac50b30f1ddda71",
+  "watchdog_clock": "host monotonic lease passed unchanged; separate process verifies pinned artifacts then emits ready ACK",
+  "lease_and_vm_cutoff_seconds": {
+    "lease": 570,
+    "vm": 600
+  },
+  "controller_cli_command": "see README.md; explicit frozen artifact pin required",
+  "controller_sha256": "d5bce0a72b7616e1d648c995b40c84536118b69d09fac80246eb385dd15f4b38",
+  "verifier_sha256": "1f6ef970a46940c3b5f64b8fedec257ab3558bedc7085b1409a1cbaff6d5e76d",
+  "remote_setup_sha256": "b3823b3ded009e358bd5a37938c456a9a193ac337f42d78bdb5cc315d682e056",
+  "README_sha256": "677bd291b622de32dab2b4ec2f0491b2181220ed2b64c67f51b5d583160b8865"
 }
