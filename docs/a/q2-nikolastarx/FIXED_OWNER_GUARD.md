@@ -1,0 +1,13 @@
+# P2 fixed-owner guarded route handoff
+
+This route is frozen by its containing source commit and the source hash below. It is not yet a measured full solver or a 500-cell result.
+
+Entry point: `python3 -m src.q2_nikolastarx.adaptive_fixed_owner_guarded` with the existing `adaptive_guarded.main` arguments. The new `build(graph, cores, config, oracle)` first runs the unchanged `adaptive_hypergap_guarded.build` and preserves its returned complete plan as incumbent. For 2–5 cores it constructs at most one `fixed_owner_reverse.retime(graph, incumbent, config)` plan. It accepts that plan only when a complete-plan injected oracle gives a strictly smaller `(makespan, added_copy_bytes)` tuple. Ties, construction failures, unsupported structures, score failures, and exhausted request budget retain the incumbent. It uses no case IDs, static-calendar score, parameter sweep, or extra retime/refine stages.
+
+The wrapper caches validated complete-plan oracle responses by plan equality. It allows at most four distinct oracle starts in total, including all requests by the old route; `main` passes the same limit to the existing guarded runner. If the old route did not score its selected plan, the wrapper scores that incumbent before the fixed-owner plan. The detail records the old detail, each available comparison score, request count, cache hits, selection, and skip reason. Existing runner rules still fail closed for unknown score evidence or an in-flight request.
+
+Validation: `python3 -m unittest -q tests.test_q2_fixed_owner_guarded` passed 12 injected-oracle tests. They cover strict improvement, regression, score ties and DDR tiebreak, old-score reuse, an unscored incumbent, duplicate candidate, constructor and score failure, four-start cap, one-core skip, and CLI limit. No official graph, candidate construction on a real case, solver, E0, E1, E2, or resource execution was run in this implementation task. The separately reported three-case mechanism pilot is not a validation of this wrapper or a full-500 outcome.
+
+Source SHA-256: `6aae758b48406b7392ef43bfe4b2feba33fa8b70748d054989a9e67f1fbb83c9` (`src/q2_nikolastarx/adaptive_fixed_owner_guarded.py`). Test SHA-256: `6eecd6378e11bcf2a5d0695881db8f92ee2fe120b8a47c8d8862b37707793642` (`tests/test_q2_fixed_owner_guarded.py`).
+
+The three-case mechanism pilot is archived in `results/a/q2-nikolastarx/fixed-owner-three-20260925/`. Its two wins alone would contribute only 0.00216637 to the full100 K5 arithmetic mean if an online guard correctly reproduces them. That is not a full-suite prediction or a significant benchmark gain. Broader same-algorithm evidence and complete solver timing are required before promotion.
