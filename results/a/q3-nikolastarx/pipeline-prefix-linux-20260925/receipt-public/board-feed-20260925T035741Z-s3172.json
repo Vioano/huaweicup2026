@@ -1,0 +1,162 @@
+{
+  "records": [
+    {
+      "algorithm_id": "q3-pipeline-prefix",
+      "algorithm_name": "Q3 static-constructed pipeline-prefix mechanism",
+      "artifacts": {
+        "plan": {
+          "path": "results/a/q3-nikolastarx/pipeline-prefix-linux-20260925/receipt-public/artifacts/case_044_multicore_res.json",
+          "sha256": "13914b24c18b59366be17de86a26d227ff85427cb00b184799587777547a6508"
+        },
+        "result": {
+          "path": "results/a/q3-nikolastarx/pipeline-prefix-linux-20260925/receipt-public/artifacts/044-result.json.gz",
+          "sha256": "d4cdf8dbabe22923b9a74329741fb39e74a588e619d9f101db1fd28ecd629da1"
+        },
+        "run": {
+          "path": "results/a/q3-nikolastarx/pipeline-prefix-linux-20260925/receipt-public/artifacts/run-public.json",
+          "sha256": "c0d81fa533aabd082d05b21bdb6a5bdc1ef1a228ef6e970c91cb592fa020903b"
+        }
+      },
+      "attempt_id": "nikolastarx-prefix-linux-044-k5-20260925-s3172",
+      "baseline": {
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "graph_sha256": "9abd4468a4be365e384de47431ac914ee44fd6e7b6221dffc584561f388cd57e",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "result": {
+          "path": "results/a/q3-nikolastarx/pipeline-prefix-linux-20260925/receipt-public/artifacts/044-baseline-result.json.gz",
+          "sha256": "73f1d15fdea4f706b22099d2339a0e74a76c4114a68672077a98a8e15faa913c"
+        },
+        "route": "E0"
+      },
+      "case_id": "044",
+      "cores": 5,
+      "evaluator": {
+        "commit": "62c69b20ab887c76567dbab5fcce6eef30107b5c",
+        "entrypoint": "multicore_cut_evaluate_problem_3.evaluate_problem_3",
+        "route": "E0"
+      },
+      "identity": {
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "graph_sha256": "9abd4468a4be365e384de47431ac914ee44fd6e7b6221dffc584561f388cd57e",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "13914b24c18b59366be17de86a26d227ff85427cb00b184799587777547a6508"
+      },
+      "metrics": {
+        "cache_hit_rate": 0.011007223490415585,
+        "ddr_bytes": 1116256,
+        "evaluation_wall_seconds": 1.952790842000013,
+        "extra_ddr_bytes": 140800,
+        "makespan_cycles": 38024,
+        "solver_wall_seconds": null,
+        "spill_bytes": 0
+      },
+      "notes": [
+        "Single mechanism cell P3 044-k5; not a full-algorithm or full-suite score.",
+        "The complete end-to-end solver wall time is unknown; solver_wall_seconds is null because the static plan construction time was not captured.",
+        "Evaluation time is the traced E0 read/evaluate/write measurement and must not be presented as solver wall time.",
+        "Call ledger: prepare executed Step1=5, Step2=5, Step3=5; P3 score executed Step1=5, Step2=5, prepare Step3=5, step3_simulation=5; aggregate prepare_step3_execution=10, P3=1, P2=0, retries=0, unknown=0.",
+        "Compared with the retained prior 044 P3 result (makespan 38390), this result is 38024 (0.9533732743% lower); added bytes remain 140800 and spill remains 0.",
+        "Old and new P3 cache_stats are identical (11264 hit bytes, 1012064 miss bytes, hit_rate 0.011007223490415585). No same-plan P2 result exists, so CacheGain is unknown; no cache improvement is claimed.",
+        "P3 result scene is B, problem=3, cache_mode=read_only. Baseline is the frozen official single-core A result.",
+        "No P2 cache_pair is included."
+      ],
+      "observed_at": "2026-09-25T03:57:41.846342Z",
+      "parameters": {
+        "candidate_count": 1,
+        "requested_cores": 5,
+        "selection": "one frozen offline-constructed plan; no online selection"
+      },
+      "problem": "P3",
+      "provenance": {
+        "environment": {
+          "cpu": null,
+          "dependencies": "uv.lock sha256:7b03fee57044ac272d8895533cbdca6d70a29d2da955f98a5552e72ef944fdc4",
+          "gpu": "none",
+          "os": "Linux 6.6.122+ x86_64; managed Colab image",
+          "peak_rss_bytes": 34246656,
+          "python": "CPython 3.12.13",
+          "ram_bytes": null,
+          "threads": null,
+          "workers": 1
+        },
+        "measurement": {
+          "budget": {
+            "candidate_limit": 1,
+            "stop_reason": "One admitted P3 completed; P2=0 and retries=0.",
+            "wall_seconds": 60
+          },
+          "calls": {
+            "E0": 1,
+            "E1": 0,
+            "E2": 0,
+            "solver": 0
+          },
+          "cold_start": null,
+          "evaluation_scope": "One official P3 E0 evaluation; 1.952790842 s read/evaluate/write with tracing enabled. This is not solver wall time.",
+          "failure": null,
+          "finished_at": "2026-09-25T03:57:41.846342Z",
+          "offline_costs": "The static plan was constructed before this evaluation; full construction wall time is unavailable. No online solver call occurred.",
+          "repeat_index": 0,
+          "seed": null,
+          "solver_scope": null,
+          "started_at": "2026-09-25T03:57:39.855581Z"
+        },
+        "missing_reasons": {
+          "provenance.environment.cpu": "Colab receipt records CPU count but not the CPU model.",
+          "provenance.environment.ram_bytes": "Host total RAM was not retained in the selected evidence.",
+          "provenance.environment.threads": "Thread count was not retained.",
+          "provenance.measurement.cold_start": "Cold/warm process and filesystem cache state was not recorded.",
+          "provenance.measurement.seed": "The frozen construction is deterministic and no random seed was recorded.",
+          "provenance.measurement.solver_scope": "The plan was constructed offline; complete construction start-to-finish wall time is unavailable.",
+          "provenance.solver.selected_algorithm_id": "This is a frozen single-plan mechanism probe, not a portfolio-selected subalgorithm.",
+          "provenance.solver.selected_solver_commit": "This is a frozen single-plan mechanism probe, not a portfolio-selected subalgorithm."
+        },
+        "producer_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+        "runner": {
+          "argv": [
+            "python -B q3_prefix_linux_supervisor.py <frozen manifest> <run output> --manifest-sha256 <sha256> --admission-ref <redacted>"
+          ],
+          "source": {
+            "commit": "c642da2b016a5796882a24432bc5f01eb9dd6a7c",
+            "entrypoint": "q3_prefix_linux_supervisor.py",
+            "path": "scripts/q3_prefix_linux_supervisor.py",
+            "repo": "huaweibei123/huaweicup2026"
+          },
+          "working_directory": "."
+        },
+        "solver": {
+          "authors": [
+            "nikolastarx"
+          ],
+          "method": "One fixed offline-constructed pipeline-prefix plan, independently evaluated once by official P3 E0; mechanism-cell result only.",
+          "references": [],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null,
+          "source": {
+            "commit": "62c69b20ab887c76567dbab5fcce6eef30107b5c",
+            "entrypoint": "frozen plan; no solver process in this run",
+            "path": "results/a/q3-nikolastarx/pipeline-prefix-static-20260925/case_044_multicore_res.json",
+            "repo": "huaweibei123/huaweicup2026"
+          },
+          "upstream": []
+        },
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51"
+      },
+      "revision": 1,
+      "run_id": "q3-pipeline-prefix-linux-20260925-s3172",
+      "runtime_id": "colab-cpu-standard-managed-image",
+      "solver_commit": "62c69b20ab887c76567dbab5fcce6eef30107b5c",
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/blob/62c69b20ab887c76567dbab5fcce6eef30107b5c/results/a/q3-nikolastarx/pipeline-prefix-static-20260925/case_044_multicore_res.json",
+      "status": "ok",
+      "timing": {
+        "evaluation_precision": "traced external evaluator read/evaluate/write wall time",
+        "solver_includes_evaluation": false,
+        "utc": "UTC timestamps retained by remote supervisor and score worker"
+      },
+      "variant": "static-constructed-prefix-one-shot"
+    }
+  ],
+  "schema_version": 1,
+  "submission_version": 1
+}

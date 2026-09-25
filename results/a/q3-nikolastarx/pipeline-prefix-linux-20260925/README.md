@@ -1,5 +1,7 @@
 # 冻结044前缀诊断的Linux执行包
 
+2026-09-25 执行补记：单次准入已完成并实停，完整原件保存在 `run-local/evidence.tar.gz`，SHA-256 `a923a07fc1ad549eecaae227e534d7a7de83ef1647a67a60a70d130c4aef8b05`。官方 M=38024，比旧同格38390低0.9534%；搬运与Cache命中统计相同，0 P2，不能据此声称CacheGain改善。准入预算已消耗，不得再在Mac或Colab重复此实验。新原件、真实预检及机制单格feed见 `receipt-public/REPORT.md`；下文保留运行前冻结说明，不代表当前仍未启动。
+
 算法/官方源码固定62c69b20ab887c76567dbab5fcce6eef30107b5c，Mac原runner、原manifest、已构造计划字节均不变。Linux外部监督及Colab控制源码固定 `c642da2b016a5796882a24432bc5f01eb9dd6a7c`。包SHA256 `9c16cf654a8c5521c5bab414724a962f07c8d95806d1dbc64b0c7c0206ed86ec`（38479 bytes）。这是同一个尚未启动的实验，不能Mac与Colab各运行一次。
 
 总调度已安排P1后单实例CPU Standard候选窗口；**当前未准入、0云/Task/Step/E0调用**。确认P1 stop且本包唯一准入后，执行：
