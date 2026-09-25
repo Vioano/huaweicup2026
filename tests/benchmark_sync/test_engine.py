@@ -903,8 +903,7 @@ class EngineTests(unittest.TestCase):
         target=[snapshot_payload(1)]
         entered=threading.Event();release=threading.Event()
         with patch('src.benchmark_sync.engine.git_json',return_value={}), \
-             patch('src.benchmark_sync.engine.read_central',side_effect=lambda *a,**k:target[0]), \
-             patch.object(leader,'publish_fast_delta'):
+             patch('src.benchmark_sync.engine.read_central',side_effect=lambda *a,**k:target[0]):
             leader.publish_snapshot(None)
             member.accept_snapshot(self.remote.head())
             original_update=self.remote.update
@@ -924,6 +923,7 @@ class EngineTests(unittest.TestCase):
                     self.assertEqual(member.cycle()['state'],'online')
                     self.assertEqual(member.accepted_record_ids(),{r['id'] for r in target[0]['records']})
                     self.assertEqual(leader.channel(self.remote.head(),'central','snapshot')[0]['manifest']['sequence'],1)
+                    self.assertEqual(leader.channel(self.remote.head(),'fast','snapshot-delta')[0]['target_manifest']['sequence'],2)
                     self.assertEqual(leader._publish_worker_status['state'],'publishing')
             finally:
                 release.set()
@@ -943,7 +943,6 @@ class EngineTests(unittest.TestCase):
         target=[snapshot_payload(1)]
         with patch('src.benchmark_sync.engine.git_json',return_value={}), \
              patch('src.benchmark_sync.engine.read_central',side_effect=lambda *a,**k:target[0]), \
-             patch.object(leader,'publish_fast_delta'), \
              patch.object(leader,'publish_git_fast_delta'):
             leader.publish_snapshot(None)
             target[0]=snapshot_payload(2)
@@ -963,3 +962,32 @@ class EngineTests(unittest.TestCase):
                 leader._publish_thread.join(5)
             self.assertEqual(leader._publish_worker_status['state'],'ready')
             self.assertEqual(leader.channel(self.remote.head(),'central','snapshot')[0]['manifest']['sequence'],2)
+
+    def test_lost_full_upload_ack_reconciles_verified_remote_target(self):
+        from unittest.mock import patch
+        leader=self.engines['leader']
+        leader.config['central']={'code_commit':'a'*40,'repo':str(self.root),'ledger':str(self.root)}
+        leader.config['git_fast_enabled']=False
+        target=[snapshot_payload(1)]
+        with patch('src.benchmark_sync.engine.git_json',return_value={}), \
+             patch('src.benchmark_sync.engine.read_central',side_effect=lambda *a,**k:target[0]):
+            leader.publish_snapshot(None)
+            target[0]=snapshot_payload(2)
+            original_update=self.remote.update
+            lost=[False]
+            def lost_ack(files,**kwargs):
+                committed=original_update(files,**kwargs)
+                if 'channels/central.json' in files and not lost[0]:
+                    lost[0]=True
+                    raise RuntimeError('Full upload ACK was lost')
+                return committed
+            with patch.object(self.remote,'update',side_effect=lost_ack):
+                leader.publish_snapshot(self.remote.head(),background_full=True)
+                leader._publish_thread.join(5)
+            self.assertEqual(leader._publish_worker_status['state'],'error')
+            self.assertEqual(leader.channel(self.remote.head(),'central','snapshot')[0]['manifest']['sequence'],2)
+            with patch.object(leader,'receive_submissions'):
+                status=leader.cycle(background_publish=True)
+            self.assertEqual(status['state'],'online')
+            self.assertEqual(status['publish_worker']['state'],'ready')
+            self.assertIsNone(status['publish_worker']['error'])
