@@ -1,0 +1,115 @@
+{
+  "scope": "saved R6 044 Task graph, not a new plan, model score or official execution",
+  "source": "results/a/q3-nikolastarx/pipeline-prefix-static-20260925/snapshots.json.gz",
+  "source_sha256": "91b8aad332a276345be824ffeda799564439ca61c48a5418053eec8068e1f471",
+  "script_sha256": "227824919c984f34ae60682fa31eb19710eb3764ff2fb64e47159bd91debadae",
+  "stages": [
+    {
+      "core": 1,
+      "pilot_compute_ops": 27,
+      "cross_activation_count": 1,
+      "cross_activations": [
+        {
+          "copy_id": 1000001641,
+          "source_core": 0,
+          "size_bytes": 1024,
+          "pilot_first_consumer_index": 0
+        }
+      ],
+      "single_head_activation_guard": true
+    },
+    {
+      "core": 2,
+      "pilot_compute_ops": 17,
+      "cross_activation_count": 2,
+      "cross_activations": [
+        {
+          "copy_id": 1000001653,
+          "source_core": 1,
+          "size_bytes": 128,
+          "pilot_first_consumer_index": 3
+        },
+        {
+          "copy_id": 1000001656,
+          "source_core": 1,
+          "size_bytes": 128,
+          "pilot_first_consumer_index": 0
+        }
+      ],
+      "single_head_activation_guard": false
+    },
+    {
+      "core": 3,
+      "pilot_compute_ops": 28,
+      "cross_activation_count": 4,
+      "cross_activations": [
+        {
+          "copy_id": 1000001647,
+          "source_core": 1,
+          "size_bytes": 512,
+          "pilot_first_consumer_index": 18
+        },
+        {
+          "copy_id": 1000001650,
+          "source_core": 1,
+          "size_bytes": 256,
+          "pilot_first_consumer_index": 5
+        },
+        {
+          "copy_id": 1000001659,
+          "source_core": 2,
+          "size_bytes": 128,
+          "pilot_first_consumer_index": 1
+        },
+        {
+          "copy_id": 1000001662,
+          "source_core": 2,
+          "size_bytes": 128,
+          "pilot_first_consumer_index": 0
+        }
+      ],
+      "single_head_activation_guard": false
+    },
+    {
+      "core": 4,
+      "pilot_compute_ops": 28,
+      "cross_activation_count": 4,
+      "cross_activations": [
+        {
+          "copy_id": 1000001638,
+          "source_core": 0,
+          "size_bytes": 2048,
+          "pilot_first_consumer_index": 16
+        },
+        {
+          "copy_id": 1000001644,
+          "source_core": 0,
+          "size_bytes": 1024,
+          "pilot_first_consumer_index": 3
+        },
+        {
+          "copy_id": 1000001665,
+          "source_core": 3,
+          "size_bytes": 512,
+          "pilot_first_consumer_index": 1
+        },
+        {
+          "copy_id": 1000001668,
+          "source_core": 3,
+          "size_bytes": 512,
+          "pilot_first_consumer_index": 0
+        }
+      ],
+      "single_head_activation_guard": false
+    }
+  ],
+  "calls": {
+    "Task": 0,
+    "Step1": 0,
+    "Step2": 0,
+    "Step3": 0,
+    "E0": 0,
+    "solver": 0
+  },
+  "implication": "The single-activation formula only applies to stages whose guard is true; otherwise interior releases require additional state."
+}
