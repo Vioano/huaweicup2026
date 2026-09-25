@@ -8,6 +8,13 @@ REMOTE_SHA='b3187697e9aa7e4a16a8122c9cdf34c4bcbd59778d58f4add19715302d4ba143'
 BUNDLE_REMOTE='/content/p1-lazy-seed-source-bundle.tar.gz'
 ARCHIVE_REMOTE='/content/p1_lazy_seed_window/evidence.tar.gz'
 EMPTY='No active sessions found on server.'
+def empty_sessions_receipt(receipt):
+ """Accept only the two observed no-session messages, with optional final LF."""
+ if type(receipt.get('returncode')) is not int or receipt['returncode']!=0 or receipt.get('stderr')!='':
+  return False
+ plain=EMPTY
+ prefixed='[colab] '+EMPTY
+ return receipt.get('stdout') in (plain,plain+'\n',prefixed,prefixed+'\n')
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def sources():
  receipt=json.loads((HERE/'offline-check.json').read_text())
@@ -29,7 +36,7 @@ def run_once(*,runner,watchdog_start,verify,now,persist,cli,session=SESSION,arch
  def invoke(label,tail,timeout):
   rec=runner(label,[cli,'--auth','oauth2',*tail],timeout);log['steps'].append(rec);save();return rec
  pre=invoke('preflight-sessions',['sessions'],10)
- if pre.get('returncode')!=0 or pre.get('stdout','').strip()!=EMPTY:
+ if not empty_sessions_receipt(pre):
   log.update(status='preflight-failed',error='active or unreadable sessions');save();return log
  t0=now();deadline=t0+300;log['t0_monotonic']=t0;save()
  watchdog=watchdog_start(session,t0+270)
@@ -70,7 +77,7 @@ def run_once(*,runner,watchdog_start,verify,now,persist,cli,session=SESSION,arch
    except Exception as error:log['stop_error']=f'{type(error).__name__}: {error}';save()
    try:
     r=invoke('finally-sessions',['sessions'],min(8,max(1,deadline-now())))
-    log['VM_stopped_readback']=r.get('returncode')==0 and r.get('stdout','').strip()==EMPTY
+    log['VM_stopped_readback']=empty_sessions_receipt(r)
    except Exception as error:log['readback_error']=f'{type(error).__name__}: {error}';save()
   log['elapsed_seconds']=now()-t0
   if not log['VM_stopped_readback']:

@@ -8,10 +8,14 @@
 
 - 全部 72 个源/输入文件与固定 Git blob 或官方 ZIP 中的 008 原始字节一致；73 个 tar 成员路径、大小和 SHA 全部核对。
 - `rebuild_bundle.py` 可从固定 Git 和本目录 manifest 精确重建 9,237,091 字节包，SHA 为 `b78c67f1c535625ac6ff31545b179cb2a5bfcd1f762fff99248d9364c7101ab9`；不必再提交一份已有原始数据包。
-- 冻结入口 `--help`、脚本 AST、5 项 fake 控制流程（成功、执行失败收证、已有会话不创建、停机不明、坏包不接收）通过。隔离临时目录的独立 watchdog 子进程通过立即截止的假 CLI 检查；没有网络调用。
+- 冻结入口 `--help`、脚本 AST、7 项 fake 检查（含 5 项原控制流程和真实 CLI 前缀回归）（成功、执行失败收证、已有会话不创建、停机不明、坏包不接收）通过。隔离临时目录的独立 watchdog 子进程通过立即截止的假 CLI 检查；没有网络调用。
 
 ## 待验证与使用边界
 
 尚未验证云端 Python/uv setup、真实编译/响应、Linux 子进程资源监督、真实下载或真实 VM 停止。fake 测试和源码哈希不证明这些真实路径已成功。`--execute` 只是一项显式操作开关，不能替代协调者分配窗口；不可因没有活动 VM 就自行抢占。不要重用已有 controller-run/evidence 输出目录，也不要重复新建或重跑未知结果。
 
 本目录不含重复的源码包。资源窗口获批且检查通过后，可先用 `python rebuild_bundle.py --repo <已有仓库> --output <本目录>/lazy-seed-source-bundle.tar.gz` 重建完全相同的字节，再使用控制器。离线测试命令为 `python -B test_controller.py`，不调用 Colab。执行前后保留全部回执，不把失败收证当作探针成功。
+
+## 真实 CLI 输出勘误
+
+协调者只读实测空会话 stdout 为 `[colab] No active sessions found on server.\n`。旧控制器只接受无前缀文本，已定点修复预检及停机回读，统一仅接受这两种已知形状；非零退出、stderr、命名实例或附加未知文本仍拒绝。7 项 fake 测试通过；这未验证实际新建、运行或停机。算法、bundle、remote 脚本和全部预算未变，仍未获新 VM 窗口。
