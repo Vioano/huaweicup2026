@@ -28,7 +28,7 @@ class CriticalPacketTests(unittest.TestCase):
     def test_downstream_critical_closure_reaches_sink(self):
         graph, plan, config, link = scene()
         original = copy.deepcopy((graph, plan, config, link))
-        out, meta = construct(graph, plan, config, [link], {3})
+        out, meta = construct(graph, plan, config, [link], {3}, incumbent_makespan=99)
         self.assertIsNotNone(out, meta)
         self.assertEqual(meta['selected']['packet'], [2, 3])
         self.assertEqual(meta['selected']['packet_size'], 2)
@@ -51,27 +51,31 @@ class CriticalPacketTests(unittest.TestCase):
         graph['ops'].append({'id': 4, 'op': 'CONV', 'pipe': 'PIPE_M', 'cycles': 2})
         plan['node_to_subgraph']['4'] = 3
         plan['core_schedules'][0].append(3)
-        out, meta = construct(graph, plan, config, [link], set())
+        out, meta = construct(graph, plan, config, [link], set(), incumbent_makespan=99)
         self.assertIsNotNone(out, meta)
         self.assertEqual(out['core_schedules'][0], [0, 1, 3, 2])
         self.assertEqual(out['core_schedules'][1], [])
 
-    def test_load_envelope_rejects(self):
+    def test_allow_load_growth_but_reject_impossible_strict_gain(self):
         graph, plan, config, link = scene()
         graph['ops'].append({'id': 5, 'op': 'RELU', 'pipe': 'PIPE_V', 'cycles': 4})
         plan['node_to_subgraph']['5'] = 3
         plan['core_schedules'][0].append(3)
-        out, meta = construct(graph, plan, config, [link], {3})
+        out, meta = construct(graph, plan, config, [link], {3}, incumbent_makespan=99)
+        self.assertIsNotNone(out, meta)
+        self.assertGreater(meta['selected']['pipe_load_peaks_after']['PIPE_V'],
+                           meta['selected']['pipe_load_peaks_before']['PIPE_V'])
+        out, meta = construct(graph, plan, config, [link], {3}, incumbent_makespan=6)
         self.assertIsNone(out)
-        self.assertIn('no_load_envelope', meta['rejections'])
+        self.assertIn('load_lower_bound_no_strict_gain', meta['rejections'])
 
     def test_alias_and_capacity_abstain(self):
         graph, plan, config, link = scene()
         graph['tensors'][0]['logical_tid'] = 10
-        self.assertEqual(construct(graph, plan, config, [link], {3})[1]['status'], 'unsupported')
+        self.assertEqual(construct(graph, plan, config, [link], {3}, incumbent_makespan=99)[1]['status'], 'unsupported')
         del graph['tensors'][0]['logical_tid']
         config['capacity']['UB'] = 1
-        self.assertEqual(construct(graph, plan, config, [link], {3})[1]['status'], 'unsupported')
+        self.assertEqual(construct(graph, plan, config, [link], {3}, incumbent_makespan=99)[1]['status'], 'unsupported')
 
 
 if __name__ == '__main__':

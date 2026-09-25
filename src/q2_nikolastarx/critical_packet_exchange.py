@@ -44,7 +44,7 @@ def _merge(index, rows, packet, *, packet_first):
     return ordered if len(ordered) == len(index.ops) else None
 
 
-def construct(graph, plan, config, critical_links, critical_operations, max_seeds=8):
+def construct(graph, plan, config, critical_links, critical_operations, *, incumbent_makespan, max_seeds=8):
     """Return one complete singleton plan or None, with bounded diagnostics.
 
     At most max_seeds witnessed tensor links and two fixed Kahn merges per seed.
@@ -62,6 +62,8 @@ def construct(graph, plan, config, critical_links, critical_operations, max_seed
         meta['rejections'][code] = meta['rejections'].get(code, 0) + 1
     if type(max_seeds) is not int or not 0 <= max_seeds <= 8:
         raise ValueError('max_seeds must be an integer in [0,8]')
+    if type(incumbent_makespan) is not int or incumbent_makespan <= 0:
+        raise ValueError('incumbent_makespan must be a positive integer from the audited trace')
     try:
         index = DAGIndex(graph)
         rows = _rows(graph, plan, index)
@@ -128,8 +130,13 @@ def construct(graph, plan, config, critical_links, critical_operations, max_seed
         packet = [u for u in rows[b] if u in x]
         wx = {p: sum(index.duration(u) for u in packet if index.ops[u]['pipe'] == p)
               for p in PIPES}
-        if any(max(loads[a][p] + wx[p], loads[b][p] - wx[p]) > caps[p] for p in PIPES):
-            reject('no_load_envelope'); continue
+        proposed_peaks = {p: max(loads[c][p] + (wx[p] if c == a else -wx[p] if c == b else 0)
+                                 for c in range(len(rows))) for p in PIPES}
+        # Old load peaks are not hard limits: communicating schedules can be
+        # mostly idle. Only the valid compute lower bound can reject a claimed
+        # strict Makespan improvement, and the chosen candidate still needs E0.
+        if max(proposed_peaks.values()) >= incumbent_makespan:
+            reject('load_lower_bound_no_strict_gain'); continue
         for packet_first in (True, False):
             meta['candidates_checked'] += 1
             ordered = _merge(index, rows, packet, packet_first=packet_first)
@@ -153,6 +160,8 @@ def construct(graph, plan, config, critical_links, critical_operations, max_seed
                 bound = fixed_fifo_lower_bound(graph, candidate)
                 if not bound['supported']:
                     reject('fifo_bound_unsupported'); continue
+                if bound['makespan_lower_bound_cycles'] >= incumbent_makespan:
+                    reject('fifo_lower_bound_no_strict_gain'); continue
             except (ValueError, KeyError, TypeError) as error:
                 reject('candidate_guard_failure:' + type(error).__name__); continue
             row = {'tensor_id': tid, 'source_core': a, 'target_core': b,
@@ -161,6 +170,8 @@ def construct(graph, plan, config, critical_links, critical_operations, max_seed
                    'critical_downstream_added': len(packet) - receiver_count,
                    'packet': packet, 'merge': 'packet_first' if packet_first else 'retained_first',
                    'fifo_compute_lower_bound': bound['makespan_lower_bound_cycles'],
+                   'pipe_load_peaks_before': caps, 'pipe_load_peaks_after': proposed_peaks,
+                   'incumbent_makespan': incumbent_makespan,
                    'mandatory_copy_bytes_before': baseline_bytes,
                    'mandatory_copy_bytes_after': copied}
             meta['candidate_summaries'].append(row)
