@@ -24,6 +24,10 @@ if(focusProblem){
   $('#focus-title').textContent=focusProblem+' · 批次与成绩';
   $('#batch-title').textContent=focusProblem+' · 固定算法批次';
   document.title=focusProblem+' · 方案成绩台';
+  if(focusProblem==='P3'){
+    $('#metric option[value="cache_gain"]').textContent='P3 Cache 加速比 · × ↑';
+    $('#metric option[value="cache_hit_rate"]').textContent='P3 字节命中率 · % ↑';
+  }
   document.querySelectorAll('#focus-nav a').forEach(a=>a.setAttribute('aria-current',String(a.search==='?problem='+focusProblem)));
 }
 const loadedAssets=document.querySelector('meta[name="board-assets"]')?.content;
@@ -32,8 +36,9 @@ try{
   if(saved?.version===1&&typeof saved.savedAt==='number'&&Date.now()-saved.savedAt<3600000){
     pendingRestore=saved;
     if(focusProblem)focusChoice=saved.run||saved.algorithm?'batch':'history';
-    if([...$('#metric').options].some(o=>o.value===saved.metric)&&!['cache_gain','cache_hit_rate'].includes(saved.metric)){
-      mainMetric=saved.metric;$('#metric').value=mainMetric;
+    const restoredMetric=focusProblem==='P3'&&['cache_gain','cache_hit_rate'].includes(saved.cacheMode)?saved.cacheMode:saved.metric;
+    if([...$('#metric').options].some(o=>o.value===restoredMetric)&&(!['cache_gain','cache_hit_rate'].includes(restoredMetric)||focusProblem==='P3')){
+      mainMetric=restoredMetric;$('#metric').value=mainMetric;
     }
     $('#search').value=typeof saved.search==='string'?saved.search.slice(0,100):'';
     $('#reported').checked=saved.reported===true;
@@ -48,7 +53,7 @@ function restoreView(){
   if(!pendingRestore)return;
   const saved=pendingRestore;pendingRestore=null;sessionStorage.removeItem(restoreKey);
   if(Number.isFinite(saved.detailScroll))$('#detail').scrollTop=Math.max(0,saved.detailScroll);
-  if(['cache_gain','cache_hit_rate'].includes(saved.cacheMode)){
+  if(focusProblem!=='P3'&&['cache_gain','cache_hit_rate'].includes(saved.cacheMode)){
     openCache(saved.cacheMode);
     const table=$('#cache-dialog .cache-table-scroll');if(table&&Number.isFinite(saved.cacheScroll))table.scrollTop=Math.max(0,saved.cacheScroll);
   }
@@ -64,7 +69,7 @@ async function checkVersion(){
     const dialog=$('#cache-dialog');
     sessionStorage.setItem(restoreKey,JSON.stringify({version:1,savedAt:Date.now(),metric:mainMetric,
       algorithm:$('#algorithm').value,run:$('#run').value,search:$('#search').value,reported:$('#reported').checked,
-      scrolls:[...document.querySelectorAll('.board-scroll')].map(x=>x.scrollTop),detailScroll:$('#detail').scrollTop,
+      scrolls:[...document.querySelectorAll('.board-scroll')].map(x=>({top:x.scrollTop,left:x.scrollLeft})),detailScroll:$('#detail').scrollTop,
       windowScroll:window.scrollY,cacheMode:dialog.open?dialog.dataset.mode:null,
       cacheScroll:$('#cache-dialog .cache-table-scroll')?.scrollTop||0,
       batchCores:$('#batch-cores').value,batchFilter:$('#batch-filter').value,batchSearch:$('#batch-search').value,
@@ -172,24 +177,24 @@ function absoluteColor(value,metric,low,high){
   t=Math.max(0,Math.min(1,t));const x=t*(palette.length-1),i=Math.min(palette.length-2,Math.floor(x));return mixColor(palette[i],palette[i+1],x-i);
 }
 function relativePosition(value,values){if(values.length<2)return null;const less=values.filter(x=>x<value).length,equal=values.filter(x=>x===value).length;return (less+(equal-1)/2)/(values.length-1);}
-function render(){if(!data)return;const metric=$('#metric').value;const values=data.cells.filter(c=>c.best&&c.best.eligible).map(c=>c.best.metrics[metric]).filter(x=>x!==null&&x!==undefined);const low=values.length?Math.min(...values):null,high=values.length?Math.max(...values):null;
+function render(){if(!data)return;const metric=$('#metric').value;const values=data.cells.filter(c=>c.best?.eligible&&(metric!=='cache_gain'||c.best.cache_pair_verified)).map(c=>c.best.metrics[metric]).filter(x=>Number.isFinite(x));const low=values.length?Math.min(...values):null,high=values.length?Math.max(...values):null;
 const selectedRun=$('#run').value,selectedAlgorithm=$('#algorithm').value;
 $('#algorithm').options[0].textContent=selectedRun?'所有算法（本批次）':'探索：历史逐格最佳';
 const chosen=batchRows.find(r=>r.run_id===selectedRun);
-$('#selection-note').textContent=(selectedRun?(focusProblem?`当前${chosen?.composite?'四分片复合':'固定'}批次：${chosen?.composite_label||selectedRun} · 全题已核 ${chosen?.full_valid_count??'待核'}/500。${chosen?.full_complete?'五个核数均有100图有效数据。':'均值只作已测样本预览。'}`:`当前批次：${selectedRun}。请进入对应题目的专注页核查是否同源全题500/500。`):selectedAlgorithm?'探索：当前算法跨批次逐格选优，可能混合不同版本；不作最终成绩。':'探索：历史逐格最佳混合不同算法和批次，不作最终成绩；请在专注页选全题500/500的固定批次。')+' 切换指标仍展示同一方案。';
+$('#selection-note').textContent=(selectedRun?(focusProblem?`当前${chosen?.composite?'四分片复合':'固定'}批次：${chosen?.composite_label||selectedRun} · 全题已核 ${chosen?.full_valid_count??'待核'}/500。${chosen?.full_complete?'五个核数均有100图有效数据。':'均值只作已测样本预览。'}`:`当前批次：${selectedRun}。请进入对应题目的专注页核查是否同源全题500/500。`):selectedAlgorithm?'探索：当前算法跨批次逐格选优，可能混合不同版本；不作最终成绩。':'探索：历史逐格最佳混合不同算法和批次，不作最终成绩；请在专注页选全题500/500的固定批次。')+' 切换指标仍展示同一方案。'+(metric==='cache_gain'?' Cache 加速比只统计当前方案有无 Cache 配对原件的格；缺配对不计入均值，也不代表已独立复跑。':'');
 const ratio=metric==='baseline_speedup'||metric==='cache_gain';
 $('#metric-label').textContent=(metrics()[metric]?.[0]||metric)+' / '+(metrics()[metric]?.[1]||'');
 const ticks=ratio?[.5,1,2,4,8]:metric==='cache_hit_rate'?[0,.25,.5,.75,1]:[low,low===null?null:Math.expm1((Math.log1p(low)+Math.log1p(high))/2),high];
 $('#scale-ticks').innerHTML=ticks.filter(x=>x!==null).map((v,i)=>{const rgb=absoluteColor(v,metric,low,high);return `<span class="scale-tick"><i style="background:rgb(${rgb});border-color:${inkFor(rgb)}33"></i>${esc(ratio?(i===0?'≤0.5×':i===4?'≥8×':v+'×'):fmt(Number(v.toFixed(3)),metric))}</span>`;}).join('');
-$('#scale-note').textContent=ratio?'固定对数色阶 · 1× 为基准，暖色低于基准；等色距表示倍数变化':metric==='cache_hit_rate'?'固定 0–100% 色阶':'当前全表范围的对数色阶 · 跨图规模不同，颜色不表示算法优劣';
-const groups=new Map();for(const c of data.cells){const v=c.best?.metrics[metric];if(c.best?.eligible&&Number.isFinite(v)&&visibleCase(c.case_id)){const key=c.problem+'-'+c.cores;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(v);}}
+$('#scale-note').textContent=metric==='cache_gain'?'无 Cache 周期 ÷ 有 Cache 周期 · 1× 为无收益 · 固定对数色阶；格底细条显示同核相对位置':ratio?'固定对数色阶 · 1× 为基准，暖色低于基准；等色距表示倍数变化':metric==='cache_hit_rate'?'固定 0–100% 色阶':'当前全表范围的对数色阶 · 跨图规模不同，颜色不表示算法优劣';
+const groups=new Map();for(const c of data.cells){const v=c.best?.metrics[metric];if(c.best?.eligible&&(metric!=='cache_gain'||c.best.cache_pair_verified)&&Number.isFinite(v)&&visibleCase(c.case_id)){const key=c.problem+'-'+c.cores;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(v);}}
 const cellStyle=v=>{const rgb=absoluteColor(v,metric,low,high);return `background:rgb(${rgb});color:${inkFor(rgb)}`;};
-const scrolls=Array.isArray(pendingRestore?.scrolls)?pendingRestore.scrolls:[...document.querySelectorAll('.board-scroll')].map(x=>x.scrollTop);
+const scrolls=Array.isArray(pendingRestore?.scrolls)?pendingRestore.scrolls:[...document.querySelectorAll('.board-scroll')].map(x=>({top:x.scrollTop,left:x.scrollLeft}));
 const activeCell=document.activeElement?.dataset?.case?{...document.activeElement.dataset}:null;
-$('#boards').innerHTML=(focusProblem?[focusProblem]:['P1','P2','P3']).map((p,index)=>{const cells=data.cells.filter(c=>c.problem===p),map=new Map(cells.map(c=>[c.case_id+'-'+c.cores,c]));const valid=cells.filter(c=>c.best?.eligible).length;return `<section class="board"><div class="board-title"><div><strong>${focusProblem?p:`<a class="problem-link" href="/?problem=${p}" target="_blank" rel="noopener" aria-label="在新标签页查看 ${p} 全部批次与优秀候选">${p} <span>批次与成绩 ↗</span></a>`}</strong><small>${names[p]} · ${valid}/500 已入榜</small></div>${p==='P3'?`<button id="cache-view">Cache 对照 · ${cells.filter(c=>visibleCase(c.case_id)&&c.best?.eligible&&c.best.cache_pair_verified).length} 已配对</button>`:''}</div><div class="board-scroll" tabindex="0" aria-label="${p} 成绩表滚动区域"><table><thead><tr><th>算例</th>${[1,2,3,4,5].map(k=>`<th>${k} 核</th>`).join('')}</tr><tr class="averages"><th scope="row">均值</th>${[1,2,3,4,5].map(k=>{const a=summarizeCells(cells.filter(c=>visibleCase(c.case_id)),metric,k);return `<th title="${esc(metrics()[metric][0])}：当前筛选的逐例算术平均；${a.count}/${a.total} 个有效样本"><b>${esc(fmt(a.mean===null?null:Number(a.mean.toFixed(3)),metric))}</b><small>${a.count}/${a.total}</small></th>`;}).join('')}</tr></thead><tbody>${Array.from({length:100},(_,i)=>String(i+1).padStart(3,'0')).filter(visibleCase).map(c=>`<tr><th>${c}</th>${[1,2,3,4,5].map(k=>{const cell=map.get(c+'-'+k),r=cell.best,v=r?.metrics[metric],distribution=groups.get(p+'-'+k)||[],rank=r?.eligible&&Number.isFinite(v)?relativePosition(v,distribution):null,selected=selection&&selection.problem===p&&selection.case_id===c&&selection.cores===k;let text=r?fmt(v,metric):cell.status==='failed'?'失败 !':cell.status==='timeout'?'超时 !':cell.status==='running'?'运行中':cell.status==='reported'?(cell.missing_artifacts?.length?'缺原件':'待核验'):cell.attempts?'待核验':'—';const tip=r?`${p} / ${c} / ${k}核\n${r.algorithm_name}\n${metrics()[metric][0]}: ${fmt(v,metric)}\n${r.eligible?'原件一致':'仅报告 · 不入正式榜'}${rank===null?'':`\n同题同核数值分位: ${Math.round(rank*100)}%（${distribution.length} 个样本；细条越长数值越大，不表示绝对差值）`}\n点击查看 ${cell.attempts} 次尝试及历史`:`${p} / ${c} / ${k}核：${statuses[cell.status]||cell.status}，${cell.attempts} 次尝试${cell.missing_artifacts?.length?'；缺少 '+cell.missing_artifacts.join('/')+' 原件':''}`;return `<td><button class="cell ${r?'measured ':''}${r&&!r.eligible?'reported ':''}${cell.status} ${selected?'selected':''}" style="${r?.eligible&&Number.isFinite(v)?cellStyle(v):''}" data-p="${p}" data-case="${c}" data-k="${k}" title="${esc(tip)}" aria-label="${esc(tip)}">${esc(text)}${rank===null?'':`<i class="relative-bar" aria-hidden="true" style="width:${(rank*92).toFixed(2)}%"></i>`}</button></td>`;}).join('')}</tr>`).join('')}</tbody></table></div></section>`;}).join('');
-[...document.querySelectorAll('.board-scroll')].forEach((e,i)=>e.scrollTop=Number.isFinite(scrolls[i])?Math.max(0,scrolls[i]):0);
+$('#boards').innerHTML=(focusProblem?[focusProblem]:['P1','P2','P3']).map((p,index)=>{const cells=data.cells.filter(c=>c.problem===p),map=new Map(cells.map(c=>[c.case_id+'-'+c.cores,c]));const valid=cells.filter(c=>c.best?.eligible).length;return `<section class="board"><div class="board-title"><div><strong>${focusProblem?p:`<a class="problem-link" href="/?problem=${p}" target="_blank" rel="noopener" aria-label="在新标签页查看 ${p} 全部批次与优秀候选">${p} <span>批次与成绩 ↗</span></a>`}</strong><small>${names[p]} · ${valid}/500 已入榜</small></div>${p==='P3'?`<button id="cache-view" ${focusProblem==='P3'?`aria-pressed="${metric==='cache_gain'}"`:''}>${focusProblem==='P3'&&metric==='cache_gain'?'返回单核加速比':`Cache 加速比 · ${cells.filter(c=>visibleCase(c.case_id)&&c.best?.eligible&&c.best.cache_pair_verified).length} 已配对`}</button>`:''}</div><div class="board-scroll" tabindex="0" aria-label="${p} 成绩表滚动区域"><table><thead><tr><th>算例</th>${[1,2,3,4,5].map(k=>`<th>${k} 核</th>`).join('')}</tr><tr class="averages"><th scope="row">均值</th>${[1,2,3,4,5].map(k=>{const a=summarizeCells(cells.filter(c=>visibleCase(c.case_id)),metric,k);return `<th title="${esc(metrics()[metric][0])}：当前筛选的逐例算术平均；${a.count}/${a.total} 个有效样本"><b>${esc(fmt(a.mean===null?null:Number(a.mean.toFixed(3)),metric))}</b><small>${a.count}/${a.total}</small></th>`;}).join('')}</tr></thead><tbody>${Array.from({length:100},(_,i)=>String(i+1).padStart(3,'0')).filter(visibleCase).map(c=>`<tr><th>${c}</th>${[1,2,3,4,5].map(k=>{const cell=map.get(c+'-'+k),r=cell.best,v=metric==='cache_gain'&&!r?.cache_pair_verified?null:r?.metrics[metric],distribution=groups.get(p+'-'+k)||[],rank=r?.eligible&&Number.isFinite(v)?relativePosition(v,distribution):null,selected=selection&&selection.problem===p&&selection.case_id===c&&selection.cores===k;let text=r?(metric==='cache_gain'&&r.eligible&&!r.cache_pair_verified?'缺配对':fmt(v,metric)):cell.status==='failed'?'失败 !':cell.status==='timeout'?'超时 !':cell.status==='running'?'运行中':cell.status==='reported'?(cell.missing_artifacts?.length?'缺原件':'待核验'):cell.attempts?'待核验':'—';const tip=r?`${p} / ${c} / ${k}核\n${r.algorithm_name}\n${metrics()[metric][0]}: ${fmt(v,metric)}\n${r.eligible?'原件一致':'仅报告 · 不入正式榜'}${metric==='cache_gain'&&!r.cache_pair_verified?'\n缺同计划无 Cache 配对原件；P3 成绩仍有效':''}${rank===null?'':`\n同题同核数值分位: ${Math.round(rank*100)}%（${distribution.length} 个样本；细条越长数值越大，不表示绝对差值）`}\n点击查看 ${cell.attempts} 次尝试及历史`:`${p} / ${c} / ${k}核：${statuses[cell.status]||cell.status}，${cell.attempts} 次尝试${cell.missing_artifacts?.length?'；缺少 '+cell.missing_artifacts.join('/')+' 原件':''}`;return `<td><button class="cell ${r?'measured ':''}${r&&!r.eligible?'reported ':''}${cell.status} ${selected?'selected':''}" style="${r?.eligible&&Number.isFinite(v)?cellStyle(v):''}" data-p="${p}" data-case="${c}" data-k="${k}" title="${esc(tip)}" aria-label="${esc(tip)}">${esc(text)}${rank===null?'':`<i class="relative-bar" aria-hidden="true" style="width:${(rank*92).toFixed(2)}%"></i>`}</button></td>`;}).join('')}</tr>`).join('')}</tbody></table></div></section>`;}).join('');
+[...document.querySelectorAll('.board-scroll')].forEach((e,i)=>{const pos=scrolls[i];e.scrollTop=Math.max(0,Number.isFinite(pos?.top)?pos.top:Number.isFinite(pos)?pos:0);e.scrollLeft=Math.max(0,Number.isFinite(pos?.left)?pos.left:0);});
 if(activeCell)[...document.querySelectorAll('[data-case]')].find(b=>b.dataset.p===activeCell.p&&b.dataset.case===activeCell.case&&b.dataset.k===activeCell.k)?.focus({preventScroll:true});
-$('#cache-view')?.addEventListener('click',()=>openCache('cache_gain'));
+$('#cache-view')?.addEventListener('click',()=>focusProblem==='P3'?selectMetric($('#metric').value==='cache_gain'?'baseline_speedup':'cache_gain'):openCache('cache_gain'));
 const shown=data.cells.filter(c=>!focusProblem||c.problem===focusProblem);
 const valid=shown.filter(c=>c.best?.eligible).length,attempts=shown.filter(c=>c.attempts).length;$('#counts').innerHTML=`<div><b>${valid}<small> / ${focusProblem?500:1500}</small></b><span>${data.runtime?.mode==='central_mirror'?'中央已核的有效格':'有原件的有效格'}</span></div><div><b>${attempts}</b><span>已有记录的格</span></div><div><b>${data.record_count}</b><span>${focusProblem?'全站历史记录':'历史记录'}</span></div>`;
 }
@@ -267,7 +272,13 @@ panel.scrollTop=keepPosition?previousScroll:0;
 }
 function pair(r){if(r.problem!=='P3')return '';if(!r.cache_pair_verified)return '<h4>Cache 收益</h4><p>缺少同计划、同核数配对原件，暂不计算收益。</p>';let withCache=r.metrics.makespan_cycles,noCache=withCache*r.metrics.cache_gain,max=Math.max(withCache,noCache);return `<h4>Cache 配对对照 · ${fmt(r.metrics.cache_gain,'cache_gain')}×</h4><div class="pair"><span>无 Cache</span><i style="width:${130*noCache/max}px"></i><em>${fmt(noCache)}</em></div><div class="pair"><span>有 Cache</span><i style="width:${130*withCache/max}px"></i><em>${fmt(withCache)}</em></div><p>方案哈希由提交者声明；本站未独立复跑配对评估。</p>`;}
 $('#boards').addEventListener('click',e=>{const b=e.target.closest('[data-case]');if(b){selection={problem:b.dataset.p,case_id:b.dataset.case,cores:+b.dataset.k};detail();}});
-for(const id of ['#algorithm','#run'])$(id).addEventListener('change',()=>{if(focusProblem)focusChoice=$('#algorithm').value||$('#run').value?'batch':'history';refresh(true);});$('#reported').addEventListener('change',()=>refresh(true));$('#metric').onchange=()=>{const chosen=$('#metric').value;if(chosen==='cache_gain'||chosen==='cache_hit_rate'){$('#metric').value=mainMetric;openCache(chosen);return;}mainMetric=chosen;render();if(selection)detail(false);};$('#search').oninput=()=>{render();if(!$('#batch-panel').hidden)loadBatches();};$('#refresh').onclick=()=>refresh(true);$('#theme').onclick=()=>{document.body.classList.toggle('light');localStorage.setItem('board-theme',document.body.classList.contains('light')?'light':'dark');};if(localStorage.getItem('board-theme')==='light')document.body.classList.add('light');
+for(const id of ['#algorithm','#run'])$(id).addEventListener('change',()=>{if(focusProblem)focusChoice=$('#algorithm').value||$('#run').value?'batch':'history';refresh(true);});
+$('#reported').addEventListener('change',()=>refresh(true));
+function selectMetric(chosen){
+  if(['cache_gain','cache_hit_rate'].includes(chosen)&&focusProblem!=='P3'){$('#metric').value=mainMetric;openCache(chosen);return;}
+  $('#metric').value=chosen;mainMetric=chosen;render();if(selection)detail(false);
+}
+$('#metric').onchange=()=>selectMetric($('#metric').value);$('#search').oninput=()=>{render();if(!$('#batch-panel').hidden)loadBatches();};$('#refresh').onclick=()=>refresh(true);$('#theme').onclick=()=>{document.body.classList.toggle('light');localStorage.setItem('board-theme',document.body.classList.contains('light')?'light':'dark');};if(localStorage.getItem('board-theme')==='light')document.body.classList.add('light');
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&selection&&!$('#cache-dialog').open)$('#close-detail')?.click();});
 const hash=new URLSearchParams(location.hash.slice(1));if(['P1','P2','P3'].includes(hash.get('problem'))&&/^\d{3}$/.test(hash.get('case_id')||'')&&+hash.get('cores')>=1&&+hash.get('cores')<=5)selection={problem:hash.get('problem'),case_id:hash.get('case_id'),cores:+hash.get('cores')};
 async function initialize(){if(focusProblem)await loadBatches();await refresh(true);}
