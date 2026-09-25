@@ -1,0 +1,140 @@
+{
+  "kind": "actual-cloud-model-interface-NOT-E0",
+  "admission_head": "85fda84b2ec950e54944f8946c4f1be3ba423ed1",
+  "algorithm_source": "4fc5e5e91e4a2ac9feaf05267c1f8ab713ca5990",
+  "controller_sha256": "b6bfe3dcd81c152e6acc45e598741930f2f14bc6bd58289fd5332db20ba40c75",
+  "bundle_sha256": "b78c67f1c535625ac6ff31545b179cb2a5bfcd1f762fff99248d9364c7101ab9",
+  "session": "p1-lazy-seed-008-20260925",
+  "t0_utc_anchored": "2026-09-25T05:11:22.416544+00:00",
+  "t0_monotonic": 292555.652632416,
+  "t0_utc_method": "host launch UTC plus monotonic delta; no additional VM assumption",
+  "status": "probe-success-collected",
+  "VM_window_seconds": 50.937263959029224,
+  "calls": {
+    "Task_compile_attempts_reserved": 16,
+    "Task_compile_confirmed_completed": 16,
+    "Fraction_response_attempts": 3,
+    "Fraction_response_completed": 3,
+    "solver_process": 1,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "retry": 0
+  },
+  "probe": {
+    "returncode": 0,
+    "stop_reason": null,
+    "wall_seconds": 1.6395893359999718,
+    "sampled_max_tree_rss_bytes": 39477248,
+    "remaining_owned_pids": []
+  },
+  "archive": {
+    "path": "evidence.tar.gz",
+    "bytes": 42612,
+    "sha256": "6d2e5bfd9211227c0a270fd3c9280a86471f2780317af06ab676e2cc60ff8050",
+    "verified_files": 5
+  },
+  "evidence_files": [
+    {
+      "path": "evidence/probe.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/probe.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/setup.json",
+      "bytes": 3323,
+      "sha256": "6b3fe68f3e97daeacb7ba74f9c64e30609569e2c77cf3ed60c20e7c4980e6623"
+    },
+    {
+      "path": "workspace/evidence/lazy-seed-008/plan.json",
+      "bytes": 7111,
+      "sha256": "6c7563bd92b269fa6f4c6bb0f7ddff90e75800b867a0db904af85ed4e3b6b195"
+    },
+    {
+      "path": "workspace/evidence/lazy-seed-008/report.json",
+      "bytes": 760369,
+      "sha256": "9ee1bac52b11ea2e156e4c81a2139c120637ad5a3219b453dfd3e76edcb72c3b"
+    }
+  ],
+  "graph_sha256": "c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d",
+  "plan_sha256": "6c7563bd92b269fa6f4c6bb0f7ddff90e75800b867a0db904af85ed4e3b6b195",
+  "model_upper": 101836,
+  "model_lower": 52146,
+  "optimal": false,
+  "official_Makespan": null,
+  "official_score_claim": false,
+  "compiler_traffic": {
+    "original_graph_copy_bytes": 2654424,
+    "scheduled_copy_bytes": 2654424,
+    "added_copy_bytes": 0,
+    "partition_added_copy_bytes": 0,
+    "spill_added_copy_bytes": 0
+  },
+  "full_plan_tasks": 8,
+  "root_static_plan_check": {
+    "compute_ops": 864,
+    "two_keys_exactly": true,
+    "task_schedule_bijection": true
+  },
+  "source_scope_unchanged": true,
+  "stop_returncode": 0,
+  "VM_stopped_readback": true,
+  "fresh_stop_readback": {
+    "checked_at": "2026-09-25T05:13:04.513017+00:00",
+    "sessions_returncode": 0,
+    "sessions_stdout": "[colab] No active sessions found on server.\n",
+    "sessions_stderr": "",
+    "matching_watchdog_pids": []
+  },
+  "host_steps": [
+    {
+      "step": "preflight-sessions",
+      "returncode": 0,
+      "wall_seconds": 1.0176530420430936,
+      "stdout": "[colab] No active sessions found on server.\n",
+      "stderr": ""
+    },
+    {
+      "step": "new",
+      "returncode": 0,
+      "wall_seconds": 13.89492854202399
+    },
+    {
+      "step": "upload-bundle",
+      "returncode": 0,
+      "wall_seconds": 5.107262459001504
+    },
+    {
+      "step": "exec",
+      "returncode": 0,
+      "wall_seconds": 27.888120666961186
+    },
+    {
+      "step": "download",
+      "returncode": 0,
+      "wall_seconds": 1.2641730830073357
+    },
+    {
+      "step": "finally-stop",
+      "returncode": 0,
+      "wall_seconds": 1.7452696250402369,
+      "stdout": "[colab] Stopping session 'p1-lazy-seed-008-20260925'...\n[colab] Session terminated.\n",
+      "stderr": ""
+    },
+    {
+      "step": "finally-sessions",
+      "returncode": 0,
+      "wall_seconds": 1.0279825840261765,
+      "stdout": "[colab] No active sessions found on server.\n",
+      "stderr": ""
+    }
+  ],
+  "raw_host_receipt_sha256": "d423b8b16ea0b9ccd636d6387c4cd925bd12f7c93fd7b228685fbb27944e4f3a",
+  "raw_host_receipt_note": "kept locally; public receipt omits VM creation/connection output and local CLI paths",
+  "next": "test a separately admitted explicit periodic packet seed; no carry-over budget or automatic retry"
+}
