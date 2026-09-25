@@ -13,8 +13,9 @@ from pathlib import Path
 import time
 
 from src.q1 import branch_aid as aid
+from evaluation_validation import read_required_settings
 
-ALGORITHM_ID = "q1-general-bridge-static-v1"
+ALGORITHM_ID = "q1-general-bridge-static-queue-v2"
 MAX_TASKS = aid.TASK_LIMIT
 SOFT_SECONDS = 10.0
 
@@ -87,6 +88,57 @@ def _acyclic_with_orders(data_edges, schedules):
     return seen == len(degree)
 
 
+def _queue_projection(data_edges, schedules, durations, same_wait, cross_wait):
+    """Static critical path with core queues; no Task compilation or scoring.
+
+    Pipe peak is only a duration proxy. Data and core-order arcs carry the
+    scene-A release waits, with the larger wait winning on duplicate arcs.
+    """
+    core = {task: c for c, order in enumerate(schedules) for task in order}
+    arcs = {task: {} for task in core}
+    for source, targets in data_edges.items():
+        for target in targets:
+            wait = cross_wait if core[source] != core[target] else 0
+            arcs[source][target] = max(arcs[source].get(target, 0), wait)
+    for order in schedules:
+        for source, target in zip(order, order[1:]):
+            arcs[source][target] = max(arcs[source].get(target, 0), same_wait)
+    degree = {task: 0 for task in core}
+    for targets in arcs.values():
+        for target in targets:
+            degree[target] += 1
+    ready = deque(task for task, n in degree.items() if n == 0)
+    starts = {task: 0 for task in ready}
+    topo = []
+    while ready:
+        task = ready.popleft()
+        topo.append(task)
+        end = starts[task] + durations[task]
+        for target, wait in arcs[task].items():
+            starts[target] = max(starts.get(target, 0), end + wait)
+            degree[target] -= 1
+            if degree[target] == 0:
+                ready.append(target)
+    if len(topo) != len(core):
+        raise aid.UnsupportedStructure("static queue graph is cyclic")
+    tail = {}
+    for task in reversed(topo):
+        tail[task] = durations[task] + max(
+            (wait + tail[target] for target, wait in arcs[task].items()),
+            default=0)
+    return {"starts": starts, "makespan": max(
+        (starts[t] + durations[t] for t in core), default=0), "tail": tail}
+
+
+def _queue_screen(base, candidate, downstream):
+    """Require the donor continuation to fit its old static path slack."""
+    delay = candidate["starts"][downstream] - base["starts"][downstream]
+    slack = base["makespan"] - (
+        base["starts"][downstream] + base["tail"][downstream])
+    return (candidate["makespan"] <= base["makespan"] and delay <= slack,
+            delay, slack)
+
+
 def construct(graph, cores, base_plan):
     """Try one structurally ranked X/Y/J relocation; return baseline on refusal.
 
@@ -127,10 +179,24 @@ def construct(graph, cores, base_plan):
         bandwidth = aid.read_bandwidth_config(
             aid.ROOT / "data/raw/a/official/data/config.txt")
         old_boundary = aid._boundary(graph, mapping, bandwidth)
+        waits = read_required_settings(
+            aid.ROOT / "data/raw/a/official/data/config.txt",
+            "multicore_scene_a",
+            ("task_cross_core_wait_cycles", "task_same_core_wait_cycles"))
+        cross_wait = int(waits["task_cross_core_wait_cycles"])
+        same_wait = int(waits["task_same_core_wait_cycles"])
+        old_durations = {t: _peak(aid._work(view["nodes_by_subgraph"][t], ops))
+                         for t in view["subgraph_ids"]}
+        base_orders = [view["core_orders"][c] for c in range(cores)]
+        base_queue = _queue_projection(view["subgraph_succs"],
+                                       base_orders, old_durations,
+                                       same_wait, cross_wait)
         old_tasks = len(view["subgraph_ids"])
         next_id = max(view["subgraph_ids"]) + 1
         choices = []
         witnessed = 0
+        acyclic_slots = 0
+        queue_rejected = 0
         for task in sorted(view["subgraph_ids"]):
             if time.monotonic() - started > SOFT_SECONDS:
                 raise aid.UnsupportedStructure("structural soft time budget exceeded")
@@ -163,6 +229,14 @@ def construct(graph, cores, base_plan):
             delta = {key: new_boundary.get(key, 0) - old_boundary.get(key, 0)
                      for key in sorted(old_boundary.keys() | new_boundary.keys())}
             donor = view["core_by_subgraph"][task]
+            donor_order = view["core_orders"][donor]
+            donor_index = donor_order.index(task)
+            downstream = (donor_order[donor_index + 1]
+                          if donor_index + 1 < len(donor_order) else None)
+            durations = dict(old_durations)
+            durations[task] = _peak(pieces["Y"])
+            durations[next_id] = _peak(pieces["J"])
+            durations[next_id + 1] = _peak(pieces["X"])
             # The new J immediately follows retained Y on the donor core.
             for helper in range(cores):
                 if helper == donor:
@@ -175,23 +249,49 @@ def construct(graph, cores, base_plan):
                     schedules[helper].insert(slot, next_id + 1)
                     if not _acyclic_with_orders(data_edges, schedules):
                         continue
+                    acyclic_slots += 1
+                    projected = _queue_projection(data_edges, schedules,
+                                                  durations, same_wait,
+                                                  cross_wait)
+                    if downstream is not None:
+                        acceptable, delay, slack = _queue_screen(
+                            base_queue, projected, downstream)
+                    else:
+                        acceptable = projected["makespan"] <= base_queue["makespan"]
+                        delay = slack = None
+                    if not acceptable:
+                        queue_rejected += 1
+                        continue
+                    projected_gain = (base_queue["makespan"] -
+                                      projected["makespan"])
+                    # A queue tie with no COPY-service saving has no positive
+                    # signal in either static proxy; keep the exact baseline.
+                    if projected_gain == 0 and delta.get("service_cycles", 0) >= 0:
+                        queue_rejected += 1
+                        continue
                     local = _nearby_work(view, ops, helper, slot)
-                    # Large Task-local Pipe reduction first, then static COPY
-                    # service/bytes and nearby helper work. IDs only break ties.
-                    key = (-gain, max(0, delta.get("service_cycles", 0)),
-                           max(0, delta.get("bytes", 0)), *local,
+                    # Prefer projected global critical-path relief. Static COPY
+                    # and donor relief then discriminate candidates; this is
+                    # still a proxy and never a quality claim.
+                    key = (-projected_gain, delta.get("service_cycles", 0),
+                           delta.get("bytes", 0), -gain, *local,
                            task, helper, slot)
                     choices.append((key, task, witness, candidate_mapping,
                                     schedules, delta, old_boundary,
-                                    new_boundary, original, pieces))
+                                    new_boundary, original, pieces,
+                                    projected["makespan"], delay, slack))
         info["census"] = {"old_tasks": old_tasks,
                           "bridge_witnessed_tasks": witnessed,
-                          "feasible_insertion_slots": len(choices)}
+                          "acyclic_insertion_slots": acyclic_slots,
+                          "feasible_insertion_slots": len(choices),
+                          "queue_rejected_slots": queue_rejected}
         if not choices:
-            raise aid.UnsupportedStructure("no bridge witness with positive Task-local Pipe reduction and acyclic insertion")
+            raise aid.UnsupportedStructure(
+                "no bridge witness with positive Pipe reduction, acyclic insertion, and acceptable static queue projection")
         selected = min(choices, key=lambda item: item[0])
         (key, task, witness, new_mapping, schedules, delta, old_boundary,
-         new_boundary, original, pieces) = selected
+         new_boundary, original, pieces, projected_makespan,
+         downstream_delay, downstream_slack) = selected
         plan = {"node_to_subgraph": new_mapping, "core_schedules": schedules}
         edges = aid._task_dag(new_mapping, schedules, succ)
         # Official structural guards are required even after the local DAG
@@ -206,8 +306,14 @@ def construct(graph, cores, base_plan):
                     piece_sizes={name: len(witness[name]) for name in ("X", "Y", "J")},
                     old_task_pipe_work=dict(original),
                     new_piece_pipe_work={name: dict(work) for name, work in pieces.items()},
-                    task_local_peak_reduction=-key[0],
-                    selection_rule="max Task-local Pipe peak reduction; min added static COPY service/bytes; min neighboring helper Pipe work; deterministic IDs",
+                    task_local_peak_reduction=(
+                        _peak(original) - max(map(_peak, pieces.values()))),
+                    static_queue_baseline_makespan=base_queue["makespan"],
+                    static_queue_candidate_makespan=projected_makespan,
+                    static_queue_projected_gain=base_queue["makespan"] - projected_makespan,
+                    static_downstream_start_delay=downstream_delay,
+                    static_downstream_slack=downstream_slack,
+                    selection_rule="require no static queue makespan increase and downstream delay within baseline path slack; reject a tie without COPY-service saving; then max static global queue relief, min COPY service/bytes, max Task-local Pipe relief, min nearby helper work, deterministic IDs",
                     old_boundary=old_boundary, new_boundary=new_boundary,
                     boundary_delta=delta, augmented_dag_edges=edges,
                     warning="Task compilation, FIFO/MEM/spill, E1/E0/E2 and Makespan remain unverified")
