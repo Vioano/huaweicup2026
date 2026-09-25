@@ -109,6 +109,47 @@ with tempfile.TemporaryDirectory(prefix='p2-holdout-offline-') as temporary:
         assert dispatches == ['saved-solver','saved-e0']
         replayed.append(f'{case}-k{cores}')
 
+    # Saved 097 is a completed zero-E2 plan; only its exact known structural
+    # UnsupportedStructure route may proceed to an independent future E0.
+    saved097 = ROOT/'output/bidirectional-holdout12-runtimefix-run-20260925/results/097-k5'
+    if not (saved097/'online/solver.json').is_file():
+        raise FileNotFoundError('Offline structural replay needs saved 097 ledger: '+str(saved097))
+    proc097 = json.loads((saved097/'solver-process/process.json').read_bytes())
+    _, score097, route097 = m.inspect_solver(saved097,'097',5,proc097,doc['solver_sources'],e2)
+    assert score097 is None and route097 == 'single_plan_independent_E0_only'
+    dispatch097 = []
+    def fake_097_monitor(argv, folder, deadline, rss):
+        dispatch097.append('solver' if '-m' in argv else 'external_e0_blocked')
+        if '-m' not in argv:
+            raise RuntimeError('synthetic independent E0 blocked; no evaluator launched')
+        folder.mkdir(parents=True)
+        shutil.copytree(saved097/'online', folder.parent/'online')
+        shutil.copyfile(saved097/'plan.json', folder.parent/'plan.json')
+        shutil.copyfile(saved097/'solver-process/process.json', folder/'process.json')
+        return proc097
+    row097 = m.cell('097',5,doc,identity,e2,fake_097_monitor,temp,
+                    time.perf_counter()+10)
+    assert dispatch097 == ['solver','external_e0_blocked']
+    assert row097['selected_comparison_kind'] == 'single_plan_independent_E0_only'
+    assert row097['calls']['E2_api_attempted'] == 0 and row097['calls']['E0_independent_started'] == 1
+    assert row097['status'] == 'stopped'  # no fabricated official E0 acceptance
+    adversarial = temp/'bad-097'
+    (adversarial/'online').mkdir(parents=True)
+    shutil.copyfile(saved097/'plan.json',adversarial/'plan.json')
+    original097 = json.loads((saved097/'online/solver.json').read_bytes())
+    for label, change in (
+        ('unknown_exception', lambda ledger: ledger['detail'].update(reverse_error="RuntimeError('unknown')")),
+        ('unexpected_construction', lambda ledger: ledger['detail']['incumbent_detail']['construction_errors'][0].update(kind='unexpected'))):
+        altered = json.loads(json.dumps(original097))
+        change(altered)
+        (adversarial/'online/solver.json').write_text(json.dumps(altered))
+        try:
+            m.inspect_solver(adversarial,'097',5,proc097,doc['solver_sources'],e2)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError(label+' was incorrectly accepted as structural skip')
+
     # One worker: the first failed cell must stop dispatch and reserve unknown fallback.
     m.COORDS = (('006',5),('019',5))
     calls = []
@@ -204,6 +245,8 @@ with tempfile.TemporaryDirectory(prefix='p2-holdout-offline-') as temporary:
 result = {'selection_recomputed':list(coords),
           'venv_symlink_import_preflight':'passed',
           'saved_cell_replays':replayed,'unknown_fallback_reserved':1,
+          'saved_097_zero_e2_structural_route':'reaches_mock_blocked_external_E0',
+          'unknown_error_variants':'rejected',
           'first_failure_dispatches':1,'gate_bad_scope_hash_expiry':'rejected',
           'fake_process_launches':3,'outer_timeout_cleanup':'passed',
           'vm_pressure_stop_cleanup':'passed','swap_growth_stop_cleanup':'passed',
@@ -212,7 +255,7 @@ result = {'selection_recomputed':list(coords),
           'holdout_supervisor_sha256':sup.sha(ROOT/'scripts/q2_bidirectional_holdout_supervise.py'),
           'selection_sha256':m.SELECTION_SHA,
           'test_sha256':m.sha(Path(__file__))}
-runtime_fix = ROOT/'output/holdout-runtime-fix-20260925'
-runtime_fix.mkdir(parents=True, exist_ok=True)
-(runtime_fix/'offline-test-receipt.json').write_text(json.dumps(result,indent=2)+'\n')
+structural_fix = ROOT/'output/holdout-structural-route-fix-20260925'
+structural_fix.mkdir(parents=True, exist_ok=True)
+(structural_fix/'offline-test-receipt.json').write_text(json.dumps(result,indent=2)+'\n')
 print(json.dumps(result))

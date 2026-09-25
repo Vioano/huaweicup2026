@@ -140,6 +140,28 @@ def metrics(record, *, official, cores=None):
             'data_movement_bytes': {k: movement[k] for k in FIELDS}}
 
 
+def known_structural_unavailable(detail, base):
+    """Only the frozen, known no-fork-or-join structural skip may use zero E2."""
+    error = "UnsupportedStructure('requires both fork and join')"
+    return (detail.get('skip_reason') == 'reverse_construction_unavailable'
+            and detail.get('reverse_error') == error
+            and detail.get('reverse_detail') is None
+            and detail.get('selected') == 'incumbent'
+            and detail.get('reason') == 'incumbent_retained'
+            and detail.get('score_evidence') == 'not_requested'
+            and detail.get('scores') == {}
+            and detail.get('oracle_requests') == 0
+            and detail.get('oracle_request_limit') == 4
+            and detail.get('unique_scored_plans') == 0
+            and detail.get('constructed_plans') == 1
+            and base.get('selected') == 'baseline'
+            and base.get('reason') == 'gap_structure_unsupported'
+            and base.get('score_evidence') == 'not_requested'
+            and base.get('unique_plans') == 1
+            and base.get('construction_errors') ==
+                [{'stage': 'gap_candidate', 'kind': 'unsupported_structure', 'error': error}])
+
+
 def preflight(repo, raw_root, e2_root, python, manifest_path):
     global ROOT, PYTHON, E2_ROOT, RAW_ROOT, COORDS
     if platform.system() != 'Darwin' or platform.machine() != 'arm64':
@@ -285,7 +307,8 @@ def inspect_solver(folder, case, cores, process, sources, e2):
                 or base.get('unique_plans') != 1 or detail.get('selected') != 'incumbent'
                 or detail.get('score_evidence') != 'not_requested'
                 or detail.get('unique_scored_plans') != 0
-                or detail.get('skip_reason') not in ('single_core', 'reverse_duplicates_incumbent')):
+                or (detail.get('skip_reason') not in ('single_core', 'reverse_duplicates_incumbent')
+                    and not known_structural_unavailable(detail, base))):
             raise ValueError('Zero E2 allowed only for one-plan structural route')
         score, route = None, 'single_plan_independent_E0_only'
     return ledger, score, route
