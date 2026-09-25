@@ -1,0 +1,201 @@
+{
+  "attempt_id": "q3-forest-full500-20260925-s59-s01-P3-005-k5-unified-forest-witness-e0",
+  "revision": 2,
+  "run_id": "q3-forest-full500-20260925-s59",
+  "algorithm_id": "q3-forest-memory-witness",
+  "algorithm_name": "P3 fresh witness plus bounded reduction-forest memory order",
+  "variant": "unified-forest-witness-e0",
+  "solver_commit": "311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1",
+  "parameters": {
+    "candidate_limit": 3,
+    "forest_candidate_limit": 1,
+    "selection": "strictly smaller official Makespan than fresh witness incumbent",
+    "solver_args": [],
+    "e0_call_limit": 3,
+    "global_budget": {
+      "max_e0_calls": 150,
+      "total_wall_seconds": 1800,
+      "per_job_seconds": 90
+    },
+    "workers": 1,
+    "retry": false,
+    "native_shard_run_id": "q3-forest-full500-20260925-s59-s01",
+    "global_max_workers": 4,
+    "controller_source_sha256": "0ae462dc80789d3061f8999f2d3d193a410ecb8b214febb94e54bf0e2167cd52",
+    "native_shard_batch_sha256": "dc6b423924c7048e64a5a57f7f2612e4f4755ec210e0ccad5a281262dbf7da99",
+    "native_manifest_sha256": "9bf52b9d8cfb49e53fe9181b66cf9e0bac36d366a55c45c028108e409d265698"
+  },
+  "problem": "P3",
+  "case_id": "005",
+  "cores": 5,
+  "status": "ok",
+  "metrics": {
+    "makespan_cycles": 30642,
+    "solver_wall_seconds": 2.878452249977272,
+    "evaluation_wall_seconds": null,
+    "ddr_bytes": 2136798,
+    "extra_ddr_bytes": 1803384,
+    "spill_bytes": 0,
+    "cache_hit_rate": 0.4589403333755121
+  },
+  "evaluator": {
+    "route": "E0",
+    "commit": "311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1",
+    "entrypoint": "multicore_cut_evaluate_problem_3.evaluate_problem_3"
+  },
+  "identity": {
+    "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+    "plan_sha256": "271a969809500146111039bc4f327abe2a78f298177e99cbc9a9ecc637bb8eb6"
+  },
+  "artifacts": {
+    "plan": {
+      "path": "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s01/cells/005-k5-unified-forest-witness-e0/case_005_multicore_res.json",
+      "sha256": "271a969809500146111039bc4f327abe2a78f298177e99cbc9a9ecc637bb8eb6"
+    },
+    "result": {
+      "path": "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s01/cells/005-k5-unified-forest-witness-e0/evidence/result.json.gz",
+      "sha256": "161f6c00a3c406c3e11d9aead620c9652bdce4c8999ce1039c83000dd859f631"
+    },
+    "trace": {
+      "path": "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s01/cells/005-k5-unified-forest-witness-e0/evidence/receipt.json",
+      "sha256": "90bcc0572f03d58bcc752bcde7c388d4bc8666f95b8b16a5f1a7782033722067"
+    },
+    "run": {
+      "path": "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s01/cells/005-k5-unified-forest-witness-e0/run.json",
+      "sha256": "891de38f62db57604bd96f18e375d2ba796791d9811f43c6c2066bbd4f1fa9da"
+    },
+    "manifest": {
+      "path": "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s01/manifest-shard-01.json",
+      "sha256": "9bf52b9d8cfb49e53fe9181b66cf9e0bac36d366a55c45c028108e409d265698"
+    }
+  },
+  "runtime_id": "q3-central-forest-20260925",
+  "observed_at": "2026-09-24T21:23:13.415883Z",
+  "timing": {
+    "solver_includes_evaluation": true,
+    "evaluation_precision": "External perf_counter whole-child wall; no standalone external final-evaluation timer.",
+    "utc": "UTC"
+  },
+  "provenance": {
+    "producer_session": "nikolastarx/s-59ee5b053e1c48af8a64bc9ddb6ed5bc",
+    "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+    "solver": {
+      "source": {
+        "repo": "huaweibei123/huaweicup2026",
+        "commit": "311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1",
+        "path": "src/q3/forest_solve.py",
+        "entrypoint": "src.q3.forest_solve.main"
+      },
+      "authors": [
+        "NikolaStarx",
+        "yuanzhifang30-sudo"
+      ],
+      "method": "Fresh witness incumbent, then at most one graph-derived reduction-forest order if total online E0 calls remain below three; accept only strict official Makespan improvement. No per-case lookup or historical plan reuse.",
+      "references": [
+        "https://github.com/huaweibei123/huaweicup2026/issues/51",
+        "https://github.com/huaweibei123/huaweicup2026/blob/311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1/src/q3/forest_solve.py"
+      ],
+      "upstream": [
+        {
+          "repo": "huaweibei123/huaweicup2026",
+          "commit": "311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1",
+          "path": "src/q3/witness_solve.py",
+          "entrypoint": "src.q3.witness_solve.evaluate_candidates"
+        }
+      ],
+      "selected_algorithm_id": null,
+      "selected_solver_commit": null
+    },
+    "runner": {
+      "source": {
+        "repo": "huaweibei123/huaweicup2026",
+        "commit": "311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1",
+        "path": "src/q3/feedback_benchmark.py",
+        "entrypoint": "src.q3.feedback_benchmark.main"
+      },
+      "argv": [
+        "python",
+        "-m",
+        "src.q3.feedback_benchmark",
+        "<repo>/results/a/q3-nikolastarx/forest500-control-20260925-s59/manifest-s01.json",
+        "<repo>/results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s01"
+      ],
+      "working_directory": "."
+    },
+    "environment": {
+      "os": "macOS-27.0-arm64-arm-64bit",
+      "cpu": "Apple M5 Pro",
+      "gpu": "none used (CPU-only solver)",
+      "ram_bytes": 51539607552,
+      "python": "3.12.13 (main, May 10 2026, 19:20:41) [Clang 22.1.3 ]",
+      "dependencies": "uv.lock sha256=7b03fee57044ac272d8895533cbdca6d70a29d2da955f98a5552e72ef944fdc4",
+      "threads": null,
+      "workers": 1,
+      "peak_rss_bytes": null
+    },
+    "measurement": {
+      "started_at": "2026-09-24T21:23:10.240314Z",
+      "finished_at": "2026-09-24T21:23:13.415883Z",
+      "seed": null,
+      "repeat_index": 0,
+      "cold_start": null,
+      "solver_scope": "Fresh child spawn through reaped exit: interpreter/import, read graph, construct, integrated E0 selection/verification, final plan and evidence writes, required cleanup. External parent preflight excluded and retained in batch wall.",
+      "evaluation_scope": "No separate external final evaluation. Integrated E0 calls are included in solver wall; internal diagnostics are retained in trace and are not substituted for external timing.",
+      "budget": {
+        "wall_seconds": 90,
+        "candidate_limit": 3,
+        "stop_reason": "completed"
+      },
+      "calls": {
+        "solver": 1,
+        "E0": 3,
+        "E1": 0,
+        "E2": 0
+      },
+      "offline_costs": "Fresh witness full500 and its same-plan no-L2 pair were separate earlier experiments. Forest two-graph mechanism test used two constructors and four external official E0; no previous result substitutes any cell here. Fixed source has 184 passed tests, one explicit E0 opt-in skipped, and ten relevant tests passed after the final guard.",
+      "failure": null
+    },
+    "missing_reasons": {
+      "provenance.environment.threads": "Thread count was not sampled; one worker is a dispatch constraint, not an observed thread count.",
+      "provenance.environment.peak_rss_bytes": "Per-child peak RSS was not measured; no aggregate/high-water proxy is substituted.",
+      "provenance.measurement.seed": "Deterministic construction; no random generator or seed.",
+      "provenance.measurement.cold_start": "Fresh interpreter per job; OS page-cache state is uncontrolled, so strict cold/warm classification is unknown."
+    }
+  },
+  "notes": [
+    "One explicit development batch; no independent-platform or full-suite acceptance is claimed.",
+    "Final E0 JSON is preserved unchanged, including scene=B/problem=3/cache_mode=read_only.",
+    "ddr_bytes is official scheduled_copy_bytes, not physical DDR traffic.",
+    "Fresh process does not imply a cold OS cache; one observation is not a tail-latency estimate.",
+    "Whole-batch original deadline and all reservations are retained in batch.json; continuation never resets them.",
+    "One fixed 50-cell shard of a single fresh 500-cell algorithm run; original shard run, receipt and manifest remain attached. This slice alone is not a full-batch score. Four shard workers maximum; no prior witness result fills a cell.",
+    "Baseline evidence added from fixed source 5228e2e09d05be1d0b9e723439aed6b5885e380b; revision 1 solver result and attempt are unchanged.",
+    "Same-plan no-L2 Cache pair added in revision 2. Fixed P2 E0 source 11d5d3ba1820864626bb49acccbeec7a75553e80:results/a/q3-nikolastarx/witness-cachepair-20260925-s59/20260924T2102Z-s59ee/cells/005-k5/result.json.gz"
+  ],
+  "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+  "baseline": {
+    "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+    "route": "E0",
+    "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+    "result": {
+      "path": "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/revision2-baseline-draft/baseline/005/result.json.gz",
+      "sha256": "3efb00f0d7750733b54df72ce2acde81b6bbc510d92771f6414ff985864340a4"
+    }
+  },
+  "cache_pair": {
+    "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+    "plan_sha256": "271a969809500146111039bc4f327abe2a78f298177e99cbc9a9ecc637bb8eb6",
+    "cores": 5,
+    "route": "E0",
+    "result": {
+      "path": "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/revision2-baseline-draft/cache_pair/005-k5/result.json.gz",
+      "sha256": "5d665df590c4f93b12529d3837234888901c1b525f083219445a04a3d51075f3"
+    }
+  }
+}

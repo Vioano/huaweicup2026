@@ -1,0 +1,44 @@
+The system has 51539607552 (3145728 pages with a page size of 16384).
+
+Stats: 
+Pages free: 278175 
+Pages purgeable: 16889 
+Pages purged: 31430330 
+
+Swap I/O:
+Swapins: 389646 
+Swapouts: 1242433 
+
+Page Q counts:
+Pages active: 1142164 
+Pages inactive: 1125332 
+Pages speculative: 16964 
+Pages throttled: 0 
+Pages wired down: 283407 
+
+Compressor Stats:
+Pages used by compressor: 239190 
+Pages decompressed: 181909849 
+Pages compressed: 207170754 
+
+File I/O:
+Pageins: 104888565 
+Pageouts: 29102 
+
+System-wide memory free percentage: 82%
+{ 4.52 4.50 4.53 }
+68071  82.1 /Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/153.0.8010.53/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer)
+24122  65.5 /Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/153.0.8010.53/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer)
+  493  46.6 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer
+17685  27.2 /Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/153.0.8010.53/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer)
+53312  22.8 /Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/153.0.8010.53/Helpers/Codex (Service).app/Contents/MacOS/Codex (Service)
+69676  12.0 /Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/153.0.8010.53/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer)
+53591   7.0 /Users/nikolastar/Projects/huaweicup2026/.venv/bin/python
+53347   6.9 /Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/153.0.8010.53/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer)
+ 3698   6.9 /Applications/VoiceType.app/Contents/MacOS/VoiceType
+53277   6.4 /Applications/ChatGPT.app/Contents/MacOS/ChatGPT
+  629   2.5 /usr/sbin/coreaudiod
+  937   2.1 /System/Library/CoreServices/ControlCenter.app/Contents/MacOS/ControlCenter
+37254 53339       00:00   2.3 /bin/zsh -lc python3 - <<'PY'\012from pathlib import Path\012p=Path('results/a/q3-nikolastarx/layered-port-static-20260925/runner.py'); s=p.read_text()\012needle="if (out/'run_claim.json').exists() or (out/'run_summary.json').exists() or any((out/f\"case_{c['case_id']}\").exists() for c in m['cases']): raise SystemExit('prior claim/output exists; refuse rerun')"\012s=s.replace(needle,needle+"\n    for c in m['cases']:\n        if sha(ROOT/c['graph'])!=c['graph_sha256'] or sha(ROOT/c['candidate_plan'])!=c['candidate_plan_sha256'] or sha(ROOT/c['candidate_metadata'])!=c['candidate_metadata_sha256']: raise SystemExit(f\"{c['case_id']} frozen input/candidate SHA mismatch\")")\012p.write_text(s)\012import hashlib,json\012mp=Path('results/a/q3-nikolastarx/layered-port-static-20260925/manifest.json'); d=json.loads(mp.read_text()); d['runner_sha256']=hashlib.sha256(p.read_bytes()).hexdigest(); mp.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')\012PY\012memory_pressure > results/a/q3-nikolastarx/layered-port-static-20260925/RESOURCE_PREFLIGHT.txt; sysctl -n vm.loadavg >> results/a/q3-nikolastarx/layered-port-static-20260925/RESOURCE_PREFLIGHT.txt; ps -axo pid,pcpu,comm | sort -rn -k2 | head -12 >> results/a/q3-nikolastarx/layered-port-static-20260925/RESOURCE_PREFLIGHT.txt; ps -axo pid,ppid,etime,pcpu,command | rg 'benchmark-sync/releases/.*/benchmark_board/app.py|multicore_cut_evaluate|pipe_bound|evaluate_scene|evaluate_problem' >> results/a/q3-nikolastarx/layered-port-static-20260925/RESOURCE_PREFLIGHT.txt || true\012
+37267 37254       00:00   0.0 rg benchmark-sync/releases/.*/benchmark_board/app.py|multicore_cut_evaluate|pipe_bound|evaluate_scene|evaluate_problem
+53591 53589    09:01:32  15.9 /Users/nikolastar/Projects/huaweicup2026/.venv/bin/python -X utf8 -u /Users/nikolastar/Library/Application Support/huaweicup-benchmark-sync/releases/a1e61de7193f885c50d66b8c18be3d3d7b6f0d0ebeaba0a3b720a61020f6ec31/src/benchmark_board/app.py --state /Users/nikolastar/Projects/huaweicup2026/output/benchmark-board --repo /Users/nikolastar/Projects/huaweicup2026 serve --port 52341 --sync-status /Users/nikolastar/Library/Application Support/huaweicup-benchmark-sync/status.json --sync-inbox /Users/nikolastar/Library/Application Support/huaweicup-benchmark-sync/inbox

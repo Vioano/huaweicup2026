@@ -1,0 +1,110 @@
+{
+  "id": "r9-layered-port-static-20260925",
+  "status": "frozen-before-execution",
+  "frozen_commit": "2f74818b81155c9439392622296716d4bc6c4005",
+  "source_path": "src/q3/layered_query_flow.py",
+  "source_sha256": "db197556787c7818cad21c47dca52e497ba84ba56e1717d4616977fda0556d33",
+  "entrypoint": "src.q3.layered_query_flow.construct_layered",
+  "official_config_parsers": {
+    "capacity": "evaluation_validation.read_evaluation_config(config.txt)['capacity']",
+    "delay": "multicore_cut_evaluate_problem_2.read_scene_b_config(config.txt)['cross_core_copy_delay_cycles']"
+  },
+  "capacity": {
+    "L1": 524288,
+    "UB": 131072
+  },
+  "cross_delay_cycles": 500,
+  "cases": [
+    {
+      "case_id": "005",
+      "graph": "data/raw/a/official/data/case_005.json",
+      "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+      "candidate_plan": "AI chats/20260925-Pro-P3-多层查询亲和/附件/R9_candidate_005_plan.json",
+      "candidate_plan_sha256": "2885b28a512598e4bae525c7bf4b214ac9b2452de19425603fcdea2ae8e7038a",
+      "candidate_metadata": "AI chats/20260925-Pro-P3-多层查询亲和/附件/R9_candidate_005_metadata.json",
+      "candidate_metadata_sha256": "16b751fdfb5a62a9821fd552dc8aa63f62eb959eb39072bc1dd3dc6563c412e2",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/layered-port-static-20260925/construct_case.py",
+        "--case",
+        "005",
+        "--graph",
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/data/raw/a/official/data/case_005.json",
+        "--config",
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/data/raw/a/official/data/config.txt",
+        "--out",
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/layered-port-static-20260925/case_005/constructed",
+        "--capacity",
+        "{\"L1\":524288,\"UB\":131072}",
+        "--delay",
+        "500"
+      ]
+    },
+    {
+      "case_id": "086",
+      "graph": "data/raw/a/official/data/case_086.json",
+      "graph_sha256": "ef91fda2692fd0add63db3c7f677e4e03c8d115d97db3cb959cffc62fff2434a",
+      "candidate_plan": "AI chats/20260925-Pro-P3-多层查询亲和/附件/R9_candidate_086_plan.json",
+      "candidate_plan_sha256": "f2111af54fcc3c11048663db149a93290dbe4558e7d5b7eecf8ec49e847022e6",
+      "candidate_metadata": "AI chats/20260925-Pro-P3-多层查询亲和/附件/R9_candidate_086_metadata.json",
+      "candidate_metadata_sha256": "95daad19dcdf87fe58512dc105298ad010f7dfdb79f9af89cd8cba34cf60f5bb",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/layered-port-static-20260925/construct_case.py",
+        "--case",
+        "086",
+        "--graph",
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/data/raw/a/official/data/case_086.json",
+        "--config",
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/data/raw/a/official/data/config.txt",
+        "--out",
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/layered-port-static-20260925/case_086/constructed",
+        "--capacity",
+        "{\"L1\":524288,\"UB\":131072}",
+        "--delay",
+        "500"
+      ]
+    }
+  ],
+  "config_path": "data/raw/a/official/data/config.txt",
+  "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+  "budget": {
+    "workers": 1,
+    "per_case_seconds": 60,
+    "total_seconds": 180,
+    "max_attempts_per_case": 1,
+    "retries": 0
+  },
+  "prohibited_calls": [
+    "Task",
+    "Step",
+    "E0",
+    "E1",
+    "E2",
+    "pipe_bound",
+    "official simulation"
+  ],
+  "stop_conditions": [
+    "first constructor exception",
+    "per-case timeout",
+    "plan structure mismatch",
+    "canonical plan encoding mismatch"
+  ],
+  "runner_command": [
+    "python3",
+    "-B",
+    "results/a/q3-nikolastarx/layered-port-static-20260925/runner.py",
+    "--manifest",
+    "results/a/q3-nikolastarx/layered-port-static-20260925/manifest.json"
+  ],
+  "helper_path": "results/a/q3-nikolastarx/layered-port-static-20260925/construct_case.py",
+  "helper_sha256": "b4492ee7653502320b2fc45fbe1cb927ebdb1382e61312b4621186c6be717d34",
+  "runner_path": "results/a/q3-nikolastarx/layered-port-static-20260925/runner.py",
+  "runner_sha256": "09a1f09cf2423225f109b8c7e1e97e180cb951cb74fb16f5637b3090a8f12868",
+  "official_parser_sha256": {
+    "data/raw/a/official/code/evaluation_validation.py": "103206b8c5c25e37de50cc3193de3989d7c1e01d4a11cc5f509dedd8f9be9a64",
+    "data/raw/a/official/code/multicore_cut_evaluate_problem_2.py": "0b39f84d5ec0a7fba9a4c92a598a9044b97ab79c71393824c1ba130ecfe6c464"
+  }
+}
