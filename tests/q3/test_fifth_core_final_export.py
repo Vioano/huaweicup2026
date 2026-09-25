@@ -3,8 +3,9 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
-from src.q3.fifth_core_final_export import export, percent95, strict_batch
+from src.q3.fifth_core_final_export import export, percent95, strict_batch, study_segments
 
 
 class FinalExportGuards(unittest.TestCase):
@@ -12,7 +13,7 @@ class FinalExportGuards(unittest.TestCase):
         with tempfile.TemporaryDirectory() as name:
             root = Path(name)
             (root / "batch.json").write_text(json.dumps({"status": "running", "records": []}))
-            with self.assertRaisesRegex(ValueError, "not the fixed completed"):
+            with self.assertRaisesRegex(ValueError, "not a stopped fixed-solver segment"):
                 strict_batch(root, "batch.json")
 
     def test_existing_export_is_never_overwritten(self):
@@ -52,6 +53,38 @@ class FinalExportGuards(unittest.TestCase):
             path.write_text(json.dumps(batch))
             with self.assertRaisesRegex(ValueError, "E0 call total"):
                 strict_batch(root, "batch.json")
+
+    def test_two_segments_require_disjoint_fixed_identity_and_combined_cap(self):
+        with tempfile.TemporaryDirectory() as name:
+            root = Path(name)
+            for file in ("a.json", "b.json"):
+                (root / file).write_text("{}")
+            def record(n, k):
+                return {"case_id": f"{n:03d}", "cores": k,
+                    "identity": {"graph_sha256": f"graph{n}", "config_sha256": "config", "official_sha256": "official"}}
+            all_rows = [record(n, k) for n in range(1, 101) for k in range(1, 6)]
+            common = {"solver_commit": "fixed", "solver_module": "solver", "runtime_id": "host",
+                "official_sha256": "official", "algorithm": {"id": "fixed"},
+                "environment": {"os": "same"}, "offline_costs": "none"}
+            a = {**common, "run_id": "a", "e0_budget_used": 800, "records": all_rows[:400]}
+            b = {**common, "run_id": "b", "e0_budget_used": 300, "records": all_rows[400:]}
+            sources = {"a.json": a, "b.json": b}
+            def loaded(_, path):
+                return sources[path], root, {}
+            with patch("src.q3.fifth_core_final_export.strict_batch", side_effect=loaded):
+                segments, _ = study_segments(root, ["a.json", "b.json"])
+                self.assertEqual(sum(len(item[1]["records"]) for item in segments), 500)
+                b["records"] = all_rows[399:499]
+                with self.assertRaisesRegex(ValueError, "overlapping"):
+                    study_segments(root, ["a.json", "b.json"])
+                b["records"] = all_rows[400:]
+                b["solver_commit"] = "changed"
+                with self.assertRaisesRegex(ValueError, "fixed algorithm"):
+                    study_segments(root, ["a.json", "b.json"])
+                b["solver_commit"] = "fixed"
+                b["e0_budget_used"] = 1001
+                with self.assertRaisesRegex(ValueError, "combined study E0"):
+                    study_segments(root, ["a.json", "b.json"])
 
 
 if __name__ == "__main__":

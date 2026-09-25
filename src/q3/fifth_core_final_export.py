@@ -1,4 +1,4 @@
-"""Offline, fail-closed export of a stopped fifth-core full-500 batch.
+"""Offline, fail-closed export of a fixed fifth-core 500-cell study.
 
 No solver or evaluator is invoked. Historical originals are copied byte for
 byte from their pinned Git commits into a new, self-contained submission area.
@@ -60,22 +60,24 @@ def json_gz(raw: bytes) -> dict:
 def strict_batch(root: Path, batch_name: str) -> tuple[dict, Path, dict]:
     root = root.resolve()
     if Path(batch_name).is_absolute() or ".." in Path(batch_name).parts:
-        raise ValueError("--batch must be a repository-relative batch.json")
+        raise ValueError("--batch must be a repository-relative batch.json[.gz]")
     batch_path = (root / batch_name).resolve()
-    if not batch_path.is_relative_to(root) or batch_path.name != "batch.json":
-        raise ValueError("--batch must be a repository-relative batch.json")
+    if not batch_path.is_relative_to(root) or batch_path.name not in {"batch.json", "batch.json.gz"}:
+        raise ValueError("--batch must be a repository-relative batch.json[.gz]")
     batch = base.read(batch_path)
-    if (batch.get("status") != "stage_complete" or len(batch.get("records", [])) != 500 or
+    if (batch.get("status") not in {"stage_complete", "stopped_before_dispatch"} or
+            not 1 <= len(batch.get("records", [])) <= 500 or
             batch.get("solver_commit") != SOLVER_COMMIT or
-            batch.get("solver_module") != "src.q3.fifth_core_final_solve" or
-            batch.get("full500_verified", {}).get("cells") != 500):
-        raise ValueError("batch is not the fixed completed, runner-verified 500")
+            batch.get("solver_module") != "src.q3.fifth_core_final_solve"):
+        raise ValueError("batch is not a stopped fixed-solver segment")
     expected = {(f"{n:03d}", k) for n in range(1, 101) for k in range(1, 6)}
     records = batch["records"]
-    if ({(r["case_id"], r["cores"]) for r in records} != expected or
-            len({(r["case_id"], r["cores"]) for r in records}) != len(records) or
+    coords = {(r["case_id"], r["cores"]) for r in records}
+    if (not coords <= expected or len(coords) != len(records) or
             any(r.get("status") != "ok" for r in records)):
         raise ValueError("batch has failed, duplicated or absent cells")
+    if len(records) == 500 and batch.get("full500_verified", {}).get("cells") != 500:
+        raise ValueError("single full500 batch lacks runner verification")
     actual_e0 = 0
     for record in records:
         calls = record.get("calls", {})
@@ -88,11 +90,12 @@ def strict_batch(root: Path, batch_name: str) -> tuple[dict, Path, dict]:
                 not math.isfinite(wall) or wall <= 0):
             raise ValueError("successful cell has invalid call, process or timing evidence")
         actual_e0 += calls["E0"]
-    if (actual_e0 != batch.get("e0_budget_used") or actual_e0 > 1800 or
-            batch.get("budget", {}).get("max_e0_calls") != 1800):
+    segment_cap = batch.get("budget", {}).get("max_e0_calls")
+    if (type(segment_cap) is not int or not 1 <= segment_cap <= 1800 or
+            actual_e0 != batch.get("e0_budget_used") or actual_e0 > segment_cap):
         raise ValueError("full500 E0 call total or frozen cap differs")
     for stage in batch["stages"]:
-        if (stage["status"] != "stage_complete" or
+        if (stage["status"] not in {"stage_complete", "stopped_before_dispatch"} or
                 stage["runner_argv"] != ["python", "-m", "src.q3.fifth_core_full500_runner",
                                          "--runner-commit", RUNNER_COMMIT]):
             raise ValueError("unexpected stage/runner identity")
@@ -105,6 +108,40 @@ def strict_batch(root: Path, batch_name: str) -> tuple[dict, Path, dict]:
     return batch, batch_path.parent, control
 
 
+def study_segments(root: Path, names: list[str]) -> tuple[list[tuple[str, dict, str]], dict]:
+    if not 1 <= len(names) <= 2 or len(set(names)) != len(names):
+        raise ValueError("study needs one or two distinct original batches")
+    segments, reference, control = [], None, None
+    seen, run_ids, case_inputs = set(), set(), {}
+    for name in names:
+        batch, _, current_control = strict_batch(root, name)
+        identity = tuple(batch.get(k) for k in ("solver_commit", "solver_module", "runtime_id", "official_sha256"))
+        common = (identity, batch.get("algorithm"), batch.get("environment"))
+        if reference is not None and common != reference:
+            raise ValueError("segments differ in fixed algorithm, runtime, inputs or environment")
+        reference = common
+        if batch["run_id"] in run_ids:
+            raise ValueError("distinct segments must retain distinct run IDs")
+        run_ids.add(batch["run_id"])
+        for record in batch["records"]:
+            coord = (record["case_id"], record["cores"])
+            if coord in seen:
+                raise ValueError(f"overlapping study coordinate: {coord}")
+            seen.add(coord)
+            inputs = tuple(record["identity"][k] for k in ("graph_sha256", "config_sha256", "official_sha256"))
+            previous = case_inputs.setdefault(record["case_id"], inputs)
+            if inputs != previous or inputs[2] != batch["official_sha256"]:
+                raise ValueError("segments differ in fixed graph/config/official inputs")
+        segments.append((name, batch, base.digest(root / name)))
+        control = current_control
+    expected = {(f"{n:03d}", k) for n in range(1, 101) for k in range(1, 6)}
+    if seen != expected:
+        raise ValueError(f"study has {len(seen)} unique coordinates, expected 500")
+    if sum(b["e0_budget_used"] for _, b, _ in segments) > 1800:
+        raise ValueError("combined study E0 calls exceed fixed 1800 cap")
+    return segments, control
+
+
 def percent95(values: list[float]) -> float:
     ordered = sorted(values)
     position = .95 * (len(ordered) - 1)
@@ -112,7 +149,7 @@ def percent95(values: list[float]) -> float:
     return ordered[low] + (ordered[min(low + 1, len(ordered) - 1)] - ordered[low]) * (position - low)
 
 
-def export(root: Path, batch_name: str, output_name: str) -> dict:
+def export(root: Path, batch_names: str | list[str], output_name: str) -> dict:
     root = root.resolve()
     if Path(output_name).is_absolute() or ".." in Path(output_name).parts:
         raise ValueError("--output must be a new repository-relative Q3 result directory")
@@ -121,14 +158,16 @@ def export(root: Path, batch_name: str, output_name: str) -> dict:
     if (not output.is_relative_to(area) or output == area or output.exists() or
             (root / output_name).absolute() != output):
         raise ValueError("--output must be a new repository-relative Q3 result directory")
-    batch, batch_dir, control = strict_batch(root, batch_name)
-    batch_sha256 = base.digest(root / batch_name)
+    if isinstance(batch_names, str):
+        batch_names = [batch_names]
+    segments, control = study_segments(root, batch_names)
+    jobs = [(batch, job) for _, batch, _ in segments for job in batch["records"]]
     control_by_coord = {(r["case_id"], r["cores"]): r for r in control["records"]}
     stage = output.with_name(output.name + ".tmp-" + uuid.uuid4().hex)
     stage.mkdir(parents=True, exist_ok=False)
     try:
         rows, report_rows, baselines = [], [], {}
-        for job in sorted(batch["records"], key=lambda r: (r["case_id"], r["cores"])):
+        for batch, job in sorted(jobs, key=lambda pair: (pair[1]["case_id"], pair[1]["cores"])):
             case, cores = job["case_id"], job["cores"]
             coord = control_by_coord[(case, cores)]
             folder = (root / job["run_path"]).parent
@@ -210,7 +249,7 @@ def export(root: Path, batch_name: str, output_name: str) -> dict:
                     "seed": None, "repeat_index": 0, "cold_start": None,
                     "solver_scope": "Fresh child process through reaped exit, including import, input, construction, all online E0 calls, plan/evidence write and cleanup; OS page cache not controlled.",
                     "evaluation_scope": "Integrated E0 calls included in solver wall; no standalone final E0 timer. Archived controls and baselines excluded.",
-                    "budget": {"wall_seconds": batch["budget"]["per_job_seconds"], "candidate_limit": job["e0_call_limit"], "stop_reason": "completed"},
+                    "budget": {"wall_seconds": batch["budget"]["per_job_seconds"], "candidate_limit": 4 if cores == 5 else 3, "stop_reason": "completed"},
                     "calls": job["calls"], "offline_costs": batch["offline_costs"], "failure": None},
                 "missing_reasons": {}}
             provenance["missing_reasons"] = board_export.explain_nulls(provenance)
@@ -259,11 +298,15 @@ def export(root: Path, batch_name: str, output_name: str) -> dict:
                 "makespan_delta_vs_forest": result["makespan"] - old_result["makespan"],
                 "scheduled_copy_bytes": movement["scheduled_copy_bytes"], "extra_ddr_bytes": movement["added_copy_bytes"],
                 "cache_hit_rate_bytes": cache["hit_rate"]})
-        summary = {"schema": "q3-fifth-core-final-audit-v1", "run_id": batch["run_id"],
-            "source_batch": batch_name, "source_batch_sha256": batch_sha256,
-            "runner_batch_started_at": batch["started_at"], "runner_batch_finished_at": batch["finished_at"],
-            "original_budget": batch["budget"],
-            "actual_calls": {"solver": 500, "E0": batch["e0_budget_used"], "E1": 0, "E2": 0},
+        segment_info = [{"batch": name, "sha256": sha, "run_id": b["run_id"],
+            "status": b["status"], "started_at": b["started_at"], "finished_at": b["finished_at"],
+            "original_budget": b["budget"], "attempted_cells": len(b["records"]),
+            "actual_calls": {"solver": len(b["records"]), "E0": b["e0_budget_used"], "E1": 0, "E2": 0}}
+            for name, b, sha in segments]
+        summary = {"schema": "q3-fifth-core-final-audit-v2",
+            "study_id": "q3-fifth-core-final-fixed-full500", "run_ids": [b["run_id"] for _, b, _ in segments],
+            "segments": segment_info,
+            "actual_calls": {"solver": 500, "E0": sum(b["e0_budget_used"] for _, b, _ in segments), "E1": 0, "E2": 0},
             "source_runner_commit": RUNNER_COMMIT, "source_solver_commit": SOLVER_COMMIT,
             "cells": 500, "new_evaluations": 0, "baseline_source_commit": BASELINE_COMMIT,
             "forest_control_manifest": CONTROL.as_posix(), "forest_control_commit": control["sources"]["forest_artifact_commit"],
@@ -315,8 +358,9 @@ def export(root: Path, batch_name: str, output_name: str) -> dict:
         (stage / "export-manifest.json").write_text(json.dumps({"summary": summary,
             "feeds": feeds, "comparison_csv": (output / "comparison.csv").relative_to(root).as_posix()},
             ensure_ascii=False, indent=2, allow_nan=False) + "\n")
-        if base.digest(root / batch_name) != batch_sha256:
-            raise ValueError("batch changed during export")
+        for name, _, sha in segments:
+            if base.digest(root / name) != sha:
+                raise ValueError("batch changed during export")
         if output.exists():
             raise FileExistsError(output)
         os.rename(stage, output)
@@ -329,7 +373,7 @@ def export(root: Path, batch_name: str, output_name: str) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, required=True, help="execution checkout")
-    parser.add_argument("--batch", required=True, help="repository-relative batch.json")
+    parser.add_argument("--batch", required=True, action="append", help="one or two repository-relative batch.json[.gz] originals")
     parser.add_argument("--output", required=True, help="new repository-relative output directory")
     args = parser.parse_args()
     print(json.dumps(export(args.root, args.batch, args.output), ensure_ascii=False))
