@@ -1,0 +1,20 @@
+{
+  "status": "proposed_not_dispatched",
+  "experiments": [
+    {
+      "name": "allocator-aware cache and frozen-MEM response contract",
+      "inputs": "two small synthetic release-order variants; use the team's frozen Python and config; compare projected and full-original compilation",
+      "budgets": {"static_task_compiles": 4, "rational_response_calls": 4, "E0": 0, "E1": 0, "E2": 0},
+      "falsifiers": ["same strengthened key but different raw signature", "missing MEM source in need", "K-fold rational quotient differs from expanded symmetric rational replay"],
+      "failure_policy": "first mismatch stops; no numeric-equivalence generalization"
+    },
+    {
+      "name": "one lazy-domain method on two declared chain inputs",
+      "inputs": ["008/K5", "095/K5"],
+      "routing": "the filenames select experiment inputs only; solver routes only by private-chain and verified compilation predicates",
+      "budgets_per_input": {"candidate_constructors": 1, "new_representative_task_compiles": 24, "rational_response_calls_including_full_check": 48, "box_refinements": 2048, "new_profile_ops_total": 16384, "exploration_seconds": 2, "final_task_compiles_max": 512, "child_wall_seconds": 20, "E0": 0, "E1": 0, "E2": 0, "retries": 0},
+      "measurements": ["verified model U", "unresolved frontier L", "certificate scope", "new keys/regions", "extra DDR", "read-to-plan-fsync and process wall"],
+      "failure_policy": "keep incumbent; timeout is unknown, not an infeasibility proof; no automatic extra run"
+    }
+  ]
+}
