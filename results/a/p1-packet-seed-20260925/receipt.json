@@ -1,0 +1,209 @@
+{
+  "kind": "structural-seed-pure-metadata-NOT-E0",
+  "source_commit": "4fc5e5e91e4a2ac9feaf05267c1f8ab713ca5990",
+  "recorded_at": "2026-09-25T04:38:30.353310+00:00",
+  "input_metadata": "results/a/p1-two-task-bound-20260925/structural-audit.json",
+  "input_sha256": "eefc9998e577b6cfbbedff9d7974fec64466c1a080249d8453e988239bcf5cb9",
+  "source_sha256": {
+    "src/review/p1_lazy_memory_probe.py": "7cf8141ae7d56de4e23602559252d23ff98ba59711347879d58d1ff3c78faa9f",
+    "src/review/p1_packet_seed.py": "24b55dcc5bbcf829a6bf7df343b4c338b4cc3c7a7b3ed5fd51f2c8a648f1fd8f",
+    "tests/q1/test_p1_packet_seed.py": "9508d494f09cb6fdfceac5a13bba49157388b1dd2d758c21619887f6811ca407",
+    "tests/q1/test_p1_lazy_memory_probe.py": "8351860863b38a0d64ffdd25e6fd978ed26862d2dd0431606c3ee389c369ff16"
+  },
+  "rows": [
+    {
+      "case_id": "008",
+      "cores": 5,
+      "graph_sha256": "c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d",
+      "resources": {
+        "a": 1158,
+        "b": 2196,
+        "c": 1158,
+        "d_prefix": 515,
+        "d_return": 514,
+        "d_whole": 413,
+        "counts": [
+          22,
+          22,
+          22,
+          21,
+          21
+        ]
+      },
+      "gate": 100,
+      "B": 21,
+      "selection": {
+        "s": 0,
+        "resource_lower": 97068,
+        "path": [
+          [
+            "normal",
+            [
+              0,
+              0
+            ],
+            [
+              21,
+              0
+            ]
+          ],
+          [
+            "terminal",
+            [
+              21,
+              0
+            ],
+            "merge"
+          ]
+        ],
+        "why": {
+          "method": "compare s=0 and floor/ceil of convex positive-s real witness",
+          "positive_real_witness_s": "1",
+          "tested_s_resource_lowers": {
+            "0": 97068,
+            "1": 97403
+          },
+          "tie_break": "smallest s"
+        },
+        "scope": "conditional resource lower bound only; try first, then compile and validate"
+      }
+    },
+    {
+      "case_id": "084",
+      "cores": 5,
+      "graph_sha256": "1af22ac8dd69090ed25be62ae1bbb18a922ce99a8cffb2be4f89e7a1234794ee",
+      "resources": {
+        "a": 588,
+        "b": 1152,
+        "c": 588,
+        "d_prefix": 182,
+        "d_return": 181,
+        "d_whole": 209,
+        "counts": [
+          216,
+          216,
+          215,
+          215,
+          215
+        ]
+      },
+      "gate": 100,
+      "B": 215,
+      "selection": {
+        "s": 215,
+        "resource_lower": 443261,
+        "path": [
+          [
+            "normal",
+            [
+              0,
+              0
+            ],
+            [
+              215,
+              215
+            ]
+          ],
+          [
+            "terminal",
+            [
+              215,
+              215
+            ],
+            "merge"
+          ]
+        ],
+        "why": {
+          "method": "compare s=0 and floor/ceil of convex positive-s real witness",
+          "positive_real_witness_s": "215",
+          "tested_s_resource_lowers": {
+            "0": 501696,
+            "215": 443261
+          },
+          "tie_break": "smallest s"
+        },
+        "scope": "conditional resource lower bound only; try first, then compile and validate"
+      }
+    },
+    {
+      "case_id": "095",
+      "cores": 5,
+      "graph_sha256": "99875b1d3025c71f87e04818e28c08915928813f495d080ae6436879f6cb540f",
+      "resources": {
+        "a": 1158,
+        "b": 2196,
+        "c": 1158,
+        "d_prefix": 515,
+        "d_return": 514,
+        "d_whole": 413,
+        "counts": [
+          93,
+          93,
+          92,
+          92,
+          92
+        ]
+      },
+      "gate": 100,
+      "B": 92,
+      "selection": {
+        "s": 0,
+        "resource_lower": 417420,
+        "path": [
+          [
+            "normal",
+            [
+              0,
+              0
+            ],
+            [
+              92,
+              0
+            ]
+          ],
+          [
+            "terminal",
+            [
+              92,
+              0
+            ],
+            "merge"
+          ]
+        ],
+        "why": {
+          "method": "compare s=0 and floor/ceil of convex positive-s real witness",
+          "positive_real_witness_s": "745/706",
+          "tested_s_resource_lowers": {
+            "0": 417420,
+            "1": 417420,
+            "2": 417596
+          },
+          "tie_break": "smallest s"
+        },
+        "scope": "conditional resource lower bound only; try first, then compile and validate"
+      }
+    }
+  ],
+  "validation": {
+    "tests_passed": 27,
+    "reported_suite_seconds": 0.066,
+    "python": "3.12.13",
+    "command": "python -B -m unittest tests.q1.test_p1_lazy_memory_probe tests.q1.test_p1_packet_seed tests.q1.test_p1_lazy_packet_search tests.q1.test_p1_packet_edge_bound tests.q1.test_p1_two_task_resource_bound tests.q1.test_p1_return_cut_resource_bound"
+  },
+  "real_calls": {
+    "Task_compile": 0,
+    "Fraction_response": 0,
+    "solver": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "VM": 0
+  },
+  "production_adopted": false,
+  "unverified": [
+    "actual no-spill feasibility and MEM signatures",
+    "final full-plan replay",
+    "official E0 score",
+    "quality/runtime benefit"
+  ]
+}
