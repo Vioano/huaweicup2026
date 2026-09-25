@@ -24,7 +24,7 @@
 |---|---|---|---|---|
 | P1 | `834d8c957538ee069c66aadac9509552a4cc69d7` / `src.q1.branch_refine` | 500 求解；1130 E1；48 新 E0 + 452 经方案/输入/配置/核数/语义身份核同复用 E0 | 1.951553 / 2.751399 / 3.478594 / **4.055267** | 旧原稿 v4 五核 4.025907 需整章升级；[完整报告][p1-full] |
 | P2 | `c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f` / `src.q2_nikolastarx.adaptive_hypergap_guarded` | 500 求解、1131 E2、500 独立最终 E0；报告无 fallback | 2.316727 / 3.235566 / 3.971149 / **4.549757** | 保留该主算法；[完整报告][p2-full] |
-| P3 | `311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1` / `src.q3.forest_solve` | 已完成 500 格及同计划无 L2 配对；revision2 基线口径 | 五核相对基线 **4.757617**；其余核数从固定表读取，不凭口头补写 | Forest 作为当前已完成基点；[主结果][p3-full]与[配对][p3-pair] |
+| P3 | `311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1` / `src.q3.forest_solve` | 已完成 500 格及同计划无 L2 配对；revision2 基线口径 | 2.312002 / 3.258687 / 4.091503 / **4.757617** | Forest 作为当前已完成基点；[主结果][p3-full]与[配对][p3-pair] |
 
 P1 优化单核观测均值 1.002097，P2 为 1.206139，不替换官方主曲线单核基点。P3 同计划 CacheGain 的 k=1～5 均值为 1.002340 / 1.007924 / 1.031380 / 1.051202 / 1.082917；与 4.757617 的分母不同。成绩台 P3 批次曾保留两版共 1000 行历史，按最新有效 revision 取每格后才是 500 格，不能双重计数。
 
@@ -42,10 +42,14 @@ P1 优化单核观测均值 1.002097，P2 为 1.206139，不替换官方主曲�
 |---|---|---|---|
 | P1 R7，`1b1e439c0eb056a7e1567de0d72a6a987684e645` | 044/k5：64624→58450 cycles，COPY 2026944→1712000 B，spill 0 | 局部构造与单例机制；[报告][p1-r7] | 834 完整算法的新均值或全量优越性 |
 | P2 C04，`00d311ed0eea0fd86f9840df406956041a7c192a` | 六格 E0 合法/zero-spill、COPY 静态账吻合；0 胜0平6负，退化 3.47%～75.50%；019/039/075 字节下降但变慢 | 证伪“零 spill + 少字节足以改善 Makespan”；[结果][p2-c04] | 整个端口构造算法族必定失败；c665 的完整消融 |
-| P3 R9F，算法 `f6fd8153375a7fb64f9af2c8f36c35356fb7d878` | 总调度最新只读核对两段已完成500/500、982 E0；作者完整原件尚待固定发布 | [交接说明][p3-final]与候选状态 | R9F有额外质量提升；归档/审计/接受状态未确认前不替换主表 |
+| P3 R9F，算法 `f6fd8153375a7fb64f9af2c8f36c35356fb7d878` | 固定原件8416300c已发布；两段500/500、982 E0，500份输出均与Forest相同 | [最终报告][p3-r9f-report]与[交接说明][p3-final]；固定选择政策的负结果 | R9F有额外质量提升、全局最优或第五核构造不可能改善绝对周期 |
 | P3 068 单格 | P3 绝对周期下降但配对 CacheGain 由约 1.131385 降至 1.009615，未过联合门槛 | 绝对质量与相对缓存收益的冲突 | 只看一个指标宣布接受 |
 
-**P3终态补记（来自总调度，固定归档HEAD待作者发布）**：原400格于2026-09-25 20:27:43Z按1小时截止结束，独立未尝试100格于20:36:09–20:47:10Z完成；两段0重叠、全500合法成功，共982 E0。五核新策略0 accepted、0 plan changed，96 unsupported、1 bound_pruned、3 paired_gate_rejected；最终各核结果与Forest相同，五核仍4.757617、同计划CacheGain仍1.082917。它是全量负结果及Forest继承成绩，不是新质量提升，也不是原1小时内完成500格。原段曾与P2共享主机并行约9秒。总调度核对汇总不替代作者全部原件发布；本文件暂保留已固定的Forest主表。
+**P3正式终态（固定归档8416300c）**：原400格于2026-09-25 20:27:43Z按1小时截止结束，独立未尝试100格于20:36:09–20:47:10Z完成；两段0重叠、全500合法成功，共982 E0，见[最终报告][p3-r9f-report]。作者逐原件审计报告500份最终计划均与Forest字节一致；本次整稿只读复算CSV的500唯一坐标、两端周期、逐核均值与p95，并核对图输入/脚本/输出哈希，未再逐份复核全部原计划字节。五核96 unsupported、1 bound_pruned、3 paired_gate_rejected、0 accepted。064/068/088候选的M3分别6981→6877、116345→97971、85789→66224，M2也下降，但G下降，因冻结联合门槛而拒绝。因此主算法保留Forest；这是该选择政策的全量负结果，不是第五核构造无法改善绝对周期，更不是全局最优证明。
+
+保住相对Cache收益是团队选择政策，不能当作官方新增合法性条件或凌驾于Makespan的题设目标。它使三个绝对周期更好的候选未被采用，正文应讨论这一政策与首要目标的冲突；不能因此称Forest是候选集合中按官方首要目标最好的方案，也不能把被拒候选离线拼进Forest主表。保留Forest主算法是保留已有固定交付与完整证据，不是追认全局最优。
+
+R9F实际子进程墙钟均值3.202649 s、中位1.157935 s、p95（Type 7）15.235049 s、最大36.896687 s；包含在线E0，父runner额外审计另计。共享主机单worker、OS缓存未受控，不能与旧4worker批次直接计算提速倍数；也不能把这些新时间贴成旧Forest实测。首段与P2运行约9秒重叠，第二段与离线复制核验约1.97秒重叠。图件现已有固定三面板总结，但不覆盖全部正式图需求，见[盘点](FIGURES.md)。五feed本地eligible仅是协议预检；中央接收、镜像同步和论文科学验收分别等待实际回执。
 
 P2 C04 已触发停止条件：不追加 Pro、不晋级全500；本轮只吸收现有反例。其他后续状态变化通过固定交付修订此表，本计划不授权新增实验。
 
@@ -98,7 +102,9 @@ P1 路径闭合只是必要条件，加入核上顺序后的 Task 图仍需无�
 [p3-pair]: https://github.com/huaweibei123/huaweicup2026/blob/e70e74e53133856865f4c490cfdb28709a7f1795/results/a/q3-nikolastarx/forest-cachepair-delta-20260925/REPORT.md
 [p1-r7]: https://github.com/huaweibei123/huaweicup2026/blob/1b1e439c0eb056a7e1567de0d72a6a987684e645/results/a/p1-r7-construction-probe-20260926/RUN_RESULT_044_K5.md
 [p2-c04]: https://github.com/huaweibei123/huaweicup2026/blob/00d311ed0eea0fd86f9840df406956041a7c192a/results/a/q2-nikolastarx/c04-six-e0-20260926/README.md
-[p3-final]: https://github.com/huaweibei123/huaweicup2026/blob/e70e74e53133856865f4c490cfdb28709a7f1795/paper/notes/p3-final-round-method-handoff-20260926.md
+[p3-final]: https://github.com/huaweibei123/huaweicup2026/blob/8416300c7245925795aaa3acc64d4d5b31fa13d5/paper/notes/p3-final-round-method-handoff-20260926.md
 [coherent-index]: https://github.com/huaweibei123/huaweicup2026/blob/e82c20098eb53cfb00d5f2287173f6894b3fb291/docs/a/research/20260924-coherent-pro/README.md
 [control-contract]: https://github.com/huaweibei123/huaweicup2026/blob/e82c20098eb53cfb00d5f2287173f6894b3fb291/docs/a/coherent/control-contract-s8ee-20260924/CONTROL_CONTRACT.md
 [theory-final]: https://github.com/huaweibei123/huaweicup2026/blob/229b322a9778093782683841f3050db1dbdaabfc/paper/notes/a-theory-coherence-final.md
+
+[p3-r9f-report]: https://github.com/huaweibei123/huaweicup2026/blob/8416300c7245925795aaa3acc64d4d5b31fa13d5/results/a/q3-nikolastarx/r9f-final-full500-20260926/FINAL_REPORT.md

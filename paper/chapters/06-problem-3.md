@@ -1,7 +1,7 @@
 <!-- Editorial working copy. Original content begins after source-body marker. -->
 > **整稿工作副本｜2026-09-26｜尚非定稿。** 继承 [PR #104 作者原稿](https://github.com/huaweibei123/huaweicup2026/blob/987fc1aeeabf31cc1b7cb2c19b4fcb81aadc5f96/paper/sections/a-q3.md)，固定提交 `987fc1aeeabf31cc1b7cb2c19b4fcb81aadc5f96`。原稿正文保留，只把相对来源链接解析为固定提交链接，便于本目录阅读；本次未重跑其试验或重新验收全部证明。
 >
-> **版本处理：** 主结果是311322 Forest及revision2配对。总调度最新反馈R9F两段已完成500格、982 E0，五核0接受/0方案改变，最终质量与Forest相同；不是原1小时内完成500格。完整原件尚待作者固定发布，本章保留Forest主表。单例、局部模型和未实测构造保留原来的条件标签。
+> **版本处理：** 主结果是311322 Forest及revision2配对。R9F已发布[固定最终报告](https://github.com/huaweibei123/huaweicup2026/blob/8416300c7245925795aaa3acc64d4d5b31fa13d5/results/a/q3-nikolastarx/r9f-final-full500-20260926/FINAL_REPORT.md)（8416300c）：两段400+100格、982 E0，500份最终方案均与Forest字节一致；五核0接受，最终质量不变。三个候选虽然M3与M2都下降，但G下降而被联合门槛拒绝；不能写成候选无法改善周期。主算法仍保留Forest，R9F仅作固定选择政策的负结果。不是原1小时内完成500格。单例、局部模型和未实测构造保留原来的条件标签。
 >
 > 来源哈希及导入规则见 [清单](../sources/manifest.json)，最新可引用证据与理论边界见 [整稿索引](../planning/EVIDENCE_AND_THEORY.md)。原作者后续更新需比较吸收；此副本不与原目录自动双向同步。
 
