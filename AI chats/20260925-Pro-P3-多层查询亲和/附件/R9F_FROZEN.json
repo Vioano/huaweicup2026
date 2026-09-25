@@ -1,0 +1,10 @@
+{
+  "status": "FROZEN_BEFORE_SINGLE_CANDIDATE_STATIC_CONSTRUCTION",
+  "graph_sha256": "dfd9a58ef9d26a8a4567026b50af8b4499d87eebb3d98f8208b909b11e963c6d",
+  "rule": "For r=K-1 persistent tracks, track i stays on core i. Put every ancestor-closed shared component on core K-1. Order feeding components before terminal components, feeding by minimum target private phase, then minimum op ID; terminal by minimum op ID. Replace shared phase 0 with strictly ordered component microphases. Within each component and each private phase use unchanged R9 priority_words. Keep every original edge and singleton op. Run interval certificate once; stop without retry on failure.",
+  "guard": "single-producer tensor-mediated positive M/V ops each producing onchip output; persistent-track decompose and ancestor-closed S; all raw inputs standardized; all pools capacity; complete graph and FIFO acyclic.",
+  "official_calls_allowed": false,
+  "candidate_count": 1,
+  "no_case_id_branch": true,
+  "freeze_utc": "2026-09-25T17:48:07.408958+00:00"
+}

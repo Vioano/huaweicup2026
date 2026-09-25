@@ -1,0 +1,572 @@
+{
+  "68": {
+    "op": {
+      "id": 68,
+      "op": "MATMUL",
+      "pipe": "PIPE_M",
+      "cycles": 84
+    },
+    "inputs": [
+      {
+        "tensor": {
+          "id": 1000000081,
+          "pos": "L1",
+          "size": 192
+        },
+        "producer": 63
+      },
+      {
+        "tensor": {
+          "id": 1000000089,
+          "pos": "L1",
+          "size": 18432
+        },
+        "producer": 67
+      }
+    ],
+    "outputs": [
+      {
+        "tensor": {
+          "id": 1000000090,
+          "pos": "L1",
+          "size": 192
+        },
+        "consumers": [
+          {
+            "op": {
+              "id": 114,
+              "op": "ADD",
+              "pipe": "PIPE_V",
+              "cycles": 15
+            },
+            "private_track": 0
+          },
+          {
+            "op": {
+              "id": 124,
+              "op": "ADD",
+              "pipe": "PIPE_V",
+              "cycles": 15
+            },
+            "private_track": 1
+          },
+          {
+            "op": {
+              "id": 134,
+              "op": "ADD",
+              "pipe": "PIPE_V",
+              "cycles": 15
+            },
+            "private_track": 2
+          }
+        ]
+      }
+    ]
+  },
+  "4444": {
+    "op": {
+      "id": 4444,
+      "op": "RELU",
+      "pipe": "PIPE_V",
+      "cycles": 140
+    },
+    "inputs": [
+      {
+        "tensor": {
+          "id": 1000004669,
+          "pos": "UB",
+          "size": 8192
+        },
+        "producer": 4443
+      }
+    ],
+    "outputs": [
+      {
+        "tensor": {
+          "id": 1000004670,
+          "pos": "UB",
+          "size": 8192
+        },
+        "consumers": [
+          {
+            "op": {
+              "id": 4445,
+              "op": "RELU",
+              "pipe": "PIPE_V",
+              "cycles": 140
+            },
+            "private_track": null
+          },
+          {
+            "op": {
+              "id": 4465,
+              "op": "ADD",
+              "pipe": "PIPE_V",
+              "cycles": 140
+            },
+            "private_track": null
+          }
+        ]
+      }
+    ]
+  },
+  "4447": {
+    "op": {
+      "id": 4447,
+      "op": "ADD",
+      "pipe": "PIPE_V",
+      "cycles": 140
+    },
+    "inputs": [
+      {
+        "tensor": {
+          "id": 1000004669,
+          "pos": "UB",
+          "size": 8192
+        },
+        "producer": 4443
+      },
+      {
+        "tensor": {
+          "id": 1000004672,
+          "pos": "UB",
+          "size": 8192
+        },
+        "producer": 4446
+      }
+    ],
+    "outputs": [
+      {
+        "tensor": {
+          "id": 1000004673,
+          "pos": "UB",
+          "size": 8192
+        },
+        "consumers": [
+          {
+            "op": {
+              "id": 4448,
+              "op": "RELU",
+              "pipe": "PIPE_V",
+              "cycles": 140
+            },
+            "private_track": null
+          }
+        ]
+      }
+    ]
+  },
+  "4471": {
+    "op": {
+      "id": 4471,
+      "op": "ADD",
+      "pipe": "PIPE_V",
+      "cycles": 140
+    },
+    "inputs": [
+      {
+        "tensor": {
+          "id": 1000004695,
+          "pos": "UB",
+          "size": 8192
+        },
+        "producer": 4469
+      },
+      {
+        "tensor": {
+          "id": 1000004696,
+          "pos": "UB",
+          "size": 8192
+        },
+        "producer": 4470
+      }
+    ],
+    "outputs": [
+      {
+        "tensor": {
+          "id": 1000004697,
+          "pos": "UB",
+          "size": 8192
+        },
+        "consumers": [
+          {
+            "op": {
+              "id": 4554,
+              "op": "REDUCE",
+              "pipe": "PIPE_V",
+              "cycles": 140
+            },
+            "private_track": null
+          }
+        ]
+      }
+    ]
+  },
+  "4554": {
+    "op": {
+      "id": 4554,
+      "op": "REDUCE",
+      "pipe": "PIPE_V",
+      "cycles": 140
+    },
+    "inputs": [
+      {
+        "tensor": {
+          "id": 1000004697,
+          "pos": "UB",
+          "size": 8192
+        },
+        "producer": 4471
+      }
+    ],
+    "outputs": [
+      {
+        "tensor": {
+          "id": 1000004782,
+          "pos": "UB",
+          "size": 2
+        },
+        "consumers": [
+          {
+            "op": {
+              "id": 5822,
+              "op": "COPY_OUT",
+              "pipe": "PIPE_MTE3",
+              "cycles": 0
+            },
+            "private_track": null
+          }
+        ]
+      }
+    ]
+  },
+  "4508": {
+    "op": {
+      "id": 4508,
+      "op": "ADD",
+      "pipe": "PIPE_V",
+      "cycles": 140
+    },
+    "inputs": [
+      {
+        "tensor": {
+          "id": 1000004727,
+          "pos": "UB",
+          "size": 8192
+        },
+        "producer": 4500
+      },
+      {
+        "tensor": {
+          "id": 1000004734,
+          "pos": "UB",
+          "size": 8192
+        },
+        "producer": 4507
+      }
+    ],
+    "outputs": [
+      {
+        "tensor": {
+          "id": 1000004735,
+          "pos": "UB",
+          "size": 8192
+        },
+        "consumers": [
+          {
+            "op": {
+              "id": 4555,
+              "op": "REDUCE",
+              "pipe": "PIPE_V",
+              "cycles": 140
+            },
+            "private_track": null
+          }
+        ]
+      }
+    ]
+  },
+  "4555": {
+    "op": {
+      "id": 4555,
+      "op": "REDUCE",
+      "pipe": "PIPE_V",
+      "cycles": 140
+    },
+    "inputs": [
+      {
+        "tensor": {
+          "id": 1000004735,
+          "pos": "UB",
+          "size": 8192
+        },
+        "producer": 4508
+      }
+    ],
+    "outputs": [
+      {
+        "tensor": {
+          "id": 1000004783,
+          "pos": "UB",
+          "size": 2
+        },
+        "consumers": [
+          {
+            "op": {
+              "id": 5676,
+              "op": "RELU",
+              "pipe": "PIPE_V",
+              "cycles": 13
+            },
+            "private_track": null
+          }
+        ]
+      }
+    ]
+  },
+  "5676": {
+    "op": {
+      "id": 5676,
+      "op": "RELU",
+      "pipe": "PIPE_V",
+      "cycles": 13
+    },
+    "inputs": [
+      {
+        "tensor": {
+          "id": 1000004783,
+          "pos": "UB",
+          "size": 2
+        },
+        "producer": 4555
+      }
+    ],
+    "outputs": [
+      {
+        "tensor": {
+          "id": 1000006082,
+          "pos": "UB",
+          "size": 2
+        },
+        "consumers": [
+          {
+            "op": {
+              "id": 5787,
+              "op": "COPY_OUT",
+              "pipe": "PIPE_MTE3",
+              "cycles": 0
+            },
+            "private_track": null
+          }
+        ]
+      }
+    ]
+  },
+  "4510": {
+    "op": {
+      "id": 4510,
+      "op": "RELU",
+      "pipe": "PIPE_V",
+      "cycles": 140
+    },
+    "inputs": [
+      {
+        "tensor": {
+          "id": 1000004737,
+          "pos": "UB",
+          "size": 8192
+        },
+        "producer": 4509
+      }
+    ],
+    "outputs": [
+      {
+        "tensor": {
+          "id": 1000004738,
+          "pos": "UB",
+          "size": 8192
+        },
+        "consumers": [
+          {
+            "op": {
+              "id": 4511,
+              "op": "RELU",
+              "pipe": "PIPE_V",
+              "cycles": 140
+            },
+            "private_track": null
+          },
+          {
+            "op": {
+              "id": 4544,
+              "op": "ADD",
+              "pipe": "PIPE_V",
+              "cycles": 140
+            },
+            "private_track": null
+          }
+        ]
+      }
+    ]
+  },
+  "4540": {
+    "op": {
+      "id": 4540,
+      "op": "RELU",
+      "pipe": "PIPE_V",
+      "cycles": 140
+    },
+    "inputs": [
+      {
+        "tensor": {
+          "id": 1000004767,
+          "pos": "UB",
+          "size": 8192
+        },
+        "producer": 4539
+      }
+    ],
+    "outputs": [
+      {
+        "tensor": {
+          "id": 1000004768,
+          "pos": "UB",
+          "size": 8192
+        },
+        "consumers": [
+          {
+            "op": {
+              "id": 4541,
+              "op": "ADD",
+              "pipe": "PIPE_V",
+              "cycles": 140
+            },
+            "private_track": null
+          }
+        ]
+      }
+    ]
+  },
+  "4553": {
+    "op": {
+      "id": 4553,
+      "op": "ADD",
+      "pipe": "PIPE_V",
+      "cycles": 140
+    },
+    "inputs": [
+      {
+        "tensor": {
+          "id": 1000004779,
+          "pos": "UB",
+          "size": 8192
+        },
+        "producer": 4551
+      },
+      {
+        "tensor": {
+          "id": 1000004780,
+          "pos": "UB",
+          "size": 8192
+        },
+        "producer": 4552
+      }
+    ],
+    "outputs": [
+      {
+        "tensor": {
+          "id": 1000004781,
+          "pos": "UB",
+          "size": 8192
+        },
+        "consumers": [
+          {
+            "op": {
+              "id": 4556,
+              "op": "REDUCE",
+              "pipe": "PIPE_V",
+              "cycles": 140
+            },
+            "private_track": null
+          }
+        ]
+      }
+    ]
+  },
+  "4556": {
+    "op": {
+      "id": 4556,
+      "op": "REDUCE",
+      "pipe": "PIPE_V",
+      "cycles": 140
+    },
+    "inputs": [
+      {
+        "tensor": {
+          "id": 1000004781,
+          "pos": "UB",
+          "size": 8192
+        },
+        "producer": 4553
+      }
+    ],
+    "outputs": [
+      {
+        "tensor": {
+          "id": 1000004784,
+          "pos": "UB",
+          "size": 2
+        },
+        "consumers": [
+          {
+            "op": {
+              "id": 5718,
+              "op": "NEG",
+              "pipe": "PIPE_V",
+              "cycles": 13
+            },
+            "private_track": null
+          }
+        ]
+      }
+    ]
+  },
+  "5721": {
+    "op": {
+      "id": 5721,
+      "op": "NEG",
+      "pipe": "PIPE_V",
+      "cycles": 13
+    },
+    "inputs": [
+      {
+        "tensor": {
+          "id": 1000006126,
+          "pos": "UB",
+          "size": 2
+        },
+        "producer": 5720
+      }
+    ],
+    "outputs": [
+      {
+        "tensor": {
+          "id": 1000006127,
+          "pos": "UB",
+          "size": 2
+        },
+        "consumers": [
+          {
+            "op": {
+              "id": 5816,
+              "op": "COPY_OUT",
+              "pipe": "PIPE_MTE3",
+              "cycles": 0
+            },
+            "private_track": null
+          }
+        ]
+      }
+    ]
+  }
+}
