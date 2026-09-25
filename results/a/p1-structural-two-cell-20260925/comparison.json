@@ -1,0 +1,81 @@
+{
+  "status": "official_two_cells_complete",
+  "scope": "Same fixed unified solver on two targeted cells; not a new full500 mean",
+  "solver_commit": "3a1b82b71ca1ff6689eb8e72f17d26c48b52073c",
+  "runner_commit": "c44f0558c11f2f45030c8d1e1ea0ae51d9629e7c",
+  "reference_solver_commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
+  "reference_feed_commit": "9c5f87548cc7588465a638e032993969b5cac891",
+  "current_accepted_full500_K5_mean": 4.025907473836023,
+  "archive_sha256": "8c2015ef3d2721804f2e903ca369a917474cd9f453c7b212e6866c03ca37664d",
+  "calls": {
+    "solver": 2,
+    "E1": 8,
+    "E0": 2,
+    "E2": 0,
+    "retry": 0
+  },
+  "cells": [
+    {
+      "case": "016",
+      "cores": 5,
+      "old_makespan_cycles": 3223183,
+      "new_makespan_cycles": 2941234,
+      "reduction_fraction": 0.08747533106249317,
+      "official_singlecore_cycles": 7715523,
+      "old_speedup": 2.3937589023024755,
+      "new_speedup": 2.6232265096894705,
+      "old_extra_ddr_bytes": 119555952,
+      "new_extra_ddr_bytes": 119547424,
+      "extra_ddr_difference_bytes": -8528,
+      "spill_bytes": 0,
+      "solver_wall_seconds": 42.64475251499999,
+      "external_E0_wall_seconds": 31.892888094,
+      "calls": {
+        "solver": 1,
+        "E1": 4,
+        "E0": 1
+      },
+      "selected": "intact-root-heavy-fused",
+      "prior_prediction_cycles": 2941234,
+      "prediction_matches": true,
+      "observed_rounds": 305,
+      "first_round_end": 9762,
+      "round_end_increment_counts": {
+        "9643": 304
+      },
+      "plan_sha256": "d5c4ebac9df42afc1b8e403259f07caa77a4378ea23606d7ff4d2d13f1a0b4c2"
+    },
+    {
+      "case": "024",
+      "cores": 5,
+      "old_makespan_cycles": 1067515,
+      "new_makespan_cycles": 974062,
+      "reduction_fraction": 0.08754256380472403,
+      "official_singlecore_cycles": 2555343,
+      "old_speedup": 2.3937302988716787,
+      "new_speedup": 2.6233884496058772,
+      "old_extra_ddr_bytes": 39327648,
+      "new_extra_ddr_bytes": 39324832,
+      "extra_ddr_difference_bytes": -2816,
+      "spill_bytes": 0,
+      "solver_wall_seconds": 11.67406405700001,
+      "external_E0_wall_seconds": 6.045528420999972,
+      "calls": {
+        "solver": 1,
+        "E1": 4,
+        "E0": 1
+      },
+      "selected": "intact-root-heavy-fused",
+      "prior_prediction_cycles": 974062,
+      "prediction_matches": true,
+      "observed_rounds": 101,
+      "first_round_end": 9762,
+      "round_end_increment_counts": {
+        "9643": 100
+      },
+      "plan_sha256": "90784b55b09b50736371be17c6e88cf22725a04beea58b92b01a789284e68a8a"
+    }
+  ],
+  "hypothetical_mean_increment_if_only_these_two_cells_changed": 0.004591257581211936,
+  "hypothetical_scope": "Arithmetic diagnostic only; not a measured full500 algorithm score; untouched cells not inferred"
+}

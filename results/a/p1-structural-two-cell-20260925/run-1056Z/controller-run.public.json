@@ -1,0 +1,150 @@
+{
+  "kind": "controller-receipt-derived-for-publication",
+  "derived_from": "output/p1-structural-two-cell-colab-20260925/run-c44/controller-run.json",
+  "derivation": "JSON values preserved; literal local repository root replaced with <local-repo> to remove personal absolute paths. The original local receipt remains at its source path.",
+  "receipt": {
+    "status": "e0-success-collected",
+    "session": "p1-structural-two-cell-20260925",
+    "source": {
+      "artifact_manifest_sha256": "395f8e4e73c84f6ccc54a076ca50c0b4008e182d080ff84443d70c3ead0261c8",
+      "solver_commit": "3a1b82b71ca1ff6689eb8e72f17d26c48b52073c",
+      "graph_016_sha256": "76537aa7163cf0748adcff2ecbd84fbc9a02a2d129ffcecd2bfebb89685e71ef",
+      "graph_024_sha256": "f974fbf1a23b4a145b5f8c9c691eb1b247f93d8785d98bb46a9cdd8626399aec",
+      "artifacts_verified": 5
+    },
+    "steps": [
+      {
+        "step": "preflight-sessions",
+        "argv": [
+          "/Users/nikolastar/.local/bin/colab",
+          "--auth",
+          "oauth2",
+          "sessions"
+        ],
+        "returncode": 0,
+        "stdout": "[colab] No active sessions found on server.\n",
+        "stderr": "",
+        "wall_seconds": 3.463399833010044
+      },
+      {
+        "step": "new",
+        "argv": [
+          "/Users/nikolastar/.local/bin/colab",
+          "--auth",
+          "oauth2",
+          "new",
+          "--session",
+          "p1-structural-two-cell-20260925"
+        ],
+        "returncode": 0,
+        "stdout": "[colab] Creating session 'p1-structural-two-cell-20260925'...\n[colab] Session READY.\n",
+        "stderr": "",
+        "wall_seconds": 15.40689708298305
+      },
+      {
+        "step": "upload-bundle",
+        "argv": [
+          "/Users/nikolastar/.local/bin/colab",
+          "--auth",
+          "oauth2",
+          "upload",
+          "--session",
+          "p1-structural-two-cell-20260925",
+          "<local-repo>/output/p1-structural-two-cell-colab-20260925/run-c44/two-cell-source-bundle.tar.gz",
+          "/content/two-cell-source-bundle.tar.gz"
+        ],
+        "returncode": 0,
+        "stdout": "[colab] Uploaded '<local-repo>/output/p1-structural-two-cell-colab-20260925/run-c44/two-cell-source-bundle.tar.gz' to '/content/two-cell-source-bundle.tar.gz'\n",
+        "stderr": "",
+        "wall_seconds": 1.6264595829998143
+      },
+      {
+        "step": "exec",
+        "argv": [
+          "/Users/nikolastar/.local/bin/colab",
+          "--auth",
+          "oauth2",
+          "exec",
+          "--session",
+          "p1-structural-two-cell-20260925",
+          "--file",
+          "<local-repo>/output/p1-structural-two-cell-colab-20260925/run-c44/remote_setup.py",
+          "--timeout",
+          "560"
+        ],
+        "returncode": 0,
+        "stdout": "{\"status\": \"complete\", \"archive_sha256\": \"8c2015ef3d2721804f2e903ca369a917474cd9f453c7b212e6866c03ca37664d\"}\n",
+        "stderr": "",
+        "wall_seconds": 113.36573762499029
+      },
+      {
+        "step": "download",
+        "argv": [
+          "/Users/nikolastar/.local/bin/colab",
+          "--auth",
+          "oauth2",
+          "download",
+          "--session",
+          "p1-structural-two-cell-20260925",
+          "/content/p1_structural_two_cell/evidence.tar.gz",
+          "<local-repo>/output/p1-structural-two-cell-colab-20260925/run-c44/evidence.tar.gz"
+        ],
+        "returncode": 0,
+        "stdout": "[colab] Downloaded '/content/p1_structural_two_cell/evidence.tar.gz' to '<local-repo>/output/p1-structural-two-cell-colab-20260925/run-c44/evidence.tar.gz'\n",
+        "stderr": "",
+        "wall_seconds": 4.898986499989405
+      },
+      {
+        "step": "finally-stop",
+        "argv": [
+          "/Users/nikolastar/.local/bin/colab",
+          "--auth",
+          "oauth2",
+          "stop",
+          "--session",
+          "p1-structural-two-cell-20260925"
+        ],
+        "returncode": 0,
+        "stdout": "[colab] Stopping session 'p1-structural-two-cell-20260925'...\n[colab] Session terminated.\n",
+        "stderr": "",
+        "wall_seconds": 2.644688500033226
+      },
+      {
+        "step": "finally-sessions",
+        "argv": [
+          "/Users/nikolastar/.local/bin/colab",
+          "--auth",
+          "oauth2",
+          "sessions"
+        ],
+        "returncode": 0,
+        "stdout": "[colab] No active sessions found on server.\n",
+        "stderr": "",
+        "wall_seconds": 1.7948554999893531
+      }
+    ],
+    "VM_stopped_readback": true,
+    "archive_collected": true,
+    "e0_success": true,
+    "t0_monotonic": 312707.086589625,
+    "lease_deadline_monotonic": 313397.086589625,
+    "evidence": {
+      "status": "complete",
+      "calls": {
+        "solver": 2,
+        "E1": 8,
+        "E0": 2,
+        "E2": 0,
+        "retry": 0
+      },
+      "cells": [
+        "016",
+        "024"
+      ],
+      "verified_files": 33,
+      "archive_sha256": "8c2015ef3d2721804f2e903ca369a917474cd9f453c7b212e6866c03ca37664d"
+    },
+    "stop_returncode": 0,
+    "elapsed_seconds": 139.83932287502103
+  }
+}

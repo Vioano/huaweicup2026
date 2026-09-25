@@ -1,0 +1,251 @@
+{
+  "status": "complete",
+  "solver_commit": "3a1b82b71ca1ff6689eb8e72f17d26c48b52073c",
+  "cases": [
+    "016",
+    "024"
+  ],
+  "cores": 5,
+  "worker_limit": 1,
+  "maximum_calls": {
+    "solver": 2,
+    "E1": 18,
+    "E0": 2,
+    "E2": 0,
+    "retry": 0
+  },
+  "calls": {
+    "solver": 2,
+    "E1": 8,
+    "E0": 2,
+    "E2": 0,
+    "retry": 0
+  },
+  "E1_reserved_max": 18,
+  "subreaper": true,
+  "cells": [
+    {
+      "case": "016",
+      "cores": 5,
+      "status": "ok",
+      "calls": {
+        "solver": 1,
+        "E1": 4,
+        "E0": 1
+      },
+      "graph_sha256": "76537aa7163cf0748adcff2ecbd84fbc9a02a2d129ffcecd2bfebb89685e71ef",
+      "E1_reserved_max": 9,
+      "solver": {
+        "argv": [
+          "<verified-inputs>/.venv/bin/python",
+          "-B",
+          "<verified-inputs>/src/q1/structural_refine.py",
+          "<verified-inputs>/case_016.json",
+          "--cores",
+          "5",
+          "--output",
+          "<verified-inputs>/two-cell-run/016/case_016_multicore_res.json",
+          "--diagnostics",
+          "<verified-inputs>/two-cell-run/016/diagnostics.json"
+        ],
+        "cwd": ".",
+        "started_at": "2026-09-25T10:57:10.148Z",
+        "finished_at": "2026-09-25T10:57:52.793Z",
+        "wall_seconds": 42.64475251499999,
+        "timeout_seconds": 180,
+        "exit_code": 0,
+        "cleanup_confirmed": true,
+        "status": "ok",
+        "stdout": {
+          "path": "two-cell-run/016/solver.stdout.txt",
+          "sha256": "8a94842f9229241cb23f9089645a8811d7c24c6898a67365b6ae8fd1c7b7b425"
+        },
+        "stderr": {
+          "path": "two-cell-run/016/solver.stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_derivation": "UTF-8 child output with workspace and temporary input root replaced by public labels",
+        "adopted_cleanup": {
+          "confirmed": true,
+          "observed_pids": [],
+          "remaining_pids": []
+        },
+        "process_identity": {
+          "pid": 1987,
+          "pgid": 1987,
+          "linux_proc_start_ticks": 48350
+        }
+      },
+      "plan_sha256": "d5c4ebac9df42afc1b8e403259f07caa77a4378ea23606d7ff4d2d13f1a0b4c2",
+      "diagnostic_sha256": "37dec0f8f05b51816bebfadac28b914bba4501d1f7640f66bab6a5c31ec739db",
+      "evaluation": {
+        "argv": [
+          "<verified-inputs>/.venv/bin/python",
+          "-B",
+          "<verified-inputs>/data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+          "<verified-inputs>/case_016.json",
+          "<verified-inputs>/two-cell-run/016/case_016_multicore_res.json",
+          "--config",
+          "<verified-inputs>/data/raw/a/official/data/config.txt",
+          "--output",
+          "<verified-inputs>/two-cell-run/016/result.json",
+          "--trace-output",
+          "<verified-inputs>/two-cell-run/016/trace.json",
+          "--log-output",
+          "<verified-inputs>/two-cell-run/016/official.log"
+        ],
+        "cwd": ".",
+        "started_at": "2026-09-25T10:57:52.823Z",
+        "finished_at": "2026-09-25T10:58:24.716Z",
+        "wall_seconds": 31.892888094,
+        "timeout_seconds": 120,
+        "exit_code": 0,
+        "cleanup_confirmed": true,
+        "status": "ok",
+        "stdout": {
+          "path": "two-cell-run/016/E0.stdout.txt",
+          "sha256": "79b0013b4085451eefb2e608a00b34f8816fcdddf284444345894f9e1b8c342c"
+        },
+        "stderr": {
+          "path": "two-cell-run/016/E0.stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_derivation": "UTF-8 child output with workspace and temporary input root replaced by public labels",
+        "adopted_cleanup": {
+          "confirmed": true,
+          "observed_pids": [],
+          "remaining_pids": []
+        },
+        "process_identity": {
+          "pid": 2163,
+          "pgid": 2163,
+          "linux_proc_start_ticks": 52617
+        }
+      },
+      "makespan_cycles": 2941234,
+      "data_movement_bytes": {
+        "original_graph_copy_bytes": 393218,
+        "scheduled_copy_bytes": 119940642,
+        "added_copy_bytes": 119547424,
+        "partition_added_copy_bytes": 119547424,
+        "spill_added_copy_bytes": 0
+      },
+      "finished_monotonic": 558.198671758
+    },
+    {
+      "case": "024",
+      "cores": 5,
+      "status": "ok",
+      "calls": {
+        "solver": 1,
+        "E1": 4,
+        "E0": 1
+      },
+      "graph_sha256": "f974fbf1a23b4a145b5f8c9c691eb1b247f93d8785d98bb46a9cdd8626399aec",
+      "E1_reserved_max": 9,
+      "solver": {
+        "argv": [
+          "<verified-inputs>/.venv/bin/python",
+          "-B",
+          "<verified-inputs>/src/q1/structural_refine.py",
+          "<verified-inputs>/case_024.json",
+          "--cores",
+          "5",
+          "--output",
+          "<verified-inputs>/two-cell-run/024/case_024_multicore_res.json",
+          "--diagnostics",
+          "<verified-inputs>/two-cell-run/024/diagnostics.json"
+        ],
+        "cwd": ".",
+        "started_at": "2026-09-25T10:58:24.853Z",
+        "finished_at": "2026-09-25T10:58:36.527Z",
+        "wall_seconds": 11.67406405700001,
+        "timeout_seconds": 180,
+        "exit_code": 0,
+        "cleanup_confirmed": true,
+        "status": "ok",
+        "stdout": {
+          "path": "two-cell-run/024/solver.stdout.txt",
+          "sha256": "cdf8d1ee94c35725277fb2e3bfa1be9e5bf3e972aba3051024f4fbcf75ff2be2"
+        },
+        "stderr": {
+          "path": "two-cell-run/024/solver.stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_derivation": "UTF-8 child output with workspace and temporary input root replaced by public labels",
+        "adopted_cleanup": {
+          "confirmed": true,
+          "observed_pids": [],
+          "remaining_pids": []
+        },
+        "process_identity": {
+          "pid": 2292,
+          "pgid": 2292,
+          "linux_proc_start_ticks": 55820
+        }
+      },
+      "plan_sha256": "90784b55b09b50736371be17c6e88cf22725a04beea58b92b01a789284e68a8a",
+      "diagnostic_sha256": "4efdc0336220f91e135407d24d3692a65e4cce6bdabe16e2ba3457bf4fa20041",
+      "evaluation": {
+        "argv": [
+          "<verified-inputs>/.venv/bin/python",
+          "-B",
+          "<verified-inputs>/data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+          "<verified-inputs>/case_024.json",
+          "<verified-inputs>/two-cell-run/024/case_024_multicore_res.json",
+          "--config",
+          "<verified-inputs>/data/raw/a/official/data/config.txt",
+          "--output",
+          "<verified-inputs>/two-cell-run/024/result.json",
+          "--trace-output",
+          "<verified-inputs>/two-cell-run/024/trace.json",
+          "--log-output",
+          "<verified-inputs>/two-cell-run/024/official.log"
+        ],
+        "cwd": ".",
+        "started_at": "2026-09-25T10:58:36.550Z",
+        "finished_at": "2026-09-25T10:58:42.596Z",
+        "wall_seconds": 6.045528420999972,
+        "timeout_seconds": 120,
+        "exit_code": 0,
+        "cleanup_confirmed": true,
+        "status": "ok",
+        "stdout": {
+          "path": "two-cell-run/024/E0.stdout.txt",
+          "sha256": "13f44c9c3bc04a0b28022db7da52795cbf729979633080f3e6ae775d3ce2f57b"
+        },
+        "stderr": {
+          "path": "two-cell-run/024/E0.stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_derivation": "UTF-8 child output with workspace and temporary input root replaced by public labels",
+        "adopted_cleanup": {
+          "confirmed": true,
+          "observed_pids": [],
+          "remaining_pids": []
+        },
+        "process_identity": {
+          "pid": 2340,
+          "pgid": 2340,
+          "linux_proc_start_ticks": 56990
+        }
+      },
+      "makespan_cycles": 974062,
+      "data_movement_bytes": {
+        "original_graph_copy_bytes": 393218,
+        "scheduled_copy_bytes": 39718050,
+        "added_copy_bytes": 39324832,
+        "partition_added_copy_bytes": 39324832,
+        "spill_added_copy_bytes": 0
+      },
+      "finished_monotonic": 576.002678622
+    }
+  ],
+  "E1_unknown_dispatch": null,
+  "worker_cleanup": {
+    "confirmed": true,
+    "observed_pids": [],
+    "remaining_pids": []
+  },
+  "finished_monotonic": 576.005322609
+}
