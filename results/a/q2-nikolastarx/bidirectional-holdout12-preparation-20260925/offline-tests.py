@@ -67,6 +67,18 @@ doc, identity, e2, _, _, _ = fixed.preflight(
     REPO, RAW, E2, PYTHON,
     ROOT/'output/bidirectional-full500-preparation-20260925/local-full500-manifest.json')
 m.ROOT, m.RAW_ROOT, m.E2_ROOT, m.PYTHON, m.COORDS = REPO, RAW, E2, PYTHON, coords
+assert PYTHON.is_symlink() and sup.invocation_python(PYTHON) == PYTHON
+assert sup.invocation_python(PYTHON).resolve() != PYTHON
+child_executable = subprocess.check_output([str(PYTHON), '-B', '-c',
+                                            'import sys;print(sys.executable)'], text=True).strip()
+assert child_executable == str(PYTHON)
+m.runtime_import_preflight(PYTHON, E2)
+try:
+    m.runtime_import_preflight(PYTHON.resolve(), E2)
+except ValueError as error:
+    assert 'ModuleNotFoundError' in str(error) or 'venv not active' in str(error)
+else:
+    raise AssertionError('base interpreter unexpectedly passed venv import preflight')
 qualification = ROOT/'output/bidirectional-qualification-20260925/run-local-1'
 replayed = []
 with tempfile.TemporaryDirectory(prefix='p2-holdout-offline-') as temporary:
@@ -190,6 +202,7 @@ with tempfile.TemporaryDirectory(prefix='p2-holdout-offline-') as temporary:
         sup.DEADLINE_SECONDS,sup.SAMPLE_SECONDS = original_deadline,original_sample
 
 result = {'selection_recomputed':list(coords),
+          'venv_symlink_import_preflight':'passed',
           'saved_cell_replays':replayed,'unknown_fallback_reserved':1,
           'first_failure_dispatches':1,'gate_bad_scope_hash_expiry':'rejected',
           'fake_process_launches':3,'outer_timeout_cleanup':'passed',
@@ -199,5 +212,7 @@ result = {'selection_recomputed':list(coords),
           'holdout_supervisor_sha256':sup.sha(ROOT/'scripts/q2_bidirectional_holdout_supervise.py'),
           'selection_sha256':m.SELECTION_SHA,
           'test_sha256':m.sha(Path(__file__))}
-(OUT/'offline-test-receipt-v2.json').write_text(json.dumps(result,indent=2)+'\n')
+runtime_fix = ROOT/'output/holdout-runtime-fix-20260925'
+runtime_fix.mkdir(parents=True, exist_ok=True)
+(runtime_fix/'offline-test-receipt.json').write_text(json.dumps(result,indent=2)+'\n')
 print(json.dumps(result))

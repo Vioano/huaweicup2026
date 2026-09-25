@@ -38,6 +38,25 @@ def sha(path):
     return digest(path.read_bytes())
 
 
+def runtime_import_preflight(python, e2_root):
+    """Import E2 dependencies with the actual invocation path, without scoring."""
+    code = ('import pathlib, sys\n'
+            'root = pathlib.Path(sys.argv[1]).resolve()\n'
+            'if pathlib.Path(sys.executable) != pathlib.Path(sys.argv[2]):\n'
+            '    raise RuntimeError("Python invocation path changed")\n'
+            'if sys.prefix == sys.base_prefix: raise RuntimeError("venv not active")\n'
+            'sys.path.insert(0, str(root))\n'
+            'import research.a.e2_search as e2\n'
+            'import src.eval_exact._official as official\n'
+            'for module in (e2, official):\n'
+            '    if not pathlib.Path(module.__file__).resolve().is_relative_to(root):\n'
+            '        raise RuntimeError("foreign evaluator import")\n')
+    result = subprocess.run([str(python), '-B', '-c', code, str(e2_root), str(python)],
+                            cwd=ROOT, capture_output=True, text=True, timeout=15)
+    if result.returncode:
+        raise ValueError('Interpreter/E2 import-only preflight failed: ' + result.stderr[-2000:])
+
+
 def read(path):
     return json.loads(path.read_bytes())
 
@@ -125,8 +144,10 @@ def preflight(repo, raw_root, e2_root, python, manifest_path):
     global ROOT, PYTHON, E2_ROOT, RAW_ROOT, COORDS
     if platform.system() != 'Darwin' or platform.machine() != 'arm64':
         raise ValueError('Requires macOS arm64')
-    ROOT, PYTHON, E2_ROOT, RAW_ROOT = (repo.resolve(strict=True), python.resolve(strict=True),
+    ROOT, PYTHON, E2_ROOT, RAW_ROOT = (repo.resolve(strict=True), python.absolute(),
                                       e2_root.resolve(strict=True), raw_root.resolve(strict=True))
+    if not PYTHON.is_file():
+        raise ValueError('Python invocation path missing')
     doc = read(manifest_path)
     if (doc.get('schema') != 'q2-bidirectional-holdout12-v1'
             or doc.get('solver_source_commit') != SOLVER
@@ -136,11 +157,12 @@ def preflight(repo, raw_root, e2_root, python, manifest_path):
     COORDS = load_selection(doc, manifest_path, RAW_ROOT)
     if subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip() != SOLVER:
         raise ValueError('Detached source checkout HEAD differs')
-    if sha(PYTHON) != doc['python_sha256'] or sha(Path(__file__)) != doc['runner_sha256']:
+    if sha(PYTHON.resolve(strict=True)) != doc['python_sha256'] or sha(Path(__file__)) != doc['runner_sha256']:
         raise ValueError('Python or runner bytes differ')
     if subprocess.check_output([str(PYTHON), '-c', 'import sys;print(sys.version_info[:2])'],
                                text=True).strip() != '(3, 12)':
         raise ValueError('Requires fixed Python 3.12')
+    runtime_import_preflight(PYTHON, E2_ROOT)
     names = subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', SOLVER,
                                      'src/q2_nikolastarx', 'data/raw/a/official/code'],
                                     cwd=ROOT, text=True).splitlines()

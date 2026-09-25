@@ -1,0 +1,76 @@
+{
+  "scope": "Only synthetic fixed-service DAGs and exact rational COPY service fixtures",
+  "official_graphs_constructed": 0,
+  "official_evaluator_calls": 0,
+  "randomized": {
+    "generated_fixed_service_cases": 1000,
+    "seed": 70328,
+    "outcomes": {
+      "no_fit_for_frozen_midpoint_and_word": 668,
+      "success": 321,
+      "priority_lift_cycle": 11
+    },
+    "successes_checked_by_independent_longest_path_recurrence": 321,
+    "not_performance_evidence": true
+  },
+  "fixtures": {
+    "exterior_can_finish_later_without_makespan_loss": {
+      "old_exterior_E_finish": 4,
+      "new_E_finish": 6,
+      "fixed_model_M": 8,
+      "old_exit_finish": 8,
+      "new_exit_finish": 4
+    },
+    "shared_DDR_counterexample": {
+      "old_exit_finish": 524,
+      "new_exit_finish": 2,
+      "old_fixed_release_fluid_M": 1010,
+      "new_fixed_release_fluid_M": 1018,
+      "old_DDR_service": 62,
+      "new_DDR_service": 60,
+      "old_A_copy_finish": 10,
+      "new_A_copy_finish": 18,
+      "constructor_rows": [
+        [
+          1,
+          3,
+          2
+        ],
+        [
+          0
+        ]
+      ],
+      "scope": "Source-semantics-derived synthetic schedule; not an official evaluator run"
+    },
+    "midpoint_false_negative": {
+      "reserved_V_interval": [
+        2,
+        4
+      ],
+      "needed_contiguous_V_service": 3,
+      "constructor": "no_candidate",
+      "another_legal_fixed_model_M": 6
+    },
+    "topological_ready_is_not_time_ready": {
+      "outside_first": 110,
+      "region_first": 211
+    },
+    "priority_lift_cycle": {
+      "valid_resource_witness": {
+        "1": 0,
+        "2": 1,
+        "3": 2,
+        "0": 3
+      },
+      "cycle": [
+        0,
+        1,
+        2,
+        3,
+        0
+      ]
+    }
+  },
+  "tests_run": 6,
+  "tests_successful": true
+}

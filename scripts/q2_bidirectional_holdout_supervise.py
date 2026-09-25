@@ -107,9 +107,17 @@ def disk_usage(root):
     return total
 
 
+def invocation_python(path):
+    candidate = Path(path).absolute()  # Do not collapse a venv executable symlink.
+    if not candidate.is_file():
+        raise ValueError('Python invocation path missing')
+    return candidate
+
+
 def preflight_paths(args):
     paths = {key: Path(getattr(args, key)).resolve(strict=True)
-             for key in ('repo', 'python', 'runner', 'manifest', 'raw_root', 'e2_root', 'gate')}
+             for key in ('repo', 'runner', 'manifest', 'raw_root', 'e2_root', 'gate')}
+    paths['python'] = invocation_python(args.python)
     out = Path(args.output).resolve()
     if out.exists():
         raise ValueError('supervisor output must be fresh')
@@ -127,6 +135,8 @@ def preflight_paths(args):
             or manifest.get('solver_source_commit') != SOURCE
             or sha(paths['runner']) != manifest.get('runner_sha256')):
         raise ValueError('runner/source manifest mismatch')
+    if sha(paths['python'].resolve(strict=True)) != manifest.get('python_sha256'):
+        raise ValueError('Python real-binary hash differs')
     limits = manifest.get('limits', {})
     if (limits.get('cells') != 12 or limits.get('workers') != 1
             or limits.get('batch_seconds') != DEADLINE_SECONDS

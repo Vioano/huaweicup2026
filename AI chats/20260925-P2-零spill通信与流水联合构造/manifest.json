@@ -12,7 +12,7 @@
     "new public user message",
     "Pro thinking"
   ],
-  "scope": "Six cumulative public messages, five inherited and C03 final copied completely and fingerprint verified. No hidden reasoning. Attachments still unacquired.",
+  "scope": "Six cumulative public messages; C03 final fingerprint verified. Two C03 code previews recovered; original ZIP/READ_LOG/synthetic_results attachment bytes not acquired.",
   "latest_snapshot": "完整问答-20260925T1330Z-C03完成.md",
   "files": [
     {
@@ -135,6 +135,24 @@
       "bytes": 88820,
       "sha256": "d5c2da77728a7426e7b85b7db58dce2ab63ea25fab2b09782bd332fd22a24645",
       "round": "c03"
+    },
+    {
+      "path": "c03-attachments-20260925T1349Z.json",
+      "bytes": 822,
+      "sha256": "7d6b389a7c1d7607a84df9b245c52ff04b98eb24c1f14dfb62f57b393bce3002",
+      "round": "c03"
+    },
+    {
+      "path": "附件/c03-outside_slack_merge.browser-copy.py",
+      "bytes": 13500,
+      "sha256": "b6adade74ec250eadce8804fc06e494634ae6cf459fb29fee0341e3e1a4c3b1f",
+      "round": "c03"
+    },
+    {
+      "path": "附件/c03-test_outside_slack_merge.browser-copy.py",
+      "bytes": 9549,
+      "sha256": "c7f48c5c11779376021f5fd43f8c131103ca500d33b741a1d406cd5ca8d8f8ba",
+      "round": "c03"
     }
   ],
   "attachments": [
@@ -179,9 +197,25 @@
       "round": "c03",
       "source_message": "765c7cf7-0ea0-4b1d-8788-2db5bc0c96f7",
       "state": "visible_not_acquired",
-      "name": "P2_C03_s7d28_slack_merge_evidence.zip; READ_LOG.md; outside_slack_merge.py; test_outside_slack_merge.py; synthetic_results.json",
+      "name": "P2_C03_s7d28_slack_merge_evidence.zip; READ_LOG.md; synthetic_results.json",
       "bytes": null,
       "sha256": null
+    },
+    {
+      "round": "c03",
+      "source_message": "765c7cf7-0ea0-4b1d-8788-2db5bc0c96f7",
+      "state": "browser_preview_text_recovered_original_bytes_unverified",
+      "name": "outside_slack_merge.py",
+      "local_path": "附件/c03-outside_slack_merge.browser-copy.py",
+      "acquisition_receipt": "c03-attachments-20260925T1349Z.json"
+    },
+    {
+      "round": "c03",
+      "source_message": "765c7cf7-0ea0-4b1d-8788-2db5bc0c96f7",
+      "state": "browser_preview_text_recovered_original_bytes_unverified",
+      "name": "test_outside_slack_merge.py",
+      "local_path": "附件/c03-test_outside_slack_merge.browser-copy.py",
+      "acquisition_receipt": "c03-attachments-20260925T1349Z.json"
     }
   ],
   "phase": "c03_final_received",
@@ -202,8 +236,8 @@
     "source_commit": "8577916bc48cf2e8240aaecadce286c02b34eb20",
     "source_mirror_receipt": "output/interleave-mirror-8577916bc.json"
   },
-  "latest_round_status": "c02-final-status.json",
-  "latest_completed_assistant_message_id": "7e8a3832-2bdd-4592-86f8-d7268ded3f32",
+  "latest_round_status": "c03-final-status.json",
+  "latest_completed_assistant_message_id": "765c7cf7-0ea0-4b1d-8788-2db5bc0c96f7",
   "recorded_at_utc": "2026-09-25T10:39:57.211480+00:00",
   "readback_normalized_body_matches": true,
   "normalization": "Ignore whitespace and trailing Show more UI control; exact local sent body retained.",
