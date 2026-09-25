@@ -114,6 +114,47 @@ class QueryFlowTests(unittest.TestCase):
             with self.assertRaisesRegex(UnsupportedStructure, "direct edges unsupported"):
                 query_flow.construct(index, 2, capacity={"L1": 128, "UB": 512})
 
+    def test_shared_source_only_feeds_private_outputs_but_join_rejected(self):
+        index, rows = toy(2)
+        graph = index.graph
+        next_op = max(index.ops) + 1
+        next_tid = max(t["id"] for t in graph["tensors"]) + 1
+        graph["tensors"].extend((
+            {"id": next_tid, "size": 8, "pos": "DDR"},
+            {"id": next_tid + 1, "size": 8, "pos": "UB"},
+        ))
+        graph["ops"].append({"id": next_op, "op": "MATMUL", "pipe": "PIPE_M", "cycles": 2})
+        graph["edges"].extend((
+            {"source": next_tid, "target": next_op},
+            {"source": next_op, "target": next_tid + 1},
+        ))
+        outputs = [next(iter(index.succ[row["sink"]])) for row in rows]
+        graph["edges"].extend({"source": next_tid + 1, "target": u} for u in outputs)
+        index = ToyIndex(graph)
+        label = query_flow._decompose(index, query_flow._ports(index), rows)[0]
+        self.assertEqual(label[next_op], ("S", None))
+        with patch.object(query_flow, "_recognize", return_value=rows):
+            plan, info = query_flow.construct(
+                index, 2, capacity={"L1": 128, "UB": 512})
+        self.assertEqual(info["flow_count"], 2)
+        self.assertEqual(len(plan["node_to_subgraph"]), len(index.ops))
+
+        # A genuine private-output join has two A ancestors and must not be
+        # reclassified as a shared upstream parameter.
+        output_tensors = [next(e["target"] for e in graph["edges"]
+                               if e["source"] == u) for u in outputs]
+        join = next_op + 1
+        graph["ops"].append({"id": join, "op": "ADD", "pipe": "PIPE_V", "cycles": 1})
+        graph["tensors"].append({"id": next_tid + 2, "size": 8, "pos": "UB"})
+        graph["edges"].extend((
+            {"source": output_tensors[0], "target": join},
+            {"source": output_tensors[1], "target": join},
+            {"source": join, "target": next_tid + 2},
+        ))
+        with patch.object(query_flow, "_recognize", return_value=rows):
+            with self.assertRaisesRegex(UnsupportedStructure, "post-row cross-flow join"):
+                query_flow.construct(ToyIndex(graph), 2, capacity={"L1": 128, "UB": 512})
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -29,6 +29,17 @@ def _ancestors(index, seeds):
     return seen
 
 
+def _ancestors_without(index, seeds, excluded_edges):
+    seen, stack = set(), list(seeds)
+    while stack:
+        u = stack.pop()
+        if u in seen:
+            continue
+        seen.add(u)
+        stack.extend(p for p in index.pred[u] if (p, u) not in excluded_edges)
+    return seen
+
+
 def _descendants(index, seeds):
     seen, stack = set(), list(seeds)
     while stack:
@@ -89,15 +100,35 @@ def _decompose(index, ports, rows):
     if any(not nodes for nodes in projections):
         raise UnsupportedStructure("query flow has no projection")
 
-    ancestors = [_ancestors(index, nodes) for nodes in projections]
+    if sum(map(len, a_nodes)) != len(all_a):
+        raise UnsupportedStructure("attention rows overlap")
+    kv_edges = {(u, v) for row in rows for u in (*row["k"], *row["v"])
+                for v in row["nodes"] if v in index.succ[u]}
+    outputs = []
+    for i, nodes in enumerate(a_nodes):
+        descendants = _descendants(index, nodes)
+        if (descendants & all_a) - nodes:
+            raise UnsupportedStructure("one query row feeds a different query flow")
+        outputs.append(descendants - all_a)
+    if any(outputs[i] & outputs[j] for i in range(len(outputs)) for j in range(i + 1, len(outputs))):
+        raise UnsupportedStructure("post-row cross-flow join")
+    all_o = set().union(*outputs)
+    if all_o & set().union(*projections):
+        raise UnsupportedStructure("post-row path returns to a projection")
+
+    # Exclude only recognized K/V broadcasts while tracing each private
+    # flow. An upstream parameter used solely by several O branches is then
+    # found as a common ancestor even if it feeds no Q/K/V projection.
+    ancestors = [_ancestors_without(index, projections[i] | a_nodes[i] | outputs[i], kv_edges)
+                 for i in range(len(flow_keys))]
     shared = {u for u in index.ops if sum(u in group for group in ancestors) > 1}
     shared = _ancestors(index, shared)
-    if shared & all_a:
-        raise UnsupportedStructure("shared upstream depends on an attention row")
+    if shared & (all_a | all_o | set().union(*projections)):
+        raise UnsupportedStructure("shared upstream depends on a private row/output/projection")
     label = {u: ("S", None) for u in shared}
     for i, nodes in enumerate(ancestors):
-        for u in nodes - shared:
-            if u in all_a or (u in label and label[u] != ("P", i)):
+        for u in nodes - shared - all_a - all_o:
+            if u in label and label[u] != ("P", i):
                 raise UnsupportedStructure("private projection ancestry overlaps another flow")
             label[u] = ("P", i)
     for i, nodes in enumerate(a_nodes):
@@ -106,32 +137,15 @@ def _decompose(index, ports, rows):
                 raise UnsupportedStructure("attention row overlaps the upstream frontier")
             label[u] = ("A", i)
 
-    # Every descendant of a row is post-row. Overlapping descendants are a
-    # cross-flow join, not a private output branch.
-    for i, nodes in enumerate(a_nodes):
-        for u in _descendants(index, nodes) - nodes:
+    for i, nodes in enumerate(outputs):
+        for u in nodes:
             if u in label and label[u] != ("O", i):
                 raise UnsupportedStructure("row descendant regresses stage or joins flows")
             label[u] = ("O", i)
-    # A side branch from a private input to its output may never pass a row.
-    # Its unique attached flow is sufficient; ambiguous attachments are refused.
     remaining = set(index.ops) - set(label)
-    while remaining:
-        changed = False
-        for u in sorted(remaining):
-            attached = {label[v][1] for v in index.pred[u] | index.succ[u]
-                        if v in label and label[v][0] != "S"}
-            if len(attached) > 1:
-                raise UnsupportedStructure("unclassified branch joins private flows")
-            if len(attached) == 1:
-                label[u] = ("P", next(iter(attached)))
-                remaining.remove(u)
-                changed = True
-        if not changed:
-            raise UnsupportedStructure("compute operations outside recognized query flows")
+    if remaining:
+        raise UnsupportedStructure("compute operations outside recognized query flows")
 
-    kv_edges = {(u, v) for row in rows for u in (*row["k"], *row["v"])
-                for v in row["nodes"] if v in index.succ[u]}
     rank = {stage: n for n, stage in enumerate(STAGES)}
     for u in index.ops:
         su, fu = label[u]
@@ -338,6 +352,8 @@ def construct(index, cores, cross_delay=500, *, capacity=None):
             "core_schedules": [[mapping[str(u)] for u in word] for word in words]}
     return plan, {"strategy": "query_flow_affinity_r8", "flow_count": r,
                   "row_count": len(rows), "canonical_states": len(pairs),
+                  "stage_counts": {stage: sum(kind == stage for kind, _ in label.values())
+                                   for stage in STAGES},
                   "capacity_rejected_states": rejected_capacity,
                   "selected_groups": [list(group) for group in groups],
                   "query_tensors": flow_keys, "L0_compute_fifo": l0,
