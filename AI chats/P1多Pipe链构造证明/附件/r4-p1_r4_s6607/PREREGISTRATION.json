@@ -1,0 +1,9 @@
+{
+  "question": "Does an ordered-isomorphic private-chain Task keep the same raw compiled need when Step3 consumes free credits?",
+  "input_kind": "two generated synthetic graphs, not official case modifications",
+  "fixed_inputs": {"chains": 2, "word": ["PIPE_M", "PIPE_V", "PIPE_M"], "cycles": [100, 100, 100], "tensor_bytes": 32768, "tensor_id_offsets": [0, 7]},
+  "configuration": "verbatim vendor/data/raw/a/official/data/config.txt; no overrides",
+  "budget": {"official_static_task_compiles": 2, "E0": 0, "E1": 0, "E2": 0, "real_case_candidates": 0, "retries": 0},
+  "measurements": ["ordered prekey equality", "input set traversal at V", "FIFO", "raw need", "MEM pairs", "Step3 compilation peak"],
+  "response_simulations": 0
+}
