@@ -39,8 +39,29 @@ def reap_adopted():
   if not live:return {'confirmed':True,'observed':sorted(seen),'remaining':[]}
   seen.update(adopted())
  return {'confirmed':False,'observed':sorted(seen),'remaining':[p for p,s in seen.items() if proc_start(p)==s]}
+def cleanup_runner(child,identity):
+ if child is None:return {'confirmed':True,'launched':False}
+ result={'confirmed':False,'pid':child.pid}
+ try:
+  if child.poll() is None:
+   group_matches=False
+   try:
+    group_matches=bool(identity and identity.get('pid')==child.pid and identity.get('pgid')==child.pid and type(identity.get('linux_proc_start_ticks')) is int and proc_start(child.pid)==identity['linux_proc_start_ticks'] and os.getpgid(child.pid)==child.pid)
+   except Exception as e:result['identity_error']=f'{type(e).__name__}: {e}'
+   if group_matches:
+    try:os.killpg(child.pid,signal.SIGKILL)
+    except ProcessLookupError:pass
+    except Exception as e:
+     result['group_kill_error']=f'{type(e).__name__}: {e}';child.kill()
+   else:child.kill()
+ except ProcessLookupError:pass
+ except Exception as e:result['kill_error']=f'{type(e).__name__}: {e}'
+ try:
+  result['exit_code']=child.wait(timeout=8);result['confirmed']=True
+ except Exception as e:result['wait_error']=f'{type(e).__name__}: {e}'
+ return result
 def main():
- BASE.mkdir(exist_ok=False);EVID.mkdir();start=time.monotonic();rec={'status':'started','calls':{'solver':0,'E1':None,'E0':0,'E2':0,'retry':0},'E1_reserved_max':18};child=None
+ BASE.mkdir(exist_ok=False);EVID.mkdir();start=time.monotonic();rec={'status':'started','calls':{'solver':0,'E1':None,'E0':0,'E2':0,'retry':0},'E1_reserved_max':18};child=None;runner_identity=None
  try:
   if ctypes.CDLL(None,use_errno=True).prctl(36,1,0,0,0)!=0:raise OSError('cannot arm subreaper')
   raw=BUNDLE.read_bytes();assert sha(raw)==BUNDLE_SHA
@@ -74,15 +95,9 @@ def main():
   if live:
    try:rec['stage_child_cleanup']=kill_ident(json.loads(live[-1].read_text()))
    except Exception as e:rec['stage_child_cleanup']={'confirmed':False,'error':str(e)}
-  if child is not None:
-   try:
-    if child.poll() is None:
-     if runner_identity and proc_start(runner_identity['pid'])==runner_identity['linux_proc_start_ticks'] and os.getpgid(runner_identity['pid'])==runner_identity['pgid']:os.killpg(runner_identity['pgid'],signal.SIGKILL)
-     else:child.kill()
-    try:child.wait(timeout=8)
-    except subprocess.TimeoutExpired:rec['runner_residual']=True
-   except (ProcessLookupError,PermissionError) as e:rec['runner_cleanup_error']=str(e)
-  rec['runner_exited']=child is None or child.poll() is not None
+  rec['runner_cleanup']=cleanup_runner(child,runner_identity)
+  rec['runner_exited']=rec['runner_cleanup']['confirmed']
+  if not rec['runner_exited']:rec['runner_residual']=True
   try:rec['adopted_cleanup']=reap_adopted()
   except Exception as e:rec['adopted_cleanup']={'confirmed':False,'error':str(e)}
   if rec.get('status')=='complete' and (not rec.get('adopted_cleanup',{}).get('confirmed') or rec.get('runner_residual') or rec.get('stage_child_cleanup',{}).get('confirmed') is False):rec['status']='cleanup-unconfirmed'
