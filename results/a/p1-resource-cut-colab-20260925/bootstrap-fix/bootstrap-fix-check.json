@@ -1,0 +1,31 @@
+{
+  "status": "prefix-verified",
+  "scope": "isolated TemporaryDirectory; AST try-body statements lines 11-25 through stage=python-uv-sync only; no later statement executed",
+  "original_script_sha256": "3ff577f4e39968b3c6d1950ae66f75ee0c4e706d38c7886772cdfe4668a73a1b",
+  "fixed_script_sha256": "19d74e2b5153432eac0749b1bff76777ba3fc341404d7705301a0141abd08bf6",
+  "bundle_sha256": "a681d7531f4178da760ab96e2f269abad9219c67f37e634661a8b1108fc05533",
+  "bundle_bytes": 9200549,
+  "manifest_files_declared": 65,
+  "manifest_files_extracted_size_sha256_verified": 65,
+  "manifest_bytes_preserved": true,
+  "prior_remote_failure": {
+    "stage": "bundle-verify",
+    "error": "OSError: TarFile is closed"
+  },
+  "fixed_prefix_error": null,
+  "static_followup": {
+    "undefined_uv_returncode": "replaced with uv_bootstrap returncode inside bootstrap branch",
+    "tarfile_after_close": "manifest bytes read inside with and written after close",
+    "remaining_tf_uses": "inside with or independent final evidence archive with",
+    "uv_sync_probe_executed": false
+  },
+  "calls": {
+    "Task_compile": 0,
+    "Fraction_response": 0,
+    "solver": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "retry": 0
+  }
+}
