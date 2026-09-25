@@ -1,0 +1,80 @@
+{
+  "status": "phase-pair-complete-NOT-E0",
+  "started_at": 1790321932.9263914,
+  "calls": {
+    "Task_compile_attempts_upper_bound": 27,
+    "Task_compile_confirmed": 27,
+    "Fraction_attempts_upper_bound": 2,
+    "Fraction_confirmed": 2,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "retry": 0
+  },
+  "source_files": 124,
+  "bundle_sha256": "f680062c292bae1a679c9253cc8bd8ef578b72a1dfe203d50b0ce9fa6c54a89d",
+  "uv_bootstrap": {
+    "argv": [
+      "python3",
+      "-m",
+      "pip",
+      "install",
+      "uv"
+    ],
+    "returncode": 0,
+    "wall_seconds": 5.419885839000017,
+    "stdout": "Collecting uv\n  Downloading uv-0.12.19-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (11 kB)\nDownloading uv-0.12.19-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (20.5 MB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 20.5/20.5 MB 75.0 MB/s eta 0:00:00\nInstalling collected packages: uv\nSuccessfully installed uv-0.12.19\n",
+    "stderr": ""
+  },
+  "uv_sync": {
+    "argv": [
+      "/usr/local/bin/uv",
+      "sync",
+      "--locked",
+      "--python",
+      "3.12.13"
+    ],
+    "returncode": 0,
+    "wall_seconds": 5.8174184049998985,
+    "stdout": "",
+    "stderr": "Downloading cpython-3.12.13-linux-x86_64-gnu (download) (32.6MiB)\n Downloaded cpython-3.12.13-linux-x86_64-gnu (download)\nUsing CPython 3.12.13\nCreating virtual environment at: .venv\nResolved 15 packages in 0.86ms\nDownloading fonttools (5.2MiB)\nDownloading kiwisolver (1.4MiB)\nDownloading pandas (10.3MiB)\nDownloading pillow (6.6MiB)\nDownloading numpy (15.9MiB)\nDownloading matplotlib (9.4MiB)\nDownloading scipy (33.7MiB)\n Downloaded kiwisolver\n Downloaded fonttools\n Downloaded pillow\n Downloaded matplotlib\n Downloaded pandas\n Downloaded numpy\n Downloaded scipy\nPrepared 13 packages in 1.92s\nInstalled 13 packages in 982ms\n + contourpy==1.4.0\n + cycler==0.12.1\n + fonttools==4.65.0\n + kiwisolver==1.5.1\n + matplotlib==3.11.2\n + numpy==2.5.3\n + packaging==26.3\n + pandas==3.0.6\n + pillow==12.3.0\n + pyparsing==3.3.2\n + python-dateutil==2.9.0.post0\n + scipy==1.18.1\n + six==1.17.0\n"
+  },
+  "command": [
+    ".venv/bin/python",
+    "-B",
+    "-m",
+    "src.review.p1_coalesced_phase_probe",
+    "case_008.json",
+    "--cores",
+    "5",
+    "--capacity-l1",
+    "524288",
+    "--capacity-ub",
+    "131072",
+    "--bandwidth",
+    "60",
+    "--gate",
+    "100",
+    "--q",
+    "7",
+    "--s",
+    "3",
+    "--period",
+    "35405",
+    "--chain-work",
+    "4512",
+    "--threshold",
+    "99264",
+    "--expect-graph-sha256",
+    "c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d",
+    "--output-root",
+    "evidence/coalesced-008-k5",
+    "--execute"
+  ],
+  "stage": "runner",
+  "runner_returncode": 0,
+  "remaining_runner_pids": [],
+  "diagnostics_status": "model_pair_complete_NOT_E0",
+  "diagnostics_sha256": "3e9f30b76d94aa327eaa7a31edbd703a57a5498b81a253a9cd0b1605b705bd2f",
+  "finished_at": 1790321948.7396352
+}
