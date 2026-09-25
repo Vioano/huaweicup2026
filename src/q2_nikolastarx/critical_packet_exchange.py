@@ -49,14 +49,18 @@ def _merge(index, rows, packet, *, packet_first=True, start_times=None, exposed_
 
 
 def propose(graph, plan, config, critical_links, critical_operations, *, incumbent_makespan,
-            max_seeds=8, merge_policy='extremes', original_start_times=None):
+            max_seeds=8, merge_policy='extremes', original_start_times=None,
+            closure_scope='same_core'):
     """Return ordered distinct complete plans and bounded diagnostics.
 
     At most max_seeds witnessed links: two extreme merges or one shifted merge each.
     The critical set is supplied evidence, never inferred from an absent trace.
     Closure follows original edges between old critical vertices; these edges
-    need not themselves be tight. This is a proposal heuristic, not a proof
-    that the moved packet reduces the new schedule's critical path.
+    need not themselves be tight. The cone's packet and retained chains are
+    subsequences of one baseline topological order, so their union with the
+    original DAG is structurally acyclic. Old critical membership does not
+    guarantee a new critical path; capacity and COPY remain guarded, and
+    Makespan still requires scoring and independent official E0 verification.
     """
     meta = {'status': 'no_candidate', 'scope': 'static C01 critical packet; unscored',
             'seeds_seen': 0, 'candidates_checked': 0, 'rejections': {},
@@ -66,6 +70,7 @@ def propose(graph, plan, config, critical_links, critical_operations, *, incumbe
                            if merge_policy == 'shifted' else
                            'at most 8 seeds and 16 plans; per seed O(V+E) closure plus two O((V+E) log V) merges and whole-graph legality, capacity, COPY, and FIFO-bound guards; no subset enumeration'),
             'official_makespan_guarantee': False, 'merge_policy': merge_policy,
+            'closure_scope': closure_scope,
             'start_time_scope': 'Old observed starts guide priority only; not predicted new schedule or guarantee.'}
     def reject(code):
         meta['rejections'][code] = meta['rejections'].get(code, 0) + 1
@@ -77,6 +82,8 @@ def propose(graph, plan, config, critical_links, critical_operations, *, incumbe
         index = DAGIndex(graph)
         if merge_policy not in ('extremes', 'shifted'):
             raise ValueError('unsupported merge_policy')
+        if closure_scope not in ('same_core', 'critical_cone'):
+            raise ValueError('unsupported closure_scope')
         if merge_policy == 'shifted' and (type(original_start_times) is not dict
                 or set(original_start_times) != set(index.ops)
                 or any(type(u) is not int or type(t) is not int or t < 0
@@ -85,6 +92,10 @@ def propose(graph, plan, config, critical_links, critical_operations, *, incumbe
         rows = _rows(graph, plan, index)
         if len(rows) < 2 or not _acyclic(index, rows):
             raise ValueError('singleton baseline priority union invalid')
+        baseline_order = (_merge(index, rows, [], packet_first=True)
+                          if closure_scope == 'critical_cone' else None)
+        if closure_scope == 'critical_cone' and baseline_order is None:
+            raise ValueError('baseline global topological order unavailable')
         cert = certify(graph, plan, config)
         if not cert['supported'] or not cert['zero_spill_certificate']:
             raise ValueError('baseline zero-spill certificate unavailable')
@@ -135,19 +146,27 @@ def propose(graph, plan, config, critical_links, critical_operations, *, incumbe
         if not x:
             reject('empty_receiver_closure'); continue
         receiver_count = len(x)
-        # One monotone closure over old eligible successors on the receiving
-        # core. No arbitrary subset search or packet-size truncation.
+        # One monotone closure over old critical eligible successors, either
+        # on the receiving core alone or across all old cores.
         stack = list(sorted(x))
         while stack:
             u = stack.pop()
             for v in sorted(index.succ[u]):
-                if owner[v] == b and v in critical and v not in x:
+                if (closure_scope == 'critical_cone' or owner[v] == b) and v in critical and v not in x:
                     x.add(v)
                     stack.append(v)
-        packet = [u for u in rows[b] if u in x]
-        wx = {p: sum(index.duration(u) for u in packet if index.ops[u]['pipe'] == p)
-              for p in PIPES}
-        proposed_peaks = {p: max(loads[c][p] + (wx[p] if c == a else -wx[p] if c == b else 0)
+        packet = ([u for u in baseline_order if u in x] if closure_scope == 'critical_cone'
+                  else [u for u in rows[b] if u in x])
+        packet_old_core_counts = {c: sum(owner[u] == c for u in packet)
+                                  for c in range(len(rows)) if any(owner[u] == c for u in packet)}
+        effective_moved_count = sum(owner[u] != a for u in packet)
+        removed = [{p: 0 for p in PIPES} for _ in rows]
+        added = {p: 0 for p in PIPES}
+        for u in packet:
+            pipe, duration = index.ops[u]['pipe'], index.duration(u)
+            removed[owner[u]][pipe] += duration
+            added[pipe] += duration
+        proposed_peaks = {p: max(loads[c][p] - removed[c][p] + (added[p] if c == a else 0)
                                  for c in range(len(rows))) for p in PIPES}
         # Old load peaks are not hard limits: communicating schedules can be
         # mostly idle. Only the valid compute lower bound can reject a claimed
@@ -165,8 +184,9 @@ def propose(graph, plan, config, critical_links, critical_operations, *, incumbe
             proposed = [[u for u in ordered if new_owner[u] == c] for c in range(len(rows))]
             if not _acyclic(index, proposed):
                 reject('priority_cycle'); continue
-            if any([u for u in proposed[c] if u not in x] != rows[c] for c in range(len(rows)) if c not in (a,b)):
-                reject('external_core_order_changed'); continue
+            if any([u for u in proposed[c] if u not in x] != [u for u in rows[c] if u not in x]
+                   for c in range(len(rows))):
+                reject('retained_core_order_changed'); continue
             candidate = _plan(plan, proposed)
             try:
                 derive_multicore_plan(graph, candidate)
@@ -187,6 +207,9 @@ def propose(graph, plan, config, critical_links, critical_operations, *, incumbe
                    'exposed_delay': -neg_delay, 'packet_size': len(packet),
                    'receiver_count': receiver_count,
                    'critical_downstream_added': len(packet) - receiver_count,
+                   'closure_scope': closure_scope,
+                   'packet_old_core_counts': packet_old_core_counts,
+                   'effective_moved_count': effective_moved_count,
                    'packet': packet, 'merge': ('shifted' if merge_policy == 'shifted' else
                                              'packet_first' if packet_first else 'retained_first'),
                    'fifo_compute_lower_bound': bound['makespan_lower_bound_cycles'],
@@ -217,12 +240,14 @@ def propose(graph, plan, config, critical_links, critical_operations, *, incumbe
 
 
 def construct(graph, plan, config, critical_links, critical_operations, *, incumbent_makespan,
-              max_seeds=8, merge_policy='extremes', original_start_times=None):
+              max_seeds=8, merge_policy='extremes', original_start_times=None,
+              closure_scope='same_core'):
     """Keep the original static single-candidate choice over propose's list."""
     candidates, meta = propose(graph, plan, config, critical_links,
                                critical_operations, incumbent_makespan=incumbent_makespan,
                                max_seeds=max_seeds, merge_policy=merge_policy,
-                               original_start_times=original_start_times)
+                               original_start_times=original_start_times,
+                               closure_scope=closure_scope)
     if not candidates:
         return None, meta
     chosen = min(candidates, key=lambda item: tuple(item['detail']['static_rank_key']))

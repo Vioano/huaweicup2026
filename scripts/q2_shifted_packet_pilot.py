@@ -21,7 +21,7 @@ ROOT = Path('/content/q2-shifted-packet-capsule')
 E2ROOT = ROOT / 'e2-src'
 OUT = Path('/content/q2-shifted-packet-output')
 RESULT_ZIP = Path('/content/q2-shifted-packet-results.zip')
-SCHEMA = 'q2-shifted-packet-three-v1'
+SCHEMA = 'q2-shifted-cone-three-v1'
 LIMITS = {'workers': 1, 'wall_seconds': 120, 'rss_bytes': 536870912,
           'propose': 3, 'native_E2': 27, 'E0': 3, 'E1': 0,
           'separate_prepare': 0, 'retries': 0}
@@ -30,7 +30,7 @@ PINNED = {
     'scripts/q2_rcx_fixed_e0_probe.py': 'c002ee5e1a18fb71a77eaa1caae94bedd8fdf2b20c4198afde4ad9f4b405f156',
     'scripts/q2_packet_native_pilot.py': '328d272dc4410c6e17bfa9125f7dfe82688c20c364db6c3e5ced302385a4dfbc',
     'src/q2_nikolastarx/native_trace_diagnostic.py': 'bb2170fdfdb0360140e41c342a592a1f7a1624d7610be7fbdced39d1bb200413',
-    'src/q2_nikolastarx/critical_packet_exchange.py': 'dc12414e49c0f503c02a5e8707340d652ccdaa972bbe4aed2cd4aea89add55b7',
+    'src/q2_nikolastarx/critical_packet_exchange.py': '6f358bf9993fd4afec834d836ae21fc14fd0abaee5bd69ecafdfbd076cb0ebdb',
 }
 
 
@@ -210,7 +210,7 @@ def child(manifest_path, deadline):
             save(ledger_path, ledger)
             proposals, meta = critical_packet_exchange.propose(
                 graph, base, cfg, diag['critical_links'], diag['critical_original_ids']['op_ids'],
-                incumbent_makespan=old['makespan'], max_seeds=8, merge_policy='shifted',
+                incumbent_makespan=old['makespan'], max_seeds=8, merge_policy='shifted', closure_scope='critical_cone',
                 original_start_times=starts)
             save(folder / 'proposal-meta.json', meta)
             if len(proposals) > 8:

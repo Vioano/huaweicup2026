@@ -25,6 +25,42 @@ def scene():
 
 
 class CriticalPacketTests(unittest.TestCase):
+    def test_critical_cone_crosses_third_core_and_accounts_load(self):
+        graph, plan, config, link = scene()
+        graph['ops'] += [{'id': 4, 'op': 'CONV', 'pipe': 'PIPE_M', 'cycles': 2},
+                         {'id': 5, 'op': 'CONV', 'pipe': 'PIPE_M', 'cycles': 4},
+                         {'id': 6, 'op': 'CONV', 'pipe': 'PIPE_M', 'cycles': 4},
+                         {'id': 7, 'op': 'CONV', 'pipe': 'PIPE_M', 'cycles': 3}]
+        graph['edges'].append({'source': 3, 'target': 4, 'data_size': 0})
+        graph['edges'].append({'source': 4, 'target': 7, 'data_size': 0})
+        plan['node_to_subgraph'].update({'4': 3, '5': 4, '6': 5, '7': 6})
+        plan['core_schedules'][0].append(6)
+        plan['core_schedules'].append([4, 3, 5])
+        original = copy.deepcopy((graph, plan, config))
+        same, _ = propose(graph, plan, config, [link], {3, 4, 7},
+                          incumbent_makespan=99)
+        cone, meta = propose(graph, plan, config, [link], {3, 4, 7},
+                             incumbent_makespan=99, closure_scope='critical_cone')
+        self.assertTrue(same)
+        self.assertTrue(cone, meta)
+        detail = cone[0]['detail']
+        self.assertEqual(same[0]['detail']['packet'], [2, 3])
+        self.assertEqual(detail['packet'], [2, 3, 4, 7])
+        self.assertEqual(detail['packet_old_core_counts'], {0: 1, 1: 2, 2: 1})
+        self.assertEqual(detail['effective_moved_count'], 3)
+        self.assertEqual(detail['pipe_load_peaks_before']['PIPE_M'], 10)
+        self.assertEqual(detail['pipe_load_peaks_after']['PIPE_M'], 8)
+        self.assertEqual(cone[0]['plan']['core_schedules'][2], [4, 5])
+        derive_multicore_plan(graph, cone[0]['plan'])
+        self.assertEqual((graph, plan, config), original)
+
+    def test_unknown_closure_scope_is_unsupported(self):
+        graph, plan, config, link = scene()
+        candidates, meta = propose(graph, plan, config, [link], {3},
+                                   incumbent_makespan=99, closure_scope='unknown')
+        self.assertEqual(candidates, [])
+        self.assertEqual(meta['status'], 'unsupported')
+
     def test_shifted_merge_places_packet_between_retained_ops(self):
         graph, plan, config, link = scene()
         graph['ops'] += [{'id': 4, 'op': 'CONV', 'pipe': 'PIPE_M', 'cycles': 2},
