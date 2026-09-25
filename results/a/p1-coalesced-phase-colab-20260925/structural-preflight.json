@@ -1,0 +1,42 @@
+{
+  "status": "prepared_plans_validated_NOT_SCORED",
+  "graph_sha256": "c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d",
+  "prototype_sha256": "6e8b14c309813b5f259be3e240d13f15f1e7237ef9fdeba7ab9927fc6d9905ef",
+  "proposal": {
+    "kind": "UNSCORED_coalesced_real_reserve_phase",
+    "q": 7,
+    "s": 3,
+    "body_period_reference": 35405,
+    "chain_compute_work": 4512,
+    "whole_chain_reserve": 7,
+    "phase_counts": [
+      0,
+      2,
+      3,
+      5,
+      6
+    ],
+    "body_packets": 2,
+    "tasks": 27,
+    "tasks_per_core": [
+      5,
+      6,
+      6,
+      5,
+      5
+    ],
+    "same_partition_and_core_ownership": true,
+    "scope": "Private chains only; requires fresh Task compile and model replay"
+  },
+  "same_partition": true,
+  "both_official_structure_and_order_checks": true,
+  "calls": {
+    "Task_compile": 0,
+    "Fraction": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "pure_plan_tests": 5,
+  "scope": "reduces declared reserve Task boundaries; actual FIFO/MEM/phase and quality require fresh compile and response"
+}

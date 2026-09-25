@@ -1,0 +1,144 @@
+{
+  "status": "probe-success-collected",
+  "session": "p1-r5-phase-008-k5-20260925",
+  "source": {
+    "artifact_manifest_sha256": "3ff23e7c05b6f80eb8318f58930be7026d18b296a3fb5185fac50b30f1ddda71",
+    "source_commit": "8e63305f86a3692b9552295c61c4f234a006c105",
+    "graph_sha256": "c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d",
+    "artifacts_verified": 5
+  },
+  "steps": [
+    {
+      "step": "preflight-sessions",
+      "argv": [
+        "/Users/nikolastar/.local/bin/colab",
+        "--auth",
+        "oauth2",
+        "sessions"
+      ],
+      "returncode": 0,
+      "stdout": "[colab] No active sessions found on server.\n",
+      "stderr": "",
+      "wall_seconds": 1.130492750031408
+    },
+    {
+      "step": "new",
+      "argv": [
+        "/Users/nikolastar/.local/bin/colab",
+        "--auth",
+        "oauth2",
+        "new",
+        "--session",
+        "p1-r5-phase-008-k5-20260925"
+      ],
+      "returncode": 0,
+      "stdout": "[colab] Creating session 'p1-r5-phase-008-k5-20260925'...\n[colab] Session READY.\n",
+      "stderr": "",
+      "wall_seconds": 13.938820417039096
+    },
+    {
+      "step": "upload-bundle",
+      "argv": [
+        "/Users/nikolastar/.local/bin/colab",
+        "--auth",
+        "oauth2",
+        "upload",
+        "--session",
+        "p1-r5-phase-008-k5-20260925",
+        "/Users/nikolastar/Projects/huaweicup2026/output/p1-r5-phase-colab-20260925/run-r5-008-k5-20260925/r5-source-bundle.tar.gz",
+        "/content/r5-source-bundle.tar.gz"
+      ],
+      "returncode": 0,
+      "stdout": "[colab] Uploaded '/Users/nikolastar/Projects/huaweicup2026/output/p1-r5-phase-colab-20260925/run-r5-008-k5-20260925/r5-source-bundle.tar.gz' to '/content/r5-source-bundle.tar.gz'\n",
+      "stderr": "",
+      "wall_seconds": 0.9782909160130657
+    },
+    {
+      "step": "exec",
+      "argv": [
+        "/Users/nikolastar/.local/bin/colab",
+        "--auth",
+        "oauth2",
+        "exec",
+        "--session",
+        "p1-r5-phase-008-k5-20260925",
+        "--file",
+        "/Users/nikolastar/Projects/huaweicup2026/output/p1-r5-phase-colab-20260925/run-r5-008-k5-20260925/remote_setup.py",
+        "--timeout",
+        "330"
+      ],
+      "returncode": 0,
+      "stdout": "{\"status\": \"phase-pair-complete-NOT-E0\", \"verified_diagnostics\": true, \"archive_sha256\": \"215c6f501a4f5ed835c20411b7f809605b0247cbbe11902c25ff88901b233d9b\"}\n",
+      "stderr": "",
+      "wall_seconds": 18.35316362499725
+    },
+    {
+      "step": "download",
+      "argv": [
+        "/Users/nikolastar/.local/bin/colab",
+        "--auth",
+        "oauth2",
+        "download",
+        "--session",
+        "p1-r5-phase-008-k5-20260925",
+        "/content/p1_r5_phase_window/evidence.tar.gz",
+        "/Users/nikolastar/Projects/huaweicup2026/output/p1-r5-phase-colab-20260925/run-r5-008-k5-20260925/evidence.tar.gz"
+      ],
+      "returncode": 0,
+      "stdout": "[colab] Downloaded '/content/p1_r5_phase_window/evidence.tar.gz' to '/Users/nikolastar/Projects/huaweicup2026/output/p1-r5-phase-colab-20260925/run-r5-008-k5-20260925/evidence.tar.gz'\n",
+      "stderr": "",
+      "wall_seconds": 0.9264652089914307
+    },
+    {
+      "step": "finally-stop",
+      "argv": [
+        "/Users/nikolastar/.local/bin/colab",
+        "--auth",
+        "oauth2",
+        "stop",
+        "--session",
+        "p1-r5-phase-008-k5-20260925"
+      ],
+      "returncode": 0,
+      "stdout": "[colab] Stopping session 'p1-r5-phase-008-k5-20260925'...\n[colab] Session terminated.\n",
+      "stderr": "",
+      "wall_seconds": 1.6068866669666022
+    },
+    {
+      "step": "finally-sessions",
+      "argv": [
+        "/Users/nikolastar/.local/bin/colab",
+        "--auth",
+        "oauth2",
+        "sessions"
+      ],
+      "returncode": 0,
+      "stdout": "[colab] No active sessions found on server.\n",
+      "stderr": "",
+      "wall_seconds": 1.0435270000016317
+    }
+  ],
+  "VM_stopped_readback": true,
+  "archive_collected": true,
+  "probe_success": true,
+  "t0_monotonic": 300098.213517541,
+  "lease_deadline_monotonic": 300668.213517541,
+  "evidence": {
+    "archive_sha256": "215c6f501a4f5ed835c20411b7f809605b0247cbbe11902c25ff88901b233d9b",
+    "verified_files": 6,
+    "setup_status": "phase-pair-complete-NOT-E0",
+    "diagnostics_verified": true,
+    "diagnostics_status": "model_pair_complete_NOT_E0",
+    "graph_sha256": "c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d",
+    "Task_compile_confirmed": 53,
+    "Fraction_attempts": 2,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "retry": 0,
+    "both_traces": true,
+    "same_partition": true
+  },
+  "stop_returncode": 0,
+  "elapsed_seconds": 36.878621875017416
+}

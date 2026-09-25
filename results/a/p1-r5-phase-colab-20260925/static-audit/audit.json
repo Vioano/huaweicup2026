@@ -1,0 +1,604 @@
+{
+  "kind": "LOCAL_COLAB_SAVED_FRACTION_TRACE_STATIC_AUDIT_NOT_RERUN_NOT_E0",
+  "source_archive": "results/a/p1-r5-phase-colab-20260925/run-0717Z/evidence.tar.gz",
+  "source_archive_sha256": "215c6f501a4f5ed835c20411b7f809605b0247cbbe11902c25ff88901b233d9b",
+  "A_reference": {
+    "path": "results/a/p1-r5-local-audit-20260925/traces/whole_seed-audit.json",
+    "sha256": "6f1a7f8ebd027253a3d0480440c673ff0111df0c15c2eafbc15a014213fe87b6",
+    "makespan": 101836,
+    "decomposition": {
+      "ddr_solo_work": 618,
+      "ddr_duration_excess_including_rounding": 1854,
+      "compute_work": 99264,
+      "gate": 100
+    }
+  },
+  "calls_this_audit": {
+    "Task_compile": 0,
+    "Fraction_simulate": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "modes": {
+    "control": {
+      "makespan": 121475,
+      "global_DDR_union": 63084,
+      "cores": [
+        {
+          "core": 0,
+          "M_busy": 50952,
+          "V_busy": 48312,
+          "M_V_overlap": 5060,
+          "DDR_union_on_core": 63084,
+          "gate_gaps": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "last_two_tasks": [
+            {
+              "core": 0,
+              "task": 9,
+              "start": 107068,
+              "end": 115936
+            },
+            {
+              "core": 0,
+              "task": 10,
+              "start": 116036,
+              "end": 121475
+            }
+          ],
+          "finish": 121475
+        },
+        {
+          "core": 1,
+          "M_busy": 50952,
+          "V_busy": 48312,
+          "M_V_overlap": 5060,
+          "DDR_union_on_core": 63084,
+          "gate_gaps": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "last_two_tasks": [
+            {
+              "core": 1,
+              "task": 20,
+              "start": 107068,
+              "end": 115936
+            },
+            {
+              "core": 1,
+              "task": 21,
+              "start": 116036,
+              "end": 121475
+            }
+          ],
+          "finish": 121475
+        },
+        {
+          "core": 2,
+          "M_busy": 50952,
+          "V_busy": 48312,
+          "M_V_overlap": 5060,
+          "DDR_union_on_core": 63084,
+          "gate_gaps": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "last_two_tasks": [
+            {
+              "core": 2,
+              "task": 31,
+              "start": 107068,
+              "end": 115936
+            },
+            {
+              "core": 2,
+              "task": 32,
+              "start": 116036,
+              "end": 121475
+            }
+          ],
+          "finish": 121475
+        },
+        {
+          "core": 3,
+          "M_busy": 48636,
+          "V_busy": 46116,
+          "M_V_overlap": 5060,
+          "DDR_union_on_core": 61845,
+          "gate_gaps": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "last_two_tasks": [
+            {
+              "core": 3,
+              "task": 41,
+              "start": 71563,
+              "end": 106968
+            },
+            {
+              "core": 3,
+              "task": 42,
+              "start": 107068,
+              "end": 115936
+            }
+          ],
+          "finish": 115936
+        },
+        {
+          "core": 4,
+          "M_busy": 48636,
+          "V_busy": 46116,
+          "M_V_overlap": 5060,
+          "DDR_union_on_core": 61845,
+          "gate_gaps": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "last_two_tasks": [
+            {
+              "core": 4,
+              "task": 51,
+              "start": 71563,
+              "end": 106968
+            },
+            {
+              "core": 4,
+              "task": 52,
+              "start": 107068,
+              "end": 115936
+            }
+          ],
+          "finish": 115936
+        }
+      ],
+      "observed_duration_DAG": {
+        "status": "matched_observed_duration_DAG_only",
+        "observed_duration_DAG_longest": 121475,
+        "unexplained_gap": 0,
+        "decomposition": {
+          "ddr_solo_work": 5761,
+          "ddr_duration_excess_including_rounding": 27642,
+          "compute_work": 87072,
+          "gate": 1000
+        },
+        "max_operation_start_slack": 0,
+        "checked_operations": 1464
+      },
+      "critical_chain_last_8": [
+        {
+          "kind": "compute",
+          "weight": 150,
+          "task": 10,
+          "core": 0,
+          "pipe": "PIPE_V",
+          "rank": 2,
+          "observed_start": 118394,
+          "observed_end": 118544,
+          "solo_work": 150,
+          "duration": 150,
+          "incoming": "FIFO"
+        },
+        {
+          "kind": "compute",
+          "weight": 150,
+          "task": 10,
+          "core": 0,
+          "pipe": "PIPE_V",
+          "rank": 3,
+          "observed_start": 118544,
+          "observed_end": 118694,
+          "solo_work": 150,
+          "duration": 150,
+          "incoming": "FIFO"
+        },
+        {
+          "kind": "compute",
+          "weight": 582,
+          "task": 10,
+          "core": 0,
+          "pipe": "PIPE_V",
+          "rank": 4,
+          "observed_start": 118694,
+          "observed_end": 119276,
+          "solo_work": 582,
+          "duration": 582,
+          "incoming": "FIFO"
+        },
+        {
+          "kind": "compute",
+          "weight": 150,
+          "task": 10,
+          "core": 0,
+          "pipe": "PIPE_V",
+          "rank": 5,
+          "observed_start": 119276,
+          "observed_end": 119426,
+          "solo_work": 150,
+          "duration": 150,
+          "incoming": "FIFO"
+        },
+        {
+          "kind": "compute",
+          "weight": 582,
+          "task": 10,
+          "core": 0,
+          "pipe": "PIPE_V",
+          "rank": 6,
+          "observed_start": 119426,
+          "observed_end": 120008,
+          "solo_work": 582,
+          "duration": 582,
+          "incoming": "FIFO"
+        },
+        {
+          "kind": "compute",
+          "weight": 1158,
+          "task": 10,
+          "core": 0,
+          "pipe": "PIPE_M",
+          "rank": 2,
+          "observed_start": 120008,
+          "observed_end": 121166,
+          "solo_work": 1158,
+          "duration": 1158,
+          "incoming": "need"
+        },
+        {
+          "kind": "DDR",
+          "weight": 309,
+          "task": 10,
+          "core": 0,
+          "pipe": "PIPE_MTE3",
+          "rank": 1,
+          "observed_start": 121166,
+          "observed_end": 121475,
+          "solo_work": 103,
+          "duration": 309,
+          "incoming": "need"
+        },
+        {
+          "kind": "task_end",
+          "weight": 0,
+          "task": 10,
+          "incoming": "task_completion"
+        }
+      ]
+    },
+    "phase": {
+      "makespan": 102473,
+      "global_DDR_union": 63084,
+      "cores": [
+        {
+          "core": 0,
+          "M_busy": 50952,
+          "V_busy": 48312,
+          "M_V_overlap": 6790,
+          "DDR_union_on_core": 22963,
+          "gate_gaps": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "last_two_tasks": [
+            {
+              "core": 0,
+              "task": 6,
+              "start": 91113,
+              "end": 95934
+            },
+            {
+              "core": 0,
+              "task": 10,
+              "start": 96034,
+              "end": 100855
+            }
+          ],
+          "finish": 100855
+        },
+        {
+          "core": 1,
+          "M_busy": 50952,
+          "V_busy": 48312,
+          "M_V_overlap": 6872,
+          "DDR_union_on_core": 25125,
+          "gate_gaps": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "last_two_tasks": [
+            {
+              "core": 1,
+              "task": 17,
+              "start": 92159,
+              "end": 96980
+            },
+            {
+              "core": 1,
+              "task": 21,
+              "start": 97080,
+              "end": 101901
+            }
+          ],
+          "finish": 101901
+        },
+        {
+          "core": 2,
+          "M_busy": 50952,
+          "V_busy": 48312,
+          "M_V_overlap": 6623,
+          "DDR_union_on_core": 25683,
+          "gate_gaps": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "last_two_tasks": [
+            {
+              "core": 2,
+              "task": 28,
+              "start": 92672,
+              "end": 97552
+            },
+            {
+              "core": 2,
+              "task": 32,
+              "start": 97652,
+              "end": 102473
+            }
+          ],
+          "finish": 102473
+        },
+        {
+          "core": 3,
+          "M_busy": 48636,
+          "V_busy": 46116,
+          "M_V_overlap": 7050,
+          "DDR_union_on_core": 27007,
+          "gate_gaps": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "last_two_tasks": [
+            {
+              "core": 3,
+              "task": 38,
+              "start": 88022,
+              "end": 93222
+            },
+            {
+              "core": 3,
+              "task": 39,
+              "start": 93322,
+              "end": 98319
+            }
+          ],
+          "finish": 98319
+        },
+        {
+          "core": 4,
+          "M_busy": 48636,
+          "V_busy": 46116,
+          "M_V_overlap": 6972,
+          "DDR_union_on_core": 26752,
+          "gate_gaps": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "last_two_tasks": [
+            {
+              "core": 4,
+              "task": 52,
+              "start": 88934,
+              "end": 93045
+            },
+            {
+              "core": 4,
+              "task": 49,
+              "start": 93145,
+              "end": 98081
+            }
+          ],
+          "finish": 98081
+        }
+      ],
+      "observed_duration_DAG": {
+        "status": "matched_observed_duration_DAG_only",
+        "observed_duration_DAG_longest": 102473,
+        "unexplained_gap": 0,
+        "decomposition": {
+          "ddr_solo_work": 4117,
+          "ddr_duration_excess_including_rounding": 5652,
+          "compute_work": 91704,
+          "gate": 1000
+        },
+        "max_operation_start_slack": 0,
+        "checked_operations": 1464
+      },
+      "critical_chain_last_8": [
+        {
+          "kind": "compute",
+          "weight": 150,
+          "task": 32,
+          "core": 2,
+          "pipe": "PIPE_V",
+          "rank": 2,
+          "observed_start": 99598,
+          "observed_end": 99748,
+          "solo_work": 150,
+          "duration": 150,
+          "incoming": "FIFO"
+        },
+        {
+          "kind": "compute",
+          "weight": 150,
+          "task": 32,
+          "core": 2,
+          "pipe": "PIPE_V",
+          "rank": 3,
+          "observed_start": 99748,
+          "observed_end": 99898,
+          "solo_work": 150,
+          "duration": 150,
+          "incoming": "FIFO"
+        },
+        {
+          "kind": "compute",
+          "weight": 582,
+          "task": 32,
+          "core": 2,
+          "pipe": "PIPE_V",
+          "rank": 4,
+          "observed_start": 99898,
+          "observed_end": 100480,
+          "solo_work": 582,
+          "duration": 582,
+          "incoming": "FIFO"
+        },
+        {
+          "kind": "compute",
+          "weight": 150,
+          "task": 32,
+          "core": 2,
+          "pipe": "PIPE_V",
+          "rank": 5,
+          "observed_start": 100480,
+          "observed_end": 100630,
+          "solo_work": 150,
+          "duration": 150,
+          "incoming": "FIFO"
+        },
+        {
+          "kind": "compute",
+          "weight": 582,
+          "task": 32,
+          "core": 2,
+          "pipe": "PIPE_V",
+          "rank": 6,
+          "observed_start": 100630,
+          "observed_end": 101212,
+          "solo_work": 582,
+          "duration": 582,
+          "incoming": "FIFO"
+        },
+        {
+          "kind": "compute",
+          "weight": 1158,
+          "task": 32,
+          "core": 2,
+          "pipe": "PIPE_M",
+          "rank": 2,
+          "observed_start": 101212,
+          "observed_end": 102370,
+          "solo_work": 1158,
+          "duration": 1158,
+          "incoming": "need"
+        },
+        {
+          "kind": "DDR",
+          "weight": 103,
+          "task": 32,
+          "core": 2,
+          "pipe": "PIPE_MTE3",
+          "rank": 1,
+          "observed_start": 102370,
+          "observed_end": 102473,
+          "solo_work": 103,
+          "duration": 103,
+          "incoming": "need"
+        },
+        {
+          "kind": "task_end",
+          "weight": 0,
+          "task": 32,
+          "incoming": "task_completion"
+        }
+      ]
+    }
+  },
+  "comparison": {
+    "phase_minus_control": -19002,
+    "phase_minus_A": 637,
+    "phase_minus_threshold": 3209
+  },
+  "tail_scope": "Core 2 Task 32 is remainder tail1 after reserve7 and body14; reserved Tasks are 22..28.",
+  "limitation": "Saved-trace algebra only; DDR fairness, E0 score and counterfactual tail cost unverified."
+}
