@@ -1,3 +1,5 @@
+最新公开对话快照：[CHAT-20260925T1446Z.md](CHAT-20260925T1446Z.md)。R10针对整轨道负载不均的有限迁移追问已发送，6 Pro生成中；准确正文与消息ID见[R10_QUESTION.md](R10_QUESTION.md)、[R10_STATUS.json](R10_STATUS.json)。不得重复发送，尚无R10结论。
+
 # P3 R9 多层查询亲和
 
 最新完整公开问答：[CHAT-20260925T1339Z.md](CHAT-20260925T1339Z.md)。原会话及消息ID、完整性范围见 [STATUS.json](STATUS.json)。先前生成中快照保留在提交 c1edb49324fd8ff45cabecec02cf051ab5ddd119 中。

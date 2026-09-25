@@ -1,0 +1,69 @@
+{
+  "schema": "one-shot-static-merge-audit-v1",
+  "input_sha256": {
+    "graph": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+    "plan": "2885b28a512598e4bae525c7bf4b214ac9b2452de19425603fcdea2ae8e7038a",
+    "prepared": "91c9e4ff2995d091922f7ae1b0975de98174a9487a1d0458a05c60535beb5c44",
+    "trace": "3c51fac6f14a7c2fdafad3eef6694fb8f38d473e00534c25cd4dadff13cfa0d8",
+    "step1_source": "d8fe721ff3dbe036e34a20c00cce6430960860000a49eb467e63465f76b84034",
+    "p3_source": "eab1504dead881f4b67c0f0498cbc2dbbd9039dc3c9d198c6af58773c127eeb0"
+  },
+  "raw_ops": 4209,
+  "raw_edges": 11187,
+  "raw_op_arcs": 6889,
+  "raw_op_dag": [
+    true,
+    4209,
+    4209
+  ],
+  "compute_ops": 4113,
+  "compute_arcs": 6258,
+  "target_detail": [
+    {
+      "tensor_id": 1000000048,
+      "pilot_core": 0,
+      "pilot_copy_id": 1000004471,
+      "pilot_issue": 6100,
+      "first_insert": 6735,
+      "consumer": 1289,
+      "old_rank": 202,
+      "first_independent_rank": 23,
+      "first_independent_op": 4073,
+      "merged_compute_count": 180,
+      "all_between_after_first_are_ancestors": true,
+      "prior_immediate_compute_preds": [
+        1288
+      ],
+      "old_prepared_copy_index": 300,
+      "old_prepared_consumer_index": 301,
+      "raw_step1_relative_order_known": false
+    },
+    {
+      "tensor_id": 1000001471,
+      "pilot_core": 0,
+      "pilot_copy_id": 1000005004,
+      "pilot_issue": 13305,
+      "first_insert": 14075,
+      "consumer": 2686,
+      "old_rank": 395,
+      "first_independent_rank": 23,
+      "first_independent_op": 4073,
+      "merged_compute_count": 373,
+      "all_between_after_first_are_ancestors": true,
+      "prior_immediate_compute_preds": [
+        2685
+      ],
+      "old_prepared_copy_index": 543,
+      "old_prepared_consumer_index": 544,
+      "raw_step1_relative_order_known": false
+    }
+  ],
+  "candidate_quotient_dag": [
+    false,
+    482,
+    3741
+  ],
+  "candidate_quotient_arcs": 5739,
+  "candidate_local_order_ok": true,
+  "limitation": "No original Step1 raw_seq in archived prepared; no official Task/Step called. COPY order inside merged bucket, memory frontier, and runtime effect remain unknown."
+}
