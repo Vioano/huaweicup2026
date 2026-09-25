@@ -49,14 +49,16 @@ try{
     }
   }
 }catch(_){pendingRestore=null;}
+if(focusProblem==='P3'){
+  const requestedMetric=new URLSearchParams(location.search).get('metric');
+  if(['cache_gain','cache_hit_rate'].includes(requestedMetric)){
+    mainMetric=requestedMetric;$('#metric').value=requestedMetric;
+  }
+}
 function restoreView(){
   if(!pendingRestore)return;
   const saved=pendingRestore;pendingRestore=null;sessionStorage.removeItem(restoreKey);
   if(Number.isFinite(saved.detailScroll))$('#detail').scrollTop=Math.max(0,saved.detailScroll);
-  if(focusProblem!=='P3'&&['cache_gain','cache_hit_rate'].includes(saved.cacheMode)){
-    openCache(saved.cacheMode);
-    const table=$('#cache-dialog .cache-table-scroll');if(table&&Number.isFinite(saved.cacheScroll))table.scrollTop=Math.max(0,saved.cacheScroll);
-  }
   if(Number.isFinite(saved.windowScroll))window.scrollTo(0,Math.max(0,saved.windowScroll));
   if(focusProblem)loadBatches(saved.batchScroll);
 }
@@ -114,11 +116,11 @@ function renderBatchList(restoreScroll){
   $('#history-view').setAttribute('aria-pressed',String(!$('#run').value&&!$('#algorithm').value));
   container.innerHTML=rows.length?rows.map(r=>{
     const rank=batchResult.full.findIndex(c=>c.run_id===r.run_id)+1;
-    const status=r.full_complete?(r.full_mean_speedup===null?'全题500/500 · 比值待核':rank?'全题500/500 · #'+rank:'全题500/500'):r.composite?'四分片原始记录 · 待补齐或待核':!r.one_attempt_per_cell?'同格多次尝试 · 待核选择规则':!r.single_source?'混合或缺少固定来源':r.complete?'当前范围完整 · 全题未满':!r.scope_attempts?'当前核数暂无记录':'未完成全题500格';
+    const status=r.full_complete?(r.full_mean_speedup===null?'全题500/500 · 比值待核':rank?'全题500/500 · #'+rank:'全题500/500'):r.composite?'固定分片原始记录 · 待补齐或待核':!r.one_attempt_per_cell?'同格多次尝试 · 待核选择规则':!r.single_source?'混合或缺少固定来源':r.complete?'当前范围完整 · 全题未满':!r.scope_attempts?'当前核数暂无记录':'未完成全题500格';
     const score=r.full_complete?r.full_mean_speedup:r.mean_speedup;
     const label=r.composite?r.composite_label:r.run_id;
-    const source=r.composite?r.component_runs.map(run=>run.slice(-3)).join(' / ')+' · 固定原始记录指纹':r.solver_commits.map(c=>c.slice(0,8)).join(' / ')||'来源待补';
-    return `<div class="batch-entry"><button class="batch-item" data-batch-run="${esc(r.run_id)}" aria-pressed="${$('#run').value===r.run_id}" title="${esc(r.run_id)}"><span class="batch-item-top"><span class="batch-badge ${r.full_complete?'complete':''}">${status}</span><strong>${score===null?'NA':score.toFixed(3)+'×'}</strong></span><b>${esc(label)}</b><span class="batch-algorithm">${esc(r.algorithm_ids.join(' / '))}</span><span class="batch-source">${esc(source)}</span><span class="batch-item-bottom"><span>全题已核 ${r.full_valid_count}/500 · 当前范围 ${r.scored_count}/${r.target_count}</span><span>${r.mean_solver_seconds===null?'求解耗时 NA':r.mean_solver_seconds.toFixed(3)+' s / '+r.solver_count+'例'}</span></span><span class="batch-subset">${r.full_complete?(r.full_mean_speedup===null?'所选核数缺少完整单核分母，暂不比较加速比':'上方为所选核数相对官方单核均值'):'上方为相对官方单核的已测子集均值；不可作全量比较'}</span></button>${r.composite?`<a class="batch-manifest" href="${esc(r.manifest_url)}" target="_blank" rel="noopener">四分片固定 manifest ↗</a>`:''}</div>`;
+    const source=r.composite?r.component_runs.length+' 个原始批次 · 固定记录指纹':r.solver_commits.map(c=>c.slice(0,8)).join(' / ')||'来源待补';
+    return `<div class="batch-entry"><button class="batch-item" data-batch-run="${esc(r.run_id)}" aria-pressed="${$('#run').value===r.run_id}" title="${esc(r.run_id)}"><span class="batch-item-top"><span class="batch-badge ${r.full_complete?'complete':''}">${status}</span><strong>${score===null?'NA':score.toFixed(3)+'×'}</strong></span><b>${esc(label)}</b><span class="batch-algorithm">${esc(r.algorithm_ids.join(' / '))}</span><span class="batch-source">${esc(source)}</span><span class="batch-item-bottom"><span>全题已核 ${r.full_valid_count}/500 · 当前范围 ${r.scored_count}/${r.target_count}</span><span>${r.mean_solver_seconds===null?'求解耗时 NA':r.mean_solver_seconds.toFixed(3)+' s / '+r.solver_count+'例'}</span></span><span class="batch-subset">${r.full_complete?(r.full_mean_speedup===null?'所选核数缺少完整单核分母，暂不比较加速比':'上方为所选核数相对官方单核均值'):'上方为相对官方单核的已测子集均值；不可作全量比较'}</span></button>${r.composite?`<a class="batch-manifest" href="${esc(r.manifest_url)}" target="_blank" rel="noopener">固定来源清单 ↗</a>`:''}</div>`;
   }).join(''):`<div class="batch-empty">${search?'没有匹配的批次。':top?'当前没有本题500/500的同源完整批次。切换“所有批次”查看已测结果。':'本题尚无批次。'}</div>`;
   $('#batch-status').textContent=`${batchRows.length} 个批次 · ${batchResult.full_complete_count||0} 个全题同源完整批次 · 显示 ${rows.length} 个`;
   container.scrollTop=scroll;
@@ -186,7 +188,7 @@ function render(){if(!data)return;const metric=$('#metric').value;const values=d
 const selectedRun=$('#run').value,selectedAlgorithm=$('#algorithm').value;
 $('#algorithm').options[0].textContent=selectedRun?'所有算法（本批次）':'探索：历史逐格最佳';
 const chosen=batchRows.find(r=>r.run_id===selectedRun);
-$('#selection-note').textContent=(selectedRun?(focusProblem?`当前${chosen?.composite?'四分片复合':'固定'}批次：${chosen?.composite_label||selectedRun} · 全题已核 ${chosen?.full_valid_count??'待核'}/500。${chosen?.full_complete?'五个核数均有100图有效数据。':'均值只作已测样本预览。'}`:`当前批次：${selectedRun}。请进入对应题目的专注页核查是否同源全题500/500。`):selectedAlgorithm?'探索：当前算法跨批次逐格选优，可能混合不同版本；不作最终成绩。':'探索：历史逐格最佳混合不同算法和批次，不作最终成绩；请在专注页选全题500/500的固定批次。')+' 切换指标仍展示同一方案。'+(metric==='cache_gain'?' Cache 加速比只统计当前方案有无 Cache 配对原件的格；缺配对不计入均值，也不代表已独立复跑。':'');
+$('#selection-note').textContent=(selectedRun?(focusProblem?`当前${chosen?.composite?'固定来源复合':'固定'}批次：${chosen?.composite_label||selectedRun} · 全题已核 ${chosen?.full_valid_count??'待核'}/500。${chosen?.full_complete?'五个核数均有100图有效数据。':'均值只作已测样本预览。'}`:`当前批次：${selectedRun}。请进入对应题目的专注页核查是否同源全题500/500。`):selectedAlgorithm?'探索：当前算法跨批次逐格选优，可能混合不同版本；不作最终成绩。':'探索：历史逐格最佳混合不同算法和批次，不作最终成绩；请在专注页选全题500/500的固定批次。')+' 切换指标仍展示同一方案。'+(metric==='cache_gain'?' Cache 加速比只统计当前方案有无 Cache 配对原件的格；缺配对不计入均值，也不代表已独立复跑。':'');
 const ratio=metric==='baseline_speedup'||metric==='cache_gain';
 $('#metric-label').textContent=(metrics()[metric]?.[0]||metric)+' / '+(metrics()[metric]?.[1]||'');
 const ticks=metric==='cache_gain'?[1,1.05,1.2,1.5,2]:ratio?[.5,1,2,4,8]:metric==='cache_hit_rate'?[0,.25,.5,.75,1]:[low,low===null?null:Math.expm1((Math.log1p(low)+Math.log1p(high))/2),high];
@@ -199,7 +201,7 @@ const activeCell=document.activeElement?.dataset?.case?{...document.activeElemen
 $('#boards').innerHTML=(focusProblem?[focusProblem]:['P1','P2','P3']).map((p,index)=>{const cells=data.cells.filter(c=>c.problem===p),map=new Map(cells.map(c=>[c.case_id+'-'+c.cores,c]));const valid=cells.filter(c=>c.best?.eligible).length;return `<section class="board"><div class="board-title"><div><strong>${focusProblem?p:`<a class="problem-link" href="/?problem=${p}" target="_blank" rel="noopener" aria-label="在新标签页查看 ${p} 全部批次与优秀候选">${p} <span>批次与成绩 ↗</span></a>`}</strong><small>${names[p]} · ${valid}/500 已入榜</small></div>${p==='P3'?`<button id="cache-view" ${focusProblem==='P3'?`aria-pressed="${metric==='cache_gain'}"`:''}>${focusProblem==='P3'&&metric==='cache_gain'?'返回单核加速比':`Cache 加速比 · ${cells.filter(c=>visibleCase(c.case_id)&&c.best?.eligible&&c.best.cache_pair_verified).length} 已配对`}</button>`:''}</div><div class="board-scroll" tabindex="0" aria-label="${p} 成绩表滚动区域"><table><thead><tr><th>算例</th>${[1,2,3,4,5].map(k=>`<th>${k} 核</th>`).join('')}</tr><tr class="averages"><th scope="row">均值</th>${[1,2,3,4,5].map(k=>{const a=summarizeCells(cells.filter(c=>visibleCase(c.case_id)),metric,k);return `<th title="${esc(metrics()[metric][0])}：当前筛选的逐例算术平均；${a.count}/${a.total} 个有效样本"><b>${esc(fmt(a.mean===null?null:Number(a.mean.toFixed(3)),metric))}</b><small>${a.count}/${a.total}</small></th>`;}).join('')}</tr></thead><tbody>${Array.from({length:100},(_,i)=>String(i+1).padStart(3,'0')).filter(visibleCase).map(c=>`<tr><th>${c}</th>${[1,2,3,4,5].map(k=>{const cell=map.get(c+'-'+k),r=cell.best,v=metric==='cache_gain'&&!r?.cache_pair_verified?null:r?.metrics[metric],distribution=groups.get(p+'-'+k)||[],rank=r?.eligible&&Number.isFinite(v)?relativePosition(v,distribution):null,selected=selection&&selection.problem===p&&selection.case_id===c&&selection.cores===k;let text=r?(metric==='cache_gain'&&r.eligible&&!r.cache_pair_verified?'缺配对':fmt(v,metric)):cell.status==='failed'?'失败 !':cell.status==='timeout'?'超时 !':cell.status==='running'?'运行中':cell.status==='reported'?(cell.missing_artifacts?.length?'缺原件':'待核验'):cell.attempts?'待核验':'—';const tip=r?`${p} / ${c} / ${k}核\n${r.algorithm_name}\n${metrics()[metric][0]}: ${fmt(v,metric)}\n${r.eligible?'原件一致':'仅报告 · 不入正式榜'}${metric==='cache_gain'&&!r.cache_pair_verified?'\n缺同计划无 Cache 配对原件；P3 成绩仍有效':''}${rank===null?'':`\n同题同核数值分位: ${Math.round(rank*100)}%（${distribution.length} 个样本；细条越长数值越大，不表示绝对差值）`}\n点击查看 ${cell.attempts} 次尝试及历史`:`${p} / ${c} / ${k}核：${statuses[cell.status]||cell.status}，${cell.attempts} 次尝试${cell.missing_artifacts?.length?'；缺少 '+cell.missing_artifacts.join('/')+' 原件':''}`;return `<td><button class="cell ${r?'measured ':''}${r&&!r.eligible?'reported ':''}${cell.status} ${selected?'selected':''}" style="${r?.eligible&&Number.isFinite(v)?cellStyle(v):''}" data-p="${p}" data-case="${c}" data-k="${k}" title="${esc(tip)}" aria-label="${esc(tip)}">${esc(text)}${rank===null?'':`<i class="relative-bar" aria-hidden="true" style="width:${(rank*92).toFixed(2)}%"></i>`}</button></td>`;}).join('')}</tr>`).join('')}</tbody></table></div></section>`;}).join('');
 [...document.querySelectorAll('.board-scroll')].forEach((e,i)=>{const pos=scrolls[i];e.scrollTop=Math.max(0,Number.isFinite(pos?.top)?pos.top:Number.isFinite(pos)?pos:0);e.scrollLeft=Math.max(0,Number.isFinite(pos?.left)?pos.left:0);});
 if(activeCell)[...document.querySelectorAll('[data-case]')].find(b=>b.dataset.p===activeCell.p&&b.dataset.case===activeCell.case&&b.dataset.k===activeCell.k)?.focus({preventScroll:true});
-$('#cache-view')?.addEventListener('click',()=>focusProblem==='P3'?selectMetric($('#metric').value==='cache_gain'?'baseline_speedup':'cache_gain'):openCache('cache_gain'));
+$('#cache-view')?.addEventListener('click',()=>focusProblem==='P3'?selectMetric($('#metric').value==='cache_gain'?'baseline_speedup':'cache_gain'):location.assign('/?problem=P3&metric=cache_gain'));
 const shown=data.cells.filter(c=>!focusProblem||c.problem===focusProblem);
 const valid=shown.filter(c=>c.best?.eligible).length,attempts=shown.filter(c=>c.attempts).length;$('#counts').innerHTML=`<div><b>${valid}<small> / ${focusProblem?500:1500}</small></b><span>${data.runtime?.mode==='central_mirror'?'中央已核的有效格':'有原件的有效格'}</span></div><div><b>${attempts}</b><span>已有记录的格</span></div><div><b>${data.record_count}</b><span>${focusProblem?'全站历史记录':'历史记录'}</span></div>`;
 }
@@ -280,7 +282,15 @@ $('#boards').addEventListener('click',e=>{const b=e.target.closest('[data-case]'
 for(const id of ['#algorithm','#run'])$(id).addEventListener('change',()=>{if(focusProblem)focusChoice=$('#algorithm').value||$('#run').value?'batch':'history';refresh(true);});
 $('#reported').addEventListener('change',()=>refresh(true));
 function selectMetric(chosen){
-  if(['cache_gain','cache_hit_rate'].includes(chosen)&&focusProblem!=='P3'){$('#metric').value=mainMetric;openCache(chosen);return;}
+  if(['cache_gain','cache_hit_rate'].includes(chosen)&&focusProblem!=='P3'){
+    location.assign('/?problem=P3&metric='+chosen);return;
+  }
+  if(focusProblem==='P3'){
+    const url=new URL(location.href);
+    if(['cache_gain','cache_hit_rate'].includes(chosen))url.searchParams.set('metric',chosen);
+    else url.searchParams.delete('metric');
+    history.replaceState(null,'',url);
+  }
   $('#metric').value=chosen;mainMetric=chosen;render();if(selection)detail(false);
 }
 $('#metric').onchange=()=>selectMetric($('#metric').value);$('#search').oninput=()=>{render();if(!$('#batch-panel').hidden)loadBatches();};$('#refresh').onclick=()=>refresh(true);$('#theme').onclick=()=>{document.body.classList.toggle('light');localStorage.setItem('board-theme',document.body.classList.contains('light')?'light':'dark');};if(localStorage.getItem('board-theme')==='light')document.body.classList.add('light');

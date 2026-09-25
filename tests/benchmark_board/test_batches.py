@@ -10,7 +10,7 @@ from urllib.error import HTTPError
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'src/benchmark_board'))
 from core import batch_candidates, project_records
-from composites import record_ids_digest
+from composites import COMPOSITES, record_ids_digest
 from app import make_handler, ui_bundle
 
 
@@ -25,6 +25,45 @@ def record(run,case,ratio=2,**changes):
 
 
 class BatchTests(unittest.TestCase):
+    def test_p3_disjoint_runs_form_only_the_fingerprinted_full_collection(self):
+        spec=copy.deepcopy(next(s for s in COMPOSITES if s['problem']=='P3'))
+        original,completion=(member[0] for member in spec['members'])
+        rows=[]
+        for n in range(1,101):
+            case=f'{n:03d}'
+            for core in range(1,6):
+                run=completion if n>=81 else original
+                if (case,core)==('080',5): run=completion
+                if (case,core)==('082',4): run=original
+                rows.append(record(run,case,id=f'fixed-{case}-{core}',
+                    attempt_id=f'{run}-P3-{case}-k{core}-fifth-core-final-fixed',
+                    problem='P3',cores=core,algorithm_id=spec['algorithm_id'],
+                    solver_commit=spec['solver_commit'],evaluator={'route':'E0'},
+                    baseline={'route':'E0'},cache_pair_verified=True,
+                    cache_pair={'route':'E0'},imported_at='2026-09-26T00:00:00+00:00'))
+        spec['record_ids_sha256']=record_ids_digest(rows)
+        candidate=next(r for r in batch_candidates(rows,'P3',5,
+            [f'{n:03d}' for n in range(1,101)],composites=(spec,))['batches']
+            if r['run_id']==spec['id'])
+        self.assertTrue(candidate['composite_verified'])
+        self.assertTrue(candidate['full_complete'])
+        self.assertEqual(candidate['full_valid_count'],500)
+        selected=project_records(rows,{'official_code_hash':'x','files':[]},1,{},
+                                 run=spec['id'],composites=(spec,))
+        self.assertEqual(sum(c['best'] is not None for c in selected['cells'] if c['problem']=='P3'),500)
+
+        missing_pair=copy.deepcopy(rows);missing_pair[-1]['cache_pair_verified']=False
+        candidate=next(r for r in batch_candidates(missing_pair,'P3',5,['100'],
+            composites=(spec,))['batches'] if r['run_id']==spec['id'])
+        self.assertFalse(candidate['composite_verified'])
+        self.assertFalse(candidate['full_complete'])
+
+        changed_run=copy.deepcopy(rows);changed_run[-1]['run_id']=original
+        candidate=next(r for r in batch_candidates(changed_run,'P3',5,['100'],
+            composites=(spec,))['batches'] if r['run_id']==spec['id'])
+        self.assertEqual(candidate['full_valid_count'],499)
+        self.assertFalse(candidate['full_complete'])
+
     def test_fixed_composite_uses_original_attempts_and_rejects_changed_bytes(self):
         members=tuple((f'fixed-s{i}',1+25*(i-1),25*i) for i in range(1,5))
         rows=[]

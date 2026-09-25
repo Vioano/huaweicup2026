@@ -26,7 +26,29 @@ COMPOSITES = ({
         ('q2-activecore-full500-20260925-s59-s03', 51, 75),
         ('q2-activecore-full500-20260925-s59-s04', 76, 100),
     ),
-},)
+}, {
+    'id': 'composite:q3-r9f-final-full500-20260926-s3172',
+    'label': 'P3 R9F · 原400格与缺格100格',
+    'problem': 'P3',
+    'algorithm_id': 'q3-fifth-core-final-fixed',
+    'solver_commit': 'f6fd8153375a7fb64f9af2c8f36c35356fb7d878',
+    'source_commit': '2c24a0eec7671abf9745f48b5eea0146b98a5aae',
+    'manifest_path': 'results/a/q3-nikolastarx/r9f-final-full500-20260926/COMPOSITE_MANIFEST.json',
+    'manifest_sha256': '8e6bca56a9e198154ad6ca6d835a29a1081ae0a736f17bd0935637d0e1df8c96',
+    'member_sha256': 'f51adbea55c3cf4a3baf2e4e8c140720eccf122f62be289947c2022ba7a7a59f',
+    'record_ids_sha256': 'f9d38c4ac668879541474c52030873ca420dd1f4355289f38b96ad1d260502b2',
+    'members': (
+        ('q3-r9f-final-full500-20260926-s3172', 1, 80),
+        ('q3-r9f-final-full500-completion100-20260926-s3172', 81, 100),
+    ),
+    # The original run reached 080/k4, then included 082/k4 before its
+    # deadline. The second run covered exactly the other 100 coordinates.
+    'run_overrides': {
+        '080-k5': 'q3-r9f-final-full500-completion100-20260926-s3172',
+        '082-k4': 'q3-r9f-final-full500-20260926-s3172',
+    },
+    'attempt_id_template': '{run_id}-P3-{case_id}-k{cores}-fifth-core-final-fixed',
+})
 
 
 def member_row(row, spec):
@@ -38,10 +60,12 @@ def member_row(row, spec):
     case, cores = row.get('case_id'), row.get('cores')
     if not isinstance(case, str) or len(case) != 3 or not case.isdecimal() or type(cores) is not int or cores not in range(1, 6):
         return False
-    for run_id, first, last in spec['members']:
-        if first <= int(case) <= last:
-            return row.get('run_id') == run_id and row.get('attempt_id') == f'{run_id}-p2-{case}-k{cores}'
-    return False
+    run_id = next((run for run, first, last in spec['members'] if first <= int(case) <= last), None)
+    run_id = spec.get('run_overrides', {}).get(f'{case}-k{cores}', run_id)
+    if run_id is None or row.get('run_id') != run_id:
+        return False
+    template = spec.get('attempt_id_template', '{run_id}-p2-{case_id}-k{cores}')
+    return row.get('attempt_id') == template.format(run_id=run_id, case_id=case, cores=cores)
 
 
 def record_ids_digest(rows):
@@ -58,5 +82,8 @@ def verified(rows, spec):
     if not all(member_row(r, spec) and r.get('status') == 'ok' and r.get('eligible')
                and r.get('baseline_verified') and r.get('evaluator', {}).get('route') == 'E0'
                and r.get('baseline', {}).get('route') == 'E0' for r in rows):
+        return False
+    if spec['problem'] == 'P3' and not all(r.get('cache_pair_verified')
+            and (r.get('cache_pair') or {}).get('route') == 'E0' for r in rows):
         return False
     return record_ids_digest(rows) == spec['record_ids_sha256']
