@@ -1,0 +1,492 @@
+{
+  "schema_version": 1,
+  "submission_version": 1,
+  "records": [
+    {
+      "attempt_id": "nikolastarx-pipeline-capacity-044-k5-20260925-s3172",
+      "revision": 2,
+      "run_id": "q3-pipeline-capacity-two-20260925-s3172",
+      "algorithm_id": "q3-capacity-shared-pipeline",
+      "algorithm_name": "Q3 capacity-constrained shared-pipeline mechanism",
+      "variant": "capacity-dp-single-plan-one-shot-e0",
+      "solver_commit": "78d82a99ba00f07e2890c87a7132955369efa73b",
+      "parameters": {
+        "requested_cores": 5,
+        "candidate_count": 1,
+        "selection": "single constructed plan per case; no online selection"
+      },
+      "problem": "P3",
+      "case_id": "044",
+      "cores": 5,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 38390,
+        "solver_wall_seconds": null,
+        "evaluation_wall_seconds": 0.18375233298866078,
+        "ddr_bytes": 1116256,
+        "extra_ddr_bytes": 140800,
+        "spill_bytes": 0,
+        "cache_hit_rate": 0.011007223490415585
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "78d82a99ba00f07e2890c87a7132955369efa73b",
+        "entrypoint": "multicore_cut_evaluate_problem_3.evaluate_problem_3"
+      },
+      "identity": {
+        "graph_sha256": "9abd4468a4be365e384de47431ac914ee44fd6e7b6221dffc584561f388cd57e",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "e959272c4330eb75e524190eadaee382c85263896c82dfc910ecffc31bb40c44"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/case_044_multicore_res.json",
+          "sha256": "e959272c4330eb75e524190eadaee382c85263896c82dfc910ecffc31bb40c44"
+        },
+        "result": {
+          "path": "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/evaluation/044/result.json.gz",
+          "sha256": "506a8d65c65b7bcd2957e2b20f31ba117fb3a244b9c366ff2342c421df626cd5"
+        },
+        "run": {
+          "path": "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/run.json",
+          "sha256": "83d7c81e6d2906612099f38164dbf5cf1dd27b4797f284f6d4f865165b54f763"
+        },
+        "manifest": {
+          "path": "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/manifest.json",
+          "sha256": "7591f1f41ca3eb49401105117b27e9ff9a278727246f7f9d3d3af5b76d44d88b"
+        }
+      },
+      "runtime_id": "unknown",
+      "observed_at": "2026-09-25T00:40:04.863680Z",
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "child wall_seconds preserved from run.json",
+        "utc": "UTC timestamps in run.json"
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "78d82a99ba00f07e2890c87a7132955369efa73b",
+            "path": "src/q3/shared_pipeline_capacity.py",
+            "entrypoint": "construct"
+          },
+          "authors": [
+            "nikolastarx"
+          ],
+          "method": "Capacity-constrained dynamic programming constructs one contiguous shared-pipeline partition plan; static mechanism probe, not a general end-to-end solver.",
+          "references": [],
+          "upstream": [],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "78d82a99ba00f07e2890c87a7132955369efa73b",
+            "path": "src/q3/pipeline_capacity_probe.py",
+            "entrypoint": "src.q3.pipeline_capacity_probe"
+          },
+          "argv": [],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": null,
+          "cpu": null,
+          "gpu": null,
+          "ram_bytes": null,
+          "python": null,
+          "dependencies": "uv.lock sha256:7b03fee57044ac272d8895533cbdca6d70a29d2da955f98a5552e72ef944fdc4",
+          "threads": null,
+          "workers": 1,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": "2026-09-25T00:40:04.493252Z",
+          "finished_at": "2026-09-25T00:40:04.863680Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": null,
+          "evaluation_scope": "Independent official P3 E0 subprocess only; this child wall does not include complete solver startup/read/construct/cleanup.",
+          "budget": {
+            "wall_seconds": 60,
+            "candidate_limit": 1,
+            "stop_reason": "One preauthorized P3 E0 completed for this cell; no P2/solver call."
+          },
+          "calls": {
+            "solver": 0,
+            "E0": 1,
+            "E1": 0,
+            "E2": 0
+          },
+          "offline_costs": "No training/compilation/precompute; two-case plan preparation took 0.053101 s total, not solver wall.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.runner.argv": "Outer runner argv was not retained; exact child evaluator argv is preserved in run.json per job.",
+          "provenance.environment.os": "As-run OS was not recorded in manifest/run.",
+          "provenance.environment.cpu": "As-run CPU model was not recorded in manifest/run.",
+          "provenance.environment.gpu": "GPU use/availability was not recorded in manifest/run.",
+          "provenance.environment.ram_bytes": "Total physical RAM was not recorded in manifest/run.",
+          "provenance.environment.python": "As-run Python version was not recorded in manifest/run.",
+          "provenance.environment.threads": "Thread count was not recorded in manifest/run.",
+          "provenance.environment.peak_rss_bytes": "Only sampled process-group RSS values were recorded; they are not actual peaks.",
+          "provenance.measurement.solver_scope": "No end-to-end solver was run, so solver wall scope is unavailable.",
+          "provenance.measurement.seed": "No random seed is recorded; the capacity construction is deterministic.",
+          "provenance.measurement.cold_start": "Cold/warm process and filesystem cache state was not recorded."
+        }
+      },
+      "notes": [
+        "Mechanism-only P3 cell 044-k5; not a full-suite algorithm score.",
+        "solver_wall_seconds is null: no end-to-end solver was executed; preparation timing is not a solver runtime.",
+        "Independent official E0 wall time: 0.183752333 s.",
+        "Sampled RSS 36831232 bytes is a sampled process-group tripwire observation, not an actual peak.",
+        "No P2 cache_pair is included.",
+        "Revision 2 adds the existing verified official E0 single-core baseline from huaweibei123/huaweicup2026@f26704ed8748f0a575b55f1a02b83d7335a1083f (results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/revision2-baseline-draft/baseline/044/result.json.gz); source record 19bebf35205d23fdd832781540f8879da52eeb62:results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/revision2-baseline-draft/board-feed-s05-revision2.json. The gzip bytes are copied unchanged; no evaluation was run. Revision 1 metrics, plan/result/run artifacts, and null end-to-end solver timing are preserved."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/blob/78d82a99ba00f07e2890c87a7132955369efa73b/src/q3/shared_pipeline_capacity.py",
+      "baseline": {
+        "graph_sha256": "9abd4468a4be365e384de47431ac914ee44fd6e7b6221dffc584561f388cd57e",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/q3-nikolastarx/baseline-revision-20260925/baseline/044-result.json.gz",
+          "sha256": "73f1d15fdea4f706b22099d2339a0e74a76c4114a68672077a98a8e15faa913c"
+        }
+      }
+    },
+    {
+      "attempt_id": "nikolastarx-pipeline-capacity-046-k5-20260925-s3172",
+      "revision": 2,
+      "run_id": "q3-pipeline-capacity-two-20260925-s3172",
+      "algorithm_id": "q3-capacity-shared-pipeline",
+      "algorithm_name": "Q3 capacity-constrained shared-pipeline mechanism",
+      "variant": "capacity-dp-single-plan-one-shot-e0",
+      "solver_commit": "78d82a99ba00f07e2890c87a7132955369efa73b",
+      "parameters": {
+        "requested_cores": 5,
+        "candidate_count": 1,
+        "selection": "single constructed plan per case; no online selection"
+      },
+      "problem": "P3",
+      "case_id": "046",
+      "cores": 5,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 82505,
+        "solver_wall_seconds": null,
+        "evaluation_wall_seconds": 0.17833850003080443,
+        "ddr_bytes": 1528416,
+        "extra_ddr_bytes": 466944,
+        "spill_bytes": 0,
+        "cache_hit_rate": 0.0
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "78d82a99ba00f07e2890c87a7132955369efa73b",
+        "entrypoint": "multicore_cut_evaluate_problem_3.evaluate_problem_3"
+      },
+      "identity": {
+        "graph_sha256": "1917fbb2bfe1141fd8dc4bdac6119dd44014df9a13eb18faa3e55f25bcc91659",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "5c05041646e382308d8bfe6a2a5a641b7cbbfb9e75e278dd0c20ef492ce564bd"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/case_046_multicore_res.json",
+          "sha256": "5c05041646e382308d8bfe6a2a5a641b7cbbfb9e75e278dd0c20ef492ce564bd"
+        },
+        "result": {
+          "path": "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/evaluation/046/result.json.gz",
+          "sha256": "b84451d14a60de6589da5b4fa778607a7c82758acb058c13d015efce97e30023"
+        },
+        "run": {
+          "path": "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/run.json",
+          "sha256": "83d7c81e6d2906612099f38164dbf5cf1dd27b4797f284f6d4f865165b54f763"
+        },
+        "manifest": {
+          "path": "results/a/q3-nikolastarx/pipeline-capacity-two-shot-20260925/manifest.json",
+          "sha256": "7591f1f41ca3eb49401105117b27e9ff9a278727246f7f9d3d3af5b76d44d88b"
+        }
+      },
+      "runtime_id": "unknown",
+      "observed_at": "2026-09-25T00:40:04.863680Z",
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "child wall_seconds preserved from run.json",
+        "utc": "UTC timestamps in run.json"
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "78d82a99ba00f07e2890c87a7132955369efa73b",
+            "path": "src/q3/shared_pipeline_capacity.py",
+            "entrypoint": "construct"
+          },
+          "authors": [
+            "nikolastarx"
+          ],
+          "method": "Capacity-constrained dynamic programming constructs one contiguous shared-pipeline partition plan; static mechanism probe, not a general end-to-end solver.",
+          "references": [],
+          "upstream": [],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "78d82a99ba00f07e2890c87a7132955369efa73b",
+            "path": "src/q3/pipeline_capacity_probe.py",
+            "entrypoint": "src.q3.pipeline_capacity_probe"
+          },
+          "argv": [],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": null,
+          "cpu": null,
+          "gpu": null,
+          "ram_bytes": null,
+          "python": null,
+          "dependencies": "uv.lock sha256:7b03fee57044ac272d8895533cbdca6d70a29d2da955f98a5552e72ef944fdc4",
+          "threads": null,
+          "workers": 1,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": "2026-09-25T00:40:04.493252Z",
+          "finished_at": "2026-09-25T00:40:04.863680Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": null,
+          "evaluation_scope": "Independent official P3 E0 subprocess only; this child wall does not include complete solver startup/read/construct/cleanup.",
+          "budget": {
+            "wall_seconds": 60,
+            "candidate_limit": 1,
+            "stop_reason": "One preauthorized P3 E0 completed for this cell; no P2/solver call."
+          },
+          "calls": {
+            "solver": 0,
+            "E0": 1,
+            "E1": 0,
+            "E2": 0
+          },
+          "offline_costs": "No training/compilation/precompute; two-case plan preparation took 0.053101 s total, not solver wall.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.runner.argv": "Outer runner argv was not retained; exact child evaluator argv is preserved in run.json per job.",
+          "provenance.environment.os": "As-run OS was not recorded in manifest/run.",
+          "provenance.environment.cpu": "As-run CPU model was not recorded in manifest/run.",
+          "provenance.environment.gpu": "GPU use/availability was not recorded in manifest/run.",
+          "provenance.environment.ram_bytes": "Total physical RAM was not recorded in manifest/run.",
+          "provenance.environment.python": "As-run Python version was not recorded in manifest/run.",
+          "provenance.environment.threads": "Thread count was not recorded in manifest/run.",
+          "provenance.environment.peak_rss_bytes": "Only sampled process-group RSS values were recorded; they are not actual peaks.",
+          "provenance.measurement.solver_scope": "No end-to-end solver was run, so solver wall scope is unavailable.",
+          "provenance.measurement.seed": "No random seed is recorded; the capacity construction is deterministic.",
+          "provenance.measurement.cold_start": "Cold/warm process and filesystem cache state was not recorded."
+        }
+      },
+      "notes": [
+        "Mechanism-only P3 cell 046-k5; not a full-suite algorithm score.",
+        "solver_wall_seconds is null: no end-to-end solver was executed; preparation timing is not a solver runtime.",
+        "Independent official E0 wall time: 0.178338500 s.",
+        "Sampled RSS 33832960 bytes is a sampled process-group tripwire observation, not an actual peak.",
+        "No P2 cache_pair is included.",
+        "Revision 2 adds the existing verified official E0 single-core baseline from huaweibei123/huaweicup2026@f26704ed8748f0a575b55f1a02b83d7335a1083f (results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/baseline/046/result.json.gz); source record 830542ecba075af269cedce22009695cf6503faa:results/a/q3-nikolastarx/expanded-full500-20260925-s59/20260924T1837Z-s59ee/board-feed-500-with-baselines.json. The gzip bytes are copied unchanged; no evaluation was run. Revision 1 metrics, plan/result/run artifacts, and null end-to-end solver timing are preserved."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/blob/78d82a99ba00f07e2890c87a7132955369efa73b/src/q3/shared_pipeline_capacity.py",
+      "baseline": {
+        "graph_sha256": "1917fbb2bfe1141fd8dc4bdac6119dd44014df9a13eb18faa3e55f25bcc91659",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/q3-nikolastarx/baseline-revision-20260925/baseline/046-result.json.gz",
+          "sha256": "d34869c92f2f414dfe9c6f1bf715e0c26f4f2438c8f8cb4840868b9199b6997f"
+        }
+      }
+    },
+    {
+      "attempt_id": "nikolastarx-leaf-tile-097-k1-20260925-s3172",
+      "revision": 2,
+      "run_id": "q3-leaf-tile-097-one-shot-20260925-s3172",
+      "algorithm_id": "q3-leaf-tile",
+      "algorithm_name": "Q3 leaf-tile one-shot mechanism",
+      "variant": "static-4x4-single-candidate-no-online-selection",
+      "solver_commit": "638ef288bfd287a436095965441bfbd0a2f9d488",
+      "parameters": {
+        "tile_shape": [
+          4,
+          4
+        ],
+        "candidate_count": 1,
+        "selection": "single static candidate; no online selection",
+        "scope": "one P3 E0 mechanism probe"
+      },
+      "problem": "P3",
+      "case_id": "097",
+      "cores": 1,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 10662163,
+        "solver_wall_seconds": null,
+        "evaluation_wall_seconds": 1.2912873749737628,
+        "ddr_bytes": 9072640,
+        "extra_ddr_bytes": 4026368,
+        "spill_bytes": 4026368,
+        "cache_hit_rate": 0.0
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "638ef288bfd287a436095965441bfbd0a2f9d488",
+        "entrypoint": "multicore_cut_evaluate_problem_3.evaluate_problem_3"
+      },
+      "identity": {
+        "graph_sha256": "7dc5c8ebf92052dbdd1bf59794a8fcef74e3ab3c59d5f0b4e753bf38a741ffaf",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "87a0916ffb799399e0e7f88131c7589cb2195f0f8fbad95ef3577ca1692abd55"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/q3-nikolastarx/leaf-tile-097-one-shot-20260925/plan.json",
+          "sha256": "87a0916ffb799399e0e7f88131c7589cb2195f0f8fbad95ef3577ca1692abd55"
+        },
+        "result": {
+          "path": "results/a/q3-nikolastarx/leaf-tile-097-one-shot-20260925/evaluation/result.json.gz",
+          "sha256": "2576cc3c79fe640b6f0e279c9fd21604572dd918f1024028b95c7f2fb2e96559"
+        },
+        "run": {
+          "path": "results/a/q3-nikolastarx/leaf-tile-097-one-shot-20260925/run.json",
+          "sha256": "a30d44ebcf7a6cf4176561db9deee9d4d38cd7752559fb7fee73fbf723af8bfb"
+        },
+        "manifest": {
+          "path": "results/a/q3-nikolastarx/leaf-tile-097-one-shot-20260925/manifest.json",
+          "sha256": "7982d1c60fe5df9101535465da429a9311bf4a64a24ee3f45aed3d929db1347b"
+        },
+        "trace": {
+          "path": "results/a/q3-nikolastarx/leaf-tile-097-one-shot-20260925/provenance-derivation.json",
+          "sha256": "025dec382b57ffcdcabe5ec10a3174899f28806335ac428a33585b4462044251"
+        }
+      },
+      "runtime_id": "unknown",
+      "observed_at": "2026-09-25T00:10:30.779664Z",
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "child wall_seconds reported to 0.1 ms; preserve source precision",
+        "utc": "UTC timestamps in run.json"
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "638ef288bfd287a436095965441bfbd0a2f9d488",
+            "path": "src/q3/leaf_tile.py",
+            "entrypoint": "transform"
+          },
+          "authors": [
+            "nikolastarx"
+          ],
+          "method": "Cartesian leaf-tile transform; one capacity-derived 4x4 candidate, algebraic selection only. Not a general solver or capacity/quality guarantee.",
+          "references": [],
+          "upstream": [],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "638ef288bfd287a436095965441bfbd0a2f9d488",
+            "path": "src/q3/leaf_tile_probe.py",
+            "entrypoint": "src.q3.leaf_tile_probe"
+          },
+          "argv": [],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": null,
+          "cpu": null,
+          "gpu": null,
+          "ram_bytes": null,
+          "python": null,
+          "dependencies": "uv.lock sha256:7b03fee57044ac272d8895533cbdca6d70a29d2da955f98a5552e72ef944fdc4",
+          "threads": null,
+          "workers": 1,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": "2026-09-25T00:10:29.474596Z",
+          "finished_at": "2026-09-25T00:10:30.779664Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": null,
+          "evaluation_scope": "Independent official P3 E0 only; child wall_seconds covers official evaluation subprocess, not candidate construction or complete solver.",
+          "budget": {
+            "wall_seconds": 60,
+            "candidate_limit": 1,
+            "stop_reason": "One preauthorized P3 E0 completed; no P2 or solver call."
+          },
+          "calls": {
+            "solver": 0,
+            "E0": 1,
+            "E1": 0,
+            "E2": 0
+          },
+          "offline_costs": "No training/compilation/precompute. Static candidate construct/validate/write took 0.223203208995983 s per manifest; not solver wall.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.runner.argv": "Outer runner argv was not retained; [] avoids inventing it, while the official child argv remains recorded in run.json.",
+          "provenance.environment.os": "Run receipt does not capture the as-run OS.",
+          "provenance.environment.cpu": "Run receipt does not capture the as-run CPU model.",
+          "provenance.environment.gpu": "Run receipt does not capture GPU availability/use.",
+          "provenance.environment.ram_bytes": "Run receipt does not capture total physical RAM.",
+          "provenance.environment.python": "Run receipt does not capture the as-run Python version.",
+          "provenance.environment.threads": "Thread count was not recorded by the run receipt.",
+          "provenance.measurement.seed": "This deterministic single candidate run has no recorded random seed.",
+          "provenance.measurement.cold_start": "Cold/warm process and filesystem cache state was not measured.",
+          "provenance.measurement.solver_scope": "No end-to-end solver was run; only one static candidate was constructed and separately evaluated by E0.",
+          "provenance.environment.peak_rss_bytes": "Only a sampled process-group RSS tripwire value was retained; it is not an actual peak."
+        }
+      },
+      "notes": [
+        "Single-cell P3 mechanism evidence only; not a full-500 score or full solver timing.",
+        "solver_wall_seconds is null because no end-to-end solver was executed; the 0.223 s construction metric excludes solver startup/read/solve/cleanup.",
+        "evaluation_wall_seconds is the separate official E0 child wall (1.2912873749737628 s), not solver time.",
+        "run.json was privacy-derived after execution; see provenance-derivation artifact. resource_preflight supervisor_sha256 remains the as-run hash.",
+        "sampled_peak_rss_bytes=139427840 is a 0.1 s sampled process-group RSS tripwire observation, not an actual peak; peak_rss_bytes remains null.",
+        "Revision 2 adds the existing verified official E0 single-core baseline from huaweibei123/huaweicup2026@f26704ed8748f0a575b55f1a02b83d7335a1083f (results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/revision2-baseline-draft/baseline/097/result.json.gz); source record 19bebf35205d23fdd832781540f8879da52eeb62:results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/revision2-baseline-draft/board-feed-s10-revision2.json. The gzip bytes are copied unchanged; no evaluation was run. Revision 1 metrics, plan/result/run artifacts, and null end-to-end solver timing are preserved."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/blob/638ef288bfd287a436095965441bfbd0a2f9d488/src/q3/leaf_tile.py",
+      "baseline": {
+        "graph_sha256": "7dc5c8ebf92052dbdd1bf59794a8fcef74e3ab3c59d5f0b4e753bf38a741ffaf",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/q3-nikolastarx/baseline-revision-20260925/baseline/097-result.json.gz",
+          "sha256": "bfd1fddfe03ac16242562d8849fc9e21f82a179ee1b25c13d7b21126888af534"
+        }
+      },
+      "cache_pair": null
+    }
+  ]
+}
