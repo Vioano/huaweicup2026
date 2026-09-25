@@ -1,0 +1,40 @@
+{
+  "schema": "captain-resource-admission-v1",
+  "status": "admitted",
+  "scope": "p1-branch-refine-full500",
+  "owner_session": "nikolastarx/s-6607cb2735304751b36662035723372b",
+  "source_head": "20d534ce93252c462132bd643b5e8039b8a139a1",
+  "solver_commit": "834d8c957538ee069c66aadac9509552a4cc69d7",
+  "runner_sha256": "d68558b1140da00396ee415e338451fa0ae62e851afa5baf451485e1d3b309d0",
+  "output_dir": "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/output/p1-branch-refine-full500-20260925/20260925T1525Z-s6607-branch-full500",
+  "budget": {
+    "workers": 4,
+    "solver_seconds": 300,
+    "new_E0_seconds": 900,
+    "batch_seconds": 4500,
+    "solver_max": 500,
+    "E1_max": 5000,
+    "E0_max": 500,
+    "E2": 0,
+    "retry": 0,
+    "process_group_rss_limit_kib": 1572864
+  },
+  "created_at_utc": "2026-09-25T15:48:25.513510+00:00",
+  "expires_at_utc": "2026-09-25T16:00:00Z",
+  "start_by_utc": "2026-09-25T16:00:00Z",
+  "resource_guard": {
+    "max_parallel_workers": 4,
+    "per_process_group_rss_sampled_kib": 1572864,
+    "pressure_level": 1,
+    "swap_delta_mib": 256,
+    "disk_free_min_gib": 10,
+    "no_other_scoring": true
+  },
+  "stop_rules": [
+    "One full500 frozen source/runner, one output directory and zero automatic retry",
+    "Stop new dispatch on abnormal worker, source drift, official scorer mismatch or unknown accounting",
+    "Keep all completed, timeout, failed and not_run originals; verify process-group cleanup",
+    "Report real T0, complete call ledger and actual memory/disk samples; shared host wall is not exclusive speed"
+  ],
+  "root_runs_solver_or_evaluator": false
+}
