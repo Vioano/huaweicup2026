@@ -1,0 +1,77 @@
+{
+  "t0_utc": "2026-09-25T11:30:38Z",
+  "identity": {
+    "head": "675fdcb4f6527336f35ca3ec870bf59544485324",
+    "source_commit": "675fdcb4f6527336f35ca3ec870bf59544485324",
+    "capsule_sha256": "be92a01c0ab1fd10d3fc28e4e6a98cdeb25357e736d91ff3110cbb5fba34eec2",
+    "expected_capsule_sha256": "be92a01c0ab1fd10d3fc28e4e6a98cdeb25357e736d91ff3110cbb5fba34eec2",
+    "launch_actual": {
+      "bootstrap.py": "2b8decd7250e195d6ba2204c1b9d32b844595939ff847856a98a2b70ff9da1fc",
+      "controller.py": "075cb032ee9faf0779b9cfa3927cd4529cf6ff0644348272e225fdfadcf4350b"
+    },
+    "launch_expected": {
+      "bootstrap.py": "2b8decd7250e195d6ba2204c1b9d32b844595939ff847856a98a2b70ff9da1fc",
+      "controller.py": "075cb032ee9faf0779b9cfa3927cd4529cf6ff0644348272e225fdfadcf4350b"
+    }
+  },
+  "checks": {
+    "sessions": {
+      "argv": [
+        "/Users/nikolastar/.local/bin/colab",
+        "--auth",
+        "oauth2",
+        "sessions"
+      ],
+      "returncode": 0,
+      "stdout": "[colab] No active sessions found on server.\n",
+      "stderr": ""
+    },
+    "vm_stat": {
+      "argv": [
+        "vm_stat"
+      ],
+      "returncode": 0,
+      "stdout": "Mach Virtual Memory Statistics: (page size of 16384 bytes)\nPages free:                                   258391.\nPages active:                                1110593.\nPages inactive:                              1055591.\nPages speculative:                             58747.\nPages throttled:                                   0.\nPages wired down:                             296549.\nPages purgeable:                               13797.\n\"Translation faults\":                    10411063381.\nPages copy-on-write:                       617912602.\nPages zero filled:                        6153767365.\nPages reactivated:                         152628479.\nPages purged:                               31217997.\nFile-backed pages:                            394897.\nAnonymous pages:                             1830034.\nPages stored in compressor:                   571367.\nPages occupied by compressor:                 305361.\nDecompressions:                            181539275.\nCompressions:                              206570553.\nPageins:                                   103491455.\nPageouts:                                      29076.\nSwapins:                                      307177.\nSwapouts:                                    1187515.\nPages tagged:                                 184640.\nPages tagged resident:                        165924.\nPages tagged compressed:                       18716.\nPages tag-storage:                             98304.\nPages tag-storage holding tags:                10335.\nPages tag-storage free:                          225.\nPages tag-storage non-tag pageable:            87621.\nPages tag-storage non-tag wired:                   9.\nBytes of compressed tags:                    2875520.\nTagged compressions:                         2835098.\nTagged decompressions:                       2553652.\n",
+      "stderr": ""
+    },
+    "swap": {
+      "argv": [
+        "sysctl",
+        "vm.swapusage"
+      ],
+      "returncode": 0,
+      "stdout": "vm.swapusage: total = 8192.00M  used = 6495.31M  free = 1696.69M  (encrypted)\n",
+      "stderr": ""
+    },
+    "disk": {
+      "argv": [
+        "df",
+        "-k",
+        "/Users/nikolastar/.codex/worktrees/q2-continuation-s7d28/huaweicup2026/output/reverse-generalization-colab-20260925"
+      ],
+      "returncode": 0,
+      "stdout": "Filesystem   1024-blocks      Used Available Capacity iused      ifree %iused  Mounted on\n/dev/disk3s5   971298980 720459644 215699516    77% 6069640 2156995160    0%   /System/Volumes/Data\n",
+      "stderr": ""
+    },
+    "ps": {
+      "returncode": 0,
+      "publication": "raw stdout excluded; gate reported zero scorer conflicts"
+    }
+  },
+  "derived": {
+    "page_size_bytes": 16384,
+    "pages_free": 258391,
+    "physical_free_bytes": 4233478144,
+    "swap_free_mib": 1696.69,
+    "disk_free_bytes": 220876304384,
+    "scorer_conflicts": []
+  },
+  "passed": true,
+  "privacy": {
+    "local_raw_sha256": "d59728a029691a4e779f08d954125c02bcae26325a33bc6efee143c8c5fa9c09",
+    "local_raw_bytes": 259428,
+    "omitted": "unrelated full-host process command lines; retained locally only",
+    "process_filter": "evaluator/solver/benchmark candidates checked by original prelaunch gate",
+    "scorer_conflicts": []
+  }
+}

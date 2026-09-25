@@ -1,0 +1,56 @@
+{
+  "status": "passed",
+  "source_kind": "browser_preview_copy_not_original_zip",
+  "source_sha256": "f5321a3a76b03b765cadac393489b624bbe27eb6336744d0e45d5ef37779f16e",
+  "source_bytes": 17595,
+  "python": "3.14.5",
+  "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+  "command": "python3 output/c02-synthetic-local/test.py",
+  "wall_seconds": 0.025474,
+  "assertions": 14,
+  "tests": [
+    {
+      "name": "two_pipe_full_join",
+      "passed": true,
+      "region": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "name": "mandatory_output_escape",
+      "passed": true,
+      "reason": "no_real_common_postdominator"
+    },
+    {
+      "name": "sealed_exit_costly_entry_and_priority",
+      "passed": true,
+      "old_rows": [
+        [
+          2
+        ],
+        [
+          0,
+          1,
+          3
+        ]
+      ],
+      "new_rows": [
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          3
+        ]
+      ],
+      "static_bytes_only": {
+        "new_entry_tensor": 60000,
+        "removed_inner_tensor": 60
+      }
+    }
+  ],
+  "scope": "static synthetic structure only; no official simulator or Makespan"
+}

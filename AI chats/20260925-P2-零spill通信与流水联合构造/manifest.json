@@ -1,5 +1,5 @@
 {
-  "state": "c02_pro_in_flight",
+  "state": "c02_final_received",
   "chat_url": "https://chatgpt.com/g/g-p-6ab2d820c86081918067a0c6d5eb1ab6-huaweicup/c/6ab60a43-abe4-83ea-bb4c-d4d442e661e5",
   "project": "huaweicup",
   "mode": "6 Pro",
@@ -12,8 +12,8 @@
     "new public user message",
     "Pro thinking"
   ],
-  "scope": "C01 archived final plus C02 submitted user message; C02 answer still generating. Snapshot coverage limitations recorded in snapshot.",
-  "latest_snapshot": "完整问答-20260925T1038Z-C02在途.md",
+  "scope": "Four ordered public messages; old three retained from earlier archive; new final exact copy verified. Author evidence not local performance.",
+  "latest_snapshot": "完整问答-20260925T1129Z-C02完成.md",
   "files": [
     {
       "path": "c01-prompt.txt",
@@ -63,6 +63,42 @@
       "bytes": 33465,
       "sha256": "1f82eefef0d959cf3c7c38a9fb2a1a8310bdc91a2f3f7100f3605925b4a0cead",
       "round": "c02"
+    },
+    {
+      "path": "c02-response-7e8a3832.md",
+      "bytes": 26178,
+      "sha256": "f4bdcdc39565753e964fd90b3b72b03614682beae8a1803cbb3132283571de9c",
+      "round": "c02"
+    },
+    {
+      "path": "完整问答-20260925T1129Z-C02完成.md",
+      "bytes": 60296,
+      "sha256": "c1c1036a1d6f865918ce78c6d3642f46bee8e7e13fa60a2a2ca44c75d54cc3e9",
+      "round": "c02"
+    },
+    {
+      "path": "c02-final-status.json",
+      "bytes": 853,
+      "sha256": "18c0affac2af3227eea83d823177f486b7158f57d2e00ab22055c6106d5b9a4c",
+      "round": "c02"
+    },
+    {
+      "path": "附件/c02-exit_sealed_rebuild.browser-copy.py",
+      "bytes": 17595,
+      "sha256": "f5321a3a76b03b765cadac393489b624bbe27eb6336744d0e45d5ef37779f16e",
+      "round": "c02"
+    },
+    {
+      "path": "附件/c02-synthetic_checks.browser-copy.json",
+      "bytes": 1160,
+      "sha256": "620e754bc3b7a3cbc3fd590cbb342d00aaddcb093e0b832ff935f6fd1438d982",
+      "round": "c02"
+    },
+    {
+      "path": "附件/c02-audit_readback.browser-copy.json",
+      "bytes": 15389,
+      "sha256": "613693f85f4ec6fc3299501492e91e17eb530f3b03cea05774b51c69ebba1229",
+      "round": "c02"
     }
   ],
   "attachments": [
@@ -73,11 +109,40 @@
       "name": "evidence package; microchecks.py; microchecks_results.json; READ_LOG.md",
       "bytes": null,
       "sha256": null
+    },
+    {
+      "round": "c02",
+      "source_message": "7e8a3832-2bdd-4592-86f8-d7268ded3f32",
+      "state": "browser_preview_text_recovered_original_bytes_unverified",
+      "name": "exit_sealed_rebuild.py",
+      "local_path": "附件/c02-exit_sealed_rebuild.browser-copy.py"
+    },
+    {
+      "round": "c02",
+      "source_message": "7e8a3832-2bdd-4592-86f8-d7268ded3f32",
+      "state": "browser_preview_text_recovered_original_bytes_unverified",
+      "name": "synthetic_checks.json",
+      "local_path": "附件/c02-synthetic_checks.browser-copy.json"
+    },
+    {
+      "round": "c02",
+      "source_message": "7e8a3832-2bdd-4592-86f8-d7268ded3f32",
+      "state": "visible_not_acquired",
+      "name": "P2_C02_s8ee_core_evidence.zip; READ_LOG.md; saved_graph_inspection.txt",
+      "bytes": null,
+      "sha256": null
+    },
+    {
+      "round": "c02",
+      "source_message": "7e8a3832-2bdd-4592-86f8-d7268ded3f32",
+      "state": "browser_preview_text_recovered_original_bytes_unverified",
+      "name": "audit_readback.json",
+      "local_path": "附件/c02-audit_readback.browser-copy.json"
     }
   ],
-  "phase": "c02_pro_in_flight",
-  "observed_at": "2026-09-25T10:39:57.211480+00:00",
-  "previous_snapshot": "完整问答-20260925T061355Z.md",
+  "phase": "c02_final_received",
+  "observed_at": "2026-09-25T11:29:57.370436+00:00",
+  "previous_snapshot": "完整问答-20260925T1038Z-C02在途.md",
   "historical_c01_state": {
     "state": "c01_final_received",
     "phase": "c01_final_received",
@@ -93,11 +158,19 @@
     "source_commit": "8577916bc48cf2e8240aaecadce286c02b34eb20",
     "source_mirror_receipt": "output/interleave-mirror-8577916bc.json"
   },
-  "latest_round_status": "c02-status.json",
-  "latest_completed_assistant_message_id": "799ca0a0-477b-4138-bd6e-eb6f09d0dbb7",
+  "latest_round_status": "c02-final-status.json",
+  "latest_completed_assistant_message_id": "7e8a3832-2bdd-4592-86f8-d7268ded3f32",
   "recorded_at_utc": "2026-09-25T10:39:57.211480+00:00",
   "readback_normalized_body_matches": true,
   "normalization": "Ignore whitespace and trailing Show more UI control; exact local sent body retained.",
   "material_source_commit": "f02ad87e27a926cbb3a45458c4cbc82651652b4a",
-  "material_source_mirror_receipt": "output/cone-archive-mirror-20260925.json"
+  "material_source_mirror_receipt": "output/cone-archive-mirror-20260925.json",
+  "historical_c02_pending_state": {
+    "state": "c02_pro_in_flight",
+    "phase": "c02_pro_in_flight",
+    "scope": "C01 archived final plus C02 submitted user message; C02 answer still generating. Snapshot coverage limitations recorded in snapshot.",
+    "latest_snapshot": "完整问答-20260925T1038Z-C02在途.md",
+    "observed_at": "2026-09-25T10:39:57.211480+00:00",
+    "latest_round_status": "c02-status.json"
+  }
 }

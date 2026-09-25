@@ -1,0 +1,3 @@
+# C02 local structural review
+
+Source: public Pro C02 response and browser-preview copied prototype in AI chats/20260925-P2-零spill通信与流水联合构造/. Original ZIP not acquired. Sol medium review and local 3 synthetic checks/14 assertions; no real graph, official simulator or new Makespan. Python3.14.5 run is structural validation only, not project dependency qualification. `test.py` is the exact executed script, and `result.json` records source SHA and command. C02 proposes a distinct exit-sealed local rebuilding mechanism; integration is pending. Seed consumers must be complete and the prototype returns a tuple, both guarded in future adapter.
