@@ -889,16 +889,24 @@ class EngineTests(unittest.TestCase):
 
     def test_slow_full_checkpoint_does_not_block_new_signed_fast_target(self):
         from unittest.mock import patch
-        leader=self.engines['leader']
+        leader=self.engines['leader'];member=self.engines['member']
         leader.config['central']={'code_commit':'a'*40,'repo':str(self.root),'ledger':str(self.root)}
         leader.config['git_fast_enabled']=True
+        member.config['git_fast_enabled']=True
+        bare=self.root/'concurrent-fast.git'
+        subprocess.run(['git','init','--bare','-q',str(bare)],check=True)
+        writer=GitFastLane(self.root/'concurrent-writer','test/repository')
+        reader=GitFastLane(self.root/'concurrent-reader','test/repository')
+        writer._run(['remote','set-url','origin',str(bare)])
+        reader._run(['remote','set-url','origin',str(bare)])
+        leader._git_fast_lane=writer;member._git_fast_lane=reader
         target=[snapshot_payload(1)]
-        entered=threading.Event();release=threading.Event();fast=[]
+        entered=threading.Event();release=threading.Event()
         with patch('src.benchmark_sync.engine.git_json',return_value={}), \
              patch('src.benchmark_sync.engine.read_central',side_effect=lambda *a,**k:target[0]), \
-             patch.object(leader,'publish_fast_delta'), \
-             patch.object(leader,'publish_git_fast_delta',side_effect=lambda base,payload,manifest,data:fast.append(manifest['sequence'])):
+             patch.object(leader,'publish_fast_delta'):
             leader.publish_snapshot(None)
+            member.accept_snapshot(self.remote.head())
             original_update=self.remote.update
             blocked=[False]
             def slow_update(files,**kwargs):
@@ -913,7 +921,9 @@ class EngineTests(unittest.TestCase):
                     self.assertTrue(entered.wait(1))
                     target[0]=snapshot_payload(3)
                     leader.publish_snapshot(self.remote.head(),background_full=True)
-                    self.assertEqual(fast,[2,3])
+                    self.assertEqual(member.cycle()['state'],'online')
+                    self.assertEqual(member.accepted_record_ids(),{r['id'] for r in target[0]['records']})
+                    self.assertEqual(leader.channel(self.remote.head(),'central','snapshot')[0]['manifest']['sequence'],1)
                     self.assertEqual(leader._publish_worker_status['state'],'publishing')
             finally:
                 release.set()
