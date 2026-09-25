@@ -14,6 +14,8 @@
 
 2026-09-25T04:32Z 后继续跟进到 `28e8c7ddfe2223b2261056f554259c43d5bba272`。新增的是对已保存044/k5结果的 Cache 事件和实际路径分析，0新官方调用，不是新统一算法。本稿在 §6.5.4–6.5.5、§6.6.4 加入固定读取集合的命中上界、取整共享服务研究界及启动竞争分解；主表保持原版本。
 
+2026-09-25T04:41Z 队长[新增研究通知](https://github.com/huaweibei123/huaweicup2026/issues/51#issuecomment-5826864457)后，实际补读 `734914db51cecf094453c2b02e67fc5f5619b090` 的部分预加载设计、纯函数、测试代码及 `guard-audit.json`。正文 §6.5.6 加入单激活固定服务闭式、线性扫描和真实多激活守卫。此次只读推导与已发布守卫结果，没有运行测试、重建 Task 或产生新候选；队长报告的4项纯模型测试按来源归属，不计作本会话复现。当前19式、7处文字图占位，统一算法与主表保持原版本。
+
 ## 主算法与数据身份
 
 | 项目 | 固定版本或内容 | 本稿采用方式 |
@@ -58,6 +60,7 @@ Luna medium 的第一份[feed 审阅](../drafts/p3-forest500-audit.json)保留�
 | §6.6.2 Cache 配对主表 | [配对审计](https://github.com/huaweibei123/huaweicup2026/blob/cf4d77a018def540358c3b4667c2d2466390981a/results/a/q3-nikolastarx/forest-cachepair-delta-20260925/independent-audit.json) | 476 同字节 P2 复用 + 24 新 P2，完整 500 对；不声称本批重新跑500个P2 |
 | §6.5.4、§6.6.4 命中饱和 | [固定 Cache 事件审计](https://github.com/huaweibei123/huaweicup2026/blob/28e8c7ddfe2223b2261056f554259c43d5bba272/results/a/q3-nikolastarx/prefix-cache-critical-audit-20260925/REPORT.md)及 `summary.json` | 两份044/k5原结果在本次重新核 SHA、键大小/次数和事件：171首次miss、11重复hit、0淘汰；上界只针对固定读取集合 |
 | §6.5.5、§6.6.4 共享前缀与路径 | [固定实际路径审计](https://github.com/huaweibei123/huaweicup2026/blob/28e8c7ddfe2223b2261056f554259c43d5bba272/results/a/q3-nikolastarx/prefix-realized-path-20260925/README.md)及 `audit.json`/`test_math.py` | 1678操作开始时间重现为团队已发布结论；本次复核分项算术，不重新构建准备图。36592仅有理数共享取整模型界，不登记为官方浮点剪枝证书 |
+| §6.5.6 部分预加载 | [DESIGN.md](https://github.com/huaweibei123/huaweicup2026/blob/734914db51cecf094453c2b02e67fc5f5619b090/results/a/q3-nikolastarx/partial-preload-design-20260925/DESIGN.md)，同提交 `fixed_service.py`/`test_fixed_service.py`/`guard-audit.json` | 单激活、固定服务和串行计算链中精确；逐读递推测试为队长报告，本次仅审阅代码。真实核2/3/4不满足单激活条件，核1只通过此单项；没有新官方方案 |
 | §6.6.5 非单调反例 | [CACHE_NONMONOTONE_021.md](https://github.com/huaweibei123/huaweicup2026/blob/f26704ed8748f0a575b55f1a02b83d7335a1083f/docs/a/q3-yuanzhifang/CACHE_NONMONOTONE_021.md)，同提交 `audit_021.py`/`audit.json` | 同 plan 2140720→2140863、同 COPY/字节；已核字节原件及逐操作观察；尚非完整退化因果链 |
 
 ## 公式审阅与图件计划
@@ -84,6 +87,8 @@ Sol medium 只读复核了式（6-6）至（6-16）及相关小源文件，未�
 P1 正文核编号从 1 起，P3 对齐接口从 0 起；只是编号映射，合稿时需统一，不应改变各自等待语义。P2 的整体方案符号和时间符号可由队长最后统一，不为了形式一致改写它的实质模型。主表数据和源 JSON 字段未因记号调整改变。
 
 新增小范围原件复核：`python -B paper/tools/audit_p3_prefix_cache.py`，输出[前缀 Cache 核验](../drafts/p3-prefix-cache-audit.json)。只读取固定提交中的两份 P3 压缩结果（48,921 B 和 50,375 B）、一份计划、两个审计小文件；结果/计划 SHA 与已发布绑定一致。独立核实了完整键—大小—次数多重集相等、首次/重复读取、命中字节上界取等、零淘汰和搬运字段一致。对路径部分只核来源绑定、38024分项和、8244差值及四个前缀完成下限算术；未重新加载完整准备图，也未调用Task/Step/E0。七处图占位与18个公式对应最新稿，旧“六图/16式”是上一版检查记录。
+
+部分预加载修订增加式（6-19），最新稿共19式、7处文字图占位；上述18式/7图及16式/6图保留为各版的实际检查记录。森林节点孩子数改记为 $a_v$，消除与有效计算时长 $d_v$ 的同名冲突。
 
 | 图号 | 目前状态 | 最终绘制需要 |
 |---|---|---|
