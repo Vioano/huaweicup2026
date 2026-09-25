@@ -53,7 +53,13 @@ def source_scope(capacity, bandwidth):
                sys.maxsize, tuple(sys.hash_info), os.environ.get("PYTHONHASHSEED"))
     # Cover imported q1 helpers too, rather than only the direct adapters.
     # No hot reload or concurrent source edits are supported by this contract.
-    helper_paths = sorted((ROOT / "src/q1").glob("*.py")) + [Path(__file__)]
+    helper_paths = sorted((ROOT / "src/q1").glob("*.py")) + [
+        ROOT / "AI chats/P1多Pipe链构造证明/附件/r1-p1_s6607/p1_phase_cut.py",
+        Path(__file__),
+    ]
+    cache_impl = ROOT / "src/review/p1_memory_response_cache.py"
+    if cache_impl.exists():
+        helper_paths.append(cache_impl)
     helpers = {str(p.relative_to(ROOT)): sha(p) for p in helper_paths}
     return (tuple(sorted(hashes.items())), tuple(sorted(helpers.items())), runtime,
             tuple(sorted(capacity.items())), bandwidth)

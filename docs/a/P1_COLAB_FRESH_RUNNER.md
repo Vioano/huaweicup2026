@@ -1,0 +1,13 @@
+# P1 Colab CPU migration runner
+
+`src/q1_benchmarks/s6607_colab_fresh.py` is a benchmark wrapper for frozen solver `3a1b82b71ca1ff6689eb8e72f17d26c48b52073c`. It reuses `process_cell` and source preflight from runner `8335b5c55b0c12bd34b206e315582d1198439069`, but deliberately supplies no prior E0 rows. Every successful cell requires a **new official E0 process**, including the migration pilot. It never replaces official scoring with the mathematical response model. Production solver files are unchanged.
+
+The wrapper requires Linux, Python **3.12.13**, and wrapper/underlying runner bytes matching their fixed Git identities. The dedicated CPU VM has no other project's work. The native Colab Python 3.13 kernel only launches the locked Python 3.12 virtual environment. `uv sync --locked --python 3.12.13` setup, source/data transfer, and subsequent retrieval are separate overheads, not hidden solver work. Source files are sparse-checked out from fixed commits; all official code/config and input-archive hashes are verified. No Drive mount, GPU, credential transfer, or GitHub Actions is used.
+
+Initial migration scope is exactly `--cases 001,051 --cores 5`, one worker, at most 2 solver / 18 E1 / 2 new E0 / 0 E2 / 0 scoring retries. Only after source/receipt review and this migration pilot passes may the separately scheduled full500 run use `--full500`: 100 graphs × 1–5 cores, each freshly solved. Full500 ceilings are 500 solver / 4500 E1 / 500 new E0 / 0 E2 / 0 scoring retries; solver 300 s, E0 900 s, batch admission 4500 s. A first failure stops further cells; skipped cells are recorded. Calls with uncertain dispatch remain null with a known lower bound.
+
+The cell supervisor records subprocess completion and kills its owned process group on timeout. The outer wrapper does not claim a general descendant containment guarantee. An unconfirmed cleanup, remote connection failure, or runaway job requires terminating this **dedicated VM**, preserving whatever receipts are available. Do not apply that cleanup policy to a shared VM. No local run is permitted by this wrapper's platform guard.
+
+The official single-core denominator is a separately verified fixed artifact and is not evaluated or fetched by this runner. Speedups and board export happen after downloaded result bytes are checked; platform/runtime and all solver/E0 walls remain explicit. A cloud pilot is not a new full-matrix mean or a proof of universal platform equivalence.
+
+Preparation checks: two injected dispatcher/ledger tests under locked Python 3.12.13; no real solver or E0 was invoked by those tests. This document describes the frozen procedure; actual pilot/full500 results must have separate receipts.
