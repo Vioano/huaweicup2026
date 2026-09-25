@@ -21,3 +21,11 @@
 ## 当前静态检查
 
 `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.q3.test_leaf_tile -v`：6 个测试通过。小型 3×4、3 叶图在 `C=2200` 时选出 2×4，`D=3080 B/leaf round`、`Qmax=2091 B`；两核输入计划的原 op/core 归属保持，错配叶序共享输入与平衡归约树两个负例被拒绝，底层双叶 op ID 次序不一致仍可按张量身份对齐。对原始 `case_097.json` 仅执行一次本地构造与 `derive_multicore_plan` 合法性检查：选出 4×4，`D=163840 B/leaf round`、`Qmax=446464 B`，op 数与原树方案一致。这里没有运行 Task 构造、Step2、Step3、P3 E0 或 solver，也没有新增官方成绩。
+
+## 一次可证伪评价的预登记
+
+`src/q3/leaf_tile_probe.py prepare` 使用上述固定候选规则，只变换已有 forest 的 097/k1 方案；`gap_frequency_probe.evidence` 核对已有 forest/band 两个对照的固定提交、图/配置、方案和结果原件。准备阶段只生成一个方案和 manifest，零 Task/Step3/E0。随后 `run` 必须提供该 manifest 的 SHA-256、协调会话的新资源准入记录及实际资源预检文件；准入字符串只是来源记录，不自动授予共享主机权限。
+
+本次预算只有 **1 次新 P3 E0，0 P2、0 solver、0 重试、1 worker，子进程最多 60 秒，进程组 RSS 采样警戒 512 MiB**。执行用独占的新 `evaluation/` 目录并在调用前落账；失败保留，不覆盖重跑。资源窗口不足时只保留准备材料。引用的既有 097 依赖探针预算已用完，本次不重建额外 Task/Step3；新 P3 自身内部的官方准备当然属于这一次 E0。
+
+评价前已明确否证条件：候选即使减小搬运量，若累计 M 等待或官方 Makespan 上升，就不能直接接入求解器；若 M 改善但 spill/extra 上升，记录取舍，不能声称各指标全面改进。它是通用规则在已见机制样本上的单次实验，不是一个新算法的全量成绩，也不改变现有 forest500 榜单。
