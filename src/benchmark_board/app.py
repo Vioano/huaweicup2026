@@ -53,6 +53,34 @@ def sync_once(ledger,repo,sources,on_progress=None):
         finally:
             if on_progress: on_progress()
 
+def start_ingest_workers(ledger,repo,sources,sync_inbox=None,sync_enabled=True,sync_interval=5,stop=None):
+    """Keep authenticated local deliveries independent of blocking remote Git polls."""
+    stop=stop or threading.Event()
+    workers=[]
+    if sync_inbox:
+        from inbox import drain_inbox
+        def receive_loop():
+            while not stop.is_set():
+                try:
+                    for result in drain_inbox(ledger,sync_inbox):
+                        if result['state']=='retry': print('Benchmark inbox retry: '+packed(result),flush=True)
+                except Exception:
+                    # A failed scan must not stop later completed deliveries.
+                    traceback.print_exc()
+                stop.wait(.25)
+        workers.append(threading.Thread(target=receive_loop,daemon=True,name='benchmark-inbox'))
+    if sync_enabled:
+        def source_loop():
+            while not stop.is_set():
+                try:
+                    sync_once(ledger,repo,sources)
+                except Exception:
+                    traceback.print_exc()
+                stop.wait(max(5,sync_interval))
+        workers.append(threading.Thread(target=source_loop,daemon=True,name='benchmark-sources'))
+    for worker in workers: worker.start()
+    return workers
+
 def ui_bundle(problem=None):
     files={name:(WEB/name).read_bytes() for name in ('index.html','app.js','style.css')}
     hashes={name:digest(data) for name,data in files.items()}
@@ -166,28 +194,7 @@ def main():
     if args.command=='import': print(packed(load_feed(ledger,args.repo,args.commit,args.feed)));return
     if args.command=='sync':sync_once(ledger,args.repo,sources);print(packed({'done':True}));return
     if not mirror and (not args.no_sync or args.sync_inbox):
-        def receive():
-            if args.sync_inbox:
-                from inbox import drain_inbox
-                for result in drain_inbox(ledger,args.sync_inbox):
-                    if result['state']=='retry': print('Benchmark inbox retry: '+packed(result),flush=True)
-        def worker():
-            next_sources=0
-            while True:
-                try:
-                    receive()
-                    if not args.no_sync and time.monotonic()>=next_sources:
-                        sync_once(ledger,args.repo,sources,on_progress=receive)
-                        next_sources=time.monotonic()+max(5,args.sync_interval)
-                except Exception:
-                    # Keep retries visible and preserve batch idempotency if a
-                    # filesystem/database interruption occurs after admission.
-                    traceback.print_exc()
-                # A completed request.json is already authenticated and local.
-                # Keep the final receive hop below a second; remote polling and
-                # artifact verification remain the sync transport's responsibility.
-                time.sleep(.25 if args.sync_inbox else max(5,args.sync_interval))
-        threading.Thread(target=worker,daemon=True).start()
+        start_ingest_workers(ledger,args.repo,sources,args.sync_inbox,not args.no_sync,args.sync_interval)
     server=ThreadingHTTPServer(('127.0.0.1',args.port),make_handler(ledger,args.sync_status));server.daemon_threads=True
     args.state.mkdir(parents=True,exist_ok=True)
     (args.state/'service.json').write_text(packed({'url':f'http://127.0.0.1:{args.port}','started_at':now(),'mode':'central_mirror' if mirror else 'local_ledger','sources_poll_seconds':None if args.no_sync or mirror else max(5,args.sync_interval)}))
