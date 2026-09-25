@@ -1,0 +1,97 @@
+{
+  "schema": "figure-auto-review-v1",
+  "figure_id": "fig-4-1",
+  "primary": "fig4-1-p1-two-layer-flow.svg",
+  "files": [
+    {
+      "name": "fig4-1-p1-two-layer-flow.svg",
+      "role": "svg",
+      "sha256": "c221cc1cf878ca13f956bd87820b118eab7c51edfef78da9618e98d11ebc61eb"
+    },
+    {
+      "name": "fig4-1-p1-two-layer-flow.png",
+      "role": "png",
+      "sha256": "88122e4f371291e62e904bf8c7db7204dca2ed1b59bcf2db935b2a3dffb90775"
+    },
+    {
+      "name": "fig4-1-p1-two-layer-flow.drawio",
+      "role": "source",
+      "sha256": "a75d554b098c07edbb4c5ce7c38d7b4ef8861f023bfe4dc6ec2947456bf4cc3d"
+    },
+    {
+      "name": "caption.md",
+      "role": "caption",
+      "sha256": "33d5452cb1844d3c1a034872547316509c69ada83358a090e81800fa2f583ff4"
+    },
+    {
+      "name": "self-check.md",
+      "role": "self_check",
+      "sha256": "81449e6b27a62e02f0fb796eb5a3b5f86eda2fbb969aa5707c60deca80a474e6"
+    },
+    {
+      "name": "nodes.csv",
+      "role": "input",
+      "sha256": "bb769b4b1b9b2f2be2813852db3376859d3738dd8cdbbb52eb6b30c32aa92a46"
+    },
+    {
+      "name": "edges.csv",
+      "role": "input",
+      "sha256": "e89cc15b5433798a1db9acd949f9810ae95dc3f1697de33ff31efc15b688d674"
+    }
+  ],
+  "command": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f svg -o fig4-1-p1-two-layer-flow.svg fig4-1-p1-two-layer-flow.drawio （png 加 -f png -s 2）；校验：python skills/drawio-skill/scripts/validate.py fig4-1-p1-two-layer-flow.drawio",
+  "sources": [
+    {
+      "path": "paper/sections/P1-问题一论文初稿.md（4.1、4.4.1~4.4.4）",
+      "commit": "67c0f603960fddf86416d23ca3e85e53561c3c3a",
+      "sha256": "见固定 blob（GitHub Contents API 核对）"
+    },
+    {
+      "path": "src/q1/unified.py（v4 统一入口）",
+      "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
+      "sha256": "见固定 blob"
+    },
+    {
+      "path": "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py 等",
+      "commit": "data/raw/a/official 冻结原件（a0537aeb 目录）",
+      "sha256": "本地只读原件"
+    }
+  ],
+  "units": {
+    "makespan": "cycles",
+    "wall": "s",
+    "bytes": "B"
+  },
+  "panels": [
+    {
+      "id": "1",
+      "title": "上层｜求解器决策（v4 统一入口）"
+    },
+    {
+      "id": "2",
+      "title": "下层｜官方评价（冻结评估器）"
+    }
+  ],
+  "tables": {
+    "nodes": "nodes.csv",
+    "edges": "edges.csv"
+  },
+  "table_columns": {
+    "nodes": [
+      "id",
+      "stage",
+      "module"
+    ],
+    "edges": [
+      "source",
+      "target"
+    ]
+  },
+  "criteria": [
+    "切图、分核、每核 Task 顺序三项决策齐全；没有赋予提交者直接控制官方 Pipe 顺序或等待时间的自由。",
+    "在线 E1 评分与独立最终 E0 复评分开表示。",
+    "后续局部研究模块未混入当前完整 v4 主线，流程和主结果属于同一版本。"
+  ],
+  "head": "879c3dc3500d5b1bc258a8c6bc9ce22662603e83",
+  "branch": "a-r1-farmeruncle123"
+}

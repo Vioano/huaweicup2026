@@ -1,0 +1,14 @@
+id,stage,module
+in,上层-输入,-
+identify,上层-结构识别,src/q1/unified.py（依赖提取与结构识别，a0537aeb）
+cand,上层-候选构造,src/q1/unified.py generate_candidates：bounded/heavy-or-sink/overload/shared-input/capacity-return/fork-frontier
+dedup,上层-检查去重,src/q1/unified.py plan_bytes（SHA-256）
+e1,上层-在线选优(E1),src/q1/unified.py choose + src.eval_exact.P1BatchEvaluator
+plan,接口-方案文件,"unified.py main --output（node_to_subgraph, core_schedules）/ --diagnostics"
+read,下层-读入方案,data/raw/a/official/code/multicore_cut_evaluate_problem_1.py
+copy,下层-边界COPY重建,data/raw/a/official/code/multicore_cut_evaluate_problem_1.py
+steps,下层-核内调度Step1/2/3,data/raw/a/official/code/schedule_step1.py / schedule_step2.py / schedule_step3.py
+sim,下层-多核事件模拟,data/raw/a/official/code/multicore_cut_evaluate_problem_1.py
+out1,出口-Makespan,官方评估器输出（cycles）
+out2,出口-额外DDR,官方评估器输出（B）
+e0,标注-E0独立复评,官方评估器（未修改，实验阶段，与在线E1分开）
