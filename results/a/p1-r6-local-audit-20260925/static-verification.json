@@ -1,0 +1,150 @@
+{
+  "call_ledger": {
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "Task_compiler": 0,
+    "response": 0,
+    "solver": 0
+  },
+  "cases": {
+    "005": {
+      "all_core_orders_strictly_increasing_height": true,
+      "at_most_one_task_per_core_height": true,
+      "compute_ops": 4113,
+      "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+      "old_data_task_height_counts": {
+        "0": 4,
+        "1": 5,
+        "2": 5,
+        "3": 5,
+        "4": 5,
+        "5": 5,
+        "6": 5,
+        "7": 5
+      },
+      "old_plan_sha256": "b862f2d665a928e58bed3b6d6dd9be44a809cb4d432531c98193ea863829654c",
+      "old_tasks": 39,
+      "witnesses": [
+        {
+          "changed_tensors": 21,
+          "copy_byte_change": 26500,
+          "local_cross_edges": {
+            "X_to_J": 1,
+            "Y_to_J": 4
+          },
+          "original_task": 14,
+          "part_sizes": [
+            82,
+            275,
+            25
+          ],
+          "row_agreement": true,
+          "service_change": 457
+        },
+        {
+          "changed_tensors": 21,
+          "copy_byte_change": 26500,
+          "local_cross_edges": {
+            "X_to_J": 1,
+            "Y_to_J": 4
+          },
+          "original_task": 15,
+          "part_sizes": [
+            82,
+            275,
+            25
+          ],
+          "row_agreement": true,
+          "service_change": 457
+        }
+      ]
+    },
+    "085": {
+      "all_core_orders_strictly_increasing_height": true,
+      "at_most_one_task_per_core_height": true,
+      "compute_ops": 19737,
+      "graph_sha256": "b63169e9cd0f21dc2da6617e7138472e95937465c703b7e4bf4dbc80125ed4f6",
+      "old_data_task_height_counts": {
+        "0": 2,
+        "1": 5,
+        "10": 5,
+        "11": 5,
+        "12": 5,
+        "13": 5,
+        "14": 5,
+        "15": 5,
+        "16": 5,
+        "17": 5,
+        "18": 5,
+        "19": 5,
+        "2": 5,
+        "3": 5,
+        "4": 5,
+        "5": 5,
+        "6": 5,
+        "7": 5,
+        "8": 5,
+        "9": 5
+      },
+      "old_plan_sha256": "e7b3e907ec10ef3d5acc55682200735c42c0f38e4b72da1372c2363b7f01c4d8",
+      "old_tasks": 97,
+      "witnesses": [
+        {
+          "changed_tensors": 30,
+          "copy_byte_change": 95876,
+          "local_cross_edges": {
+            "X_to_J": 1,
+            "Y_to_J": 4
+          },
+          "original_task": 12,
+          "part_sizes": [
+            106,
+            347,
+            25
+          ],
+          "row_agreement": true,
+          "service_change": 1626
+        },
+        {
+          "changed_tensors": 30,
+          "copy_byte_change": 95876,
+          "local_cross_edges": {
+            "X_to_J": 1,
+            "Y_to_J": 4
+          },
+          "original_task": 13,
+          "part_sizes": [
+            106,
+            347,
+            25
+          ],
+          "row_agreement": true,
+          "service_change": 1626
+        },
+        {
+          "changed_tensors": 30,
+          "copy_byte_change": 95876,
+          "local_cross_edges": {
+            "X_to_J": 1,
+            "Y_to_J": 4
+          },
+          "original_task": 14,
+          "part_sizes": [
+            106,
+            347,
+            25
+          ],
+          "row_agreement": true,
+          "service_change": 1626
+        }
+      ]
+    }
+  },
+  "inputs_sha256": {
+    "archive": "4924c14414e59bedaa67d880344278099d23936aa3435ab42490c93c622b6d97",
+    "author_witness": "fb99903b7affb72bd949d213ff18766871ccfc028500cacdf95a27f57201ce10"
+  },
+  "kind": "independent_stdlib_read_only_R6_static_witness_verification",
+  "scope": "Original graph + old plan; contracted dependencies, old data Task heights, five X/Y/J memberships and local boundary-COPY deltas. No new plan, Task compilation, spill, or timing prediction."
+}
