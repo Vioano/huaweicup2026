@@ -1,20 +1,27 @@
 id,stage,module,note
-in,input,-,输入边界：原始计算图 G、核数 K、冻结配置 Θ；required_stages 由后续节点覆盖
+in,input,-,输入边界：原始计算图 G、核数 K、冻结配置 Θ（XML ID：in）
 identify,structure,src/q1/unified.py（a0537aeb）依赖提取与结构识别,弱连通分量 / Pipe 工作量 (4-10) / 分叉阶段 (4-11) / 共享输入 / 同型链
-cand_box,partition;assignment;task_order,src/q1/unified.py generate_candidates,六类候选统一入口（至多 6 个不同方案）；覆盖/依赖合法性检查发生在各构造器内部严格识别器
-c1_bounded,partition;assignment;task_order,src/q1/bounded_tasks.py construct（经 generate_candidates add）,① 完整分量 + 有界树前沿（bounded，必需）
-c2_heavy_or_sink,partition;assignment;task_order,src/q1/heavy_suffix.py / src/q1/sink_peel.py construct（经 add）,② 重分量 + 独占后缀（heavy-or-sink）
-c3_overload,partition;assignment;task_order,src/q1/component_overload.py construct（经 add）,③ 超载分量分解（overload）
-c4_shared_input,partition;assignment;task_order,src/q1/shared_input_budget.py construct（经 add）,④ 输入预算 + 活跃核选择（shared-input；components>=cores 且 external>524288 B 时启用）
-c5_capacity_return,partition;assignment;task_order,src/q1/capacity_return.py construct（经 add）,⑤ 容量约束回转分组（capacity-return；全图仅 PIPE_M/PIPE_V 且形状匹配时启用，strict-private-chain-check）
-c6_fork_frontier,partition;assignment;task_order,src/q1/fork_frontier.py construct（经 add，grain=4）,⑥ 分叉阶段前沿（fork-frontier）
+candBox,candidate_construct,src/q1/unified.py generate_candidates,六类候选统一入口（至多 6 个不同方案）；覆盖/依赖合法性检查发生在各构造器内部严格识别器；可选候选失败跳过、必需 bounded 失败终止
+c1,candidate_construct,src/q1/bounded_tasks.py construct（经 generate_candidates add）,① 完整分量 + 有界树前沿（bounded，必需）
+c2,candidate_construct,src/q1/heavy_suffix.py / src/q1/sink_peel.py construct（经 add）,② 重分量 + 独占后缀（heavy-or-sink）
+c3,candidate_construct,src/q1/component_overload.py construct（经 add）,③ 超载分量分解（overload）
+c4,candidate_construct,src/q1/shared_input_budget.py construct（经 add）,④ 输入预算 + 活跃核选择（shared-input；components>=cores 且 external>524288 B 时启用）
+c5,candidate_construct,src/q1/capacity_return.py construct（经 add）,⑤ 容量约束回转分组（capacity-return；全图仅 PIPE_M/PIPE_V 且形状匹配时启用，strict-private-chain-check）
+c6,candidate_construct,src/q1/fork_frontier.py construct（经 add，grain=4）,⑥ 分叉阶段前沿（fork-frontier）
+semantic-partition,partition,src/q1/unified.py（各候选构造器输出 plan.node_to_subgraph）,语义子项（非独立图节点）：候选构造的切图决策，映射到图容器 candBox 及其子节点 c1~c6（XML ID candBox、c1..c6）
+semantic-assignment,assignment,src/q1/unified.py（各候选构造器输出 plan 内 Task→核 指派）,语义子项（非独立图节点）：候选构造的 Task→核 指派决策，映射同上（candBox、c1..c6）
+semantic-task_order,task_order,src/q1/unified.py（各候选构造器输出 plan 内每核顺序）,语义子项（非独立图节点）：候选构造的每核 Task 顺序决策，映射同上（candBox、c1..c6）
 dedup,candidate_select,src/q1/unified.py add() 内 plan_bytes 的 SHA-256,仅字节去重（重复只保留首个）；覆盖/依赖合法性检查不在 plan_bytes
 decision,candidate_select,src/q1/unified.py solve / choose,去重后候选数 = 1 判定
 single,candidate_select,src/q1/unified.py choose（single-distinct-plan）,仅 1 个候选时直接选定；不启动在线 E1；输出方案仍需独立 E0 复评
-e1,online_e1,src.eval_exact.P1BatchEvaluator（经 unified.py solve 注入 choose）,多候选路径：1 worker / 16 MiB / 60 s / 启动限额 10 s；按 (Makespan, scheduled COPY bytes) 择优；首个评分失败即停
-plan,node_to_subgraph;core_schedules,src/q1/unified.py main --output,官方方案文件严格只含两字段；不含诊断内容
+e1,online_e1,src.eval_exact.P1BatchEvaluator（经 unified.py solve 注入 choose）,"多候选路径：1 worker / 16 MiB / 60 s / 启动限额 10 s；按 (Makespan, scheduled COPY bytes) 择优；首个评分失败即停"
+plan,output_interface,src/q1/unified.py main --output,官方方案文件输出接口；严格只含 node_to_subgraph 与 core_schedules 两字段，不含诊断内容
+semantic-plan-n2s,node_to_subgraph,src/q1/unified.py main --output 字段一,语义子项（非独立图节点）：方案 JSON 字段 node_to_subgraph，映射到图节点 plan（XML ID plan）
+semantic-plan-cs,core_schedules,src/q1/unified.py main --output 字段二,语义子项（非独立图节点）：方案 JSON 字段 core_schedules，同上映射 plan
 diag,diagnostics,src/q1/unified.py main --diagnostics,独立诊断 JSON（算法 ID/候选清单/在线评分/耗时）；不属官方方案 JSON
-read,node_to_subgraph;core_schedules,data/raw/a/official/code/multicore_cut_evaluate_problem_1.py,官方评估器读入方案文件并按两键重建子图 / Task
+read,official_read,data/raw/a/official/code/multicore_cut_evaluate_problem_1.py,官方评估器读入方案文件并按两键重建子图 / Task
+semantic-read-n2s,node_to_subgraph,data/raw/a/official/code/multicore_cut_evaluate_problem_1.py,语义子项（非独立图节点）：评估器按 node_to_subgraph 重建子图，映射到图节点 read（XML ID read）
+semantic-read-cs,core_schedules,data/raw/a/official/code/multicore_cut_evaluate_problem_1.py,语义子项（非独立图节点）：评估器按 core_schedules 重建每核 Task 顺序，同上映射 read
 copy,copy_rebuild,data/raw/a/official/code/multicore_cut_evaluate_problem_1.py,边界 COPY 重建：COPY_OUT → DDR → COPY_IN
 steps,official_schedule,data/raw/a/official/code/schedule_step1.py / schedule_step2.py / schedule_step3.py,官方核内调度固定三步：拓扑顺序 / 缓存换入换出 / 四 Pipe 时间线
 sim,official_schedule,data/raw/a/official/code/multicore_cut_evaluate_problem_1.py,多核事件模拟：DDR 60 B/cycle；同核/跨核 Task 门控 100/1000 cyc

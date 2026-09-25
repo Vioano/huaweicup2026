@@ -6,46 +6,52 @@
     {
       "name": "fig4-1-p1-two-layer-flow.svg",
       "role": "svg",
-      "sha256": "36041704a5a2b3a98946523166605c33531d2b09b58eac16f36dc794359ec155"
+      "sha256": "f18597355f0510010b75c8e8a57d73d8dc1f19a538d2e3f4c0930488dfaa3621"
     },
     {
       "name": "fig4-1-p1-two-layer-flow.png",
       "role": "png",
-      "sha256": "e4b8d8e6e8fe395ad69bc889134c9e36a5100277d30dc194567c4fd3d4aa2043"
+      "sha256": "d045d104bd9ad370d9c295f5d61865dbd87c71fc442493232a2c454147e1f692"
     },
     {
       "name": "fig4-1-p1-two-layer-flow.drawio",
       "role": "source",
-      "sha256": "e4c35ef85c6084d4d9dfa5c6c8223a311862de75f615a45e514082db8d02bf81"
+      "sha256": "39a246e9ec814ac462048e6951debeffed80adcf2f797212866e97c4a4eec285"
+    },
+    {
+      "name": "fig4-1-preview-insert-146mm.png",
+      "role": "preview",
+      "sha256": "1957980e06e28c9fac2fdc8729625ee51848770bbe613cdf0a100d58134e9071",
+      "note": "论文插入宽度预览：A4 textwidth=146.6 mm（gmcmthesis.cls left/right=31.7 mm）@300dpi 等效，1734x1799 px"
     },
     {
       "name": "caption.md",
       "role": "caption",
-      "sha256": "cd46acd343797dd854ef21907c54128885223836f1c1392805bc79fb034702c3"
+      "sha256": "3dfb85756a86c550c2511f4bf9b00e1a07662b697eb74f951ef02ea54327229c"
     },
     {
       "name": "self-check.md",
       "role": "self_check",
-      "sha256": "29f1e8f567e767f7b99799c220a9ef6ce0a5be42bb3797c0f9dab2f3c0ce70c7"
+      "sha256": "a6adfe005cec53c409fae9812607865d189e12fe67feaef5f9b0fc787af4f16f"
     },
     {
       "name": "nodes.csv",
       "role": "input",
-      "sha256": "41e60665e0e76cfa50bffbe6888fd494a8e0504411730e25ed8db0bf44898ae8"
+      "sha256": "fd37f1ca5630b229532e7201df541c3bb9a00079402ece5e85c49b1d873df8a9"
     },
     {
       "name": "edges.csv",
       "role": "input",
-      "sha256": "cb5dcfee165a91e5feef6d0729990ce12efa8facabb642d19f6c30aec0a270d0"
+      "sha256": "faec135726e62df8a9c04c00946d1e31f6fec06f37abed48489368800f79472f"
     },
     {
       "name": "DELIVERY.md",
       "role": "notes",
-      "sha256": "e25f1572c5f3c59fcee0f66bce91f31295d79f85a395f497fdae422cd6e1ba72",
+      "sha256": "7f98877834fcfd8e4277cec2aaeb7187d7508f95bd6b93879d3eb82912f71ae9",
       "note": "交付说明与图注草稿、节点↔源码对应表；应用户要求随包保留，此处登记真实哈希"
     }
   ],
-  "command": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f svg -o fig4-1-p1-two-layer-flow.svg fig4-1-p1-two-layer-flow.drawio （png 加 -f png -s 2）；XML 校验：python -c \"import xml.dom.minidom; xml.dom.minidom.parse('fig4-1-p1-two-layer-flow.drawio')\"（旧源第 46 行多余 </mxCell> 已修复，解析通过）",
+  "command": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f svg -o fig4-1-p1-two-layer-flow.svg fig4-1-p1-two-layer-flow.drawio ；PNG 预览：同命令加 -f png -s 2 -o fig4-1-p1-two-layer-flow.png ；插入宽度预览（146.6 mm @300dpi 等效）：同命令加 -f png -s 1.49 -o fig4-1-preview-insert-146mm.png ；XML 校验：python -c \"import xml.dom.minidom; xml.dom.minidom.parse('fig4-1-p1-two-layer-flow.drawio')\"（解析通过）。工具：draw.io desktop CLI（本机 F:/draw.io/），Python 3.13.12（csv.writer 生成 CSV、hashlib 计算 SHA256）",
   "sources": [
     {
       "path": "src/q1/unified.py",
@@ -54,9 +60,10 @@
       "sha256": "3c571f6c9c0ef2a956268abf9129d557f2d087e783b4e621c2917279fa13e985"
     },
     {
-      "path": "paper/sections/P1-问题一论文初稿.md（4.1、4.4.1~4.4.4）",
+      "path": "paper/sections/P1-问题一论文初稿.md",
       "commit": "67c0f603960fddf86416d23ca3e85e53561c3c3a",
-      "sha256": "10d0dc195e138c42f7507ca12c8619ebdf46c4df54ca38b31fe353fc886ef8ef"
+      "sha256": "10d0dc195e138c42f7507ca12c8619ebdf46c4df54ca38b31fe353fc886ef8ef",
+      "note": "章节定位：4.1、4.4.1~4.4.4（P1 决策口径与式 4-10/4-11）"
     },
     {
       "path": "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
@@ -119,13 +126,15 @@
   "criteria": [
     "去重后仅 1 个候选时直接选定（single-distinct-plan），不启动在线 E1；多候选才进入 E1；两条路径输出均需独立 E0 复评。",
     "候选先经 add() 内 plan_bytes SHA-256 字节去重再进入分支；覆盖/依赖合法性检查定位在各构造器内部严格识别器，plan_bytes 仅字节去重。",
+    "构造失败语义：可选候选失败跳过；必需 bounded 候选失败（required=True）直接 raise 终止求解。",
     "官方方案文件严格只含 node_to_subgraph 与 core_schedules 两字段；诊断经 --diagnostics 独立旁支写出，不属官方方案 JSON。",
-    "在线 E1 评分与独立最终 E0 复评分开表示；研究扩展模块未混入 v4 主线。"
+    "在线 E1 评分与独立最终 E0 复评分开表示；研究扩展模块未混入 v4 主线。",
+    "nodes.csv 以 csv.writer 规范写出；id 与 drawio XML ID 统一；stage 列全部单值，partition/assignment/task_order/node_to_subgraph/core_schedules 以唯一 ID 语义子项行覆盖并注明对应 XML ID。"
   ],
-  "head": "8bbaf6db2b44b30371e7b0695703ba40081164ec",
+  "head": "be49466c1bac6e5036af732273d97b734a035629",
   "branch": "a-r1-farmeruncle123",
   "rework_refs": [
-    "https://github.com/huaweibei123/huaweicup2026/pull/205#issuecomment-5836746442",
-    "https://github.com/huaweibei123/huaweicup2026/pull/205#issuecomment-5836853258"
+    "https://github.com/huaweibei123/huaweicup2026/issues/14#issuecomment-5837226124",
+    "https://github.com/huaweibei123/huaweicup2026/issues/14#issuecomment-5837354904"
   ]
 }
