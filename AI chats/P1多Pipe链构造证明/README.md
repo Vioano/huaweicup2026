@@ -1,3 +1,9 @@
+## R5：真实性能瓶颈追问（2026-09-25）
+
+已在同一 huaweicup project chat 用6 Pro发送，消息`c9183ea6-5436-4aeb-b0d8-2b513565eac6`。本轮暂只有已发送提问与输入材料，等待最终答复。准确全文见[PROMPT_R5_20260925.txt](PROMPT_R5_20260925.txt)，查收状态以[STATUS_R5_20260925.json](STATUS_R5_20260925.json)为准，早期status.json不代表当前轮次。
+
+输入为两份实际模型方案和冻结源码，附件清单见[MANIFEST_R5_INPUT_20260925.json](附件/MANIFEST_R5_INPUT_20260925.json)。问题聚焦101836→109412的因果等待、扩大构造域的价值及跨结构族泛化；正式五核均值仍4.025907473836023。R5全聊天clip尚待生成完成后补齐，不把当前虚拟化页面的5个消息块称为全部历史。
+
 # P1 多Pipe链构造与证明：生成中
 
 会话：https://chatgpt.com/g/g-p-6ab2d820c86081918067a0c6d5eb1ab6-huaweicup/c/6ab54526-3220-83e8-9dca-f2f924c91d69
