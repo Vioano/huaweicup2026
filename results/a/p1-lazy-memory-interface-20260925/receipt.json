@@ -1,0 +1,50 @@
+{
+  "kind": "pure-and-fake-interface-validation-NOT-E0",
+  "source_commit": "4808115e6023741a7d6c644adbb9710849bc0634",
+  "recorded_at": "2026-09-25T04:28:53.470094+00:00",
+  "python_version": "3.12.13",
+  "platform": "Darwin",
+  "command": "python -B -m unittest tests.q1.test_p1_lazy_memory_probe tests.q1.test_p1_lazy_packet_search tests.q1.test_p1_packet_edge_bound tests.q1.test_p1_two_task_resource_bound tests.q1.test_p1_return_cut_resource_bound",
+  "result": {
+    "exit_code": 0,
+    "tests_passed": 24,
+    "reported_suite_seconds": 0.057
+  },
+  "source_sha256": {
+    "src/review/p1_lazy_memory_probe.py": "7eb483cfe7f09809f2fab16fc1390f91fc0ec0daedad588af112d5f55930c812",
+    "src/review/p1_lazy_packet_search.py": "18b1c485454099871b5559e1e1170ca8cbc0d5d5095883de9141ed309952a64e",
+    "src/review/p1_packet_edge_bound.py": "2d1116d177e78f0592b6c000f71ae71c1c0549ce339a2c9825b72144f7a3c784",
+    "src/review/p1_return_cut_resource_bound.py": "3a64e61cbcd576aadbd2c2607fb47ae31d6925f60b60bb7bdc0bdfecfa664e61",
+    "tests/q1/test_p1_lazy_memory_probe.py": "4062d21a06c4ed287be814dd6edeabbb6b453402a8b2115322190c0d89e21781",
+    "tests/q1/test_p1_lazy_packet_search.py": "ab9dccaa7944e7e03d273984fb892399b1a2894765856cfc9e8fe672c6c65f88",
+    "docs/a/P1_RETURN_CUT_RESOURCE_BOUND.md": "9cf052b61dbf43c06d0d1fd2f2c0c6c2d99deb824d3c81cd196cf6676dbc6717"
+  },
+  "real_calls": {
+    "Task_compile": 0,
+    "Fraction_response": 0,
+    "solver": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "VM_created": 0
+  },
+  "verified": [
+    "gate accounting and fake original-ID assembly",
+    "preserve nonoptimal candidate and frontier",
+    "cooperative stop retains unopened items and incumbent",
+    "partial compile completion stays unknown",
+    "final signature/byte/response mismatch blocks verification",
+    "receipt published before plan; failed receipt leaves no plan",
+    "unknown CLI exits nonzero",
+    "conditional edge bounds and abstract DAG tests"
+  ],
+  "unverified": [
+    "real graph compiler interface for this new driver",
+    "hard-signal or external supervisor behavior under real load",
+    "no-spill feasibility for candidate Tasks",
+    "E0 model agreement",
+    "quality or end-to-end speed benefit",
+    "global P1 optimality"
+  ],
+  "production_adopted": false
+}
