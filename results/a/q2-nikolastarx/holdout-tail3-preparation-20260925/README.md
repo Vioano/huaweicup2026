@@ -1,0 +1,11 @@
+# Frozen holdout tail3 preparation
+
+This package continues only `076-k5`, `003-k5`, and `084-k5` in that order. It does not read or rerun 097, nor repeat the eight earlier accepted cells. `run_tail3.py` reuses the frozen holdout `preflight` and `cell` logic, which checks solver call accounting, native E2 provenance, and independent E0 agreement. It changes the requested output to an absolute path immediately after parsing arguments, so child processes started from the fixed 15d checkout write where the parent reads.
+
+`manifest.json` pins the 15d solver commit, holdout runner and base manifest hashes, monitor hash, runtime paths, scope and limits. The execution host must recheck those paths. `gate-template.json` is `pending` and cannot dispatch. After the coordinator admits a new resource window, a fresh gate must carry scope `p2-bidirectional-holdout-tail3`, status `admitted`, matching manifest and runner hashes, and an unexpired timezone-aware `expires_at`. The runner requires a fresh output directory.
+
+Maximum new work: three solver calls, twelve E2 attempts, three total E0 calls including any possible fallback, no retries, one worker, 180 seconds per process, and 600 seconds for the whole batch including preflight. Monitored subtree RSS is limited to 2 GiB. VM pressure level must be 1, swap growth at most 256 MiB, and disk free at least 10 GiB before and after stages. The first failed, unknown, or fallback cell stops the batch. A completed run requires zero fallback. `summary.json` retains complete cell rows and marks unresolved calls in `in_flight` conservatively.
+
+Preparation verification: `python3 -m py_compile` passed for the runner and test file. `python3 -B -m unittest discover -s output/holdout-tail3-preparation-20260925 -p test_preparation.py -v` passed two tests: a fake monitored child ran under a different working directory and wrote an absolute result path readable by the parent; a pending gate exited before creating a run directory. No real preflight, graph construction, solver, prepare, E0, E1, or E2 was run.
+
+The admitted gate is bound to the exact absolute `output_dir` shown in `gate-template.json`; a different requested output is rejected before preflight or directory creation.
