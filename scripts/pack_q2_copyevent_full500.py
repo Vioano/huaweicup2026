@@ -51,9 +51,13 @@ def make_baseline():
         if sha(truth_raw) != ref['sha256']:
             raise ValueError('baseline result identity differs: ' + case)
         truth = decode(truth_raw)
-        if truth['scene'] != 'B' or truth['num_cores'] != 1 or truth['makespan'] <= 0:
+        # The shared board denominator is the official singlecore CLI result.
+        # That CLI labels its result scene A, including for P2 comparisons.
+        if (truth['scene'] != 'A' or truth.get('execution_mode') != 'singlecore'
+                or truth['num_cores'] != 1 or truth['makespan'] <= 0):
             raise ValueError('wrong baseline scene/cores')
         records.append({'case': case, 'makespan': truth['makespan'],
+                        'scene': truth['scene'], 'execution_mode': truth['execution_mode'],
                         'graph_sha256': row['identity']['graph_sha256'],
                         'config_sha256': row['identity']['config_sha256'],
                         'result': {**ref, 'commit': BASE}})
