@@ -1,0 +1,30 @@
+{
+  "source": "c7e026d5271ef4a8d707559d7cf0e542c799d4d1",
+  "input_hashes": {
+    "071": "437cc74cae9e0fc0cb89b05403c62062ceff8d5bc2224c8834c519e69524e897"
+  },
+  "official_schedule_calls": 0,
+  "e0_calls": 0,
+  "solver_calls": 0,
+  "records": [
+    {
+      "case": "071",
+      "label": "071-k5-control",
+      "plan_sha256": "a15cd82e8a9cc5cb52cfbc133619d08ba9810c4eb057025b135b481f32c5208d",
+      "construction_wall_seconds": 0.933934666973073,
+      "compute_lower_bound": 5218,
+      "placement_proxy": 5218,
+      "regions": null,
+      "capsules": 136
+    }
+  ],
+  "scope": "static compute/FIFO/cross-delay model only; no official score",
+  "failure": "UnsupportedStructure('attention/FFN/chain quotient contains a cycle')",
+  "static_helper_calls": {
+    "validate_graph": 4,
+    "construct": 2,
+    "derive_multicore_plan": 2,
+    "pipe_bound": 1
+  },
+  "diagnostic_wall_seconds": 1.1895967079908587
+}

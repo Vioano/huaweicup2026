@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/src/q3/attention_rows.py", line 276, in _capsules
+    border_order = topo(successors, successors)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/src/q3/construct.py", line 47, in topo
+    raise ValueError("precedence cycle")
+ValueError: precedence cycle
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/short-vector-static-20260925/probe.py", line 103, in <module>
+    main()
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/short-vector-static-20260925/probe.py", line 75, in main
+    plan, meta = construct(index, 5, delay, pack_ffn=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/src/q3/attention_rows.py", line 448, in construct
+    blocks, block_of, predecessors, successors, border_order = _capsules(
+                                                               ^^^^^^^^^^
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/src/q3/attention_rows.py", line 280, in _capsules
+    raise UnsupportedStructure(f"{family} quotient contains a cycle") from error
+src.q3.construct.UnsupportedStructure: attention/FFN/chain quotient contains a cycle
