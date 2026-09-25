@@ -2,6 +2,8 @@
 
 对应正文：[问题三 Markdown 初稿](../sections/a-q3.md)。本文件为合稿与复核记录，不直接作为参赛论文正文。
 
+最新研究来源已跟进至 `3d22453deb0d2e3618f9d6cb41795ff164c6c84e`：新增 §6.4.4 离线分桶、§6.5.7 多释放包络及 §6.5.8 共享服务反馈，正文现为24式、7处文字图占位。完整统一算法仍为311322b，主表仍为19bebf；没有将新结构或模型系数替换为官方成绩。
+
 ## 写作范围与衔接
 
 用户已澄清原请求中的“P1”为笔误，本任务整理 P3 完整思路。按用户指定的 `paper/论文结构参考.pdf` 参考章节层次，使用问题分析、模型、算法、结果与局限的结构。参考 PDF 为 52 页的往届评审方案论文，只参考其组织方式；它的统计模型、数据、图、姓名和结论均不是本题成果。PDF SHA-256：`f302a6d59b7cea9bcfe3c12287a0d6fb76d1dc5d1a0394f88896121c3336fe12`。已读取目录、相关 P3 章节文字，并查看物理第 35、40 页图像；不声称逐页审读全 52 页。
@@ -52,6 +54,7 @@ Luna medium 的第一份[feed 审阅](../drafts/p3-forest500-audit.json)保留�
 | §6.3.4 条件下界 | [pipe_bound.py](https://github.com/huaweibei123/huaweicup2026/blob/311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1/src/q3/pipe_bound.py) | 单节点子图、整数 M/V、已证明原依赖与 FIFO；不支持 COPY 收缩歧义；不证明合法执行 |
 | §6.4、§6.6.3 容量流水 | [固定单例报告](https://github.com/huaweibei123/huaweicup2026/blob/7edacdd97a7be36a402af20bc8bfa8a7454dbbe0/results/a/q3-yuanzhifang/pipeline-capacity-20260925/REPORT.md)；源码 `2df4a5fa70d7a59492a7477e9ecd706501e64ad6` | 044/k4 实测 40927→37581、extra DDR 135168→121088 B；非全家族或统一500格结论 |
 | §6.4.3 完整 Task 前缀 | [固定静态说明](https://github.com/huaweibei123/huaweicup2026/blob/62c69b20ab887c76567dbab5fcce6eef30107b5c/results/a/q3-nikolastarx/pipeline-prefix-static-20260925/README.md)；[新官方单格报告](https://github.com/huaweibei123/huaweicup2026/blob/e96a8551d6b3c92bbf00285376ce950f9246c0dc/results/a/q3-nikolastarx/pipeline-prefix-linux-20260925/receipt-public/REPORT.md) | 044/k5 的结构、容量守卫和38024周期为发布证据；本稿读取报告，不代签独立原件验证或完整算法 |
+| §6.4.4 离线部分分桶 | [README与构造](https://github.com/huaweibei123/huaweicup2026/tree/3d22453deb0d2e3618f9d6cb41795ff164c6c84e/results/a/q3-nikolastarx/partial-bucket-compile-20260925) | 7个冷读断点受限族的保存结构检查；不是全部合法h，不含Step3内存边，不是新官方方案验收。非规范键缺陷已修复，任意证书身份认证仍由入口负责 |
 | §6.5.1 完整作业必要界 | [WHOLE_JOB_BOUND.md](https://github.com/huaweibei123/huaweicup2026/blob/09191c18bebc8b93e7751058b7c1b0f67c7d08fe/docs/a/q3-yuanzhifang/WHOLE_JOB_BOUND.md) | 067/k5 完整作业家族下界 12446880；不能超越已存 12237901；不证明全局最优 |
 | §6.5.2 首波阶梯 | 源码 `68fbe66e97f78161bfb6f4f9e83cd2f0977ce7a9`；[当前保留的冷构造与停止记录](https://github.com/huaweibei123/huaweicup2026/blob/6152817144576bec9918a2ae59ef54e42352b21e/results/a/q3-yuanzhifang/wave-stair-20260925/REPORT.md) | 真实构造成功 1 次，随后父进程导入失败，0 E0；无官方分数 |
 | §6.5.3 响应压缩 | `1b70dd6076430230c531b10e3e403e88474179cc` 的 `tail_response_model.py`；[真实图静态审阅](https://github.com/huaweibei123/huaweicup2026/blob/6152817144576bec9918a2ae59ef54e42352b21e/results/a/q3-yuanzhifang/tail-response-static-followup-20260925/REPORT.md) | 8804 操作与完整计算/FIFO DAG 一致；零 COPY/零额外 lag 模型，不是缓存模拟 |
@@ -62,6 +65,8 @@ Luna medium 的第一份[feed 审阅](../drafts/p3-forest500-audit.json)保留�
 | §6.5.4、§6.6.4 命中饱和 | [固定 Cache 事件审计](https://github.com/huaweibei123/huaweicup2026/blob/28e8c7ddfe2223b2261056f554259c43d5bba272/results/a/q3-nikolastarx/prefix-cache-critical-audit-20260925/REPORT.md)及 `summary.json` | 两份044/k5原结果在本次重新核 SHA、键大小/次数和事件：171首次miss、11重复hit、0淘汰；上界只针对固定读取集合 |
 | §6.5.5、§6.6.4 共享前缀与路径 | [固定实际路径审计](https://github.com/huaweibei123/huaweicup2026/blob/28e8c7ddfe2223b2261056f554259c43d5bba272/results/a/q3-nikolastarx/prefix-realized-path-20260925/README.md)及 `audit.json`/`test_math.py` | 1678操作开始时间重现为团队已发布结论；本次复核分项算术，不重新构建准备图。36592仅有理数共享取整模型界，不登记为官方浮点剪枝证书 |
 | §6.5.6 部分预加载 | [DESIGN.md](https://github.com/huaweibei123/huaweicup2026/blob/734914db51cecf094453c2b02e67fc5f5619b090/results/a/q3-nikolastarx/partial-preload-design-20260925/DESIGN.md)，同提交 `fixed_service.py`/`test_fixed_service.py`/`guard-audit.json` | 单激活、固定服务和串行计算链中精确；逐读递推测试为队长报告，本次仅审阅代码。真实核2/3/4不满足单激活条件，核1只通过此单项；没有新官方方案 |
+| §6.5.7 多释放函数 | [模型、测试与保存签名](https://github.com/huaweibei123/huaweicup2026/tree/3d22453deb0d2e3618f9d6cb41795ff164c6c84e/results/a/q3-nikolastarx/release-envelope-model-20260925) | 固定服务下的完整释放函数；在相同独立非负变量域内的模型支配，不是官方剪枝；本次独立重算8个已保存签名和支配表 |
+| §6.5.8 共享供给反馈 | [R7正文及清单目录](https://github.com/huaweibei123/huaweicup2026/tree/3d22453deb0d2e3618f9d6cb41795ff164c6c84e/AI%20chats/20260924-Pro-P3-%E5%BD%92%E7%BA%A6%E6%A3%AE%E6%9E%97%E5%88%87%E5%88%86) | 阅读本轮问答正文并核回答字节哈希；反例及两流推导经代数/手算审阅，九项测试仅Pro自述，附件未取得，不能称本机复现 |
 | §6.6.5 非单调反例 | [CACHE_NONMONOTONE_021.md](https://github.com/huaweibei123/huaweicup2026/blob/f26704ed8748f0a575b55f1a02b83d7335a1083f/docs/a/q3-yuanzhifang/CACHE_NONMONOTONE_021.md)，同提交 `audit_021.py`/`audit.json` | 同 plan 2140720→2140863、同 COPY/字节；已核字节原件及逐操作观察；尚非完整退化因果链 |
 
 ## 公式审阅与图件计划
@@ -102,6 +107,14 @@ P1 正文核编号从 1 起，P3 对齐接口从 0 起；只是编号映射，�
 | 6-7 质量—墙钟 | 文字占位 | 固定硬件/worker 的端到端计时；重复试验与跨用例分布分开 |
 
 按用户要求，当前不生成看似实测的示意数据。最终科研图使用项目 `scientific-figures`/Matplotlib 工作流，保留绘图输入、脚本和可编辑来源，待算法冻结后绘制与视觉验收。
+
+## R7 与多释放研究的本次复核
+
+实际读取3d22453d的离线分桶README/AUDIT/compile.py/test_compile.py、完整结构表，以及多释放README/model.py/test_model.py/task_profile.py/audit_saved_family.py和保存签名字段。没有运行这些候选编译器、模型选择器或测试。发布的6项编译测试、4项/20次模型递推检查按队长结果归属，原数据依赖、内存峰值和上游COPY_OUT先后也未在本次重建完整Task图验证。
+
+根会话新增 `python -B paper/tools/audit_p3_release_envelopes.py`，输出[只读包络核验](../drafts/p3-release-envelope-audit.json)。共读取12个固定Git文件：重算8份已保存传输记录对应的系数和全部模型支配关系，得到h=2/15/17；核对构造/模型源码、结构表、原计划与容量证书的已发布散列，检查示例仍为两字段且其他核提交列表不变。没有加载完整Task压缩快照，没有重新验证预估峰值或依赖无环，也没有产生新候选。模型周期绝不登记为官方Makespan。
+
+R7本轮问答和manifest已读取，回答 `bb41cb93-c330-4de4-bda1-78825d4aa74f` 的保存正文为19,805 B，SHA-256为 `1b5519801e99614842802c72cdeed4a3541ff5a4144952b756ab261f6cff67ff`，本次按Git字节重新核实。Pro自述完整/局部读文件范围保留在正文开头；归档只核该轮可见回答，不代表重新验证全部七轮历史。清单明确数学内核压缩包和证书JSON未取得可验证原件，本会话未下载或执行这些附件；“九项检查通过”只能作作者报告，不当作本机测试。新章节主要采用可从文字逐步复核的推导、反例及保存代码中已明确的适用条件。
 
 ## 后续更新规则
 
