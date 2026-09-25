@@ -56,6 +56,9 @@ class Engine:
         self._local_fastpath_status={'state':'idle','delivery_id':None,'started_at':None,
                                      'finished_at':None,'error':None}
         self._git_fast_lane=None
+        self._publish_thread=None
+        self._publish_worker_status={'state':'idle','started_at':None,'finished_at':None,
+                                     'sequence':None,'error':None}
 
     def sign(self,domain,payload): return self.signatures.sign(domain,self.actor,payload,self.key)
     def submission_lock(self,identity):
@@ -225,7 +228,26 @@ class Engine:
         self._accepted_cache_key=(local_manifest['payload_sha256'],local_manifest['payload_size'],local_manifest['snapshot_id'])
         self._accepted_payload_cache=target
 
-    def publish_snapshot(self,head):
+    def _finish_snapshot_publication(self,head,previous,envelope,manifest,data,payload_bytes):
+        if previous and data is not None:
+            self.publish_fast_delta(head,previous,None,None,manifest,data=data)
+        path='objects/'+manifest['payload_sha256']
+        channel={'generation':(previous['generation']+1 if previous else 1),'manifest':manifest,'object':path}
+        self.remote.update({path:payload_bytes,
+                            'channels/central.json':canonical(self.sign('snapshot',channel))},
+                           expected={'channels/central.json':canonical(envelope) if envelope else None})
+
+    def _publish_full_worker(self,head,previous,envelope,manifest,data,payload_bytes):
+        error=None
+        try:
+            self._finish_snapshot_publication(head,previous,envelope,manifest,data,payload_bytes)
+        except Exception as failure:
+            error={'stage':'publish_full','message':str(failure)}
+        self._publish_worker_status={'state':'error' if error else 'ready',
+                                     'started_at':self._publish_worker_status['started_at'],
+                                     'finished_at':now(),'sequence':manifest['sequence'],'error':error}
+
+    def publish_snapshot(self,head,*,background_full=False):
         previous,envelope=self.channel(head,'central','snapshot') if head else (None,None)
         central=self.config['central']; commit=central['code_commit']
         active=self.state/'software'/'active.json'
@@ -250,21 +272,29 @@ class Engine:
                 old=unpack(self.remote.read_path(head,previous['object']),previous['manifest'])
             reject_history_regression(old,payload)
             if old['snapshot_id']==payload['snapshot_id']: return
-        manifest=publish_files(payload,self.state/'published')
-        manifest={k:v for k,v in manifest.items() if k!='unchanged'}
-        if previous:
-            data=pack_delta(old,payload)
-            if data is not None:
-                if self.config.get('git_fast_enabled',True):
-                    try: self.publish_git_fast_delta(previous,payload,manifest,data)
-                    except Exception as error:
-                        self.errors.append({'stage':'git_fast_publish','message':str(error)})
-                self.publish_fast_delta(head,previous,old,payload,manifest,data=data)
-        path='objects/'+manifest['payload_sha256']
-        channel={'generation':(previous['generation']+1 if previous else 1),'manifest':manifest,'object':path}
-        self.remote.update({path:(self.state/'published'/payload_name(manifest)).read_bytes(),
-                            'channels/central.json':canonical(self.sign('snapshot',channel))},
-                           expected={'channels/central.json':canonical(envelope) if envelope else None})
+        published=publish_files(payload,self.state/'published')
+        unchanged=published.get('unchanged',False)
+        manifest={k:v for k,v in published.items() if k!='unchanged'}
+        payload_bytes=(self.state/'published'/payload_name(manifest)).read_bytes()
+        if unchanged:
+            # The saved manifest and delta target must describe the same bytes.
+            # A queued full checkpoint can leave this target ahead of central.
+            payload=unpack(payload_bytes,manifest)
+        data=pack_delta(old,payload) if previous else None
+        if previous and data is not None and self.config.get('git_fast_enabled',True):
+            try: self.publish_git_fast_delta(previous,payload,manifest,data)
+            except Exception as error:
+                self.errors.append({'stage':'git_fast_publish','message':str(error)})
+        if not background_full:
+            self._finish_snapshot_publication(head,previous,envelope,manifest,data,payload_bytes)
+            return
+        if self._publish_thread is not None and self._publish_thread.is_alive(): return
+        self._publish_worker_status={'state':'publishing','started_at':now(),'finished_at':None,
+                                     'sequence':manifest['sequence'],'error':None}
+        self._publish_thread=threading.Thread(target=self._publish_full_worker,
+            args=(head,previous,envelope,manifest,data,payload_bytes),
+            name='benchmark-full-publisher',daemon=True)
+        self._publish_thread.start()
 
     def publish_fast_delta(self,head,base_channel,base_payload,target,manifest,*,data=None):
         """Publish a small signed change before the legacy full object upload."""
@@ -843,8 +873,10 @@ class Engine:
             except (OSError,ValueError,KeyError,TypeError): pass
         return counts
 
-    def cycle(self,*,background_upload=False,background_receive=False):
+    def cycle(self,*,background_upload=False,background_receive=False,background_publish=False):
         self.errors=[]; status_path=self.state/'status.json'
+        if background_publish and self._publish_worker_status['error']:
+            self.errors.append(self._publish_worker_status['error'])
         previous=read_json(status_path) if status_path.exists() else {}
         cycle_started=time.monotonic(); timings={}
         status={'schema_version':1,'role':self.role,'state':'syncing','last_attempt_at':now(),
@@ -922,7 +954,11 @@ class Engine:
                 else:
                     stage('receive_submissions',lambda:self.receive_submissions(head))
                     status['receive']=self.receive_status
-                stage('publish_snapshot',lambda:self.publish_snapshot(head))
+                if background_publish:
+                    stage('publish_snapshot',lambda:self.publish_snapshot(head,background_full=True))
+                    status['publish_worker']=dict(self._publish_worker_status)
+                else:
+                    stage('publish_snapshot',lambda:self.publish_snapshot(head))
             if background_upload:
                 if self._upload_thread is None or not self._upload_thread.is_alive():
                     # Only the polling thread touches the accepted snapshot cache.
