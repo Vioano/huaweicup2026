@@ -234,13 +234,19 @@ def recognize(index):
     return rows
 
 
-def _capsules(index, rows, ffn_diamonds=()):
+def _capsules(index, rows, ffn_diamonds=(), *, vector_work_limit=0):
     positions = {u: i for i, u in enumerate(index.order)}
     blocks = [{"kind": "attention_row", "nodes": tuple(sorted(row["nodes"], key=positions.get)),
                "row_sink": row["sink"]} for row in rows]
     blocks.extend({"kind": "ffn_diamond", "nodes": tuple(sorted(nodes, key=positions.get))}
                   for nodes in ffn_diamonds)
     remaining = set(index.ops) - {u for block in blocks for u in block["nodes"]}
+    if vector_work_limit:
+        from .short_vectors import regions
+        vectors = regions(index, remaining, vector_work_limit)
+        blocks.extend({"kind": "short_vector_region", "nodes": nodes}
+                      for nodes in vectors)
+        remaining.difference_update(u for nodes in vectors for u in nodes)
     assigned = set()
     for u in index.order:
         if u not in remaining or u in assigned:
@@ -422,7 +428,7 @@ def _gap_trial(index, nodes, block_id, block_of, core, roots, tails,
 
 
 def construct(index, cores, cross_delay=500, *, pack_ffn=False, placement_mode="append",
-              final_order="ready"):
+              final_order="ready", pack_short_vectors=False):
     """One construction, at most k core trials/unit; optional closed FFN packing."""
     if type(cores) is not int or cores < 1:
         raise ValueError("cores must be a positive integer")
@@ -430,6 +436,8 @@ def construct(index, cores, cross_delay=500, *, pack_ffn=False, placement_mode="
         raise ValueError("cross_delay must be a nonnegative integer")
     if type(pack_ffn) is not bool:
         raise ValueError("pack_ffn must be a boolean")
+    if type(pack_short_vectors) is not bool:
+        raise ValueError("pack_short_vectors must be a boolean")
     if placement_mode not in ("append", "gap"):
         raise ValueError("placement_mode must be 'append' or 'gap'")
     if final_order not in ("ready", "placement"):
@@ -437,7 +445,9 @@ def construct(index, cores, cross_delay=500, *, pack_ffn=False, placement_mode="
     ports = _ports(index)
     rows = _recognize(index, ports)
     ffn_diamonds = _packed_ffn_motifs(index, ports, rows) if pack_ffn else ()
-    blocks, block_of, predecessors, successors, border_order = _capsules(index, rows, ffn_diamonds)
+    blocks, block_of, predecessors, successors, border_order = _capsules(
+        index, rows, ffn_diamonds,
+        vector_work_limit=cross_delay if pack_short_vectors else 0)
     weights = {u: index.duration(u) for u in index.ops}
     block_work = [{p: sum(weights[u] for u in b["nodes"] if index.ops[u]["pipe"] == p)
                    for p in ("PIPE_M", "PIPE_V")} for b in blocks]
@@ -590,4 +600,18 @@ def construct(index, cores, cross_delay=500, *, pack_ffn=False, placement_mode="
         metadata["complexity"] = metadata["complexity"].replace(
             "final ready pass O((V+E) log V+kV)", "final witness sort O(V log V)")
         metadata["limitations"][2] = "The final word preserves the committed placement timing witness under compute dependencies, per-pipe FIFO and fixed cross-core delay; this is not an E0 bound."
+    if pack_short_vectors:
+        metadata["strategy"] += "_short_vectors"
+        metadata["short_vector_regions"] = {
+            "count": sum(b["kind"] == "short_vector_region" for b in blocks),
+            "nodes": sum(len(b["nodes"]) for b in blocks
+                         if b["kind"] == "short_vector_region"),
+            "work_limit_cycles": cross_delay,
+            "selection": "maximal V-only weak components outside rows/FFN; total work <= cross delay",
+            "discovery_complexity": "O(V+E)",
+        }
+        metadata["guards"].append("combined row/FFN/V-region/chain quotient is acyclic")
+        metadata["limitations"].append(
+            "Short-region optimal locality theorem assumes isolated common-release inputs and idle cores; "
+            "it does not prove improvement with external releases, resource contention, COPY or capacity.")
     return plan, metadata

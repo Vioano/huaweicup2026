@@ -1,0 +1,771 @@
+{
+  "prior_summary": "results/a/q3-nikolastarx/attention-headroom-audit-20260925/summary.json",
+  "prior_summary_sha256": "20f4f2c72588c1a3b712a8b4a65a11d94b7a2a914e926a2b6a7ed9e2e7deeb50",
+  "definition": "A path boundary is one saved longest-path original compute dependency whose endpoints have different assigned cores. For its two capsule IDs, pair frontier is every original producer-tensor-reader dependency between those exact capsules, counted as distinct source ops, tensors, target ops, and triples. This local quotient boundary is not graph treewidth or a physical timing bound.",
+  "cases": [
+    {
+      "case_id": "071",
+      "graph_path": "data/raw/a/official/data/case_071.json",
+      "graph_sha256": "437cc74cae9e0fc0cb89b05403c62062ceff8d5bc2224c8834c519e69524e897",
+      "plan_path": "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s08/cells/071-k5-unified-forest-witness-e0/case_071_multicore_res.json",
+      "plan_artifact_source": "forest_root",
+      "plan_sha256": "ce7f38549b9f9492b2cde7b87b593febc732c979725021ac18a9d06715aa317f",
+      "trace_path": "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s08/cells/071-k5-unified-forest-witness-e0/evidence/receipt.json",
+      "trace_artifact_source": "forest_root",
+      "trace_sha256": "86626613e0c1f547d9332dbf6aca6ba67b7d1a725b10c2ee1b48b15ef014eebd",
+      "selected_candidate": "attention_gap",
+      "capsules": 136,
+      "mapped_compute_ops": 741,
+      "path_segment_lengths": [
+        7,
+        4,
+        2,
+        93,
+        6
+      ],
+      "short_interval_union_frontier": {
+        "path_ops": [
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          80,
+          81,
+          90,
+          91,
+          105,
+          391
+        ],
+        "capsules": [
+          24,
+          25,
+          26,
+          28,
+          29,
+          34,
+          35,
+          49,
+          60
+        ],
+        "union_ops": 13,
+        "external_dependency_triples": 32,
+        "external_tensors": 13,
+        "external_source_ops": 13,
+        "external_target_ops": 30,
+        "external_tensor_bytes_unique": 15266
+      },
+      "path_segments": [
+        {
+          "core": 3,
+          "ops": [
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78
+          ]
+        },
+        {
+          "core": 2,
+          "ops": [
+            80,
+            81,
+            90,
+            91
+          ]
+        },
+        {
+          "core": 1,
+          "ops": [
+            105,
+            391
+          ]
+        },
+        {
+          "core": 4,
+          "ops": [
+            460,
+            461,
+            469,
+            473,
+            463,
+            470,
+            476,
+            474,
+            477,
+            475,
+            478,
+            479,
+            480,
+            481,
+            482,
+            483,
+            484,
+            485,
+            487,
+            489,
+            486,
+            488,
+            490,
+            491,
+            492,
+            493,
+            494,
+            509,
+            495,
+            496,
+            497,
+            510,
+            498,
+            511,
+            500,
+            501,
+            499,
+            512,
+            502,
+            503,
+            513,
+            629,
+            631,
+            637,
+            638,
+            641,
+            644,
+            642,
+            645,
+            643,
+            646,
+            647,
+            648,
+            649,
+            650,
+            651,
+            652,
+            653,
+            655,
+            657,
+            654,
+            656,
+            658,
+            659,
+            660,
+            661,
+            662,
+            677,
+            663,
+            664,
+            678,
+            703,
+            705,
+            706,
+            707,
+            708,
+            709,
+            710,
+            711,
+            712,
+            713,
+            714,
+            715,
+            760,
+            762,
+            763,
+            764,
+            765,
+            766,
+            767,
+            768,
+            769,
+            770
+          ]
+        },
+        {
+          "core": 1,
+          "ops": [
+            771,
+            772,
+            773,
+            774,
+            775,
+            776
+          ]
+        }
+      ],
+      "cross_core_boundaries": [
+        {
+          "source": 78,
+          "target": 80,
+          "source_op": "DIV",
+          "source_cycles": 54,
+          "target_op": "MUL",
+          "target_cycles": 18,
+          "source_core": 3,
+          "target_core": 2,
+          "source_capsule": {
+            "capsule": 26,
+            "kind": "exclusive_chain",
+            "core": 3
+          },
+          "target_capsule": {
+            "capsule": 28,
+            "kind": "exclusive_chain",
+            "core": 2
+          },
+          "connecting_tensors": [
+            {
+              "id": 1000000112,
+              "bytes": 1536,
+              "other_readers": []
+            }
+          ],
+          "preceding_segment_ops": 7,
+          "following_segment_ops": 4,
+          "pair_frontier": {
+            "dependency_triples": 1,
+            "source_ops": 1,
+            "tensors": 1,
+            "target_ops": 1
+          }
+        },
+        {
+          "source": 91,
+          "target": 105,
+          "source_op": "ADD",
+          "source_cycles": 18,
+          "target_op": "MATMUL",
+          "target_cycles": 78,
+          "source_core": 2,
+          "target_core": 1,
+          "source_capsule": {
+            "capsule": 35,
+            "kind": "exclusive_chain",
+            "core": 2
+          },
+          "target_capsule": {
+            "capsule": 49,
+            "kind": "exclusive_chain",
+            "core": 1
+          },
+          "connecting_tensors": [
+            {
+              "id": 1000000125,
+              "bytes": 1536,
+              "other_readers": [
+                104,
+                106,
+                399,
+                400,
+                401
+              ]
+            }
+          ],
+          "preceding_segment_ops": 4,
+          "following_segment_ops": 2,
+          "pair_frontier": {
+            "dependency_triples": 1,
+            "source_ops": 1,
+            "tensors": 1,
+            "target_ops": 1
+          }
+        },
+        {
+          "source": 391,
+          "target": 460,
+          "source_op": "MATMUL",
+          "source_cycles": 114,
+          "target_op": "MATMUL",
+          "target_cycles": 60,
+          "source_core": 1,
+          "target_core": 4,
+          "source_capsule": {
+            "capsule": 60,
+            "kind": "exclusive_chain",
+            "core": 1
+          },
+          "target_capsule": {
+            "capsule": 72,
+            "kind": "attention_row",
+            "core": 4
+          },
+          "connecting_tensors": [
+            {
+              "id": 1000000425,
+              "bytes": 1152,
+              "other_readers": [
+                404,
+                516,
+                572,
+                628
+              ]
+            }
+          ],
+          "preceding_segment_ops": 2,
+          "following_segment_ops": 93,
+          "pair_frontier": {
+            "dependency_triples": 1,
+            "source_ops": 1,
+            "tensors": 1,
+            "target_ops": 1
+          }
+        },
+        {
+          "source": 770,
+          "target": 771,
+          "source_op": "DIV",
+          "source_cycles": 54,
+          "target_op": "MATMUL",
+          "target_cycles": 294,
+          "source_core": 4,
+          "target_core": 1,
+          "source_capsule": {
+            "capsule": 132,
+            "kind": "exclusive_chain",
+            "core": 4
+          },
+          "target_capsule": {
+            "capsule": 133,
+            "kind": "ffn_diamond",
+            "core": 1
+          },
+          "connecting_tensors": [
+            {
+              "id": 1000000804,
+              "bytes": 1536,
+              "other_readers": []
+            }
+          ],
+          "preceding_segment_ops": 93,
+          "following_segment_ops": 6,
+          "pair_frontier": {
+            "dependency_triples": 1,
+            "source_ops": 1,
+            "tensors": 1,
+            "target_ops": 1
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "069",
+      "graph_path": "data/raw/a/official/data/case_069.json",
+      "graph_sha256": "9632392d98cfc04291ba0546accf1f4c3ede8ff71befd3cd0ae67caf27659e52",
+      "plan_path": "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s07/cells/069-k5-unified-forest-witness-e0/case_069_multicore_res.json",
+      "plan_artifact_source": "forest_root",
+      "plan_sha256": "b591631b1994bd80355326b15174082b2d755d0b54e0d705d92f8b37215d4fd3",
+      "trace_path": "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/s07/cells/069-k5-unified-forest-witness-e0/evidence/receipt.json",
+      "trace_artifact_source": "forest_root",
+      "trace_sha256": "0da66d99c3531a2a9a78d671c095b175bc3364a8911dfee91a1157a3ced2d72c",
+      "selected_candidate": "attention_gap",
+      "capsules": 162,
+      "mapped_compute_ops": 1032,
+      "path_segment_lengths": [
+        8,
+        3,
+        164,
+        10,
+        6
+      ],
+      "short_interval_union_frontier": {
+        "path_ops": [
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          90,
+          91,
+          101,
+          92
+        ],
+        "capsules": [
+          18,
+          19,
+          20,
+          33,
+          34,
+          35,
+          40
+        ],
+        "union_ops": 11,
+        "external_dependency_triples": 17,
+        "external_tensors": 11,
+        "external_source_ops": 11,
+        "external_target_ops": 15,
+        "external_tensor_bytes_unique": 11044
+      },
+      "path_segments": [
+        {
+          "core": 2,
+          "ops": [
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            90
+          ]
+        },
+        {
+          "core": 4,
+          "ops": [
+            91,
+            101,
+            92
+          ]
+        },
+        {
+          "core": 3,
+          "ops": [
+            543,
+            532,
+            536,
+            118,
+            461,
+            547,
+            551,
+            555,
+            463,
+            465,
+            469,
+            549,
+            553,
+            554,
+            562,
+            565,
+            568,
+            566,
+            569,
+            567,
+            570,
+            574,
+            575,
+            576,
+            558,
+            564,
+            571,
+            572,
+            573,
+            577,
+            578,
+            579,
+            580,
+            582,
+            584,
+            586,
+            581,
+            583,
+            585,
+            587,
+            588,
+            590,
+            589,
+            591,
+            609,
+            592,
+            593,
+            610,
+            594,
+            595,
+            612,
+            596,
+            597,
+            611,
+            598,
+            599,
+            613,
+            600,
+            601,
+            602,
+            614,
+            468,
+            820,
+            822,
+            824,
+            826,
+            476,
+            831,
+            832,
+            833,
+            834,
+            472,
+            828,
+            830,
+            482,
+            837,
+            840,
+            483,
+            838,
+            841,
+            477,
+            478,
+            835,
+            836,
+            481,
+            484,
+            839,
+            842,
+            485,
+            488,
+            843,
+            846,
+            486,
+            489,
+            844,
+            847,
+            487,
+            490,
+            845,
+            848,
+            491,
+            849,
+            492,
+            850,
+            493,
+            851,
+            494,
+            496,
+            498,
+            500,
+            852,
+            854,
+            856,
+            858,
+            495,
+            497,
+            499,
+            501,
+            853,
+            855,
+            857,
+            859,
+            502,
+            504,
+            860,
+            862,
+            503,
+            505,
+            861,
+            863,
+            523,
+            524,
+            881,
+            882,
+            506,
+            507,
+            508,
+            509,
+            864,
+            865,
+            866,
+            867,
+            510,
+            511,
+            525,
+            526,
+            868,
+            869,
+            883,
+            884,
+            512,
+            513,
+            870,
+            871,
+            514,
+            515,
+            872,
+            873,
+            527,
+            885,
+            516,
+            874,
+            528,
+            1050
+          ]
+        },
+        {
+          "core": 2,
+          "ops": [
+            1052,
+            1054,
+            1055,
+            1056,
+            1057,
+            1058,
+            1059,
+            1060,
+            1061,
+            1062
+          ]
+        },
+        {
+          "core": 1,
+          "ops": [
+            1063,
+            1064,
+            1065,
+            1066,
+            1067,
+            1068
+          ]
+        }
+      ],
+      "cross_core_boundaries": [
+        {
+          "source": 90,
+          "target": 91,
+          "source_op": "ADD",
+          "source_cycles": 7,
+          "target_op": "MUL",
+          "target_cycles": 18,
+          "source_core": 2,
+          "target_core": 4,
+          "source_capsule": {
+            "capsule": 33,
+            "kind": "exclusive_chain",
+            "core": 2
+          },
+          "target_capsule": {
+            "capsule": 34,
+            "kind": "exclusive_chain",
+            "core": 4
+          },
+          "connecting_tensors": [
+            {
+              "id": 1000000125,
+              "bytes": 96,
+              "other_readers": []
+            }
+          ],
+          "preceding_segment_ops": 8,
+          "following_segment_ops": 3,
+          "pair_frontier": {
+            "dependency_triples": 1,
+            "source_ops": 1,
+            "tensors": 1,
+            "target_ops": 1
+          }
+        },
+        {
+          "source": 92,
+          "target": 543,
+          "source_op": "ADD",
+          "source_cycles": 18,
+          "target_op": "MATMUL",
+          "target_cycles": 78,
+          "source_core": 4,
+          "target_core": 3,
+          "source_capsule": {
+            "capsule": 35,
+            "kind": "exclusive_chain",
+            "core": 4
+          },
+          "target_capsule": {
+            "capsule": 80,
+            "kind": "exclusive_chain",
+            "core": 3
+          },
+          "connecting_tensors": [
+            {
+              "id": 1000000127,
+              "bytes": 1536,
+              "other_readers": [
+                115,
+                116,
+                117,
+                541,
+                542
+              ]
+            }
+          ],
+          "preceding_segment_ops": 3,
+          "following_segment_ops": 164,
+          "pair_frontier": {
+            "dependency_triples": 1,
+            "source_ops": 1,
+            "tensors": 1,
+            "target_ops": 1
+          }
+        },
+        {
+          "source": 1050,
+          "target": 1052,
+          "source_op": "MATMUL",
+          "source_cycles": 78,
+          "target_op": "ADD",
+          "target_cycles": 18,
+          "source_core": 3,
+          "target_core": 2,
+          "source_capsule": {
+            "capsule": 150,
+            "kind": "exclusive_chain",
+            "core": 3
+          },
+          "target_capsule": {
+            "capsule": 152,
+            "kind": "exclusive_chain",
+            "core": 2
+          },
+          "connecting_tensors": [
+            {
+              "id": 1000001085,
+              "bytes": 1536,
+              "other_readers": []
+            }
+          ],
+          "preceding_segment_ops": 164,
+          "following_segment_ops": 10,
+          "pair_frontier": {
+            "dependency_triples": 1,
+            "source_ops": 1,
+            "tensors": 1,
+            "target_ops": 1
+          }
+        },
+        {
+          "source": 1062,
+          "target": 1063,
+          "source_op": "DIV",
+          "source_cycles": 54,
+          "target_op": "MATMUL",
+          "target_cycles": 294,
+          "source_core": 2,
+          "target_core": 1,
+          "source_capsule": {
+            "capsule": 158,
+            "kind": "exclusive_chain",
+            "core": 2
+          },
+          "target_capsule": {
+            "capsule": 159,
+            "kind": "ffn_diamond",
+            "core": 1
+          },
+          "connecting_tensors": [
+            {
+              "id": 1000001097,
+              "bytes": 1536,
+              "other_readers": []
+            }
+          ],
+          "preceding_segment_ops": 10,
+          "following_segment_ops": 6,
+          "pair_frontier": {
+            "dependency_triples": 1,
+            "source_ops": 1,
+            "tensors": 1,
+            "target_ops": 1
+          }
+        }
+      ]
+    }
+  ]
+}
