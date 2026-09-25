@@ -25,6 +25,18 @@ LIMITS = {'cells': 500, 'workers': 4, 'E2_api': 1500,
           'E0_fallback_reserved': 1500, 'E0_independent': 500,
           'solver_seconds': 60, 'e0_seconds': 60, 'batch_seconds': 7200,
           'rss_bytes_per_cell': 4 << 30, 'retries': 0}
+ROUTES = {
+    'hypergap_full500_v1': ('src.q2_nikolastarx.adaptive_hypergap_guarded', 3),
+    'copyevent_full500_v1': ('src.q2_nikolastarx.adaptive_copyevent_guarded', 4),
+}
+
+
+def route_limits(schema):
+    if schema not in ROUTES:
+        raise ValueError('Unknown fixed P2 full500 route')
+    _, requests = ROUTES[schema]
+    return {**LIMITS, 'E2_api': 500 * requests,
+            'E0_fallback_reserved': 500 * requests}
 
 
 def digest(raw):
@@ -84,14 +96,15 @@ def source_preflight(doc, runner_commit, frozen):
     paths = subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', commit,
                                      'src/q2_nikolastarx'], cwd=ROOT, text=True).splitlines()
     paths = sorted(p for p in paths if p.endswith('.py'))
-    if (not paths or set(paths) != set(doc['solver_sources'])
+    source_paths = set(paths) - {own}
+    if (not paths or source_paths != set(doc['solver_sources'])
             or doc['solver_module'].replace('.', '/') + '.py' not in paths):
         raise ValueError('Frozen solver source set/module mismatch')
     actual = sorted(p.relative_to(ROOT).as_posix()
                     for p in (ROOT / 'src/q2_nikolastarx').glob('*.py'))
-    if actual != sorted((*paths, own)):
+    if actual != sorted(set(paths) | {own}):
         raise ValueError('Solver checkout file set differs from freeze')
-    for relative in paths:
+    for relative in sorted(source_paths):
         raw = (ROOT / relative).read_bytes()
         if digest(raw) != doc['solver_sources'][relative] or raw != git_bytes(commit, relative):
             raise ValueError('Solver source drift: ' + relative)
@@ -100,11 +113,12 @@ def source_preflight(doc, runner_commit, frozen):
 def preflight(manifest, raw_root, e2_root, python, runner_commit=None, frozen=False):
     doc = json.loads(manifest.read_bytes())
     limits = doc.get('limits')
-    if (doc.get('schema') != 'hypergap_full500_v1' or not isinstance(limits, dict)
+    schema = doc.get('schema')
+    if (schema not in ROUTES or not isinstance(limits, dict)
             or type(limits.get('workers')) is not int or limits['workers'] not in (1, 2, 4)
             or {k: v for k, v in limits.items() if k != 'workers'} !=
-               {k: v for k, v in LIMITS.items() if k != 'workers'}
-            or doc.get('solver_module') != 'src.q2_nikolastarx.adaptive_hypergap_guarded'):
+               {k: v for k, v in route_limits(schema).items() if k != 'workers'}
+            or doc.get('solver_module') != ROUTES[schema][0]):
         raise ValueError('Unexpected algorithm, schema or batch budget')
     doc['_manifest_path'] = manifest
     if not python.is_file() or Path(sys.executable).absolute() != python.absolute():
@@ -170,7 +184,7 @@ def preflight(manifest, raw_root, e2_root, python, runner_commit=None, frozen=Fa
                       'baseline_manifest_sha256': digest(old_raw)}
 
 
-def inspect_solver(folder, row, process, baseline, e2_identity):
+def inspect_solver(folder, row, process, baseline, e2_identity, max_requests=3):
     ledger_path = folder / 'online/solver.json'
     if not ledger_path.exists():
         raise ValueError('Solver ledger missing; calls unknown')
@@ -180,7 +194,7 @@ def inspect_solver(folder, row, process, baseline, e2_identity):
         raise ValueError('Solver process or ledger failed/uncertain')
     calls, attempts = ledger['calls'], ledger['attempts']
     if (calls['E2_api_attempted'] != len(attempts)
-            or calls['native_returns'] != len(attempts) or len(attempts) > 3
+            or calls['native_returns'] != len(attempts) or len(attempts) > max_requests
             or calls['E0_fallback'] or ledger['possible_E0_fallback_calls']
             or any(a.get('status') != 'native' or a.get('record', {}).get('route') != 'native'
                    or a['record'].get('status') != 'ok' or a['record'].get('problem') != 2
@@ -196,7 +210,14 @@ def inspect_solver(folder, row, process, baseline, e2_identity):
             or (attempts and detail.get('score_evidence') !=
                 'injected_oracle_complete_plan_scores')):
         raise ValueError('Solver score evidence unavailable')
-    if any(item.get('kind') == 'unexpected' for item in detail.get('construction_errors', [])):
+    base_detail = detail.get('base_detail', detail)
+    if not isinstance(base_detail, dict):
+        raise ValueError('Nested base detail missing')
+    if (base_detail.get('score_evidence') == 'unknown'
+            or any(item.get('kind') == 'unexpected'
+                   for item in base_detail.get('construction_errors', []))
+            or (isinstance(detail.get('postprocess_error'), dict)
+                and detail['postprocess_error'].get('kind') == 'unexpected')):
         raise ValueError('Unexpected candidate construction error')
     if (ledger.get('graph_sha256') != row['graph']['sha256']
             or ledger.get('config_sha256') != baseline['config']['sha256']
@@ -279,7 +300,8 @@ def cell(row, doc, old, identity, raw_root, e2_root, python, output, deadline):
         else:
             receipt['call_count_complete'] = False
         save(folder / 'cell.json', receipt)
-        score_ledger, comparison = inspect_solver(folder, row, process, old, identity['e2'])
+        score_ledger, comparison = inspect_solver(folder, row, process, old, identity['e2'],
+                                                 ROUTES[doc['schema']][1])
         receipt['selected_comparison_kind'] = comparison['kind']
         receipt['plan_sha256'] = comparison['plan_sha256']
         receipt['selected_plan_canonical_sha256'] = comparison['selected_plan_canonical_sha256']
@@ -384,9 +406,9 @@ def run(doc, old, identity, manifest, raw_root, e2_root, python, output, runner_
                     summary['status'] = 'stopped_first_failure'
                 else:
                     summary['accepted_cells'] += 1
-                if (summary['calls']['E2_api_attempted'] > LIMITS['E2_api']
-                        or summary['calls']['E0_fallback_possible'] > LIMITS['E0_fallback_reserved']
-                        or summary['calls']['E0_independent_started'] > LIMITS['E0_independent']):
+                if (summary['calls']['E2_api_attempted'] > limits['E2_api']
+                        or summary['calls']['E0_fallback_possible'] > limits['E0_fallback_reserved']
+                        or summary['calls']['E0_independent_started'] > limits['E0_independent']):
                     stop = True
                     summary['status'] = 'stopped_budget_exceeded'
                 summary['total_wall_seconds'] = time.perf_counter()-started

@@ -35,3 +35,25 @@ the runner stops and never interprets missing evidence as zero.
 This three-cell pilot is a mechanism check, not a full 500-cell result. It
 must not be dispatched from this source tree; the production owner controls
 the capsule and run.
+
+## Actual pilot, 2026-09-25
+
+Frozen solver `295ec9cf4351b77f5c6fffe8fbb23e8bc8d2f323`, Linux x86_64,
+Python 3.12.3 under `uv sync --locked`. All three saved-plan native/E0 pairs
+and all three selected-plan native/independent-E0 pairs match exactly on
+Makespan, cross-task traffic and all five movement fields. Actual 15 native
+E2 calls, 3 independent E0, zero fallback. Batch 56.933s; setup 16.499s is
+separate. Solver walls 15.152s / 20.511s / 7.360s are remote end-to-end values,
+not a controlled speed comparison with the Mac.
+
+| Case / K5 | c665 M | New M | Selected |
+|---|---:|---:|---|
+| 005 | 33515 | 32849 | COPY-event |
+| 009 | 51905 | 44648 | COPY-event |
+| 015 | 40828 | 40828 | Original selected seed |
+
+`report.json` records local downloaded-byte verification. The two ZIPs retain
+original input/code/results, the Linux binary and the build receipt. This is
+not a new full500 score, nor proof of all-case Linux equivalence. A separate
+capacity-safe 015 probe (one extra E0) is archived in
+`../capacity-safe-diagnostic-20260925/` and is not part of this frozen solver.
