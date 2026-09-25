@@ -81,6 +81,13 @@ to be zero. Setup/transfer are outside `preparation_t0_utc` but inside the
 itself crashes, the separate watchdog still requests a stop. No automatic
 retry is provided.
 
+`completed` requires all three stop-proof conditions: `colab stop` exits 0,
+`colab sessions` exits 0, and the named session is absent from the full
+readback. Failure or uncertainty in any condition becomes `failed_or_unknown`;
+the controller leaves the separate watchdog running until its 600-second stop
+request rather than cancelling that last protection. A synthetic test checks
+these branches without calling Colab.
+
 The cell entry SHA-checks and unpacks the capsule, runs `uv sync --locked`
 with separate timing, then launches exactly one child with the 180-second
 `timeout` command above. It samples the child process tree's RSS every 0.2s

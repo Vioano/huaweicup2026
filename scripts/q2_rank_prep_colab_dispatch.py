@@ -33,6 +33,33 @@ def run_logged(command, log_file, deadline):
     return result.returncode
 
 
+def stop_proven(receipt):
+    """Require successful stop and successful, explicit absence on readback."""
+    return (receipt.get("stop_exit_code") == 0
+            and receipt.get("sessions_readback_exit_code") == 0
+            and receipt.get("named_session_still_active") is False
+            and "stop_error" not in receipt
+            and "sessions_readback_error" not in receipt)
+
+
+def final_status(workload_completed, receipt):
+    return "completed" if workload_completed and stop_proven(receipt) else "failed_or_unknown"
+
+
+def release_watchdog_if_proven(watchdog, receipt):
+    """Keep the independent stop request alive whenever stop is unproven."""
+    receipt["watchdog_termination_skipped"] = not stop_proven(receipt)
+    receipt["watchdog_already_exited"] = watchdog.poll() is not None
+    if not stop_proven(receipt):
+        return
+    watchdog.terminate()
+    try:
+        watchdog.wait(timeout=3)
+    except subprocess.TimeoutExpired:
+        watchdog.kill()
+        watchdog.wait()
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--admitted", action="store_true", help="total scheduler granted the exclusive CPU window")
@@ -94,11 +121,11 @@ def main():
                 receipt["cell_runner_report_status"] = cell_receipt.get("runner_report", {}).get("status")
             except (OSError, KeyError, ValueError, zipfile.BadZipFile) as error:
                 receipt["cell_receipt_error"] = str(error)
-        receipt["status"] = "completed" if (
+        receipt["workload_completed"] = bool(
             code == 0 and receipt.get("download_exit_code") == 0
             and receipt.get("cell_status") == "completed"
             and receipt.get("cell_preparation_attempts") == 1
-        ) else "failed_or_unknown"
+        )
     except Exception as error:
         receipt["error"] = f"{type(error).__name__}: {error}"
         if receipt["preparation_attempts"]:
@@ -113,22 +140,18 @@ def main():
         try:
             receipt["sessions_readback_exit_code"] = run_logged(
                 ["colab", "sessions"], args.out / "sessions-after.log", time.monotonic() + 45)
-            receipt["named_session_still_active"] = session in (args.out / "sessions-after.log").read_text()
-            if receipt["named_session_still_active"]:
-                receipt["status"] = "failed_or_unknown"
+            if receipt["sessions_readback_exit_code"] == 0:
+                receipt["named_session_still_active"] = session in (args.out / "sessions-after.log").read_text()
         except Exception as error:
             receipt["sessions_readback_error"] = str(error)
-        watchdog.terminate()
-        try:
-            watchdog.wait(timeout=3)
-        except subprocess.TimeoutExpired:
-            watchdog.kill()
-            watchdog.wait()
+        receipt["stop_proven"] = stop_proven(receipt)
+        receipt["status"] = final_status(receipt.get("workload_completed") is True, receipt)
+        release_watchdog_if_proven(watchdog, receipt)
         receipt["host_finished_utc"] = utc_now()
         if not (args.out / "result.zip").exists():
             receipt["calls_if_no_cell_report"] = "unknown; do not infer zero"
         (args.out / "host-receipt.json").write_text(json.dumps(receipt, sort_keys=True, indent=2))
-    return 0 if receipt["status"] == "completed" and receipt.get("stop_exit_code") == 0 else 1
+    return 0 if receipt["status"] == "completed" else 1
 
 
 if __name__ == "__main__":
