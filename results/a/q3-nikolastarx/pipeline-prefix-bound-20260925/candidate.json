@@ -1,0 +1,6159 @@
+{
+  "schema": "q3-no-spill-static-task-bound-v1",
+  "lower_bound_cycles": 29780,
+  "scope": "successful execution of this exact no-spill Task word; not all-plan optimum",
+  "official_execution_legality_proved": false,
+  "interval_peaks": {
+    "0": {
+      "L1": 12768,
+      "UB": 0
+    },
+    "1": {
+      "L1": 215808,
+      "UB": 0
+    },
+    "2": {
+      "L1": 516480,
+      "UB": 0
+    },
+    "3": {
+      "L1": 187904,
+      "UB": 0
+    },
+    "4": {
+      "L1": 13184,
+      "UB": 0
+    }
+  },
+  "op_count": 1678,
+  "edge_count": 3825,
+  "copy_count": 314,
+  "sole_copy_in_key_count": 160,
+  "settings": {
+    "capacity": {
+      "L1": 524288,
+      "UB": 131072
+    },
+    "ddr_bandwidth": 60,
+    "cache_bandwidth": 250,
+    "cross_core_delay_cycles": 500
+  },
+  "copy_nodes": [
+    {
+      "core": 0,
+      "op_id": 1000001498,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 288,
+      "cache_key": 1000000001,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 0,
+      "op_id": 1000001635,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000000227,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001500,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 288,
+      "cache_key": 1000000003,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 0,
+      "op_id": 1000001502,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 288,
+      "cache_key": 1000000005,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 0,
+      "op_id": 1000001504,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 288,
+      "cache_key": 1000000007,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 0,
+      "op_id": 1000001506,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 288,
+      "cache_key": 1000000009,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 0,
+      "op_id": 1000001637,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000000239,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001508,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 576,
+      "cache_key": 1000000011,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 10
+    },
+    {
+      "core": 0,
+      "op_id": 1000001510,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1152,
+      "cache_key": 1000000013,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 20
+    },
+    {
+      "core": 0,
+      "op_id": 1000001512,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1152,
+      "cache_key": 1000000015,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 20
+    },
+    {
+      "core": 0,
+      "op_id": 1000001514,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1152,
+      "cache_key": 1000000017,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 20
+    },
+    {
+      "core": 0,
+      "op_id": 1000001516,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1152,
+      "cache_key": 1000000019,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 20
+    },
+    {
+      "core": 0,
+      "op_id": 1000001640,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000000251,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001643,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000000251,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001598,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000000101,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001600,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000000113,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001603,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000000125,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001606,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000000125,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001672,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000000353,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001674,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000000365,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001677,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000000377,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001680,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000000377,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001709,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000000479,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001711,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000000491,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001714,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000000503,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001717,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000000503,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001746,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000000605,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001748,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000000617,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001751,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000000629,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001754,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000000629,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001783,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000000731,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001785,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000000743,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001788,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000000755,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001791,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000000755,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001820,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000000857,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001822,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000000869,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001825,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000000881,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001828,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000000881,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001857,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000000983,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001859,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000000995,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001862,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000001007,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001865,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000001007,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001894,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000001109,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001896,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000001121,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001899,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000001133,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001902,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000001133,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001931,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000001235,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001933,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000001247,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001936,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000001259,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001939,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000001259,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001968,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000001361,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001970,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000001373,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 0,
+      "op_id": 1000001973,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000001385,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 0,
+      "op_id": 1000001976,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 1024,
+      "cache_key": 1000001385,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 1,
+      "op_id": 1000001518,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2304,
+      "cache_key": 1000000021,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 39
+    },
+    {
+      "core": 1,
+      "op_id": 1000001520,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 4608,
+      "cache_key": 1000000023,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 77
+    },
+    {
+      "core": 1,
+      "op_id": 1000001522,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 4608,
+      "cache_key": 1000000025,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 77
+    },
+    {
+      "core": 1,
+      "op_id": 1000001524,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 4608,
+      "cache_key": 1000000027,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 77
+    },
+    {
+      "core": 1,
+      "op_id": 1000001526,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 4608,
+      "cache_key": 1000000029,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 77
+    },
+    {
+      "core": 1,
+      "op_id": 1000001528,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 9216,
+      "cache_key": 1000000031,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 154
+    },
+    {
+      "core": 1,
+      "op_id": 1000001530,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 18432,
+      "cache_key": 1000000033,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 308
+    },
+    {
+      "core": 1,
+      "op_id": 1000001532,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 18432,
+      "cache_key": 1000000035,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 308
+    },
+    {
+      "core": 1,
+      "op_id": 1000001534,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 18432,
+      "cache_key": 1000000037,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 308
+    },
+    {
+      "core": 1,
+      "op_id": 1000001536,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 18432,
+      "cache_key": 1000000039,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 308
+    },
+    {
+      "core": 1,
+      "op_id": 1000001538,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 36864,
+      "cache_key": 1000000041,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 615
+    },
+    {
+      "core": 1,
+      "op_id": 1000001540,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 73728,
+      "cache_key": 1000000043,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 1229
+    },
+    {
+      "core": 1,
+      "op_id": 1000001641,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000000251,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001655,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000278,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001652,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000277,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001649,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 256,
+      "cache_key": 1000000275,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001646,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000263,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 1,
+      "op_id": 1000001604,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000000125,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001609,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000137,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 1,
+      "op_id": 1000001612,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 256,
+      "cache_key": 1000000149,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001615,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000151,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001618,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000152,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001678,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000000377,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001683,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000389,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 1,
+      "op_id": 1000001686,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 256,
+      "cache_key": 1000000401,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001689,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000403,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001692,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000404,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001715,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000000503,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001720,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000515,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 1,
+      "op_id": 1000001723,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 256,
+      "cache_key": 1000000527,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001726,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000529,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001729,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000530,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001752,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000000629,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001757,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000641,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 1,
+      "op_id": 1000001760,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 256,
+      "cache_key": 1000000653,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001763,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000655,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001766,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000656,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001789,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000000755,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001794,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000767,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 1,
+      "op_id": 1000001797,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 256,
+      "cache_key": 1000000779,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001800,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000781,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001803,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000782,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001826,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000000881,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001831,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000893,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 1,
+      "op_id": 1000001834,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 256,
+      "cache_key": 1000000905,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001837,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000907,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001840,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000908,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001863,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000001007,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001868,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000001019,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 1,
+      "op_id": 1000001871,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 256,
+      "cache_key": 1000001031,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001874,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000001033,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001877,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000001034,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001900,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000001133,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001905,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000001145,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 1,
+      "op_id": 1000001908,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 256,
+      "cache_key": 1000001157,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001911,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000001159,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001914,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000001160,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001937,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000001259,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001942,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000001271,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 1,
+      "op_id": 1000001945,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 256,
+      "cache_key": 1000001283,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001948,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000001285,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001951,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000001286,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001974,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000001385,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001979,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000001397,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 1,
+      "op_id": 1000001982,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 256,
+      "cache_key": 1000001409,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 1,
+      "op_id": 1000001985,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000001411,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 1,
+      "op_id": 1000001988,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000001412,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001542,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 73728,
+      "cache_key": 1000000045,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 1229
+    },
+    {
+      "core": 2,
+      "op_id": 1000001544,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 73728,
+      "cache_key": 1000000047,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 1229
+    },
+    {
+      "core": 2,
+      "op_id": 1000001546,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 73728,
+      "cache_key": 1000000049,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 1229
+    },
+    {
+      "core": 2,
+      "op_id": 1000001548,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 73728,
+      "cache_key": 1000000051,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 1229
+    },
+    {
+      "core": 2,
+      "op_id": 1000001550,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 73728,
+      "cache_key": 1000000053,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 1229
+    },
+    {
+      "core": 2,
+      "op_id": 1000001552,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 73728,
+      "cache_key": 1000000055,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 1229
+    },
+    {
+      "core": 2,
+      "op_id": 1000001554,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 73728,
+      "cache_key": 1000000057,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 1229
+    },
+    {
+      "core": 2,
+      "op_id": 1000001656,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000278,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001653,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000277,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001661,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000295,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001658,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000292,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001619,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000152,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001616,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000151,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001621,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000166,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001624,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000169,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001693,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000404,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001690,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000403,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001695,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000418,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001698,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000421,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001730,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000530,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001727,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000529,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001732,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000544,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001735,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000547,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001767,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000656,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001764,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000655,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001769,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000670,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001772,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000673,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001804,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000782,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001801,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000781,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001806,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000796,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001809,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000799,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001841,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000908,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001838,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000907,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001843,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000922,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001846,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000925,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001878,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000001034,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001875,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000001033,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001880,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000001048,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001883,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000001051,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001915,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000001160,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001912,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000001159,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001917,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000001174,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001920,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000001177,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001952,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000001286,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001949,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000001285,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001954,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000001300,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001957,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000001303,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001989,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000001412,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001986,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000001411,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001991,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000001426,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 2,
+      "op_id": 1000001994,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000001429,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001556,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 73728,
+      "cache_key": 1000000059,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 1229
+    },
+    {
+      "core": 3,
+      "op_id": 1000001558,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 16384,
+      "cache_key": 1000000061,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 274
+    },
+    {
+      "core": 3,
+      "op_id": 1000001560,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 18432,
+      "cache_key": 1000000063,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 308
+    },
+    {
+      "core": 3,
+      "op_id": 1000001562,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 18432,
+      "cache_key": 1000000065,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 308
+    },
+    {
+      "core": 3,
+      "op_id": 1000001564,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 18432,
+      "cache_key": 1000000067,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 308
+    },
+    {
+      "core": 3,
+      "op_id": 1000001566,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 18432,
+      "cache_key": 1000000069,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 308
+    },
+    {
+      "core": 3,
+      "op_id": 1000001568,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 4096,
+      "cache_key": 1000000071,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 69
+    },
+    {
+      "core": 3,
+      "op_id": 1000001570,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 4608,
+      "cache_key": 1000000073,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 77
+    },
+    {
+      "core": 3,
+      "op_id": 1000001572,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 4608,
+      "cache_key": 1000000075,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 77
+    },
+    {
+      "core": 3,
+      "op_id": 1000001574,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 4608,
+      "cache_key": 1000000077,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 77
+    },
+    {
+      "core": 3,
+      "op_id": 1000001576,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 4608,
+      "cache_key": 1000000079,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 77
+    },
+    {
+      "core": 3,
+      "op_id": 1000001662,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000295,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001659,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000292,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001650,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 256,
+      "cache_key": 1000000275,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 3,
+      "op_id": 1000001647,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000263,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001667,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000323,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001664,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000320,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001625,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000169,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001622,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000166,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001613,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 256,
+      "cache_key": 1000000149,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 3,
+      "op_id": 1000001610,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000137,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001627,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000194,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001630,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000197,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001699,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000421,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001696,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000418,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001687,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 256,
+      "cache_key": 1000000401,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 3,
+      "op_id": 1000001684,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000389,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001701,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000446,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001704,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000449,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001736,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000547,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001733,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000544,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001724,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 256,
+      "cache_key": 1000000527,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 3,
+      "op_id": 1000001721,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000515,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001738,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000572,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001741,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000575,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001773,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000673,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001770,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000670,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001761,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 256,
+      "cache_key": 1000000653,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 3,
+      "op_id": 1000001758,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000641,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001775,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000698,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001778,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000701,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001810,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000799,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001807,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000796,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001798,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 256,
+      "cache_key": 1000000779,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 3,
+      "op_id": 1000001795,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000767,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001812,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000824,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001815,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000827,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001847,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000925,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001844,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000922,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001835,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 256,
+      "cache_key": 1000000905,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 3,
+      "op_id": 1000001832,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000893,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001849,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000950,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001852,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000953,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001884,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000001051,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001881,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000001048,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001872,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 256,
+      "cache_key": 1000001031,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 3,
+      "op_id": 1000001869,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000001019,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001886,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000001076,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001889,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000001079,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001921,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000001177,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001918,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000001174,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001909,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 256,
+      "cache_key": 1000001157,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 3,
+      "op_id": 1000001906,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000001145,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001923,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000001202,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001926,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000001205,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001958,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000001303,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001955,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000001300,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001946,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 256,
+      "cache_key": 1000001283,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 3,
+      "op_id": 1000001943,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000001271,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001960,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000001328,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001963,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000001331,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001995,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000001429,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001992,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000001426,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3
+    },
+    {
+      "core": 3,
+      "op_id": 1000001983,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 256,
+      "cache_key": 1000001409,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 3,
+      "op_id": 1000001980,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000001397,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000001997,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000001454,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 3,
+      "op_id": 1000002000,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000001457,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001578,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000000081,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 18
+    },
+    {
+      "core": 4,
+      "op_id": 1000001580,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1152,
+      "cache_key": 1000000083,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 20
+    },
+    {
+      "core": 4,
+      "op_id": 1000001582,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1152,
+      "cache_key": 1000000085,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 20
+    },
+    {
+      "core": 4,
+      "op_id": 1000001584,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1152,
+      "cache_key": 1000000087,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 20
+    },
+    {
+      "core": 4,
+      "op_id": 1000001586,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1152,
+      "cache_key": 1000000089,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 20
+    },
+    {
+      "core": 4,
+      "op_id": 1000001588,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 256,
+      "cache_key": 1000000091,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 4,
+      "op_id": 1000001590,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 288,
+      "cache_key": 1000000093,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 4,
+      "op_id": 1000001592,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 288,
+      "cache_key": 1000000095,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 4,
+      "op_id": 1000001594,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 288,
+      "cache_key": 1000000097,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 4,
+      "op_id": 1000001596,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 288,
+      "cache_key": 1000000099,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 4,
+      "op_id": 1000001668,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000323,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001665,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000320,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001644,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000000251,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 4,
+      "op_id": 1000001638,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000000239,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001670,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000000351,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001631,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000197,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001628,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000194,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001607,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000000125,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 4,
+      "op_id": 1000001601,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000000113,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001633,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000000225,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001705,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000449,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001702,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000446,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001681,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000000377,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 4,
+      "op_id": 1000001675,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000000365,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001707,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000000477,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001742,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000575,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001739,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000572,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001718,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000000503,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 4,
+      "op_id": 1000001712,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000000491,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001744,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000000603,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001779,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000701,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001776,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000698,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001755,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000000629,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 4,
+      "op_id": 1000001749,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000000617,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001781,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000000729,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001816,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000827,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001813,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000824,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001792,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000000755,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 4,
+      "op_id": 1000001786,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000000743,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001818,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000000855,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001853,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000953,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001850,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000950,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001829,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000000881,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 4,
+      "op_id": 1000001823,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000000869,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001855,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000000981,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001890,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000001079,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001887,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000001076,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001866,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000001007,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 4,
+      "op_id": 1000001860,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000000995,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001892,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000001107,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001927,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000001205,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001924,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000001202,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001903,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000001133,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 4,
+      "op_id": 1000001897,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000001121,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001929,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000001233,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001964,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000001331,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001961,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000001328,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001940,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000001259,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 4,
+      "op_id": 1000001934,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000001247,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000001966,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000001359,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000002001,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000001457,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001998,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000001454,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9
+    },
+    {
+      "core": 4,
+      "op_id": 1000001977,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 1024,
+      "cache_key": 1000001385,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 5
+    },
+    {
+      "core": 4,
+      "op_id": 1000001971,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 2048,
+      "cache_key": 1000001373,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 35
+    },
+    {
+      "core": 4,
+      "op_id": 1000002003,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000001485,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35
+    }
+  ],
+  "critical_path": [
+    {
+      "core": 2,
+      "op_id": 1000001542,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 73728,
+      "cache_key": 1000000045,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 1229,
+      "earliest_start": 0
+    },
+    {
+      "core": 2,
+      "op_id": 1000001544,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 73728,
+      "cache_key": 1000000047,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 1229,
+      "earliest_start": 1229
+    },
+    {
+      "core": 2,
+      "op_id": 1000001546,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 73728,
+      "cache_key": 1000000049,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 1229,
+      "earliest_start": 2458
+    },
+    {
+      "core": 2,
+      "op_id": 1000001548,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 73728,
+      "cache_key": 1000000051,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 1229,
+      "earliest_start": 3687
+    },
+    {
+      "core": 2,
+      "op_id": 1000001550,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 73728,
+      "cache_key": 1000000053,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 1229,
+      "earliest_start": 4916
+    },
+    {
+      "core": 2,
+      "op_id": 1000001552,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 73728,
+      "cache_key": 1000000055,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 1229,
+      "earliest_start": 6145
+    },
+    {
+      "core": 2,
+      "op_id": 1000001554,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 73728,
+      "cache_key": 1000000057,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 1229,
+      "earliest_start": 7374
+    },
+    {
+      "core": 2,
+      "op_id": 1000001656,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000278,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3,
+      "earliest_start": 8603
+    },
+    {
+      "core": 2,
+      "op_id": 228,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 7,
+      "earliest_start": 8606
+    },
+    {
+      "core": 2,
+      "op_id": 229,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 8613
+    },
+    {
+      "core": 2,
+      "op_id": 230,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 7,
+      "earliest_start": 8763
+    },
+    {
+      "core": 2,
+      "op_id": 231,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 7,
+      "earliest_start": 8770
+    },
+    {
+      "core": 2,
+      "op_id": 232,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 8777
+    },
+    {
+      "core": 2,
+      "op_id": 233,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 7,
+      "earliest_start": 8927
+    },
+    {
+      "core": 2,
+      "op_id": 234,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 8934
+    },
+    {
+      "core": 2,
+      "op_id": 235,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 7,
+      "earliest_start": 9084
+    },
+    {
+      "core": 2,
+      "op_id": 236,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 7,
+      "earliest_start": 9091
+    },
+    {
+      "core": 2,
+      "op_id": 237,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 9098
+    },
+    {
+      "core": 2,
+      "op_id": 238,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 7,
+      "earliest_start": 9248
+    },
+    {
+      "core": 2,
+      "op_id": 239,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 9255
+    },
+    {
+      "core": 2,
+      "op_id": 240,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 7,
+      "earliest_start": 9405
+    },
+    {
+      "core": 2,
+      "op_id": 241,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 7,
+      "earliest_start": 9412
+    },
+    {
+      "core": 2,
+      "op_id": 242,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 9419
+    },
+    {
+      "core": 2,
+      "op_id": 243,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 7,
+      "earliest_start": 9569
+    },
+    {
+      "core": 2,
+      "op_id": 244,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 9576
+    },
+    {
+      "core": 2,
+      "op_id": 1000001661,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 128,
+      "cache_key": 1000000295,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 3,
+      "earliest_start": 9726
+    },
+    {
+      "core": 3,
+      "op_id": 1000001662,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 128,
+      "cache_key": 1000000295,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 3,
+      "earliest_start": 10229
+    },
+    {
+      "core": 3,
+      "op_id": 245,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 7,
+      "earliest_start": 10232
+    },
+    {
+      "core": 3,
+      "op_id": 246,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 7,
+      "earliest_start": 10239
+    },
+    {
+      "core": 3,
+      "op_id": 247,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 10246
+    },
+    {
+      "core": 3,
+      "op_id": 248,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 7,
+      "earliest_start": 10396
+    },
+    {
+      "core": 3,
+      "op_id": 249,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 10403
+    },
+    {
+      "core": 3,
+      "op_id": 250,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 8,
+      "earliest_start": 10441
+    },
+    {
+      "core": 3,
+      "op_id": 251,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 8,
+      "earliest_start": 10449
+    },
+    {
+      "core": 3,
+      "op_id": 252,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 10457
+    },
+    {
+      "core": 3,
+      "op_id": 253,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 8,
+      "earliest_start": 10607
+    },
+    {
+      "core": 3,
+      "op_id": 254,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 10615
+    },
+    {
+      "core": 3,
+      "op_id": 255,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 8,
+      "earliest_start": 10765
+    },
+    {
+      "core": 3,
+      "op_id": 256,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 8,
+      "earliest_start": 10773
+    },
+    {
+      "core": 3,
+      "op_id": 257,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 10781
+    },
+    {
+      "core": 3,
+      "op_id": 258,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 8,
+      "earliest_start": 10931
+    },
+    {
+      "core": 3,
+      "op_id": 259,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 10939
+    },
+    {
+      "core": 3,
+      "op_id": 260,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 8,
+      "earliest_start": 11089
+    },
+    {
+      "core": 3,
+      "op_id": 261,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 8,
+      "earliest_start": 11097
+    },
+    {
+      "core": 3,
+      "op_id": 262,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 11105
+    },
+    {
+      "core": 3,
+      "op_id": 263,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 11143
+    },
+    {
+      "core": 3,
+      "op_id": 264,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 11153
+    },
+    {
+      "core": 3,
+      "op_id": 265,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 11163
+    },
+    {
+      "core": 3,
+      "op_id": 266,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 11313
+    },
+    {
+      "core": 3,
+      "op_id": 267,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 11323
+    },
+    {
+      "core": 3,
+      "op_id": 268,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 11473
+    },
+    {
+      "core": 3,
+      "op_id": 269,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 11483
+    },
+    {
+      "core": 3,
+      "op_id": 270,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 11493
+    },
+    {
+      "core": 3,
+      "op_id": 271,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 11643
+    },
+    {
+      "core": 3,
+      "op_id": 272,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 11653
+    },
+    {
+      "core": 3,
+      "op_id": 1000001667,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 512,
+      "cache_key": 1000000323,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 9,
+      "earliest_start": 11803
+    },
+    {
+      "core": 4,
+      "op_id": 1000001668,
+      "kind": "COPY_IN",
+      "pipe": "PIPE_MTE2",
+      "bytes": 512,
+      "cache_key": 1000000323,
+      "sole_copy_in_key_proved_cold": true,
+      "duration_lower_bound": 9,
+      "earliest_start": 12312
+    },
+    {
+      "core": 4,
+      "op_id": 273,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 12321
+    },
+    {
+      "core": 4,
+      "op_id": 274,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 12331
+    },
+    {
+      "core": 4,
+      "op_id": 275,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 12341
+    },
+    {
+      "core": 4,
+      "op_id": 276,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 12379
+    },
+    {
+      "core": 4,
+      "op_id": 277,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 12393
+    },
+    {
+      "core": 4,
+      "op_id": 278,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 12407
+    },
+    {
+      "core": 4,
+      "op_id": 279,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 12557
+    },
+    {
+      "core": 4,
+      "op_id": 280,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 12571
+    },
+    {
+      "core": 4,
+      "op_id": 281,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 12721
+    },
+    {
+      "core": 4,
+      "op_id": 282,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 12735
+    },
+    {
+      "core": 4,
+      "op_id": 283,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 12749
+    },
+    {
+      "core": 4,
+      "op_id": 284,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 12899
+    },
+    {
+      "core": 4,
+      "op_id": 285,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 12913
+    },
+    {
+      "core": 4,
+      "op_id": 286,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 13063
+    },
+    {
+      "core": 4,
+      "op_id": 287,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 13077
+    },
+    {
+      "core": 4,
+      "op_id": 288,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 13091
+    },
+    {
+      "core": 4,
+      "op_id": 289,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 13129
+    },
+    {
+      "core": 4,
+      "op_id": 290,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 13151
+    },
+    {
+      "core": 4,
+      "op_id": 291,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 13173
+    },
+    {
+      "core": 4,
+      "op_id": 292,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 13323
+    },
+    {
+      "core": 4,
+      "op_id": 293,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 13345
+    },
+    {
+      "core": 4,
+      "op_id": 294,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 13495
+    },
+    {
+      "core": 4,
+      "op_id": 295,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 13517
+    },
+    {
+      "core": 4,
+      "op_id": 296,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 13539
+    },
+    {
+      "core": 4,
+      "op_id": 297,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 13689
+    },
+    {
+      "core": 4,
+      "op_id": 298,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 13711
+    },
+    {
+      "core": 4,
+      "op_id": 299,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 13861
+    },
+    {
+      "core": 4,
+      "op_id": 300,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 13883
+    },
+    {
+      "core": 4,
+      "op_id": 148,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 13905
+    },
+    {
+      "core": 4,
+      "op_id": 149,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 13915
+    },
+    {
+      "core": 4,
+      "op_id": 150,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 13925
+    },
+    {
+      "core": 4,
+      "op_id": 151,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 13963
+    },
+    {
+      "core": 4,
+      "op_id": 152,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 13977
+    },
+    {
+      "core": 4,
+      "op_id": 153,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 13991
+    },
+    {
+      "core": 4,
+      "op_id": 154,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 14141
+    },
+    {
+      "core": 4,
+      "op_id": 155,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 14155
+    },
+    {
+      "core": 4,
+      "op_id": 156,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 14305
+    },
+    {
+      "core": 4,
+      "op_id": 157,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 14319
+    },
+    {
+      "core": 4,
+      "op_id": 158,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 14333
+    },
+    {
+      "core": 4,
+      "op_id": 159,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 14483
+    },
+    {
+      "core": 4,
+      "op_id": 160,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 14497
+    },
+    {
+      "core": 4,
+      "op_id": 161,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 14647
+    },
+    {
+      "core": 4,
+      "op_id": 162,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 14661
+    },
+    {
+      "core": 4,
+      "op_id": 163,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 14675
+    },
+    {
+      "core": 4,
+      "op_id": 164,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 14713
+    },
+    {
+      "core": 4,
+      "op_id": 165,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 14735
+    },
+    {
+      "core": 4,
+      "op_id": 166,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 14757
+    },
+    {
+      "core": 4,
+      "op_id": 167,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 14907
+    },
+    {
+      "core": 4,
+      "op_id": 168,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 14929
+    },
+    {
+      "core": 4,
+      "op_id": 169,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 15079
+    },
+    {
+      "core": 4,
+      "op_id": 170,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 15101
+    },
+    {
+      "core": 4,
+      "op_id": 171,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 15123
+    },
+    {
+      "core": 4,
+      "op_id": 172,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 15273
+    },
+    {
+      "core": 4,
+      "op_id": 173,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 15295
+    },
+    {
+      "core": 4,
+      "op_id": 174,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 15445
+    },
+    {
+      "core": 4,
+      "op_id": 175,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 15467
+    },
+    {
+      "core": 4,
+      "op_id": 398,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 15489
+    },
+    {
+      "core": 4,
+      "op_id": 399,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 15499
+    },
+    {
+      "core": 4,
+      "op_id": 400,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 15509
+    },
+    {
+      "core": 4,
+      "op_id": 401,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 15547
+    },
+    {
+      "core": 4,
+      "op_id": 402,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 15561
+    },
+    {
+      "core": 4,
+      "op_id": 403,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 15575
+    },
+    {
+      "core": 4,
+      "op_id": 404,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 15725
+    },
+    {
+      "core": 4,
+      "op_id": 405,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 15739
+    },
+    {
+      "core": 4,
+      "op_id": 406,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 15889
+    },
+    {
+      "core": 4,
+      "op_id": 407,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 15903
+    },
+    {
+      "core": 4,
+      "op_id": 408,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 15917
+    },
+    {
+      "core": 4,
+      "op_id": 409,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 16067
+    },
+    {
+      "core": 4,
+      "op_id": 410,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 16081
+    },
+    {
+      "core": 4,
+      "op_id": 411,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 16231
+    },
+    {
+      "core": 4,
+      "op_id": 412,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 16245
+    },
+    {
+      "core": 4,
+      "op_id": 413,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 16259
+    },
+    {
+      "core": 4,
+      "op_id": 414,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 16297
+    },
+    {
+      "core": 4,
+      "op_id": 415,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 16319
+    },
+    {
+      "core": 4,
+      "op_id": 416,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 16341
+    },
+    {
+      "core": 4,
+      "op_id": 417,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 16491
+    },
+    {
+      "core": 4,
+      "op_id": 418,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 16513
+    },
+    {
+      "core": 4,
+      "op_id": 419,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 16663
+    },
+    {
+      "core": 4,
+      "op_id": 420,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 16685
+    },
+    {
+      "core": 4,
+      "op_id": 421,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 16707
+    },
+    {
+      "core": 4,
+      "op_id": 422,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 16857
+    },
+    {
+      "core": 4,
+      "op_id": 423,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 16879
+    },
+    {
+      "core": 4,
+      "op_id": 424,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 17029
+    },
+    {
+      "core": 4,
+      "op_id": 425,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 17051
+    },
+    {
+      "core": 4,
+      "op_id": 523,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 17073
+    },
+    {
+      "core": 4,
+      "op_id": 524,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 17083
+    },
+    {
+      "core": 4,
+      "op_id": 525,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 17093
+    },
+    {
+      "core": 4,
+      "op_id": 526,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 17131
+    },
+    {
+      "core": 4,
+      "op_id": 527,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 17145
+    },
+    {
+      "core": 4,
+      "op_id": 528,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 17159
+    },
+    {
+      "core": 4,
+      "op_id": 529,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 17309
+    },
+    {
+      "core": 4,
+      "op_id": 530,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 17323
+    },
+    {
+      "core": 4,
+      "op_id": 531,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 17473
+    },
+    {
+      "core": 4,
+      "op_id": 532,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 17487
+    },
+    {
+      "core": 4,
+      "op_id": 533,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 17501
+    },
+    {
+      "core": 4,
+      "op_id": 534,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 17651
+    },
+    {
+      "core": 4,
+      "op_id": 535,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 17665
+    },
+    {
+      "core": 4,
+      "op_id": 536,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 17815
+    },
+    {
+      "core": 4,
+      "op_id": 537,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 17829
+    },
+    {
+      "core": 4,
+      "op_id": 538,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 17843
+    },
+    {
+      "core": 4,
+      "op_id": 539,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 17881
+    },
+    {
+      "core": 4,
+      "op_id": 540,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 17903
+    },
+    {
+      "core": 4,
+      "op_id": 541,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 17925
+    },
+    {
+      "core": 4,
+      "op_id": 542,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 18075
+    },
+    {
+      "core": 4,
+      "op_id": 543,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 18097
+    },
+    {
+      "core": 4,
+      "op_id": 544,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 18247
+    },
+    {
+      "core": 4,
+      "op_id": 545,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 18269
+    },
+    {
+      "core": 4,
+      "op_id": 546,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 18291
+    },
+    {
+      "core": 4,
+      "op_id": 547,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 18441
+    },
+    {
+      "core": 4,
+      "op_id": 548,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 18463
+    },
+    {
+      "core": 4,
+      "op_id": 549,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 18613
+    },
+    {
+      "core": 4,
+      "op_id": 550,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 18635
+    },
+    {
+      "core": 4,
+      "op_id": 648,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 18657
+    },
+    {
+      "core": 4,
+      "op_id": 649,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 18667
+    },
+    {
+      "core": 4,
+      "op_id": 650,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 18677
+    },
+    {
+      "core": 4,
+      "op_id": 651,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 18715
+    },
+    {
+      "core": 4,
+      "op_id": 652,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 18729
+    },
+    {
+      "core": 4,
+      "op_id": 653,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 18743
+    },
+    {
+      "core": 4,
+      "op_id": 654,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 18893
+    },
+    {
+      "core": 4,
+      "op_id": 655,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 18907
+    },
+    {
+      "core": 4,
+      "op_id": 656,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 19057
+    },
+    {
+      "core": 4,
+      "op_id": 657,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 19071
+    },
+    {
+      "core": 4,
+      "op_id": 658,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 19085
+    },
+    {
+      "core": 4,
+      "op_id": 659,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 19235
+    },
+    {
+      "core": 4,
+      "op_id": 660,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 19249
+    },
+    {
+      "core": 4,
+      "op_id": 661,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 19399
+    },
+    {
+      "core": 4,
+      "op_id": 662,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 19413
+    },
+    {
+      "core": 4,
+      "op_id": 663,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 19427
+    },
+    {
+      "core": 4,
+      "op_id": 664,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 19465
+    },
+    {
+      "core": 4,
+      "op_id": 665,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 19487
+    },
+    {
+      "core": 4,
+      "op_id": 666,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 19509
+    },
+    {
+      "core": 4,
+      "op_id": 667,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 19659
+    },
+    {
+      "core": 4,
+      "op_id": 668,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 19681
+    },
+    {
+      "core": 4,
+      "op_id": 669,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 19831
+    },
+    {
+      "core": 4,
+      "op_id": 670,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 19853
+    },
+    {
+      "core": 4,
+      "op_id": 671,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 19875
+    },
+    {
+      "core": 4,
+      "op_id": 672,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 20025
+    },
+    {
+      "core": 4,
+      "op_id": 673,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 20047
+    },
+    {
+      "core": 4,
+      "op_id": 674,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 20197
+    },
+    {
+      "core": 4,
+      "op_id": 675,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 20219
+    },
+    {
+      "core": 4,
+      "op_id": 773,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 20241
+    },
+    {
+      "core": 4,
+      "op_id": 774,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 20251
+    },
+    {
+      "core": 4,
+      "op_id": 775,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 20261
+    },
+    {
+      "core": 4,
+      "op_id": 776,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 20299
+    },
+    {
+      "core": 4,
+      "op_id": 777,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 20313
+    },
+    {
+      "core": 4,
+      "op_id": 778,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 20327
+    },
+    {
+      "core": 4,
+      "op_id": 779,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 20477
+    },
+    {
+      "core": 4,
+      "op_id": 780,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 20491
+    },
+    {
+      "core": 4,
+      "op_id": 781,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 20641
+    },
+    {
+      "core": 4,
+      "op_id": 782,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 20655
+    },
+    {
+      "core": 4,
+      "op_id": 783,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 20669
+    },
+    {
+      "core": 4,
+      "op_id": 784,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 20819
+    },
+    {
+      "core": 4,
+      "op_id": 785,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 20833
+    },
+    {
+      "core": 4,
+      "op_id": 786,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 20983
+    },
+    {
+      "core": 4,
+      "op_id": 787,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 20997
+    },
+    {
+      "core": 4,
+      "op_id": 788,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 21011
+    },
+    {
+      "core": 4,
+      "op_id": 789,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 21049
+    },
+    {
+      "core": 4,
+      "op_id": 790,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 21071
+    },
+    {
+      "core": 4,
+      "op_id": 791,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 21093
+    },
+    {
+      "core": 4,
+      "op_id": 792,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 21243
+    },
+    {
+      "core": 4,
+      "op_id": 793,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 21265
+    },
+    {
+      "core": 4,
+      "op_id": 794,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 21415
+    },
+    {
+      "core": 4,
+      "op_id": 795,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 21437
+    },
+    {
+      "core": 4,
+      "op_id": 796,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 21459
+    },
+    {
+      "core": 4,
+      "op_id": 797,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 21609
+    },
+    {
+      "core": 4,
+      "op_id": 798,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 21631
+    },
+    {
+      "core": 4,
+      "op_id": 799,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 21781
+    },
+    {
+      "core": 4,
+      "op_id": 800,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 21803
+    },
+    {
+      "core": 4,
+      "op_id": 898,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 21825
+    },
+    {
+      "core": 4,
+      "op_id": 899,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 21835
+    },
+    {
+      "core": 4,
+      "op_id": 900,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 21845
+    },
+    {
+      "core": 4,
+      "op_id": 901,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 21883
+    },
+    {
+      "core": 4,
+      "op_id": 902,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 21897
+    },
+    {
+      "core": 4,
+      "op_id": 903,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 21911
+    },
+    {
+      "core": 4,
+      "op_id": 904,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 22061
+    },
+    {
+      "core": 4,
+      "op_id": 905,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 22075
+    },
+    {
+      "core": 4,
+      "op_id": 906,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 22225
+    },
+    {
+      "core": 4,
+      "op_id": 907,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 22239
+    },
+    {
+      "core": 4,
+      "op_id": 908,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 22253
+    },
+    {
+      "core": 4,
+      "op_id": 909,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 22403
+    },
+    {
+      "core": 4,
+      "op_id": 910,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 22417
+    },
+    {
+      "core": 4,
+      "op_id": 911,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 22567
+    },
+    {
+      "core": 4,
+      "op_id": 912,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 22581
+    },
+    {
+      "core": 4,
+      "op_id": 913,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 22595
+    },
+    {
+      "core": 4,
+      "op_id": 914,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 22633
+    },
+    {
+      "core": 4,
+      "op_id": 915,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 22655
+    },
+    {
+      "core": 4,
+      "op_id": 916,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 22677
+    },
+    {
+      "core": 4,
+      "op_id": 917,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 22827
+    },
+    {
+      "core": 4,
+      "op_id": 918,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 22849
+    },
+    {
+      "core": 4,
+      "op_id": 919,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 22999
+    },
+    {
+      "core": 4,
+      "op_id": 920,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 23021
+    },
+    {
+      "core": 4,
+      "op_id": 921,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 23043
+    },
+    {
+      "core": 4,
+      "op_id": 922,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 23193
+    },
+    {
+      "core": 4,
+      "op_id": 923,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 23215
+    },
+    {
+      "core": 4,
+      "op_id": 924,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 23365
+    },
+    {
+      "core": 4,
+      "op_id": 925,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 23387
+    },
+    {
+      "core": 4,
+      "op_id": 1023,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 23409
+    },
+    {
+      "core": 4,
+      "op_id": 1024,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 23419
+    },
+    {
+      "core": 4,
+      "op_id": 1025,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 23429
+    },
+    {
+      "core": 4,
+      "op_id": 1026,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 23467
+    },
+    {
+      "core": 4,
+      "op_id": 1027,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 23481
+    },
+    {
+      "core": 4,
+      "op_id": 1028,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 23495
+    },
+    {
+      "core": 4,
+      "op_id": 1029,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 23645
+    },
+    {
+      "core": 4,
+      "op_id": 1030,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 23659
+    },
+    {
+      "core": 4,
+      "op_id": 1031,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 23809
+    },
+    {
+      "core": 4,
+      "op_id": 1032,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 23823
+    },
+    {
+      "core": 4,
+      "op_id": 1033,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 23837
+    },
+    {
+      "core": 4,
+      "op_id": 1034,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 23987
+    },
+    {
+      "core": 4,
+      "op_id": 1035,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 24001
+    },
+    {
+      "core": 4,
+      "op_id": 1036,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 24151
+    },
+    {
+      "core": 4,
+      "op_id": 1037,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 24165
+    },
+    {
+      "core": 4,
+      "op_id": 1038,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 24179
+    },
+    {
+      "core": 4,
+      "op_id": 1039,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 24217
+    },
+    {
+      "core": 4,
+      "op_id": 1040,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 24239
+    },
+    {
+      "core": 4,
+      "op_id": 1041,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 24261
+    },
+    {
+      "core": 4,
+      "op_id": 1042,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 24411
+    },
+    {
+      "core": 4,
+      "op_id": 1043,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 24433
+    },
+    {
+      "core": 4,
+      "op_id": 1044,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 24583
+    },
+    {
+      "core": 4,
+      "op_id": 1045,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 24605
+    },
+    {
+      "core": 4,
+      "op_id": 1046,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 24627
+    },
+    {
+      "core": 4,
+      "op_id": 1047,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 24777
+    },
+    {
+      "core": 4,
+      "op_id": 1048,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 24799
+    },
+    {
+      "core": 4,
+      "op_id": 1049,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 24949
+    },
+    {
+      "core": 4,
+      "op_id": 1050,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 24971
+    },
+    {
+      "core": 4,
+      "op_id": 1148,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 24993
+    },
+    {
+      "core": 4,
+      "op_id": 1149,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 25003
+    },
+    {
+      "core": 4,
+      "op_id": 1150,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 25013
+    },
+    {
+      "core": 4,
+      "op_id": 1151,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 25051
+    },
+    {
+      "core": 4,
+      "op_id": 1152,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 25065
+    },
+    {
+      "core": 4,
+      "op_id": 1153,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 25079
+    },
+    {
+      "core": 4,
+      "op_id": 1154,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 25229
+    },
+    {
+      "core": 4,
+      "op_id": 1155,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 25243
+    },
+    {
+      "core": 4,
+      "op_id": 1156,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 25393
+    },
+    {
+      "core": 4,
+      "op_id": 1157,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 25407
+    },
+    {
+      "core": 4,
+      "op_id": 1158,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 25421
+    },
+    {
+      "core": 4,
+      "op_id": 1159,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 25571
+    },
+    {
+      "core": 4,
+      "op_id": 1160,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 25585
+    },
+    {
+      "core": 4,
+      "op_id": 1161,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 25735
+    },
+    {
+      "core": 4,
+      "op_id": 1162,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 25749
+    },
+    {
+      "core": 4,
+      "op_id": 1163,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 25763
+    },
+    {
+      "core": 4,
+      "op_id": 1164,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 25801
+    },
+    {
+      "core": 4,
+      "op_id": 1165,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 25823
+    },
+    {
+      "core": 4,
+      "op_id": 1166,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 25845
+    },
+    {
+      "core": 4,
+      "op_id": 1167,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 25995
+    },
+    {
+      "core": 4,
+      "op_id": 1168,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 26017
+    },
+    {
+      "core": 4,
+      "op_id": 1169,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 26167
+    },
+    {
+      "core": 4,
+      "op_id": 1170,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 26189
+    },
+    {
+      "core": 4,
+      "op_id": 1171,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 26211
+    },
+    {
+      "core": 4,
+      "op_id": 1172,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 26361
+    },
+    {
+      "core": 4,
+      "op_id": 1173,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 26383
+    },
+    {
+      "core": 4,
+      "op_id": 1174,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 26533
+    },
+    {
+      "core": 4,
+      "op_id": 1175,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 26555
+    },
+    {
+      "core": 4,
+      "op_id": 1273,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 26577
+    },
+    {
+      "core": 4,
+      "op_id": 1274,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 26587
+    },
+    {
+      "core": 4,
+      "op_id": 1275,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 26597
+    },
+    {
+      "core": 4,
+      "op_id": 1276,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 26635
+    },
+    {
+      "core": 4,
+      "op_id": 1277,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 26649
+    },
+    {
+      "core": 4,
+      "op_id": 1278,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 26663
+    },
+    {
+      "core": 4,
+      "op_id": 1279,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 26813
+    },
+    {
+      "core": 4,
+      "op_id": 1280,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 26827
+    },
+    {
+      "core": 4,
+      "op_id": 1281,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 26977
+    },
+    {
+      "core": 4,
+      "op_id": 1282,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 26991
+    },
+    {
+      "core": 4,
+      "op_id": 1283,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 27005
+    },
+    {
+      "core": 4,
+      "op_id": 1284,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 27155
+    },
+    {
+      "core": 4,
+      "op_id": 1285,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 27169
+    },
+    {
+      "core": 4,
+      "op_id": 1286,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 27319
+    },
+    {
+      "core": 4,
+      "op_id": 1287,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 27333
+    },
+    {
+      "core": 4,
+      "op_id": 1288,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 27347
+    },
+    {
+      "core": 4,
+      "op_id": 1289,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 27385
+    },
+    {
+      "core": 4,
+      "op_id": 1290,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 27407
+    },
+    {
+      "core": 4,
+      "op_id": 1291,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 27429
+    },
+    {
+      "core": 4,
+      "op_id": 1292,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 27579
+    },
+    {
+      "core": 4,
+      "op_id": 1293,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 27601
+    },
+    {
+      "core": 4,
+      "op_id": 1294,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 27751
+    },
+    {
+      "core": 4,
+      "op_id": 1295,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 27773
+    },
+    {
+      "core": 4,
+      "op_id": 1296,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 27795
+    },
+    {
+      "core": 4,
+      "op_id": 1297,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 27945
+    },
+    {
+      "core": 4,
+      "op_id": 1298,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 27967
+    },
+    {
+      "core": 4,
+      "op_id": 1299,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 28117
+    },
+    {
+      "core": 4,
+      "op_id": 1300,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 28139
+    },
+    {
+      "core": 4,
+      "op_id": 1398,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 28161
+    },
+    {
+      "core": 4,
+      "op_id": 1399,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 10,
+      "earliest_start": 28171
+    },
+    {
+      "core": 4,
+      "op_id": 1400,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 28181
+    },
+    {
+      "core": 4,
+      "op_id": 1401,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 28219
+    },
+    {
+      "core": 4,
+      "op_id": 1402,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 28233
+    },
+    {
+      "core": 4,
+      "op_id": 1403,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 28247
+    },
+    {
+      "core": 4,
+      "op_id": 1404,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 28397
+    },
+    {
+      "core": 4,
+      "op_id": 1405,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 28411
+    },
+    {
+      "core": 4,
+      "op_id": 1406,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 28561
+    },
+    {
+      "core": 4,
+      "op_id": 1407,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 28575
+    },
+    {
+      "core": 4,
+      "op_id": 1408,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 28589
+    },
+    {
+      "core": 4,
+      "op_id": 1409,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 28739
+    },
+    {
+      "core": 4,
+      "op_id": 1410,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 28753
+    },
+    {
+      "core": 4,
+      "op_id": 1411,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 28903
+    },
+    {
+      "core": 4,
+      "op_id": 1412,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 14,
+      "earliest_start": 28917
+    },
+    {
+      "core": 4,
+      "op_id": 1413,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 38,
+      "earliest_start": 28931
+    },
+    {
+      "core": 4,
+      "op_id": 1414,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 28969
+    },
+    {
+      "core": 4,
+      "op_id": 1415,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 28991
+    },
+    {
+      "core": 4,
+      "op_id": 1416,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 29013
+    },
+    {
+      "core": 4,
+      "op_id": 1417,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 29163
+    },
+    {
+      "core": 4,
+      "op_id": 1418,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 29185
+    },
+    {
+      "core": 4,
+      "op_id": 1419,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 29335
+    },
+    {
+      "core": 4,
+      "op_id": 1420,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 29357
+    },
+    {
+      "core": 4,
+      "op_id": 1421,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 29379
+    },
+    {
+      "core": 4,
+      "op_id": 1422,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 29529
+    },
+    {
+      "core": 4,
+      "op_id": 1423,
+      "kind": "CONV",
+      "pipe": "PIPE_M",
+      "duration_lower_bound": 150,
+      "earliest_start": 29551
+    },
+    {
+      "core": 4,
+      "op_id": 1424,
+      "kind": "RELU",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 29701
+    },
+    {
+      "core": 4,
+      "op_id": 1425,
+      "kind": "ADD",
+      "pipe": "PIPE_V",
+      "duration_lower_bound": 22,
+      "earliest_start": 29723
+    },
+    {
+      "core": 4,
+      "op_id": 1000002003,
+      "kind": "COPY_OUT",
+      "pipe": "PIPE_MTE3",
+      "bytes": 2048,
+      "cache_key": 1000001485,
+      "sole_copy_in_key_proved_cold": false,
+      "duration_lower_bound": 35,
+      "earliest_start": 29745
+    }
+  ],
+  "calls": {
+    "Task_builder": 0,
+    "Step1": 0,
+    "Step2": 0,
+    "Step3": 0,
+    "E0": 0
+  }
+}
