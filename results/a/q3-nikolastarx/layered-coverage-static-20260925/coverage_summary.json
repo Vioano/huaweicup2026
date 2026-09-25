@@ -1,0 +1,65 @@
+{
+  "cases_total": 100,
+  "recognized_and_decomposed": 22,
+  "unsupported_structure": 78,
+  "unexpected_exceptions": 0,
+  "decomposed_with_5_to_10_tracks": 13,
+  "decomposed_outside_track_bound": 9,
+  "track_count_distribution": {
+    "3": 1,
+    "4": 5,
+    "5": 3,
+    "6": 2,
+    "7": 4,
+    "8": 2,
+    "9": 2,
+    "11": 1,
+    "13": 1,
+    "15": 1
+  },
+  "unsupported_stage_counts": {
+    "recognize_layers": 73,
+    "decompose": 5
+  },
+  "unsupported_reason_counts": {
+    "no closed attention query row matched": 73,
+    "genuine cross-stream bridge/join: two keys of one depth in one lineage": 3,
+    "shared auxiliary set must be ancestor-closed": 2
+  },
+  "successful_case_ids": [
+    "005",
+    "009",
+    "031",
+    "035",
+    "040",
+    "043",
+    "047",
+    "048",
+    "049",
+    "053",
+    "064",
+    "068",
+    "069",
+    "071",
+    "072",
+    "075",
+    "077",
+    "082",
+    "085",
+    "086",
+    "087",
+    "088"
+  ],
+  "official_calls": {
+    "Task": 0,
+    "Step": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "pipe_bound": 0
+  },
+  "elapsed_seconds": 7.952014,
+  "started_at": "2026-09-25T14:06:26.243137Z",
+  "finished_at": "2026-09-25T14:06:34.195151Z",
+  "scope": "structure recognition/decomposition only; not plan construction, capacity proof, official legality, score, or solver benchmark"
+}

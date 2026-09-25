@@ -1,0 +1,7 @@
+# Scope of the two R9 candidates
+
+This is arithmetic on saved artifacts, not a new algorithm score. Keeping the other98 cells of fixed Forest500 unchanged, even if both current R9 plans attain their legitimate compute/MV-FIFO/cross-delay lower bounds, the K5 arithmetic mean would be at most **4.778031376**, below5. The present plans therefore cannot by themselves finish the user goal. They test whether persistent multi-layer ownership, lower COPY traffic, and bounded full-path crossings help official timing. A positive result needs generalization and other structural coverage.
+
+The 005 fixed-plan lower bound is21636 (old fixed-plan bound20257), so improved crossing count alone does not guarantee improvement: private-track grouping raises a different scheduling floor. Its predicted scheduled COPY bytes fall from old2136798 to1595646, conditional on the prepared guard. The official test distinguishes that traffic benefit from the increased compute/FIFO constraint. No claim that either bound is achievable, that these are best plans, or that the P3 optimum is bounded by this hypothetical mean.
+
+All candidates and negative observations will be retained. The diagnostic accepted flag requires joint per-cell improvement of M3, nonregressing M2, and nonregressing G; it is a conservative gate for the current experiment. A faster-in-both-modes candidate with lower G is still useful evidence and is not scientifically invalidated by this flag. Any eventual global selection change needs its own frozen rule and full500 evidence.

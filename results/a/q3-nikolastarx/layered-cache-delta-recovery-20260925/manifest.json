@@ -1,0 +1,21 @@
+{
+  "purpose": "Root explicitly authorizes one corrected existing-file aggregation after deterministic Counter/list bug; no new candidate or evaluation, original failure preserved.",
+  "inputs": {
+    "results/a/q3-nikolastarx/layered-one-shot-20260925/control/P3.json.gz": "161f6c00a3c406c3e11d9aead620c9652bdce4c8999ce1039c83000dd859f631",
+    "results/a/q3-nikolastarx/layered-one-shot-20260925/run/p3.json.gz": "3c51fac6f14a7c2fdafad3eef6694fb8f38d473e00534c25cd4dadff13cfa0d8",
+    "data/raw/a/official/data/case_005.json": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f"
+  },
+  "script_sha256": "8ed6af21123202ecac7016e0f78abe825ba5618b6d984344a649dc9a2ec8f212",
+  "budget": {
+    "analysis_processes": 1,
+    "seconds": 120,
+    "workers": 1,
+    "automatic_retries": 0,
+    "E0": 0
+  },
+  "command": [
+    "python3",
+    "-B",
+    "results/a/q3-nikolastarx/layered-cache-delta-recovery-20260925/analyze.py"
+  ]
+}

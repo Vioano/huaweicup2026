@@ -1,0 +1,46 @@
+{
+  "budget": {
+    "P2_conditional": 1,
+    "P3": 1,
+    "per_phase_seconds": 90,
+    "retries": 0,
+    "total_seconds": 600,
+    "workers": 1
+  },
+  "candidate_plan_sha256": "2885b28a512598e4bae525c7bf4b214ac9b2452de19425603fcdea2ae8e7038a",
+  "created_utc": "2026-09-25T14:09:29Z",
+  "decision": "admitted_once",
+  "fixed_input_count": 96,
+  "guard_sha256": "f4ff0045917d3868663e98a1ea6ca08145874494fbb30474e047e523be4e3ec8",
+  "old_control_sha256": "06ed2d4590fa6f30aebd930ab18708b27c716979349d12983281eea697457658",
+  "old_reference": {
+    "P2_makespan": 37327,
+    "P3_makespan": 30642,
+    "exact_gain_fraction": "37327/30642"
+  },
+  "probe_sha256": "c431b3ff64c8a9a24f862a7b0e6f3ea5ef498751850536361df58d27aecc7724",
+  "proposal_sha256": "96aa0b92dd8425be1059928864254433f3bac97db39807a9671af48ae2e1496e",
+  "research_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+  "resource_guard": {
+    "disk_free_min_gib": 10,
+    "no_other_scoring": true,
+    "owned_rss_sampled_bytes": 2147483648,
+    "pressure_level": 1,
+    "swap_delta_mib": 256,
+    "workers": 1
+  },
+  "root_runs_solver_or_evaluator": false,
+  "schema": "captain-resource-admission-v1",
+  "scope": "P3 R9 005/K5 one frozen candidate; conditional same-plan P2 comparison",
+  "session": "nikolastarx/s-a5bdb19389ee43d686b7976d3bcdf766",
+  "source_commit": "e9ff04c3019dedadd5b2ff71ecfdd57ac1aabe4a",
+  "start_by_utc": "2026-09-25T14:20:00Z",
+  "stop_rules": [
+    "Any source, manifest, admission, plan, or control mismatch: no score",
+    "First failed or unknown P3 call: stop and preserve artifacts",
+    "P2 call only after guard proves P3 Makespan <30642; comparison uses exact old P2 reference 37327",
+    "Zero automatic retry; one run/output directory; all calls charged",
+    "On pressure, swap, RSS, disk, foreign scorer, timeout, or identity uncertainty: stop new work, retain ledger and cleanup evidence"
+  ],
+  "supervisor_sha256": "13b445a8dc16dcd77faf09f4af241b504a8210b2ff9d4dc06e02fd156c776065"
+}

@@ -1,0 +1,7 @@
+# Cache delta analysis attempt: stopped on analyzer error
+
+The frozen, single authorized read-only analysis process failed during per-key aggregation and was not retried. The error was `AttributeError: 'int' object has no attribute 'append'` at `analyze.py` line 22: the event aggregator used a `Counter` default value for a timestamp list. No per-key analysis output was produced. The tool displayed a truncated traceback; no complete raw stderr was captured, so `analysis_failure.json` explicitly records the available excerpt rather than reconstructing a full log.
+
+Input gzip hashes matched the frozen manifest: old P3 `161f6c00a3c406c3e11d9aead620c9652bdce4c8999ce1039c83000dd859f631`; new P3 `3c51fac6f14a7c2fdafad3eef6694fb8f38d473e00534c25cd4dadff13cfa0d8`. The preflight observation found `cache_events` entries of types hit/miss/insert with `tensor_id`, simulated `time`, `size_bytes`, `core_id`, and `op_id`; insert entries also had `evicted_tensor_ids`. Summary values read before the frozen analysis were old miss/hit bytes 795322/674612 and new 870442/356084, so miss bytes increased by 75120 while hit bytes decreased by 318528. M3 was old 30642 and new 24522.
+
+Because the only analysis process failed, this attempt does not identify which logical cache keys account for the 75120-byte miss increase, does not classify paired hit-to-miss requests, and does not establish any eviction cause. No constructor, Task, Step, E0/E1/E2, or `pipe_bound` was called. Do not treat this partial readout as a causal or optimization result.

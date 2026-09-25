@@ -1,0 +1,68 @@
+{
+  "status": "complete",
+  "manifest_sha256": "de5925f3a676adf7b3e8e46b7f211764c59d77ecd2ffbd4154665561a0921ad5",
+  "supervisor_sha256": "13b445a8dc16dcd77faf09f4af241b504a8210b2ff9d4dc06e02fd156c776065",
+  "sample_interval_seconds": 1,
+  "source_commit": "e9ff04c3019dedadd5b2ff71ecfdd57ac1aabe4a",
+  "probe_sha256": "c431b3ff64c8a9a24f862a7b0e6f3ea5ef498751850536361df58d27aecc7724",
+  "admission_file": "/Users/nikolastar/Projects/huaweicup2026/output/handoffs/resource-window-20260925/P3_R9_005_K5_ADMISSION_20260925.json",
+  "admission_sha256": "3da85b63cfb2ab340055a46750a6a2c872fff311bc19c97cee381a3686e32718",
+  "budget": {
+    "P2_conditional": 1,
+    "P3": 1,
+    "per_phase_seconds": 90,
+    "retries": 0,
+    "total_seconds": 600,
+    "workers": 1
+  },
+  "resource_policy": "new_window_admission_required",
+  "command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "-m",
+    "src.q3.layered_query_flow_probe",
+    "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/layered-one-shot-20260925/candidate",
+    "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/layered-one-shot-20260925/run",
+    "--source",
+    "e9ff04c3019dedadd5b2ff71ecfdd57ac1aabe4a",
+    "--plan-sha256",
+    "2885b28a512598e4bae525c7bf4b214ac9b2452de19425603fcdea2ae8e7038a",
+    "--admission-file",
+    "/Users/nikolastar/Projects/huaweicup2026/output/handoffs/resource-window-20260925/P3_R9_005_K5_ADMISSION_20260925.json",
+    "--admission-sha256",
+    "3da85b63cfb2ab340055a46750a6a2c872fff311bc19c97cee381a3686e32718",
+    "--control",
+    "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/layered-one-shot-20260925/control/control.json",
+    "--control-sha256",
+    "06ed2d4590fa6f30aebd930ab18708b27c716979349d12983281eea697457658"
+  ],
+  "T0": "2026-09-25T14:18:31.333313+00:00",
+  "swap_used_t0_mib": 1247.12,
+  "parent_pid": 85095,
+  "parent_start_identity": [
+    1790345911,
+    333582
+  ],
+  "terminal_branch": "parent_exited",
+  "exit_code": 0,
+  "T1": "2026-09-25T14:18:47.451614+00:00",
+  "final_sample": {
+    "utc": "2026-09-25T14:18:47.500449+00:00",
+    "pressure_level": 1,
+    "physical_free_bytes": 1788723200,
+    "swap_used_mib": 1247.12,
+    "swap_free_mib": 800.88,
+    "disk_free_bytes": 231979704320,
+    "owned_rss_bytes": 0,
+    "owned_processes": [],
+    "other_scorers": []
+  },
+  "outer_supervisor_wall_seconds": 16.21728954196442,
+  "finished_at": "2026-09-25T14:18:47.500713+00:00",
+  "observed_owned_pids": [
+    85095,
+    85105,
+    85747
+  ],
+  "resource_note": "1-second samples; not a hard peak guarantee; physical free and swap free observed only"
+}

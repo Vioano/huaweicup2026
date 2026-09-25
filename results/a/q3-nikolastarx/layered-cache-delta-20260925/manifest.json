@@ -1,0 +1,33 @@
+{
+  "old_path": "results/a/q3-nikolastarx/layered-one-shot-20260925/control/P3.json.gz",
+  "old_sha256": "161f6c00a3c406c3e11d9aead620c9652bdce4c8999ce1039c83000dd859f631",
+  "new_path": "results/a/q3-nikolastarx/layered-one-shot-20260925/run/p3.json.gz",
+  "new_sha256": "3c51fac6f14a7c2fdafad3eef6694fb8f38d473e00534c25cd4dadff13cfa0d8",
+  "schema_source": "data/raw/a/official/code/multicore_cut_evaluate_problem_3.py",
+  "schema_source_sha256": "eab1504dead881f4b67c0f0498cbc2dbbd9039dc3c9d198c6af58773c127eeb0",
+  "script_sha256": "a87e70ea3aecd4693e379632c02a0bca0dfb11d26bc9fda1909a9758455ff113",
+  "command": [
+    "python3",
+    "-B",
+    "results/a/q3-nikolastarx/layered-cache-delta-20260925/analyze.py",
+    "--manifest",
+    "results/a/q3-nikolastarx/layered-cache-delta-20260925/manifest.json"
+  ],
+  "timeout_seconds": 120,
+  "workers": 1,
+  "retries": 0,
+  "stop_conditions": [
+    "input identity/hash mismatch",
+    "unknown/incomplete event schema",
+    "event-byte totals mismatch"
+  ],
+  "calls": {
+    "candidate_construction": 0,
+    "Task": 0,
+    "Step": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "pipe_bound": 0
+  }
+}

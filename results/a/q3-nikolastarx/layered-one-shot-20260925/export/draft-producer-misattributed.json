@@ -1,0 +1,385 @@
+{
+  "schema_version": 1,
+  "submission_version": 1,
+  "records": [
+    {
+      "attempt_id": "nikolastarx-r9-layered-005-k5-p3",
+      "revision": 1,
+      "run_id": "q3-r9-layered-005-one-shot-20260925T141831Z",
+      "algorithm_id": "q3-r9-layered-diagnostic",
+      "algorithm_name": "Q3 R9 layered query-flow diagnostic",
+      "variant": "r9-layered-one-shot-fixed005-k5",
+      "solver_commit": "e9ff04c3019dedadd5b2ff71ecfdd57ac1aabe4a",
+      "parameters": {
+        "requested_cores": 5,
+        "candidate_count": 1,
+        "plan_sha256": "2885b28a512598e4bae525c7bf4b214ac9b2452de19425603fcdea2ae8e7038a",
+        "selection": "one previously constructed fixed plan; P2 conditional on P3 guard and M3 threshold"
+      },
+      "problem": "P3",
+      "case_id": "005",
+      "cores": 5,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 24522,
+        "solver_wall_seconds": null,
+        "evaluation_wall_seconds": 8.403244792018086,
+        "ddr_bytes": 1595646,
+        "extra_ddr_bytes": 1262232,
+        "spill_bytes": 0,
+        "cache_hit_rate": 0.2903191615995095
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "e9ff04c3019dedadd5b2ff71ecfdd57ac1aabe4a",
+        "entrypoint": "multicore_cut_evaluate_problem_3.evaluate_problem_3"
+      },
+      "identity": {
+        "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "2885b28a512598e4bae525c7bf4b214ac9b2452de19425603fcdea2ae8e7038a"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/q3-nikolastarx/layered-one-shot-20260925/candidate/case_005_multicore_res.json",
+          "sha256": "2885b28a512598e4bae525c7bf4b214ac9b2452de19425603fcdea2ae8e7038a"
+        },
+        "result": {
+          "path": "results/a/q3-nikolastarx/layered-one-shot-20260925/run/p3.json.gz",
+          "sha256": "3c51fac6f14a7c2fdafad3eef6694fb8f38d473e00534c25cd4dadff13cfa0d8"
+        },
+        "run": {
+          "path": "results/a/q3-nikolastarx/layered-one-shot-20260925/run/run.json",
+          "sha256": "d41e0f93d6481e50e967c81dbe3958d9ddd89f7dd06a8a82a62e83400cfd55de"
+        },
+        "trace": {
+          "path": "results/a/q3-nikolastarx/layered-one-shot-20260925/run/p3.worker.json",
+          "sha256": "5355c5dbb3d63d4b751d09c4b5d3d047d477501e8f16c1195cd7cf773e119a11"
+        },
+        "log": {
+          "path": "results/a/q3-nikolastarx/layered-one-shot-20260925/run/p3.stdout.txt",
+          "sha256": "8f2a1474f368d859589a201ae02fd2ff0fb2a1dacd682faf4f59a0c6ae93ff8c"
+        },
+        "manifest": {
+          "path": "results/a/q3-nikolastarx/layered-one-shot-20260925/export/evidence-manifest.json",
+          "sha256": "9abf9acb95f7b2522516a36b149f3a8d43113ed860a3f211deade85c63e88c47"
+        }
+      },
+      "runtime_id": "macos-arm64-local-shared-48GiB",
+      "observed_at": "2026-09-25T14:18:31.552744Z",
+      "timing": {
+        "solver_includes_evaluation": null,
+        "evaluation_precision": "Worker diagnostic wall includes official E0 plus startup, profile observer, prepared capture and guard for P3; not E0-only.",
+        "utc": "Original worker UTC timestamps; diagnostic wall measured by monotonic clock."
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-a5bdb19389ee43d686b7976d3bcdf766",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "e9ff04c3019dedadd5b2ff71ecfdd57ac1aabe4a",
+            "path": "src/q3/layered_query_flow.py",
+            "entrypoint": "src.q3.layered_query_flow.construct_layered"
+          },
+          "authors": [
+            "nikolastarx"
+          ],
+          "method": "R9 layered query-flow fixed plan constructed before this isolated diagnostic; no integrated solver run or full-matrix claim.",
+          "references": [],
+          "upstream": [],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "e9ff04c3019dedadd5b2ff71ecfdd57ac1aabe4a",
+            "path": "src/q3/layered_query_flow_probe.py",
+            "entrypoint": "src.q3.layered_query_flow_probe.main"
+          },
+          "argv": [
+            "python3",
+            "-B",
+            "-m",
+            "src.q3.layered_query_flow_probe",
+            "results/a/q3-nikolastarx/layered-one-shot-20260925/candidate",
+            "results/a/q3-nikolastarx/layered-one-shot-20260925/run",
+            "--source",
+            "e9ff04c3019dedadd5b2ff71ecfdd57ac1aabe4a",
+            "--plan-sha256",
+            "2885b28a512598e4bae525c7bf4b214ac9b2452de19425603fcdea2ae8e7038a",
+            "--admission-file",
+            "<redacted admission path>",
+            "--admission-sha256",
+            "3da85b63cfb2ab340055a46750a6a2c872fff311bc19c97cee381a3686e32718",
+            "--control",
+            "results/a/q3-nikolastarx/layered-one-shot-20260925/control/control.json",
+            "--control-sha256",
+            "06ed2d4590fa6f30aebd930ab18708b27c716979349d12983281eea697457658"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS-27.0-arm64-arm-64bit-Mach-O",
+          "cpu": null,
+          "gpu": "none",
+          "ram_bytes": 51539607552,
+          "python": "3.14.5 (main, May 10 2026, 10:21:34) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "dependencies": "uv.lock sha256:7b03fee57044ac272d8895533cbdca6d70a29d2da955f98a5552e72ef944fdc4",
+          "threads": null,
+          "workers": 1,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": "2026-09-25T14:18:31.552744Z",
+          "finished_at": "2026-09-25T14:18:39.961387Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": null,
+          "evaluation_scope": "One fixed-plan official E0 phase; reported worker diagnostic wall also includes wrapper/profiling, and P3 prepared capture and guard.",
+          "budget": {
+            "wall_seconds": 600,
+            "candidate_limit": 1,
+            "stop_reason": "One P3 and conditional same-plan P2 completed; zero retries; candidate rejected by G threshold."
+          },
+          "calls": {
+            "solver": 0,
+            "E0": 1,
+            "E1": 0,
+            "E2": 0
+          },
+          "offline_costs": "Plan was constructed in a preceding static phase; no end-to-end cold solver time measured for this one-shot diagnostic.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.cpu": "CPU model absent from retained receipt (18 logical CPUs recorded).",
+          "provenance.environment.threads": "Thread count not recorded.",
+          "provenance.environment.peak_rss_bytes": "One-second supervisor sampling is not a hard process peak.",
+          "provenance.measurement.seed": "Deterministic fixed plan; no random seed.",
+          "provenance.measurement.cold_start": "Cold/warm state not recorded.",
+          "provenance.measurement.solver_scope": "End-to-end constructor timing absent."
+        }
+      },
+      "notes": [
+        "One case 005/K5 R9 layered diagnostic, not an integrated uniform solver or complete 500-cell run.",
+        "Official P3 E0 result is complete and legal; run.accepted=false is a separate local two-metric gate: M3/M2 improved versus old, but P2/P3 cache gain declined.",
+        "worker diagnostic_wall_seconds includes P3 prepared audit and must not be compared as isolated official evaluator latency or solver runtime.",
+        "Guard step3_local_memory_peaks are prepared local Step3 values, not independently observed final multicore runtime peaks.",
+        "The original plan, results, full run/worker/resource receipts, reservation/claim, prepared capture, and raw stdout/stderr remain cited unchanged.",
+        "Official single-core baseline M=95618 is reused from the preexisting frozen E0 original; no baseline scoring in this export.",
+        "No publication, board import, independent replay, or algorithm acceptance is claimed."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/blob/e9ff04c3019dedadd5b2ff71ecfdd57ac1aabe4a/src/q3/layered_query_flow.py",
+      "baseline": {
+        "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/benchmark-board/official-singlecore-20260924/005/result.json.gz",
+          "sha256": "3efb00f0d7750733b54df72ce2acde81b6bbc510d92771f6414ff985864340a4"
+        }
+      },
+      "cache_pair": {
+        "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "2885b28a512598e4bae525c7bf4b214ac9b2452de19425603fcdea2ae8e7038a",
+        "cores": 5,
+        "route": "E0",
+        "result": {
+          "path": "results/a/q3-nikolastarx/layered-one-shot-20260925/run/p2.json.gz",
+          "sha256": "d2ae7b1b0fbdc08df0a1bb156d06d224b07d2e9e22258346a8ea4dfcf82ce1f1"
+        }
+      }
+    },
+    {
+      "attempt_id": "nikolastarx-r9-layered-005-k5-p2",
+      "revision": 1,
+      "run_id": "q3-r9-layered-005-one-shot-20260925T141831Z",
+      "algorithm_id": "q3-r9-layered-diagnostic",
+      "algorithm_name": "Q3 R9 layered query-flow diagnostic",
+      "variant": "r9-layered-one-shot-fixed005-k5",
+      "solver_commit": "e9ff04c3019dedadd5b2ff71ecfdd57ac1aabe4a",
+      "parameters": {
+        "requested_cores": 5,
+        "candidate_count": 1,
+        "plan_sha256": "2885b28a512598e4bae525c7bf4b214ac9b2452de19425603fcdea2ae8e7038a",
+        "selection": "one previously constructed fixed plan; P2 conditional on P3 guard and M3 threshold"
+      },
+      "problem": "P2",
+      "case_id": "005",
+      "cores": 5,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 29026,
+        "solver_wall_seconds": null,
+        "evaluation_wall_seconds": 7.181347334000748,
+        "ddr_bytes": 1595646,
+        "extra_ddr_bytes": 1262232,
+        "spill_bytes": 0,
+        "cache_hit_rate": null
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "e9ff04c3019dedadd5b2ff71ecfdd57ac1aabe4a",
+        "entrypoint": "multicore_cut_evaluate_problem_2.evaluate_scene_b"
+      },
+      "identity": {
+        "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "2885b28a512598e4bae525c7bf4b214ac9b2452de19425603fcdea2ae8e7038a"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/q3-nikolastarx/layered-one-shot-20260925/candidate/case_005_multicore_res.json",
+          "sha256": "2885b28a512598e4bae525c7bf4b214ac9b2452de19425603fcdea2ae8e7038a"
+        },
+        "result": {
+          "path": "results/a/q3-nikolastarx/layered-one-shot-20260925/run/p2.json.gz",
+          "sha256": "d2ae7b1b0fbdc08df0a1bb156d06d224b07d2e9e22258346a8ea4dfcf82ce1f1"
+        },
+        "run": {
+          "path": "results/a/q3-nikolastarx/layered-one-shot-20260925/run/run.json",
+          "sha256": "d41e0f93d6481e50e967c81dbe3958d9ddd89f7dd06a8a82a62e83400cfd55de"
+        },
+        "trace": {
+          "path": "results/a/q3-nikolastarx/layered-one-shot-20260925/run/p2.worker.json",
+          "sha256": "f4823da4ec0c95f79cf6216794bf59b25eb23da4dbb216fd69e0c3c52c7d9d2e"
+        },
+        "log": {
+          "path": "results/a/q3-nikolastarx/layered-one-shot-20260925/run/p2.stdout.txt",
+          "sha256": "7e8f903c4cfbe2eff6bfa180b616967491b5e855024ceb43fbe9d3293bb3ee7a"
+        },
+        "manifest": {
+          "path": "results/a/q3-nikolastarx/layered-one-shot-20260925/export/evidence-manifest.json",
+          "sha256": "9abf9acb95f7b2522516a36b149f3a8d43113ed860a3f211deade85c63e88c47"
+        }
+      },
+      "runtime_id": "macos-arm64-local-shared-48GiB",
+      "observed_at": "2026-09-25T14:18:40.143286Z",
+      "timing": {
+        "solver_includes_evaluation": null,
+        "evaluation_precision": "Worker diagnostic wall includes official E0 plus startup, profile observer, prepared capture and guard for P3; not E0-only.",
+        "utc": "Original worker UTC timestamps; diagnostic wall measured by monotonic clock."
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-a5bdb19389ee43d686b7976d3bcdf766",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "e9ff04c3019dedadd5b2ff71ecfdd57ac1aabe4a",
+            "path": "src/q3/layered_query_flow.py",
+            "entrypoint": "src.q3.layered_query_flow.construct_layered"
+          },
+          "authors": [
+            "nikolastarx"
+          ],
+          "method": "R9 layered query-flow fixed plan constructed before this isolated diagnostic; no integrated solver run or full-matrix claim.",
+          "references": [],
+          "upstream": [],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "e9ff04c3019dedadd5b2ff71ecfdd57ac1aabe4a",
+            "path": "src/q3/layered_query_flow_probe.py",
+            "entrypoint": "src.q3.layered_query_flow_probe.main"
+          },
+          "argv": [
+            "python3",
+            "-B",
+            "-m",
+            "src.q3.layered_query_flow_probe",
+            "results/a/q3-nikolastarx/layered-one-shot-20260925/candidate",
+            "results/a/q3-nikolastarx/layered-one-shot-20260925/run",
+            "--source",
+            "e9ff04c3019dedadd5b2ff71ecfdd57ac1aabe4a",
+            "--plan-sha256",
+            "2885b28a512598e4bae525c7bf4b214ac9b2452de19425603fcdea2ae8e7038a",
+            "--admission-file",
+            "<redacted admission path>",
+            "--admission-sha256",
+            "3da85b63cfb2ab340055a46750a6a2c872fff311bc19c97cee381a3686e32718",
+            "--control",
+            "results/a/q3-nikolastarx/layered-one-shot-20260925/control/control.json",
+            "--control-sha256",
+            "06ed2d4590fa6f30aebd930ab18708b27c716979349d12983281eea697457658"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS-27.0-arm64-arm-64bit-Mach-O",
+          "cpu": null,
+          "gpu": "none",
+          "ram_bytes": 51539607552,
+          "python": "3.14.5 (main, May 10 2026, 10:21:34) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "dependencies": "uv.lock sha256:7b03fee57044ac272d8895533cbdca6d70a29d2da955f98a5552e72ef944fdc4",
+          "threads": null,
+          "workers": 1,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": "2026-09-25T14:18:40.143286Z",
+          "finished_at": "2026-09-25T14:18:47.330333Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": null,
+          "evaluation_scope": "One fixed-plan official E0 phase; reported worker diagnostic wall also includes wrapper/profiling, and P3 prepared capture and guard.",
+          "budget": {
+            "wall_seconds": 600,
+            "candidate_limit": 1,
+            "stop_reason": "One P3 and conditional same-plan P2 completed; zero retries; candidate rejected by G threshold."
+          },
+          "calls": {
+            "solver": 0,
+            "E0": 1,
+            "E1": 0,
+            "E2": 0
+          },
+          "offline_costs": "Plan was constructed in a preceding static phase; no end-to-end cold solver time measured for this one-shot diagnostic.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.cpu": "CPU model absent from retained receipt (18 logical CPUs recorded).",
+          "provenance.environment.threads": "Thread count not recorded.",
+          "provenance.environment.peak_rss_bytes": "One-second supervisor sampling is not a hard process peak.",
+          "provenance.measurement.seed": "Deterministic fixed plan; no random seed.",
+          "provenance.measurement.cold_start": "Cold/warm state not recorded.",
+          "provenance.measurement.solver_scope": "End-to-end constructor timing absent."
+        }
+      },
+      "notes": [
+        "One case 005/K5 R9 layered diagnostic, not an integrated uniform solver or complete 500-cell run.",
+        "Official P2 E0 result is complete and legal; run.accepted=false is a separate local two-metric gate: M3/M2 improved versus old, but P2/P3 cache gain declined.",
+        "worker diagnostic_wall_seconds includes P3 prepared audit and must not be compared as isolated official evaluator latency or solver runtime.",
+        "Guard step3_local_memory_peaks are prepared local Step3 values, not independently observed final multicore runtime peaks.",
+        "The original plan, results, full run/worker/resource receipts, reservation/claim, prepared capture, and raw stdout/stderr remain cited unchanged.",
+        "Official single-core baseline M=95618 is reused from the preexisting frozen E0 original; no baseline scoring in this export.",
+        "No publication, board import, independent replay, or algorithm acceptance is claimed."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/blob/e9ff04c3019dedadd5b2ff71ecfdd57ac1aabe4a/src/q3/layered_query_flow.py",
+      "baseline": {
+        "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/benchmark-board/official-singlecore-20260924/005/result.json.gz",
+          "sha256": "3efb00f0d7750733b54df72ce2acde81b6bbc510d92771f6414ff985864340a4"
+        }
+      },
+      "cache_pair": null
+    }
+  ]
+}
