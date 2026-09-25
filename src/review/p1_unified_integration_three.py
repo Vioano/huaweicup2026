@@ -260,6 +260,23 @@ def run(manifest_path, output, expected_head, admission, *,
             if not all((e0dir / name).is_file()
                        for name in ("result.json", "trace.json", "official.log")):
                 raise RuntimeError(f"{case} E0 original artifacts missing")
+            official_result = json.loads((e0dir / "result.json").read_text())
+            movement = official_result.get("data_movement_bytes")
+            makespan = official_result.get("makespan")
+            copies = movement.get("scheduled_copy_bytes") if isinstance(movement, dict) else None
+            selected_objective = entry.get("selected_objective")
+            if (official_result.get("scene") != "A"
+                    or type(official_result.get("num_cores")) is not int
+                    or official_result["num_cores"] != 5
+                    or type(makespan) is not int or makespan <= 0
+                    or type(copies) is not int or copies < 0
+                    or not isinstance(selected_objective, list)
+                    or len(selected_objective) != 2
+                    or type(selected_objective[0]) is not int
+                    or type(selected_objective[1]) is not int
+                    or selected_objective != [makespan, copies]):
+                raise RuntimeError(f"{case} official E0 identity/objective mismatch")
+            entry["official_objective"] = [makespan, copies]
             entry["official_artifact_hashes"] = supervisor.artifact_hashes(e0dir)
             entry["status"] = "complete"
         result["status"] = "complete"

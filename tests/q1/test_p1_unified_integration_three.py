@@ -63,7 +63,9 @@ class RunnerTests(unittest.TestCase):
                                         "core_schedules": [[], [], [], [], []]}))
             (out / "diagnostics.json").write_text(json.dumps(diagnostics(runner.file_sha(plan))))
         else:
-            (out / "e0" / "result.json").write_text("{}")
+            (out / "e0" / "result.json").write_text(json.dumps({
+                "scene": "A", "num_cores": 5, "makespan": 100,
+                "data_movement_bytes": {"scheduled_copy_bytes": 20}}))
             (out / "e0" / "trace.json").write_text("{}")
             (out / "e0" / "official.log").write_text("")
         (out / f"{name}.stdout.raw").write_bytes(b"stdout")
@@ -202,6 +204,24 @@ class RunnerTests(unittest.TestCase):
                 runner.run(self.manifest, self.base / "out", "head", self.admission,
                            stage_fn=self.stage, guard=Guard(), clock=lambda: 0.0)
         self.assertEqual(len(self.stages), 6)
+
+    def test_official_e0_mismatch_stops_after_first_scored_cell(self):
+        def wrong_e0(name, argv, cap, out, check):
+            stage = self.stage(name, argv, cap, out, check)
+            if name == "E0":
+                path = out / "e0" / "result.json"
+                record = json.loads(path.read_text())
+                record["makespan"] = 101
+                path.write_text(json.dumps(record))
+            return stage
+        result = self.execute(stage=wrong_e0)
+        self.assertEqual(result["status"], "stopped")
+        self.assertEqual(result["calls"]["solver_process"], 1)
+        self.assertEqual(result["calls"]["E0_process"], 1)
+        self.assertEqual(result["calls"]["online_E1_exact"], 3)
+        self.assertEqual([cell["status"] for cell in result["cells"]],
+                         ["failed", "not-run", "not-run"])
+        self.assertEqual(self.stages, [("085", "solver", 300.0), ("085", "E0", 120.0)])
 
 
 if __name__ == "__main__":
