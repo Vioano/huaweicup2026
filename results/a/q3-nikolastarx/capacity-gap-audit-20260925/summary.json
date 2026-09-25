@@ -1,0 +1,80 @@
+{
+  "plan_sha256": "e959272c4330eb75e524190eadaee382c85263896c82dfc910ecffc31bb40c44",
+  "result_sha256": "506a8d65c65b7bcd2957e2b20f31ba117fb3a244b9c366ff2342c421df626cd5",
+  "components": 11,
+  "component_sizes": [
+    124,
+    124,
+    124,
+    124,
+    124,
+    124,
+    124,
+    124,
+    124,
+    124,
+    124
+  ],
+  "first_component_min_op_id": 52,
+  "windows": [
+    {
+      "core": 0,
+      "first_job_compute_window": [
+        79,
+        1759
+      ],
+      "window_span_cycles": 1680,
+      "copy_in_interval_intersection_cycles": 460,
+      "copy_in_reported_duration_wholly_inside": 460,
+      "copy_in_reported_duration_all": 539
+    },
+    {
+      "core": 1,
+      "first_job_compute_window": [
+        2295,
+        6177
+      ],
+      "window_span_cycles": 3882,
+      "copy_in_interval_intersection_cycles": 3768,
+      "copy_in_reported_duration_wholly_inside": 3768,
+      "copy_in_reported_duration_all": 4162
+    },
+    {
+      "core": 2,
+      "first_job_compute_window": [
+        6683,
+        16085
+      ],
+      "window_span_cycles": 9402,
+      "copy_in_interval_intersection_cycles": 9276,
+      "copy_in_reported_duration_wholly_inside": 9276,
+      "copy_in_reported_duration_all": 9333
+    },
+    {
+      "core": 3,
+      "first_job_compute_window": [
+        16591,
+        20406
+      ],
+      "window_span_cycles": 3815,
+      "copy_in_interval_intersection_cycles": 3408,
+      "copy_in_reported_duration_wholly_inside": 3408,
+      "copy_in_reported_duration_all": 3571
+    },
+    {
+      "core": 4,
+      "first_job_compute_window": [
+        20924,
+        22515
+      ],
+      "window_span_cycles": 1591,
+      "copy_in_interval_intersection_cycles": 235,
+      "copy_in_reported_duration_wholly_inside": 215,
+      "copy_in_reported_duration_all": 796
+    }
+  ],
+  "first_output_end": 22565,
+  "final_makespan": 38390,
+  "tail_after_first_output": 15825,
+  "duration_definition": "COPY_IN interval intersection measures overlap with each first-job compute window; saved op duration is elapsed op time, not exclusive critical-path contribution"
+}

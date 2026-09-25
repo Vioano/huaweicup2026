@@ -1,0 +1,96 @@
+{
+  "status": "static_validated_not_officially_evaluated",
+  "source_sha256": {
+    "src/q3/pipeline_startup.py": "031a7216c81584aef4a7317e45eaac2ab67588b93c02e2263e36b12f01c48e65",
+    "tests/q3/test_pipeline_startup.py": "90b826c05a2a4d0637e73d8baab16e8354a74d68dd0472b458d40f175a97eff0"
+  },
+  "validation": {
+    "command": "uv run --locked --no-sync python -m unittest tests.q3.test_pipeline_startup -v",
+    "test_methods": 4,
+    "passed": true,
+    "reported_seconds_final": 0.262,
+    "execution_count": 2,
+    "repeat_reason": "removed floating metadata before final static recheck",
+    "verification": "delegated Sol execution; root reviewed code, test scope and proof; no separate root rerun"
+  },
+  "calls": {
+    "E0": 0,
+    "P2": 0,
+    "solver": 0,
+    "Task": 0,
+    "Step3": 0
+  },
+  "observed_graphs": [
+    "044",
+    "046"
+  ],
+  "not_holdout": true,
+  "candidates": [
+    {
+      "case": "044",
+      "cores": 5,
+      "cuts": [
+        0,
+        24,
+        51,
+        68,
+        101,
+        124
+      ],
+      "compute": [
+        1680,
+        1717,
+        1120,
+        1657,
+        1498
+      ],
+      "shared_bytes": [
+        6624,
+        214272,
+        516096,
+        187392,
+        6016
+      ],
+      "proxy_scaled": 2138640,
+      "frontier": 61,
+      "states": 7823,
+      "transitions": 155220,
+      "previous_capacity_proxy_scaled": 2142776,
+      "proxy_reduction_cycles": 68.93333333333334,
+      "constant_cross_delay_cycles": 2000
+    },
+    {
+      "case": "046",
+      "cores": 5,
+      "cuts": [
+        0,
+        24,
+        51,
+        65,
+        95,
+        124
+      ],
+      "compute": [
+        6288,
+        6382,
+        3000,
+        6372,
+        6414
+      ],
+      "shared_bytes": [
+        6624,
+        214272,
+        368640,
+        329216,
+        11648
+      ],
+      "proxy_scaled": 4589880,
+      "frontier": 18,
+      "states": 3274,
+      "transitions": 58371,
+      "previous_capacity_proxy_scaled": 4644456,
+      "proxy_reduction_cycles": 909.6,
+      "constant_cross_delay_cycles": 2000
+    }
+  ]
+}

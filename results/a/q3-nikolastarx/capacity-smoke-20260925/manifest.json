@@ -1,0 +1,64 @@
+{
+  "schema": "q3-feedback-benchmark-v1",
+  "run_id": "q3-capacity-smoke-20260925-s3172",
+  "stage_id": "two-paths",
+  "producer_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+  "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+  "solver_commit": "da1c9e86f9353ad4ca1bb3b8c720cef9b5043b49",
+  "solver_module": "src.q3.capacity_solve",
+  "algorithm": {
+    "id": "q3-capacity-structure",
+    "name": "统一结构构造与L1容量约束流水线",
+    "authors": [
+      "NikolaStarx",
+      "yuanzhifang30-sudo"
+    ],
+    "method": "Fresh complete forest policy followed by one common-input-capacity contiguous-stage DP proposal. Skip unsupported, duplicate or certified bound-pruned plans; accept only a strict official Makespan improvement. Maximum four online E0 calls. No case-ID routing or historical score lookup.",
+    "references": [
+      "https://github.com/huaweibei123/huaweicup2026/issues/51"
+    ],
+    "upstream": [
+      {
+        "repo": "huaweibei123/huaweicup2026",
+        "commit": "da1c9e86f9353ad4ca1bb3b8c720cef9b5043b49",
+        "path": "src/q3/forest_solve.py",
+        "entrypoint": "src.q3.forest_solve.evaluate_candidates"
+      }
+    ]
+  },
+  "runtime_id": "q3-local-capacity-smoke-20260925",
+  "budget": {
+    "max_e0_calls": 8,
+    "total_wall_seconds": 180,
+    "per_job_seconds": 60
+  },
+  "jobs": [
+    {
+      "case_id": "044",
+      "cores": 5,
+      "variant": "unified-capacity-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 4,
+        "capacity_candidate_limit": 1,
+        "workers": 1,
+        "selection": "strictly lower official Makespan than fresh forest"
+      },
+      "e0_call_limit": 4
+    },
+    {
+      "case_id": "001",
+      "cores": 5,
+      "variant": "unified-capacity-e0",
+      "solver_args": [],
+      "parameters": {
+        "candidate_limit": 4,
+        "capacity_candidate_limit": 1,
+        "workers": 1,
+        "selection": "strictly lower official Makespan than fresh forest"
+      },
+      "e0_call_limit": 4
+    }
+  ],
+  "offline_costs": "Six injected policy tests and capacity static coverage preceded this smoke, zero E0. Earlier two fixed-plan mechanism evaluations (044,046) were separate; no historical results substitute these fresh solver calls. No training or compilation. Both cases are previously observed development graphs."
+}
