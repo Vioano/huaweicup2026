@@ -1,0 +1,167 @@
+{
+  "tables": [
+    [
+      [
+        "五核原图",
+        "已有官方方案的计算＋FIFO＋500界",
+        "新构造的计算＋FIFO＋500界",
+        "新构造同词零延迟界"
+      ],
+      [
+        "071",
+        "5441",
+        "4538",
+        "4215"
+      ],
+      [
+        "069",
+        "6232",
+        "5846",
+        "5846"
+      ]
+    ],
+    [
+      [
+        "原图结构",
+        "071",
+        "069"
+      ],
+      [
+        "私有查询流",
+        "5",
+        "6"
+      ],
+      [
+        "Attention row",
+        "10",
+        "12"
+      ],
+      [
+        "共享上游参数计算节点",
+        "6",
+        "6"
+      ],
+      [
+        "私有前处理及 Q/K/V 投影节点",
+        "80",
+        "96"
+      ],
+      [
+        "Attention row 内节点",
+        "560",
+        "816"
+      ],
+      [
+        "私有输出汇合、残差、归一化、FFN节点",
+        "95",
+        "114"
+      ]
+    ],
+    [
+      [
+        "原图",
+        "关键跨核边",
+        "在新分解中的关系"
+      ],
+      [
+        "071",
+        "78→80；91→105",
+        "同一查询流的前处理／投影"
+      ],
+      [
+        "071",
+        "391→460",
+        "该查询流自己的 K 投影到其 row"
+      ],
+      [
+        "071",
+        "770→771",
+        "同一查询流的归一化到 FFN"
+      ],
+      [
+        "069",
+        "90→91；92→543",
+        "同一查询流的前处理／投影"
+      ],
+      [
+        "069",
+        "1050→1052；1062→1063",
+        "同一查询流的输出汇合／FFN"
+      ]
+    ],
+    [
+      [
+        "变化",
+        "计算模型结束时间"
+      ],
+      [
+        "初始方案",
+        "1202"
+      ],
+      [
+        "只迁 U 到核0",
+        "1502"
+      ],
+      [
+        "只迁 V 到核0",
+        "1202"
+      ],
+      [
+        "U、V共同迁到核0",
+        "502"
+      ]
+    ],
+    [
+      [
+        "静态候选",
+        "最大 L1 全支持",
+        "最大 UB 全支持",
+        "固定容量"
+      ],
+      [
+        "071",
+        "108672 B",
+        "83718 B",
+        "L1 524288；UB 131072"
+      ],
+      [
+        "069",
+        "131968 B",
+        "124806 B",
+        "同上"
+      ]
+    ],
+    [
+      [
+        "竞争解释",
+        "最小需要字段"
+      ],
+      [
+        "计算联合归核没真正落实",
+        "原 compute 的 owner、M/V 顺序和起止时间"
+      ],
+      [
+        "静态容量证书实现有误",
+        "Task tensor 集、spill/backing/incarnation、全部 memory_dependencies"
+      ],
+      [
+        "计算收益被搬运吃掉",
+        "COPY 的 logical key、源/目的 Task、FIFO 前驱、起止时间、独占参考工作、hit/miss；最终实际关键路径"
+      ]
+    ]
+  ],
+  "formulas_ax_lines": [
+    "\t\t\t\t\t\t1076 container S\\to B,\\qquad S\\to U\\to V\\to Z,\\qquad B\\to Z. \\tag{R8.1}",
+    "\t\t\t\t\t\t1114 container T_{\\mathrm{old}}=2+2\\delta+a+b,\\qquad T_{\\mathrm{joint}}=2+t+a+b, \\qquad 0<t<2\\delta\\Longrightarrow T_{\\mathrm{joint}}<T_{\\mathrm{old}}. \\tag{R8.2}",
+    "\t\t\t\t\t\t1122 container \\mathcal S,\\qquad \\mathcal P_i,\\qquad \\mathcal A_i,\\qquad \\mathcal O_i. \\tag{R8.3}",
+    "\t\t\t\t\t\t1148 container B(r,k)= \\begin{cases} 1,&r\\le k,\\\\[1mm] \\binom r2,&r=k+1. \\end{cases} \\tag{R8.4}",
+    "\t\t\t\t\t\t1156 container \\mathcal S\\ \\prec\\ \\bigcup_i\\mathcal P_i\\ \\prec\\ \\bigcup_i\\mathcal A_i\\ \\prec\\ \\bigcup_i\\mathcal O_i. \\tag{R8.5}",
+    "\t\t\t\t\t\t1160 container \\begin{aligned} r_u&= \\max_{t\\in I(u)} \\left[ F_{\\operatorname{prod}(t)} +\\delta\\mathbf1_{\\operatorname{owner}(\\operatorname{prod}(t)) \\ne\\operatorname{owner}(u)} \\right],\\\\ S_u&=\\max\\{r_u,A_{\\operatorname{owner}(u),p_u}\\},\\\\ F_u&=S_u+w_u. \\end{aligned} \\tag{R8.6}",
+    "\t\t\t\t\t\t1179 container (A_0,A_1)=(x,W-x). \\tag{R8.7}",
+    "\t\t\t\t\t\t1204 container T= O\\!\\left( B(r,k)\\bigl((N+E)\\log N+kN\\bigr) \\right), \\qquad S=O(N+E). \\tag{R8.8}",
+    "\t\t\t\t\t\t1218 container \\boxed{ \\text{任意增强路径的跨核计算边数}\\le2, \\qquad L_\\delta\\le L_0+2\\delta. } \\tag{R8.9}",
+    "\t\t\t\t\t\t1225 container U_{c,P} = \\sum_{\\substack{t\\text{ 被核 }c\\text{ 的原计算触及}\\\\ \\operatorname{localPos}(t)=P}} s_t. \\tag{R8.10}",
+    "\t\t\t\t\t\t1229 container \\boxed{U_{c,P}\\le C_P\\quad\\text{对所有核和池成立},} \\tag{R8.11}",
+    "\t\t\t\t\t\t1291 container L_{0,\\mathrm{new}}=5846>5166=L_{0,\\mathrm{old}}, \\qquad L_{500,\\mathrm{new}}=5846<6232=L_{500,\\mathrm{old}}. \\tag{R8.12}"
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "scope": "saved-byte/hash/numeric audit; zero new official calls, no independent rerun",
+  "source_commit": "817e9e399f5efaf66cea6ddc495fe444950e43f2",
+  "artifact_sha256": "02fa71024fcc6fe35071c7dd9e8a5516caa55609bcbb8fa930bcc661aa114898",
+  "calls": {
+    "P3": 1,
+    "P2": 2,
+    "Step1": 20,
+    "Step2": 20,
+    "prepare_Step3": 20,
+    "step3_simulation": 15,
+    "diagnostic_Task_prepare": 1
+  },
+  "prepare_dag": {
+    "ops": 1678,
+    "edges": 3992
+  },
+  "control_M": 38024,
+  "candidate_M": 37060,
+  "cycles_saved": 964,
+  "relative_cycle_reduction": 0.025352409004839038,
+  "candidate_G": 1.0,
+  "control_G": 1.0,
+  "unchanged_data_movement": {
+    "original_graph_copy_bytes": 975456,
+    "scheduled_copy_bytes": 1116256,
+    "added_copy_bytes": 140800,
+    "partition_added_copy_bytes": 140800,
+    "spill_added_copy_bytes": 0
+  },
+  "unchanged_cache_stats": {
+    "copy_in_hits": 11,
+    "copy_in_misses": 171,
+    "hit_bytes": 11264,
+    "miss_bytes": 1012064,
+    "hits": 11,
+    "accesses": 182,
+    "hit_rate": 0.011007223490415585
+  },
+  "per_core": [
+    {
+      "core": 0,
+      "control_first_compute": 200,
+      "candidate_first_compute": 200,
+      "control_end": 18436,
+      "candidate_end": 18436
+    },
+    {
+      "core": 1,
+      "control_first_compute": 11387,
+      "candidate_first_compute": 11387,
+      "control_end": 30277,
+      "candidate_end": 30277
+    },
+    {
+      "core": 2,
+      "control_first_compute": 16850,
+      "candidate_first_compute": 15512,
+      "control_end": 31903,
+      "candidate_end": 31903
+    },
+    {
+      "core": 3,
+      "control_first_compute": 18476,
+      "candidate_first_compute": 17512,
+      "control_end": 35626,
+      "candidate_end": 34662
+    },
+    {
+      "core": 4,
+      "control_first_compute": 20565,
+      "candidate_first_compute": 19601,
+      "control_end": 38024,
+      "candidate_end": 37060
+    }
+  ],
+  "host_wall_seconds": 57.15144412498921,
+  "solver_wall_seconds": null,
+  "full500_result": false
+}

@@ -1,0 +1,117 @@
+{
+  "budget": {
+    "max_E0": 3,
+    "max_P2": 2,
+    "max_P3": 1,
+    "max_prepare": 1,
+    "memory_limit_bytes": 536870912,
+    "per_phase_seconds": 90,
+    "retries": 0,
+    "total_seconds": 600,
+    "workers": 1
+  },
+  "candidate_G": 1.0,
+  "candidate_M": 37060,
+  "control_G": 1.0,
+  "control_M": 38024,
+  "controller_commit": "f4bc0b983f247e3395394e9b4ac25b25fd210d0b",
+  "controller_host_head": "ff6e16ea8fbc2af90417aa045c457f37f6e167d7",
+  "controller_script_sha256": "f9a2d7c24af406618c3a578ccae5e6323907cd74ca6acba76deb1c050bf96796",
+  "controller_t0_ready_observed_at": "2026-09-25T06:08:27Z",
+  "controller_wall_seconds": 57.15144412498921,
+  "environment": {
+    "cpu_count": 2,
+    "python": "3.12.13 (main, May 10 2026, 19:30:01) [Clang 22.1.3 ]",
+    "uname": [
+      "Linux",
+      "01ebc83c1833",
+      "6.6.122+",
+      "#1 SMP Thu Apr 30 18:17:14 UTC 2026",
+      "x86_64"
+    ]
+  },
+  "finished_at": "2026-09-25T06:09:14.537610Z",
+  "job_script_sha256": "6c096a4b09e08f34da5cabaac2b474d2aaa7920859d483bcb476ef758e8e47d3",
+  "manifest_sha256": "b36ef3ae7b974b139d9f7d5969a27df7868ebfba9d69818d26055bc83bd310a4",
+  "official_code_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+  "package_sha256": "5b293299544502de4c5aa2569d55ebd768262d5462ea54f4f68092749445c6f7",
+  "phase_ledger": [
+    {
+      "exit_code": 0,
+      "phase": "prepare",
+      "stop_reason": null,
+      "wall_seconds": 7.925706724999998
+    },
+    {
+      "exit_code": 0,
+      "phase": "candidate-p3",
+      "stop_reason": null,
+      "wall_seconds": 2.739182925999984
+    },
+    {
+      "exit_code": 0,
+      "phase": "candidate-p2",
+      "stop_reason": null,
+      "wall_seconds": 1.7527167739999925
+    },
+    {
+      "exit_code": 0,
+      "phase": "control-p2",
+      "stop_reason": null,
+      "wall_seconds": 1.7487105679999786
+    }
+  ],
+  "prepare_counts": {
+    "Step1": 5,
+    "Step2": 5,
+    "Step3": 5,
+    "Task": 1
+  },
+  "privacy_note": "Local admission reference omitted; original run receipts remain in the retained evidence archive.",
+  "schema": "q3-partial-preload-public-run-v1",
+  "score_counts": {
+    "candidate-p2": {
+      "P2": 1,
+      "P3": 0,
+      "Step1": 5,
+      "Step2": 5,
+      "prepare_Step3": 5,
+      "step3_simulation": 5
+    },
+    "candidate-p3": {
+      "P2": 0,
+      "P3": 1,
+      "Step1": 5,
+      "Step2": 5,
+      "prepare_Step3": 5,
+      "step3_simulation": 5
+    },
+    "control-p2": {
+      "P2": 1,
+      "P3": 0,
+      "Step1": 5,
+      "Step2": 5,
+      "prepare_Step3": 5,
+      "step3_simulation": 5
+    }
+  },
+  "solver_wall_seconds": null,
+  "source_commit": "817e9e399f5efaf66cea6ddc495fe444950e43f2",
+  "source_evidence_sha256": "02fa71024fcc6fe35071c7dd9e8a5516caa55609bcbb8fa930bcc661aa114898",
+  "started_at": "2026-09-25T06:09:00.308932Z",
+  "status": "complete",
+  "t0_preflight_utc": "2026-09-25T06:08:16.647041+00:00",
+  "terminal_state": {
+    "controller_status": "remote_command_completed",
+    "sessions_after": {
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "[colab] No active sessions found on server."
+    },
+    "stop_confirmation": "confirmed_empty",
+    "stop_exit_code": 0,
+    "watchdog_status": "disarmed_by_confirmed_parent"
+  },
+  "timing_scope": "diagnostic preparation/scoring; solver_wall_seconds unknown",
+  "watchdog_script_sha256": "6148a51304f12a0309e8f54ab12c55ec3ab6ebb242e7d2c853168884e2a0aff1"
+}
