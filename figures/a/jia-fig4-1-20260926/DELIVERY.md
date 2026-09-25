@@ -1,47 +1,71 @@
-# 图 4-1 交付包｜P1 两层决策与官方评价流程
+# 图 4-1 交付包｜P1 两层决策与官方评价流程（v2 返工版）
 
-- 图号：4-1　版本：v3（2026-09-26；v1 退回后修订，历次稿保留于 git 历史）
+- 图号：4-1　版本：v2（2026-09-26，按 #205 评论 5836746442 / 5836853258 返工）
 - 主责：甲　输入数据约束：仅 GitHub 仓库固定来源，无外部数据
+- 历次修改稿保留：v1/v4（提交 879c3dc3、01425aa3）未被覆盖；本版为新提交
 
 ## 文件
 
 | 文件 | 说明 |
 |---|---|
-| `fig4-1-p1-two-layer-flow.drawio` | 可编辑源（draw.io，双层布局手排，节点间距按论文插入宽度校核） |
-| `fig4-1-p1-two-layer-flow.svg` | 矢量成图 |
-| `fig4-1-p1-two-layer-flow.png` | PNG 预览（scale=2） |
+| `fig4-1-p1-two-layer-flow.drawio` | 可编辑源（draw.io；本版修复了旧源第 46 行多余 `</mxCell>` 的 XML 缺陷，并按返工意见改图） |
+| `fig4-1-p1-two-layer-flow.svg` | 矢量成图（由修复后源重新导出） |
+| `fig4-1-p1-two-layer-flow.png` | PNG 预览（scale=2，由修复后源重新导出） |
+| `caption.md` | 图注 |
+| `self-check.md` | 自查记录（v2，逐项对照返工意见） |
+| `nodes.csv` | 逐节点映射（stage 列使用派发模板 required_stages 标准标记） |
+| `edges.csv` | 逐边清单（与图中实际连线一一对应，含分支标签） |
+| `audit.json` | 自动核验清单（全部随包文件登记 + 真实 SHA256 + 40 位固定提交来源） |
 
-## 图注（草稿）
+## 图注
 
-图 4-1 给出问题一的两层决策与官方评价流程。上层为完整算法 v4（统一入口 `src/q1/unified.py`，提交 a0537aeb）：从原始计算图 G、核数 K 与冻结配置 Θ 出发，识别弱连通分量、Pipe 工作量（式 4-10）、分叉阶段（式 4-11）、共享输入与同型链等结构特征，由统一入口构造至多六个结构候选（完整分量+有界树前沿、重分量+独占后缀、超载分量分解、输入预算+活跃核选择、容量约束回转分组、分叉阶段前沿）；经覆盖与联合依赖检查并按方案输出字节 SHA-256 去重后，以固定 E1 在线评分按 (Makespan, scheduled COPY bytes) 择优，评分失败即停止并保留已知最好。上层仅输出两个规定字段 `node_to_subgraph` 与 `core_schedules` 组成的方案文件及诊断记录。下层为提交者不可修改的冻结官方评估器（`data/raw/a/official/code/multicore_cut_evaluate_problem_1.py`）：按方案重建 Task 边界 COPY，依次执行官方核内调度 Step1（拓扑顺序）、Step2（缓存换入/换出）、Step3（四 Pipe 时间线），再做多核事件模拟（DDR 共享 60 B/cycle，同核/跨核 Task 门控 100/1000 cycles），给出 Makespan（cycles）与额外数据搬运量（B）两个评价出口。实验阶段另以未修改的 E0 独立复评最终方案，与上层在线 E1 评分分开表示。提交者仅决定切图、分核与每核 Task 顺序三项；逐 Pipe 执行顺序、缓存换入换出与模拟时间线均由冻结评估器确定。研究性扩展（变宽分组、错峰融合等）不属于本主线。
+见 `caption.md`（v4 补件版已含单候选直达、`--diagnostics` 旁路表述，本版未改动文字内容）。
 
-## 流程节点 ↔ 源码模块对应表
+## 流程节点 ↔ 源码模块对应表（v2 修正定位）
 
 | 图中节点 | 源码模块 | 提交/位置 |
 |---|---|---|
-| 结构特征识别 | `unified.py`（依赖提取）+ 结构识别器 | a0537aeb `src/q1/unified.py` |
-| 六类候选构造 | `generate_candidates`：bounded / heavy-or-sink / overload / shared-input / capacity-return / fork-frontier | 同上 |
-| 覆盖检查 + 字节去重 | `plan_bytes`（SHA-256） | 同上 |
-| 在线选优（E1） | `choose` + `src.eval_exact.P1BatchEvaluator`（1 worker / 16 MiB / 60 s / 启动 10 s） | 同上 |
-| 方案与诊断写出 | `main`（`--output` 方案两键；`--diagnostics` 诊断） | 同上 |
-| 边界 COPY 重建 → Step1/2/3 → 事件模拟 | 官方评估器 `multicore_cut_evaluate_problem_1.py` + `schedule_step1.py` / `schedule_step2.py` / `schedule_step3.py` | 冻结 `data/raw/a/official/code/` |
+| 结构特征识别 | `unified.py`（依赖提取 + 结构识别） | a0537aeb `src/q1/unified.py` |
+| 六类候选构造 | `generate_candidates`：bounded / heavy-or-sink / overload / shared-input / capacity-return / fork-frontier；**覆盖/依赖合法性检查发生在各构造器内部严格识别器**（如 capacity-return 的 strict-private-chain-check），不在 plan_bytes | 同上 |
+| 字节去重（add() 内） | `plan_bytes`（JSON 序列化实际输出字节）+ SHA-256，重复只保留首个；仅字节去重，不做合法性检查 | 同上 |
+| 单/多候选分支 | `solve`：去重后 `len(candidates)==1` → `choose(candidates, None)` 直接选定（single-distinct-plan），**不启动在线 E1**；多候选才构造 `P1BatchEvaluator` | 同上 |
+| 在线选优（E1，仅多候选路径） | `src.eval_exact.P1BatchEvaluator`（1 worker / 16 MiB / 60 s / 启动 10 s），按 (Makespan, scheduled COPY bytes) 择优，首个评分失败即停 | 同上 |
+| 官方方案文件（严格两字段） | `main --output`：仅 `node_to_subgraph` + `core_schedules` | 同上 |
+| 诊断记录旁路 | `main --diagnostics`：独立 JSON，不属官方方案 JSON，不进官方评估器 | 同上 |
+| 边界 COPY 重建 → Step1/2/3 → 事件模拟 | 官方评估器 `multicore_cut_evaluate_problem_1.py` + `schedule_step1.py` / `schedule_step2.py` / `schedule_step3.py` | 冻结 `data/raw/a/official/code/` @ a0537aeb |
 
-## 输入数据版本
+## 输入数据版本（含真实哈希）
 
-- P1 初稿 4.1、4.4.1～4.4.4：提交 67c0f603960fddf86416d23ca3e85e53561c3c3a（`paper/sections/P1-问题一论文初稿.md`）
-- 完整算法 v4：提交 a0537aeb72dc702af86d67d3194587d581ac207c（`src/q1/unified.py`）
-- 官方评估器与配置：`data/raw/a/official/`（冻结原件，DDR 60 B/cycle；L1 524288 B、UB 131072 B；同核/跨核 Task 等待 100/1000 cycles）
+| 来源 | 固定提交 | SHA-256 |
+|---|---|---|
+| `src/q1/unified.py`（v4 统一入口） | a0537aeb72dc702af86d67d3194587d581ac207c | 3c571f6c9c0ef2a956268abf9129d557f2d087e783b4e621c2917279fa13e985 |
+| `paper/sections/P1-问题一论文初稿.md`（4.1、4.4.1~4.4.4） | 67c0f603960fddf86416d23ca3e85e53561c3c3a | 10d0dc195e138c42f7507ca12c8619ebdf46c4df54ca38b31fe353fc886ef8ef |
+| `data/raw/a/official/code/multicore_cut_evaluate_problem_1.py` | a0537aeb72dc702af86d67d3194587d581ac207c | 2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f |
+| `data/raw/a/official/code/schedule_step1.py` | 同上 | d8fe721ff3dbe036e34a20c00cce6430960860000a49eb467e63465f76b84034 |
+| `data/raw/a/official/code/schedule_step2.py` | 同上 | 2836baac176f4e0bdd9eec59b8d9ce254e209e5f7a251e23837ab684312fa0c3 |
+| `data/raw/a/official/code/schedule_step3.py` | 同上 | 50053db0436f1d166dd75436693ba3af49b5c339576beb6e7299477f6b69fc7a |
+| `data/raw/a/official/data/config.txt`（Θ：DDR 60 B/cycle；L1 524288 B、UB 131072 B；门控 100/1000 cycles） | 同上 | dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9 |
 
-## 已通过的检查
+哈希口径：`git show <commit>:<path>` 的原始字节（与 GitHub 固定 blob 一致），非工作区检出字节。
 
-- [x] 切图、分核、每核 Task 顺序三项决策齐全；图中明确提交者无逐 Pipe 顺序与等待时间控制权
-- [x] 在线 E1 评分与独立最终 E0 复评分开表示（上/下层分别标注）
-- [x] 研究模块（变宽分组、错峰融合等）未混入 v4 主线，图注与对应表均注明
-- [x] `validate.py`（drawio-skill）：0 error
-- [x] PNG 全宽目检：无缺字、无遮挡、无裁切；中文正常渲染
-- [x] 两个提交字段与两个评价出口均已强调标出
+## 生成与校验命令
+
+- 导出：`"F:/draw.io/draw.io.exe" --disable-gpu --no-sandbox -x -f svg -o fig4-1-p1-two-layer-flow.svg fig4-1-p1-two-layer-flow.drawio`；PNG 加 `-f png -s 2`
+- XML 解析：Python `xml.dom.minidom.parse` 通过（旧源第 46 行多余 `</mxCell>` 已修复）
+
+## 已通过的检查（v2）
+
+- [x] 单候选分支：去重后仅 1 个候选 → 直接选定（single-distinct-plan），不启动在线 E1，仍需独立 E0 复评
+- [x] 候选箭头：六类候选 → add() 字节去重 → 分支判定 →（多候选）E1；（单候选）直达方案；候选不再绕过去重
+- [x] 合法性检查定位：图中与对应表均写明在各构造器内部严格识别器，plan_bytes 仅字节去重
+- [x] 方案接口消歧：官方方案文件严格两字段；诊断单独旁支标 `--diagnostics`
+- [x] audit.json 登记全部随包文件（含 DELIVERY.md 本文件）与真实 SHA256；来源为 40 位固定提交 + 64 位哈希 + 真实路径
+- [x] nodes.csv stage 使用派发模板 required_stages 标准标记（structure/partition/assignment/task_order/candidate_select/online_e1/node_to_subgraph/core_schedules/copy_rebuild/official_schedule/final_e0/makespan/extra_ddr 全覆盖；input/diagnostics 为边界与旁路标记）
+- [x] 切图、分核、每核 Task 顺序三项决策齐全；无逐 Pipe 顺序/等待时间控制权
+- [x] 在线 E1 与独立 E0 复评分开表示；研究模块未混入主线
+- [x] draw.io CLI 重新导出 SVG/PNG；PNG 目检无缺字、无遮挡、无裁切
 
 ## 未完成项 / 说明
 
-- 本图为甲的 drawio 样板：字体（Microsoft YaHei）、双层配色（上层蓝=求解器决策，下层橙=官方评价）、金色=方案文件接口。后续 4-2、5-1、6-1 等结构图沿用此规范。
-- 若 P1 初稿或 v4 绑定版本变更，本图随对应版本同步更新，不把局部研究模块画入主线。
+- 接收端已自行修复的 SVG 声明/HTML 标签兼容问题非本包缺陷；本包以修复后源直接导出，源与成图一致（哈希见 audit.json）。
+- 若 P1 初稿或 v4 绑定版本变更，本图随对应版本同步更新。

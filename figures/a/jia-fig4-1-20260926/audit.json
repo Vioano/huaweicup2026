@@ -6,60 +6,57 @@
     {
       "name": "fig4-1-p1-two-layer-flow.svg",
       "role": "svg",
-      "sha256": "e769316d9be8384e3fefdef58674fab24cd5d3ea5831d141e183ada8f9311bde"
+      "sha256": "36041704a5a2b3a98946523166605c33531d2b09b58eac16f36dc794359ec155"
     },
     {
       "name": "fig4-1-p1-two-layer-flow.png",
       "role": "png",
-      "sha256": "165dbd4d3431343fa22c4db6c170da9316008f9dda8fbe446ff4709ac19ab8d5"
+      "sha256": "e4b8d8e6e8fe395ad69bc889134c9e36a5100277d30dc194567c4fd3d4aa2043"
     },
     {
       "name": "fig4-1-p1-two-layer-flow.drawio",
       "role": "source",
-      "sha256": "2d8da20a1399a1a192ec47e7693d9f3f85fcc2d00cbad719c9fe1d0bb9b1e260"
+      "sha256": "e4c35ef85c6084d4d9dfa5c6c8223a311862de75f615a45e514082db8d02bf81"
     },
     {
       "name": "caption.md",
       "role": "caption",
-      "sha256": "33d5452cb1844d3c1a034872547316509c69ada83358a090e81800fa2f583ff4"
+      "sha256": "cd46acd343797dd854ef21907c54128885223836f1c1392805bc79fb034702c3"
     },
     {
       "name": "self-check.md",
       "role": "self_check",
-      "sha256": "81449e6b27a62e02f0fb796eb5a3b5f86eda2fbb969aa5707c60deca80a474e6"
+      "sha256": "29f1e8f567e767f7b99799c220a9ef6ce0a5be42bb3797c0f9dab2f3c0ce70c7"
     },
     {
       "name": "nodes.csv",
       "role": "input",
-      "sha256": "2327cf28b782d83dce0eaf4eb7fb923215ae9523d35805203d487aed020842be"
+      "sha256": "41e60665e0e76cfa50bffbe6888fd494a8e0504411730e25ed8db0bf44898ae8"
     },
     {
       "name": "edges.csv",
       "role": "input",
-      "sha256": "e286ca075a7bdfb03da7d409c9c1c098cd077f0eba9682ce73843aa5a0f54d4c"
+      "sha256": "cb5dcfee165a91e5feef6d0729990ce12efa8facabb642d19f6c30aec0a270d0"
     },
     {
       "name": "DELIVERY.md",
       "role": "notes",
-      "sha256": "37a666ddaa6b11d28bd114bdd1c35bf7013b0a1e9a211e1dae1596ecf7110045"
-    },
-    {
-      "name": "audit.json",
-      "role": "manifest",
-      "sha256": "a2493786fc85b4eee5d408e26b7e35463aeec4e3ab615dcf0b1c5b4651f79c18"
+      "sha256": "e25f1572c5f3c59fcee0f66bce91f31295d79f85a395f497fdae422cd6e1ba72",
+      "note": "交付说明与图注草稿、节点↔源码对应表；应用户要求随包保留，此处登记真实哈希"
     }
   ],
-  "command": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f svg -o fig4-1-p1-two-layer-flow.svg fig4-1-p1-two-layer-flow.drawio；PNG：同命令加 -f png -s 2；结构校验：.venv/Scripts/python.exe F:/WorkBuddyData/skills/drawio-skill/scripts/validate.py fig4-1-p1-two-layer-flow.drawio",
+  "command": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f svg -o fig4-1-p1-two-layer-flow.svg fig4-1-p1-two-layer-flow.drawio （png 加 -f png -s 2）；XML 校验：python -c \"import xml.dom.minidom; xml.dom.minidom.parse('fig4-1-p1-two-layer-flow.drawio')\"（旧源第 46 行多余 </mxCell> 已修复，解析通过）",
   "sources": [
-    {
-      "path": "paper/sections/P1-问题一论文初稿.md",
-      "commit": "67c0f603960fddf86416d23ca3e85e53561c3c3a",
-      "sha256": "10d0dc195e138c42f7507ca12c8619ebdf46c4df54ca38b31fe353fc886ef8ef"
-    },
     {
       "path": "src/q1/unified.py",
       "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
+      "git_blob": "f5427bd94706ac2e1dbc2baf26051ec928902079",
       "sha256": "3c571f6c9c0ef2a956268abf9129d557f2d087e783b4e621c2917279fa13e985"
+    },
+    {
+      "path": "paper/sections/P1-问题一论文初稿.md（4.1、4.4.1~4.4.4）",
+      "commit": "67c0f603960fddf86416d23ca3e85e53561c3c3a",
+      "sha256": "10d0dc195e138c42f7507ca12c8619ebdf46c4df54ca38b31fe353fc886ef8ef"
     },
     {
       "path": "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
@@ -80,6 +77,11 @@
       "path": "data/raw/a/official/code/schedule_step3.py",
       "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
       "sha256": "50053db0436f1d166dd75436693ba3af49b5c339576beb6e7299477f6b69fc7a"
+    },
+    {
+      "path": "data/raw/a/official/data/config.txt",
+      "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
+      "sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9"
     }
   ],
   "units": {
@@ -90,7 +92,7 @@
   "panels": [
     {
       "id": "1",
-      "title": "上层｜求解器决策（v4 统一入口 unified.py）"
+      "title": "上层｜求解器决策（v4 统一入口：候选构造→字节去重→单候选直达/多候选在线选优）"
     },
     {
       "id": "2",
@@ -105,19 +107,25 @@
     "nodes": [
       "id",
       "stage",
-      "module"
+      "module",
+      "note"
     ],
     "edges": [
       "source",
-      "target"
+      "target",
+      "label"
     ]
   },
   "criteria": [
-    "切图、分核、每核 Task 顺序三项决策齐全；没有赋予提交者直接控制官方 Pipe 顺序或等待时间的自由。",
-    "在线 E1 评分与独立最终 E0 复评分开表示。",
-    "后续局部研究模块未混入当前完整 v4 主线，流程和主结果属于同一版本。"
+    "去重后仅 1 个候选时直接选定（single-distinct-plan），不启动在线 E1；多候选才进入 E1；两条路径输出均需独立 E0 复评。",
+    "候选先经 add() 内 plan_bytes SHA-256 字节去重再进入分支；覆盖/依赖合法性检查定位在各构造器内部严格识别器，plan_bytes 仅字节去重。",
+    "官方方案文件严格只含 node_to_subgraph 与 core_schedules 两字段；诊断经 --diagnostics 独立旁支写出，不属官方方案 JSON。",
+    "在线 E1 评分与独立最终 E0 复评分开表示；研究扩展模块未混入 v4 主线。"
   ],
-  "version_note": "v3：修正XML缺陷(46行孤立</mxCell>)；新增单候选直接输出分支；连线改为候选→去重→(单候选|E1)；诊断--diagnostics独立旁支；方案文件严格两字段；nodes.csv stage改用required_stages标准标记；sources填真实40位commit与64位SHA256；DELIVERY.md纳入notes角色",
-  "head_commit": "本次交付评论中提供",
-  "branch": "a-r1-farmeruncle123"
+  "head": "8bbaf6db2b44b30371e7b0695703ba40081164ec",
+  "branch": "a-r1-farmeruncle123",
+  "rework_refs": [
+    "https://github.com/huaweibei123/huaweicup2026/pull/205#issuecomment-5836746442",
+    "https://github.com/huaweibei123/huaweicup2026/pull/205#issuecomment-5836853258"
+  ]
 }

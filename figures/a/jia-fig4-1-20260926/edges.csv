@@ -1,16 +1,17 @@
-source,target
-in,identify
-identify,candBox
-candBox,dedup
-dedup,single
-dedup,e1
-single,plan
-e1,plan
-single,diag
-plan,read
-read,copy
-copy,steps
-steps,sim
-sim,out1
-sim,out2
-e0,read
+source,target,label
+in,identify,
+identify,cand_box,
+cand_box,dedup,构造 plan → add() 计算字节 SHA-256 去重
+dedup,decision,
+decision,e1,多个候选
+decision,single,仅 1 个候选
+single,plan,直接输出（single-distinct-plan）
+e1,plan,择优输出
+plan,diag,--diagnostics
+plan,read,方案文件（磁盘传递）
+read,copy,
+copy,steps,
+steps,sim,
+sim,out1,
+sim,out2,
+e0,read,E0 复评读入（虚线）
