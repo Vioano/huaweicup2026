@@ -1,0 +1,140 @@
+{
+  "status": "e0-success-collected",
+  "session": "p1-coalesced-e0-008-k5-20260925",
+  "source": {
+    "artifact_manifest_sha256": "9abd2faf07178964fbcbbefe42ce631298686ed4a228139aa80a8d4b757b42c6",
+    "data_head": "a008dfb8f1b5b881844af312be0b7246b2c6b025",
+    "plan_sha256": "e9327269bc95a81d17ca907a617aed896fd6fdde2a3174044d975f746569f9ce",
+    "artifacts_verified": 5
+  },
+  "steps": [
+    {
+      "step": "preflight-sessions",
+      "argv": [
+        "<local-colab-cli>",
+        "--auth",
+        "oauth2",
+        "sessions"
+      ],
+      "returncode": 0,
+      "stdout": "[colab] No active sessions found on server.\n",
+      "stderr": "",
+      "wall_seconds": 1.1670268330490217
+    },
+    {
+      "step": "new",
+      "argv": [
+        "<local-colab-cli>",
+        "--auth",
+        "oauth2",
+        "new",
+        "--session",
+        "p1-coalesced-e0-008-k5-20260925"
+      ],
+      "returncode": 0,
+      "stdout": "[colab] Creating session 'p1-coalesced-e0-008-k5-20260925'...\n[colab] Session READY.\n",
+      "stderr": "",
+      "wall_seconds": 13.93451254197862
+    },
+    {
+      "step": "upload-bundle",
+      "argv": [
+        "<local-colab-cli>",
+        "--auth",
+        "oauth2",
+        "upload",
+        "--session",
+        "p1-coalesced-e0-008-k5-20260925",
+        "<local-runtime>/coalesced-e0-source-bundle.tar.gz",
+        "/content/coalesced-e0-source-bundle.tar.gz"
+      ],
+      "returncode": 0,
+      "stdout": "[colab] Uploaded '<local-runtime>/coalesced-e0-source-bundle.tar.gz' to '/content/coalesced-e0-source-bundle.tar.gz'\n",
+      "stderr": "",
+      "wall_seconds": 1.0131718330085278
+    },
+    {
+      "step": "exec",
+      "argv": [
+        "<local-colab-cli>",
+        "--auth",
+        "oauth2",
+        "exec",
+        "--session",
+        "p1-coalesced-e0-008-k5-20260925",
+        "--file",
+        "<local-runtime>/remote_setup.py",
+        "--timeout",
+        "230"
+      ],
+      "returncode": 0,
+      "stdout": "{\"status\": \"e0-complete\", \"E0\": 1, \"archive_sha256\": \"c45390473076fb390375e7544a084e39a0e88553643eed6e940e22d1ac07770f\"}\n",
+      "stderr": "",
+      "wall_seconds": 25.153786749986466
+    },
+    {
+      "step": "download",
+      "argv": [
+        "<local-colab-cli>",
+        "--auth",
+        "oauth2",
+        "download",
+        "--session",
+        "p1-coalesced-e0-008-k5-20260925",
+        "/content/p1_coalesced_e0_window/evidence.tar.gz",
+        "<local-runtime>/evidence.tar.gz"
+      ],
+      "returncode": 0,
+      "stdout": "[colab] Downloaded '/content/p1_coalesced_e0_window/evidence.tar.gz' to '<local-runtime>/evidence.tar.gz'\n",
+      "stderr": "",
+      "wall_seconds": 0.9887266669538803
+    },
+    {
+      "step": "finally-stop",
+      "argv": [
+        "<local-colab-cli>",
+        "--auth",
+        "oauth2",
+        "stop",
+        "--session",
+        "p1-coalesced-e0-008-k5-20260925"
+      ],
+      "returncode": 0,
+      "stdout": "[colab] Stopping session 'p1-coalesced-e0-008-k5-20260925'...\n[colab] Session terminated.\n",
+      "stderr": "",
+      "wall_seconds": 1.8531983330030926
+    },
+    {
+      "step": "finally-sessions",
+      "argv": [
+        "<local-colab-cli>",
+        "--auth",
+        "oauth2",
+        "sessions"
+      ],
+      "returncode": 0,
+      "stdout": "[colab] No active sessions found on server.\n",
+      "stderr": "",
+      "wall_seconds": 0.9623392920475453
+    }
+  ],
+  "VM_stopped_readback": true,
+  "archive_collected": true,
+  "e0_success": true,
+  "t0_monotonic": 303659.783565166,
+  "lease_deadline_monotonic": 303929.783565166,
+  "evidence": {
+    "archive_sha256": "c45390473076fb390375e7544a084e39a0e88553643eed6e940e22d1ac07770f",
+    "verified_files": 11,
+    "e0_status": "ok",
+    "plan_sha256": "e9327269bc95a81d17ca907a617aed896fd6fdde2a3174044d975f746569f9ce",
+    "graph_sha256": "c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d",
+    "E0": 1,
+    "solver": 0,
+    "E1": 0,
+    "E2": 0,
+    "retry": 0
+  },
+  "stop_returncode": 0,
+  "elapsed_seconds": 43.938497541996185
+}

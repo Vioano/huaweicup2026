@@ -1,0 +1,181 @@
+{
+  "status": "e0-complete",
+  "calls": {
+    "E0": 1,
+    "solver": 0,
+    "E1": 0,
+    "E2": 0,
+    "retry": 0
+  },
+  "remote_started_monotonic": 766.032475597,
+  "remote_deadline_monotonic": 986.032475597,
+  "uv_install": {
+    "returncode": 0,
+    "stdout": "Collecting uv\n  Downloading uv-0.12.19-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (11 kB)\nDownloading uv-0.12.19-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (20.5 MB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 20.5/20.5 MB 67.2 MB/s eta 0:00:00\nInstalling collected packages: uv\nSuccessfully installed uv-0.12.19\n",
+    "stderr": ""
+  },
+  "uv_sync": {
+    "argv": [
+      "uv",
+      "sync",
+      "--locked",
+      "--python",
+      "3.12.13"
+    ],
+    "timeout_seconds": 82.96503045500003,
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "Downloading cpython-3.12.13-linux-x86_64-gnu (download) (32.6MiB)\n Downloaded cpython-3.12.13-linux-x86_64-gnu (download)\nUsing CPython 3.12.13\nCreating virtual environment at: .venv\nResolved 15 packages in 0.86ms\nDownloading matplotlib (9.4MiB)\nDownloading pillow (6.6MiB)\nDownloading scipy (33.7MiB)\nDownloading numpy (15.9MiB)\nDownloading pandas (10.3MiB)\nDownloading kiwisolver (1.4MiB)\nDownloading fonttools (5.2MiB)\n Downloaded kiwisolver\n Downloaded fonttools\n Downloaded pillow\n Downloaded matplotlib\n Downloaded pandas\n Downloaded numpy\n Downloaded scipy\nPrepared 13 packages in 1.88s\nInstalled 13 packages in 3.92s\n + contourpy==1.4.0\n + cycler==0.12.1\n + fonttools==4.65.0\n + kiwisolver==1.5.1\n + matplotlib==3.11.2\n + numpy==2.5.3\n + packaging==26.3\n + pandas==3.0.6\n + pillow==12.3.0\n + pyparsing==3.3.2\n + python-dateutil==2.9.0.post0\n + scipy==1.18.1\n + six==1.17.0\n"
+  },
+  "runner_argv": [
+    ".venv/bin/python",
+    "-B",
+    "-m",
+    "src.review.p1_saved_plan_e0_once",
+    "--graph",
+    "/content/p1_coalesced_e0_window/workspace/case_008.json",
+    "--plan",
+    "/content/p1_coalesced_e0_window/workspace/phase-plan.json",
+    "--output-dir",
+    "/content/p1_coalesced_e0_window/workspace/run-first-e0",
+    "--deadline-monotonic",
+    "901.320983065",
+    "--execute"
+  ],
+  "stage": "e0-runner",
+  "runner_returncode": 0,
+  "runner_starttime": 78132,
+  "e0_attempt": {
+    "state": "ok",
+    "started_at": "2026-09-25T08:17:05.139Z",
+    "deadline_monotonic": 901.320983065,
+    "workers": 1,
+    "timeout_seconds": 60,
+    "calls": {
+      "constructor": 0,
+      "E0": 1,
+      "E1": 0,
+      "E2": 0,
+      "retry": 0
+    },
+    "identity": {
+      "graph_sha256": "c93bb7ab5deec5112aff0cc001fbd76d001d3de5ea7463fba59b1f1ff2ba3e1d",
+      "plan_sha256": "e9327269bc95a81d17ca907a617aed896fd6fdde2a3174044d975f746569f9ce",
+      "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+      "evaluator_sha256": "2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f",
+      "official_code_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+      "helper_sha256": "08f86b1e95dbed9f0c3d82c4005cbf85d81e0164493fc4fc51542ced9035011c",
+      "manifest_sha256": "713792d81693757a71cb29b9daea7434192d1bf14fcb8efd25165e6f68d9cffc"
+    },
+    "runtime": "3.12.13 (main, Aug  7 2026, 02:25:39) [Clang 22.1.3 ]",
+    "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
+    "process_identity": {
+      "pid": 3187,
+      "pgid": 3187,
+      "linux_proc_start_ticks": 78251,
+      "argv": [
+        "/content/p1_coalesced_e0_window/workspace/.venv/bin/python",
+        "-B",
+        "/content/p1_coalesced_e0_window/workspace/data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+        "/content/p1_coalesced_e0_window/workspace/case_008.json",
+        "/content/p1_coalesced_e0_window/workspace/phase-plan.json",
+        "--config",
+        "/content/p1_coalesced_e0_window/workspace/data/raw/a/official/data/config.txt",
+        "--output",
+        "/content/p1_coalesced_e0_window/workspace/run-first-e0/result.json",
+        "--trace-output",
+        "/content/p1_coalesced_e0_window/workspace/run-first-e0/trace.json",
+        "--log-output",
+        "/content/p1_coalesced_e0_window/workspace/run-first-e0/official.log"
+      ]
+    },
+    "dispatch_started_at": "2026-09-25T08:17:05.141Z",
+    "process": {
+      "argv": [
+        "<verified-inputs>/.venv/bin/python",
+        "-B",
+        "<verified-inputs>/data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+        "<verified-inputs>/case_008.json",
+        "<verified-inputs>/phase-plan.json",
+        "--config",
+        "<verified-inputs>/data/raw/a/official/data/config.txt",
+        "--output",
+        "<verified-inputs>/run-first-e0/result.json",
+        "--trace-output",
+        "<verified-inputs>/run-first-e0/trace.json",
+        "--log-output",
+        "<verified-inputs>/run-first-e0/official.log"
+      ],
+      "cwd": ".",
+      "started_at": "2026-09-25T08:17:05.142Z",
+      "finished_at": "2026-09-25T08:17:06.064Z",
+      "wall_seconds": 0.9216672289999224,
+      "timeout_seconds": 60,
+      "exit_code": 0,
+      "cleanup_confirmed": true,
+      "status": "ok",
+      "stdout": {
+        "path": "run-first-e0/E0.stdout.txt",
+        "sha256": "f1eee48f3697f72ec1207de86a6af8d26b566867ce59e2cf889a302c20c45498"
+      },
+      "stderr": {
+        "path": "run-first-e0/E0.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "log_derivation": "UTF-8 child output with workspace and temporary input root replaced by public labels"
+    },
+    "finished_at": "2026-09-25T08:17:06.065Z",
+    "cleanup_confirmed": true,
+    "metrics": {
+      "makespan_cycles": 98932,
+      "data_movement_bytes": {
+        "original_graph_copy_bytes": 2654424,
+        "scheduled_copy_bytes": 3760344,
+        "added_copy_bytes": 1105920,
+        "partition_added_copy_bytes": 1105920,
+        "spill_added_copy_bytes": 0
+      }
+    },
+    "artifacts": {
+      "result.json": {
+        "path": "result.json",
+        "sha256": "caa89d152ca78888adb317cce5a9eab3c1db465a320eba5d73f84e7e47a919df"
+      },
+      "trace.json": {
+        "path": "trace.json",
+        "sha256": "0025693c1dee9ad373fd313f6cb85018ca32a939832819b45104c42c37be7b2d"
+      },
+      "official.log": {
+        "path": "official.log",
+        "sha256": "a888cdf67d9862fc6b17d6125a8bbab853f16e1bd269f79f516c832ddf1140fc"
+      },
+      "E0.stdout.txt": {
+        "path": "E0.stdout.txt",
+        "sha256": "f1eee48f3697f72ec1207de86a6af8d26b566867ce59e2cf889a302c20c45498"
+      },
+      "E0.stderr.txt": {
+        "path": "E0.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "E0.stdout.raw.txt": {
+        "path": "E0.stdout.raw.txt",
+        "sha256": "351feca21be0d0ba4cff223efbfa5b6f1ffab36c95fdb793ce73a75502e42ae2"
+      },
+      "E0.stderr.raw.txt": {
+        "path": "E0.stderr.raw.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "finally_e0_cleanup": {
+    "identity_valid": true,
+    "killed": false,
+    "exited": true,
+    "residual": false
+  },
+  "runner_exited": true,
+  "e0_residual_confirmed_absent": true,
+  "peak_rss_kib": 106808,
+  "finished_monotonic": 783.505456094,
+  "remote_wall_seconds": 17.47298049699998
+}
