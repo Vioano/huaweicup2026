@@ -4,6 +4,7 @@
 import hashlib
 import json
 from pathlib import Path
+import subprocess
 
 
 def sha256(path: Path) -> str:
@@ -21,6 +22,11 @@ def main() -> None:
     assert len(entries) == inventory['visible_chats_checked'] == 15
     assert len({entry['conversation_id'] for entry in entries}) == len(entries)
     assert {path.name for path in root.iterdir() if path.is_dir()} == {entry['directory'] for entry in entries}
+    tracked = {
+        path.decode('utf-8')
+        for path in subprocess.check_output(['git', 'ls-files', '-z', '--', 'AI chats'], cwd=root.parent).split(b'\0')
+        if path
+    }
     checked = 0
     for entry in entries:
         folder = root / entry['directory']
@@ -37,6 +43,7 @@ def main() -> None:
         assert len(missing) == entry['missing_original_assets_reported']
         for record in files:
             path = folder / record['path']
+            assert str(path.relative_to(root.parent)) in tracked, path
             assert path.is_file() and path.stat().st_size == record['bytes'], path
             assert sha256(path) == record['sha256'], path
             checked += 1
