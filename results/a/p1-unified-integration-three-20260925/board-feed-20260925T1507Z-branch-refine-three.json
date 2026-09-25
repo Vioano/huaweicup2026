@@ -1,0 +1,537 @@
+{
+  "schema_version": 1,
+  "submission_version": 1,
+  "records": [
+    {
+      "attempt_id": "nikolastarx-p1-unified-three-20260925-085-k5-r0",
+      "revision": 1,
+      "run_id": "20260925T1507Z-s6607-branch-refine-three",
+      "algorithm_id": "q1-branch-refine-research-v1",
+      "algorithm_name": "P1 unified branch-refine research entry",
+      "variant": "structural-parent-plus-single-branch-aid-refinement",
+      "solver_commit": "834d8c957538ee069c66aadac9509552a4cc69d7",
+      "parameters": {
+        "cores": 5,
+        "max_additional_E1": 1,
+        "solver_timeout_seconds": 300,
+        "E0_timeout_seconds": 120,
+        "workers": 1,
+        "E1_actual": 4,
+        "E2": 0,
+        "retry": 0
+      },
+      "problem": "P1",
+      "case_id": "085",
+      "cores": 5,
+      "status": "ok",
+      "runtime_id": "macos-27.0-arm64-python3.12.13",
+      "observed_at": "2026-09-25T15:07:55Z",
+      "metrics": {
+        "makespan_cycles": 681874,
+        "solver_wall_seconds": 10.47916616598377,
+        "evaluation_wall_seconds": 3.1752513340325095,
+        "ddr_bytes": 12431882,
+        "extra_ddr_bytes": 10742148,
+        "spill_bytes": 0,
+        "cache_hit_rate": null
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
+        "entrypoint": "multicore_cut_evaluate_problem_1.evaluate_scene_a"
+      },
+      "identity": {
+        "graph_sha256": "b63169e9cd0f21dc2da6617e7138472e95937465c703b7e4bf4dbc80125ed4f6",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "8a084f8947b47bd3fcc0a30eacab6e43e0b11c9e04bb8f0d5b40ca6f25a4b2ba"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/p1-unified-integration-three-20260925/cells/085-k5/plan.json",
+          "sha256": "8a084f8947b47bd3fcc0a30eacab6e43e0b11c9e04bb8f0d5b40ca6f25a4b2ba"
+        },
+        "result": {
+          "path": "results/a/p1-unified-integration-three-20260925/cells/085-k5/result.json.gz",
+          "sha256": "8ce0c3dacb99ba77f575c50adae0babba05aa9bd326a38bba0d411dafd4e9653"
+        },
+        "run": {
+          "path": "results/a/p1-unified-integration-three-20260925/cells/085-k5/run-derived.json",
+          "sha256": "8718b1bb50304bb3b4022d99edd5a154c437500894589e281acdd921cfa29545"
+        },
+        "trace": {
+          "path": "results/a/p1-unified-integration-three-20260925/cells/085-k5/trace.json.gz",
+          "sha256": "2aad48f67c790fc01ca2b546a885e947db91fa7d04d8bce31a92984985846dde"
+        },
+        "log": {
+          "path": "results/a/p1-unified-integration-three-20260925/cells/085-k5/official.log",
+          "sha256": "b4dc98c53bf68874a64bb836ea79bff582d290c9aef0188ad542ed20ae868bfe"
+        }
+      },
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "Supervisor sampled process-group wall; exact receipt monotonic timings retained.",
+        "utc": "UTC"
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-6607cb2735304751b36662035723372b",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "834d8c957538ee069c66aadac9509552a4cc69d7",
+            "path": "src/q1/branch_refine.py",
+            "entrypoint": "python -B -m src.q1.branch_refine INPUT.json --cores K --output PLAN.json --diagnostics DIAGNOSTICS.json"
+          },
+          "authors": [
+            "NikolaStarx"
+          ],
+          "method": "Runs the structural parent and conditionally one R6 branch-aid refinement; it keeps a strict objective improvement, otherwise retains the parent. This is the fixed branch_refine research algorithm, not a full500 result.",
+          "references": [
+            "https://github.com/huaweibei123/huaweicup2026/issues/98"
+          ],
+          "upstream": [],
+          "selected_algorithm_id": "branch-aid",
+          "selected_solver_commit": "834d8c957538ee069c66aadac9509552a4cc69d7"
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "834d8c957538ee069c66aadac9509552a4cc69d7",
+            "path": "src/review/p1_unified_integration_three.py",
+            "entrypoint": "main"
+          },
+          "argv": [
+            "/Users/nikolastar/Projects/huaweicup2026/.venv/bin/python",
+            "-B",
+            "-m",
+            "src.review.p1_unified_integration_three",
+            "--manifest",
+            "output/p1-unified-integration-three-20260925/manifest.json",
+            "--output-dir",
+            "output/p1-unified-integration-three-20260925/attempt-1",
+            "--expected-head",
+            "834d8c957538ee069c66aadac9509552a4cc69d7",
+            "--admission",
+            "P1_UNIFIED_THREE_GATE_V2_20260925.json"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS-27.0-arm64-arm-64bit",
+          "cpu": null,
+          "gpu": null,
+          "ram_bytes": 51539607552,
+          "python": "3.12.13",
+          "dependencies": "Locked project venv; exact installed package inventory not recorded.",
+          "threads": 1,
+          "workers": 1,
+          "peak_rss_bytes": 470614016
+        },
+        "measurement": {
+          "started_at": "2026-09-25T15:07:55Z",
+          "finished_at": "2026-09-25T15:08:09Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": "Fresh solver child process includes graph read, structural parent selection, optional branch construction/E1 scoring, plan and diagnostics persistence and cleanup; E1 is online and included. OS cache state was not cleared.",
+          "evaluation_scope": "One independent official P1 E0 on the selected plan; excluded from solver wall.",
+          "budget": {
+            "wall_seconds": 300,
+            "candidate_limit": 10,
+            "stop_reason": "One solver and one E0 completed; batch ended after 3 cells."
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 1,
+            "E1": 4,
+            "E2": 0
+          },
+          "offline_costs": "No offline training or current-case preoptimization in this run; locked environment/input preparation occurred outside solver timing.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.cpu": "CPU model not recorded in this run receipt.",
+          "provenance.environment.gpu": "GPU inventory not recorded in this run receipt.",
+          "provenance.environment.dependencies": "Exact installed package inventory not recorded.",
+          "provenance.measurement.cold_start": "OS cache state was not measured.",
+          "provenance.measurement.seed": "Deterministic run; no seed was recorded."
+        }
+      },
+      "notes": [
+        "Part of a three-cell diagnostic run (3/500 cells), not full500.",
+        "Actual selected branch and complete nested E1 ledger are retained in run-derived.json and diagnostics.",
+        "The E0 objective exactly equals the selected objective for this cell.",
+        "Baseline points to the matching original singlecore E0 result in the frozen full500 feed; the baseline bytes were copied without scoring.",
+        "Three cells have different selected branches but belong to this same fixed solver commit; no cross-version splicing."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+      "baseline": {
+        "graph_sha256": "b63169e9cd0f21dc2da6617e7138472e95937465c703b7e4bf4dbc80125ed4f6",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/p1-unified-integration-three-20260925/baselines/085-singlecore-result.json.gz",
+          "sha256": "c5fc551ed610a15089f26c0b153a5d765edf926c87de21a0bd79b9e767640ed6"
+        }
+      },
+      "cache_pair": null
+    },
+    {
+      "attempt_id": "nikolastarx-p1-unified-three-20260925-075-k5-r0",
+      "revision": 1,
+      "run_id": "20260925T1507Z-s6607-branch-refine-three",
+      "algorithm_id": "q1-branch-refine-research-v1",
+      "algorithm_name": "P1 unified branch-refine research entry",
+      "variant": "structural-parent-plus-single-branch-aid-refinement",
+      "solver_commit": "834d8c957538ee069c66aadac9509552a4cc69d7",
+      "parameters": {
+        "cores": 5,
+        "max_additional_E1": 1,
+        "solver_timeout_seconds": 300,
+        "E0_timeout_seconds": 120,
+        "workers": 1,
+        "E1_actual": 4,
+        "E2": 0,
+        "retry": 0
+      },
+      "problem": "P1",
+      "case_id": "075",
+      "cores": 5,
+      "status": "ok",
+      "runtime_id": "macos-27.0-arm64-python3.12.13",
+      "observed_at": "2026-09-25T15:08:09Z",
+      "metrics": {
+        "makespan_cycles": 378832,
+        "solver_wall_seconds": 3.1630876670242287,
+        "evaluation_wall_seconds": 1.1888831249671057,
+        "ddr_bytes": 7292086,
+        "extra_ddr_bytes": 5454896,
+        "spill_bytes": 0,
+        "cache_hit_rate": null
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
+        "entrypoint": "multicore_cut_evaluate_problem_1.evaluate_scene_a"
+      },
+      "identity": {
+        "graph_sha256": "5c24beddea6d09e1df3c8f8843d3593b90affb117ba38450fa9bea8a8db3351c",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "af70c21c3d654ce4a5562215d3e1e985be79604333c2c6dceddecea6e56edf43"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/p1-unified-integration-three-20260925/cells/075-k5/plan.json",
+          "sha256": "af70c21c3d654ce4a5562215d3e1e985be79604333c2c6dceddecea6e56edf43"
+        },
+        "result": {
+          "path": "results/a/p1-unified-integration-three-20260925/cells/075-k5/result.json.gz",
+          "sha256": "9b8e5d4e8aeecff1889a9a059e42b2e1d6f4883621678070340b854fe5436dbc"
+        },
+        "run": {
+          "path": "results/a/p1-unified-integration-three-20260925/cells/075-k5/run-derived.json",
+          "sha256": "e2f99efed062668a398205c05fec730b924f79887082cd27769328332d3a7d9d"
+        },
+        "trace": {
+          "path": "results/a/p1-unified-integration-three-20260925/cells/075-k5/trace.json.gz",
+          "sha256": "da379a4c0b2824a886c03b0ed5d2392123d0935858572bfd91a54a478a97fad9"
+        },
+        "log": {
+          "path": "results/a/p1-unified-integration-three-20260925/cells/075-k5/official.log",
+          "sha256": "4776eb315c02cfd637ab97711ee99d337829771a290a47141d6c55431c4b131f"
+        }
+      },
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "Supervisor sampled process-group wall; exact receipt monotonic timings retained.",
+        "utc": "UTC"
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-6607cb2735304751b36662035723372b",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "834d8c957538ee069c66aadac9509552a4cc69d7",
+            "path": "src/q1/branch_refine.py",
+            "entrypoint": "python -B -m src.q1.branch_refine INPUT.json --cores K --output PLAN.json --diagnostics DIAGNOSTICS.json"
+          },
+          "authors": [
+            "NikolaStarx"
+          ],
+          "method": "Runs the structural parent and conditionally one R6 branch-aid refinement; it keeps a strict objective improvement, otherwise retains the parent. This is the fixed branch_refine research algorithm, not a full500 result.",
+          "references": [
+            "https://github.com/huaweibei123/huaweicup2026/issues/98"
+          ],
+          "upstream": [],
+          "selected_algorithm_id": "parent",
+          "selected_solver_commit": "834d8c957538ee069c66aadac9509552a4cc69d7"
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "834d8c957538ee069c66aadac9509552a4cc69d7",
+            "path": "src/review/p1_unified_integration_three.py",
+            "entrypoint": "main"
+          },
+          "argv": [
+            "/Users/nikolastar/Projects/huaweicup2026/.venv/bin/python",
+            "-B",
+            "-m",
+            "src.review.p1_unified_integration_three",
+            "--manifest",
+            "output/p1-unified-integration-three-20260925/manifest.json",
+            "--output-dir",
+            "output/p1-unified-integration-three-20260925/attempt-1",
+            "--expected-head",
+            "834d8c957538ee069c66aadac9509552a4cc69d7",
+            "--admission",
+            "P1_UNIFIED_THREE_GATE_V2_20260925.json"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS-27.0-arm64-arm-64bit",
+          "cpu": null,
+          "gpu": null,
+          "ram_bytes": 51539607552,
+          "python": "3.12.13",
+          "dependencies": "Locked project venv; exact installed package inventory not recorded.",
+          "threads": 1,
+          "workers": 1,
+          "peak_rss_bytes": 236290048
+        },
+        "measurement": {
+          "started_at": "2026-09-25T15:08:09Z",
+          "finished_at": "2026-09-25T15:08:13Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": "Fresh solver child process includes graph read, structural parent selection, optional branch construction/E1 scoring, plan and diagnostics persistence and cleanup; E1 is online and included. OS cache state was not cleared.",
+          "evaluation_scope": "One independent official P1 E0 on the selected plan; excluded from solver wall.",
+          "budget": {
+            "wall_seconds": 300,
+            "candidate_limit": 10,
+            "stop_reason": "One solver and one E0 completed; batch ended after 3 cells."
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 1,
+            "E1": 4,
+            "E2": 0
+          },
+          "offline_costs": "No offline training or current-case preoptimization in this run; locked environment/input preparation occurred outside solver timing.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.cpu": "CPU model not recorded in this run receipt.",
+          "provenance.environment.gpu": "GPU inventory not recorded in this run receipt.",
+          "provenance.environment.dependencies": "Exact installed package inventory not recorded.",
+          "provenance.measurement.cold_start": "OS cache state was not measured.",
+          "provenance.measurement.seed": "Deterministic run; no seed was recorded."
+        }
+      },
+      "notes": [
+        "Part of a three-cell diagnostic run (3/500 cells), not full500.",
+        "Actual selected branch and complete nested E1 ledger are retained in run-derived.json and diagnostics.",
+        "The E0 objective exactly equals the selected objective for this cell.",
+        "Baseline points to the matching original singlecore E0 result in the frozen full500 feed; the baseline bytes were copied without scoring.",
+        "Three cells have different selected branches but belong to this same fixed solver commit; no cross-version splicing."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+      "baseline": {
+        "graph_sha256": "5c24beddea6d09e1df3c8f8843d3593b90affb117ba38450fa9bea8a8db3351c",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/p1-unified-integration-three-20260925/baselines/075-singlecore-result.json.gz",
+          "sha256": "58784813755a0a2007d093a0fa270c41a2809c64aa0edd6f81ec07592e1017d5"
+        }
+      },
+      "cache_pair": null
+    },
+    {
+      "attempt_id": "nikolastarx-p1-unified-three-20260925-016-k5-r0",
+      "revision": 1,
+      "run_id": "20260925T1507Z-s6607-branch-refine-three",
+      "algorithm_id": "q1-branch-refine-research-v1",
+      "algorithm_name": "P1 unified branch-refine research entry",
+      "variant": "structural-parent-plus-single-branch-aid-refinement",
+      "solver_commit": "834d8c957538ee069c66aadac9509552a4cc69d7",
+      "parameters": {
+        "cores": 5,
+        "max_additional_E1": 1,
+        "solver_timeout_seconds": 300,
+        "E0_timeout_seconds": 120,
+        "workers": 1,
+        "E1_actual": 4,
+        "E2": 0,
+        "retry": 0
+      },
+      "problem": "P1",
+      "case_id": "016",
+      "cores": 5,
+      "status": "ok",
+      "runtime_id": "macos-27.0-arm64-python3.12.13",
+      "observed_at": "2026-09-25T15:08:13Z",
+      "metrics": {
+        "makespan_cycles": 2941234,
+        "solver_wall_seconds": 9.403652916953433,
+        "evaluation_wall_seconds": 8.035997790982947,
+        "ddr_bytes": 119940642,
+        "extra_ddr_bytes": 119547424,
+        "spill_bytes": 0,
+        "cache_hit_rate": null
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
+        "entrypoint": "multicore_cut_evaluate_problem_1.evaluate_scene_a"
+      },
+      "identity": {
+        "graph_sha256": "76537aa7163cf0748adcff2ecbd84fbc9a02a2d129ffcecd2bfebb89685e71ef",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "d5c4ebac9df42afc1b8e403259f07caa77a4378ea23606d7ff4d2d13f1a0b4c2"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/p1-unified-integration-three-20260925/cells/016-k5/plan.json",
+          "sha256": "d5c4ebac9df42afc1b8e403259f07caa77a4378ea23606d7ff4d2d13f1a0b4c2"
+        },
+        "result": {
+          "path": "results/a/p1-unified-integration-three-20260925/cells/016-k5/result.json.gz",
+          "sha256": "091bcb6acdbced373c476b7dabd475629a79becdcfdae78660becaf094c3ffd8"
+        },
+        "run": {
+          "path": "results/a/p1-unified-integration-three-20260925/cells/016-k5/run-derived.json",
+          "sha256": "206107a7d93a232e24d72d2367ff1ca36b92c6fb6eee3c1a28247376d3b8acf6"
+        },
+        "trace": {
+          "path": "results/a/p1-unified-integration-three-20260925/cells/016-k5/trace.json.gz",
+          "sha256": "d36b712e76fca586d6de96f5b250d212dcac9d0f84757094d300b945e342b39e"
+        },
+        "log": {
+          "path": "results/a/p1-unified-integration-three-20260925/cells/016-k5/official.log",
+          "sha256": "1d9d79e4ab8a3e757df4e2f9f1b8089770e207bcce35db9dca19ba45c0116c0a"
+        }
+      },
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "Supervisor sampled process-group wall; exact receipt monotonic timings retained.",
+        "utc": "UTC"
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-6607cb2735304751b36662035723372b",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "834d8c957538ee069c66aadac9509552a4cc69d7",
+            "path": "src/q1/branch_refine.py",
+            "entrypoint": "python -B -m src.q1.branch_refine INPUT.json --cores K --output PLAN.json --diagnostics DIAGNOSTICS.json"
+          },
+          "authors": [
+            "NikolaStarx"
+          ],
+          "method": "Runs the structural parent and conditionally one R6 branch-aid refinement; it keeps a strict objective improvement, otherwise retains the parent. This is the fixed branch_refine research algorithm, not a full500 result.",
+          "references": [
+            "https://github.com/huaweibei123/huaweicup2026/issues/98"
+          ],
+          "upstream": [],
+          "selected_algorithm_id": "parent",
+          "selected_solver_commit": "834d8c957538ee069c66aadac9509552a4cc69d7"
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "834d8c957538ee069c66aadac9509552a4cc69d7",
+            "path": "src/review/p1_unified_integration_three.py",
+            "entrypoint": "main"
+          },
+          "argv": [
+            "/Users/nikolastar/Projects/huaweicup2026/.venv/bin/python",
+            "-B",
+            "-m",
+            "src.review.p1_unified_integration_three",
+            "--manifest",
+            "output/p1-unified-integration-three-20260925/manifest.json",
+            "--output-dir",
+            "output/p1-unified-integration-three-20260925/attempt-1",
+            "--expected-head",
+            "834d8c957538ee069c66aadac9509552a4cc69d7",
+            "--admission",
+            "P1_UNIFIED_THREE_GATE_V2_20260925.json"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS-27.0-arm64-arm-64bit",
+          "cpu": null,
+          "gpu": null,
+          "ram_bytes": 51539607552,
+          "python": "3.12.13",
+          "dependencies": "Locked project venv; exact installed package inventory not recorded.",
+          "threads": 1,
+          "workers": 1,
+          "peak_rss_bytes": 390660096
+        },
+        "measurement": {
+          "started_at": "2026-09-25T15:08:13Z",
+          "finished_at": "2026-09-25T15:08:30Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": "Fresh solver child process includes graph read, structural parent selection, optional branch construction/E1 scoring, plan and diagnostics persistence and cleanup; E1 is online and included. OS cache state was not cleared.",
+          "evaluation_scope": "One independent official P1 E0 on the selected plan; excluded from solver wall.",
+          "budget": {
+            "wall_seconds": 300,
+            "candidate_limit": 10,
+            "stop_reason": "One solver and one E0 completed; batch ended after 3 cells."
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 1,
+            "E1": 4,
+            "E2": 0
+          },
+          "offline_costs": "No offline training or current-case preoptimization in this run; locked environment/input preparation occurred outside solver timing.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.cpu": "CPU model not recorded in this run receipt.",
+          "provenance.environment.gpu": "GPU inventory not recorded in this run receipt.",
+          "provenance.environment.dependencies": "Exact installed package inventory not recorded.",
+          "provenance.measurement.cold_start": "OS cache state was not measured.",
+          "provenance.measurement.seed": "Deterministic run; no seed was recorded."
+        }
+      },
+      "notes": [
+        "Part of a three-cell diagnostic run (3/500 cells), not full500.",
+        "Actual selected branch and complete nested E1 ledger are retained in run-derived.json and diagnostics.",
+        "The E0 objective exactly equals the selected objective for this cell.",
+        "Baseline points to the matching original singlecore E0 result in the frozen full500 feed; the baseline bytes were copied without scoring.",
+        "Three cells have different selected branches but belong to this same fixed solver commit; no cross-version splicing."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+      "baseline": {
+        "graph_sha256": "76537aa7163cf0748adcff2ecbd84fbc9a02a2d129ffcecd2bfebb89685e71ef",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/p1-unified-integration-three-20260925/baselines/016-singlecore-result.json.gz",
+          "sha256": "a161e763c0166f60b6f890528a96bcea8284bee60a13d3116b04cf5e0260bb55"
+        }
+      },
+      "cache_pair": null
+    }
+  ]
+}
