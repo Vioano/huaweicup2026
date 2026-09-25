@@ -1,0 +1,1320 @@
+{
+  "005": {
+    "carry_tensor": {
+      "tensor": {
+        "id": 1000001330,
+        "pos": "UB",
+        "size": 2304
+      },
+      "producer": {
+        "id": 1294,
+        "op": "ADD",
+        "pipe": "PIPE_V",
+        "cycles": 24
+      },
+      "consumers": [
+        {
+          "id": 1441,
+          "op": "REDUCE",
+          "pipe": "PIPE_V",
+          "cycles": 24
+        },
+        {
+          "id": 1442,
+          "op": "SUB",
+          "pipe": "PIPE_V",
+          "cycles": 24
+        },
+        {
+          "id": 2678,
+          "op": "ADD",
+          "pipe": "PIPE_V",
+          "cycles": 24
+        }
+      ]
+    },
+    "depth0_to_depth2_bypass": {
+      "from_row": 0,
+      "to_row": 28,
+      "from_depth": 0,
+      "to_depth": 2,
+      "path_original_node_ids": [
+        214,
+        1000000250,
+        1276,
+        1000001312,
+        1278,
+        1000001314,
+        1280,
+        1000001316,
+        1281,
+        1000001317,
+        1294,
+        1000001330,
+        2678,
+        1000002740,
+        2691,
+        1000002753,
+        2839,
+        1000002927,
+        2844,
+        1000002932,
+        2846,
+        1000002934,
+        2847,
+        1000002935,
+        2908,
+        1000002996,
+        2929
+      ],
+      "between_compute_ops": [
+        {
+          "id": 1276,
+          "op": "MATMUL"
+        },
+        {
+          "id": 1278,
+          "op": "ADD"
+        },
+        {
+          "id": 1280,
+          "op": "MUL"
+        },
+        {
+          "id": 1281,
+          "op": "ADD"
+        },
+        {
+          "id": 1294,
+          "op": "ADD"
+        },
+        {
+          "id": 2678,
+          "op": "ADD"
+        },
+        {
+          "id": 2691,
+          "op": "ADD"
+        },
+        {
+          "id": 2839,
+          "op": "SUB"
+        },
+        {
+          "id": 2844,
+          "op": "DIV"
+        },
+        {
+          "id": 2846,
+          "op": "MUL"
+        },
+        {
+          "id": 2847,
+          "op": "ADD"
+        },
+        {
+          "id": 2908,
+          "op": "MATMUL"
+        }
+      ]
+    },
+    "depth0_to_different_key_depth1": {
+      "from_row": 0,
+      "to_row": 15,
+      "from_depth": 0,
+      "to_depth": 1,
+      "path_original_node_ids": [
+        214,
+        1000000250,
+        1276,
+        1000001312,
+        1278,
+        1000001314,
+        1280,
+        1000001316,
+        1281,
+        1000001317,
+        1294,
+        1000001330,
+        1442,
+        1000001504,
+        1447,
+        1000001509,
+        1449,
+        1000001511,
+        1450,
+        1000001512,
+        1512,
+        1000001574,
+        1612
+      ],
+      "between_compute_ops": [
+        {
+          "id": 1276,
+          "op": "MATMUL"
+        },
+        {
+          "id": 1278,
+          "op": "ADD"
+        },
+        {
+          "id": 1280,
+          "op": "MUL"
+        },
+        {
+          "id": 1281,
+          "op": "ADD"
+        },
+        {
+          "id": 1294,
+          "op": "ADD"
+        },
+        {
+          "id": 1442,
+          "op": "SUB"
+        },
+        {
+          "id": 1447,
+          "op": "DIV"
+        },
+        {
+          "id": 1449,
+          "op": "MUL"
+        },
+        {
+          "id": 1450,
+          "op": "ADD"
+        },
+        {
+          "id": 1512,
+          "op": "MATMUL"
+        }
+      ]
+    },
+    "anchor_nodes_on_cross_key_path": [
+      {
+        "op": 214,
+        "anchor": [
+          "A",
+          0,
+          1000000089
+        ],
+        "track": 0
+      },
+      {
+        "op": 1512,
+        "anchor": [
+          "P",
+          1,
+          1000001512
+        ],
+        "track": 0
+      },
+      {
+        "op": 1612,
+        "anchor": [
+          "A",
+          1,
+          1000001522
+        ],
+        "track": 1
+      }
+    ],
+    "bypass_op_ownership": [
+      {
+        "op": 214,
+        "core": 0,
+        "track": 0,
+        "phase": 3,
+        "anchor": [
+          "A",
+          0,
+          1000000089
+        ],
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000089
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "A",
+            0,
+            1000000089
+          ]
+        ]
+      },
+      {
+        "op": 1276,
+        "core": 0,
+        "track": 0,
+        "phase": 4,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000089
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            1,
+            1000001512
+          ],
+          [
+            "P",
+            2,
+            1000002935
+          ]
+        ]
+      },
+      {
+        "op": 1278,
+        "core": 0,
+        "track": 0,
+        "phase": 4,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000089
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            1,
+            1000001512
+          ],
+          [
+            "P",
+            2,
+            1000002935
+          ]
+        ]
+      },
+      {
+        "op": 1280,
+        "core": 0,
+        "track": 0,
+        "phase": 4,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000089
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            1,
+            1000001512
+          ],
+          [
+            "P",
+            2,
+            1000002935
+          ]
+        ]
+      },
+      {
+        "op": 1281,
+        "core": 0,
+        "track": 0,
+        "phase": 4,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000089
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            1,
+            1000001512
+          ],
+          [
+            "P",
+            2,
+            1000002935
+          ]
+        ]
+      },
+      {
+        "op": 1294,
+        "core": 0,
+        "track": 0,
+        "phase": 4,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000089
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            1,
+            1000001512
+          ],
+          [
+            "P",
+            2,
+            1000002935
+          ]
+        ]
+      },
+      {
+        "op": 2678,
+        "core": 0,
+        "track": 0,
+        "phase": 7,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000089
+          ],
+          [
+            "A",
+            1,
+            1000001512
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            2,
+            1000002935
+          ]
+        ]
+      },
+      {
+        "op": 2691,
+        "core": 0,
+        "track": 0,
+        "phase": 7,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000089
+          ],
+          [
+            "A",
+            1,
+            1000001512
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            2,
+            1000002935
+          ]
+        ]
+      },
+      {
+        "op": 2839,
+        "core": 0,
+        "track": 0,
+        "phase": 7,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000089
+          ],
+          [
+            "A",
+            1,
+            1000001512
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            2,
+            1000002935
+          ]
+        ]
+      },
+      {
+        "op": 2844,
+        "core": 0,
+        "track": 0,
+        "phase": 7,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000089
+          ],
+          [
+            "A",
+            1,
+            1000001512
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            2,
+            1000002935
+          ]
+        ]
+      },
+      {
+        "op": 2846,
+        "core": 0,
+        "track": 0,
+        "phase": 7,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000089
+          ],
+          [
+            "A",
+            1,
+            1000001512
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            2,
+            1000002935
+          ]
+        ]
+      },
+      {
+        "op": 2847,
+        "core": 0,
+        "track": 0,
+        "phase": 7,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000089
+          ],
+          [
+            "A",
+            1,
+            1000001512
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            2,
+            1000002935
+          ]
+        ]
+      },
+      {
+        "op": 2908,
+        "core": 0,
+        "track": 0,
+        "phase": 8,
+        "anchor": [
+          "P",
+          2,
+          1000002935
+        ],
+        "first_upstream_anchors": [
+          [
+            "P",
+            2,
+            1000002935
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            2,
+            1000002935
+          ]
+        ]
+      },
+      {
+        "op": 2929,
+        "core": 0,
+        "track": 0,
+        "phase": 9,
+        "anchor": [
+          "A",
+          2,
+          1000002935
+        ],
+        "first_upstream_anchors": [
+          [
+            "A",
+            2,
+            1000002935
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "A",
+            2,
+            1000002935
+          ]
+        ]
+      }
+    ],
+    "head_join_examples": [
+      {
+        "op": {
+          "id": 1278,
+          "op": "ADD",
+          "pipe": "PIPE_V",
+          "cycles": 24
+        },
+        "inputs": [
+          {
+            "tensor": {
+              "id": 1000001312,
+              "pos": "L1",
+              "size": 2304
+            },
+            "producer": {
+              "id": 1276,
+              "op": "MATMUL",
+              "pipe": "PIPE_M",
+              "cycles": 114
+            }
+          },
+          {
+            "tensor": {
+              "id": 1000001313,
+              "pos": "L1",
+              "size": 2304
+            },
+            "producer": {
+              "id": 1277,
+              "op": "MATMUL",
+              "pipe": "PIPE_M",
+              "cycles": 114
+            }
+          }
+        ]
+      },
+      {
+        "op": {
+          "id": 2678,
+          "op": "ADD",
+          "pipe": "PIPE_V",
+          "cycles": 24
+        },
+        "inputs": [
+          {
+            "tensor": {
+              "id": 1000001330,
+              "pos": "UB",
+              "size": 2304
+            },
+            "producer": {
+              "id": 1294,
+              "op": "ADD",
+              "pipe": "PIPE_V",
+              "cycles": 24
+            }
+          },
+          {
+            "tensor": {
+              "id": 1000002739,
+              "pos": "UB",
+              "size": 2304
+            },
+            "producer": {
+              "id": 2677,
+              "op": "MUL",
+              "pipe": "PIPE_V",
+              "cycles": 24
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "086": {
+    "carry_tensor": {
+      "tensor": {
+        "id": 1000001700,
+        "pos": "UB",
+        "size": 2304
+      },
+      "producer": {
+        "id": 1663,
+        "op": "ADD",
+        "pipe": "PIPE_V",
+        "cycles": 24
+      },
+      "consumers": [
+        {
+          "id": 1829,
+          "op": "REDUCE",
+          "pipe": "PIPE_V",
+          "cycles": 24
+        },
+        {
+          "id": 1830,
+          "op": "SUB",
+          "pipe": "PIPE_V",
+          "cycles": 24
+        },
+        {
+          "id": 3434,
+          "op": "ADD",
+          "pipe": "PIPE_V",
+          "cycles": 24
+        }
+      ]
+    },
+    "depth0_to_depth2_bypass": {
+      "from_row": 0,
+      "to_row": 32,
+      "from_depth": 0,
+      "to_depth": 2,
+      "path_original_node_ids": [
+        240,
+        1000000277,
+        1645,
+        1000001682,
+        1647,
+        1000001684,
+        1649,
+        1000001686,
+        1650,
+        1000001687,
+        1663,
+        1000001700,
+        3434,
+        1000003497,
+        3447,
+        1000003510,
+        3614,
+        1000003703,
+        3619,
+        1000003708,
+        3621,
+        1000003710,
+        3622,
+        1000003711,
+        3693,
+        1000003782,
+        3717
+      ],
+      "between_compute_ops": [
+        {
+          "id": 1645,
+          "op": "MATMUL"
+        },
+        {
+          "id": 1647,
+          "op": "ADD"
+        },
+        {
+          "id": 1649,
+          "op": "MUL"
+        },
+        {
+          "id": 1650,
+          "op": "ADD"
+        },
+        {
+          "id": 1663,
+          "op": "ADD"
+        },
+        {
+          "id": 3434,
+          "op": "ADD"
+        },
+        {
+          "id": 3447,
+          "op": "ADD"
+        },
+        {
+          "id": 3614,
+          "op": "SUB"
+        },
+        {
+          "id": 3619,
+          "op": "DIV"
+        },
+        {
+          "id": 3621,
+          "op": "MUL"
+        },
+        {
+          "id": 3622,
+          "op": "ADD"
+        },
+        {
+          "id": 3693,
+          "op": "MATMUL"
+        }
+      ]
+    },
+    "depth0_to_different_key_depth1": {
+      "from_row": 0,
+      "to_row": 17,
+      "from_depth": 0,
+      "to_depth": 1,
+      "path_original_node_ids": [
+        240,
+        1000000277,
+        1645,
+        1000001682,
+        1647,
+        1000001684,
+        1649,
+        1000001686,
+        1650,
+        1000001687,
+        1663,
+        1000001700,
+        1830,
+        1000001893,
+        1835,
+        1000001898,
+        1837,
+        1000001900,
+        1838,
+        1000001901,
+        1910,
+        1000001973,
+        2025
+      ],
+      "between_compute_ops": [
+        {
+          "id": 1645,
+          "op": "MATMUL"
+        },
+        {
+          "id": 1647,
+          "op": "ADD"
+        },
+        {
+          "id": 1649,
+          "op": "MUL"
+        },
+        {
+          "id": 1650,
+          "op": "ADD"
+        },
+        {
+          "id": 1663,
+          "op": "ADD"
+        },
+        {
+          "id": 1830,
+          "op": "SUB"
+        },
+        {
+          "id": 1835,
+          "op": "DIV"
+        },
+        {
+          "id": 1837,
+          "op": "MUL"
+        },
+        {
+          "id": 1838,
+          "op": "ADD"
+        },
+        {
+          "id": 1910,
+          "op": "MATMUL"
+        }
+      ]
+    },
+    "anchor_nodes_on_cross_key_path": [
+      {
+        "op": 240,
+        "anchor": [
+          "A",
+          0,
+          1000000091
+        ],
+        "track": 0
+      },
+      {
+        "op": 1910,
+        "anchor": [
+          "P",
+          1,
+          1000001901
+        ],
+        "track": 0
+      },
+      {
+        "op": 2025,
+        "anchor": [
+          "A",
+          1,
+          1000001911
+        ],
+        "track": 1
+      }
+    ],
+    "bypass_op_ownership": [
+      {
+        "op": 240,
+        "core": 0,
+        "track": 0,
+        "phase": 3,
+        "anchor": [
+          "A",
+          0,
+          1000000091
+        ],
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000091
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "A",
+            0,
+            1000000091
+          ]
+        ]
+      },
+      {
+        "op": 1645,
+        "core": 0,
+        "track": 0,
+        "phase": 4,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000091
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            1,
+            1000001901
+          ],
+          [
+            "P",
+            2,
+            1000003711
+          ]
+        ]
+      },
+      {
+        "op": 1647,
+        "core": 0,
+        "track": 0,
+        "phase": 4,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000091
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            1,
+            1000001901
+          ],
+          [
+            "P",
+            2,
+            1000003711
+          ]
+        ]
+      },
+      {
+        "op": 1649,
+        "core": 0,
+        "track": 0,
+        "phase": 4,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000091
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            1,
+            1000001901
+          ],
+          [
+            "P",
+            2,
+            1000003711
+          ]
+        ]
+      },
+      {
+        "op": 1650,
+        "core": 0,
+        "track": 0,
+        "phase": 4,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000091
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            1,
+            1000001901
+          ],
+          [
+            "P",
+            2,
+            1000003711
+          ]
+        ]
+      },
+      {
+        "op": 1663,
+        "core": 0,
+        "track": 0,
+        "phase": 4,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000091
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            1,
+            1000001901
+          ],
+          [
+            "P",
+            2,
+            1000003711
+          ]
+        ]
+      },
+      {
+        "op": 3434,
+        "core": 0,
+        "track": 0,
+        "phase": 7,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000091
+          ],
+          [
+            "A",
+            1,
+            1000001901
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            2,
+            1000003711
+          ]
+        ]
+      },
+      {
+        "op": 3447,
+        "core": 0,
+        "track": 0,
+        "phase": 7,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000091
+          ],
+          [
+            "A",
+            1,
+            1000001901
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            2,
+            1000003711
+          ]
+        ]
+      },
+      {
+        "op": 3614,
+        "core": 0,
+        "track": 0,
+        "phase": 7,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000091
+          ],
+          [
+            "A",
+            1,
+            1000001901
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            2,
+            1000003711
+          ]
+        ]
+      },
+      {
+        "op": 3619,
+        "core": 0,
+        "track": 0,
+        "phase": 7,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000091
+          ],
+          [
+            "A",
+            1,
+            1000001901
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            2,
+            1000003711
+          ]
+        ]
+      },
+      {
+        "op": 3621,
+        "core": 0,
+        "track": 0,
+        "phase": 7,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000091
+          ],
+          [
+            "A",
+            1,
+            1000001901
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            2,
+            1000003711
+          ]
+        ]
+      },
+      {
+        "op": 3622,
+        "core": 0,
+        "track": 0,
+        "phase": 7,
+        "anchor": null,
+        "first_upstream_anchors": [
+          [
+            "A",
+            0,
+            1000000091
+          ],
+          [
+            "A",
+            1,
+            1000001901
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            2,
+            1000003711
+          ]
+        ]
+      },
+      {
+        "op": 3693,
+        "core": 0,
+        "track": 0,
+        "phase": 8,
+        "anchor": [
+          "P",
+          2,
+          1000003711
+        ],
+        "first_upstream_anchors": [
+          [
+            "P",
+            2,
+            1000003711
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "P",
+            2,
+            1000003711
+          ]
+        ]
+      },
+      {
+        "op": 3717,
+        "core": 0,
+        "track": 0,
+        "phase": 9,
+        "anchor": [
+          "A",
+          2,
+          1000003711
+        ],
+        "first_upstream_anchors": [
+          [
+            "A",
+            2,
+            1000003711
+          ]
+        ],
+        "first_downstream_anchors": [
+          [
+            "A",
+            2,
+            1000003711
+          ]
+        ]
+      }
+    ],
+    "head_join_examples": [
+      {
+        "op": {
+          "id": 1647,
+          "op": "ADD",
+          "pipe": "PIPE_V",
+          "cycles": 24
+        },
+        "inputs": [
+          {
+            "tensor": {
+              "id": 1000001682,
+              "pos": "L1",
+              "size": 2304
+            },
+            "producer": {
+              "id": 1645,
+              "op": "MATMUL",
+              "pipe": "PIPE_M",
+              "cycles": 114
+            }
+          },
+          {
+            "tensor": {
+              "id": 1000001683,
+              "pos": "L1",
+              "size": 2304
+            },
+            "producer": {
+              "id": 1646,
+              "op": "MATMUL",
+              "pipe": "PIPE_M",
+              "cycles": 114
+            }
+          }
+        ]
+      },
+      {
+        "op": {
+          "id": 3434,
+          "op": "ADD",
+          "pipe": "PIPE_V",
+          "cycles": 24
+        },
+        "inputs": [
+          {
+            "tensor": {
+              "id": 1000001700,
+              "pos": "UB",
+              "size": 2304
+            },
+            "producer": {
+              "id": 1663,
+              "op": "ADD",
+              "pipe": "PIPE_V",
+              "cycles": 24
+            }
+          },
+          {
+            "tensor": {
+              "id": 1000003496,
+              "pos": "UB",
+              "size": 2304
+            },
+            "producer": {
+              "id": 3433,
+              "op": "MUL",
+              "pipe": "PIPE_V",
+              "cycles": 24
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

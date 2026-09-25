@@ -1,0 +1,365 @@
+{
+  "schema_version": 1,
+  "submission_version": 1,
+  "records": [
+    {
+      "attempt_id": "nikolastarx-query-flow-unified-071-k5-p3",
+      "revision": 1,
+      "run_id": "q3-query-flow-unified-071-k5-20260925T132224Z",
+      "algorithm_id": "q3-query-flow-unified",
+      "algorithm_name": "Q3 unified query-flow solver",
+      "variant": "guarded-query-flow-selection-071-k5",
+      "solver_commit": "c960cd38724fc8d5cc8c4e8942a58cdcf74fdc43",
+      "parameters": {
+        "cores": 5,
+        "selected_plan_sha256": "b0ccb1c9d9e2f90ae6566ecaa725a0440c47d942401a3cdcb261d90eb0968136",
+        "candidate_evaluations": {
+          "P3": 4,
+          "P2": 2
+        },
+        "retries": 0
+      },
+      "problem": "P3",
+      "case_id": "071",
+      "cores": 5,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 5785,
+        "solver_wall_seconds": 1.1744653750211,
+        "evaluation_wall_seconds": 0.0468659580219537,
+        "ddr_bytes": 393630,
+        "extra_ddr_bytes": 272184,
+        "spill_bytes": 0,
+        "cache_hit_rate": 0.2979895018322274
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "c960cd38724fc8d5cc8c4e8942a58cdcf74fdc43",
+        "entrypoint": "multicore_cut_evaluate_problem_3.evaluate_problem_3"
+      },
+      "identity": {
+        "graph_sha256": "437cc74cae9e0fc0cb89b05403c62062ceff8d5bc2224c8834c519e69524e897",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "b0ccb1c9d9e2f90ae6566ecaa725a0440c47d942401a3cdcb261d90eb0968136"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/q3-nikolastarx/query-flow-integration-20260925/run/plan.json",
+          "sha256": "b0ccb1c9d9e2f90ae6566ecaa725a0440c47d942401a3cdcb261d90eb0968136"
+        },
+        "result": {
+          "path": "results/a/q3-nikolastarx/query-flow-integration-20260925/run/evidence/p3-query_flow/result.json.gz",
+          "sha256": "dba8245dfc7208094855957448cc81cb7f5bc27004f15bf9a09d8ea937c2e944"
+        },
+        "run": {
+          "path": "results/a/q3-nikolastarx/query-flow-integration-20260925/integration-control/receipt.json",
+          "sha256": "7329abfa6a2e493938cc4b9dc6ee515d524c3dbc7fcb9fe956a2e8d678879752"
+        },
+        "trace": {
+          "path": "results/a/q3-nikolastarx/query-flow-integration-20260925/run/outer_e0_ledger.json",
+          "sha256": "ca0c29222a1ad0edeac3c4e5dabb236045189ab82c15a368a0a132be3d58759e"
+        },
+        "log": {
+          "path": "results/a/q3-nikolastarx/query-flow-integration-20260925/integration-control/samples.jsonl",
+          "sha256": "47d4d8d3b6189f86585e7d841769ff5e9f1379b01f878008db6a7c9fad2158c3"
+        },
+        "manifest": {
+          "path": "results/a/q3-nikolastarx/query-flow-integration-20260925/integration-manifest.json",
+          "sha256": "b93b1aee59d876d4c93a20f72ed99af47cc0876d4612b114cef0b09f1100fe78"
+        }
+      },
+      "runtime_id": "macos-arm64-local-shared",
+      "observed_at": "2026-09-25T13:22:24.736912Z",
+      "timing": {
+        "solver_includes_evaluation": true,
+        "evaluation_precision": "Per-call E0 wall from retained evaluations.json; supervisor window is the reported inclusive solver wall.",
+        "utc": "T0/T1 and supervisor interval from external receipt; OS cold-cache timing not established."
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "c960cd38724fc8d5cc8c4e8942a58cdcf74fdc43",
+            "path": "src/q3/query_flow_solve.py",
+            "entrypoint": "src.q3.query_flow_solve.main"
+          },
+          "authors": [
+            "nikolastar"
+          ],
+          "method": "Unified query-flow construction and guarded candidate selection, as executed by the frozen solver entrypoint; this record covers only case 071 at five cores.",
+          "references": [],
+          "upstream": [],
+          "selected_algorithm_id": "q3-query-flow-unified",
+          "selected_solver_commit": "c960cd38724fc8d5cc8c4e8942a58cdcf74fdc43"
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "c1edb49324fd8ff45cabecec02cf051ab5ddd119",
+            "path": "results/a/q3-nikolastarx/query-flow-integration-20260925/integration_runner.py",
+            "entrypoint": "integration_runner.main"
+          },
+          "argv": [
+            "python3.14",
+            "-B",
+            "results/a/q3-nikolastarx/query-flow-integration-20260925/integration_runner.py",
+            "--manifest",
+            "results/a/q3-nikolastarx/query-flow-integration-20260925/integration-manifest.json"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS arm64",
+          "cpu": null,
+          "gpu": "none",
+          "ram_bytes": null,
+          "python": "3.14.5",
+          "dependencies": null,
+          "threads": null,
+          "workers": 1,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": "2026-09-25T13:22:24.736912Z",
+          "finished_at": "2026-09-25T13:22:25.802693Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": "Complete measured supervisor lifecycle window, including pre-child sampling, runner startup, unified solve/construction/online candidate E0 selection, post-child terminal checks and cleanup. Child T0/T1 are lifecycle markers inside this window; their difference is not solver_wall. OS cold cache not established.",
+          "evaluation_scope": "The row-specific final-plan official E0 duration; included in the six-call unified solver window.",
+          "budget": {
+            "wall_seconds": 600,
+            "candidate_limit": 4,
+            "stop_reason": "One unified run completed 4 P3 candidate evaluations and 2 same-plan P2 guard evaluations; zero retries."
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 4,
+            "E1": 0,
+            "E2": 0
+          },
+          "offline_costs": "none for this run; construction, selection, and all six E0 calls were online.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.cpu": "Exact CPU model is not in retained execution receipt.",
+          "provenance.environment.ram_bytes": "RAM capacity is not in retained execution receipt.",
+          "provenance.environment.dependencies": "Dependency environment fingerprint is not in retained execution receipt.",
+          "provenance.environment.threads": "Thread count is not recorded.",
+          "provenance.environment.peak_rss_bytes": "One-second supervisor samples do not certify process peak RSS.",
+          "provenance.measurement.cold_start": "OS/filesystem cache state was not established.",
+          "provenance.measurement.seed": "No random seed; single deterministic selected construction."
+        }
+      },
+      "notes": [
+        "Single fresh unified solver construction/selection on official 071/K5; localized evidence only, not a full algorithm/full-500 result or generalization claim.",
+        "Unified run ID q3-query-flow-unified-071-k5-20260925T132224Z; frozen algorithm source c960cd38724fc8d5cc8c4e8942a58cdcf74fdc43, delivery/runner source c1edb49324fd8ff45cabecec02cf051ab5ddd119. They are intentionally reported separately.",
+        "Solver wall uses the complete measured supervisor lifecycle window 1.1744653750211s, including pre-child sampling, monitoring, and post-child terminal checks/cleanup. Child T0/T1 are lifecycle markers inside this window; their difference is not solver_wall. The outer runner receipt (results/a/q3-nikolastarx/query-flow-integration-20260925/run/outer_receipt.json, SHA256 ce920140f2ee3a9e4f1e6f3bd7f072d9653e539b3d0fa6f32cb53539dbf0fd60) is retained as a diagnostic reference. All six online E0 calls are included and must not be added again; OS cold cache was not established. Runner-entry wall was 0.5635766250197776s and is diagnostic only.",
+        "One shared invocation produced both P3 and its same-plan P2 guard; the two feed rows are paired views, not two solver invocations. Total run accounting is 1 solver invocation and 6 E0 calls (4 P3, 2 P2), zero retries.",
+        "Manifest retains resource_policy_proposal=\"proposal_pending_scheduler_approval\" despite separate explicit admission and successful execution; original manifest/control evidence is preserved unchanged.",
+        "P3 cache hit rate is byte-based: 90264 hit bytes / 302910 total; scheduled movement is not a physical DDR counter."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/blob/c960cd38724fc8d5cc8c4e8942a58cdcf74fdc43/src/q3/query_flow_solve.py",
+      "baseline": {
+        "graph_sha256": "437cc74cae9e0fc0cb89b05403c62062ceff8d5bc2224c8834c519e69524e897",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/benchmark-board/official-singlecore-20260924/071/result.json.gz",
+          "sha256": "d2e46fd00db3766c4ca574084cde6d94b1aa062cab5b5199474c86013e51daa5"
+        }
+      },
+      "cache_pair": {
+        "graph_sha256": "437cc74cae9e0fc0cb89b05403c62062ceff8d5bc2224c8834c519e69524e897",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "b0ccb1c9d9e2f90ae6566ecaa725a0440c47d942401a3cdcb261d90eb0968136",
+        "cores": 5,
+        "route": "E0",
+        "result": {
+          "path": "results/a/q3-nikolastarx/query-flow-integration-20260925/run/evidence/p2-query_flow/result.json.gz",
+          "sha256": "d2e19cad25263310d4c1b8cc3764374d73ef20445c9d06e826f79c4f7a11f0f5"
+        }
+      }
+    },
+    {
+      "attempt_id": "nikolastarx-query-flow-unified-071-k5-p2",
+      "revision": 1,
+      "run_id": "q3-query-flow-unified-071-k5-20260925T132224Z",
+      "algorithm_id": "q3-query-flow-unified",
+      "algorithm_name": "Q3 unified query-flow solver",
+      "variant": "guarded-query-flow-selection-071-k5",
+      "solver_commit": "c960cd38724fc8d5cc8c4e8942a58cdcf74fdc43",
+      "parameters": {
+        "cores": 5,
+        "selected_plan_sha256": "b0ccb1c9d9e2f90ae6566ecaa725a0440c47d942401a3cdcb261d90eb0968136",
+        "candidate_evaluations": {
+          "P3": 4,
+          "P2": 2
+        },
+        "retries": 0
+      },
+      "problem": "P2",
+      "case_id": "071",
+      "cores": 5,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 7070,
+        "solver_wall_seconds": 1.1744653750211,
+        "evaluation_wall_seconds": 0.04590658302186057,
+        "ddr_bytes": 393630,
+        "extra_ddr_bytes": 272184,
+        "spill_bytes": 0,
+        "cache_hit_rate": null
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "c960cd38724fc8d5cc8c4e8942a58cdcf74fdc43",
+        "entrypoint": "multicore_cut_evaluate_problem_2.evaluate_scene_b"
+      },
+      "identity": {
+        "graph_sha256": "437cc74cae9e0fc0cb89b05403c62062ceff8d5bc2224c8834c519e69524e897",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "b0ccb1c9d9e2f90ae6566ecaa725a0440c47d942401a3cdcb261d90eb0968136"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/q3-nikolastarx/query-flow-integration-20260925/run/plan.json",
+          "sha256": "b0ccb1c9d9e2f90ae6566ecaa725a0440c47d942401a3cdcb261d90eb0968136"
+        },
+        "result": {
+          "path": "results/a/q3-nikolastarx/query-flow-integration-20260925/run/evidence/p2-query_flow/result.json.gz",
+          "sha256": "d2e19cad25263310d4c1b8cc3764374d73ef20445c9d06e826f79c4f7a11f0f5"
+        },
+        "run": {
+          "path": "results/a/q3-nikolastarx/query-flow-integration-20260925/integration-control/receipt.json",
+          "sha256": "7329abfa6a2e493938cc4b9dc6ee515d524c3dbc7fcb9fe956a2e8d678879752"
+        },
+        "trace": {
+          "path": "results/a/q3-nikolastarx/query-flow-integration-20260925/run/outer_e0_ledger.json",
+          "sha256": "ca0c29222a1ad0edeac3c4e5dabb236045189ab82c15a368a0a132be3d58759e"
+        },
+        "log": {
+          "path": "results/a/q3-nikolastarx/query-flow-integration-20260925/integration-control/samples.jsonl",
+          "sha256": "47d4d8d3b6189f86585e7d841769ff5e9f1379b01f878008db6a7c9fad2158c3"
+        },
+        "manifest": {
+          "path": "results/a/q3-nikolastarx/query-flow-integration-20260925/integration-manifest.json",
+          "sha256": "b93b1aee59d876d4c93a20f72ed99af47cc0876d4612b114cef0b09f1100fe78"
+        }
+      },
+      "runtime_id": "macos-arm64-local-shared",
+      "observed_at": "2026-09-25T13:22:24.736912Z",
+      "timing": {
+        "solver_includes_evaluation": true,
+        "evaluation_precision": "Per-call E0 wall from retained evaluations.json; supervisor window is the reported inclusive solver wall.",
+        "utc": "T0/T1 and supervisor interval from external receipt; OS cold-cache timing not established."
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "c960cd38724fc8d5cc8c4e8942a58cdcf74fdc43",
+            "path": "src/q3/query_flow_solve.py",
+            "entrypoint": "src.q3.query_flow_solve.main"
+          },
+          "authors": [
+            "nikolastar"
+          ],
+          "method": "Unified query-flow construction and guarded candidate selection, as executed by the frozen solver entrypoint; this record covers only case 071 at five cores.",
+          "references": [],
+          "upstream": [],
+          "selected_algorithm_id": "q3-query-flow-unified",
+          "selected_solver_commit": "c960cd38724fc8d5cc8c4e8942a58cdcf74fdc43"
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "c1edb49324fd8ff45cabecec02cf051ab5ddd119",
+            "path": "results/a/q3-nikolastarx/query-flow-integration-20260925/integration_runner.py",
+            "entrypoint": "integration_runner.main"
+          },
+          "argv": [
+            "python3.14",
+            "-B",
+            "results/a/q3-nikolastarx/query-flow-integration-20260925/integration_runner.py",
+            "--manifest",
+            "results/a/q3-nikolastarx/query-flow-integration-20260925/integration-manifest.json"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS arm64",
+          "cpu": null,
+          "gpu": "none",
+          "ram_bytes": null,
+          "python": "3.14.5",
+          "dependencies": null,
+          "threads": null,
+          "workers": 1,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": "2026-09-25T13:22:24.736912Z",
+          "finished_at": "2026-09-25T13:22:25.802693Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": "Complete measured supervisor lifecycle window, including pre-child sampling, runner startup, unified solve/construction/online candidate E0 selection, post-child terminal checks and cleanup. Child T0/T1 are lifecycle markers inside this window; their difference is not solver_wall. OS cold cache not established.",
+          "evaluation_scope": "The row-specific final-plan official E0 duration; included in the six-call unified solver window.",
+          "budget": {
+            "wall_seconds": 600,
+            "candidate_limit": 4,
+            "stop_reason": "One unified run completed 4 P3 candidate evaluations and 2 same-plan P2 guard evaluations; zero retries."
+          },
+          "calls": {
+            "solver": 0,
+            "E0": 2,
+            "E1": 0,
+            "E2": 0
+          },
+          "offline_costs": "none for this run; construction, selection, and all six E0 calls were online.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.cpu": "Exact CPU model is not in retained execution receipt.",
+          "provenance.environment.ram_bytes": "RAM capacity is not in retained execution receipt.",
+          "provenance.environment.dependencies": "Dependency environment fingerprint is not in retained execution receipt.",
+          "provenance.environment.threads": "Thread count is not recorded.",
+          "provenance.environment.peak_rss_bytes": "One-second supervisor samples do not certify process peak RSS.",
+          "provenance.measurement.cold_start": "OS/filesystem cache state was not established.",
+          "provenance.measurement.seed": "No random seed; single deterministic selected construction."
+        }
+      },
+      "notes": [
+        "Single fresh unified solver construction/selection on official 071/K5; localized evidence only, not a full algorithm/full-500 result or generalization claim.",
+        "Unified run ID q3-query-flow-unified-071-k5-20260925T132224Z; frozen algorithm source c960cd38724fc8d5cc8c4e8942a58cdcf74fdc43, delivery/runner source c1edb49324fd8ff45cabecec02cf051ab5ddd119. They are intentionally reported separately.",
+        "Solver wall uses the complete measured supervisor lifecycle window 1.1744653750211s, including pre-child sampling, monitoring, and post-child terminal checks/cleanup. Child T0/T1 are lifecycle markers inside this window; their difference is not solver_wall. The outer runner receipt (results/a/q3-nikolastarx/query-flow-integration-20260925/run/outer_receipt.json, SHA256 ce920140f2ee3a9e4f1e6f3bd7f072d9653e539b3d0fa6f32cb53539dbf0fd60) is retained as a diagnostic reference. All six online E0 calls are included and must not be added again; OS cold cache was not established. Runner-entry wall was 0.5635766250197776s and is diagnostic only.",
+        "One shared invocation produced both P3 and its same-plan P2 guard; the two feed rows are paired views, not two solver invocations. Total run accounting is 1 solver invocation and 6 E0 calls (4 P3, 2 P2), zero retries.",
+        "Manifest retains resource_policy_proposal=\"proposal_pending_scheduler_approval\" despite separate explicit admission and successful execution; original manifest/control evidence is preserved unchanged.",
+        "P3 cache hit rate is byte-based: 90264 hit bytes / 302910 total; scheduled movement is not a physical DDR counter."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/blob/c960cd38724fc8d5cc8c4e8942a58cdcf74fdc43/src/q3/query_flow_solve.py",
+      "baseline": {
+        "graph_sha256": "437cc74cae9e0fc0cb89b05403c62062ceff8d5bc2224c8834c519e69524e897",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/benchmark-board/official-singlecore-20260924/071/result.json.gz",
+          "sha256": "d2e46fd00db3766c4ca574084cde6d94b1aa062cab5b5199474c86013e51daa5"
+        }
+      },
+      "cache_pair": null
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "status": "complete",
+  "manifest_sha256": "b93b1aee59d876d4c93a20f72ed99af47cc0876d4612b114cef0b09f1100fe78",
+  "supervisor_sha256": "aaefef1e9507e4de322e432e72431c3aa1af308a1621d6f8c65a9e78c96db7ab",
+  "sample_interval_seconds": 1,
+  "delivery_head": "c1edb49324fd8ff45cabecec02cf051ab5ddd119",
+  "frozen_solver_commit": "c960cd38724fc8d5cc8c4e8942a58cdcf74fdc43",
+  "frozen_solver_sha256": "aed379e861a1342b05a68dd4c9ebfac13a458edcdc59b650425bd40a29b2cff6",
+  "budget": {
+    "p3": 4,
+    "p2": 2,
+    "phase_seconds": 90,
+    "total_seconds": 600,
+    "retries": 0
+  },
+  "resource_policy": "proposal_pending_scheduler_approval",
+  "command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/query-flow-integration-20260925/integration_runner.py",
+    "--manifest",
+    "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/query-flow-integration-20260925/integration-manifest.json"
+  ],
+  "T0": "2026-09-25T13:22:24.736912+00:00",
+  "swap_used_t0_mib": 1287.12,
+  "parent_pid": 66301,
+  "parent_start_identity": [
+    1790342544,
+    737245
+  ],
+  "terminal_branch": "parent_exited",
+  "exit_code": 0,
+  "T1": "2026-09-25T13:22:25.802693+00:00",
+  "final_sample": {
+    "utc": "2026-09-25T13:22:25.855555+00:00",
+    "pressure_level": 1,
+    "physical_free_bytes": 136101888,
+    "swap_used_mib": 1287.12,
+    "swap_free_mib": 760.88,
+    "disk_free_bytes": 232442265600,
+    "owned_rss_bytes": 0,
+    "owned_processes": [],
+    "other_scorers": []
+  },
+  "outer_supervisor_wall_seconds": 1.1744653750211,
+  "finished_at": "2026-09-25T13:22:25.855883+00:00",
+  "observed_owned_pids": [
+    66301
+  ],
+  "resource_note": "1-second samples; not a hard peak guarantee; physical free and swap free observed only"
+}

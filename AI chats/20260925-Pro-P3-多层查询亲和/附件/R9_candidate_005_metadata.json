@@ -1,0 +1,813 @@
+{
+  "status": "STATIC_CONSTRUCTED_NOT_OFFICIALLY_EVALUATED",
+  "strategy": "layered_persistent_affinity_r9",
+  "original_compute_ops": 4113,
+  "rows": 42,
+  "layers": 3,
+  "tracks": [
+    [
+      [
+        0,
+        1000000089
+      ],
+      [
+        1,
+        1000001512
+      ],
+      [
+        2,
+        1000002935
+      ]
+    ],
+    [
+      [
+        0,
+        1000000099
+      ],
+      [
+        1,
+        1000001522
+      ],
+      [
+        2,
+        1000002945
+      ]
+    ],
+    [
+      [
+        0,
+        1000000109
+      ],
+      [
+        1,
+        1000001532
+      ],
+      [
+        2,
+        1000002955
+      ]
+    ],
+    [
+      [
+        0,
+        1000000119
+      ],
+      [
+        1,
+        1000001542
+      ],
+      [
+        2,
+        1000002965
+      ]
+    ],
+    [
+      [
+        0,
+        1000000129
+      ],
+      [
+        1,
+        1000001552
+      ],
+      [
+        2,
+        1000002975
+      ]
+    ],
+    [
+      [
+        0,
+        1000000139
+      ],
+      [
+        1,
+        1000001562
+      ],
+      [
+        2,
+        1000002985
+      ]
+    ],
+    [
+      [
+        0,
+        1000000149
+      ],
+      [
+        1,
+        1000001572
+      ],
+      [
+        2,
+        1000002995
+      ]
+    ]
+  ],
+  "selected_groups": [
+    [
+      0
+    ],
+    [
+      1
+    ],
+    [
+      2
+    ],
+    [
+      3,
+      5
+    ],
+    [
+      4,
+      6
+    ]
+  ],
+  "phase_counts": {
+    "0": 18,
+    "1": 105,
+    "2": 42,
+    "3": 1120,
+    "4": 189,
+    "5": 42,
+    "6": 1120,
+    "7": 189,
+    "8": 42,
+    "9": 1120,
+    "10": 126
+  },
+  "recognized_row_ops": 3360,
+  "projection_ops": 126,
+  "non_anchor_bridge_and_auxiliary_ops": 627,
+  "stopped_signature_classes": 79,
+  "private_track_ops": 4095,
+  "shared_components": [
+    [
+      13
+    ],
+    [
+      15
+    ],
+    [
+      17
+    ],
+    [
+      29
+    ],
+    [
+      31
+    ],
+    [
+      33
+    ],
+    [
+      1410
+    ],
+    [
+      1412
+    ],
+    [
+      1414
+    ],
+    [
+      1426
+    ],
+    [
+      1428
+    ],
+    [
+      1430
+    ],
+    [
+      2807
+    ],
+    [
+      2809
+    ],
+    [
+      2811
+    ],
+    [
+      2823
+    ],
+    [
+      2825
+    ],
+    [
+      2827
+    ]
+  ],
+  "core_pipe_work_M_V": [
+    [
+      10107,
+      9306
+    ],
+    [
+      9972,
+      9306
+    ],
+    [
+      9972,
+      9306
+    ],
+    [
+      16923,
+      16506
+    ],
+    [
+      16908,
+      16506
+    ]
+  ],
+  "subset_dp": {
+    "track_work_M_V": [
+      [
+        9972,
+        9306
+      ],
+      [
+        9972,
+        9306
+      ],
+      [
+        9972,
+        9306
+      ],
+      [
+        9972,
+        9306
+      ],
+      [
+        9972,
+        9306
+      ],
+      [
+        6876,
+        7200
+      ],
+      [
+        6876,
+        7200
+      ]
+    ],
+    "bottleneck_private_pipe_work": 16848,
+    "tie_break_sum_squared_pipe_work": 1670733540,
+    "dp_states": 61,
+    "dp_transitions": 162,
+    "tie_dp_states": 20,
+    "tie_dp_transitions": 34,
+    "objective": "exact two-pass lexicographic load proxy; NOT official Makespan optimum"
+  },
+  "memory": {
+    "bucket_frontier_peaks": [
+      {
+        "L1": {
+          "bytes": 15168,
+          "bucket": 145,
+          "op": 786
+        },
+        "UB": {
+          "bytes": 21844,
+          "bucket": 344,
+          "op": 1585
+        }
+      },
+      {
+        "L1": {
+          "bytes": 14976,
+          "bucket": 136,
+          "op": 866
+        },
+        "UB": {
+          "bytes": 21844,
+          "bucket": 335,
+          "op": 1665
+        }
+      },
+      {
+        "L1": {
+          "bytes": 14976,
+          "bucket": 136,
+          "op": 946
+        },
+        "UB": {
+          "bytes": 21844,
+          "bucket": 335,
+          "op": 1745
+        }
+      },
+      {
+        "L1": {
+          "bytes": 40288,
+          "bucket": 174,
+          "op": 1026
+        },
+        "UB": {
+          "bytes": 23668,
+          "bucket": 566,
+          "op": 1825
+        }
+      },
+      {
+        "L1": {
+          "bytes": 40288,
+          "bucket": 173,
+          "op": 1106
+        },
+        "UB": {
+          "bytes": 23668,
+          "bucket": 565,
+          "op": 1905
+        }
+      }
+    ],
+    "ever_touched_union_bytes": [
+      {
+        "L1": 376512,
+        "UB": 309894
+      },
+      {
+        "L1": 334944,
+        "UB": 309894
+      },
+      {
+        "L1": 334944,
+        "UB": 309894
+      },
+      {
+        "L1": 560160,
+        "UB": 516678
+      },
+      {
+        "L1": 555552,
+        "UB": 516678
+      }
+    ],
+    "step2_no_spill_certificate": true,
+    "union_guard_passes": false,
+    "runtime_memory_peak": null,
+    "prepared_memory_edges": null,
+    "note": "Frontier equals hypothetical no-spill Step2 peak under singleton/source guards. It is NOT a runtime Step3 peak or a no-memory-edge certificate."
+  },
+  "compute_mv_fifo": {
+    "L0": 21504,
+    "Ldelta": 21636,
+    "max_remote_edges": 4,
+    "remote_path_witness": [
+      [
+        29,
+        111,
+        1
+      ],
+      [
+        111,
+        112,
+        0
+      ],
+      [
+        112,
+        113,
+        0
+      ],
+      [
+        113,
+        714,
+        0
+      ],
+      [
+        714,
+        728,
+        1
+      ],
+      [
+        728,
+        729,
+        0
+      ],
+      [
+        729,
+        736,
+        0
+      ],
+      [
+        736,
+        751,
+        0
+      ],
+      [
+        751,
+        754,
+        0
+      ],
+      [
+        754,
+        755,
+        0
+      ],
+      [
+        755,
+        756,
+        0
+      ],
+      [
+        756,
+        782,
+        0
+      ],
+      [
+        782,
+        789,
+        0
+      ],
+      [
+        789,
+        792,
+        0
+      ],
+      [
+        792,
+        794,
+        0
+      ],
+      [
+        794,
+        795,
+        0
+      ],
+      [
+        795,
+        1278,
+        0
+      ],
+      [
+        1278,
+        1280,
+        0
+      ],
+      [
+        1280,
+        1281,
+        0
+      ],
+      [
+        1281,
+        1294,
+        0
+      ],
+      [
+        1294,
+        1442,
+        0
+      ],
+      [
+        1442,
+        1447,
+        0
+      ],
+      [
+        1447,
+        1449,
+        0
+      ],
+      [
+        1449,
+        1450,
+        0
+      ],
+      [
+        1450,
+        2094,
+        0
+      ],
+      [
+        2094,
+        2259,
+        1
+      ],
+      [
+        2259,
+        2266,
+        0
+      ],
+      [
+        2266,
+        2269,
+        0
+      ],
+      [
+        2269,
+        2271,
+        0
+      ],
+      [
+        2271,
+        2272,
+        0
+      ],
+      [
+        2272,
+        2694,
+        0
+      ],
+      [
+        2694,
+        2696,
+        0
+      ],
+      [
+        2696,
+        2697,
+        0
+      ],
+      [
+        2697,
+        2710,
+        0
+      ],
+      [
+        2710,
+        2849,
+        0
+      ],
+      [
+        2849,
+        2854,
+        0
+      ],
+      [
+        2854,
+        2856,
+        0
+      ],
+      [
+        2856,
+        2857,
+        0
+      ],
+      [
+        2857,
+        2912,
+        0
+      ],
+      [
+        2912,
+        2931,
+        1
+      ]
+    ],
+    "interpretation": "Original compute plus M/V FIFO fixed-plan lower bound; omits COPY service, bandwidth, cache and memory edges."
+  },
+  "whole_path_envelope": {
+    "L0": 33429,
+    "Ldelta": 33522,
+    "max_remote_edges": 4,
+    "remote_path_witness": [
+      [
+        29,
+        111,
+        1
+      ],
+      [
+        111,
+        112,
+        0
+      ],
+      [
+        112,
+        113,
+        0
+      ],
+      [
+        113,
+        133,
+        0
+      ],
+      [
+        133,
+        147,
+        1
+      ],
+      [
+        147,
+        148,
+        0
+      ],
+      [
+        148,
+        155,
+        0
+      ],
+      [
+        155,
+        170,
+        0
+      ],
+      [
+        170,
+        173,
+        0
+      ],
+      [
+        173,
+        174,
+        0
+      ],
+      [
+        174,
+        175,
+        0
+      ],
+      [
+        175,
+        201,
+        0
+      ],
+      [
+        201,
+        208,
+        0
+      ],
+      [
+        208,
+        211,
+        0
+      ],
+      [
+        211,
+        213,
+        0
+      ],
+      [
+        213,
+        214,
+        0
+      ],
+      [
+        214,
+        1276,
+        0
+      ],
+      [
+        1276,
+        1278,
+        0
+      ],
+      [
+        1278,
+        1280,
+        0
+      ],
+      [
+        1280,
+        1281,
+        0
+      ],
+      [
+        1281,
+        1294,
+        0
+      ],
+      [
+        1294,
+        1442,
+        0
+      ],
+      [
+        1442,
+        1447,
+        0
+      ],
+      [
+        1447,
+        1449,
+        0
+      ],
+      [
+        1449,
+        1450,
+        0
+      ],
+      [
+        1450,
+        1513,
+        0
+      ],
+      [
+        1513,
+        1678,
+        1
+      ],
+      [
+        1678,
+        1685,
+        0
+      ],
+      [
+        1685,
+        1688,
+        0
+      ],
+      [
+        1688,
+        1690,
+        0
+      ],
+      [
+        1690,
+        1691,
+        0
+      ],
+      [
+        1691,
+        2692,
+        0
+      ],
+      [
+        2692,
+        2694,
+        0
+      ],
+      [
+        2694,
+        2696,
+        0
+      ],
+      [
+        2696,
+        2697,
+        0
+      ],
+      [
+        2697,
+        2710,
+        0
+      ],
+      [
+        2710,
+        2849,
+        0
+      ],
+      [
+        2849,
+        2854,
+        0
+      ],
+      [
+        2854,
+        2856,
+        0
+      ],
+      [
+        2856,
+        2857,
+        0
+      ],
+      [
+        2857,
+        2912,
+        0
+      ],
+      [
+        2912,
+        2931,
+        1
+      ],
+      [
+        2931,
+        2930,
+        0
+      ]
+    ],
+    "interpretation": "Conservative envelope for complete-path remote COUNT, including possible COPY FIFO and memory edges; L values are NOT official bounds."
+  },
+  "traffic_prediction": {
+    "expected_task_copy_bytes_without_spill": 1595646,
+    "original_copy_bytes": 333414,
+    "expected_added_copy_bytes_without_spill": 1262232,
+    "cross_core_payload_bytes": 354528,
+    "cross_core_links": 381,
+    "cache_key_union_bytes_without_spill": 408102,
+    "note": "Source-rule counts only; no measured traffic, hit rate or cycle value."
+  },
+  "M3": null,
+  "M2": null,
+  "G": null,
+  "capacity": {
+    "L1": 524288,
+    "UB": 131072
+  },
+  "delay": 500,
+  "official_calls": 0,
+  "first_row_quotient_depth_pair_counts": {
+    "0->1": 196,
+    "0->2": 196,
+    "1->2": 196
+  },
+  "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+  "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+  "constructor_sha256": "2e6221b4e618d2007aa451db7466d6d985e6347135154f38f6cb46d47501f131",
+  "plan_sha256": "2885b28a512598e4bae525c7bf4b214ac9b2452de19425603fcdea2ae8e7038a",
+  "forbidden_official_calls": {},
+  "elapsed_static_seconds": 1.2259860019998996,
+  "timing_scope": "local profiled static construction including input/hash work; NOT cold solver efficiency acceptance"
+}
