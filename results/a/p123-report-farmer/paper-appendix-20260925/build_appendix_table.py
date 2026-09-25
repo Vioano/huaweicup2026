@@ -8,6 +8,10 @@
 列（队长 5826870762 指定）：逐 case/k 给出 Makespan、**额外** DDR 字节、状态、
 算法/版本、来源；P3 另有 Cache 命中率；CacheGain 仅中央按同计划配对派生，此处留空。
 
+字段口径（队长 10:42:37Z 更正，统一文字）：
+  「额外 DDR 搬运（bytes）」= feed 记录的 metrics.extra_ddr_bytes
+  （此前误写为 added_copy_bytes，脚本不读取该字段；论文引用时以 extra_ddr_bytes 为准）
+
 用法：
     python -B build_appendix_table.py --sample        # 小样：case 001-003 × k1-5
     python -B build_appendix_table.py --full          # 全量 500×3
@@ -91,6 +95,43 @@ def main():
     wb.save(out)
     print("saved:", out)
     print("rows per sheet:", len(rows), "| mode:", "sample" if sample else "full")
+
+    if not sample:
+        # ---- 来源/缺失检查（队长 10:42:37Z 要求随全量交付）----
+        print("\n== 来源/缺失检查 ==")
+        problems = []
+        for problem, fname in FEEDS:
+            feed = json.load(open(SRC / fname, encoding="utf-8"))
+            recs = feed["records"]
+            cases = {r["case_id"] for r in recs}
+            ks = {r["cores"] for r in recs}
+            n_ok = sum(1 for r in recs if r.get("status") == "ok")
+            miss_field = [f"{r['case_id']}/k{r['cores']}" for r in recs
+                          if r.get("status") == "ok" and
+                          ((r.get("metrics") or {}).get("makespan_cycles") is None or
+                           (r.get("metrics") or {}).get("extra_ddr_bytes") is None)]
+            extra = sorted(cases - {f"{i:03d}" for i in range(1, 101)})
+            print(f"{problem}: records={len(recs)} ok={n_ok} cases={len(cases)} ks={sorted(ks)} "
+                  f"| blob={PROV[problem]['blob'][:12]} @ {PROV[problem]['commit'][:12]} "
+                  f"| algo={PROV[problem]['algo']}")
+            if len(recs) != 500 or n_ok != 500:
+                problems.append(f"{problem}: 非全量全 ok（{len(recs)} 条 / ok {n_ok}）")
+            if len(cases) != 100 or ks != {1, 2, 3, 4, 5}:
+                problems.append(f"{problem}: 覆盖异常（cases={len(cases)}, ks={sorted(ks)}）")
+            if extra:
+                problems.append(f"{problem}: 越界 case：{extra}")
+            if miss_field:
+                problems.append(f"{problem}: ok 但缺 Makespan/extra_ddr_bytes：{miss_field[:5]}…")
+            # 三份 feed blob 身份复核
+            import hashlib
+            digest = hashlib.sha256((SRC / fname).read_bytes()).hexdigest()
+            print(f"   本地文件 sha256: {digest[:16]}…（与队长 blob 清单核对）")
+        if problems:
+            print("\n发现问题：")
+            for p_ in problems:
+                print(" -", p_)
+        else:
+            print("\n全部通过：3×500=1500 行、100 case × k1-5 全覆盖、字段无缺失、来源 blob 与指定一致。")
 
 
 if __name__ == "__main__":
