@@ -1,0 +1,3888 @@
+{
+  "kind": "saved-signature-DAG-lower-NOT-simulation",
+  "input_sha256": "2a90a5b0e8b3ff19fe88a07e6580dc4899a63b7654d0d268c0941b947549c95b",
+  "gate": 100,
+  "calls": {
+    "Task_compile": 0,
+    "Fraction_response": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "variants": {
+    "whole_seed": {
+      "plan_sha256": "6c7563bd92b269fa6f4c6bb0f7ddff90e75800b867a0db904af85ed4e3b6b195",
+      "saved_model_makespan_context_only": 101836,
+      "static_dag_lower": 101218,
+      "unassigned_gap_to_saved_model": 618,
+      "synchronous_rounds": [
+        {
+          "round": 0,
+          "task_ids": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "ddr_factor": 5,
+          "conditional_symmetry_checked": true,
+          "lower": 96297,
+          "operation_count": 273,
+          "path_work_check": 96297,
+          "fifo_only_lower": 48636,
+          "need_extension_over_fifo_only": 47661,
+          "path": [
+            {
+              "pipe": "PIPE_MTE2",
+              "rank": 1,
+              "work": 515,
+              "ddr": true,
+              "incoming": "start"
+            },
+            {
+              "pipe": "PIPE_MTE2",
+              "rank": 2,
+              "work": 515,
+              "ddr": true,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 1,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 1,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 2,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 3,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 4,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 5,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 6,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 2,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 3,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 7,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 8,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 9,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 10,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 11,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 12,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 4,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 5,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 13,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 14,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 15,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 16,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 17,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 18,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 6,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 7,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 19,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 20,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 21,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 22,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 23,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 24,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 8,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 9,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 25,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 26,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 27,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 28,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 29,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 30,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 10,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 11,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 31,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 32,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 33,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 34,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 35,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 36,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 12,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 13,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 37,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 38,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 39,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 40,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 41,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 42,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 14,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 15,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 43,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 44,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 45,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 46,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 47,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 48,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 16,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 17,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 49,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 50,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 51,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 52,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 53,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 54,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 18,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 19,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 55,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 56,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 57,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 58,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 59,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 60,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 20,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 21,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 61,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 62,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 63,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 64,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 65,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 66,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 22,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 23,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 67,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 68,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 69,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 70,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 71,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 72,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 24,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 25,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 73,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 74,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 75,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 76,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 77,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 78,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 26,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 27,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 79,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 80,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 81,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 82,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 83,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 84,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 28,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 29,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 85,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 86,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 87,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 88,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 89,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 90,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 30,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 31,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 91,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 92,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 93,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 94,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 95,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 96,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 32,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 33,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 97,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 98,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 99,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 100,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 101,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 102,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 34,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 35,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 103,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 104,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 105,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 106,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 107,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 108,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 36,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 37,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 109,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 110,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 111,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 112,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 113,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 114,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 38,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 39,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 115,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 116,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 117,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 118,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 119,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 120,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 40,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 41,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 121,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 122,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 123,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 124,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 125,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 126,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 42,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_MTE3",
+              "rank": 21,
+              "work": 515,
+              "ddr": true,
+              "incoming": "need"
+            }
+          ],
+          "cross_pipe_need_links": [
+            {
+              "source_pipe": "PIPE_MTE2",
+              "source_rank": 2,
+              "target_pipe": "PIPE_M",
+              "target_rank": 1
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 1,
+              "target_pipe": "PIPE_V",
+              "target_rank": 1
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 6,
+              "target_pipe": "PIPE_M",
+              "target_rank": 2
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 3,
+              "target_pipe": "PIPE_V",
+              "target_rank": 7
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 12,
+              "target_pipe": "PIPE_M",
+              "target_rank": 4
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 5,
+              "target_pipe": "PIPE_V",
+              "target_rank": 13
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 18,
+              "target_pipe": "PIPE_M",
+              "target_rank": 6
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 7,
+              "target_pipe": "PIPE_V",
+              "target_rank": 19
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 24,
+              "target_pipe": "PIPE_M",
+              "target_rank": 8
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 9,
+              "target_pipe": "PIPE_V",
+              "target_rank": 25
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 30,
+              "target_pipe": "PIPE_M",
+              "target_rank": 10
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 11,
+              "target_pipe": "PIPE_V",
+              "target_rank": 31
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 36,
+              "target_pipe": "PIPE_M",
+              "target_rank": 12
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 13,
+              "target_pipe": "PIPE_V",
+              "target_rank": 37
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 42,
+              "target_pipe": "PIPE_M",
+              "target_rank": 14
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 15,
+              "target_pipe": "PIPE_V",
+              "target_rank": 43
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 48,
+              "target_pipe": "PIPE_M",
+              "target_rank": 16
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 17,
+              "target_pipe": "PIPE_V",
+              "target_rank": 49
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 54,
+              "target_pipe": "PIPE_M",
+              "target_rank": 18
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 19,
+              "target_pipe": "PIPE_V",
+              "target_rank": 55
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 60,
+              "target_pipe": "PIPE_M",
+              "target_rank": 20
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 21,
+              "target_pipe": "PIPE_V",
+              "target_rank": 61
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 66,
+              "target_pipe": "PIPE_M",
+              "target_rank": 22
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 23,
+              "target_pipe": "PIPE_V",
+              "target_rank": 67
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 72,
+              "target_pipe": "PIPE_M",
+              "target_rank": 24
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 25,
+              "target_pipe": "PIPE_V",
+              "target_rank": 73
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 78,
+              "target_pipe": "PIPE_M",
+              "target_rank": 26
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 27,
+              "target_pipe": "PIPE_V",
+              "target_rank": 79
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 84,
+              "target_pipe": "PIPE_M",
+              "target_rank": 28
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 29,
+              "target_pipe": "PIPE_V",
+              "target_rank": 85
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 90,
+              "target_pipe": "PIPE_M",
+              "target_rank": 30
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 31,
+              "target_pipe": "PIPE_V",
+              "target_rank": 91
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 96,
+              "target_pipe": "PIPE_M",
+              "target_rank": 32
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 33,
+              "target_pipe": "PIPE_V",
+              "target_rank": 97
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 102,
+              "target_pipe": "PIPE_M",
+              "target_rank": 34
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 35,
+              "target_pipe": "PIPE_V",
+              "target_rank": 103
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 108,
+              "target_pipe": "PIPE_M",
+              "target_rank": 36
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 37,
+              "target_pipe": "PIPE_V",
+              "target_rank": 109
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 114,
+              "target_pipe": "PIPE_M",
+              "target_rank": 38
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 39,
+              "target_pipe": "PIPE_V",
+              "target_rank": 115
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 120,
+              "target_pipe": "PIPE_M",
+              "target_rank": 40
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 41,
+              "target_pipe": "PIPE_V",
+              "target_rank": 121
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 126,
+              "target_pipe": "PIPE_M",
+              "target_rank": 42
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 42,
+              "target_pipe": "PIPE_MTE3",
+              "target_rank": 21
+            }
+          ],
+          "critical_need_count": 44
+        }
+      ],
+      "terminal_per_core": [
+        {
+          "core": 0,
+          "task_ids": [
+            5
+          ],
+          "lower": 4921,
+          "task_evidence": [
+            {
+              "task_id": 5,
+              "ddr_factor": 1,
+              "lower": 4821,
+              "operation_count": 13,
+              "path_work_check": 4821,
+              "fifo_only_lower": 2316,
+              "need_extension_over_fifo_only": 2505,
+              "path": [
+                {
+                  "pipe": "PIPE_MTE2",
+                  "rank": 1,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "start"
+                },
+                {
+                  "pipe": "PIPE_MTE2",
+                  "rank": 2,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 1,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 1,
+                  "work": 582,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 2,
+                  "work": 150,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 3,
+                  "work": 150,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 4,
+                  "work": 582,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 5,
+                  "work": 150,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 6,
+                  "work": 582,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 2,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_MTE3",
+                  "rank": 1,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "need"
+                }
+              ],
+              "cross_pipe_need_links": [
+                {
+                  "source_pipe": "PIPE_MTE2",
+                  "source_rank": 2,
+                  "target_pipe": "PIPE_M",
+                  "target_rank": 1
+                },
+                {
+                  "source_pipe": "PIPE_M",
+                  "source_rank": 1,
+                  "target_pipe": "PIPE_V",
+                  "target_rank": 1
+                },
+                {
+                  "source_pipe": "PIPE_V",
+                  "source_rank": 6,
+                  "target_pipe": "PIPE_M",
+                  "target_rank": 2
+                },
+                {
+                  "source_pipe": "PIPE_M",
+                  "source_rank": 2,
+                  "target_pipe": "PIPE_MTE3",
+                  "target_rank": 1
+                }
+              ],
+              "critical_need_count": 4
+            }
+          ]
+        },
+        {
+          "core": 1,
+          "task_ids": [
+            6
+          ],
+          "lower": 4921,
+          "task_evidence": [
+            {
+              "task_id": 6,
+              "ddr_factor": 1,
+              "lower": 4821,
+              "operation_count": 13,
+              "path_work_check": 4821,
+              "fifo_only_lower": 2316,
+              "need_extension_over_fifo_only": 2505,
+              "path": [
+                {
+                  "pipe": "PIPE_MTE2",
+                  "rank": 1,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "start"
+                },
+                {
+                  "pipe": "PIPE_MTE2",
+                  "rank": 2,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 1,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 1,
+                  "work": 582,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 2,
+                  "work": 150,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 3,
+                  "work": 150,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 4,
+                  "work": 582,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 5,
+                  "work": 150,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 6,
+                  "work": 582,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 2,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_MTE3",
+                  "rank": 1,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "need"
+                }
+              ],
+              "cross_pipe_need_links": [
+                {
+                  "source_pipe": "PIPE_MTE2",
+                  "source_rank": 2,
+                  "target_pipe": "PIPE_M",
+                  "target_rank": 1
+                },
+                {
+                  "source_pipe": "PIPE_M",
+                  "source_rank": 1,
+                  "target_pipe": "PIPE_V",
+                  "target_rank": 1
+                },
+                {
+                  "source_pipe": "PIPE_V",
+                  "source_rank": 6,
+                  "target_pipe": "PIPE_M",
+                  "target_rank": 2
+                },
+                {
+                  "source_pipe": "PIPE_M",
+                  "source_rank": 2,
+                  "target_pipe": "PIPE_MTE3",
+                  "target_rank": 1
+                }
+              ],
+              "critical_need_count": 4
+            }
+          ]
+        },
+        {
+          "core": 2,
+          "task_ids": [
+            7
+          ],
+          "lower": 4921,
+          "task_evidence": [
+            {
+              "task_id": 7,
+              "ddr_factor": 1,
+              "lower": 4821,
+              "operation_count": 13,
+              "path_work_check": 4821,
+              "fifo_only_lower": 2316,
+              "need_extension_over_fifo_only": 2505,
+              "path": [
+                {
+                  "pipe": "PIPE_MTE2",
+                  "rank": 1,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "start"
+                },
+                {
+                  "pipe": "PIPE_MTE2",
+                  "rank": 2,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 1,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 1,
+                  "work": 582,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 2,
+                  "work": 150,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 3,
+                  "work": 150,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 4,
+                  "work": 582,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 5,
+                  "work": 150,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 6,
+                  "work": 582,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 2,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_MTE3",
+                  "rank": 1,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "need"
+                }
+              ],
+              "cross_pipe_need_links": [
+                {
+                  "source_pipe": "PIPE_MTE2",
+                  "source_rank": 2,
+                  "target_pipe": "PIPE_M",
+                  "target_rank": 1
+                },
+                {
+                  "source_pipe": "PIPE_M",
+                  "source_rank": 1,
+                  "target_pipe": "PIPE_V",
+                  "target_rank": 1
+                },
+                {
+                  "source_pipe": "PIPE_V",
+                  "source_rank": 6,
+                  "target_pipe": "PIPE_M",
+                  "target_rank": 2
+                },
+                {
+                  "source_pipe": "PIPE_M",
+                  "source_rank": 2,
+                  "target_pipe": "PIPE_MTE3",
+                  "target_rank": 1
+                }
+              ],
+              "critical_need_count": 4
+            }
+          ]
+        },
+        {
+          "core": 3,
+          "task_ids": [],
+          "lower": 0,
+          "task_evidence": []
+        },
+        {
+          "core": 4,
+          "task_ids": [],
+          "lower": 0,
+          "task_evidence": []
+        }
+      ],
+      "terminal_controlling_core": 0,
+      "scope": "Minimum per-op service precedence bound; not simulated contention or wait attribution"
+    },
+    "period7_seed": {
+      "plan_sha256": "f9f72874e6257b7dcef222115fa7e2f733c0633e7f41a76e930c1504fa414063",
+      "saved_model_makespan_context_only": 109412,
+      "static_dag_lower": 99397,
+      "unassigned_gap_to_saved_model": 10015,
+      "synchronous_rounds": [
+        {
+          "round": 0,
+          "task_ids": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "ddr_factor": 5,
+          "conditional_symmetry_checked": true,
+          "lower": 28364,
+          "operation_count": 85,
+          "path_work_check": 28364,
+          "fifo_only_lower": 15372,
+          "need_extension_over_fifo_only": 12992,
+          "path": [
+            {
+              "pipe": "PIPE_MTE2",
+              "rank": 1,
+              "work": 515,
+              "ddr": true,
+              "incoming": "start"
+            },
+            {
+              "pipe": "PIPE_MTE2",
+              "rank": 2,
+              "work": 515,
+              "ddr": true,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 1,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 1,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 2,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 3,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 4,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 5,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 6,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 2,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 3,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 7,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 8,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 9,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 10,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 11,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 12,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 4,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 5,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 13,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 14,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 15,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 16,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 17,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 18,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 6,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 7,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 19,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 20,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 21,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 22,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 23,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 24,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 8,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 9,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 25,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 26,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 27,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 28,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 29,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 30,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 31,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 32,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 33,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 34,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 35,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 36,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 37,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 38,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 39,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 40,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 41,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 42,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_MTE3",
+              "rank": 7,
+              "work": 1540,
+              "ddr": true,
+              "incoming": "need"
+            }
+          ],
+          "cross_pipe_need_links": [
+            {
+              "source_pipe": "PIPE_MTE2",
+              "source_rank": 2,
+              "target_pipe": "PIPE_M",
+              "target_rank": 1
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 1,
+              "target_pipe": "PIPE_V",
+              "target_rank": 1
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 6,
+              "target_pipe": "PIPE_M",
+              "target_rank": 2
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 3,
+              "target_pipe": "PIPE_V",
+              "target_rank": 7
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 12,
+              "target_pipe": "PIPE_M",
+              "target_rank": 4
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 5,
+              "target_pipe": "PIPE_V",
+              "target_rank": 13
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 18,
+              "target_pipe": "PIPE_M",
+              "target_rank": 6
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 7,
+              "target_pipe": "PIPE_V",
+              "target_rank": 19
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 24,
+              "target_pipe": "PIPE_M",
+              "target_rank": 8
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 9,
+              "target_pipe": "PIPE_V",
+              "target_rank": 25
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 42,
+              "target_pipe": "PIPE_MTE3",
+              "target_rank": 7
+            }
+          ],
+          "critical_need_count": 11
+        },
+        {
+          "round": 1,
+          "task_ids": [
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "ddr_factor": 5,
+          "conditional_symmetry_checked": true,
+          "lower": 31219,
+          "operation_count": 97,
+          "path_work_check": 31219,
+          "fifo_only_lower": 16212,
+          "need_extension_over_fifo_only": 15007,
+          "path": [
+            {
+              "pipe": "PIPE_MTE2",
+              "rank": 1,
+              "work": 515,
+              "ddr": true,
+              "incoming": "start"
+            },
+            {
+              "pipe": "PIPE_MTE2",
+              "rank": 2,
+              "work": 515,
+              "ddr": true,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 1,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 1,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 2,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 3,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 4,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 5,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 6,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 2,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 3,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 7,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 8,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 9,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 10,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 11,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 12,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 4,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 5,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 13,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 14,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 15,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 16,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 17,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 18,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 6,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 7,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 19,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 20,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 21,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 22,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 23,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 24,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 8,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 9,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 25,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 26,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 27,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 28,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 29,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 30,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 31,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 32,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 33,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 34,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_MTE2",
+              "rank": 27,
+              "work": 1540,
+              "ddr": true,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_MTE2",
+              "rank": 28,
+              "work": 515,
+              "ddr": true,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_MTE2",
+              "rank": 29,
+              "work": 1540,
+              "ddr": true,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_MTE2",
+              "rank": 30,
+              "work": 515,
+              "ddr": true,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_MTE2",
+              "rank": 31,
+              "work": 1540,
+              "ddr": true,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 14,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_MTE3",
+              "rank": 10,
+              "work": 515,
+              "ddr": true,
+              "incoming": "need"
+            }
+          ],
+          "cross_pipe_need_links": [
+            {
+              "source_pipe": "PIPE_MTE2",
+              "source_rank": 2,
+              "target_pipe": "PIPE_M",
+              "target_rank": 1
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 1,
+              "target_pipe": "PIPE_V",
+              "target_rank": 1
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 6,
+              "target_pipe": "PIPE_M",
+              "target_rank": 2
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 3,
+              "target_pipe": "PIPE_V",
+              "target_rank": 7
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 12,
+              "target_pipe": "PIPE_M",
+              "target_rank": 4
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 5,
+              "target_pipe": "PIPE_V",
+              "target_rank": 13
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 18,
+              "target_pipe": "PIPE_M",
+              "target_rank": 6
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 7,
+              "target_pipe": "PIPE_V",
+              "target_rank": 19
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 24,
+              "target_pipe": "PIPE_M",
+              "target_rank": 8
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 9,
+              "target_pipe": "PIPE_V",
+              "target_rank": 25
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 34,
+              "target_pipe": "PIPE_MTE2",
+              "target_rank": 27
+            },
+            {
+              "source_pipe": "PIPE_MTE2",
+              "source_rank": 31,
+              "target_pipe": "PIPE_M",
+              "target_rank": 14
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 14,
+              "target_pipe": "PIPE_MTE3",
+              "target_rank": 10
+            }
+          ],
+          "critical_need_count": 13
+        },
+        {
+          "round": 2,
+          "task_ids": [
+            10,
+            11,
+            12,
+            13,
+            14
+          ],
+          "ddr_factor": 5,
+          "conditional_symmetry_checked": true,
+          "lower": 31219,
+          "operation_count": 97,
+          "path_work_check": 31219,
+          "fifo_only_lower": 16212,
+          "need_extension_over_fifo_only": 15007,
+          "path": [
+            {
+              "pipe": "PIPE_MTE2",
+              "rank": 1,
+              "work": 515,
+              "ddr": true,
+              "incoming": "start"
+            },
+            {
+              "pipe": "PIPE_MTE2",
+              "rank": 2,
+              "work": 515,
+              "ddr": true,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 1,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 1,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 2,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 3,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 4,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 5,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 6,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 2,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 3,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 7,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 8,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 9,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 10,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 11,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 12,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 4,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 5,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 13,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 14,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 15,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 16,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 17,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 18,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 6,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 7,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 19,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 20,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 21,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 22,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 23,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 24,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 8,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 9,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 25,
+              "work": 582,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 26,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 27,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 28,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 29,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 30,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 31,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 32,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 33,
+              "work": 150,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_V",
+              "rank": 34,
+              "work": 582,
+              "ddr": false,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_MTE2",
+              "rank": 27,
+              "work": 1540,
+              "ddr": true,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_MTE2",
+              "rank": 28,
+              "work": 515,
+              "ddr": true,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_MTE2",
+              "rank": 29,
+              "work": 1540,
+              "ddr": true,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_MTE2",
+              "rank": 30,
+              "work": 515,
+              "ddr": true,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_MTE2",
+              "rank": 31,
+              "work": 1540,
+              "ddr": true,
+              "incoming": "FIFO"
+            },
+            {
+              "pipe": "PIPE_M",
+              "rank": 14,
+              "work": 1158,
+              "ddr": false,
+              "incoming": "need"
+            },
+            {
+              "pipe": "PIPE_MTE3",
+              "rank": 10,
+              "work": 515,
+              "ddr": true,
+              "incoming": "need"
+            }
+          ],
+          "cross_pipe_need_links": [
+            {
+              "source_pipe": "PIPE_MTE2",
+              "source_rank": 2,
+              "target_pipe": "PIPE_M",
+              "target_rank": 1
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 1,
+              "target_pipe": "PIPE_V",
+              "target_rank": 1
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 6,
+              "target_pipe": "PIPE_M",
+              "target_rank": 2
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 3,
+              "target_pipe": "PIPE_V",
+              "target_rank": 7
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 12,
+              "target_pipe": "PIPE_M",
+              "target_rank": 4
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 5,
+              "target_pipe": "PIPE_V",
+              "target_rank": 13
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 18,
+              "target_pipe": "PIPE_M",
+              "target_rank": 6
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 7,
+              "target_pipe": "PIPE_V",
+              "target_rank": 19
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 24,
+              "target_pipe": "PIPE_M",
+              "target_rank": 8
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 9,
+              "target_pipe": "PIPE_V",
+              "target_rank": 25
+            },
+            {
+              "source_pipe": "PIPE_V",
+              "source_rank": 34,
+              "target_pipe": "PIPE_MTE2",
+              "target_rank": 27
+            },
+            {
+              "source_pipe": "PIPE_MTE2",
+              "source_rank": 31,
+              "target_pipe": "PIPE_M",
+              "target_rank": 14
+            },
+            {
+              "source_pipe": "PIPE_M",
+              "source_rank": 14,
+              "target_pipe": "PIPE_MTE3",
+              "target_rank": 10
+            }
+          ],
+          "critical_need_count": 13
+        }
+      ],
+      "terminal_per_core": [
+        {
+          "core": 0,
+          "task_ids": [
+            15
+          ],
+          "lower": 8395,
+          "task_evidence": [
+            {
+              "task_id": 15,
+              "ddr_factor": 1,
+              "lower": 8295,
+              "operation_count": 25,
+              "path_work_check": 8295,
+              "fifo_only_lower": 5790,
+              "need_extension_over_fifo_only": 2505,
+              "path": [
+                {
+                  "pipe": "PIPE_MTE2",
+                  "rank": 1,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "start"
+                },
+                {
+                  "pipe": "PIPE_MTE2",
+                  "rank": 2,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 1,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 1,
+                  "work": 582,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 2,
+                  "work": 150,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 3,
+                  "work": 150,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 4,
+                  "work": 582,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 5,
+                  "work": 150,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 6,
+                  "work": 582,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 2,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 3,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 4,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 5,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_MTE3",
+                  "rank": 4,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "need"
+                }
+              ],
+              "cross_pipe_need_links": [
+                {
+                  "source_pipe": "PIPE_MTE2",
+                  "source_rank": 2,
+                  "target_pipe": "PIPE_M",
+                  "target_rank": 1
+                },
+                {
+                  "source_pipe": "PIPE_M",
+                  "source_rank": 1,
+                  "target_pipe": "PIPE_V",
+                  "target_rank": 1
+                },
+                {
+                  "source_pipe": "PIPE_V",
+                  "source_rank": 6,
+                  "target_pipe": "PIPE_M",
+                  "target_rank": 2
+                },
+                {
+                  "source_pipe": "PIPE_M",
+                  "source_rank": 5,
+                  "target_pipe": "PIPE_MTE3",
+                  "target_rank": 4
+                }
+              ],
+              "critical_need_count": 4
+            }
+          ]
+        },
+        {
+          "core": 1,
+          "task_ids": [
+            16
+          ],
+          "lower": 8395,
+          "task_evidence": [
+            {
+              "task_id": 16,
+              "ddr_factor": 1,
+              "lower": 8295,
+              "operation_count": 25,
+              "path_work_check": 8295,
+              "fifo_only_lower": 5790,
+              "need_extension_over_fifo_only": 2505,
+              "path": [
+                {
+                  "pipe": "PIPE_MTE2",
+                  "rank": 1,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "start"
+                },
+                {
+                  "pipe": "PIPE_MTE2",
+                  "rank": 2,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 1,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 1,
+                  "work": 582,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 2,
+                  "work": 150,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 3,
+                  "work": 150,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 4,
+                  "work": 582,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 5,
+                  "work": 150,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 6,
+                  "work": 582,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 2,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 3,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 4,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 5,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_MTE3",
+                  "rank": 4,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "need"
+                }
+              ],
+              "cross_pipe_need_links": [
+                {
+                  "source_pipe": "PIPE_MTE2",
+                  "source_rank": 2,
+                  "target_pipe": "PIPE_M",
+                  "target_rank": 1
+                },
+                {
+                  "source_pipe": "PIPE_M",
+                  "source_rank": 1,
+                  "target_pipe": "PIPE_V",
+                  "target_rank": 1
+                },
+                {
+                  "source_pipe": "PIPE_V",
+                  "source_rank": 6,
+                  "target_pipe": "PIPE_M",
+                  "target_rank": 2
+                },
+                {
+                  "source_pipe": "PIPE_M",
+                  "source_rank": 5,
+                  "target_pipe": "PIPE_MTE3",
+                  "target_rank": 4
+                }
+              ],
+              "critical_need_count": 4
+            }
+          ]
+        },
+        {
+          "core": 2,
+          "task_ids": [
+            17
+          ],
+          "lower": 8395,
+          "task_evidence": [
+            {
+              "task_id": 17,
+              "ddr_factor": 1,
+              "lower": 8295,
+              "operation_count": 25,
+              "path_work_check": 8295,
+              "fifo_only_lower": 5790,
+              "need_extension_over_fifo_only": 2505,
+              "path": [
+                {
+                  "pipe": "PIPE_MTE2",
+                  "rank": 1,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "start"
+                },
+                {
+                  "pipe": "PIPE_MTE2",
+                  "rank": 2,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 1,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 1,
+                  "work": 582,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 2,
+                  "work": 150,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 3,
+                  "work": 150,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 4,
+                  "work": 582,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 5,
+                  "work": 150,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_V",
+                  "rank": 6,
+                  "work": 582,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 2,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 3,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 4,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 5,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_MTE3",
+                  "rank": 4,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "need"
+                }
+              ],
+              "cross_pipe_need_links": [
+                {
+                  "source_pipe": "PIPE_MTE2",
+                  "source_rank": 2,
+                  "target_pipe": "PIPE_M",
+                  "target_rank": 1
+                },
+                {
+                  "source_pipe": "PIPE_M",
+                  "source_rank": 1,
+                  "target_pipe": "PIPE_V",
+                  "target_rank": 1
+                },
+                {
+                  "source_pipe": "PIPE_V",
+                  "source_rank": 6,
+                  "target_pipe": "PIPE_M",
+                  "target_rank": 2
+                },
+                {
+                  "source_pipe": "PIPE_M",
+                  "source_rank": 5,
+                  "target_pipe": "PIPE_MTE3",
+                  "target_rank": 4
+                }
+              ],
+              "critical_need_count": 4
+            }
+          ]
+        },
+        {
+          "core": 3,
+          "task_ids": [
+            18
+          ],
+          "lower": 4088,
+          "task_evidence": [
+            {
+              "task_id": 18,
+              "ddr_factor": 1,
+              "lower": 3988,
+              "operation_count": 12,
+              "path_work_check": 3988,
+              "fifo_only_lower": 3474,
+              "need_extension_over_fifo_only": 514,
+              "path": [
+                {
+                  "pipe": "PIPE_MTE2",
+                  "rank": 1,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "start"
+                },
+                {
+                  "pipe": "PIPE_MTE2",
+                  "rank": 2,
+                  "work": 308,
+                  "ddr": true,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 1,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 2,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 3,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_MTE3",
+                  "rank": 3,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "need"
+                }
+              ],
+              "cross_pipe_need_links": [
+                {
+                  "source_pipe": "PIPE_MTE2",
+                  "source_rank": 2,
+                  "target_pipe": "PIPE_M",
+                  "target_rank": 1
+                },
+                {
+                  "source_pipe": "PIPE_M",
+                  "source_rank": 3,
+                  "target_pipe": "PIPE_MTE3",
+                  "target_rank": 3
+                }
+              ],
+              "critical_need_count": 2
+            }
+          ]
+        },
+        {
+          "core": 4,
+          "task_ids": [
+            19
+          ],
+          "lower": 4088,
+          "task_evidence": [
+            {
+              "task_id": 19,
+              "ddr_factor": 1,
+              "lower": 3988,
+              "operation_count": 12,
+              "path_work_check": 3988,
+              "fifo_only_lower": 3474,
+              "need_extension_over_fifo_only": 514,
+              "path": [
+                {
+                  "pipe": "PIPE_MTE2",
+                  "rank": 1,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "start"
+                },
+                {
+                  "pipe": "PIPE_MTE2",
+                  "rank": 2,
+                  "work": 308,
+                  "ddr": true,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 1,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "need"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 2,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_M",
+                  "rank": 3,
+                  "work": 1158,
+                  "ddr": false,
+                  "incoming": "FIFO"
+                },
+                {
+                  "pipe": "PIPE_MTE3",
+                  "rank": 3,
+                  "work": 103,
+                  "ddr": true,
+                  "incoming": "need"
+                }
+              ],
+              "cross_pipe_need_links": [
+                {
+                  "source_pipe": "PIPE_MTE2",
+                  "source_rank": 2,
+                  "target_pipe": "PIPE_M",
+                  "target_rank": 1
+                },
+                {
+                  "source_pipe": "PIPE_M",
+                  "source_rank": 3,
+                  "target_pipe": "PIPE_MTE3",
+                  "target_rank": 3
+                }
+              ],
+              "critical_need_count": 2
+            }
+          ]
+        }
+      ],
+      "terminal_controlling_core": 0,
+      "scope": "Minimum per-op service precedence bound; not simulated contention or wait attribution"
+    }
+  }
+}
