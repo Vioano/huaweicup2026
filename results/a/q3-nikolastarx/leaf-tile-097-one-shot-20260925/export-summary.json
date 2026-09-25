@@ -1,0 +1,38 @@
+{
+  "preflight_command": "python3 src/benchmark_board/protocol.py .worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/leaf-tile-097-one-shot-20260925/board-feed-20260925T001030Z-s3172.json --repo .worktrees/q3-core-nikolastarx --submission",
+  "preflight_result": {
+    "valid": true,
+    "submission": true,
+    "records": 1,
+    "eligible": 1,
+    "scope": "format and available bytes only; no solver/evaluator execution or production write"
+  },
+  "feed": "board-feed-20260925T001030Z-s3172.json",
+  "feed_sha256": "37eeec3092f6ad08b33992eca07064699cc358cd331b8e0977014d1616dc20f8",
+  "attempt_id": "nikolastarx-leaf-tile-097-k1-20260925-s3172",
+  "run_id": "q3-leaf-tile-097-one-shot-20260925-s3172",
+  "producer_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+  "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+  "problem": "P3",
+  "case_id": "097",
+  "cores": 1,
+  "status": "ok",
+  "makespan_cycles": 10662163,
+  "solver_wall_seconds": null,
+  "evaluation_wall_seconds": 1.2912873749737628,
+  "artifact_hashes": {
+    "plan": "87a0916ffb799399e0e7f88131c7589cb2195f0f8fbad95ef3577ca1692abd55",
+    "result": "2576cc3c79fe640b6f0e279c9fd21604572dd918f1024028b95c7f2fb2e96559",
+    "run": "a30d44ebcf7a6cf4176561db9deee9d4d38cd7752559fb7fee73fbf723af8bfb",
+    "manifest": "7982d1c60fe5df9101535465da429a9311bf4a64a24ee3f45aed3d929db1347b",
+    "trace": "025dec382b57ffcdcabe5ec10a3174899f28806335ac428a33585b4462044251"
+  },
+  "current_run_sha256": "a30d44ebcf7a6cf4176561db9deee9d4d38cd7752559fb7fee73fbf723af8bfb",
+  "provenance_derivation_sha256": "025dec382b57ffcdcabe5ec10a3174899f28806335ac428a33585b4462044251",
+  "environment_note": "OS, CPU, GPU, RAM and Python are null because as-run values are absent from run/manifest; workers=1 and uv.lock SHA come from manifest.",
+  "baseline": "omitted: official singlecore bytes absent from this worktree",
+  "limitations": [
+    "One mechanism cell only; not full500 or complete solver evidence.",
+    "Local preflight eligibility does not mean submitted/fixed-commit admission."
+  ]
+}

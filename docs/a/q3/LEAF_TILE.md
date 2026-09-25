@@ -1,6 +1,6 @@
 # Cartesian 左深归约链的叶片分 tile 静态原型
 
-`src/q3/leaf_tile.py` 提供 `transform(index, plan, capacity)`，输入已经合法的 singleton 方案，输出仍只含 `node_to_subgraph`、`core_schedules`。它保持每个原始 compute op 的 subgraph ID 和核心归属，只改核内顺序。`construct(index, cores, capacity)` 是包装入口，先取 `forest_memory_order` 的实际整树分核方案，再调用 `transform`。该原型未接入在线候选选择，未做官方 P3 评分。
+`src/q3/leaf_tile.py` 提供 `transform(index, plan, capacity)`，输入已经合法的 singleton 方案，输出仍只含 `node_to_subgraph`、`core_schedules`。它保持每个原始 compute op 的 subgraph ID 和核心归属，只改核内顺序。`construct(index, cores, capacity)` 是包装入口，先取 `forest_memory_order` 的实际整树分核方案，再调用 `transform`。该原型未接入在线候选选择；2026-09-25 已完成下述单格 P3 机制评价。
 
 ## 可识别结构
 
@@ -29,3 +29,5 @@
 本次预算只有 **1 次新 P3 E0，0 P2、0 solver、0 重试、1 worker，子进程最多 60 秒，进程组 RSS 采样警戒 512 MiB**。执行用独占的新 `evaluation/` 目录并在调用前落账；失败保留，不覆盖重跑。资源窗口不足时只保留准备材料。引用的既有 097 依赖探针预算已用完，本次不重建额外 Task/Step3；新 P3 自身内部的官方准备当然属于这一次 E0。
 
 评价前已明确否证条件：候选即使减小搬运量，若累计 M 等待或官方 Makespan 上升，就不能直接接入求解器；若 M 改善但 spill/extra 上升，记录取舍，不能声称各指标全面改进。它是通用规则在已见机制样本上的单次实验，不是一个新算法的全量成绩，也不改变现有 forest500 榜单。
+
+该预算已执行完：097/k1 Makespan 从 10,746,146 降到 10,662,163，extra/spill 从 11,665,408 B 降到 4,026,368 B，字节 hit 降到 0；没有新增 P2 配对。完整原件、时钟分解、资源与局限见[单次报告](../../../results/a/q3-nikolastarx/leaf-tile-097-one-shot-20260925/REPORT.md)。不能复用已耗尽预算再跑一格。

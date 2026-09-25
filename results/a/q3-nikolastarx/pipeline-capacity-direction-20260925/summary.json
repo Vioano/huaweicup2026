@@ -1,0 +1,86 @@
+{
+  "case_id": "044",
+  "cores": 5,
+  "source_run": "q3-forest-full500-20260925-s59",
+  "source_commit": "311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1",
+  "selected_strategy": "shared_input_pipeline",
+  "plan_sha256": "a16abc2ce5000de286a5416080f19d21ed1d237942045e5fca10a61625094c2e",
+  "baseline_makespan": 154407,
+  "selected_makespan": 41205,
+  "compute_only_lower_bound": 14881,
+  "candidate_specific_lower_bound": 25412,
+  "cuts": [
+    0,
+    21,
+    45,
+    70,
+    97,
+    124
+  ],
+  "stage_compute_cycles_per_job": [
+    1502,
+    1494,
+    1535,
+    1567,
+    1574
+  ],
+  "shared_input_bytes_by_stage": [
+    5472,
+    86400,
+    645120,
+    186368,
+    7040
+  ],
+  "l1_capacity_bytes": 524288,
+  "core2_copy_in_duration_cycles": {
+    "ddr": 12633,
+    "cache_read": 6344
+  },
+  "core2_pipe_m_duration_cycles": 15708,
+  "spill_added_copy_bytes": 1585152,
+  "cache_hit_bytes": 1585152,
+  "cache_hit_core": 2,
+  "gap_cycles": {
+    "selected_minus_compute_only_bound": 26324,
+    "candidate_bound_minus_compute_only_bound": 10531,
+    "selected_minus_candidate_bound": 15793
+  },
+  "proposed_direction": "capacity-aware contiguous stage cut using shared-input bytes, L1 margin, compute load, and crossing costs",
+  "candidate_cut_contrasts": [
+    [
+      0,
+      21,
+      53,
+      70,
+      97,
+      124
+    ],
+    [
+      0,
+      21,
+      45,
+      62,
+      97,
+      124
+    ]
+  ],
+  "limits": [
+    "No spill_records in saved result",
+    "No counterfactual Makespan",
+    "Current worktree HEAD differs from source commit",
+    "No evaluator or solver run in this audit"
+  ],
+  "root_static_verification": {
+    "plan_sha256_match": true,
+    "reconstructed_cuts": [
+      0,
+      21,
+      45,
+      70,
+      97,
+      124
+    ],
+    "candidate_bound_cycles": 25412,
+    "task_step3_e0_calls": 0
+  }
+}

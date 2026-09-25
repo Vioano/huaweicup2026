@@ -1,0 +1,109 @@
+{
+  "scope": "one new 097/k1 P3 mechanism experiment; no new full500 solver score",
+  "source_commit": "638ef288bfd287a436095965441bfbd0a2f9d488",
+  "new_p3_e0": 1,
+  "new_p2_e0": 0,
+  "new_solver": 0,
+  "additional_task_step3_rebuilds": 0,
+  "rows": [
+    {
+      "name": "old_forest",
+      "plan_sha256": "57ba69cb443e9893a56233b63b12ac42acf3802d522a50274891e4b8f09eb10c",
+      "result_sha256": "9e18f995989891b34a4ba338acda3bab42d6195c89bf9cdcb2ee7c0a11b7da4e",
+      "makespan_cycles": 10746146,
+      "m_count": 3328,
+      "m_busy": 10303488,
+      "first_m": 172,
+      "tail": 613,
+      "total_m_gap": 441873,
+      "positive_m_gaps": 397,
+      "max_m_gap": 1224,
+      "movement": {
+        "original_graph_copy_bytes": 5046272,
+        "scheduled_copy_bytes": 16711680,
+        "added_copy_bytes": 11665408,
+        "partition_added_copy_bytes": 0,
+        "spill_added_copy_bytes": 11665408
+      },
+      "cache_stats": {
+        "copy_in_hits": 3,
+        "copy_in_misses": 3677,
+        "hit_bytes": 12288,
+        "miss_bytes": 15912960,
+        "hits": 3,
+        "accesses": 3680,
+        "hit_rate": 0.0007716049382716049
+      }
+    },
+    {
+      "name": "new_band_lookahead",
+      "plan_sha256": "4bec9fab54143a4ebbdfa744c5241d06c43e0c41474a26d6a2d1a039a1defc2f",
+      "result_sha256": "1b86b61afc1afca1ff96986b9dbca670a2250b39f74e79aae4f4b3958af69127",
+      "makespan_cycles": 11215134,
+      "m_count": 3328,
+      "m_busy": 10303488,
+      "first_m": 172,
+      "tail": 613,
+      "total_m_gap": 910861,
+      "positive_m_gaps": 1904,
+      "max_m_gap": 546,
+      "movement": {
+        "original_graph_copy_bytes": 5046272,
+        "scheduled_copy_bytes": 14393344,
+        "added_copy_bytes": 9347072,
+        "partition_added_copy_bytes": 0,
+        "spill_added_copy_bytes": 9347072
+      },
+      "cache_stats": {
+        "copy_in_hits": 0,
+        "copy_in_misses": 3114,
+        "hit_bytes": 0,
+        "miss_bytes": 13606912,
+        "hits": 0,
+        "accesses": 3114,
+        "hit_rate": 0.0
+      }
+    },
+    {
+      "name": "leaf_tile_4x4",
+      "plan_sha256": "87a0916ffb799399e0e7f88131c7589cb2195f0f8fbad95ef3577ca1692abd55",
+      "result_sha256": "2576cc3c79fe640b6f0e279c9fd21604572dd918f1024028b95c7f2fb2e96559",
+      "makespan_cycles": 10662163,
+      "m_count": 3328,
+      "m_busy": 10303488,
+      "first_m": 172,
+      "tail": 613,
+      "total_m_gap": 357890,
+      "positive_m_gaps": 101,
+      "max_m_gap": 3672,
+      "movement": {
+        "original_graph_copy_bytes": 5046272,
+        "scheduled_copy_bytes": 9072640,
+        "added_copy_bytes": 4026368,
+        "partition_added_copy_bytes": 0,
+        "spill_added_copy_bytes": 4026368
+      },
+      "cache_stats": {
+        "copy_in_hits": 0,
+        "copy_in_misses": 1622,
+        "hit_bytes": 0,
+        "miss_bytes": 8286208,
+        "hits": 0,
+        "accesses": 1622,
+        "hit_rate": 0.0
+      }
+    }
+  ],
+  "delta_vs_forest": {
+    "makespan_cycles": -83983,
+    "relative_m_reduction": 0.007815173923749086,
+    "spill_bytes": -7639040,
+    "total_m_gap": -83983
+  },
+  "limits": [
+    "No P2 control for the new plan, so no new CacheGain claim.",
+    "Zero byte hits is not evidence of worse absolute Makespan.",
+    "Timeline gaps do not identify full critical predecessors; no new Task rebuild.",
+    "Runtime is construction plus external single E0, not a complete online solver."
+  ]
+}

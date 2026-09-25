@@ -1,0 +1,86 @@
+{
+  "status": "complete",
+  "started_at": "2026-09-25T00:10:29.474596Z",
+  "source_commit": "638ef288bfd287a436095965441bfbd0a2f9d488",
+  "manifest_sha256": "7982d1c60fe5df9101535465da429a9311bf4a64a24ee3f45aed3d929db1347b",
+  "plan_sha256": "87a0916ffb799399e0e7f88131c7589cb2195f0f8fbad95ef3577ca1692abd55",
+  "budget": {
+    "new_p3": 1,
+    "new_p2": 0,
+    "solver_calls": 0,
+    "workers": 1,
+    "retries": 0,
+    "per_call_seconds": 60,
+    "sampled_group_rss_tripwire_bytes": 536870912
+  },
+  "new_p3_reserved": 1,
+  "new_p2": 0,
+  "solver_calls": 0,
+  "admission_reference": "coordinator nikolastarx/s-a5bdb19389ee43d686b7976d3bcdf766 2026-09-25T00:05Z single 097/k1 P3 only",
+  "resource_preflight": {
+    "observations": [
+      {
+        "utc": "2026-09-25T00:10:27.758998+00:00",
+        "pressure": 2,
+        "unused_mib": 1802.0,
+        "swapouts": 845228,
+        "physmem": "PhysMem: 45G used (5072M wired, 19G compressor), 1802M unused."
+      },
+      {
+        "utc": "2026-09-25T00:10:29.218294+00:00",
+        "pressure": 2,
+        "unused_mib": 1708.0,
+        "swapouts": 845228,
+        "physmem": "PhysMem: 45G used (5069M wired, 19G compressor), 1708M unused."
+      }
+    ],
+    "ready": true,
+    "supervisor_sha256": "b1e98b4865509d5364bb3b86e46da048b13a677cae30fa7b7ab3cc817c429b4b",
+    "start_min_unused_mib": 1536,
+    "run_min_unused_mib": 1024
+  },
+  "resource_preflight_sha256": "6fd544157a8e51604dac31c17073b2a219eaaf7c684ba97a8f230945a4500919",
+  "child": {
+    "status": "ok",
+    "reason": null,
+    "exit_code": 0,
+    "wall_seconds": 1.2912873749737628,
+    "argv": [
+      "python",
+      "-B",
+      "-m",
+      "src.q3.oracle",
+      "data/raw/a/official/data/case_097.json",
+      "results/a/q3-nikolastarx/leaf-tile-097-one-shot-20260925/plan.json",
+      "3",
+      "results/a/q3-nikolastarx/leaf-tile-097-one-shot-20260925/evaluation/result.json.gz"
+    ],
+    "process_tree_cleanup": "POSIX process group",
+    "memory": {
+      "limit_bytes": 536870912,
+      "sampled_peak_rss_bytes": 139427840,
+      "poll_seconds": 0.1,
+      "scope": "sum of process-group RSS / Windows job WorkingSetSize; sampled tripwire, not OS hard limit; shared pages may be counted more than once"
+    },
+    "log_derivation": "stdout/stderr preserve bytes except repository and interpreter absolute paths replaced by markers"
+  },
+  "result_sha256": "2576cc3c79fe640b6f0e279c9fd21604572dd918f1024028b95c7f2fb2e96559",
+  "makespan": 10662163,
+  "movement": {
+    "original_graph_copy_bytes": 5046272,
+    "scheduled_copy_bytes": 9072640,
+    "added_copy_bytes": 4026368,
+    "partition_added_copy_bytes": 0,
+    "spill_added_copy_bytes": 4026368
+  },
+  "cache_stats": {
+    "copy_in_hits": 0,
+    "copy_in_misses": 1622,
+    "hit_bytes": 0,
+    "miss_bytes": 8286208,
+    "hits": 0,
+    "accesses": 1622,
+    "hit_rate": 0.0
+  },
+  "finished_at": "2026-09-25T00:10:30.779664Z"
+}
