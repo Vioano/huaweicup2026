@@ -89,6 +89,31 @@ def build_from_seed(graph, seed_plan, witness, cores, config, *, final_proxy_gua
     return plan,meta
 
 
+def build_from_plan(graph, seed_plan, cores, config, *, final_proxy_guard=True):
+    """Refine a caller-selected singleton plan without a gap-seed witness.
+
+    Every eligible op is its own packet. The existing guarded matching and
+    byte checks remain in build_from_seed; this entrypoint chooses no seed.
+    """
+    from .dag_direct import DAGIndex
+    from .direct import derive_multicore_plan, UnsupportedStructure
+    if type(final_proxy_guard) is not bool:
+        raise ValueError('final_proxy_guard must be bool')
+    if type(cores) is not int or cores < 1:
+        raise ValueError('cores must be positive')
+    view = derive_multicore_plan(graph, seed_plan)
+    if view['num_cores'] != cores:
+        raise ValueError('core budget mismatch')
+    if any(len(nodes) != 1 for nodes in view['nodes_by_subgraph'].values()):
+        raise UnsupportedStructure('caller plan requires singleton subgraphs')
+    index = DAGIndex(graph)
+    witness = {'chains': [[u] for u in index.order]}
+    plan, meta = build_from_seed(graph, seed_plan, witness, cores, config,
+                                 final_proxy_guard=final_proxy_guard)
+    meta.update(packetization='singleton', source='caller_selected_plan')
+    return plan, meta
+
+
 def build(graph,cores,config):
     from .gap_candidate import build_with_witness
     seed,seed_meta,witness=build_with_witness(graph,cores,config)
