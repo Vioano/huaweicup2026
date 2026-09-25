@@ -302,7 +302,10 @@ def construct(graph, cores, capacity, bandwidth, gate, *, task_limit, final_max_
             incumbent = (total, seed_path)
             seed.update(status='model_candidate', upper=total, path=seed_path)
 
-    result = search(family.B, exact, bound, oracle_limit-seed['oracle_calls'],
+    # Explicit periodic mode is a fixed-path probe. A failed seed must not
+    # spend the remaining budget on a different, unadmitted construction.
+    remaining_queries = 0 if period_q is not None else oracle_limit-seed['oracle_calls']
+    result = search(family.B, exact, bound, remaining_queries,
                     incumbent=incumbent,
                     max_expansions=expansion_limit,
                     should_stop=lambda: time.perf_counter() >= kernel.deadline)

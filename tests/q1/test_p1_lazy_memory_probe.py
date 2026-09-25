@@ -61,15 +61,18 @@ class LazyMemoryProbeTests(unittest.TestCase):
                 self.calls = []
             def profile(self, n, r, q, s, drain=False):
                 self.calls.append(('normal', (n, r), (q, s)))
+                if self.fail_first:
+                    return None
                 return {'cost': 1, 'groups': [[]], 'bytes': 0}
             def suffix(self, r, policy):
                 self.calls.append(('terminal', (20, r), policy))
                 return {'cost': 2, 'groups': [[]], 'bytes': 0}
-        def run(budget):
+        def run(budget, fail_first=False):
+            Kernel.fail_first = fail_first
             state = {}
             def fake_search(B, exact, bound, remaining, **kwargs):
-                self.assertEqual(remaining, budget - (4 if budget >= 4 else 0))
-                if budget >= 4:
+                self.assertEqual(remaining, 0)
+                if budget >= 4 and not fail_first:
                     self.assertEqual(kwargs['incumbent'], (5, probe.periodic_seed_path(20, 7, 3)))
                 else:
                     self.assertIsNone(kwargs['incumbent'])
@@ -93,6 +96,10 @@ class LazyMemoryProbeTests(unittest.TestCase):
         self.assertEqual(short['kernel'].calls, [])
         self.assertEqual(short['seed']['oracle_calls'], 0)
         self.assertEqual(short['seed']['status'], 'insufficient_oracle_budget')
+        failed = run(4, fail_first=True)
+        self.assertEqual(len(failed['kernel'].calls), 1)
+        self.assertEqual(failed['seed']['oracle_calls'], 1)
+        self.assertEqual(failed['seed']['status'], 'unsupported')
 
     def test_partial_compile_accounting_is_unknown_with_known_lower_bound(self):
         kernel = FakeKernel()
