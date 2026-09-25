@@ -1,0 +1,45 @@
+{
+  "created_at": "2026-09-25T01:10:42.219665+00:00",
+  "state": "frozen_not_started",
+  "session": "p1-cpu-s6607-20260925",
+  "head": "bd6dc85a0b69f30d08714cbb46200f90632bb2d7",
+  "solver": "3a1b82b71ca1ff6689eb8e72f17d26c48b52073c",
+  "wrapper_sha256": "589cf9a544b3edfe31b3b515d5bdf9ec876badda52f3a26310af8640d5baa4e9",
+  "supervisor_sha256": "a65e4c0c27aab304ebd5bc180ede80822a86d5f913bbf83d1c0a9f4353117d4d",
+  "output": "/content/p1_s6607_repo/results/a/p1-colab-full500-20260925/20260925T0110Z-s6607",
+  "workers": 1,
+  "cells": {
+    "cases": "001..100",
+    "cores": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "maximum_calls": {
+    "solver": 500,
+    "E1": 4500,
+    "E0": 500,
+    "E2": 0,
+    "retry": 0
+  },
+  "budgets_seconds": {
+    "solver": 300,
+    "E0": 900,
+    "admission": 4500,
+    "supervisor": 4600
+  },
+  "memory_policy": {
+    "available_start_GiB": 8,
+    "available_stop_GiB": 1,
+    "observed_tree_RSS_stop_GiB": 9,
+    "sample_seconds": 1
+  },
+  "source_review": "Root static audit; Linux subreaper cleanup, birth-identified processes; terminate dedicated VM if cleanup unknown. No universal containment guarantee.",
+  "pilot_archive_sha256": "9d4fb3b4610614c45f34b13a81115da63fc52ff320245f7e820369d548a16728",
+  "pilot_files_verified": 53,
+  "local_duplicate": false,
+  "solver_E0_policy": "fresh every cell; stop on first failure; no retry"
+}
