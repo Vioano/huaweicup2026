@@ -1,0 +1,97 @@
+{
+  "schema": "q3-feedback-benchmark-v1",
+  "run_id": "q3-r9f-final-full500-20260926-s3172",
+  "stage_id": "pilot-4",
+  "producer_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+  "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+  "solver_commit": "f6fd8153375a7fb64f9af2c8f36c35356fb7d878",
+  "solver_module": "src.q3.fifth_core_final_solve",
+  "algorithm": {
+    "id": "q3-fifth-core-final-fixed",
+    "name": "Forest incumbent with guarded contiguous fifth-core selection",
+    "authors": [
+      "NikolaStarx"
+    ],
+    "method": "One fixed, case-ID-independent solver: run the frozen Forest candidate policy; only for five cores attempt one deterministic structurally guarded contiguous fifth-core plan; official P3 must strictly improve, then paired official P2 must be nonworse and exact cross-multiplied G nonworse. All construction, bounds and online evaluations are included in each cold process. Unsupported structures, duplicate proposals, bound-pruned proposals, non-improving P3, or failed paired gate keep the Forest incumbent.",
+    "references": [
+      "https://github.com/huaweibei123/huaweicup2026/commit/f6fd8153375a7fb64f9af2c8f36c35356fb7d878"
+    ],
+    "upstream": [
+      {
+        "repo": "huaweibei123/huaweicup2026",
+        "commit": "f6fd8153375a7fb64f9af2c8f36c35356fb7d878",
+        "path": "src/q3/fifth_core_final_solve.py",
+        "entrypoint": "src.q3.fifth_core_final_solve.evaluate_candidates"
+      }
+    ]
+  },
+  "runtime_id": "q3-final-full500-one-worker",
+  "budget": {
+    "max_e0_calls": 1800,
+    "total_wall_seconds": 3600,
+    "per_job_seconds": 90
+  },
+  "jobs": [
+    {
+      "case_id": "068",
+      "cores": 5,
+      "variant": "fifth-core-final-fixed",
+      "solver_args": [],
+      "parameters": {
+        "selection_rule": "fresh Forest candidate selection; for K5 only, add deterministic structural contiguous fifth-core proposal; accept only strict P3 M3 improvement and paired P2 M2 nonworse plus exact rational G nonworse",
+        "p3_call_limit": 4,
+        "p2_call_limit": 2,
+        "p2_condition": "only after a strict P3 improvement; compare incumbent and candidate under same graph/config/core/plan identity",
+        "retry_count": 0,
+        "cold_solver_process": true
+      },
+      "e0_call_limit": 6
+    },
+    {
+      "case_id": "079",
+      "cores": 5,
+      "variant": "fifth-core-final-fixed",
+      "solver_args": [],
+      "parameters": {
+        "selection_rule": "fresh Forest candidate selection; for K5 only, add deterministic structural contiguous fifth-core proposal; accept only strict P3 M3 improvement and paired P2 M2 nonworse plus exact rational G nonworse",
+        "p3_call_limit": 4,
+        "p2_call_limit": 2,
+        "p2_condition": "only after a strict P3 improvement; compare incumbent and candidate under same graph/config/core/plan identity",
+        "retry_count": 0,
+        "cold_solver_process": true
+      },
+      "e0_call_limit": 6
+    },
+    {
+      "case_id": "001",
+      "cores": 1,
+      "variant": "fifth-core-final-fixed",
+      "solver_args": [],
+      "parameters": {
+        "selection_rule": "fresh Forest candidate selection; for K5 only, add deterministic structural contiguous fifth-core proposal; accept only strict P3 M3 improvement and paired P2 M2 nonworse plus exact rational G nonworse",
+        "p3_call_limit": 3,
+        "p2_call_limit": 0,
+        "p2_condition": "only after a strict P3 improvement; compare incumbent and candidate under same graph/config/core/plan identity",
+        "retry_count": 0,
+        "cold_solver_process": true
+      },
+      "e0_call_limit": 3
+    },
+    {
+      "case_id": "082",
+      "cores": 4,
+      "variant": "fifth-core-final-fixed",
+      "solver_args": [],
+      "parameters": {
+        "selection_rule": "fresh Forest candidate selection; for K5 only, add deterministic structural contiguous fifth-core proposal; accept only strict P3 M3 improvement and paired P2 M2 nonworse plus exact rational G nonworse",
+        "p3_call_limit": 3,
+        "p2_call_limit": 0,
+        "p2_condition": "only after a strict P3 improvement; compare incumbent and candidate under same graph/config/core/plan identity",
+        "retry_count": 0,
+        "cold_solver_process": true
+      },
+      "e0_call_limit": 3
+    }
+  ],
+  "offline_costs": "Static constructor development and pure policy tests occurred before this proposed run; no official E0 calls are charged to this fixed full500 source in this offline preparation. No training, graph-specific scored lookup, or parameter sweep. Prior solver versions/results are not substituted; they are comparison context only."
+}

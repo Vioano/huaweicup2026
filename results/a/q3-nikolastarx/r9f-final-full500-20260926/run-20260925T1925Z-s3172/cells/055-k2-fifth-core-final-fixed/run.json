@@ -1,0 +1,236 @@
+{
+  "case_id": "055",
+  "cores": 2,
+  "variant": "fifth-core-final-fixed",
+  "solver_args": [],
+  "parameters": {
+    "selection_rule": "fresh Forest candidate selection; for K5 only, add deterministic structural contiguous fifth-core proposal; accept only strict P3 M3 improvement and paired P2 M2 nonworse plus exact rational G nonworse",
+    "p3_call_limit": 3,
+    "p2_call_limit": 0,
+    "p2_condition": "only after a strict P3 improvement; compare incumbent and candidate under same graph/config/core/plan identity",
+    "retry_count": 0,
+    "cold_solver_process": true
+  },
+  "e0_call_limit": 3,
+  "job_key": "055-k2-fifth-core-final-fixed",
+  "stage_id": "expansion-496",
+  "started_at": "2026-09-25T20:05:26.451947Z",
+  "status": "ok",
+  "calls": {
+    "solver": 1,
+    "E0": 2,
+    "E1": 0,
+    "E2": 0
+  },
+  "e0_reserved": 3,
+  "artifacts": {
+    "plan": {
+      "path": "results/a/q3-nikolastarx/r9f-final-full500-20260926/run-20260925T1925Z-s3172/cells/055-k2-fifth-core-final-fixed/case_055_multicore_res.json",
+      "sha256": "29c9338f1764512dcd6e4ddfa0f961b6c6ac173d617638ec6f3ae9228e6c5887"
+    },
+    "result": {
+      "path": "results/a/q3-nikolastarx/r9f-final-full500-20260926/run-20260925T1925Z-s3172/cells/055-k2-fifth-core-final-fixed/evidence/result.json.gz",
+      "sha256": "d5cb2567350b7efb8a463f1107ffdda0557b7535cc8dee00fa86d38c5cae7ad5"
+    },
+    "trace": {
+      "path": "results/a/q3-nikolastarx/r9f-final-full500-20260926/run-20260925T1925Z-s3172/cells/055-k2-fifth-core-final-fixed/evidence/receipt.json",
+      "sha256": "a68da5f5da7851ab2c8bee92789c75603cb10f02a0810e9e86e0f33af1050049"
+    }
+  },
+  "run_path": "results/a/q3-nikolastarx/r9f-final-full500-20260926/run-20260925T1925Z-s3172/cells/055-k2-fifth-core-final-fixed/run.json",
+  "failure": null,
+  "solver_process": {
+    "status": "ok",
+    "reason": null,
+    "exit_code": 0,
+    "wall_seconds": 0.42288279195781797,
+    "argv": [
+      "python",
+      "-B",
+      "-m",
+      "src.q3.fifth_core_final_solve",
+      "data/raw/a/official/data/case_055.json",
+      "--cores",
+      "2",
+      "-o",
+      "results/a/q3-nikolastarx/r9f-final-full500-20260926/run-20260925T1925Z-s3172/cells/055-k2-fifth-core-final-fixed/case_055_multicore_res.json",
+      "--evidence",
+      "results/a/q3-nikolastarx/r9f-final-full500-20260926/run-20260925T1925Z-s3172/cells/055-k2-fifth-core-final-fixed/evidence"
+    ],
+    "process_tree_cleanup": "POSIX process group",
+    "memory": {
+      "limit_bytes": null,
+      "sampled_peak_rss_bytes": null,
+      "poll_seconds": null,
+      "scope": "sum of process-group RSS / Windows job WorkingSetSize; sampled tripwire, not OS hard limit; shared pages may be counted more than once"
+    },
+    "log_derivation": "stdout/stderr preserve bytes except repository and interpreter absolute paths replaced by markers"
+  },
+  "identity": {
+    "graph_sha256": "1121ee10f030be119d0930fe518d63aedd8cf65167627c7f66f1a7ffffd9d134",
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+    "plan_sha256": "29c9338f1764512dcd6e4ddfa0f961b6c6ac173d617638ec6f3ae9228e6c5887"
+  },
+  "makespan_cycles": 38646,
+  "data_movement_bytes": {
+    "original_graph_copy_bytes": 625810,
+    "scheduled_copy_bytes": 1189418,
+    "added_copy_bytes": 563608,
+    "partition_added_copy_bytes": 563608,
+    "spill_added_copy_bytes": 0
+  },
+  "cache_stats": {
+    "copy_in_hits": 73,
+    "copy_in_misses": 306,
+    "hit_bytes": 301060,
+    "miss_bytes": 756966,
+    "hits": 73,
+    "accesses": 379,
+    "hit_rate": 0.28454877290350145
+  },
+  "solver_receipt": {
+    "status": "complete",
+    "strategy": "dag_join_gap_list",
+    "selection": {
+      "rule": "general_affine",
+      "word_declined": "requires M -> V* -> M components",
+      "general_proposal": "frozen_fang_gap_insertion",
+      "acceptance": "strictly_lower_official_makespan_than_fresh_anchor",
+      "router": {
+        "stage_request": {
+          "collector_policy": "rotate_heavy",
+          "source_count": 200,
+          "lanes_by_core": [
+            100,
+            100
+          ],
+          "heaviest_lane_cores": [
+            0,
+            1
+          ],
+          "feature_scope": "Provisional source-count partition; lane/load meaning is confirmed only by the strict stage guard."
+        },
+        "migration_construct_attempts": 0,
+        "migration_candidate_plans": 0,
+        "stage_construct_attempts": 1,
+        "stage_candidate_plans": 0,
+        "attention_construct_attempts": 1,
+        "attention_candidate_plans": 0,
+        "guarded_policy_invocations": 0,
+        "stage_guard_reason": "requires one weak component",
+        "attention_cross_delay_cycles": 500,
+        "attention_guard_reason": "no closed attention query row matched",
+        "route": "general_gap",
+        "route_e0_limit": 2,
+        "evaluation_calls": 2,
+        "count_scope": "Router attempts only; guarded internal construction/decision records are preserved unchanged.",
+        "general_gap_policy_invocations": 1
+      },
+      "forest_policy": {
+        "total_e0_limit": 3,
+        "evaluation_calls": 2,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "status": "skip",
+        "skip_reason": "requires multiple reduction trees with a join and no fanout",
+        "strategy": "forest_memory_order"
+      },
+      "fifth_core_policy": {
+        "strategy": "component_contiguous_extra_core",
+        "p3_calls": 2,
+        "p2_calls": 0,
+        "acceptance": "M3 strict, M2 nonworse, G nonworse",
+        "status": "skip",
+        "reason": "requires_five_cores"
+      }
+    },
+    "candidates": [
+      {
+        "name": "seed",
+        "strategy": "affine_eighth",
+        "status": "ok",
+        "makespan": 51388,
+        "metadata": {
+          "strategy": "affine_eighth",
+          "components": 24,
+          "eligible_ops": 1236,
+          "cores": 2
+        },
+        "artifacts": {
+          "plan": {
+            "path": "p3-seed/plan.json",
+            "sha256": "968a592eea976396324d5189192d7d7becae5bda3a17891ba7c476fb268c2da7"
+          },
+          "result": {
+            "path": "p3-seed/result.json.gz",
+            "sha256": "6b517a4687332b144f2543a34517d11d736a98dfe02d1c8ee38310e38a495705"
+          }
+        }
+      },
+      {
+        "name": "gap",
+        "strategy": "dag_join_gap_list",
+        "metadata": {
+          "guard": true,
+          "selected": "dag_join_gap_list",
+          "strategy": "dag_join_gap_list",
+          "cores": 2,
+          "upstream_commit": "a37eb931a22fb7df7e0d00d193538ce5289ae045",
+          "official_e0_calls": 0,
+          "chains": 542,
+          "paired_joins": 182,
+          "operations_inserted_before_tail": 821,
+          "modeled_compute_finish": 35607,
+          "cross_chain_edges": 168,
+          "assumption": "persistent idle calendars; no official COPY/cache/capacity simulation"
+        },
+        "makespan": 38646,
+        "certified_lower_bound_cycles": 35605,
+        "status": "ok",
+        "artifacts": {
+          "plan": {
+            "path": "p3-gap/plan.json",
+            "sha256": "29c9338f1764512dcd6e4ddfa0f961b6c6ac173d617638ec6f3ae9228e6c5887"
+          },
+          "result": {
+            "path": "p3-gap/result.json.gz",
+            "sha256": "d5cb2567350b7efb8a463f1107ffdda0557b7535cc8dee00fa86d38c5cae7ad5"
+          }
+        }
+      }
+    ],
+    "official_p3_calls": 2,
+    "official_p2_calls": 0,
+    "official_e0_calls": 2,
+    "limits": {
+      "p3": 4,
+      "p2": 2,
+      "total_e0": 6
+    },
+    "makespan": 38646,
+    "graph_sha256": "1121ee10f030be119d0930fe518d63aedd8cf65167627c7f66f1a7ffffd9d134",
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "plan_sha256": "29c9338f1764512dcd6e4ddfa0f961b6c6ac173d617638ec6f3ae9228e6c5887",
+    "result_sha256": "d5cb2567350b7efb8a463f1107ffdda0557b7535cc8dee00fa86d38c5cae7ad5",
+    "evaluation_seconds": 0.1418858330580406,
+    "main_until_evidence_seconds": 0.265953374968376,
+    "timing_note": "Use outer subprocess wall for full solver time; cold/warm cache state must be measured separately. All construction and E0 calls are online.",
+    "runner_paired_audit": {
+      "status": "available_verified_reuse",
+      "p2_makespan": 39699,
+      "p3_makespan": 38646,
+      "plan_sha256": "29c9338f1764512dcd6e4ddfa0f961b6c6ac173d617638ec6f3ae9228e6c5887",
+      "p2_result_sha256": "786f94602cbe379b7573a53de2e13013b83a90d85c71c5b88aa523820144f7dd",
+      "source": {
+        "kind": "archived_reuse",
+        "commit": "11d5d3ba1820864626bb49acccbeec7a75553e80",
+        "path": "results/a/q3-nikolastarx/witness-cachepair-20260925-s59/20260924T2102Z-s59ee/cells/055-k2/result.json.gz"
+      }
+    }
+  },
+  "evaluation_ledger": {
+    "path": "results/a/q3-nikolastarx/r9f-final-full500-20260926/run-20260925T1925Z-s3172/cells/055-k2-fifth-core-final-fixed/evidence/evaluations.json",
+    "sha256": "41ffabbf9d252d4e8209520e19caff7b8d6688e3f9f9ae1123e9e2e668d807aa"
+  },
+  "finished_at": "2026-09-25T20:05:29.142817Z"
+}

@@ -1,0 +1,618 @@
+{
+  "case_id": "002",
+  "cores": 5,
+  "variant": "fifth-core-final-fixed",
+  "solver_args": [],
+  "parameters": {
+    "selection_rule": "fresh Forest candidate selection; for K5 only, add deterministic structural contiguous fifth-core proposal; accept only strict P3 M3 improvement and paired P2 M2 nonworse plus exact rational G nonworse",
+    "p3_call_limit": 4,
+    "p2_call_limit": 2,
+    "p2_condition": "only after a strict P3 improvement; compare incumbent and candidate under same graph/config/core/plan identity",
+    "retry_count": 0,
+    "cold_solver_process": true
+  },
+  "e0_call_limit": 6,
+  "job_key": "002-k5-fifth-core-final-fixed",
+  "stage_id": "expansion-496",
+  "started_at": "2026-09-25T19:45:59.646919Z",
+  "status": "ok",
+  "calls": {
+    "solver": 1,
+    "E0": 2,
+    "E1": 0,
+    "E2": 0
+  },
+  "e0_reserved": 6,
+  "artifacts": {
+    "plan": {
+      "path": "results/a/q3-nikolastarx/r9f-final-full500-20260926/run-20260925T1925Z-s3172/cells/002-k5-fifth-core-final-fixed/case_002_multicore_res.json",
+      "sha256": "ea6c992c11db5677685f75cfb1edcf166d013c765f558e0ab72621bc6a2a2527"
+    },
+    "result": {
+      "path": "results/a/q3-nikolastarx/r9f-final-full500-20260926/run-20260925T1925Z-s3172/cells/002-k5-fifth-core-final-fixed/evidence/result.json.gz",
+      "sha256": "f5d18a12536e68338a5a8532a21c4453d3f1b7ea1ed7ddc100de52ab954a4c72"
+    },
+    "trace": {
+      "path": "results/a/q3-nikolastarx/r9f-final-full500-20260926/run-20260925T1925Z-s3172/cells/002-k5-fifth-core-final-fixed/evidence/receipt.json",
+      "sha256": "555e05c534e39788b759dc0303d97caf20c8d19150d7909b92d4eb08153e1801"
+    }
+  },
+  "run_path": "results/a/q3-nikolastarx/r9f-final-full500-20260926/run-20260925T1925Z-s3172/cells/002-k5-fifth-core-final-fixed/run.json",
+  "failure": null,
+  "solver_process": {
+    "status": "ok",
+    "reason": null,
+    "exit_code": 0,
+    "wall_seconds": 0.4280226669507101,
+    "argv": [
+      "python",
+      "-B",
+      "-m",
+      "src.q3.fifth_core_final_solve",
+      "data/raw/a/official/data/case_002.json",
+      "--cores",
+      "5",
+      "-o",
+      "results/a/q3-nikolastarx/r9f-final-full500-20260926/run-20260925T1925Z-s3172/cells/002-k5-fifth-core-final-fixed/case_002_multicore_res.json",
+      "--evidence",
+      "results/a/q3-nikolastarx/r9f-final-full500-20260926/run-20260925T1925Z-s3172/cells/002-k5-fifth-core-final-fixed/evidence"
+    ],
+    "process_tree_cleanup": "POSIX process group",
+    "memory": {
+      "limit_bytes": null,
+      "sampled_peak_rss_bytes": null,
+      "poll_seconds": null,
+      "scope": "sum of process-group RSS / Windows job WorkingSetSize; sampled tripwire, not OS hard limit; shared pages may be counted more than once"
+    },
+    "log_derivation": "stdout/stderr preserve bytes except repository and interpreter absolute paths replaced by markers"
+  },
+  "identity": {
+    "graph_sha256": "578fceeb9f66a3c083b9f27d8464cf75c1e7602cbc7290920c02aa1aef7ca352",
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+    "plan_sha256": "ea6c992c11db5677685f75cfb1edcf166d013c765f558e0ab72621bc6a2a2527"
+  },
+  "makespan_cycles": 54341,
+  "data_movement_bytes": {
+    "original_graph_copy_bytes": 1224192,
+    "scheduled_copy_bytes": 1273344,
+    "added_copy_bytes": 49152,
+    "partition_added_copy_bytes": 49152,
+    "spill_added_copy_bytes": 0
+  },
+  "cache_stats": {
+    "copy_in_hits": 0,
+    "copy_in_misses": 414,
+    "hit_bytes": 0,
+    "miss_bytes": 1247232,
+    "hits": 0,
+    "accesses": 414,
+    "hit_rate": 0.0
+  },
+  "solver_receipt": {
+    "status": "complete",
+    "strategy": "release_place_forest",
+    "selection": {
+      "rule": "single_reduction_tree_balanced_anchor",
+      "router": {
+        "stage_request": {
+          "collector_policy": "fixed",
+          "source_count": 199,
+          "lanes_by_core": [
+            40,
+            40,
+            40,
+            40,
+            39
+          ],
+          "heaviest_lane_cores": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "feature_scope": "Provisional source-count partition; lane/load meaning is confirmed only by the strict stage guard."
+        },
+        "migration_construct_attempts": 0,
+        "migration_candidate_plans": 0,
+        "stage_construct_attempts": 1,
+        "stage_candidate_plans": 0,
+        "attention_construct_attempts": 1,
+        "attention_candidate_plans": 0,
+        "guarded_policy_invocations": 1,
+        "stage_guard_reason": "requires one V pipe family",
+        "attention_cross_delay_cycles": 500,
+        "attention_guard_reason": "no closed attention query row matched",
+        "route": "guarded",
+        "route_e0_limit": 2,
+        "evaluation_calls": 2,
+        "count_scope": "Router attempts only; guarded internal construction/decision records are preserved unchanged."
+      },
+      "forest_policy": {
+        "total_e0_limit": 3,
+        "evaluation_calls": 2,
+        "acceptance": "strictly_lower_official_makespan_than_fresh_incumbent",
+        "status": "skip",
+        "skip_reason": "requires multiple reduction trees with a join and no fanout",
+        "strategy": "forest_memory_order"
+      },
+      "fifth_core_policy": {
+        "strategy": "component_contiguous_extra_core",
+        "p3_calls": 2,
+        "p2_calls": 0,
+        "acceptance": "M3 strict, M2 nonworse, G nonworse",
+        "status": "unsupported",
+        "reason": "no closed attention query row matched"
+      }
+    },
+    "candidates": [
+      {
+        "name": "seed",
+        "strategy": "balanced_reduction_tree",
+        "status": "ok",
+        "makespan": 85129,
+        "metadata": {
+          "strategy": "balanced_reduction_tree",
+          "cuts": [
+            [
+              2194,
+              2196
+            ],
+            [
+              2192,
+              2194
+            ],
+            [
+              2189,
+              2193
+            ],
+            [
+              2187,
+              2192
+            ]
+          ],
+          "block_work_cycles": [
+            88320,
+            45468,
+            44160,
+            44124,
+            53856
+          ],
+          "block_operations": [
+            576,
+            295,
+            288,
+            287,
+            352
+          ],
+          "order": "original-op-id depth-first postorder"
+        },
+        "artifacts": {
+          "plan": {
+            "path": "p3-seed/plan.json",
+            "sha256": "883a11af14a7a479508d2da59d35ceba6b7aabdd80a2becff15b07414c5eaf5d"
+          },
+          "result": {
+            "path": "p3-seed/result.json.gz",
+            "sha256": "50395b8dc812428d04d3c433c10a44bd35f84d923cf32dcec0e8198d4c474b59"
+          }
+        }
+      },
+      {
+        "name": "release",
+        "strategy": "release_place_forest",
+        "makespan": 54341,
+        "metadata": {
+          "strategy": "release_place_forest",
+          "fragment_threshold_cycles": 13797,
+          "fragment_count": 25,
+          "fragment_work_cycles": [
+            11004,
+            11040,
+            11004,
+            11076,
+            11004,
+            11040,
+            11004,
+            11112,
+            12348,
+            11040,
+            11004,
+            11076,
+            11004,
+            11040,
+            11004,
+            11148,
+            11004,
+            11040,
+            11004,
+            11076,
+            11004,
+            11040,
+            11004,
+            11112,
+            9696
+          ],
+          "cuts": [
+            [
+              2148,
+              2173
+            ],
+            [
+              2150,
+              2174
+            ],
+            [
+              2152,
+              2175
+            ],
+            [
+              2154,
+              2176
+            ],
+            [
+              2156,
+              2177
+            ],
+            [
+              2158,
+              2178
+            ],
+            [
+              2160,
+              2179
+            ],
+            [
+              2162,
+              2180
+            ],
+            [
+              2164,
+              2181
+            ],
+            [
+              2166,
+              2182
+            ],
+            [
+              2168,
+              2183
+            ],
+            [
+              2170,
+              2184
+            ],
+            [
+              2173,
+              2185
+            ],
+            [
+              2175,
+              2186
+            ],
+            [
+              2177,
+              2187
+            ],
+            [
+              2179,
+              2188
+            ],
+            [
+              2181,
+              2189
+            ],
+            [
+              2183,
+              2190
+            ],
+            [
+              2185,
+              2191
+            ],
+            [
+              2187,
+              2192
+            ],
+            [
+              2189,
+              2193
+            ],
+            [
+              2191,
+              2194
+            ],
+            [
+              2193,
+              2195
+            ],
+            [
+              2194,
+              2196
+            ]
+          ],
+          "core_work_cycles": [
+            55128,
+            55164,
+            55164,
+            55236,
+            55236
+          ],
+          "fragment_dispatch": [
+            {
+              "fragment": 0,
+              "core": 0,
+              "proxy_finish": 10608,
+              "remote_inputs": 0
+            },
+            {
+              "fragment": 8,
+              "core": 1,
+              "proxy_finish": 11952,
+              "remote_inputs": 0
+            },
+            {
+              "fragment": 2,
+              "core": 2,
+              "proxy_finish": 10608,
+              "remote_inputs": 0
+            },
+            {
+              "fragment": 4,
+              "core": 3,
+              "proxy_finish": 10608,
+              "remote_inputs": 0
+            },
+            {
+              "fragment": 16,
+              "core": 4,
+              "proxy_finish": 10608,
+              "remote_inputs": 0
+            },
+            {
+              "fragment": 6,
+              "core": 0,
+              "proxy_finish": 21072,
+              "remote_inputs": 0
+            },
+            {
+              "fragment": 10,
+              "core": 2,
+              "proxy_finish": 21072,
+              "remote_inputs": 0
+            },
+            {
+              "fragment": 12,
+              "core": 3,
+              "proxy_finish": 21072,
+              "remote_inputs": 0
+            },
+            {
+              "fragment": 18,
+              "core": 4,
+              "proxy_finish": 21072,
+              "remote_inputs": 0
+            },
+            {
+              "fragment": 20,
+              "core": 1,
+              "proxy_finish": 22416,
+              "remote_inputs": 0
+            },
+            {
+              "fragment": 14,
+              "core": 0,
+              "proxy_finish": 31536,
+              "remote_inputs": 0
+            },
+            {
+              "fragment": 22,
+              "core": 2,
+              "proxy_finish": 31536,
+              "remote_inputs": 0
+            },
+            {
+              "fragment": 1,
+              "core": 3,
+              "proxy_finish": 31572,
+              "remote_inputs": 1
+            },
+            {
+              "fragment": 5,
+              "core": 4,
+              "proxy_finish": 31572,
+              "remote_inputs": 1
+            },
+            {
+              "fragment": 17,
+              "core": 1,
+              "proxy_finish": 32916,
+              "remote_inputs": 1
+            },
+            {
+              "fragment": 9,
+              "core": 0,
+              "proxy_finish": 42036,
+              "remote_inputs": 1
+            },
+            {
+              "fragment": 13,
+              "core": 3,
+              "proxy_finish": 42036,
+              "remote_inputs": 0
+            },
+            {
+              "fragment": 21,
+              "core": 2,
+              "proxy_finish": 42036,
+              "remote_inputs": 1
+            },
+            {
+              "fragment": 3,
+              "core": 4,
+              "proxy_finish": 42072,
+              "remote_inputs": 2
+            },
+            {
+              "fragment": 19,
+              "core": 1,
+              "proxy_finish": 43416,
+              "remote_inputs": 1
+            },
+            {
+              "fragment": 11,
+              "core": 0,
+              "proxy_finish": 52536,
+              "remote_inputs": 1
+            },
+            {
+              "fragment": 7,
+              "core": 4,
+              "proxy_finish": 52572,
+              "remote_inputs": 1
+            },
+            {
+              "fragment": 23,
+              "core": 2,
+              "proxy_finish": 52572,
+              "remote_inputs": 1
+            },
+            {
+              "fragment": 15,
+              "core": 3,
+              "proxy_finish": 53108,
+              "remote_inputs": 3
+            },
+            {
+              "fragment": 24,
+              "core": 1,
+              "proxy_finish": 53644,
+              "remote_inputs": 2
+            }
+          ],
+          "proxy_makespan_cycles": 53644,
+          "cross_delay_proxy": 500,
+          "cross_core_compute_edges": [
+            [
+              2148,
+              2173
+            ],
+            [
+              2150,
+              2174
+            ],
+            [
+              2152,
+              2175
+            ],
+            [
+              2154,
+              2176
+            ],
+            [
+              2156,
+              2177
+            ],
+            [
+              2158,
+              2178
+            ],
+            [
+              2162,
+              2180
+            ],
+            [
+              2164,
+              2181
+            ],
+            [
+              2166,
+              2182
+            ],
+            [
+              2168,
+              2183
+            ],
+            [
+              2173,
+              2185
+            ],
+            [
+              2187,
+              2192
+            ],
+            [
+              2189,
+              2193
+            ],
+            [
+              2191,
+              2194
+            ],
+            [
+              2193,
+              2195
+            ],
+            [
+              2194,
+              2196
+            ]
+          ],
+          "order": "minimum incoming release then quotient bottom-level ready list; within-fragment DFS postorder",
+          "placement": "minimum proxy completion",
+          "limitations": "No COPY/Cache/bandwidth/capacity model; no official performance or zero-spill guarantee."
+        },
+        "certified_lower_bound_cycles": 53644,
+        "status": "ok",
+        "artifacts": {
+          "plan": {
+            "path": "p3-release/plan.json",
+            "sha256": "ea6c992c11db5677685f75cfb1edcf166d013c765f558e0ab72621bc6a2a2527"
+          },
+          "result": {
+            "path": "p3-release/result.json.gz",
+            "sha256": "f5d18a12536e68338a5a8532a21c4453d3f1b7ea1ed7ddc100de52ab954a4c72"
+          }
+        }
+      },
+      {
+        "name": "component_contiguous_extra_core",
+        "status": "unsupported",
+        "reason": "no closed attention query row matched"
+      }
+    ],
+    "official_p3_calls": 2,
+    "official_p2_calls": 0,
+    "official_e0_calls": 2,
+    "limits": {
+      "p3": 4,
+      "p2": 2,
+      "total_e0": 6
+    },
+    "makespan": 54341,
+    "graph_sha256": "578fceeb9f66a3c083b9f27d8464cf75c1e7602cbc7290920c02aa1aef7ca352",
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "plan_sha256": "ea6c992c11db5677685f75cfb1edcf166d013c765f558e0ab72621bc6a2a2527",
+    "result_sha256": "f5d18a12536e68338a5a8532a21c4453d3f1b7ea1ed7ddc100de52ab954a4c72",
+    "evaluation_seconds": 0.17665616603335366,
+    "main_until_evidence_seconds": 0.29889020801056176,
+    "timing_note": "Use outer subprocess wall for full solver time; cold/warm cache state must be measured separately. All construction and E0 calls are online.",
+    "runner_paired_audit": {
+      "status": "available_verified_reuse",
+      "p2_makespan": 54341,
+      "p3_makespan": 54341,
+      "plan_sha256": "ea6c992c11db5677685f75cfb1edcf166d013c765f558e0ab72621bc6a2a2527",
+      "p2_result_sha256": "cda61f340804574d6ffc9e6e040a5e932260853cc74f6360446e93580d6594f7",
+      "source": {
+        "kind": "archived_reuse",
+        "commit": "11d5d3ba1820864626bb49acccbeec7a75553e80",
+        "path": "results/a/q3-nikolastarx/witness-cachepair-20260925-s59/20260924T2102Z-s59ee/cells/002-k5/result.json.gz"
+      }
+    }
+  },
+  "evaluation_ledger": {
+    "path": "results/a/q3-nikolastarx/r9f-final-full500-20260926/run-20260925T1925Z-s3172/cells/002-k5-fifth-core-final-fixed/evidence/evaluations.json",
+    "sha256": "4b8003caf37e5a9785d369f251dd8c4172c89892ec7d42660ffd4aae6f89081c"
+  },
+  "finished_at": "2026-09-25T19:46:00.345421Z"
+}
