@@ -1,0 +1,168 @@
+{
+  "graph_sha256": "9abd4468a4be365e384de47431ac914ee44fd6e7b6221dffc584561f388cd57e",
+  "component_count": 11,
+  "component_sizes": [
+    124
+  ],
+  "common_external_input_count": 50,
+  "common_external_input_bytes": 930400,
+  "representative_cross_slice_tensors": [
+    {
+      "tensor": 1000000113,
+      "size": 2048,
+      "source": "prefix",
+      "targets": [
+        "suffix"
+      ],
+      "copy_instances": 2,
+      "bytes": 4096
+    },
+    {
+      "tensor": 1000000125,
+      "size": 1024,
+      "source": "prefix",
+      "targets": [
+        "suffix"
+      ],
+      "copy_instances": 2,
+      "bytes": 2048
+    },
+    {
+      "tensor": 1000000137,
+      "size": 512,
+      "source": "prefix",
+      "targets": [
+        "suffix"
+      ],
+      "copy_instances": 2,
+      "bytes": 1024
+    },
+    {
+      "tensor": 1000000149,
+      "size": 256,
+      "source": "prefix",
+      "targets": [
+        "pool_A",
+        "pool_B"
+      ],
+      "copy_instances": 3,
+      "bytes": 768
+    },
+    {
+      "tensor": 1000000166,
+      "size": 128,
+      "source": "pool_A",
+      "targets": [
+        "pool_B"
+      ],
+      "copy_instances": 2,
+      "bytes": 256
+    },
+    {
+      "tensor": 1000000176,
+      "size": 256,
+      "source": "pool_B",
+      "targets": [
+        "suffix"
+      ],
+      "copy_instances": 2,
+      "bytes": 512
+    }
+  ],
+  "representative_cross_slice_bytes": 8704,
+  "fixed_slice_total_managed_footprints": [
+    {
+      "slice": "prefix",
+      "cohort": 0,
+      "component_count": 3,
+      "managed_tensor_union_bytes_by_pos": {
+        "L1": 254688
+      }
+    },
+    {
+      "slice": "prefix",
+      "cohort": 1,
+      "component_count": 3,
+      "managed_tensor_union_bytes_by_pos": {
+        "L1": 254688
+      }
+    },
+    {
+      "slice": "prefix",
+      "cohort": 2,
+      "component_count": 3,
+      "managed_tensor_union_bytes_by_pos": {
+        "L1": 254688
+      }
+    },
+    {
+      "slice": "prefix",
+      "cohort": 3,
+      "component_count": 2,
+      "managed_tensor_union_bytes_by_pos": {
+        "L1": 206560
+      }
+    },
+    {
+      "slice": "pool_A",
+      "cohort": 0,
+      "component_count": 11,
+      "managed_tensor_union_bytes_by_pos": {
+        "L1": 505984
+      }
+    },
+    {
+      "slice": "pool_B",
+      "cohort": 0,
+      "component_count": 11,
+      "managed_tensor_union_bytes_by_pos": {
+        "L1": 260096
+      }
+    },
+    {
+      "slice": "suffix",
+      "cohort": 0,
+      "component_count": 3,
+      "managed_tensor_union_bytes_by_pos": {
+        "L1": 262272
+      }
+    },
+    {
+      "slice": "suffix",
+      "cohort": 1,
+      "component_count": 3,
+      "managed_tensor_union_bytes_by_pos": {
+        "L1": 262272
+      }
+    },
+    {
+      "slice": "suffix",
+      "cohort": 2,
+      "component_count": 3,
+      "managed_tensor_union_bytes_by_pos": {
+        "L1": 262272
+      }
+    },
+    {
+      "slice": "suffix",
+      "cohort": 3,
+      "component_count": 2,
+      "managed_tensor_union_bytes_by_pos": {
+        "L1": 209280
+      }
+    }
+  ],
+  "scope": "Static original-graph slice accounting only; no plan, Task compilation, or scorer calls",
+  "calls": {
+    "constructors": 0,
+    "Task_compiler": 0,
+    "response": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "unique_producer_max": 1,
+  "original_compute_edge_count": 1617,
+  "rank_nonforward_or_cross_component_edges": [],
+  "rank_nonforward_or_cross_component_edge_count": 0
+}

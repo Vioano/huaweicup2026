@@ -1,0 +1,738 @@
+{
+  "schema_version": 1,
+  "submission_version": 1,
+  "records": [
+    {
+      "attempt_id": "nikolastarx-p1-r6-transfer4-20260925-082-k5-r0",
+      "revision": 2,
+      "run_id": "20260925T1353Z-s6607-r6-transfer4",
+      "algorithm_id": "q1-branch-aid-r6",
+      "algorithm_name": "P1 R6 single bridge candidate construction",
+      "variant": "single-bridge-from-current-heavy-or-sink",
+      "solver_commit": "e74c00afed2fc1ab5ada75f7dda96bfd086fe4aa",
+      "parameters": {
+        "cores": 5,
+        "candidate_limit": 1,
+        "heavy_construct": 1,
+        "branch_construct": 1,
+        "E0_timeout_seconds": 120,
+        "E1": 0,
+        "E2": 0,
+        "retry": 0,
+        "worker_limit": 1,
+        "sampled_group_rss_stop_mib": 1536
+      },
+      "problem": "P1",
+      "case_id": "082",
+      "cores": 5,
+      "status": "ok",
+      "runtime_id": "macos-27.0-arm64-python3.12.13",
+      "observed_at": "2026-09-25T13:53:35Z",
+      "metrics": {
+        "makespan_cycles": 198803,
+        "solver_wall_seconds": 0.3473056250368245,
+        "evaluation_wall_seconds": 0.6286194170243107,
+        "ddr_bytes": 3301760,
+        "extra_ddr_bytes": 2709754,
+        "spill_bytes": 0,
+        "cache_hit_rate": null
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "a008dfb8f1b5b881844af312be0b7246b2c6b025",
+        "entrypoint": "multicore_cut_evaluate_problem_1.py -> contest_io.run_problem_cli(1)"
+      },
+      "identity": {
+        "graph_sha256": "f230fbc200ad75797f3024f84431d1d26f7747d6a284378ee83eabde77b7e70c",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "917f51287311e671193b10abaedf57e09295a0cbf8fc1f52d0bee31bcc03bcf4"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/082-k5/candidate-plan.json",
+          "sha256": "917f51287311e671193b10abaedf57e09295a0cbf8fc1f52d0bee31bcc03bcf4"
+        },
+        "result": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/082-k5/result.json.gz",
+          "sha256": "e9aebdbf67ee1a1e5bd78264328ea699cfbf1b58b78f1b5286ce02a92f03cfb3"
+        },
+        "run": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/082-k5/run-derived.json",
+          "sha256": "e7c073f29d8cd3cc222068190fe787f786b25686bc83cec3e7f2df48cc6c65fc"
+        },
+        "trace": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/082-k5/trace.json.gz",
+          "sha256": "58dd9d080d0034eade3f98682acb449ebeaf562b549b62c5f6ffa10194920232"
+        },
+        "log": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/082-k5/official.log",
+          "sha256": "cde66e39191a50549a22c74071afb8414ed594c19cd86c5320aac11c7ce65116"
+        }
+      },
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "Supervisor sampled process-group wall; original per-stage monotonic timings retained in original receipt.",
+        "utc": "UTC"
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-6607cb2735304751b36662035723372b",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "e74c00afed2fc1ab5ada75f7dda96bfd086fe4aa",
+            "path": "src/q1/branch_aid.py",
+            "entrypoint": "branch-aid construct invoked by src.review.p1_r6_candidate_probe"
+          },
+          "authors": [
+            "NikolaStarx"
+          ],
+          "method": "Constructs one single bridge candidate from the current heavy-or-sink base plan, applies the byte gate, and persists the chosen candidate. The branch_aid implementation bytes match db64a937; this bounded transfer batch ran from checkout e74c00af. This is a mechanism transfer pilot, not src.q1.branch_refine or an integrated unified solver.",
+          "references": [
+            "https://github.com/huaweibei123/huaweicup2026/issues/98"
+          ],
+          "upstream": [],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "e74c00afed2fc1ab5ada75f7dda96bfd086fe4aa",
+            "path": "src/review/p1_r6_transfer_batch.py",
+            "entrypoint": "main"
+          },
+          "argv": [
+            "<venv>/bin/python",
+            "-B",
+            "-m",
+            "src.review.p1_r6_transfer_batch",
+            "--manifest",
+            "results/a/p1-r6-transfer-20260925/input-and-budget-request.json",
+            "--inputs-root",
+            "output/p1-r6-transfer-inputs-20260925",
+            "--output-dir",
+            "output/p1-r6-transfer-20260925/attempt-1",
+            "--expected-head",
+            "e74c00afed2fc1ab5ada75f7dda96bfd086fe4aa",
+            "--freshps-admission",
+            "output/p1-r6-transfer-20260925/T0-admission.json"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS-27.0-arm64-arm-64bit",
+          "cpu": null,
+          "gpu": null,
+          "ram_bytes": 51539607552,
+          "python": "3.12.13",
+          "dependencies": "Existing project venv; exact installed-package inventory not recorded.",
+          "threads": 1,
+          "workers": 1,
+          "peak_rss_bytes": 61456384
+        },
+        "measurement": {
+          "started_at": "2026-09-25T13:53:35Z",
+          "finished_at": "2026-09-25T13:53:36Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": "External cold probe process wall includes current-base reconstruction, one bridge candidate construction, byte gate, persistence and child cleanup; excludes official E0. OS cache state was not measured.",
+          "evaluation_scope": "One independent official E0 execution on the persisted candidate plan; no baseline E0, E1 or E2.",
+          "budget": {
+            "wall_seconds": 180.0,
+            "candidate_limit": 1,
+            "stop_reason": "One transfer candidate and one E0 completed; no retry."
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 1,
+            "E1": 0,
+            "E2": 0
+          },
+          "offline_costs": "Source/input capsule preparation and locked-dependency setup were outside the measured probe. No offline training, compilation, or current-case preoptimization was performed in this run.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.cpu": "CPU model not recorded in the run receipt.",
+          "provenance.environment.gpu": "GPU inventory not recorded in the run receipt.",
+          "provenance.environment.dependencies": "Exact installed package inventory not recorded.",
+          "provenance.measurement.cold_start": "OS file-cache state was not measured.",
+          "provenance.measurement.seed": "Deterministic construction; no seed was recorded."
+        }
+      },
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+      "notes": [
+        "Four-cell transfer batch, 4/500 P1 matrix cells; not an integrated unified solver or full-matrix result.",
+        "Each cell constructs one base and at most one branch-aid candidate; candidate and baseline plans/results are retained.",
+        "075 is a negative result and remains published.",
+        "No E1/E2, retry, or new structure-test calls.",
+        "External detached controller return code was not captured; do not infer it from the batch completion receipt.",
+        "The 100×1–5 full benchmark remains unrun.",
+        "The source candidate and base plans are retained as exact raw JSON; result/trace gzip artifacts are lossless wrappers.",
+        "Revision 2 attaches the existing one-core E0 denominator from frozen commit 0e0d7cd327c51cc6ac365e01f4b6a7d2b28f9297; it was not rerun. Its archived run.json records singlecore_evaluate.evaluate_singlecore and matching graph/config/official identities."
+      ],
+      "baseline": {
+        "graph_sha256": "f230fbc200ad75797f3024f84431d1d26f7747d6a284378ee83eabde77b7e70c",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/baselines/case-082-singlecore-result.json.gz",
+          "sha256": "b151858b2a5713d3dc763f6369a3736b1912e677806f26c42da56c90e19946c6"
+        }
+      }
+    },
+    {
+      "attempt_id": "nikolastarx-p1-r6-transfer4-20260925-075-k5-r0",
+      "revision": 2,
+      "run_id": "20260925T1353Z-s6607-r6-transfer4",
+      "algorithm_id": "q1-branch-aid-r6",
+      "algorithm_name": "P1 R6 single bridge candidate construction",
+      "variant": "single-bridge-from-current-heavy-or-sink",
+      "solver_commit": "e74c00afed2fc1ab5ada75f7dda96bfd086fe4aa",
+      "parameters": {
+        "cores": 5,
+        "candidate_limit": 1,
+        "heavy_construct": 1,
+        "branch_construct": 1,
+        "E0_timeout_seconds": 120,
+        "E1": 0,
+        "E2": 0,
+        "retry": 0,
+        "worker_limit": 1,
+        "sampled_group_rss_stop_mib": 1536
+      },
+      "problem": "P1",
+      "case_id": "075",
+      "cores": 5,
+      "status": "ok",
+      "runtime_id": "macos-27.0-arm64-python3.12.13",
+      "observed_at": "2026-09-25T13:53:36Z",
+      "metrics": {
+        "makespan_cycles": 379047,
+        "solver_wall_seconds": 0.6103365000453778,
+        "evaluation_wall_seconds": 1.1850848750327714,
+        "ddr_bytes": 7294774,
+        "extra_ddr_bytes": 5457584,
+        "spill_bytes": 0,
+        "cache_hit_rate": null
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "a008dfb8f1b5b881844af312be0b7246b2c6b025",
+        "entrypoint": "multicore_cut_evaluate_problem_1.py -> contest_io.run_problem_cli(1)"
+      },
+      "identity": {
+        "graph_sha256": "5c24beddea6d09e1df3c8f8843d3593b90affb117ba38450fa9bea8a8db3351c",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "e5628351a53b10e1ea730091912ddf1bfa5c0ed55c98af2ac3fe77bc1fab1e55"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/075-k5/candidate-plan.json",
+          "sha256": "e5628351a53b10e1ea730091912ddf1bfa5c0ed55c98af2ac3fe77bc1fab1e55"
+        },
+        "result": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/075-k5/result.json.gz",
+          "sha256": "8089b72731a9ac5bd3fe5cd8dbb0e6218d7c3f0e0e6763618735d08a26db90e9"
+        },
+        "run": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/075-k5/run-derived.json",
+          "sha256": "4a68e150becc5b311e705656c8327e5aec75b395984f3aa8ea20ac30ba19e015"
+        },
+        "trace": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/075-k5/trace.json.gz",
+          "sha256": "b3b9a0f026807adb0e8caff93c0e65a943d3b12f86eb4c02a43b5af0f950f561"
+        },
+        "log": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/075-k5/official.log",
+          "sha256": "44ff6fabacadd13cbcb5d155054f7cb52e7c09f9463e112209db8cf92097f59b"
+        }
+      },
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "Supervisor sampled process-group wall; original per-stage monotonic timings retained in original receipt.",
+        "utc": "UTC"
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-6607cb2735304751b36662035723372b",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "e74c00afed2fc1ab5ada75f7dda96bfd086fe4aa",
+            "path": "src/q1/branch_aid.py",
+            "entrypoint": "branch-aid construct invoked by src.review.p1_r6_candidate_probe"
+          },
+          "authors": [
+            "NikolaStarx"
+          ],
+          "method": "Constructs one single bridge candidate from the current heavy-or-sink base plan, applies the byte gate, and persists the chosen candidate. The branch_aid implementation bytes match db64a937; this bounded transfer batch ran from checkout e74c00af. This is a mechanism transfer pilot, not src.q1.branch_refine or an integrated unified solver.",
+          "references": [
+            "https://github.com/huaweibei123/huaweicup2026/issues/98"
+          ],
+          "upstream": [],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "e74c00afed2fc1ab5ada75f7dda96bfd086fe4aa",
+            "path": "src/review/p1_r6_transfer_batch.py",
+            "entrypoint": "main"
+          },
+          "argv": [
+            "<venv>/bin/python",
+            "-B",
+            "-m",
+            "src.review.p1_r6_transfer_batch",
+            "--manifest",
+            "results/a/p1-r6-transfer-20260925/input-and-budget-request.json",
+            "--inputs-root",
+            "output/p1-r6-transfer-inputs-20260925",
+            "--output-dir",
+            "output/p1-r6-transfer-20260925/attempt-1",
+            "--expected-head",
+            "e74c00afed2fc1ab5ada75f7dda96bfd086fe4aa",
+            "--freshps-admission",
+            "output/p1-r6-transfer-20260925/T0-admission.json"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS-27.0-arm64-arm-64bit",
+          "cpu": null,
+          "gpu": null,
+          "ram_bytes": 51539607552,
+          "python": "3.12.13",
+          "dependencies": "Existing project venv; exact installed-package inventory not recorded.",
+          "threads": 1,
+          "workers": 1,
+          "peak_rss_bytes": 95092736
+        },
+        "measurement": {
+          "started_at": "2026-09-25T13:53:36Z",
+          "finished_at": "2026-09-25T13:53:38Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": "External cold probe process wall includes current-base reconstruction, one bridge candidate construction, byte gate, persistence and child cleanup; excludes official E0. OS cache state was not measured.",
+          "evaluation_scope": "One independent official E0 execution on the persisted candidate plan; no baseline E0, E1 or E2.",
+          "budget": {
+            "wall_seconds": 180.0,
+            "candidate_limit": 1,
+            "stop_reason": "One transfer candidate and one E0 completed; no retry."
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 1,
+            "E1": 0,
+            "E2": 0
+          },
+          "offline_costs": "Source/input capsule preparation and locked-dependency setup were outside the measured probe. No offline training, compilation, or current-case preoptimization was performed in this run.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.cpu": "CPU model not recorded in the run receipt.",
+          "provenance.environment.gpu": "GPU inventory not recorded in the run receipt.",
+          "provenance.environment.dependencies": "Exact installed package inventory not recorded.",
+          "provenance.measurement.cold_start": "OS file-cache state was not measured.",
+          "provenance.measurement.seed": "Deterministic construction; no seed was recorded."
+        }
+      },
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+      "notes": [
+        "Four-cell transfer batch, 4/500 P1 matrix cells; not an integrated unified solver or full-matrix result.",
+        "Each cell constructs one base and at most one branch-aid candidate; candidate and baseline plans/results are retained.",
+        "075 is a negative result and remains published.",
+        "No E1/E2, retry, or new structure-test calls.",
+        "External detached controller return code was not captured; do not infer it from the batch completion receipt.",
+        "The 100×1–5 full benchmark remains unrun.",
+        "The source candidate and base plans are retained as exact raw JSON; result/trace gzip artifacts are lossless wrappers.",
+        "Revision 2 attaches the existing one-core E0 denominator from frozen commit 0e0d7cd327c51cc6ac365e01f4b6a7d2b28f9297; it was not rerun. Its archived run.json records singlecore_evaluate.evaluate_singlecore and matching graph/config/official identities."
+      ],
+      "baseline": {
+        "graph_sha256": "5c24beddea6d09e1df3c8f8843d3593b90affb117ba38450fa9bea8a8db3351c",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/baselines/case-075-singlecore-result.json.gz",
+          "sha256": "58784813755a0a2007d093a0fa270c41a2809c64aa0edd6f81ec07592e1017d5"
+        }
+      }
+    },
+    {
+      "attempt_id": "nikolastarx-p1-r6-transfer4-20260925-047-k5-r0",
+      "revision": 2,
+      "run_id": "20260925T1353Z-s6607-r6-transfer4",
+      "algorithm_id": "q1-branch-aid-r6",
+      "algorithm_name": "P1 R6 single bridge candidate construction",
+      "variant": "single-bridge-from-current-heavy-or-sink",
+      "solver_commit": "e74c00afed2fc1ab5ada75f7dda96bfd086fe4aa",
+      "parameters": {
+        "cores": 5,
+        "candidate_limit": 1,
+        "heavy_construct": 1,
+        "branch_construct": 1,
+        "E0_timeout_seconds": 120,
+        "E1": 0,
+        "E2": 0,
+        "retry": 0,
+        "worker_limit": 1,
+        "sampled_group_rss_stop_mib": 1536
+      },
+      "problem": "P1",
+      "case_id": "047",
+      "cores": 5,
+      "status": "ok",
+      "runtime_id": "macos-27.0-arm64-python3.12.13",
+      "observed_at": "2026-09-25T13:53:38Z",
+      "metrics": {
+        "makespan_cycles": 111229,
+        "solver_wall_seconds": 0.9028197909938172,
+        "evaluation_wall_seconds": 2.311853874998633,
+        "ddr_bytes": 2800202,
+        "extra_ddr_bytes": 2336260,
+        "spill_bytes": 0,
+        "cache_hit_rate": null
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "a008dfb8f1b5b881844af312be0b7246b2c6b025",
+        "entrypoint": "multicore_cut_evaluate_problem_1.py -> contest_io.run_problem_cli(1)"
+      },
+      "identity": {
+        "graph_sha256": "7c6328650b8e50e4d15a0ddf1ad0715a40d64d51f3c86c2c3b9c22e4cbb6a83f",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "9e62db84091d2ec252f8c5fc998414deb0f45dc7e64896128f01e0aedc14bc65"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/047-k5/candidate-plan.json",
+          "sha256": "9e62db84091d2ec252f8c5fc998414deb0f45dc7e64896128f01e0aedc14bc65"
+        },
+        "result": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/047-k5/result.json.gz",
+          "sha256": "01025625dd2974b2a65e4ebbc216d02080ec36cfade13fbf959e297dd2bd3498"
+        },
+        "run": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/047-k5/run-derived.json",
+          "sha256": "d6b7ccaed9ee5587b363cdcc86d2d5dcc9128af6b9cffd09bbc308a0f6e2113d"
+        },
+        "trace": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/047-k5/trace.json.gz",
+          "sha256": "28b1fcb15b05f06a451f9e1c8db80d21361ec9b0526101838f5ad3daa5cfabd7"
+        },
+        "log": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/047-k5/official.log",
+          "sha256": "134570e75f226c50ac609437e1ec41e5693f3f442acd0e1efca481a043338002"
+        }
+      },
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "Supervisor sampled process-group wall; original per-stage monotonic timings retained in original receipt.",
+        "utc": "UTC"
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-6607cb2735304751b36662035723372b",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "e74c00afed2fc1ab5ada75f7dda96bfd086fe4aa",
+            "path": "src/q1/branch_aid.py",
+            "entrypoint": "branch-aid construct invoked by src.review.p1_r6_candidate_probe"
+          },
+          "authors": [
+            "NikolaStarx"
+          ],
+          "method": "Constructs one single bridge candidate from the current heavy-or-sink base plan, applies the byte gate, and persists the chosen candidate. The branch_aid implementation bytes match db64a937; this bounded transfer batch ran from checkout e74c00af. This is a mechanism transfer pilot, not src.q1.branch_refine or an integrated unified solver.",
+          "references": [
+            "https://github.com/huaweibei123/huaweicup2026/issues/98"
+          ],
+          "upstream": [],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "e74c00afed2fc1ab5ada75f7dda96bfd086fe4aa",
+            "path": "src/review/p1_r6_transfer_batch.py",
+            "entrypoint": "main"
+          },
+          "argv": [
+            "<venv>/bin/python",
+            "-B",
+            "-m",
+            "src.review.p1_r6_transfer_batch",
+            "--manifest",
+            "results/a/p1-r6-transfer-20260925/input-and-budget-request.json",
+            "--inputs-root",
+            "output/p1-r6-transfer-inputs-20260925",
+            "--output-dir",
+            "output/p1-r6-transfer-20260925/attempt-1",
+            "--expected-head",
+            "e74c00afed2fc1ab5ada75f7dda96bfd086fe4aa",
+            "--freshps-admission",
+            "output/p1-r6-transfer-20260925/T0-admission.json"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS-27.0-arm64-arm-64bit",
+          "cpu": null,
+          "gpu": null,
+          "ram_bytes": 51539607552,
+          "python": "3.12.13",
+          "dependencies": "Existing project venv; exact installed-package inventory not recorded.",
+          "threads": 1,
+          "workers": 1,
+          "peak_rss_bytes": 148520960
+        },
+        "measurement": {
+          "started_at": "2026-09-25T13:53:38Z",
+          "finished_at": "2026-09-25T13:53:41Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": "External cold probe process wall includes current-base reconstruction, one bridge candidate construction, byte gate, persistence and child cleanup; excludes official E0. OS cache state was not measured.",
+          "evaluation_scope": "One independent official E0 execution on the persisted candidate plan; no baseline E0, E1 or E2.",
+          "budget": {
+            "wall_seconds": 180.0,
+            "candidate_limit": 1,
+            "stop_reason": "One transfer candidate and one E0 completed; no retry."
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 1,
+            "E1": 0,
+            "E2": 0
+          },
+          "offline_costs": "Source/input capsule preparation and locked-dependency setup were outside the measured probe. No offline training, compilation, or current-case preoptimization was performed in this run.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.cpu": "CPU model not recorded in the run receipt.",
+          "provenance.environment.gpu": "GPU inventory not recorded in the run receipt.",
+          "provenance.environment.dependencies": "Exact installed package inventory not recorded.",
+          "provenance.measurement.cold_start": "OS file-cache state was not measured.",
+          "provenance.measurement.seed": "Deterministic construction; no seed was recorded."
+        }
+      },
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+      "notes": [
+        "Four-cell transfer batch, 4/500 P1 matrix cells; not an integrated unified solver or full-matrix result.",
+        "Each cell constructs one base and at most one branch-aid candidate; candidate and baseline plans/results are retained.",
+        "075 is a negative result and remains published.",
+        "No E1/E2, retry, or new structure-test calls.",
+        "External detached controller return code was not captured; do not infer it from the batch completion receipt.",
+        "The 100×1–5 full benchmark remains unrun.",
+        "The source candidate and base plans are retained as exact raw JSON; result/trace gzip artifacts are lossless wrappers.",
+        "Revision 2 attaches the existing one-core E0 denominator from frozen commit 0e0d7cd327c51cc6ac365e01f4b6a7d2b28f9297; it was not rerun. Its archived run.json records singlecore_evaluate.evaluate_singlecore and matching graph/config/official identities."
+      ],
+      "baseline": {
+        "graph_sha256": "7c6328650b8e50e4d15a0ddf1ad0715a40d64d51f3c86c2c3b9c22e4cbb6a83f",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/baselines/case-047-singlecore-result.json.gz",
+          "sha256": "570a60d5927e1e07c82e7d77157af33eee1296a339ccaa2d2bba19bd60a4b310"
+        }
+      }
+    },
+    {
+      "attempt_id": "nikolastarx-p1-r6-transfer4-20260925-005-k5-r0",
+      "revision": 2,
+      "run_id": "20260925T1353Z-s6607-r6-transfer4",
+      "algorithm_id": "q1-branch-aid-r6",
+      "algorithm_name": "P1 R6 single bridge candidate construction",
+      "variant": "single-bridge-from-current-heavy-or-sink",
+      "solver_commit": "e74c00afed2fc1ab5ada75f7dda96bfd086fe4aa",
+      "parameters": {
+        "cores": 5,
+        "candidate_limit": 1,
+        "heavy_construct": 1,
+        "branch_construct": 1,
+        "E0_timeout_seconds": 120,
+        "E1": 0,
+        "E2": 0,
+        "retry": 0,
+        "worker_limit": 1,
+        "sampled_group_rss_stop_mib": 1536
+      },
+      "problem": "P1",
+      "case_id": "005",
+      "cores": 5,
+      "status": "ok",
+      "runtime_id": "macos-27.0-arm64-python3.12.13",
+      "observed_at": "2026-09-25T13:53:41Z",
+      "metrics": {
+        "makespan_cycles": 41072,
+        "solver_wall_seconds": 0.3301016250043176,
+        "evaluation_wall_seconds": 0.6080991249764338,
+        "ddr_bytes": 1845920,
+        "extra_ddr_bytes": 1512506,
+        "spill_bytes": 0,
+        "cache_hit_rate": null
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "a008dfb8f1b5b881844af312be0b7246b2c6b025",
+        "entrypoint": "multicore_cut_evaluate_problem_1.py -> contest_io.run_problem_cli(1)"
+      },
+      "identity": {
+        "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "cdf489b997665e74e4f1407f573cc68240fe4c205ec750c1f069de66ad25565d"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/005-k5/candidate-plan.json",
+          "sha256": "cdf489b997665e74e4f1407f573cc68240fe4c205ec750c1f069de66ad25565d"
+        },
+        "result": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/005-k5/result.json.gz",
+          "sha256": "22e93d26c647874ca633b2db208db02c723c0ce55d4616f45094aa76b0ce4574"
+        },
+        "run": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/005-k5/run-derived.json",
+          "sha256": "d8a8a931307c9a4a9b37ac70e24d39916144f0120645a2004213b6298e13131e"
+        },
+        "trace": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/005-k5/trace.json.gz",
+          "sha256": "3e42ad5f9eb523d3a2a941c89e4e91a3216ac4c44d6a8f82346c5a2f594ffd17"
+        },
+        "log": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/cells/005-k5/official.log",
+          "sha256": "d57c68ee21e936ca17032121aeea3df4a7ed92a95b94106da97f2a25494a24fd"
+        }
+      },
+      "timing": {
+        "solver_includes_evaluation": false,
+        "evaluation_precision": "Supervisor sampled process-group wall; original per-stage monotonic timings retained in original receipt.",
+        "utc": "UTC"
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-6607cb2735304751b36662035723372b",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+        "solver": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "e74c00afed2fc1ab5ada75f7dda96bfd086fe4aa",
+            "path": "src/q1/branch_aid.py",
+            "entrypoint": "branch-aid construct invoked by src.review.p1_r6_candidate_probe"
+          },
+          "authors": [
+            "NikolaStarx"
+          ],
+          "method": "Constructs one single bridge candidate from the current heavy-or-sink base plan, applies the byte gate, and persists the chosen candidate. The branch_aid implementation bytes match db64a937; this bounded transfer batch ran from checkout e74c00af. This is a mechanism transfer pilot, not src.q1.branch_refine or an integrated unified solver.",
+          "references": [
+            "https://github.com/huaweibei123/huaweicup2026/issues/98"
+          ],
+          "upstream": [],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "e74c00afed2fc1ab5ada75f7dda96bfd086fe4aa",
+            "path": "src/review/p1_r6_transfer_batch.py",
+            "entrypoint": "main"
+          },
+          "argv": [
+            "<venv>/bin/python",
+            "-B",
+            "-m",
+            "src.review.p1_r6_transfer_batch",
+            "--manifest",
+            "results/a/p1-r6-transfer-20260925/input-and-budget-request.json",
+            "--inputs-root",
+            "output/p1-r6-transfer-inputs-20260925",
+            "--output-dir",
+            "output/p1-r6-transfer-20260925/attempt-1",
+            "--expected-head",
+            "e74c00afed2fc1ab5ada75f7dda96bfd086fe4aa",
+            "--freshps-admission",
+            "output/p1-r6-transfer-20260925/T0-admission.json"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS-27.0-arm64-arm-64bit",
+          "cpu": null,
+          "gpu": null,
+          "ram_bytes": 51539607552,
+          "python": "3.12.13",
+          "dependencies": "Existing project venv; exact installed-package inventory not recorded.",
+          "threads": 1,
+          "workers": 1,
+          "peak_rss_bytes": 55967744
+        },
+        "measurement": {
+          "started_at": "2026-09-25T13:53:41Z",
+          "finished_at": "2026-09-25T13:53:42Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": "External cold probe process wall includes current-base reconstruction, one bridge candidate construction, byte gate, persistence and child cleanup; excludes official E0. OS cache state was not measured.",
+          "evaluation_scope": "One independent official E0 execution on the persisted candidate plan; no baseline E0, E1 or E2.",
+          "budget": {
+            "wall_seconds": 180.0,
+            "candidate_limit": 1,
+            "stop_reason": "One transfer candidate and one E0 completed; no retry."
+          },
+          "calls": {
+            "solver": 1,
+            "E0": 1,
+            "E1": 0,
+            "E2": 0
+          },
+          "offline_costs": "Source/input capsule preparation and locked-dependency setup were outside the measured probe. No offline training, compilation, or current-case preoptimization was performed in this run.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.environment.cpu": "CPU model not recorded in the run receipt.",
+          "provenance.environment.gpu": "GPU inventory not recorded in the run receipt.",
+          "provenance.environment.dependencies": "Exact installed package inventory not recorded.",
+          "provenance.measurement.cold_start": "OS file-cache state was not measured.",
+          "provenance.measurement.seed": "Deterministic construction; no seed was recorded."
+        }
+      },
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/issues/98",
+      "notes": [
+        "Four-cell transfer batch, 4/500 P1 matrix cells; not an integrated unified solver or full-matrix result.",
+        "Each cell constructs one base and at most one branch-aid candidate; candidate and baseline plans/results are retained.",
+        "075 is a negative result and remains published.",
+        "No E1/E2, retry, or new structure-test calls.",
+        "External detached controller return code was not captured; do not infer it from the batch completion receipt.",
+        "The 100×1–5 full benchmark remains unrun.",
+        "The source candidate and base plans are retained as exact raw JSON; result/trace gzip artifacts are lossless wrappers.",
+        "Revision 2 attaches the existing one-core E0 denominator from frozen commit 0e0d7cd327c51cc6ac365e01f4b6a7d2b28f9297; it was not rerun. Its archived run.json records singlecore_evaluate.evaluate_singlecore and matching graph/config/official identities."
+      ],
+      "baseline": {
+        "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/a/p1-r6-transfer-20260925/official-transfer4/baselines/case-005-singlecore-result.json.gz",
+          "sha256": "3efb00f0d7750733b54df72ce2acde81b6bbc510d92771f6414ff985864340a4"
+        }
+      }
+    }
+  ]
+}
