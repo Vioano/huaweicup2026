@@ -169,6 +169,14 @@ def key(record):
     return (record['makespan'], added)
 
 
+def normalize_p2_config(public_config):
+    """Match frozen SceneBEvaluator.evaluate_record's max_iter default."""
+    required_public = {'bandwidth', 'capacity', 'cross_core_copy_delay'}
+    if type(public_config) is not dict or set(public_config) != required_public:
+        raise ValueError('frozen P2 public config keys drifted')
+    return {**public_config, 'max_iter': 1_000_000}
+
+
 def child(manifest_path, deadline):
     manifest = json.loads(Path(manifest_path).read_bytes())
     ledger = {'status': 'running', 'request_in_flight': False,
@@ -210,7 +218,7 @@ def child(manifest_path, deadline):
         base = json.loads(read_input(manifest, 'plan'))
         old = json.loads(read_input(manifest, 'reference_result'))
         contract = json.loads(read_input(manifest, 'contract'))
-        cfg = read_config(str(ROOT / manifest['inputs']['config']), problem=2)
+        cfg = normalize_p2_config(read_config(str(ROOT / manifest['inputs']['config']), problem=2))
         if set(cfg) != native_trace_diagnostic.REQUIRED_CONFIG:
             raise ValueError('E2 config domain drift')
         saved = audit(contract, old)
