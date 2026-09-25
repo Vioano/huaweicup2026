@@ -1,0 +1,103 @@
+{
+  "status": "complete",
+  "phase": "p3",
+  "counts_started": {
+    "P3": 1,
+    "P2": 0,
+    "Task3": 1,
+    "Task2": 0,
+    "Step1": 5,
+    "Step2": 5,
+    "prepareStep3": 5,
+    "step3_simulation": 5
+  },
+  "source_commit": "4fc7e3d1fabf35b45376c993527bc79bd1bb8e1b",
+  "runner_source_sha256": "3b19c5673344c98475cbed81ed9877f63bccbf14f1f678039a0e279f85dfa4ba",
+  "plan_sha256": "ee8364e769437cb226cbe95cde845c0bbea59b2fd4e84dc47806d517949b323b",
+  "official_code_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+  "limits": {
+    "P3": 1,
+    "P2": 0,
+    "Task3": 1,
+    "Task2": 0,
+    "Step1": 5,
+    "Step2": 5,
+    "prepareStep3": 5,
+    "step3_simulation": 5
+  },
+  "solver_wall_seconds": null,
+  "started_at": "2026-09-25T18:55:09.761180Z",
+  "prepared_sha256": "0923f3aed4805b1b3acb37e09ef101433bf1ac3f2f9c8221e97d68ca2f717304",
+  "guard": {
+    "schema": "q3-layered-prepared-guard-v1",
+    "status": "passed",
+    "scope": "captured official Task/Step2/Step3 bytes; no evaluator invoked",
+    "cores": 5,
+    "compute_ops": 5351,
+    "prepared_ops": 7003,
+    "frontier_peaks": [
+      {
+        "L1": 43008,
+        "UB": 17476
+      },
+      {
+        "L1": 43008,
+        "UB": 17476
+      },
+      {
+        "L1": 43008,
+        "UB": 17476
+      },
+      {
+        "L1": 40896,
+        "UB": 9796
+      },
+      {
+        "L1": 18816,
+        "UB": 90112
+      }
+    ],
+    "step3_local_memory_peaks": [
+      {
+        "L1": 43008,
+        "UB": 17476
+      },
+      {
+        "L1": 43008,
+        "UB": 17476
+      },
+      {
+        "L1": 43008,
+        "UB": 17476
+      },
+      {
+        "L1": 40896,
+        "UB": 9796
+      },
+      {
+        "L1": 37248,
+        "UB": 90112
+      }
+    ],
+    "copy_ops": 1652,
+    "cross_links": 486,
+    "original_copy_bytes": 2771250,
+    "scheduled_copy_bytes": 5335812,
+    "memory_dependencies": 10786,
+    "edge_counts": {
+      "data_raw": 9374,
+      "memory_reported": 10786,
+      "pipe_fifo": 6983,
+      "cross_links": 486
+    },
+    "union_unique_edges": 26474,
+    "max_crossing": 7,
+    "crossing_limit": 7,
+    "crossing_bound_certified": true,
+    "allow_multi": false,
+    "complete_seq_closed_interval_peaks": null
+  },
+  "result_sha256": "537d18aabe066e29cca2cde18f3a09bf9f72411b1009156f959a63cbb567175d",
+  "finished_at": "2026-09-25T18:55:31.647168Z",
+  "diagnostic_wall_seconds": 21.87884916702751
+}
