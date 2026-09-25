@@ -56,3 +56,38 @@ The old 52.521-second preparation was measured under `cProfile`, so its wall
 time is diagnostic and **not** a controlled unprofiled speed baseline. The
 new run establishes preparation equivalence and one new wall time; a later
 speed claim needs matched unprofiled conditions and separate authorization.
+
+## Fixed external controller (not part of the capsule)
+
+After the total scheduler grants the exclusive CPU Standard window, invoke
+from this worktree on the host (fresh output directory):
+
+```sh
+python3 scripts/q2_rank_prep_colab_dispatch.py --admitted \
+  --capsule output/e2-rank-014/capsule.zip \
+  --out output/e2-rank-014/admitted-run-<UTC-ID>
+```
+
+The controller checks the pinned capsule SHA before any VM call, records
+`vm_t0_utc` immediately before `colab new --session <unique-name>` (no GPU or
+high-memory flag), and starts an independent local `sleep 600; colab stop`
+watchdog. It uploads the exact capsule, sends
+`scripts/q2_rank_prep_colab_cell.py` through `colab exec --file`, downloads the
+result archive even after a failed cell, then calls `colab stop` and records
+`colab sessions` readback in `host-receipt.json` and logs. An interrupted or
+missing report leaves actual internal call counts **unknown**, never inferred
+to be zero. Setup/transfer are outside `preparation_t0_utc` but inside the
+600-second VM guard; all are included in the host receipt. If the controller
+itself crashes, the separate watchdog still requests a stop. No automatic
+retry is provided.
+
+The cell entry SHA-checks and unpacks the capsule, runs `uv sync --locked`
+with separate timing, then launches exactly one child with the 180-second
+`timeout` command above. It samples the child process tree's RSS every 0.2s
+and terminates the process group above 4 GiB; the runner also imposes its
+150-second alarm and 4 GiB address-space limit. It retains runner/setup logs,
+new snapshot, runner report, cell receipt and sampled RSS, zipped as
+`/content/q2-rank-014-result.zip`. A missing/incomplete archive or nonempty
+session readback is a failed or unknown attempt, not permission to rerun.
+This controller and cell are static pre-dispatch code; neither has been used
+to create a VM or perform the 014 preparation yet.
