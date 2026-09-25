@@ -1,0 +1,70 @@
+{
+  "strategy": "query_flow_affinity_r8",
+  "flow_count": 5,
+  "row_count": 10,
+  "canonical_states": 1,
+  "stage_counts": {
+    "S": 6,
+    "P": 85,
+    "A": 560,
+    "O": 90
+  },
+  "capacity_rejected_states": 0,
+  "selected_groups": [
+    [
+      0
+    ],
+    [
+      1
+    ],
+    [
+      2
+    ],
+    [
+      3
+    ],
+    [
+      4
+    ]
+  ],
+  "query_tensors": [
+    1000000085,
+    1000000095,
+    1000000105,
+    1000000115,
+    1000000125
+  ],
+  "L0_compute_fifo": 4215,
+  "Ldelta_compute_fifo": 4538,
+  "max_remote_edges_on_path": 2,
+  "cross_core_tensor_bytes_proxy": 80736,
+  "task_support_bytes": [
+    {
+      "L1": 108672,
+      "UB": 83718
+    },
+    {
+      "L1": 94752,
+      "UB": 83718
+    },
+    {
+      "L1": 94752,
+      "UB": 83718
+    },
+    {
+      "L1": 96128,
+      "UB": 55878
+    },
+    {
+      "L1": 82208,
+      "UB": 55878
+    }
+  ],
+  "capacity_bytes": {
+    "L1": 524288,
+    "UB": 131072
+  },
+  "physical_support_certificate": true,
+  "official_evaluation_calls": 0,
+  "scope": "compute plus M/V FIFO proxy; no COPY, DDR, cache or official Makespan claim"
+}
