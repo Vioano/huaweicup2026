@@ -1,80 +1,199 @@
 #!/usr/bin/env python3
-"""Read-only full500 audit. Requires a completed runtime summary and archived cells."""
-import argparse, gzip, hashlib, json, math, statistics, subprocess
+"""Read-only paired audit; partial validation helpers never declare full scores."""
+import argparse
+from functools import lru_cache
+import gzip
+import hashlib
+import json
+import math
 from pathlib import Path
-SOLVER='c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f'; RUNNER='ff47cbca4a953602dec7e4b959bbb10a016eca9a'
-BASE='60afc38b327680fbda0ff10182e3e05a01edd72d'; FEED='results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/board-feed-500-with-runtime-notes.json'; FEED_SHA='0b850686966d1d7c1ce1a8babb1655051756b42f9a59d5c6f6becd6a87f2f99c'
-FIELDS=('original_graph_copy_bytes','scheduled_copy_bytes','added_copy_bytes','partition_added_copy_bytes','spill_added_copy_bytes')
-GRID=[(f'{i:03d}',k) for i in range(1,101) for k in range(1,6)]
-def sha(b): return hashlib.sha256(b).hexdigest()
-def readj(p): return json.loads(p.read_bytes())
-def unpack(p):
- b=p.read_bytes(); return gzip.decompress(b) if b[:2]==b'\x1f\x8b' else b
-def stat(x):
- x=sorted(x); return {'n':len(x),'mean':statistics.fmean(x),'p95_nearest_rank':x[math.ceil(.95*len(x))-1],'max':x[-1]}
+import statistics
+import subprocess
+
+SOLVER = 'c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f'
+RUNNER = 'ff47cbca4a953602dec7e4b959bbb10a016eca9a'
+BASE = '60afc38b327680fbda0ff10182e3e05a01edd72d'
+FEED = 'results/a/q2-nikolastarx/active-core-full500-20260925-s59/20260924T1910Z-s59ee/board-feed-500-with-runtime-notes.json'
+FEED_SHA = '0b850686966d1d7c1ce1a8babb1655051756b42f9a59d5c6f6becd6a87f2f99c'
+MANIFEST = 'results/a/q2-nikolastarx/hypergap-full500-20260925/manifest-workers1.json'
+GRID = {(f'{i:03d}', k) for i in range(1, 101) for k in range(1, 6)}
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+
+def decode(raw):
+    return json.loads(gzip.decompress(raw) if raw[:2] == b'\x1f\x8b' else raw)
+
+
+@lru_cache(maxsize=1024)
+def git_blob(repo, commit, path):
+    return subprocess.check_output(['git', 'show', commit + ':' + path], cwd=repo)
+
+
+def pinned_records(repo):
+    raw = git_blob(repo, BASE, FEED)
+    require(sha(raw) == FEED_SHA, 'pinned previous feed differs')
+    records = decode(raw)['records']
+    table = {(r['case_id'], r['cores']): r for r in records}
+    require(len(records) == 500 and set(table) == GRID, 'previous grid differs')
+    return table
+
+
+def artifact(repo, ref):
+    path = (repo / ref['path']).resolve()
+    require(path.is_relative_to(repo), 'artifact outside repo')
+    raw = path.read_bytes()
+    require(sha(raw) == ref['sha256'], 'artifact hash mismatch: ' + ref['path'])
+    return raw, decode(raw)
+
+
+def collect_feeds(repo, root, summary, *, require_full=True):
+    manifest_raw = git_blob(repo, RUNNER, MANIFEST)
+    manifest = decode(manifest_raw)
+    require(summary['manifest_sha256'] == sha(manifest_raw), 'manifest hash differs')
+    require(summary['limits'] == manifest['limits'], 'runtime limits differ')
+    require(summary['solver_commit'] == SOLVER and summary['runner_commit'] == RUNNER,
+            'runtime source differs')
+    expected = {'global_budget': manifest['limits'], 'candidate_limit': 3,
+                'selection': 'strict_lexicographic_makespan_added_copy_bytes', 'retry': False}
+    table, run_ids = {}, set()
+    for lo in range(1, 101, 10):
+        group = root / f'cases-{lo:03d}-{lo+9:03d}'
+        if not group.exists() and not require_full:
+            continue
+        feed = decode((group / 'board-feed.json').read_bytes())
+        snapshot = decode((group / 'snapshot.json').read_bytes())
+        require(snapshot['manifest_sha256'] == sha(manifest_raw), 'snapshot manifest differs')
+        records = feed['records']
+        require(len(records) == 50, 'case group must have 50 records')
+        group_grid = {(f'{c:03d}', k) for c in range(lo, lo+10) for k in range(1, 6)}
+        seen = set()
+        for r in records:
+            key = (r['case_id'], r['cores'])
+            require(key in group_grid and key not in table, 'duplicate or unexpected coordinate')
+            require(r['problem'] == 'P2' and r['status'] == 'ok' and r['solver_commit'] == SOLVER
+                    and r['algorithm_id'] == 'q2-adaptive-hypergap-guarded'
+                    and r['parameters'] == expected
+                    and r['provenance']['runner']['source']['commit'] == RUNNER
+                    and r['run_id'] == snapshot['run_id'], 'mixed algorithm/run/budget')
+            run_ids.add(r['run_id']); seen.add(key); table[key] = r
+        require(seen == group_grid, 'case group coverage differs')
+    require(len(run_ids) == 1, 'must have one run ID')
+    if require_full:
+        require(set(table) == GRID, 'feeds do not cover 500 unique cells')
+    return table, next(iter(run_ids))
+
+
+def validate_cell(repo, row, record, previous, summary):
+    key = (row['case'], row['cores'])
+    require(row['status'] == 'accepted' and not row.get('request_in_flight'), 'unaccepted cell')
+    plan_blob, plan = artifact(repo, record['artifacts']['plan'])
+    result_blob, result = artifact(repo, record['artifacts']['result'])
+    _, run = artifact(repo, record['artifacts']['run'])
+    require(run['accepted_row'] == row, 'archive row differs from runtime summary')
+    raw_plan = gzip.decompress(plan_blob) if plan_blob[:2] == b'\x1f\x8b' else plan_blob
+    raw_result = gzip.decompress(result_blob) if result_blob[:2] == b'\x1f\x8b' else result_blob
+    require(sha(raw_plan) == row['plan_sha256'] and sha(raw_result) == row['official']['result_sha256'],
+            'original plan/result hash differs')
+    evidence = {name: artifact(repo, ref)[1] for name, ref in run['archived_evidence'].items()}
+    cell = evidence['cell_receipt']
+    require({k: v for k, v in cell.items() if k not in
+             ('solver_process_in_flight', 'independent_e0_in_flight')} == row, 'cell receipt differs')
+    ledger = evidence['online_ledger']
+    # Redaction changes receipt bytes. The archive hash and original identity are distinct.
+    require(run['original_sha256']['online_ledger'] == row['solver_ledger_sha256'],
+            'original ledger identity differs')
+    require(ledger['status'] == 'ok' and ledger['solver_checkout_commit'] == RUNNER
+            and not ledger['request_in_flight'] and not ledger['possible_E0_fallback_calls'],
+            'ledger identity or uncertainty differs')
+    calls = row['calls']
+    require(ledger['calls']['E2_api_attempted'] == ledger['calls']['native_returns']
+            == calls['E2_api_attempted'] == calls['native_returns'] == len(ledger['attempts'])
+            and len(ledger['attempts']) <= 3 and not ledger['calls']['E0_fallback']
+            and not calls['E0_fallback_confirmed'] and not calls['E0_fallback_possible']
+            and calls['E0_independent_started'] == 1, 'call evidence differs')
+    for name, compact in [('solver_process', row['solver_process']), ('e0_process', row['e0_process'])]:
+        proc = evidence[name]
+        require(proc['status'] == 'ok' and proc['exit_code'] == 0 and not proc['surviving_pids']
+                and proc['wall_seconds'] == compact['wall_seconds'], 'process receipt differs')
+    official = row['official']
+    require(result['scene'] == 'B' and result['num_cores'] == key[1]
+            and result['makespan'] == official['makespan'] == record['metrics']['makespan_cycles']
+            and result['data_movement_bytes'] == official['movement']
+            and result['cross_task_traffic'] == official['cross_task_traffic'], 'official metrics differ')
+    ident = record['identity']
+    require(record['baseline'] == previous['baseline']
+            and ident['graph_sha256'] == row['graph_sha256'] == previous['identity']['graph_sha256']
+            and ident['config_sha256'] == row['config_sha256'] == previous['identity']['config_sha256']
+            and ident['official_sha256'] == previous['identity']['official_sha256']
+            and ident['plan_sha256'] == sha(plan_blob), 'graph/config/official/plan identity differs')
+    baseline = record['baseline']['result']
+    baseline_blob = git_blob(repo, BASE, baseline['path'])
+    require(sha(baseline_blob) == baseline['sha256'], 'official denominator artifact differs')
+    old_ref = previous['artifacts']['plan']
+    old_blob = git_blob(repo, BASE, old_ref['path'])
+    require(sha(old_blob) == old_ref['sha256'], 'previous plan artifact differs')
+    return {'case': key[0], 'cores': key[1], 'B': decode(baseline_blob)['makespan'],
+            'new_M': result['makespan'], 'old_M': previous['metrics']['makespan_cycles'],
+            'plan_changed': plan != decode(old_blob), 'E2': calls['E2_api_attempted'],
+            'solver_wall': row['solver_process']['wall_seconds'],
+            'external_E0_wall': row['e0_process']['wall_seconds']}
+
+
+def stats(values):
+    x = sorted(values)
+    return {'n': len(x), 'mean': statistics.fmean(x),
+            'p95_nearest_rank': x[math.ceil(.95*len(x))-1], 'max': x[-1]}
+
+
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--summary',type=Path,required=True);ap.add_argument('--archive-root',type=Path,required=True);ap.add_argument('--repo-root',type=Path,default=Path.cwd());a=ap.parse_args()
- if not a.summary.is_file():
-  print(json.dumps({'status':'incomplete','reason':'summary_missing','scores_computed':False}));return 2
- s=readj(a.summary); rows=s.get('rows',[]); accepted=[r for r in rows if r.get('status')=='accepted']
- if s.get('status')!='completed' or len(rows)!=500 or len(accepted)!=500 or s.get('accepted_cells')!=500 or s.get('call_count_complete') is not True or s.get('in_flight') or any(r.get('solver_process_in_flight') or r.get('independent_e0_in_flight') or r.get('request_in_flight') for r in rows):
-  print(json.dumps({'status':'incomplete','run_status':s.get('status'),'rows':len(rows),'accepted':len(accepted),'scores_computed':False}));return 2
- if s.get('solver_commit')!=SOLVER or s.get('runner_commit')!=RUNNER or {(str(r['case']),int(r['cores'])) for r in rows}!=set(GRID): raise ValueError('run identity/grid mismatch')
- if s.get('limits',{}).get('workers')!=1:raise ValueError('worker parameter mismatch')
- repo=a.repo_root.resolve(); feedraw=subprocess.check_output(['git','-C',str(repo),'show',f'{BASE}:{FEED}'])
- if sha(feedraw)!=FEED_SHA: raise ValueError('pinned baseline feed SHA mismatch')
- old={}
- for r in json.loads(feedraw).get('records',[]):
-  key=(str(r['case_id']),int(r['cores']))
-  if key in old or r.get('status')!='ok':raise ValueError('duplicate/bad old-feed row')
-  old[key]=r
- if set(old)!=set(GRID):raise ValueError('old feed grid mismatch')
- newvals={k:[] for k in range(1,6)}; oldvals={k:[] for k in range(1,6)}; wins={k:[0,0,0] for k in range(1,6)}; sw=[]; ew=[]; improved=set(); plan_changed=set(); calls={'solver':0,'E2':0,'native':0,'E0':0,'fallback':0,'unknown':0}
- root=a.archive_root.resolve()
- feed_records={}; params={'global_budget':{'E0_fallback_reserved':1500,'E0_independent':500,'E2_api':1500,'batch_seconds':7200,'cells':500,'e0_seconds':60,'retries':0,'rss_bytes_per_cell':4294967296,'solver_seconds':60,'workers':1},'candidate_limit':3,'selection':'strict_lexicographic_makespan_added_copy_bytes','retry':False}
- for lo in range(1,100,10):
-  shard=root/f'cases-{lo:03d}-{lo+9:03d}'; snap=readj(shard/'snapshot.json'); feed=readj(shard/'board-feed.json')
-  for fr in feed.get('records',[]):
-   if (fr.get('run_id')!=snap['run_id'] or fr.get('algorithm_id')!='q2-adaptive-hypergap-guarded' or fr.get('solver_commit')!=SOLVER or fr.get('parameters')!=params or fr.get('provenance',{}).get('runner',{}).get('source',{}).get('commit')!=RUNNER or fr.get('status')!='ok'):raise ValueError('archived feed run/algorithm/parameter/runner mismatch')
-   fk=(str(fr['case_id']),int(fr['cores']))
-   if fk in feed_records:raise ValueError(f'duplicate feed row {fk}')
-   feed_records[fk]=fr
- if set(feed_records)!=set(GRID):raise ValueError('archived shard feeds do not cover unique 500 grid')
- for row in rows:
-  case=str(row['case']);k=int(row['cores']);key=(case,k); rec=old[key]
-  base=rec['baseline']['result']; br=unpack_from_git(repo,BASE,base['path'])
-  if sha(br)!=base['sha256']:raise ValueError(f'baseline artifact hash mismatch {key}')
-  B=json.loads(unpack_bytes(br))['makespan']; om=rec['metrics']['makespan_cycles']; nm=row['official']['makespan']
-  shard=(int(case)-1)//10*10+1; cell=root/f'cases-{shard:03d}-{shard+9:03d}'/f'{case}-k{k}'
-  c=readj(cell/'cell.json'); arch=readj(cell/'run.json'); fr=feed_records[key]
-  if (c['case'],int(c['cores']),c['status'])!=(case,k,'accepted') or c['graph_sha256']!=row['graph_sha256'] or c['config_sha256']!=row['config_sha256']:raise ValueError(f'archive identity mismatch {key}')
-  plan=unpack(cell/'plan.json.gz'); result=unpack(cell/'result.json.gz')
-  if sha(plan)!=c['plan_sha256'] or sha(result)!=c['official']['result_sha256']:raise ValueError(f'compressed artifact hash mismatch {key}')
-  if sha((cell/'plan.json.gz').read_bytes())!=fr['artifacts']['plan']['sha256'] or sha((cell/'result.json.gz').read_bytes())!=fr['artifacts']['result']['sha256'] or fr['artifacts']['run']['sha256']!=sha((cell/'run.json').read_bytes()):raise ValueError(f'feed artifact SHA reference mismatch {key}')
-  for procfile in ('solver-process.json','e0-process.json'):
-   proc=readj(cell/procfile)
-   if proc.get('status')!='ok' or proc.get('exit_code')!=0 or proc.get('surviving_pids')!=[]:raise ValueError(f'process receipt mismatch {key}/{procfile}')
-  ledgerraw=(cell/'online-ledger.json').read_bytes();ledger=json.loads(ledgerraw)
-  if sha(ledgerraw)!=c.get('solver_ledger_sha256') or ledger.get('solver_checkout_commit')!=RUNNER or ledger.get('request_in_flight') or ledger.get('possible_E0_fallback_calls')!=0 or ledger.get('calls',{}).get('E2_api_attempted')!=c['calls']['E2_api_attempted'] or ledger.get('calls',{}).get('native_returns')!=c['calls']['native_returns']:raise ValueError(f'online solver identity/uncertainty mismatch {key}')
-  out=json.loads(result)
-  if out['makespan']!=nm or out.get('cross_task_traffic')!=row['official'].get('cross_task_traffic') or {f:out['data_movement_bytes'][f] for f in FIELDS}!=row['official'].get('movement'):raise ValueError(f'E0/result metric mismatch {key}')
-  ident=rec.get('identity',{})
-  source=json.loads((repo/'docs/a/source-manifest.json').read_bytes())
-  if ident.get('graph_sha256')!=c['graph_sha256'] or ident.get('config_sha256')!=c['config_sha256'] or ident.get('official_sha256')!=source['official_code_hash']:raise ValueError(f'baseline graph/config/official mismatch {key}')
-  pair_old=B/om; pair_new=B/nm; oldvals[k].append(pair_old);newvals[k].append(pair_new)
-  ix=0 if pair_new>pair_old else 2 if pair_new<pair_old else 1;wins[k][ix]+=1
-  if nm<om:improved.add(case)
-  op=rec['artifacts']['plan']; oldplanblob=unpack_from_git(repo,BASE,op['path'])
-  if sha(oldplanblob)!=op['sha256']:raise ValueError(f'old plan hash mismatch {key}')
-  oldplan=unpack_bytes(oldplanblob)
-  if oldplan!=plan:plan_changed.add(case)
-  sw.append(float(row['solver_process']['wall_seconds']));ew.append(float(row['e0_process']['wall_seconds']))
-  calls['solver']+=1;calls['E2']+=int(c['calls']['E2_api_attempted']);calls['native']+=int(c['calls']['native_returns']);calls['E0']+=int(c['calls']['E0_independent_started']);calls['fallback']+=int(c['calls']['E0_fallback_confirmed']+c['calls']['E0_fallback_possible']);calls['unknown']+=int(c['request_in_flight'])
- total=s.get('calls',{})
- if calls['solver']!=500 or calls['E0']!=500 or calls['fallback'] or calls['unknown'] or calls['E2']!=calls['native'] or total.get('solver_started')!=500 or total.get('E0_independent_started')!=500 or total.get('E2_api_attempted')!=calls['E2'] or total.get('native_returns')!=calls['native'] or total.get('E0_fallback_confirmed') or total.get('E0_fallback_possible'):raise ValueError('call accounting mismatch')
- out={'status':'complete','cells':500,'core_comparison':{str(k):{'new_mean_B_over_M':statistics.fmean(newvals[k]),'old_mean_B_over_M':statistics.fmean(oldvals[k]),'wins_ties_losses':wins[k]} for k in range(1,6)},'cases_improved_makespan_any_core':len(improved),'cases_with_plan_change_any_core':len(plan_changed),'solver_wall_seconds':stat(sw),'external_E0_wall_seconds':stat(ew),'calls':calls,'peer_targets_reference_only':[2.26,3.18,3.96,4.53],'limitations':'Paired full500 evidence only; peer targets are external context, not reproduced here; these results do not prove optimality.'}
- print(json.dumps(out,indent=2));return 0
-def unpack_from_git(repo,commit,path):
- return subprocess.check_output(['git','-C',str(repo),'show',f'{commit}:{path}'])
-def unpack_bytes(b): return gzip.decompress(b) if b[:2]==b'\x1f\x8b' else b
-if __name__=='__main__':raise SystemExit(main())
+    p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--summary', type=Path, required=True)
+    p.add_argument('--archive-root', type=Path, required=True)
+    p.add_argument('--repo-root', type=Path, default=Path.cwd())
+    a = p.parse_args(); repo = a.repo_root.resolve()
+    sraw = a.summary.read_bytes(); summary = decode(sraw); rows = summary['rows']
+    if (summary['status'] != 'completed' or summary['accepted_cells'] != 500
+            or len(rows) != 500 or summary['in_flight'] or not summary['call_count_complete']
+            or any(r['status'] != 'accepted' or r.get('request_in_flight') for r in rows)):
+        print(json.dumps({'status': 'incomplete', 'accepted': summary['accepted_cells'],
+                          'scores_computed': False})); return 2
+    require({(r['case'], r['cores']) for r in rows} == GRID, 'summary grid differs')
+    feeds, run_id = collect_feeds(repo, a.archive_root.resolve(), summary)
+    old = pinned_records(repo)
+    values = [validate_cell(repo, row, feeds[(row['case'], row['cores'])],
+                            old[(row['case'], row['cores'])], summary) for row in rows]
+    total_e2 = sum(v['E2'] for v in values); calls = summary['calls']
+    require(calls['solver_started'] == calls['E0_independent_started'] == 500
+            and calls['E2_api_attempted'] == calls['native_returns'] == total_e2
+            and not calls['E0_fallback_confirmed'] and not calls['E0_fallback_possible'],
+            'batch call accounting differs')
+    comparison = {}
+    for k in range(1, 6):
+        v = [x for x in values if x['cores'] == k]
+        comparison[str(k)] = {'n': len(v), 'new_mean_B_over_M': statistics.fmean(x['B']/x['new_M'] for x in v),
+            'old_mean_B_over_M': statistics.fmean(x['B']/x['old_M'] for x in v),
+            'wins_ties_losses': [sum(x['new_M'] < x['old_M'] for x in v),
+                                sum(x['new_M'] == x['old_M'] for x in v),
+                                sum(x['new_M'] > x['old_M'] for x in v)]}
+    print(json.dumps({'status': 'complete', 'cells': 500, 'run_id': run_id,
+        'summary_sha256': sha(sraw), 'solver_commit': SOLVER, 'runner_commit': RUNNER,
+        'core_comparison': comparison,
+        'cases_improved_makespan_any_core': len({x['case'] for x in values if x['new_M'] < x['old_M']}),
+        'cases_with_plan_change_any_core': len({x['case'] for x in values if x['plan_changed']}),
+        'solver_wall_seconds': stats([x['solver_wall'] for x in values]),
+        'external_E0_wall_seconds': stats([x['external_E0_wall'] for x in values]),
+        'calls': calls, 'peer_targets_reference_only': [2.26, 3.18, 3.96, 4.53],
+        'limitations': 'No new evaluator calls; archived evidence audit does not prove global optimality or reproduce the peer report.'}, indent=2))
+    return 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())
