@@ -1,5 +1,7 @@
 最新已保存的公开对话快照：[CHAT-20260925T1446Z.md](CHAT-20260925T1446Z.md)。R10针对整轨道负载不均的有限迁移追问曾在网页确认已发送；准确正文与消息ID见[R10_QUESTION.md](R10_QUESTION.md)、[R10_STATUS.json](R10_STATUS.json)。2026-09-25T17:10Z 同一会话当前可见分支却只显示R9两条消息，未显示R10或生成状态，见[R10_UI_OBSERVATION-20260925T1710Z.json](R10_UI_OBSERVATION-20260925T1710Z.json)。这一差异尚未解释，不能据此认定R10已答或已删除，也不盲目重发；尚无R10结论。
 
+按用户 2026-09-25T17:43Z 的要求，容量前沿数学问题已在**本 R9 原会话**续问，6 Pro 正在生成；准确正文见 [R9_CAPACITY_FOLLOWUP_QUESTION-20260925T1743Z.md](R9_CAPACITY_FOLLOWUP_QUESTION-20260925T1743Z.md)，页面回读和消息 ID 见 [R9_CAPACITY_FOLLOWUP_STATUS-20260925T1744Z.json](R9_CAPACITY_FOLLOWUP_STATUS-20260925T1744Z.json)。此续问独立于 R10 的分支异常；不得把任一在途或中断生成当最终回答。收到最终回答后再追加完整快照和附件账本。
+
 # P3 R9 多层查询亲和
 
 最新完整公开问答：[CHAT-20260925T1339Z.md](CHAT-20260925T1339Z.md)。原会话及消息ID、完整性范围见 [STATUS.json](STATUS.json)。先前生成中快照保留在提交 c1edb49324fd8ff45cabecec02cf051ab5ddd119 中。
