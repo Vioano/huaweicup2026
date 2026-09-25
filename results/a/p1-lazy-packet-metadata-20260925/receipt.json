@@ -1,0 +1,41 @@
+{
+  "kind": "pure mathematical controller and conditional bounds; NOT a scheduling score",
+  "source_commit": "869811900551a2e55f4eed79861321aad6ddc857",
+  "python": "3.12.13",
+  "command": "python -B -m unittest tests.q1.test_p1_lazy_packet_search tests.q1.test_p1_packet_edge_bound tests.q1.test_p1_two_task_resource_bound tests.q1.test_p1_return_cut_resource_bound",
+  "tests_passed": 16,
+  "unittest_reported_seconds": 0.054,
+  "file_sha256": {
+    "src/review/p1_lazy_packet_search.py": "19f4060c01b119eeb15fbb550866df1929df8b6229c953da831b65a13f5a624b",
+    "src/review/p1_packet_edge_bound.py": "2d1116d177e78f0592b6c000f71ae71c1c0549ce339a2c9825b72144f7a3c784",
+    "tests/q1/test_p1_lazy_packet_search.py": "54ea1cf08ba6267ea44e37968f38249764fdfeccaa3240774668376d6f082a6e",
+    "tests/q1/test_p1_packet_edge_bound.py": "8c12e5e0ff275e142e5d0cbe4e07e9ccf6058e6dda3958ce3405c23274f5567a",
+    "docs/a/P1_RETURN_CUT_RESOURCE_BOUND.md": "f2ceeb097e1e071e3c6dd718507694a59e384c7f7c0f81fa5b9b1395bbca9d07"
+  },
+  "calls": {
+    "real_graph_constructor": 0,
+    "Task_compile": 0,
+    "Fraction_schedule_simulation": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "calls_basis": "test commands and reviewed source; abstract integer-DAG oracle callbacks are not schedulers",
+  "coverage": [
+    "independent full abstract DAG enumeration",
+    "resource-envelope and controller integration on an abstract graph",
+    "all small P/R interleavings after W",
+    "fractional and degenerate box vertices",
+    "s=0 fill exclusion",
+    "unknown/timeout retains unresolved frontier",
+    "state improvement reopens without repeating same unknown oracle",
+    "zero oracle budget and 10-expansion bound with B=1000000",
+    "integer-box triangle coverage"
+  ],
+  "limits": [
+    "not connected to real Task compiler",
+    "not an official numeric or global optimality certificate",
+    "incumbent and lower bound must share the same abstract model",
+    "no production adoption or measured end-to-end speedup"
+  ]
+}
