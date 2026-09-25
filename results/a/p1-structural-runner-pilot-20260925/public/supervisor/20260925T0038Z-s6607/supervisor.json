@@ -1,0 +1,75 @@
+{
+  "command": [
+    "<locked-python-3.12>",
+    "-B",
+    "src/q1_benchmarks/s6607_structural_full500.py",
+    "--output-root",
+    "results/a/p1-structural-runner-pilot-20260925/20260925T0038Z-s6607",
+    "--cases",
+    "001,051",
+    "--cores",
+    "5",
+    "--workers",
+    "1"
+  ],
+  "interpreter": "<locked-python-3.12>",
+  "started_at_utc": "2026-09-25T00:36:17.030Z",
+  "finished_at_utc": "2026-09-25T00:36:21.168Z",
+  "wall_seconds": 4.138510084012523,
+  "runner_pid": 60916,
+  "runner_exit_code": 0,
+  "rss_limit_kib": 8388608,
+  "sample_interval_seconds": 1,
+  "sampled_peak_aggregate_rss_kib": 198016,
+  "sample_count": 4,
+  "observed_pids": [
+    60916,
+    61010,
+    61258,
+    61633,
+    61634,
+    61637
+  ],
+  "observed_process_groups": [
+    60916,
+    61633
+  ],
+  "rss_samples": [
+    {
+      "at": "2026-09-25T00:36:17.050Z",
+      "aggregate_rss_kib": 3584,
+      "pids": [
+        60916
+      ]
+    },
+    {
+      "at": "2026-09-25T00:36:18.074Z",
+      "aggregate_rss_kib": 65776,
+      "pids": [
+        61010,
+        60916
+      ]
+    },
+    {
+      "at": "2026-09-25T00:36:19.104Z",
+      "aggregate_rss_kib": 87776,
+      "pids": [
+        61258,
+        60916
+      ]
+    },
+    {
+      "at": "2026-09-25T00:36:20.136Z",
+      "aggregate_rss_kib": 198016,
+      "pids": [
+        61633,
+        61634,
+        60916,
+        61637
+      ]
+    }
+  ],
+  "rss_limit_exceeded": false,
+  "remaining_owned_group_processes": [],
+  "cleanup_confirmed": true
+}

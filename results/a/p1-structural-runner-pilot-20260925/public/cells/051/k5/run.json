@@ -1,0 +1,112 @@
+{
+  "run_id": "20260925T0038Z-s6607",
+  "attempt_id": "20260925T0038Z-s6607-p1-051-k5",
+  "case_id": "051",
+  "cores": 5,
+  "started_at": "2026-09-25T00:36:19.655Z",
+  "finished_at": "2026-09-25T00:36:20.459Z",
+  "graph_sha256": "884e8b12ac1f7a9b569958909680e8c2f6055966a59c9f929ffd5cee48aae43b",
+  "status": "ok",
+  "calls": {
+    "solver": 1,
+    "E1": 4,
+    "E0": 1,
+    "E2": 0
+  },
+  "artifacts": {
+    "plan": {
+      "path": "results/a/p1-structural-runner-pilot-20260925/20260925T0038Z-s6607/cells/051/k5/plan.json",
+      "sha256": "d7de42f7eea7ca83787244b2307448d6d34b5b61045fd902fb2a97540b8ed5e2"
+    },
+    "diagnostics": {
+      "path": "results/a/p1-structural-runner-pilot-20260925/20260925T0038Z-s6607/cells/051/k5/diagnostics.json",
+      "sha256": "31960f9b705dac774ab89970846ff6d0eb987074968c03aec7087a0eb9182b69"
+    },
+    "result": {
+      "path": "results/a/p1-structural-runner-pilot-20260925/20260925T0038Z-s6607/cells/051/k5/result.json",
+      "sha256": "224d3f5f37cf2276b5ab38959b19cfaa9b46b464e5640371f4fa7cb8dacd6c30"
+    },
+    "trace": {
+      "path": "results/a/p1-structural-runner-pilot-20260925/20260925T0038Z-s6607/cells/051/k5/trace.json",
+      "sha256": "2f56e27979640aba7a482849f5fe8fd110ffc946748398c2bf4854faa0a7bcae"
+    },
+    "official_log": {
+      "path": "results/a/p1-structural-runner-pilot-20260925/20260925T0038Z-s6607/cells/051/k5/official.log",
+      "sha256": "185457520364588413590b43868f9351ec4d5c3d9891ce33c615d245a9ff8041"
+    }
+  },
+  "solver": {
+    "argv": [
+      "<locked-python-3.12>",
+      "-B",
+      "./src/q1/structural_refine.py",
+      "<verified-inputs>/case_051.json",
+      "--cores",
+      "5",
+      "--output",
+      "./results/a/p1-structural-runner-pilot-20260925/20260925T0038Z-s6607/cells/051/k5/plan.json",
+      "--diagnostics",
+      "./results/a/p1-structural-runner-pilot-20260925/20260925T0038Z-s6607/cells/051/k5/diagnostics.json"
+    ],
+    "cwd": ".",
+    "started_at": "2026-09-25T00:36:19.655Z",
+    "finished_at": "2026-09-25T00:36:20.254Z",
+    "wall_seconds": 0.5981479160254821,
+    "timeout_seconds": 300,
+    "exit_code": 0,
+    "cleanup_confirmed": true,
+    "status": "ok",
+    "stdout": {
+      "path": "results/a/p1-structural-runner-pilot-20260925/20260925T0038Z-s6607/cells/051/k5/solver.stdout.txt",
+      "sha256": "60c62f4c6d696e31c712979ab74b64859f7022869db6d472efff659828af8a52"
+    },
+    "stderr": {
+      "path": "results/a/p1-structural-runner-pilot-20260925/20260925T0038Z-s6607/cells/051/k5/solver.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "log_derivation": "UTF-8 child output with workspace and temporary input root replaced by public labels"
+  },
+  "selected": "intact-root-heavy-fused",
+  "model_source": {
+    "solver_commit": "3a1b82b71ca1ff6689eb8e72f17d26c48b52073c",
+    "selected": "intact-root-heavy-fused",
+    "algorithm_id": "q1-structural-refine-experimental"
+  },
+  "evaluation": {
+    "argv": [
+      "<locked-python-3.12>",
+      "-B",
+      "./data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+      "<verified-inputs>/case_051.json",
+      "./results/a/p1-structural-runner-pilot-20260925/20260925T0038Z-s6607/cells/051/k5/plan.json",
+      "--config",
+      "./data/raw/a/official/data/config.txt",
+      "--output",
+      "./results/a/p1-structural-runner-pilot-20260925/20260925T0038Z-s6607/cells/051/k5/result.json",
+      "--trace-output",
+      "./results/a/p1-structural-runner-pilot-20260925/20260925T0038Z-s6607/cells/051/k5/trace.json",
+      "--log-output",
+      "./results/a/p1-structural-runner-pilot-20260925/20260925T0038Z-s6607/cells/051/k5/official.log"
+    ],
+    "cwd": ".",
+    "started_at": "2026-09-25T00:36:20.256Z",
+    "finished_at": "2026-09-25T00:36:20.456Z",
+    "wall_seconds": 0.20020433299941942,
+    "timeout_seconds": 900,
+    "exit_code": 0,
+    "cleanup_confirmed": true,
+    "status": "ok",
+    "stdout": {
+      "path": "results/a/p1-structural-runner-pilot-20260925/20260925T0038Z-s6607/cells/051/k5/E0.stdout.txt",
+      "sha256": "a1c7c54b49edb0093bb58320a0af7437b42b17278e1904ddb54e186762e40d14"
+    },
+    "stderr": {
+      "path": "results/a/p1-structural-runner-pilot-20260925/20260925T0038Z-s6607/cells/051/k5/E0.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "log_derivation": "UTF-8 child output with workspace and temporary input root replaced by public labels"
+  },
+  "evaluation_wall_seconds": 0.20020433299941942,
+  "makespan_cycles": 231551,
+  "scheduled_copy_bytes": 9437954
+}
