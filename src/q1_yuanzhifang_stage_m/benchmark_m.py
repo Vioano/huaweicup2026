@@ -306,7 +306,8 @@ def main() -> None:
     os.environ["PYTHONDONTWRITEBYTECODE"] = "1"
     output.mkdir(parents=True, exist_ok=False)
     facts.update(producer_session=args.producer_session, started_at=utc(),
-                 pycache_disabled=True)
+                 pycache_disabled=True, platform=platform.platform(),
+                 python=platform.python_version(), cpu=platform.processor() or None)
     (output / "batch_manifest.json").write_text(json.dumps(facts, indent=2) + "\n", encoding="utf-8")
     start = time.monotonic()
     deadline = start + BATCH_TIMEOUT

@@ -27,7 +27,8 @@ def artifact(path: Path) -> dict:
 def export(run_dir: Path, feed: Path) -> dict:
     manifest = json.loads((run_dir / "batch_manifest.json").read_bytes())
     receipt = json.loads((run_dir / "batch_receipt.json").read_bytes())
-    if manifest.get("method_source_commit") != SOURCE_COMMIT or not manifest.get("producer_session"):
+    closure = manifest.get("source_closure", {})
+    if closure.get("method_source_commit") != SOURCE_COMMIT or not manifest.get("producer_session"):
         raise ValueError("frozen solver/session identity mismatch")
     calls = receipt["calls"]
     upper = receipt.get("calls_upper_bound", calls)
@@ -101,12 +102,15 @@ def export(run_dir: Path, feed: Path) -> dict:
                                     else "not_run" if row.get("status", "").startswith("deadline")
                                     else "failed")
     missing = {
+        "provenance.environment.cpu": "CPU model is unavailable.",
         "provenance.environment.gpu": "GPU was not measured.",
         "provenance.environment.ram_bytes": "Only available RAM gate was recorded; installed RAM was not measured.",
         "provenance.environment.threads": "OS thread count was not instrumented.",
         "provenance.environment.peak_rss_bytes": "Peak RSS was not instrumented.",
         "provenance.measurement.seed": "Deterministic constructor has no RNG seed.",
     }
+    if manifest.get("cpu"):
+        missing.pop("provenance.environment.cpu")
     if not success:
         for metric in ("makespan_cycles", "ddr_bytes", "extra_ddr_bytes", "spill_bytes"):
             missing[f"metrics.{metric}"] = f"No accepted E0 result: {row.get('status')}"
@@ -154,11 +158,12 @@ def export(run_dir: Path, feed: Path) -> dict:
             task_url="https://github.com/huaweibei123/huaweicup2026/issues/98",
             solver=dict(source=source_ref, authors=["yuanzhifang30-sudo"],
                 method="One cold shared-input plan followed by guarded adjacent-task union; only a structurally active merge is evaluated.",
-                upstream=[dict(repo=REPO, commit=manifest["base_commit"],
+                upstream=[dict(repo=REPO, commit=closure["base_commit"],
                                path="src/q1/shared_input_budget.py", entrypoint="construct")],
                 selected_algorithm_id=None, selected_solver_commit=None),
-            runner=dict(source=runner_ref, argv=solver.get("command", []), working_directory="cell directory"),
-            environment=dict(os=manifest.get("platform"), cpu=manifest.get("cpu") or "unavailable",
+            runner=dict(source=runner_ref, argv=solver.get("command", []), working_directory="repository root",
+                        command_path_normalization=solver.get("command_path_normalization")),
+            environment=dict(os=manifest.get("platform"), cpu=manifest.get("cpu"),
                 gpu=None, ram_bytes=None, python=manifest.get("python"), workers=1, threads=None,
                 peak_rss_bytes=None, dependencies="frozen source closure; no dependency install"),
             measurement=dict(started_at=row.get("started_at"), finished_at=row.get("finished_at"),
