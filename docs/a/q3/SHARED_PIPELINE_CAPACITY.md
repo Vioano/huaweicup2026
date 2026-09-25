@@ -38,3 +38,17 @@ PYTHONDONTWRITEBYTECODE=1 uv run --locked python -m unittest tests.q3.test_share
 
 测试覆盖小型穷举下的受限 DP 最优、重复 tensor 去重、无解、L1 位置守卫、
 原始 044/046 的五核合法覆盖和图不变。已在本工作树复核这组静态测试；尚未接入在线策略。
+
+## 两个固定候选的机制验证
+
+`src.q3.pipeline_capacity_probe` 分为 `prepare` 与 `run`。前者校验冻结官方图和
+现有 forest500 原件，仅构造 044/046 各一个五核候选并做静态下界检查；后者要求
+固定源码 HEAD、预先确定的 manifest 哈希及新的资源准入。最多 2 次 P3、0 次 P2、
+0 次 solver、1 worker、0 重试，每次至多 60 秒，整批 120 秒，采样进程组 RSS
+警戒 512 MiB。独占 evaluation 目录防止同一准备批次重复执行；第一处失败即停。
+这份预算不是资源调度授权。调用官方评估前须按协调窗口读取实时主机状态；
+没有完整求解程序运行时不把 prepare 或 E0 时间作为 solver_wall。
+
+已有完整 forest500 提供固定控制，不重跑旧方案；计划下界已不可能严格改善时
+跳过评分。所有负结果同样保留。这是两个已见结构样本的机制测试，不作新算法
+全量成绩或泛化成绩。
