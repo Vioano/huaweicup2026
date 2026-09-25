@@ -52,7 +52,7 @@ def _cut_template(index, template_ops, cores):
     return bounds, dp[k][n], pipes, prefix, total
 
 
-def build_from_index(index, cores: int, config: dict) -> tuple[dict, dict]:
+def _build_from_index(index, cores: int, config: dict, *, job_major: bool) -> tuple[dict, dict]:
     if type(cores) is not int or cores < 1:
         raise ValueError('cores must be a positive integer')
     by_job, shared, anchor = _recognize(index)
@@ -80,8 +80,14 @@ def build_from_index(index, cores: int, config: dict) -> tuple[dict, dict]:
         for q in range(a, b):
             sig = signature_order[q]
             owner_of_signature[sig] = core
+        if job_major:
             for job in range(len(by_job)):
-                rows[core].append(mapping[str(by_job[job][sig])])
+                for q in range(a, b):
+                    rows[core].append(mapping[str(by_job[job][signature_order[q]])])
+        else:
+            for q in range(a, b):
+                for job in range(len(by_job)):
+                    rows[core].append(mapping[str(by_job[job][signature_order[q]])])
     plan = {'node_to_subgraph': mapping, 'core_schedules': rows}
     derive_multicore_plan(index.graph, plan)
     # Count actual cores per external shared input, not merely template intent.
@@ -100,7 +106,9 @@ def build_from_index(index, cores: int, config: dict) -> tuple[dict, dict]:
         for a, b in zip(bounds, bounds[1:])
     ]
     return plan, {
-        'selected_strategy': 'template_stage_pipeline',
+        'selected_strategy': ('template_job_pipeline' if job_major
+                              else 'template_stage_pipeline'),
+        'priority_order': 'job_major' if job_major else 'stage_major',
         'jobs': len(by_job), 'template_ops': len(signature_order),
         'active_cores': len(bounds) - 1, 'requested_cores': cores,
         'template_bounds': bounds, 'per_job_stage_pipe_work': stage_work,
@@ -117,3 +125,17 @@ def build_from_index(index, cores: int, config: dict) -> tuple[dict, dict]:
 
 def build(graph: dict, cores: int, config: dict) -> tuple[dict, dict]:
     return build_from_index(DAGIndex(graph), cores, config)
+
+
+def build_from_index(index, cores: int, config: dict) -> tuple[dict, dict]:
+    """Original stage-major priority; retained as the default API."""
+    return _build_from_index(index, cores, config, job_major=False)
+
+
+def build_job_pipeline_from_index(index, cores: int, config: dict) -> tuple[dict, dict]:
+    """Within each fixed stage owner, finish one job's local segment at a time."""
+    return _build_from_index(index, cores, config, job_major=True)
+
+
+def build_job_pipeline(graph: dict, cores: int, config: dict) -> tuple[dict, dict]:
+    return build_job_pipeline_from_index(DAGIndex(graph), cores, config)

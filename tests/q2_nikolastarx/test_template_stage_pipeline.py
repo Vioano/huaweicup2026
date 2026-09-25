@@ -6,7 +6,8 @@ import unittest
 from src.q2_nikolastarx.dag_direct import DAGIndex
 from src.q2_nikolastarx.direct import UnsupportedStructure, derive_multicore_plan
 from src.q2_nikolastarx.shared_input_wave import _recognize
-from src.q2_nikolastarx.template_stage_pipeline import build, _cut_template
+from src.q2_nikolastarx.template_stage_pipeline import (
+    build, build_job_pipeline, build_job_pipeline_from_index, _cut_template)
 
 
 def repeated_jobs(jobs=3):
@@ -76,6 +77,32 @@ class TemplateStagePipelineTests(unittest.TestCase):
         graph['ops'][-1]['cycles'] += 1
         with self.assertRaises(UnsupportedStructure):
             build(graph, 2, {'capacity': {'L1': 100, 'UB': 0}})
+
+    def test_job_major_keeps_stage_owner_and_shared_input_single_core(self):
+        graph = repeated_jobs(4)
+        config = {'capacity': {'L1': 100, 'UB': 0}}
+        stage_plan, stage_diag = build(graph, 2, config)
+        job_plan, job_diag = build_job_pipeline_from_index(DAGIndex(graph), 2, config)
+        self.assertEqual(job_plan, build_job_pipeline(graph, 2, config)[0])
+        self.assertEqual(stage_diag['template_bounds'], job_diag['template_bounds'])
+        self.assertEqual(job_diag['priority_order'], 'job_major')
+        self.assertTrue(job_diag['zero_spill_diagnostic']['supported'])
+        self.assertNotEqual(stage_plan['core_schedules'], job_plan['core_schedules'])
+        def owner(plan):
+            view = derive_multicore_plan(graph, plan)
+            return {u: view['core_by_subgraph'][sg] for u, sg in view['mapping'].items()}
+        self.assertEqual(owner(stage_plan), owner(job_plan))
+        index = DAGIndex(graph)
+        for tid in (100, 101):
+            self.assertEqual(len({owner(job_plan)[u] for u in index.ops
+                                  if tid in index.inputs[u]}), 1)
+
+    def test_job_major_capacity_failure_only_diagnostic(self):
+        plan, diag = build_job_pipeline(repeated_jobs(4), 2,
+                                        {'capacity': {'L1': 1, 'UB': 0}})
+        self.assertEqual(len(plan['core_schedules']), 2)
+        self.assertTrue(diag['zero_spill_diagnostic']['supported'])
+        self.assertFalse(diag['zero_spill_diagnostic']['zero_spill_certificate'])
 
 
 if __name__ == '__main__':
