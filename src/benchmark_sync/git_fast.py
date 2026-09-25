@@ -11,6 +11,7 @@ import uuid
 from .github import fixed_sha, path_ok
 
 MAX_FAST_FILE = 5 * 1024 * 1024
+_HEAD_UNSET = object()
 
 
 class FastGitError(RuntimeError):
@@ -81,7 +82,7 @@ class GitFastLane:
             if len(data)!=size: raise ValueError('Fast Git object size mismatch')
             return data
 
-    def update(self,files,*,expected=None):
+    def update(self,files,*,expected=None,known_head=_HEAD_UNSET):
         """Replace the tiny branch tree with one channel and its immutable delta."""
         delta_paths=[path for path in files if re.fullmatch(r'deltas/[0-9a-f]{64}\.json\.gz',path)]
         if len(files)!=2 or 'channels/fast.json' not in files or len(delta_paths)!=1:
@@ -89,7 +90,10 @@ class GitFastLane:
         if any(len(data)>MAX_FAST_FILE for data in files.values()):
             raise ValueError('Fast Git update exceeds byte limit')
         with self.lock:
-            parent=self.head()
+            # The publisher already fetched this head to verify the signed
+            # channel. A non-force push rejects a concurrently advanced ref.
+            parent=self.head() if known_head is _HEAD_UNSET else (
+                fixed_sha(known_head) if known_head is not None else None)
             prior=None
             if parent:
                 try: prior=self.read_path(parent,'channels/fast.json')

@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from src.benchmark_sync.git_fast import GitFastLane
+from src.benchmark_sync.git_fast import FastGitError, GitFastLane
 from src.benchmark_sync.snapshot import digest
 
 
@@ -36,6 +36,28 @@ class GitFastLaneTests(unittest.TestCase):
                 reader.read_path(next_commit,path)
             with self.assertRaisesRegex(ValueError,'changed'):
                 writer.update({'channels/fast.json':b'stale',path:delta},expected=first)
+
+    def test_known_fetched_head_saves_lookup_but_cannot_force_stale_push(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);remote=root/'remote.git'
+            subprocess.run(['git','init','--bare','-q',str(remote)],check=True)
+            writer=GitFastLane(root/'writer','test/repo')
+            rival=GitFastLane(root/'rival','test/repo')
+            for lane in (writer,rival):lane._run(['remote','set-url','origin',str(remote)])
+            first=b'{"generation":1}';first_delta=b'first'
+            first_path='deltas/'+digest(first_delta)+'.json.gz'
+            base=writer.update({'channels/fast.json':first,first_path:first_delta})
+            self.assertEqual(writer.head(),base)
+            second=b'{"generation":2}';second_delta=b'second'
+            second_path='deltas/'+digest(second_delta)+'.json.gz'
+            rival_commit=rival.update({'channels/fast.json':second,second_path:second_delta},expected=first)
+            third=b'{"generation":3}';third_delta=b'third'
+            third_path='deltas/'+digest(third_delta)+'.json.gz'
+            with self.assertRaises(FastGitError):
+                writer.update({'channels/fast.json':third,third_path:third_delta},
+                              expected=first,known_head=base)
+            self.assertEqual(rival.head(),rival_commit)
+            self.assertEqual(rival.read_path(rival_commit,'channels/fast.json'),second)
 
 
 if __name__=='__main__': unittest.main()
