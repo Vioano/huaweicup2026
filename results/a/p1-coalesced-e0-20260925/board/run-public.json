@@ -1,0 +1,103 @@
+{
+  "kind": "board-run-public-derived-from-e0-only-attempt",
+  "derived_from": [
+    {
+      "path": "results/a/p1-coalesced-e0-20260925/run-0816Z/workspace/run-first-e0/attempt.json",
+      "sha256": "7f185e0c8490aea868412be92627b2087c92fe85339bc6ee5256981ae9d5e8e2"
+    },
+    {
+      "path": "results/a/p1-coalesced-e0-20260925/run-0816Z/controller-run.public.json",
+      "sha256": "dad1842b83ef53e8a8a7c706a0b91eeecc777dca571c416b0186b2c8410211bd"
+    },
+    {
+      "path": "results/a/p1-coalesced-e0-20260925/run-0816Z/evidence/setup.json",
+      "sha256": "e65a793c6429fa3bdb23745db3fc4a101f62bde14886c946ff93c38da4e4b94b"
+    }
+  ],
+  "windows": {
+    "plan_production": {
+      "source_commit": "77977e3000904a47013458e666fee1ecddefb5de",
+      "source_path": "src/review/p1_coalesced_phase_plan.py",
+      "entrypoint": "construct_pair",
+      "plan_sha256": "e9327269bc95a81d17ca907a617aed896fd6fdde2a3174044d975f746569f9ce",
+      "phase_plan_run": "results/a/p1-coalesced-phase-colab-20260925/run-0738Z/workspace/evidence/coalesced-008-k5",
+      "tasks": 27,
+      "fractions": 2,
+      "internal_phase_seconds": 2.62559666,
+      "full_solver_wall_seconds": null,
+      "note": "partial internal phase timing; not full end-to-end solver wall"
+    },
+    "external_E0": {
+      "started_at": "2026-09-25T08:17:05.139Z",
+      "finished_at": "2026-09-25T08:17:06.065Z",
+      "wall_seconds": 0.9216672289999224,
+      "timeout_seconds": 60,
+      "exit_code": 0,
+      "status": "ok",
+      "cleanup_confirmed": true,
+      "process_identity": {
+        "pid": 3187,
+        "pgid": 3187,
+        "linux_proc_start_ticks": 78251,
+        "argv": [
+          "/content/p1_coalesced_e0_window/workspace/.venv/bin/python",
+          "-B",
+          "/content/p1_coalesced_e0_window/workspace/data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+          "/content/p1_coalesced_e0_window/workspace/case_008.json",
+          "/content/p1_coalesced_e0_window/workspace/phase-plan.json",
+          "--config",
+          "/content/p1_coalesced_e0_window/workspace/data/raw/a/official/data/config.txt",
+          "--output",
+          "/content/p1_coalesced_e0_window/workspace/run-first-e0/result.json",
+          "--trace-output",
+          "/content/p1_coalesced_e0_window/workspace/run-first-e0/trace.json",
+          "--log-output",
+          "/content/p1_coalesced_e0_window/workspace/run-first-e0/official.log"
+        ]
+      },
+      "calls": {
+        "solver": 0,
+        "E0": 1,
+        "E1": 0,
+        "E2": 0,
+        "retry": 0
+      },
+      "metrics": {
+        "makespan_cycles": 98932,
+        "data_movement_bytes": {
+          "original_graph_copy_bytes": 2654424,
+          "scheduled_copy_bytes": 3760344,
+          "added_copy_bytes": 1105920,
+          "partition_added_copy_bytes": 1105920,
+          "spill_added_copy_bytes": 0
+        }
+      }
+    }
+  },
+  "remote_runtime": "3.12.13 (main, Aug  7 2026, 02:25:39) [Clang 22.1.3 ]",
+  "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
+  "workers": 1,
+  "runner_argv": [
+    ".venv/bin/python",
+    "-B",
+    "-m",
+    "src.review.p1_saved_plan_e0_once",
+    "--graph",
+    "<verified-workspace>/case_008.json",
+    "--plan",
+    "<verified-workspace>/phase-plan.json",
+    "--output-dir",
+    "<verified-workspace>/run-first-e0",
+    "--deadline-monotonic",
+    "901.320983065",
+    "--execute"
+  ],
+  "runner_cwd": ".",
+  "wrapper_wall_seconds": 17.47298049699998,
+  "vm_controller_wall_seconds": 43.938497541996185,
+  "note": "E0-only saved-plan measurement; VM/cloud overhead is not solver wall; source raw records remain unchanged.",
+  "wrapper_resource_observation": {
+    "RUSAGE_CHILDREN_maxrss_kib": 106808,
+    "scope": "aggregate over setup and child processes; not per-E0 peak RSS"
+  }
+}
