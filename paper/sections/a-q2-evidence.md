@@ -8,7 +8,7 @@
 | --- | --- | --- |
 | 主方法 | `c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f` | 结构初解 + gap + hypergap，最多三个不同完整计划的原生 E2 评分 |
 | 主结果发布 | `1c00079aadbd071de62db17686d5ba3fed1da0f2` | 完整 100×1–5 核，500 次独立 E0；并非本会话重新运行 |
-| 最新已读算法资料 | `e4f7b13e4af04914a1264a650831a3959f14a373`，包含 `9404635dea70aa532894506c21d383f22ea6ca81` | 有限 job DP、准备剖析及模板收益上限列入 5.7，不替换主表 |
+| 最新已读算法资料 | `7c9b648dfaad134215fcc09c0a3258861cdd4c72`，继承 e4f7b13 / 9404635 | 新增五核时间线诊断与未派发的 R05 对照协议；主算法与完整均值不变 |
 | 成员 tensor/gap/F1 数据 | 读取提交 `178a3673bd238b20772211427b8134b6db35f5af` 的冻结 CSV | 各自独立固定算法的对照；F1 只列五核完整均值 |
 | R5 保存方案静态诊断 | 源码 `1acc50a7f8290fd98fa94a12113281728705d7ca`；本次归档完成结果 | 100 对、200 个条件下界、0 新评分，仅用于研究边界 |
 | 外部截图成绩 | 身份与未四舍五入数值未核实 | 不作论文正式同行基线，不写“已超越外部最优” |
@@ -61,7 +61,7 @@
 
 ### S4：结构初解与活跃核心
 
-固定 c665 下的 [ADAPTIVE_SEMANTIC.md](https://github.com/huaweibei123/huaweicup2026/blob/c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f/docs/a/q2-nikolastarx/ADAPTIVE_SEMANTIC.md)、[ACTIVE_CORE_WAVE.md](https://github.com/huaweibei123/huaweicup2026/blob/c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f/docs/a/q2-nikolastarx/ACTIVE_CORE_WAVE.md)，结合 `adaptive_budget.py`、`adaptive_semantic.py` 和 `adaptive_frontier.py` 源码阅读。当前 budget 调用明确关闭仅由分量计算不均触发的拆分，不能照搬旧 frontier 文档的默认路线。
+固定 c665 下的 [ADAPTIVE_SEMANTIC.md](https://github.com/huaweibei123/huaweicup2026/blob/c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f/docs/a/q2-nikolastarx/ADAPTIVE_SEMANTIC.md)、[ACTIVE_CORE_WAVE.md](https://github.com/huaweibei123/huaweicup2026/blob/c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f/docs/a/q2-nikolastarx/ACTIVE_CORE_WAVE.md)，结合 `adaptive_budget.py`、`adaptive_semantic.py`、`adaptive_frontier.py` 与 [active_core_wave.py](https://github.com/huaweibei123/huaweicup2026/blob/c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f/src/q2_nikolastarx/active_core_wave.py) 完整源码阅读。当前 budget 调用明确关闭仅由分量计算不均触发的拆分，不能照搬旧 frontier 文档的默认路线。后续修订补齐 choose_cores 的最优平台处理：先求模型最小值，再逆推最早计算可行核数并夹到容量下限；不能只比较交点附近两个候选就宣称找到了全局最少核的平局解。
 
 <a id="s5"></a>
 
@@ -126,6 +126,18 @@
 
 本会话读取上述原报告，未重复 profiler、算法、评分或逐字节恢复验证。准备层语义保持优化属于基础设施会话，不由论文写作会话并行修改共享 evaluator。
 
+<a id="s12"></a>
+
+### S12：五核保存时间线诊断与 R05 对照协议
+
+实际读取固定 `7c9b648dfaad134215fcc09c0a3258861cdd4c72` 的 [k5-utilization README](https://github.com/huaweibei123/huaweicup2026/blob/7c9b648dfaad134215fcc09c0a3258861cdd4c72/results/a/q2-nikolastarx/k5-utilization-20260925/README.md)、完整 `report.json` 数据结构及 `scripts/q2_k5_utilization_diagnosis.py`。报告从 c665 的已保存官方五核结果计算每核 M/V 忙时和 COPY 区间并集；COPY 活跃时间不等同于 DDR 字节带宽利用率，亦非关键路径归因。
+
+本会话新增 [静态复核脚本](../../results/a/q2-yuanzhifang/feedback-20260924/paper-draft-20260925/check_trace_diagnosis.py) 与 [复核证据](../../results/a/q2-yuanzhifang/feedback-20260924/paper-draft-20260925/trace-diagnosis-check.json)，证据 SHA-256 `670f408dc94207716ba45b4d3b3b66ab594f8197b356b83ddbbc7b8d7708cfe2`。实际核对 100 个唯一用例、同一完成摘要、Makespan、每核求和/比例及总体算术；对 005/086/088 三份原始压缩结果逐一校验压缩与解压哈希，重算每核忙时、同 Pipe 无重叠、COPY 区间并集和事件数。不能将“三份原始结果 + 一百行汇总复核”表述为另一次一百份 raw 审计或真实复跑。
+
+复核命令：仓库根目录运行 `python -B results/a/q2-yuanzhifang/feedback-20260924/paper-draft-20260925/check_trace_diagnosis.py`。全程 0 新 solver/Step2/Step3/E0/E1/E2。新增表 5-6 的数值来自上述复核；当前主算法和 500 格主均值未改变。
+
+同时完整读取 [pro-r05-pair-pilot README](https://github.com/huaweibei123/huaweicup2026/blob/7c9b648dfaad134215fcc09c0a3258861cdd4c72/results/a/q2-nikolastarx/pro-r05-pair-pilot-20260925/README.md)。该版本明确为 frozen, no dispatch；胶囊和测试通过只证明实验准备，不证明已运行或有分数。本会话不执行其云端控制器，也不把“准备就绪”登记为活进程等待。
+
 ## 图件与最终补证清单
 
 | 图号 | 本次状态 | 最终输入与检查 |
@@ -133,7 +145,7 @@
 | 5-1 | 文字占位 | 最终主程序调用关系；尚未接入的模块不能画进执行主线 |
 | 5-2 | 文字占位 | 手算合成例或完整实际物理序列；区分静态容量与运行峰值 |
 | 5-3 | 文字占位 | 固定版本 100×5 逐格结果、固定分母；缺测不连线 |
-| 5-4 | 文字占位 | 同图同核同配置的固定 plan/trace；正负案例均保留 |
+| 5-4 | 文字占位 | 同图同核同配置的固定 plan/trace；正负案例均保留，COPY 区间活跃与带宽利用率分开 |
 | 5-5 | 文字占位 | 同硬件同并发的完整求解墙钟及质量，不混内核时间 |
 | 5-6 | 文字占位 | 有适用域的全局界证书；与固定 FIFO 界分离 |
 
@@ -148,3 +160,5 @@
 本轮只读查阅官方语义、算法固定源码/说明、冻结结果并重算论文表；没有新 solver/Step2/Step3/E0/E1/E2，也没有重启 Pro 或后台实验。算法临时代码保留在原工作树，不随论文提交伪装成已验证主方法。
 
 交付检查：表格重算脚本通过；本地文档链接及 11 个资料锚点、20 个连续编号公式、8 节标题、6 个图占位检查通过；示例 007/020/045 的五核数字再次与冻结 CSV 核对。Markdown 解析后的 6 张表（含符号表）列数一致，已视觉查看正文开头及主结果表；预览保留 TeX 文本，不称作最终数学排版验收。Git 空白检查、文件编码、个人路径及凭据模式检查通过。Windows 无 dot_clean，已对本次 paper/结果具体目录做只读元数据扫描，无 `._*`、`.DS_Store` 或 `__MACOSX` 项；未作跨目录清理。
+
+后续版本在此基础上新增 5.6.6 与资料 S12；旧“11 个资料锚点/6 张表”是首次交付记录。当前 12 个资料锚点、36 个本地链接、20 个连续编号公式、8 节和 6 个图占位检查通过；7 张表（含符号表）的列数一致，新增表 5-6 的三行与复核结果逐项核对，并查看了实际渲染预览。图件仍未正式绘制。
