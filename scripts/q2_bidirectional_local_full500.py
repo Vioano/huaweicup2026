@@ -106,6 +106,9 @@ def preflight(repo, raw_root, e2_root, python, manifest_path):
     for name, expected in doc['source_files'].items():
         if sha(ROOT / name) != expected:
             raise ValueError('Frozen source drift: ' + name)
+    # The CLI records its immediate Python source directory, not official code.
+    # Keep the exact checked subset for runtime receipt comparisons in cell().
+    doc['solver_sources'] = {name: doc['source_files'][name] for name in expected_python}
     fixed = read(ROOT / 'results/a/q2-nikolastarx/e2-plan-pairs-20260925/manifest.json')
     if fixed['e2_commit'] != '603b0741e21c449d3db652ebd67c94f2dc014cc9' or len(fixed['e2_sources']) != 50:
         raise ValueError('Wrong E2 source manifest')
