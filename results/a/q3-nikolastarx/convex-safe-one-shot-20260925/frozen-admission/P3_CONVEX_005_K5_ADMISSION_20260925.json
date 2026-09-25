@@ -1,0 +1,47 @@
+{
+  "schema": "captain-resource-admission-v1",
+  "decision": "admitted_once",
+  "created_utc": "2026-09-25T15:43:34.339396+00:00",
+  "session": "nikolastarx/s-a5bdb19389ee43d686b7976d3bcdf766",
+  "research_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+  "scope": "P3 convex-safe 005/K5 one frozen candidate; conditional same-plan P2 comparison",
+  "source_commit": "035b1452bd3c77261b2afc1ee2a9c341321d956c",
+  "proposal_sha256": "0093fad72cd275ddfd4fbcf60e478400b59fc5b707278de2a7f3df34733b3340",
+  "candidate_plan_sha256": "549519032c0ae7b78957463d0b6189d30184bcfd46e06fa60fc2c1fcc7dc6615",
+  "old_control_sha256": "dea9ae082ff0edeebc8c7014f7dfc8af36c893daab9617144c115e6b6eeb2b6f",
+  "probe_sha256": "583c48fd2db8fda38b8af3cf6e0c12a640945f08ac2741bc24c61b17eb822212",
+  "guard_sha256": "804e122433fb3e6e90d28d984c3204a8ca195364f32674511d679554c43ef5f2",
+  "supervisor_sha256": "8d299c88579322cbca23ea0798f32e587dd8ac4352b9d503de0dd9eaa598bc03",
+  "budget": {
+    "workers": 1,
+    "P3": 1,
+    "P2_conditional": 1,
+    "per_phase_seconds": 90,
+    "total_seconds": 600,
+    "retries": 0
+  },
+  "fixed_input_count": 97,
+  "resource_guard": {
+    "workers": 1,
+    "pressure_level": 1,
+    "swap_delta_mib": 256,
+    "owned_rss_sampled_bytes": 2147483648,
+    "disk_free_min_gib": 10,
+    "no_other_scoring": true
+  },
+  "old_reference": {
+    "P3_makespan": 24522,
+    "P2_makespan": 29026,
+    "fixed_forest_gain_fraction": "37327/30642"
+  },
+  "start_by_utc": "2026-09-25T15:50:00Z",
+  "stop_rules": [
+    "Any source, manifest, admission, plan, or control mismatch: no score",
+    "First failed or unknown P3 call: stop and preserve artifacts",
+    "P2 call only after guarded P3 Makespan <24522; compare same frozen candidate plan",
+    "Accept only if M2<=29026 and gain>=max(29026/24522,37327/30642)",
+    "Zero automatic retry; one run/output directory; all calls charged",
+    "On pressure, swap, RSS, disk, foreign scorer, timeout, or identity uncertainty: stop new work, retain ledger and cleanup evidence"
+  ],
+  "root_runs_solver_or_evaluator": false
+}

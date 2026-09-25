@@ -1,0 +1,102 @@
+{
+  "status": "complete",
+  "phase": "p3",
+  "counts_started": {
+    "P3": 1,
+    "P2": 0,
+    "Task3": 1,
+    "Task2": 0,
+    "Step1": 5,
+    "Step2": 5,
+    "prepareStep3": 5,
+    "step3_simulation": 5
+  },
+  "source_commit": "035b1452bd3c77261b2afc1ee2a9c341321d956c",
+  "plan_sha256": "549519032c0ae7b78957463d0b6189d30184bcfd46e06fa60fc2c1fcc7dc6615",
+  "official_code_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+  "limits": {
+    "P3": 1,
+    "P2": 0,
+    "Task3": 1,
+    "Task2": 0,
+    "Step1": 5,
+    "Step2": 5,
+    "prepareStep3": 5,
+    "step3_simulation": 5
+  },
+  "solver_wall_seconds": null,
+  "started_at": "2026-09-25T15:45:19.166924Z",
+  "prepared_sha256": "6b5327a93af489199f07194a3e767fbd556d960bae5dff0cfc5692caddc66af2",
+  "guard": {
+    "schema": "q3-layered-prepared-guard-v1",
+    "status": "passed",
+    "scope": "captured official Task/Step2/Step3 bytes; no evaluator invoked",
+    "cores": 5,
+    "compute_ops": 4113,
+    "prepared_ops": 5135,
+    "frontier_peaks": null,
+    "step3_local_memory_peaks": [
+      {
+        "L1": 14400,
+        "UB": 21844
+      },
+      {
+        "L1": 14976,
+        "UB": 21844
+      },
+      {
+        "L1": 14976,
+        "UB": 21844
+      },
+      {
+        "L1": 40288,
+        "UB": 23668
+      },
+      {
+        "L1": 40288,
+        "UB": 23668
+      }
+    ],
+    "copy_ops": 1022,
+    "cross_links": 381,
+    "original_copy_bytes": 333414,
+    "scheduled_copy_bytes": 1595646,
+    "memory_dependencies": 5778,
+    "edge_counts": {
+      "data_raw": 7270,
+      "memory_reported": 5778,
+      "pipe_fifo": 5115,
+      "cross_links": 381
+    },
+    "union_unique_edges": 17827,
+    "max_crossing": 5,
+    "crossing_limit": null,
+    "crossing_bound_certified": false,
+    "allow_multi": true,
+    "complete_seq_closed_interval_peaks": [
+      {
+        "L1": 19008,
+        "UB": 21844
+      },
+      {
+        "L1": 14976,
+        "UB": 21844
+      },
+      {
+        "L1": 14976,
+        "UB": 21844
+      },
+      {
+        "L1": 40288,
+        "UB": 23668
+      },
+      {
+        "L1": 40288,
+        "UB": 23668
+      }
+    ]
+  },
+  "result_sha256": "385b30788297034a655329507f88ea0a3295d3d3d4f383c24f9c4c2952eb2ce0",
+  "finished_at": "2026-09-25T15:45:27.789073Z",
+  "diagnostic_wall_seconds": 8.616339791973587
+}

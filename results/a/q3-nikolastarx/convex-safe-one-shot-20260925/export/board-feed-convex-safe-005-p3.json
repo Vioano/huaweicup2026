@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "submission_version": 1,
+  "records": [
+    {
+      "attempt_id": "nikolastarx-convex-safe-005-k5-p3-20260925T154518Z",
+      "revision": 1,
+      "run_id": "q3-convex-safe-005-one-shot-20260925T154518Z",
+      "algorithm_id": "q3-convex-safe-diagnostic",
+      "algorithm_name": "Q3 convex-safe diagnostic",
+      "variant": "convex-safe-fixed-plan-005-k5",
+      "solver_commit": "035b1452bd3c77261b2afc1ee2a9c341321d956c",
+      "parameters": {
+        "requested_cores": 5,
+        "plan_sha256": "549519032c0ae7b78957463d0b6189d30184bcfd46e06fa60fc2c1fcc7dc6615",
+        "selection": "one frozen candidate; conditional P2 threshold was not met"
+      },
+      "problem": "P3",
+      "case_id": "005",
+      "cores": 5,
+      "status": "ok",
+      "metrics": {
+        "makespan_cycles": 26427,
+        "solver_wall_seconds": null,
+        "evaluation_wall_seconds": null,
+        "ddr_bytes": 1595646,
+        "extra_ddr_bytes": 1262232,
+        "spill_bytes": 0,
+        "cache_hit_rate": 0.3325066080947326
+      },
+      "evaluator": {
+        "route": "E0",
+        "commit": "035b1452bd3c77261b2afc1ee2a9c341321d956c",
+        "entrypoint": "multicore_cut_evaluate_problem_3.evaluate_problem_3"
+      },
+      "identity": {
+        "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "plan_sha256": "549519032c0ae7b78957463d0b6189d30184bcfd46e06fa60fc2c1fcc7dc6615"
+      },
+      "artifacts": {
+        "plan": {
+          "path": "results/a/q3-nikolastarx/convex-safe-one-shot-20260925/candidate/case_005_multicore_res.json",
+          "sha256": "549519032c0ae7b78957463d0b6189d30184bcfd46e06fa60fc2c1fcc7dc6615"
+        },
+        "result": {
+          "path": "results/a/q3-nikolastarx/convex-safe-one-shot-20260925/run/p3.json.gz",
+          "sha256": "385b30788297034a655329507f88ea0a3295d3d3d4f383c24f9c4c2952eb2ce0"
+        },
+        "run": {
+          "path": "results/a/q3-nikolastarx/convex-safe-one-shot-20260925/run/run.json",
+          "sha256": "1b98bc0d69e9f0f2e12b87f12a5d3ea7d5b148c3eae6266db9a157584854c815"
+        },
+        "trace": {
+          "path": "results/a/q3-nikolastarx/convex-safe-one-shot-20260925/run/p3.worker.json",
+          "sha256": "1145ed4d57dfa7305000a5b3cea6f55d6910ea1413b09c01ecc6ea64654773e4"
+        },
+        "log": {
+          "path": "results/a/q3-nikolastarx/convex-safe-one-shot-20260925/run/p3.stdout.txt",
+          "sha256": "cee01932c5276b33d6a17de9a5601e966b444f34c24157a2cc799685aeb8ed41"
+        },
+        "manifest": {
+          "path": "results/a/q3-nikolastarx/convex-safe-one-shot-20260925/export/evidence-manifest.json",
+          "sha256": "adb067f6a2e97491863b6625b8780ace61b3f940aeae293638ff34b022dbf6c9"
+        }
+      },
+      "runtime_id": "macos-arm64-local-shared-48GiB",
+      "observed_at": "2026-09-25T15:45:27.789073Z",
+      "timing": {
+        "solver_includes_evaluation": null,
+        "evaluation_precision": "No evaluator-only duration retained. Worker diagnostic_wall_seconds includes E0 plus startup/profiling and prepared capture; it is diagnostic only, not evaluation_wall_seconds or solver wall.",
+        "utc": "Worker monotonic diagnostic duration; receipt timestamps are UTC."
+      },
+      "provenance": {
+        "producer_session": "nikolastarx/s-3172f7b01b604cfb90aefd6396bd87bc",
+        "task_url": "https://github.com/huaweibei123/huaweicup2026/issues/51",
+        "solver": {
+          "source": null,
+          "authors": [
+            "nikolastarx"
+          ],
+          "method": "One frozen convex-safe candidate plan evaluated in an isolated P3 diagnostic; no end-to-end solver run was measured.",
+          "references": [],
+          "upstream": [],
+          "selected_algorithm_id": null,
+          "selected_solver_commit": null
+        },
+        "runner": {
+          "source": {
+            "repo": "huaweibei123/huaweicup2026",
+            "commit": "035b1452bd3c77261b2afc1ee2a9c341321d956c",
+            "path": "src/q3/convex_warmup_probe.py",
+            "entrypoint": "src.q3.convex_warmup_probe.main"
+          },
+          "argv": [
+            "python3",
+            "-B",
+            "-m",
+            "src.q3.convex_warmup_probe",
+            "<candidate-dir>",
+            "<run-dir>",
+            "--source",
+            "035b1452bd3c77261b2afc1ee2a9c341321d956c",
+            "--plan-sha256",
+            "549519032c0ae7b78957463d0b6189d30184bcfd46e06fa60fc2c1fcc7dc6615",
+            "--admission-file",
+            "<frozen admission manifest; see evidence-manifest>",
+            "--admission-sha256",
+            "516f4f588e2fc5a5b184648b3fa8c118e9584293dd36a42153137699e840cfc8",
+            "--control",
+            "<control.json>",
+            "--control-sha256",
+            "dea9ae082ff0edeebc8c7014f7dfc8af36c893daab9617144c115e6b6eeb2b6f"
+          ],
+          "working_directory": "."
+        },
+        "environment": {
+          "os": "macOS-27.0-arm64-arm-64bit-Mach-O",
+          "cpu": null,
+          "gpu": "none",
+          "ram_bytes": null,
+          "python": "3.14.5 (main, May 10 2026, 10:21:34) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "dependencies": "uv.lock sha256:7b03fee57044ac272d8895533cbdca6d70a29d2da955f98a5552e72ef944fdc4",
+          "threads": null,
+          "workers": 1,
+          "peak_rss_bytes": null
+        },
+        "measurement": {
+          "started_at": "2026-09-25T15:45:19.166924Z",
+          "finished_at": "2026-09-25T15:45:27.789073Z",
+          "seed": null,
+          "repeat_index": 0,
+          "cold_start": null,
+          "solver_scope": null,
+          "evaluation_scope": "One P3 official E0 call; evaluator-only wall was not isolated. Worker diagnostic wall includes surrounding diagnostic instrumentation and is recorded only in notes.",
+          "budget": {
+            "wall_seconds": 600,
+            "candidate_limit": 1,
+            "stop_reason": "P3 completed; M3=26427 did not meet strict conditional P2 threshold M3<24522; no retry."
+          },
+          "calls": {
+            "solver": 0,
+            "E0": 1,
+            "E1": 0,
+            "E2": 0
+          },
+          "offline_costs": "A fixed candidate plan existed before this diagnostic; its construction is outside this measured run.",
+          "failure": null
+        },
+        "missing_reasons": {
+          "provenance.solver.source": "This one-shot measurement evaluates a frozen plan; it did not execute a candidate-construction entrypoint as a solver.",
+          "provenance.environment.cpu": "CPU model not recorded in retained environment receipt.",
+          "provenance.environment.ram_bytes": "Total RAM is not recorded in the retained run receipt.",
+          "provenance.environment.threads": "Thread count not recorded.",
+          "provenance.environment.peak_rss_bytes": "No hard per-process peak RSS retained.",
+          "provenance.measurement.seed": "Fixed candidate; no random seed.",
+          "provenance.measurement.cold_start": "Cold/warm state not recorded.",
+          "provenance.measurement.solver_scope": "No end-to-end solver measurement; solver wall is null."
+        }
+      },
+      "notes": [
+        "One official E0 P3 result for case 005 at K=5; a single diagnostic sample, not a full solver or 100-case result.",
+        "Official P3 Makespan is 26427; local acceptance was false because the old comparison threshold was 24522. This is a negative diagnostic result, not a legality rejection.",
+        "No P2 score exists for this same plan: the frozen conditional threshold was not met. No same-plan CacheGain is claimed.",
+        "solver_wall_seconds is null. The worker diagnostic duration is 8.616339791973587 seconds and includes surrounding instrumentation; evaluator-only wall is unavailable.",
+        "One E0 call; no baseline rescoring, retries, E1/E2, or other evaluator calls.",
+        "Evidence manifest indexes retained originals and their SHA-256 values. No independent replay or board import is claimed."
+      ],
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/blob/035b1452bd3c77261b2afc1ee2a9c341321d956c/src/q3/convex_warmup_probe.py",
+      "baseline": {
+        "graph_sha256": "c2b378c882a3039e3d66bac6cbcba39317107339b6f38d5bce1b09379839799f",
+        "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+        "official_sha256": "de11a83db8d7c47ed328b15a7df71d613a833b16cd23ee9fe877999578a1ace0",
+        "route": "E0",
+        "entrypoint": "singlecore_evaluate.evaluate_singlecore",
+        "result": {
+          "path": "results/benchmark-board/official-singlecore-20260924/005/result.json.gz",
+          "sha256": "3efb00f0d7750733b54df72ce2acde81b6bbc510d92771f6414ff985864340a4"
+        }
+      },
+      "cache_pair": null
+    }
+  ]
+}

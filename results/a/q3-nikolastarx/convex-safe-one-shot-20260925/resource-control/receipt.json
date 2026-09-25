@@ -1,0 +1,67 @@
+{
+  "status": "complete",
+  "manifest_sha256": "d8084f3eb0d402095e39e8ad052decd631501ef27cf50c45e8d6a2222ea14c36",
+  "supervisor_sha256": "8d299c88579322cbca23ea0798f32e587dd8ac4352b9d503de0dd9eaa598bc03",
+  "sample_interval_seconds": 1,
+  "source_commit": "035b1452bd3c77261b2afc1ee2a9c341321d956c",
+  "probe_sha256": "583c48fd2db8fda38b8af3cf6e0c12a640945f08ac2741bc24c61b17eb822212",
+  "admission_file": "/Users/nikolastar/Projects/huaweicup2026/output/handoffs/resource-window-20260925/P3_CONVEX_005_K5_ADMISSION_20260925.json",
+  "admission_sha256": "516f4f588e2fc5a5b184648b3fa8c118e9584293dd36a42153137699e840cfc8",
+  "budget": {
+    "workers": 1,
+    "P3": 1,
+    "P2_conditional": 1,
+    "per_phase_seconds": 90,
+    "total_seconds": 600,
+    "retries": 0
+  },
+  "resource_policy": "new_window_admission_required",
+  "command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "-m",
+    "src.q3.convex_warmup_probe",
+    "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/convex-safe-one-shot-20260925/candidate",
+    "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/convex-safe-one-shot-20260925/run",
+    "--source",
+    "035b1452bd3c77261b2afc1ee2a9c341321d956c",
+    "--plan-sha256",
+    "549519032c0ae7b78957463d0b6189d30184bcfd46e06fa60fc2c1fcc7dc6615",
+    "--admission-file",
+    "/Users/nikolastar/Projects/huaweicup2026/output/handoffs/resource-window-20260925/P3_CONVEX_005_K5_ADMISSION_20260925.json",
+    "--admission-sha256",
+    "516f4f588e2fc5a5b184648b3fa8c118e9584293dd36a42153137699e840cfc8",
+    "--control",
+    "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/convex-safe-one-shot-20260925/control.json",
+    "--control-sha256",
+    "dea9ae082ff0edeebc8c7014f7dfc8af36c893daab9617144c115e6b6eeb2b6f"
+  ],
+  "T0": "2026-09-25T15:45:18.931663+00:00",
+  "swap_used_t0_mib": 1231.12,
+  "parent_pid": 24687,
+  "parent_start_identity": [
+    1790351118,
+    931971
+  ],
+  "terminal_branch": "parent_exited",
+  "exit_code": 0,
+  "T1": "2026-09-25T15:45:28.022199+00:00",
+  "final_sample": {
+    "utc": "2026-09-25T15:45:28.080838+00:00",
+    "pressure_level": 1,
+    "physical_free_bytes": 1050886144,
+    "swap_used_mib": 1231.12,
+    "swap_free_mib": 816.88,
+    "disk_free_bytes": 236500983808,
+    "owned_rss_bytes": 0,
+    "owned_processes": [],
+    "other_scorers": []
+  },
+  "outer_supervisor_wall_seconds": 9.20779366698116,
+  "finished_at": "2026-09-25T15:45:28.081183+00:00",
+  "observed_owned_pids": [
+    24687,
+    24699
+  ],
+  "resource_note": "1-second samples; not a hard peak guarantee; physical free and swap free observed only"
+}
