@@ -1,0 +1,738 @@
+{
+  "new_calls": {
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "Task_compiler": 0,
+    "constructor": 0,
+    "response": 0,
+    "solver": 0
+  },
+  "prior_k3_full_core": {
+    "makespan": 68109,
+    "memory_peak_by_core": {
+      "0": {
+        "L1": 264192,
+        "UB": 0
+      },
+      "1": {
+        "L1": 264192,
+        "UB": 0
+      },
+      "2": {
+        "L1": 264192,
+        "UB": 0
+      }
+    },
+    "movement": {
+      "added_copy_bytes": 1981888,
+      "original_graph_copy_bytes": 975456,
+      "partition_added_copy_bytes": 1981888,
+      "scheduled_copy_bytes": 2957344,
+      "spill_added_copy_bytes": 0
+    },
+    "plan": {
+      "compute_component_count": 11,
+      "compute_components": [
+        {
+          "anchor": 52,
+          "core_counts": {
+            "0": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 177,
+          "core_counts": {
+            "1": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 302,
+          "core_counts": {
+            "2": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 427,
+          "core_counts": {
+            "0": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 552,
+          "core_counts": {
+            "1": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 677,
+          "core_counts": {
+            "2": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 802,
+          "core_counts": {
+            "0": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 927,
+          "core_counts": {
+            "1": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 1052,
+          "core_counts": {
+            "2": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 1177,
+          "core_counts": {
+            "0": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 1302,
+          "core_counts": {
+            "1": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        }
+      ],
+      "core_schedule_lengths": [
+        5,
+        5,
+        5
+      ],
+      "external_bytes_by_task_multiplicity": {
+        "1": 22528,
+        "3": 930400
+      },
+      "external_compute_input_tensors": 61,
+      "external_repeat_bytes_beyond_unique": 1860800,
+      "external_task_input_bytes": 2813728,
+      "external_unique_bytes": 952928
+    },
+    "timeline": [
+      {
+        "between_task_gaps": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "core": 0,
+        "last_task_end": 68109,
+        "task_interval_sum": 67709,
+        "task_intervals": [
+          {
+            "duration": 22378,
+            "end": 22378,
+            "start": 0,
+            "task_id": 0
+          },
+          {
+            "duration": 12086,
+            "end": 34564,
+            "start": 22478,
+            "task_id": 3
+          },
+          {
+            "duration": 12475,
+            "end": 47139,
+            "start": 34664,
+            "task_id": 4
+          },
+          {
+            "duration": 14764,
+            "end": 62003,
+            "start": 47239,
+            "task_id": 5
+          },
+          {
+            "duration": 6006,
+            "end": 68109,
+            "start": 62103,
+            "task_id": 6
+          }
+        ],
+        "tasks": 5
+      },
+      {
+        "between_task_gaps": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "core": 1,
+        "last_task_end": 68109,
+        "task_interval_sum": 67709,
+        "task_intervals": [
+          {
+            "duration": 22378,
+            "end": 22378,
+            "start": 0,
+            "task_id": 1
+          },
+          {
+            "duration": 12086,
+            "end": 34564,
+            "start": 22478,
+            "task_id": 7
+          },
+          {
+            "duration": 12475,
+            "end": 47139,
+            "start": 34664,
+            "task_id": 8
+          },
+          {
+            "duration": 14764,
+            "end": 62003,
+            "start": 47239,
+            "task_id": 9
+          },
+          {
+            "duration": 6006,
+            "end": 68109,
+            "start": 62103,
+            "task_id": 10
+          }
+        ],
+        "tasks": 5
+      },
+      {
+        "between_task_gaps": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "core": 2,
+        "last_task_end": 55342,
+        "task_interval_sum": 54942,
+        "task_intervals": [
+          {
+            "duration": 18351,
+            "end": 18351,
+            "start": 0,
+            "task_id": 2
+          },
+          {
+            "duration": 5838,
+            "end": 24289,
+            "start": 18451,
+            "task_id": 11
+          },
+          {
+            "duration": 10601,
+            "end": 34990,
+            "start": 24389,
+            "task_id": 12
+          },
+          {
+            "duration": 15527,
+            "end": 50617,
+            "start": 35090,
+            "task_id": 13
+          },
+          {
+            "duration": 4625,
+            "end": 55342,
+            "start": 50717,
+            "task_id": 14
+          }
+        ],
+        "tasks": 5
+      }
+    ],
+    "trace": {
+      "interpretation": "Event duration sums per Pipe, not core utilization or a critical-path decomposition.",
+      "observed_pipe_event_duration_sums": {
+        "0:PIPE_M": 27056,
+        "0:PIPE_MTE2": 43026,
+        "0:PIPE_MTE3": 1429,
+        "0:PIPE_V": 3632,
+        "1:PIPE_M": 27056,
+        "1:PIPE_MTE2": 43026,
+        "1:PIPE_MTE3": 1429,
+        "1:PIPE_V": 3632,
+        "2:PIPE_M": 20292,
+        "2:PIPE_MTE2": 37892,
+        "2:PIPE_MTE3": 756,
+        "2:PIPE_V": 2724
+      },
+      "pipe_event_counts": {
+        "0:PIPE_M": 200,
+        "0:PIPE_MTE2": 94,
+        "0:PIPE_MTE3": 44,
+        "0:PIPE_V": 296,
+        "1:PIPE_M": 200,
+        "1:PIPE_MTE2": 94,
+        "1:PIPE_MTE3": 44,
+        "1:PIPE_V": 296,
+        "2:PIPE_M": 150,
+        "2:PIPE_MTE2": 83,
+        "2:PIPE_MTE3": 33,
+        "2:PIPE_V": 222
+      }
+    }
+  },
+  "scope": "Saved artifacts only; no constructor, Task compiler, evaluator, or response call",
+  "sources": {
+    "graph_zip_member_sha256": "9abd4468a4be365e384de47431ac914ee44fd6e7b6221dffc584561f388cd57e",
+    "prior_public_files_sha256": {
+      "diagnostics.json": "80aacbce1513e516ac360f1ae38f47287568dbf38594ac176959e3a7b6694731",
+      "plan.json": "f3a2aa98bdbb966adc11ee60c0667229f35b4b69521f70387d65e7ec57fd1b4a",
+      "result.json.gz": "f2cd9fe83f6189bb0119bbd7dce4c8f4dd68a9a7435e6cf13475ec6ac47348ec",
+      "trace.json.gz": "822ee8084fffaccc8ccd3bd8f21ee19a0669e71fabcbd23c217365ffc6086f4a"
+    },
+    "v4_commit": "9c5f87548cc7588465a638e032993969b5cac891",
+    "v4_objects_sha256": {
+      "plan.json": "25502a9e3e75c9c1c1e04ed3f65a9ec35d342e1343dc7bf7faab4f2800c59446",
+      "result.json.gz": "2c0408591dd5db062dc0dcf2c3a5ecbc11ad4787a531e5e7b48026353508f8f4",
+      "run-derived.json": "e1811ee4f6e3078287ec018a58e0f6e7bd750e5ce6d566e9fac732f786caf399",
+      "trace.json.gz": "a87bd9f627c7d7ff6c3091b785c73d10620272f4dbefc6b886f6af725beaf782"
+    }
+  },
+  "v4_k5": {
+    "makespan": 64624,
+    "memory_peak_by_core": {
+      "0": {
+        "L1": 264192,
+        "UB": 0
+      },
+      "1": {
+        "L1": 264192,
+        "UB": 0
+      },
+      "2": {
+        "L1": 0,
+        "UB": 0
+      },
+      "3": {
+        "L1": 0,
+        "UB": 0
+      },
+      "4": {
+        "L1": 0,
+        "UB": 0
+      }
+    },
+    "movement": {
+      "added_copy_bytes": 1051488,
+      "original_graph_copy_bytes": 975456,
+      "partition_added_copy_bytes": 1051488,
+      "scheduled_copy_bytes": 2026944,
+      "spill_added_copy_bytes": 0
+    },
+    "plan": {
+      "compute_component_count": 11,
+      "compute_components": [
+        {
+          "anchor": 52,
+          "core_counts": {
+            "0": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 177,
+          "core_counts": {
+            "1": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 302,
+          "core_counts": {
+            "0": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 427,
+          "core_counts": {
+            "1": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 552,
+          "core_counts": {
+            "0": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 677,
+          "core_counts": {
+            "1": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 802,
+          "core_counts": {
+            "0": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 927,
+          "core_counts": {
+            "1": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 1052,
+          "core_counts": {
+            "0": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 1177,
+          "core_counts": {
+            "1": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        },
+        {
+          "anchor": 1302,
+          "core_counts": {
+            "0": 124
+          },
+          "external_input_union_bytes": 932448,
+          "ops": 124,
+          "raw_pipe_work": {
+            "PIPE_M": 6764,
+            "PIPE_V": 908
+          }
+        }
+      ],
+      "core_schedule_lengths": [
+        5,
+        5,
+        0,
+        0,
+        0
+      ],
+      "external_bytes_by_task_multiplicity": {
+        "1": 22528,
+        "2": 930400
+      },
+      "external_compute_input_tensors": 61,
+      "external_repeat_bytes_beyond_unique": 930400,
+      "external_task_input_bytes": 1883328,
+      "external_unique_bytes": 952928
+    },
+    "task_dependency_pairs": [
+      {
+        "source": 0,
+        "target": 2
+      },
+      {
+        "source": 0,
+        "target": 4
+      },
+      {
+        "source": 0,
+        "target": 5
+      },
+      {
+        "source": 1,
+        "target": 6
+      },
+      {
+        "source": 1,
+        "target": 8
+      },
+      {
+        "source": 1,
+        "target": 9
+      },
+      {
+        "source": 2,
+        "target": 3
+      },
+      {
+        "source": 3,
+        "target": 4
+      },
+      {
+        "source": 4,
+        "target": 5
+      },
+      {
+        "source": 6,
+        "target": 7
+      },
+      {
+        "source": 7,
+        "target": 8
+      },
+      {
+        "source": 8,
+        "target": 9
+      }
+    ],
+    "timeline": [
+      {
+        "between_task_gaps": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "core": 0,
+        "last_task_end": 64624,
+        "task_interval_sum": 64224,
+        "task_intervals": [
+          {
+            "duration": 25442,
+            "end": 25442,
+            "start": 0,
+            "task_id": 0
+          },
+          {
+            "duration": 7832,
+            "end": 33374,
+            "start": 25542,
+            "task_id": 2
+          },
+          {
+            "duration": 8047,
+            "end": 41521,
+            "start": 33474,
+            "task_id": 3
+          },
+          {
+            "duration": 14062,
+            "end": 55683,
+            "start": 41621,
+            "task_id": 4
+          },
+          {
+            "duration": 8841,
+            "end": 64624,
+            "start": 55783,
+            "task_id": 5
+          }
+        ],
+        "tasks": 5
+      },
+      {
+        "between_task_gaps": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "core": 1,
+        "last_task_end": 56767,
+        "task_interval_sum": 56367,
+        "task_intervals": [
+          {
+            "duration": 21555,
+            "end": 21555,
+            "start": 0,
+            "task_id": 1
+          },
+          {
+            "duration": 6399,
+            "end": 28054,
+            "start": 21655,
+            "task_id": 6
+          },
+          {
+            "duration": 7161,
+            "end": 35315,
+            "start": 28154,
+            "task_id": 7
+          },
+          {
+            "duration": 13865,
+            "end": 49280,
+            "start": 35415,
+            "task_id": 8
+          },
+          {
+            "duration": 7387,
+            "end": 56767,
+            "start": 49380,
+            "task_id": 9
+          }
+        ],
+        "tasks": 5
+      },
+      {
+        "between_task_gaps": [],
+        "core": 2,
+        "last_task_end": null,
+        "task_interval_sum": 0,
+        "task_intervals": [],
+        "tasks": 0
+      },
+      {
+        "between_task_gaps": [],
+        "core": 3,
+        "last_task_end": null,
+        "task_interval_sum": 0,
+        "task_intervals": [],
+        "tasks": 0
+      },
+      {
+        "between_task_gaps": [],
+        "core": 4,
+        "last_task_end": null,
+        "task_interval_sum": 0,
+        "task_intervals": [],
+        "tasks": 0
+      }
+    ],
+    "trace": {
+      "interpretation": "Event duration sums per Pipe, not core utilization or a critical-path decomposition.",
+      "observed_pipe_event_duration_sums": {
+        "0:PIPE_M": 40584,
+        "0:PIPE_MTE2": 23902,
+        "0:PIPE_MTE3": 1305,
+        "0:PIPE_V": 5448,
+        "1:PIPE_M": 33820,
+        "1:PIPE_MTE2": 24145,
+        "1:PIPE_MTE3": 792,
+        "1:PIPE_V": 4540
+      },
+      "pipe_event_counts": {
+        "0:PIPE_M": 300,
+        "0:PIPE_MTE2": 116,
+        "0:PIPE_MTE3": 66,
+        "0:PIPE_V": 444,
+        "1:PIPE_M": 250,
+        "1:PIPE_MTE2": 105,
+        "1:PIPE_MTE3": 55,
+        "1:PIPE_V": 370
+      }
+    }
+  }
+}
