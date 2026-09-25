@@ -1,0 +1,247 @@
+"""External resource supervisor; freezes and runs the existing 65d7355 probe once."""
+import hashlib
+import argparse
+import ctypes
+import json
+import os
+from pathlib import Path
+import re
+import signal
+import subprocess
+import sys
+import time
+from datetime import datetime, timezone
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[3]
+SOURCE = '65d7355ee0856783ede81328915e8bd43227c842'
+PLAN = ROOT / 'results/a/q3-nikolastarx/query-flow-static-repair-20260925/run/case_071_multicore_res.json'
+PLAN_SHA = 'b0ccb1c9d9e2f90ae6566ecaa725a0440c47d942401a3cdcb261d90eb0968136'
+CONTROL = HERE / 'resource-control'
+
+# Layout copied from the installed macOS SDK sys/proc_info.h, proc_bsdinfo.
+class ProcBSDInfo(ctypes.Structure):
+    _fields_ = [(name, ctypes.c_uint32) for name in (
+        'flags', 'status', 'xstatus', 'pid', 'ppid', 'uid', 'gid', 'ruid',
+        'rgid', 'svuid', 'svgid', 'reserved')]
+    _fields_ += [('comm', ctypes.c_char * 16), ('name', ctypes.c_char * 32)]
+    _fields_ += [(name, ctypes.c_uint32) for name in (
+        'nfiles', 'pgid', 'pjobc', 'tdev', 'tpgid')]
+    _fields_ += [('nice', ctypes.c_int32), ('start_sec', ctypes.c_uint64),
+                 ('start_usec', ctypes.c_uint64)]
+
+LIBPROC = ctypes.CDLL('/usr/lib/libproc.dylib', use_errno=True)
+LIBPROC.proc_pidinfo.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_uint64,
+                                 ctypes.c_void_p, ctypes.c_int]
+LIBPROC.proc_pidinfo.restype = ctypes.c_int
+
+def identity(pid):
+    info = ProcBSDInfo()
+    size = LIBPROC.proc_pidinfo(pid, 3, 0, ctypes.byref(info), ctypes.sizeof(info))
+    if size != ctypes.sizeof(info) or info.pid != pid or not info.start_sec:
+        return None
+    return (info.start_sec, info.start_usec)
+
+def now():
+    return datetime.now(timezone.utc).isoformat()
+
+def command(args):
+    return subprocess.check_output(args, text=True, timeout=10, cwd=ROOT)
+
+def write(name, value):
+    (CONTROL / name).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+
+def processes():
+    rows = []
+    for line in command(['ps', '-axo', 'pid=,ppid=,pgid=,rss=,comm=,args=']).splitlines():
+        fields = line.strip().split(None, 5)
+        if len(fields) == 6:
+            try:
+                rows.append(dict(zip(('pid', 'ppid', 'pgid', 'rss_kib'), map(int, fields[:4])), comm=fields[4], args=fields[5]))
+            except ValueError:
+                pass
+    return rows
+
+def current_owned(rows, observed, parent, parent_identity):
+    """Return only currently verified descendants; history is never ownership."""
+    if parent is None:
+        return {}
+    by_pid = {r['pid']: r for r in rows}
+    if parent not in by_pid or identity(parent) != parent_identity or by_pid[parent]['pgid'] != parent:
+        raise RuntimeError('parent identity or process group unverified')
+    live = {parent: parent_identity}
+    for _ in range(len(rows)):
+        added = False
+        for row in rows:
+            pid = row['pid']
+            if pid in live or row['ppid'] not in live:
+                continue
+            # Reject a reused PID before accepting its descendants.
+            current = identity(pid)
+            if current is None or (pid in observed and observed[pid] != current):
+                raise RuntimeError(f'descendant identity unverified or reused: {pid}')
+            observed[pid] = current
+            live[pid] = current
+            added = True
+        if not added:
+            break
+    groups = {by_pid[pid]['pgid'] for pid in live}
+    # Every group leader and every group member must belong to this live tree.
+    for group in groups:
+        members = {r['pid'] for r in rows if r['pgid'] == group}
+        if group not in live or members - live.keys():
+            raise RuntimeError(f'unverified group {group}: {sorted(members - live.keys())}')
+    for pid, expected in live.items():
+        if identity(pid) != expected:
+            raise RuntimeError(f'owned identity or group changed: {pid}')
+    return live
+
+def sample(observed, parent=None, parent_identity=None):
+    rows = processes()
+    live = current_owned(rows, observed, parent, parent_identity)
+    pressure = int(command(['sysctl', '-n', 'kern.memorystatus_vm_pressure_level']).strip())
+    swap = command(['sysctl', '-n', 'vm.swapusage'])
+    swap_free = float(re.search(r'free\s*=\s*([0-9.]+)M', swap)[1])
+    vm = command(['vm_stat'])
+    page_size = int(re.search(r'page size of (\d+) bytes', vm)[1])
+    free_bytes = int(re.search(r'Pages free:\s*(\d+)', vm)[1]) * page_size
+    relevant = []
+    for r in rows:
+        if r['pid'] in live or r['pid'] == os.getpid() or 'python' not in r['comm'].lower():
+            continue
+        args = r['args']
+        if ('src.q1.' in args or 'src.q2.' in args or 'src.q3.' in args or
+                ('huaweicup2026' in args and any(s in args for s in ('evaluate_problem', 'evaluate_scene', 'benchmark_runner', 'batch_runner')))):
+            relevant.append(r)
+    own_rows = [r for r in rows if r['pid'] in live]
+    entry = {'utc': now(), 'pressure_level': pressure, 'physical_free_bytes': free_bytes,
+             'swap_free_mib': swap_free, 'owned_processes': own_rows, 'other_scorers': relevant}
+    with (CONTROL / 'samples.jsonl').open('a') as stream:
+        stream.write(json.dumps(entry, ensure_ascii=False) + '\n')
+    return entry
+
+def stop_reason(entry, start=False):
+    if entry['pressure_level'] != 1:
+        return 'memory pressure is not normal'
+    if entry['physical_free_bytes'] < (6 if start else 4) * 1024**3:
+        return 'physical free below admission threshold'
+    if entry['swap_free_mib'] < 1024:
+        return 'swap free below 1GiB'
+    if entry['other_scorers']:
+        return 'another scorer detected'
+    return None
+
+def kill_owned(observed, parent, parent_identity):
+    # Popen parent remains unreaped while its verified group is signalled.
+    rows = processes()
+    live = current_owned(rows, observed, parent, parent_identity)
+    groups = {r['pgid'] for r in rows if r['pid'] in live}
+    if os.getpgrp() in groups:
+        raise RuntimeError('refuse supervisor group cleanup')
+    for group in sorted(groups - {parent}) + ([parent] if parent in groups else []):
+        # Recheck before each signal. An unreaped root keeps its PID reserved.
+        refreshed = processes()
+        current_live = current_owned(refreshed, observed, parent, parent_identity)
+        if group not in {r['pgid'] for r in refreshed if r['pid'] in current_live}:
+            raise RuntimeError(f'group changed before signal: {group}')
+        os.killpg(group, signal.SIGKILL)
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('admission', type=Path)
+    parser.add_argument('--expected-supervisor-sha256', required=True)
+    args = parser.parse_args()
+    actual_sha = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    if actual_sha != args.expected_supervisor_sha256.lower():
+        raise ValueError('supervisor SHA-256 differs from expected value')
+    admission = args.admission.resolve()
+    CONTROL.mkdir(exist_ok=False)
+    report = {'status': 'preflight', 'started_at': now(), 'source_commit': SOURCE,
+              'supervisor_sha256': actual_sha,
+              'expected_supervisor_sha256': args.expected_supervisor_sha256.lower(),
+              'admission_ref': str(admission), 'admission_sha256': hashlib.sha256(admission.read_bytes()).hexdigest(),
+              'scope': 'resource supervision and diagnostic time, not solver timing',
+              'sample_interval_seconds': 1, 'new_E0_retries': 0}
+    write('receipt.json', report)
+    observed = {}
+    child = None
+    parent_identity = None
+    try:
+        if command(['git', 'rev-parse', 'HEAD']).strip() != SOURCE:
+            raise ValueError('HEAD differs')
+        if hashlib.sha256(PLAN.read_bytes()).hexdigest() != PLAN_SHA:
+            raise ValueError('plan hash differs')
+        if (HERE / 'run').exists():
+            raise ValueError('run already exists')
+        first = sample(observed)
+        reason = stop_reason(first, start=True)
+        if reason:
+            report.update(status='not_started', error=reason)
+            return
+        cmd = [sys.executable, '-B', '-m', 'src.q3.query_flow_probe',
+               str(PLAN.parent), str(HERE / 'run'), '--source', SOURCE,
+               '--plan-sha256', PLAN_SHA, '--admission-ref', str(admission)]
+        report.update(command=cmd, T0=now(), status='running')
+        write('receipt.json', report)
+        started = time.monotonic()
+        with (CONTROL / 'stdout.txt').open('x') as stdout, (CONTROL / 'stderr.txt').open('x') as stderr:
+            child = subprocess.Popen(cmd, cwd=ROOT, stdout=stdout, stderr=stderr, start_new_session=True)
+            parent_identity = identity(child.pid)
+            if parent_identity is None:
+                raise RuntimeError('new parent start identity unavailable')
+            observed[child.pid] = parent_identity
+            report['parent_pid'] = child.pid
+            report['parent_start_identity'] = parent_identity
+            write('receipt.json', report)
+            while True:
+                tick = time.monotonic()
+                entry = sample(observed, child.pid, parent_identity)
+                reason = stop_reason(entry)
+                if time.monotonic() - started >= 600:
+                    reason = 'whole-window 600-second deadline'
+                if reason:
+                    report.update(status='resource_stopped', error=reason)
+                    kill_owned(observed, child.pid, parent_identity)
+                    child.wait(timeout=10)
+                    break
+                if os.waitid(os.P_PID, child.pid, os.WEXITED | os.WNOHANG | os.WNOWAIT):
+                    live = current_owned(processes(), observed, child.pid, parent_identity)
+                    if len(live) > 1:
+                        kill_owned(observed, child.pid, parent_identity)
+                        report['cleanup_error'] = 'parent exited with live descendants; verified groups stopped'
+                    child.wait(timeout=10)
+                    report['status'] = 'complete' if child.returncode == 0 and 'cleanup_error' not in report else 'failed'
+                    break
+                time.sleep(max(0, 1 - (time.monotonic() - tick)))
+        report.update(exit_code=child.returncode, T1=now(), diagnostic_wall_seconds=time.monotonic() - started)
+    except BaseException as error:
+        report.update(status='failed', error=f'{type(error).__name__}: {error}')
+        if child is not None:
+            if parent_identity is not None:
+                try:
+                    kill_owned(observed, child.pid, parent_identity)
+                    child.wait(timeout=10)
+                except BaseException as cleanup_error:
+                    report['cleanup_error'] = f'{type(cleanup_error).__name__}: {cleanup_error}'
+        raise
+    finally:
+        if child is not None:
+            try:
+                rows = processes()
+                if child.returncode is None and parent_identity is not None:
+                    live = current_owned(rows, observed, child.pid, parent_identity)
+                    if live:
+                        kill_owned(observed, child.pid, parent_identity)
+                        child.wait(timeout=10)
+                report['remaining_owned_processes'] = [r for r in processes()
+                     if r['pid'] in observed and identity(r['pid']) == observed[r['pid']]]
+            except BaseException as cleanup_error:
+                report['cleanup_error'] = f'{type(cleanup_error).__name__}: {cleanup_error}'
+                report['status'] = 'failed'
+            report['observed_owned_pids'] = sorted(observed)
+        report['finished_at'] = now()
+        write('receipt.json', report)
+        print(json.dumps(report, ensure_ascii=False))
+
+if __name__ == '__main__':
+    main()

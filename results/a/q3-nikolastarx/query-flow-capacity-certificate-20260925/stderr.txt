@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/query-flow-capacity-certificate-20260925/certificate.py", line 104, in <module>
+    main()
+    ~~~~^^
+  File "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/query-flow-capacity-certificate-20260925/certificate.py", line 86, in main
+    config.read(ROOT / 'data/raw/a/official/data/config.txt')
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/configparser.py", line 761, in read
+    self._read(fp, filename)
+    ~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/configparser.py", line 1077, in _read
+    ParsingError._raise_all(self._read_inner(fp, fpname))
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/configparser.py", line 336, in _raise_all
+    raise next(exceptions).combine(exceptions)
+configparser.ParsingError: Source contains parsing errors: PosixPath('/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/data/raw/a/official/data/config.txt')
+	[line  4]: 'L1 524288\n'
+	[line  5]: 'UB 131072\n'
+	[line  8]: 'bandwidth 60\n'
+	[line 11]: 'task_cross_core_wait_cycles 1000\n'
+	[line 12]: 'task_same_core_wait_cycles 100\n'
+	[line 15]: 'cross_core_copy_delay_cycles 500\n'
+	[line 18]: 'cache_capacity_bytes 1048576\n'
+	[line 19]: 'cache_bandwidth_bytes_per_cycle 250\n'

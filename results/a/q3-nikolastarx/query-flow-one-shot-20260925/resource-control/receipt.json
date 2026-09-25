@@ -1,0 +1,40 @@
+{
+  "status": "failed",
+  "started_at": "2026-09-25T12:23:51.001867+00:00",
+  "source_commit": "65d7355ee0856783ede81328915e8bd43227c842",
+  "supervisor_sha256": "651a8a9ee62253961abc656bfa50e01cdca4e17b5f799ad7d233826dcd438fa7",
+  "expected_supervisor_sha256": "651a8a9ee62253961abc656bfa50e01cdca4e17b5f799ad7d233826dcd438fa7",
+  "admission_ref": "/Users/nikolastar/Projects/huaweicup2026/output/handoffs/resource-window-20260925/P3_R8_071_LOCAL_ADMISSION_R2.md",
+  "admission_sha256": "25ee41b404690de1fc9fb06f55119c917830cfbbff2e8d6989c267fcdc14da4b",
+  "scope": "resource supervision and diagnostic time, not solver timing",
+  "sample_interval_seconds": 1,
+  "new_E0_retries": 0,
+  "command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "-m",
+    "src.q3.query_flow_probe",
+    "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/query-flow-static-repair-20260925/run",
+    "/Users/nikolastar/Projects/huaweicup2026/.worktrees/q3-core-nikolastarx/results/a/q3-nikolastarx/query-flow-one-shot-20260925/run",
+    "--source",
+    "65d7355ee0856783ede81328915e8bd43227c842",
+    "--plan-sha256",
+    "b0ccb1c9d9e2f90ae6566ecaa725a0440c47d942401a3cdcb261d90eb0968136",
+    "--admission-ref",
+    "/Users/nikolastar/Projects/huaweicup2026/output/handoffs/resource-window-20260925/P3_R8_071_LOCAL_ADMISSION_R2.md"
+  ],
+  "T0": "2026-09-25T12:23:51.058062+00:00",
+  "parent_pid": 37660,
+  "parent_start_identity": [
+    1790339031,
+    58394
+  ],
+  "error": "RuntimeError: parent identity or process group unverified",
+  "cleanup_error": "RuntimeError: parent identity or process group unverified",
+  "observed_owned_pids": [
+    37660,
+    37672,
+    37746
+  ],
+  "finished_at": "2026-09-25T12:23:54.191825+00:00"
+}
