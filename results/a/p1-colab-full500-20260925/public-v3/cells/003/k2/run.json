@@ -1,0 +1,112 @@
+{
+  "run_id": "20260925T0110Z-s6607",
+  "attempt_id": "20260925T0110Z-s6607-p1-003-k2",
+  "case_id": "003",
+  "cores": 2,
+  "started_at": "2026-09-25T01:12:57.438Z",
+  "finished_at": "2026-09-25T01:13:42.110Z",
+  "graph_sha256": "2c80acfd37edcf811ce76b7e7b1f7194c706bd4d4aa6449e6a19e9eac1028ced",
+  "status": "ok",
+  "calls": {
+    "solver": 1,
+    "E1": 5,
+    "E0": 1,
+    "E2": 0
+  },
+  "artifacts": {
+    "plan": {
+      "path": "results/a/p1-colab-full500-20260925/20260925T0110Z-s6607/cells/003/k2/plan.json",
+      "sha256": "d0467c51e475d811f67c8357c76c6cfc8729681232e500f9bcc80cf1744f1f9b"
+    },
+    "diagnostics": {
+      "path": "results/a/p1-colab-full500-20260925/20260925T0110Z-s6607/cells/003/k2/diagnostics.json",
+      "sha256": "86213cd514fd2cb270b1625bbe35b5dd4e55f7dca5c360619a8642c62233cca0"
+    },
+    "result": {
+      "path": "results/a/p1-colab-full500-20260925/20260925T0110Z-s6607/cells/003/k2/result.json",
+      "sha256": "a04bb282febfe498d87c3cc58ec9bfc627c7a680255bac8e5da293dbf7e749bf"
+    },
+    "trace": {
+      "path": "results/a/p1-colab-full500-20260925/20260925T0110Z-s6607/cells/003/k2/trace.json",
+      "sha256": "c7e492ac28ad041fe70fd84e2efce0850a1930a4b6e294458ed4b1246708ee14"
+    },
+    "official_log": {
+      "path": "results/a/p1-colab-full500-20260925/20260925T0110Z-s6607/cells/003/k2/official.log",
+      "sha256": "29b73520f24a5843ba9488d12abe67fae8768350af7225714e79ca4d20c51d92"
+    }
+  },
+  "solver": {
+    "argv": [
+      "./.venv/bin/python",
+      "-B",
+      "./src/q1/structural_refine.py",
+      "<verified-inputs>/case_003.json",
+      "--cores",
+      "2",
+      "--output",
+      "./results/a/p1-colab-full500-20260925/20260925T0110Z-s6607/cells/003/k2/plan.json",
+      "--diagnostics",
+      "./results/a/p1-colab-full500-20260925/20260925T0110Z-s6607/cells/003/k2/diagnostics.json"
+    ],
+    "cwd": ".",
+    "started_at": "2026-09-25T01:12:57.439Z",
+    "finished_at": "2026-09-25T01:13:29.344Z",
+    "wall_seconds": 31.905433323000125,
+    "timeout_seconds": 300,
+    "exit_code": 0,
+    "cleanup_confirmed": true,
+    "status": "ok",
+    "stdout": {
+      "path": "results/a/p1-colab-full500-20260925/20260925T0110Z-s6607/cells/003/k2/solver.stdout.txt",
+      "sha256": "bc71ce318ed8af4f3e51d6075cd920b77790081df0ae7d68b32c78e53881ff0a"
+    },
+    "stderr": {
+      "path": "results/a/p1-colab-full500-20260925/20260925T0110Z-s6607/cells/003/k2/solver.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "log_derivation": "UTF-8 child output with workspace and temporary input root replaced by public labels"
+  },
+  "selected": "heavy-or-sink",
+  "model_source": {
+    "solver_commit": "3a1b82b71ca1ff6689eb8e72f17d26c48b52073c",
+    "selected": "heavy-or-sink",
+    "algorithm_id": "q1-structural-refine-experimental"
+  },
+  "evaluation": {
+    "argv": [
+      "./.venv/bin/python",
+      "-B",
+      "./data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+      "<verified-inputs>/case_003.json",
+      "./results/a/p1-colab-full500-20260925/20260925T0110Z-s6607/cells/003/k2/plan.json",
+      "--config",
+      "./data/raw/a/official/data/config.txt",
+      "--output",
+      "./results/a/p1-colab-full500-20260925/20260925T0110Z-s6607/cells/003/k2/result.json",
+      "--trace-output",
+      "./results/a/p1-colab-full500-20260925/20260925T0110Z-s6607/cells/003/k2/trace.json",
+      "--log-output",
+      "./results/a/p1-colab-full500-20260925/20260925T0110Z-s6607/cells/003/k2/official.log"
+    ],
+    "cwd": ".",
+    "started_at": "2026-09-25T01:13:29.352Z",
+    "finished_at": "2026-09-25T01:13:41.889Z",
+    "wall_seconds": 12.536307539000063,
+    "timeout_seconds": 900,
+    "exit_code": 0,
+    "cleanup_confirmed": true,
+    "status": "ok",
+    "stdout": {
+      "path": "results/a/p1-colab-full500-20260925/20260925T0110Z-s6607/cells/003/k2/E0.stdout.txt",
+      "sha256": "28f2a41dcddffc1798a70f087b911cac09de9b9aae08e812dd0555b88985114f"
+    },
+    "stderr": {
+      "path": "results/a/p1-colab-full500-20260925/20260925T0110Z-s6607/cells/003/k2/E0.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "log_derivation": "UTF-8 child output with workspace and temporary input root replaced by public labels"
+  },
+  "evaluation_wall_seconds": 12.536307539000063,
+  "makespan_cycles": 340580,
+  "scheduled_copy_bytes": 2995566
+}

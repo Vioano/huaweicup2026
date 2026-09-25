@@ -107,6 +107,14 @@ def verified_download(batch_dir, manifest_path):
     return hashes
 
 
+def submission_missing_reasons(evidence):
+    missing = dict(evidence.get("missing_reasons", {}))
+    # The run receipt contains no seed value; retain null and explain it.
+    missing["provenance.measurement.seed"] = "No random seed was specified or recorded for this run"
+    missing["provenance.measurement.offline_costs"] = "Colab bootstrap and dependency setup occurred but were not independently timed"
+    return missing
+
+
 def export(batch_dir, manifest_path, environment_path, output_dir, task_url):
     batch_dir, output_dir = Path(batch_dir), Path(output_dir).resolve()
     if not output_dir.is_relative_to(ROOT): raise ValueError("export directory must be inside repository")
@@ -158,7 +166,7 @@ def export(batch_dir, manifest_path, environment_path, output_dir, task_url):
         baseline.parent.mkdir(parents=True, exist_ok=True)
         if not baseline.exists(): baseline.write_bytes(git_base(case))
         machine = {key:evidence[key] for key in env_keys}
-        missing = dict(evidence.get("missing_reasons", {}))
+        missing = submission_missing_reasons(evidence)
         movement = value.get("data_movement_bytes", {})
         failure = None
         record = dict(attempt_id=f"nikolastarx-{RUN_ID}-P1-{case}-k{cores}-r0", revision=1,
@@ -192,11 +200,11 @@ def export(batch_dir, manifest_path, environment_path, output_dir, task_url):
               runner=dict(source=source(WRAPPER,"src/q1_benchmarks/s6607_colab_fresh.py","run"),
                           argv=[".venv/bin/python","-B","src/q1_benchmarks/s6607_colab_fresh.py","--full500"],working_directory="."),
               environment=machine,measurement=dict(started_at=row.get("started_at"),finished_at=row.get("finished_at"),
-                seed=None,repeat_index=0,cold_start=True,
-                solver_scope="Fresh child through plan and diagnostics output and exit; online E1 included",
+                seed=None,repeat_index=0,cold_start=False,
+                solver_scope="Fresh child through plan and diagnostics output and exit; online E1 included; OS file caches not flushed",
                 evaluation_scope="Independent new official E0 child through result/trace/log and exit",
                 budget=dict(wall_seconds=300,candidate_limit=9,stop_reason="successful complete"),
-                calls=row["calls"],offline_costs="none",failure=failure),missing_reasons=missing),
+                calls=row["calls"],offline_costs=None,failure=failure),missing_reasons=missing),
             notes=["Fresh official E0 for this cell; no historical E0 reuse", "Partial batch if feed contains fewer than 500 successful cells"],
             source_url=task_url)
         validate_record_shape(record)

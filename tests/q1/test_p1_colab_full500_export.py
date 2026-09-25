@@ -8,6 +8,14 @@ from src.review import p1_colab_full500_export as x
 
 
 class ExportGuardTests(unittest.TestCase):
+    def test_unrecorded_seed_has_protocol_reason(self):
+        evidence = {"missing_reasons": {"provenance.environment.cpu": "not measured"}}
+        reasons = x.submission_missing_reasons(evidence)
+        self.assertEqual(reasons["provenance.environment.cpu"], "not measured")
+        self.assertIn("provenance.measurement.seed", reasons)
+        self.assertIn("specified or recorded", reasons["provenance.measurement.seed"])
+        self.assertIn("not independently timed", reasons["provenance.measurement.offline_costs"])
+
     def test_success_record_requires_board_structure(self):
         with self.assertRaisesRegex(ValueError, "required structure"):
             x.validate_record_shape({"status": "ok", "artifacts": {"plan": {}}})
