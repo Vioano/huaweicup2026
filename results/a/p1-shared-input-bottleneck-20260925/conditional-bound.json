@@ -1,0 +1,56 @@
+{
+  "graph_sha256": "9abd4468a4be365e384de47431ac914ee44fd6e7b6221dffc584561f388cd57e",
+  "scope": "044 conditional on each compute component staying on one core; Task splitting on that core allowed. Not a global P1 bound.",
+  "component_count": 11,
+  "M_work_per_component": 6764,
+  "common_input_tensor_count": 50,
+  "common_input_bytes": 930400,
+  "private_input_unique_bytes": 22528,
+  "all_noncommon_inputs_private": true,
+  "common_service_cycles": 15530,
+  "private_service_cycles": 385,
+  "rows": [
+    {
+      "active_cores": 1,
+      "compute_lb": 74404,
+      "mandatory_external_bytes_lb": 952928,
+      "DDR_lb": 15915,
+      "joint_lb": 74404
+    },
+    {
+      "active_cores": 2,
+      "compute_lb": 40584,
+      "mandatory_external_bytes_lb": 1883328,
+      "DDR_lb": 31445,
+      "joint_lb": 40584
+    },
+    {
+      "active_cores": 3,
+      "compute_lb": 27056,
+      "mandatory_external_bytes_lb": 2813728,
+      "DDR_lb": 46975,
+      "joint_lb": 46975
+    },
+    {
+      "active_cores": 4,
+      "compute_lb": 20292,
+      "mandatory_external_bytes_lb": 3744128,
+      "DDR_lb": 62505,
+      "joint_lb": 62505
+    },
+    {
+      "active_cores": 5,
+      "compute_lb": 20292,
+      "mandatory_external_bytes_lb": 4674528,
+      "DDR_lb": 78035,
+      "joint_lb": 78035
+    }
+  ],
+  "conditional_M_lb": 40584,
+  "new_solver_Task_E0_E1_E2_calls": 0,
+  "limitations": [
+    "Condition is that each static component remains on one core. Cross-component dependencies can only further restrict feasible schedules, so are not relaxed into an achievable construction.",
+    "Shared global bandwidth60 and no P1 cross-Task persistent input cache are official premises.",
+    "Ignores output/cut traffic, gates, memory, precedence, and pipeline idle; not an achievable schedule."
+  ]
+}

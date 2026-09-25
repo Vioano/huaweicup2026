@@ -1,0 +1,3297 @@
+{
+  "input_sha256": {
+    "graph.raw.json": "5c24beddea6d09e1df3c8f8843d3593b90affb117ba38450fa9bea8a8db3351c",
+    "base.raw.json": "af70c21c3d654ce4a5562215d3e1e985be79604333c2c6dceddecea6e56edf43",
+    "candidate.raw.json": "e5628351a53b10e1ea730091912ddf1bfa5c0ed55c98af2ac3fe77bc1fab1e55",
+    "candidate.diagnostics.json": "218b8a322f5f27f2ad4f53d3e9af214387d31279539d2b25f7478059b7a1c70b"
+  },
+  "waves": [
+    {
+      "height": 0,
+      "tasks_by_core": {
+        "0": 0,
+        "1": 1,
+        "4": 6
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 88
+        },
+        "1": {
+          "PIPE_M": 88
+        },
+        "4": {
+          "PIPE_M": 176,
+          "PIPE_V": 567
+        }
+      },
+      "dominant_pipe": "PIPE_V",
+      "donors": [
+        4
+      ],
+      "helpers": [
+        0,
+        1
+      ],
+      "max_task_pipe_work": 567,
+      "bridge_join_candidates_by_core": {
+        "0": [],
+        "1": [],
+        "4": [
+          {
+            "join": 91,
+            "sides": [
+              {
+                "pred": 29,
+                "nodes": 1,
+                "work": {
+                  "PIPE_M": 88
+                }
+              },
+              {
+                "pred": 90,
+                "nodes": 10,
+                "work": {
+                  "PIPE_V": 511,
+                  "PIPE_M": 88
+                }
+              }
+            ]
+          },
+          {
+            "join": 90,
+            "sides": [
+              {
+                "pred": 88,
+                "nodes": 7,
+                "work": {
+                  "PIPE_V": 427
+                }
+              },
+              {
+                "pred": 89,
+                "nodes": 2,
+                "work": {
+                  "PIPE_V": 28,
+                  "PIPE_M": 88
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "height": 1,
+      "tasks_by_core": {
+        "0": 2,
+        "1": 3,
+        "2": 4,
+        "3": 5
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_V": 1534
+        },
+        "1": {
+          "PIPE_V": 1534
+        },
+        "2": {
+          "PIPE_V": 1534
+        },
+        "3": {
+          "PIPE_V": 1534
+        }
+      },
+      "dominant_pipe": "PIPE_V",
+      "donors": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "helpers": [],
+      "max_task_pipe_work": 1534
+    },
+    {
+      "height": 2,
+      "tasks_by_core": {
+        "0": 7,
+        "1": 8,
+        "2": 9,
+        "3": 10,
+        "4": 11
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 4192
+        },
+        "1": {
+          "PIPE_M": 3512
+        },
+        "2": {
+          "PIPE_M": 3512
+        },
+        "3": {
+          "PIPE_M": 3512
+        },
+        "4": {
+          "PIPE_M": 3424
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0
+      ],
+      "helpers": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "max_task_pipe_work": 4192,
+      "bridge_join_candidates_by_core": {
+        "0": [],
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      }
+    },
+    {
+      "height": 3,
+      "tasks_by_core": {
+        "0": 12,
+        "1": 13,
+        "2": 14,
+        "3": 15,
+        "4": 16
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "1": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "2": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "3": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "4": {
+          "PIPE_M": 6136,
+          "PIPE_V": 5810
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "helpers": [
+        4
+      ],
+      "max_task_pipe_work": 21616,
+      "bridge_join_candidates_by_core": {
+        "0": [
+          {
+            "join": 684,
+            "sides": [
+              {
+                "pred": 682,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 683,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 817,
+            "sides": [
+              {
+                "pred": 815,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 816,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "1": [
+          {
+            "join": 703,
+            "sides": [
+              {
+                "pred": 701,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              },
+              {
+                "pred": 702,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              }
+            ]
+          },
+          {
+            "join": 827,
+            "sides": [
+              {
+                "pred": 825,
+                "nodes": 140,
+                "work": {
+                  "PIPE_V": 14332,
+                  "PIPE_M": 21616
+                }
+              },
+              {
+                "pred": 826,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "2": [
+          {
+            "join": 722,
+            "sides": [
+              {
+                "pred": 720,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 721,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 837,
+            "sides": [
+              {
+                "pred": 835,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 836,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "3": [
+          {
+            "join": 741,
+            "sides": [
+              {
+                "pred": 739,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              },
+              {
+                "pred": 740,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 847,
+            "sides": [
+              {
+                "pred": 845,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 846,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "4": [
+          {
+            "join": 857,
+            "sides": [
+              {
+                "pred": 855,
+                "nodes": 141,
+                "work": {
+                  "PIPE_M": 5960,
+                  "PIPE_V": 5670
+                }
+              },
+              {
+                "pred": 856,
+                "nodes": 2,
+                "work": {
+                  "PIPE_V": 28,
+                  "PIPE_M": 88
+                }
+              }
+            ]
+          },
+          {
+            "join": 858,
+            "sides": [
+              {
+                "pred": 796,
+                "nodes": 1,
+                "work": {
+                  "PIPE_M": 88
+                }
+              },
+              {
+                "pred": 857,
+                "nodes": 144,
+                "work": {
+                  "PIPE_M": 6048,
+                  "PIPE_V": 5754
+                }
+              }
+            ]
+          },
+          {
+            "join": 760,
+            "sides": [
+              {
+                "pred": 758,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 1996,
+                  "PIPE_M": 1888
+                }
+              },
+              {
+                "pred": 759,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 1996,
+                  "PIPE_M": 1888
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "height": 4,
+      "tasks_by_core": {
+        "0": 17,
+        "1": 18,
+        "2": 19,
+        "3": 20,
+        "4": 21
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 4192
+        },
+        "1": {
+          "PIPE_M": 3512
+        },
+        "2": {
+          "PIPE_M": 3512
+        },
+        "3": {
+          "PIPE_M": 3512
+        },
+        "4": {
+          "PIPE_M": 3424
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0
+      ],
+      "helpers": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "max_task_pipe_work": 4192,
+      "bridge_join_candidates_by_core": {
+        "0": [],
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      }
+    },
+    {
+      "height": 5,
+      "tasks_by_core": {
+        "0": 22,
+        "1": 23,
+        "2": 24,
+        "3": 25,
+        "4": 26
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "1": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "2": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "3": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "4": {
+          "PIPE_M": 6136,
+          "PIPE_V": 5810
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "helpers": [
+        4
+      ],
+      "max_task_pipe_work": 21616,
+      "bridge_join_candidates_by_core": {
+        "0": [
+          {
+            "join": 1584,
+            "sides": [
+              {
+                "pred": 1582,
+                "nodes": 140,
+                "work": {
+                  "PIPE_V": 14332,
+                  "PIPE_M": 21616
+                }
+              },
+              {
+                "pred": 1583,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          },
+          {
+            "join": 1451,
+            "sides": [
+              {
+                "pred": 1449,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 1450,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          }
+        ],
+        "1": [
+          {
+            "join": 1594,
+            "sides": [
+              {
+                "pred": 1592,
+                "nodes": 140,
+                "work": {
+                  "PIPE_V": 14332,
+                  "PIPE_M": 21616
+                }
+              },
+              {
+                "pred": 1593,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          },
+          {
+            "join": 1470,
+            "sides": [
+              {
+                "pred": 1468,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              },
+              {
+                "pred": 1469,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              }
+            ]
+          }
+        ],
+        "2": [
+          {
+            "join": 1604,
+            "sides": [
+              {
+                "pred": 1602,
+                "nodes": 140,
+                "work": {
+                  "PIPE_V": 14332,
+                  "PIPE_M": 21616
+                }
+              },
+              {
+                "pred": 1603,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          },
+          {
+            "join": 1489,
+            "sides": [
+              {
+                "pred": 1487,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 1488,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          }
+        ],
+        "3": [
+          {
+            "join": 1614,
+            "sides": [
+              {
+                "pred": 1612,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 1613,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          },
+          {
+            "join": 1508,
+            "sides": [
+              {
+                "pred": 1506,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              },
+              {
+                "pred": 1507,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          }
+        ],
+        "4": [
+          {
+            "join": 1624,
+            "sides": [
+              {
+                "pred": 1622,
+                "nodes": 141,
+                "work": {
+                  "PIPE_V": 5670,
+                  "PIPE_M": 5960
+                }
+              },
+              {
+                "pred": 1623,
+                "nodes": 2,
+                "work": {
+                  "PIPE_M": 88,
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          },
+          {
+            "join": 1625,
+            "sides": [
+              {
+                "pred": 1563,
+                "nodes": 1,
+                "work": {
+                  "PIPE_M": 88
+                }
+              },
+              {
+                "pred": 1624,
+                "nodes": 144,
+                "work": {
+                  "PIPE_V": 5754,
+                  "PIPE_M": 6048
+                }
+              }
+            ]
+          },
+          {
+            "join": 1527,
+            "sides": [
+              {
+                "pred": 1525,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 1996,
+                  "PIPE_M": 1888
+                }
+              },
+              {
+                "pred": 1526,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 1996,
+                  "PIPE_M": 1888
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "height": 6,
+      "tasks_by_core": {
+        "0": 27,
+        "1": 28,
+        "2": 29,
+        "3": 30,
+        "4": 31
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 4192
+        },
+        "1": {
+          "PIPE_M": 3512
+        },
+        "2": {
+          "PIPE_M": 3512
+        },
+        "3": {
+          "PIPE_M": 3512
+        },
+        "4": {
+          "PIPE_M": 3424
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0
+      ],
+      "helpers": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "max_task_pipe_work": 4192,
+      "bridge_join_candidates_by_core": {
+        "0": [],
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      }
+    },
+    {
+      "height": 7,
+      "tasks_by_core": {
+        "0": 32,
+        "1": 33,
+        "2": 34,
+        "3": 35,
+        "4": 36
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "1": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "2": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "3": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "4": {
+          "PIPE_M": 6136,
+          "PIPE_V": 5810
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "helpers": [
+        4
+      ],
+      "max_task_pipe_work": 21616,
+      "bridge_join_candidates_by_core": {
+        "0": [
+          {
+            "join": 2218,
+            "sides": [
+              {
+                "pred": 2216,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 2217,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 2351,
+            "sides": [
+              {
+                "pred": 2349,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 2350,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "1": [
+          {
+            "join": 2237,
+            "sides": [
+              {
+                "pred": 2235,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 2236,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 2361,
+            "sides": [
+              {
+                "pred": 2359,
+                "nodes": 140,
+                "work": {
+                  "PIPE_V": 14332,
+                  "PIPE_M": 21616
+                }
+              },
+              {
+                "pred": 2360,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "2": [
+          {
+            "join": 2256,
+            "sides": [
+              {
+                "pred": 2254,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 2255,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 2371,
+            "sides": [
+              {
+                "pred": 2369,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 2370,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "3": [
+          {
+            "join": 2275,
+            "sides": [
+              {
+                "pred": 2273,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              },
+              {
+                "pred": 2274,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 2381,
+            "sides": [
+              {
+                "pred": 2379,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 2380,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "4": [
+          {
+            "join": 2294,
+            "sides": [
+              {
+                "pred": 2292,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 1996,
+                  "PIPE_M": 1888
+                }
+              },
+              {
+                "pred": 2293,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 1996,
+                  "PIPE_M": 1888
+                }
+              }
+            ]
+          },
+          {
+            "join": 2391,
+            "sides": [
+              {
+                "pred": 2389,
+                "nodes": 141,
+                "work": {
+                  "PIPE_M": 5960,
+                  "PIPE_V": 5670
+                }
+              },
+              {
+                "pred": 2390,
+                "nodes": 2,
+                "work": {
+                  "PIPE_M": 88,
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          },
+          {
+            "join": 2392,
+            "sides": [
+              {
+                "pred": 2330,
+                "nodes": 1,
+                "work": {
+                  "PIPE_M": 88
+                }
+              },
+              {
+                "pred": 2391,
+                "nodes": 144,
+                "work": {
+                  "PIPE_M": 6048,
+                  "PIPE_V": 5754
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "height": 8,
+      "tasks_by_core": {
+        "0": 37,
+        "1": 38,
+        "2": 39,
+        "3": 40,
+        "4": 41
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 4192
+        },
+        "1": {
+          "PIPE_M": 3512
+        },
+        "2": {
+          "PIPE_M": 3512
+        },
+        "3": {
+          "PIPE_M": 3512
+        },
+        "4": {
+          "PIPE_M": 3424
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0
+      ],
+      "helpers": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "max_task_pipe_work": 4192,
+      "bridge_join_candidates_by_core": {
+        "0": [],
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      }
+    },
+    {
+      "height": 9,
+      "tasks_by_core": {
+        "0": 42,
+        "1": 43,
+        "2": 44,
+        "3": 45,
+        "4": 46
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "1": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "2": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "3": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "4": {
+          "PIPE_M": 6136,
+          "PIPE_V": 5810
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "helpers": [
+        4
+      ],
+      "max_task_pipe_work": 21616,
+      "bridge_join_candidates_by_core": {
+        "0": [
+          {
+            "join": 3118,
+            "sides": [
+              {
+                "pred": 3116,
+                "nodes": 140,
+                "work": {
+                  "PIPE_V": 14332,
+                  "PIPE_M": 21616
+                }
+              },
+              {
+                "pred": 3117,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          },
+          {
+            "join": 2985,
+            "sides": [
+              {
+                "pred": 2983,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 2984,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          }
+        ],
+        "1": [
+          {
+            "join": 3128,
+            "sides": [
+              {
+                "pred": 3126,
+                "nodes": 140,
+                "work": {
+                  "PIPE_V": 14332,
+                  "PIPE_M": 21616
+                }
+              },
+              {
+                "pred": 3127,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          },
+          {
+            "join": 3004,
+            "sides": [
+              {
+                "pred": 3002,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              },
+              {
+                "pred": 3003,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          }
+        ],
+        "2": [
+          {
+            "join": 3138,
+            "sides": [
+              {
+                "pred": 3136,
+                "nodes": 140,
+                "work": {
+                  "PIPE_V": 14332,
+                  "PIPE_M": 21616
+                }
+              },
+              {
+                "pred": 3137,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          },
+          {
+            "join": 3023,
+            "sides": [
+              {
+                "pred": 3021,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 3022,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              }
+            ]
+          }
+        ],
+        "3": [
+          {
+            "join": 3148,
+            "sides": [
+              {
+                "pred": 3146,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 3147,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          },
+          {
+            "join": 3042,
+            "sides": [
+              {
+                "pred": 3040,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              },
+              {
+                "pred": 3041,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              }
+            ]
+          }
+        ],
+        "4": [
+          {
+            "join": 3158,
+            "sides": [
+              {
+                "pred": 3156,
+                "nodes": 141,
+                "work": {
+                  "PIPE_M": 5960,
+                  "PIPE_V": 5670
+                }
+              },
+              {
+                "pred": 3157,
+                "nodes": 2,
+                "work": {
+                  "PIPE_V": 28,
+                  "PIPE_M": 88
+                }
+              }
+            ]
+          },
+          {
+            "join": 3159,
+            "sides": [
+              {
+                "pred": 3097,
+                "nodes": 1,
+                "work": {
+                  "PIPE_M": 88
+                }
+              },
+              {
+                "pred": 3158,
+                "nodes": 144,
+                "work": {
+                  "PIPE_M": 6048,
+                  "PIPE_V": 5754
+                }
+              }
+            ]
+          },
+          {
+            "join": 3061,
+            "sides": [
+              {
+                "pred": 3059,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 1996,
+                  "PIPE_M": 1888
+                }
+              },
+              {
+                "pred": 3060,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 1996,
+                  "PIPE_M": 1888
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "height": 10,
+      "tasks_by_core": {
+        "0": 47,
+        "1": 48,
+        "2": 49,
+        "3": 50,
+        "4": 51
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 4192
+        },
+        "1": {
+          "PIPE_M": 3512
+        },
+        "2": {
+          "PIPE_M": 3512
+        },
+        "3": {
+          "PIPE_M": 3512
+        },
+        "4": {
+          "PIPE_M": 3424
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0
+      ],
+      "helpers": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "max_task_pipe_work": 4192,
+      "bridge_join_candidates_by_core": {
+        "0": [],
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      }
+    },
+    {
+      "height": 11,
+      "tasks_by_core": {
+        "0": 52,
+        "1": 53,
+        "2": 54,
+        "3": 55,
+        "4": 56
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "1": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "2": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "3": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "4": {
+          "PIPE_M": 6136,
+          "PIPE_V": 5810
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "helpers": [
+        4
+      ],
+      "max_task_pipe_work": 21616,
+      "bridge_join_candidates_by_core": {
+        "0": [
+          {
+            "join": 3752,
+            "sides": [
+              {
+                "pred": 3750,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 3751,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 3885,
+            "sides": [
+              {
+                "pred": 3883,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 3884,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "1": [
+          {
+            "join": 3771,
+            "sides": [
+              {
+                "pred": 3769,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              },
+              {
+                "pred": 3770,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 3895,
+            "sides": [
+              {
+                "pred": 3893,
+                "nodes": 140,
+                "work": {
+                  "PIPE_V": 14332,
+                  "PIPE_M": 21616
+                }
+              },
+              {
+                "pred": 3894,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "2": [
+          {
+            "join": 3790,
+            "sides": [
+              {
+                "pred": 3788,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 3789,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 3905,
+            "sides": [
+              {
+                "pred": 3903,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 3904,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "3": [
+          {
+            "join": 3809,
+            "sides": [
+              {
+                "pred": 3807,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              },
+              {
+                "pred": 3808,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 3915,
+            "sides": [
+              {
+                "pred": 3913,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 3914,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "4": [
+          {
+            "join": 3828,
+            "sides": [
+              {
+                "pred": 3826,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 1996,
+                  "PIPE_M": 1888
+                }
+              },
+              {
+                "pred": 3827,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 1996,
+                  "PIPE_M": 1888
+                }
+              }
+            ]
+          },
+          {
+            "join": 3925,
+            "sides": [
+              {
+                "pred": 3923,
+                "nodes": 141,
+                "work": {
+                  "PIPE_M": 5960,
+                  "PIPE_V": 5670
+                }
+              },
+              {
+                "pred": 3924,
+                "nodes": 2,
+                "work": {
+                  "PIPE_V": 28,
+                  "PIPE_M": 88
+                }
+              }
+            ]
+          },
+          {
+            "join": 3926,
+            "sides": [
+              {
+                "pred": 3864,
+                "nodes": 1,
+                "work": {
+                  "PIPE_M": 88
+                }
+              },
+              {
+                "pred": 3925,
+                "nodes": 144,
+                "work": {
+                  "PIPE_M": 6048,
+                  "PIPE_V": 5754
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "height": 12,
+      "tasks_by_core": {
+        "0": 57,
+        "1": 58,
+        "2": 59,
+        "3": 60,
+        "4": 61
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 4192
+        },
+        "1": {
+          "PIPE_M": 3512
+        },
+        "2": {
+          "PIPE_M": 3512
+        },
+        "3": {
+          "PIPE_M": 3512
+        },
+        "4": {
+          "PIPE_M": 3424
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0
+      ],
+      "helpers": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "max_task_pipe_work": 4192,
+      "bridge_join_candidates_by_core": {
+        "0": [],
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      }
+    },
+    {
+      "height": 13,
+      "tasks_by_core": {
+        "0": 62,
+        "1": 63,
+        "2": 64,
+        "3": 65,
+        "4": 66
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "1": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "2": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "3": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "4": {
+          "PIPE_M": 6136,
+          "PIPE_V": 5810
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "helpers": [
+        4
+      ],
+      "max_task_pipe_work": 21616,
+      "bridge_join_candidates_by_core": {
+        "0": [
+          {
+            "join": 4652,
+            "sides": [
+              {
+                "pred": 4650,
+                "nodes": 140,
+                "work": {
+                  "PIPE_V": 14332,
+                  "PIPE_M": 21616
+                }
+              },
+              {
+                "pred": 4651,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          },
+          {
+            "join": 4519,
+            "sides": [
+              {
+                "pred": 4517,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 4518,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          }
+        ],
+        "1": [
+          {
+            "join": 4662,
+            "sides": [
+              {
+                "pred": 4660,
+                "nodes": 140,
+                "work": {
+                  "PIPE_V": 14332,
+                  "PIPE_M": 21616
+                }
+              },
+              {
+                "pred": 4661,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          },
+          {
+            "join": 4538,
+            "sides": [
+              {
+                "pred": 4536,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              },
+              {
+                "pred": 4537,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          }
+        ],
+        "2": [
+          {
+            "join": 4672,
+            "sides": [
+              {
+                "pred": 4670,
+                "nodes": 140,
+                "work": {
+                  "PIPE_V": 14332,
+                  "PIPE_M": 21616
+                }
+              },
+              {
+                "pred": 4671,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          },
+          {
+            "join": 4557,
+            "sides": [
+              {
+                "pred": 4555,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 4556,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              }
+            ]
+          }
+        ],
+        "3": [
+          {
+            "join": 4682,
+            "sides": [
+              {
+                "pred": 4680,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 4681,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          },
+          {
+            "join": 4576,
+            "sides": [
+              {
+                "pred": 4574,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              },
+              {
+                "pred": 4575,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          }
+        ],
+        "4": [
+          {
+            "join": 4692,
+            "sides": [
+              {
+                "pred": 4690,
+                "nodes": 141,
+                "work": {
+                  "PIPE_V": 5670,
+                  "PIPE_M": 5960
+                }
+              },
+              {
+                "pred": 4691,
+                "nodes": 2,
+                "work": {
+                  "PIPE_V": 28,
+                  "PIPE_M": 88
+                }
+              }
+            ]
+          },
+          {
+            "join": 4693,
+            "sides": [
+              {
+                "pred": 4631,
+                "nodes": 1,
+                "work": {
+                  "PIPE_M": 88
+                }
+              },
+              {
+                "pred": 4692,
+                "nodes": 144,
+                "work": {
+                  "PIPE_V": 5754,
+                  "PIPE_M": 6048
+                }
+              }
+            ]
+          },
+          {
+            "join": 4595,
+            "sides": [
+              {
+                "pred": 4593,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 1996,
+                  "PIPE_M": 1888
+                }
+              },
+              {
+                "pred": 4594,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 1996,
+                  "PIPE_M": 1888
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "height": 14,
+      "tasks_by_core": {
+        "0": 67,
+        "1": 68,
+        "2": 69,
+        "3": 70,
+        "4": 71
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 4192
+        },
+        "1": {
+          "PIPE_M": 3512
+        },
+        "2": {
+          "PIPE_M": 3512
+        },
+        "3": {
+          "PIPE_M": 3512
+        },
+        "4": {
+          "PIPE_M": 3424
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0
+      ],
+      "helpers": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "max_task_pipe_work": 4192,
+      "bridge_join_candidates_by_core": {
+        "0": [],
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      }
+    },
+    {
+      "height": 15,
+      "tasks_by_core": {
+        "0": 72,
+        "1": 73,
+        "2": 74,
+        "3": 75,
+        "4": 76
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "1": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "2": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "3": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "4": {
+          "PIPE_M": 6136,
+          "PIPE_V": 5810
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "helpers": [
+        4
+      ],
+      "max_task_pipe_work": 21616,
+      "bridge_join_candidates_by_core": {
+        "0": [
+          {
+            "join": 5286,
+            "sides": [
+              {
+                "pred": 5284,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 5285,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 5419,
+            "sides": [
+              {
+                "pred": 5417,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 5418,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "1": [
+          {
+            "join": 5305,
+            "sides": [
+              {
+                "pred": 5303,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 5304,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 5429,
+            "sides": [
+              {
+                "pred": 5427,
+                "nodes": 140,
+                "work": {
+                  "PIPE_V": 14332,
+                  "PIPE_M": 21616
+                }
+              },
+              {
+                "pred": 5428,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "2": [
+          {
+            "join": 5324,
+            "sides": [
+              {
+                "pred": 5322,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 5323,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 5439,
+            "sides": [
+              {
+                "pred": 5437,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 5438,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "3": [
+          {
+            "join": 5343,
+            "sides": [
+              {
+                "pred": 5341,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              },
+              {
+                "pred": 5342,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 5449,
+            "sides": [
+              {
+                "pred": 5447,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 5448,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "4": [
+          {
+            "join": 5459,
+            "sides": [
+              {
+                "pred": 5457,
+                "nodes": 141,
+                "work": {
+                  "PIPE_M": 5960,
+                  "PIPE_V": 5670
+                }
+              },
+              {
+                "pred": 5458,
+                "nodes": 2,
+                "work": {
+                  "PIPE_V": 28,
+                  "PIPE_M": 88
+                }
+              }
+            ]
+          },
+          {
+            "join": 5460,
+            "sides": [
+              {
+                "pred": 5398,
+                "nodes": 1,
+                "work": {
+                  "PIPE_M": 88
+                }
+              },
+              {
+                "pred": 5459,
+                "nodes": 144,
+                "work": {
+                  "PIPE_M": 6048,
+                  "PIPE_V": 5754
+                }
+              }
+            ]
+          },
+          {
+            "join": 5362,
+            "sides": [
+              {
+                "pred": 5360,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 1996,
+                  "PIPE_M": 1888
+                }
+              },
+              {
+                "pred": 5361,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 1996,
+                  "PIPE_M": 1888
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "height": 16,
+      "tasks_by_core": {
+        "0": 77,
+        "1": 78,
+        "2": 79,
+        "3": 80,
+        "4": 81
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 4192
+        },
+        "1": {
+          "PIPE_M": 3512
+        },
+        "2": {
+          "PIPE_M": 3512
+        },
+        "3": {
+          "PIPE_M": 3512
+        },
+        "4": {
+          "PIPE_M": 3424
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0
+      ],
+      "helpers": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "max_task_pipe_work": 4192,
+      "bridge_join_candidates_by_core": {
+        "0": [],
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      }
+    },
+    {
+      "height": 17,
+      "tasks_by_core": {
+        "0": 82,
+        "1": 83,
+        "2": 84,
+        "3": 85,
+        "4": 86
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "1": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "2": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "3": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "4": {
+          "PIPE_M": 6136,
+          "PIPE_V": 5810
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "helpers": [
+        4
+      ],
+      "max_task_pipe_work": 21616,
+      "bridge_join_candidates_by_core": {
+        "0": [
+          {
+            "join": 6186,
+            "sides": [
+              {
+                "pred": 6184,
+                "nodes": 140,
+                "work": {
+                  "PIPE_V": 14332,
+                  "PIPE_M": 21616
+                }
+              },
+              {
+                "pred": 6185,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          },
+          {
+            "join": 6053,
+            "sides": [
+              {
+                "pred": 6051,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 6052,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          }
+        ],
+        "1": [
+          {
+            "join": 6196,
+            "sides": [
+              {
+                "pred": 6194,
+                "nodes": 140,
+                "work": {
+                  "PIPE_V": 14332,
+                  "PIPE_M": 21616
+                }
+              },
+              {
+                "pred": 6195,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          },
+          {
+            "join": 6072,
+            "sides": [
+              {
+                "pred": 6070,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              },
+              {
+                "pred": 6071,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          }
+        ],
+        "2": [
+          {
+            "join": 6206,
+            "sides": [
+              {
+                "pred": 6204,
+                "nodes": 140,
+                "work": {
+                  "PIPE_V": 14332,
+                  "PIPE_M": 21616
+                }
+              },
+              {
+                "pred": 6205,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          },
+          {
+            "join": 6091,
+            "sides": [
+              {
+                "pred": 6089,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 6090,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              }
+            ]
+          }
+        ],
+        "3": [
+          {
+            "join": 6216,
+            "sides": [
+              {
+                "pred": 6214,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 6215,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          },
+          {
+            "join": 6110,
+            "sides": [
+              {
+                "pred": 6108,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              },
+              {
+                "pred": 6109,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          }
+        ],
+        "4": [
+          {
+            "join": 6227,
+            "sides": [
+              {
+                "pred": 6165,
+                "nodes": 1,
+                "work": {
+                  "PIPE_M": 88
+                }
+              },
+              {
+                "pred": 6226,
+                "nodes": 144,
+                "work": {
+                  "PIPE_V": 5754,
+                  "PIPE_M": 6048
+                }
+              }
+            ]
+          },
+          {
+            "join": 6226,
+            "sides": [
+              {
+                "pred": 6224,
+                "nodes": 141,
+                "work": {
+                  "PIPE_V": 5670,
+                  "PIPE_M": 5960
+                }
+              },
+              {
+                "pred": 6225,
+                "nodes": 2,
+                "work": {
+                  "PIPE_V": 28,
+                  "PIPE_M": 88
+                }
+              }
+            ]
+          },
+          {
+            "join": 6129,
+            "sides": [
+              {
+                "pred": 6127,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 1996,
+                  "PIPE_M": 1888
+                }
+              },
+              {
+                "pred": 6128,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 1996,
+                  "PIPE_M": 1888
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "height": 18,
+      "tasks_by_core": {
+        "0": 87,
+        "1": 88,
+        "2": 89,
+        "3": 90,
+        "4": 91
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 4192
+        },
+        "1": {
+          "PIPE_M": 3512
+        },
+        "2": {
+          "PIPE_M": 3512
+        },
+        "3": {
+          "PIPE_M": 3512
+        },
+        "4": {
+          "PIPE_M": 3424
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0
+      ],
+      "helpers": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "max_task_pipe_work": 4192,
+      "bridge_join_candidates_by_core": {
+        "0": [],
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      }
+    },
+    {
+      "height": 19,
+      "tasks_by_core": {
+        "0": 92,
+        "1": 93,
+        "2": 94,
+        "3": 95,
+        "4": 96
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "1": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "2": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "3": {
+          "PIPE_M": 21616,
+          "PIPE_V": 14664
+        },
+        "4": {
+          "PIPE_M": 6136,
+          "PIPE_V": 5810
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "helpers": [
+        4
+      ],
+      "max_task_pipe_work": 21616,
+      "bridge_join_candidates_by_core": {
+        "0": [
+          {
+            "join": 6820,
+            "sides": [
+              {
+                "pred": 6818,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 6819,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 6953,
+            "sides": [
+              {
+                "pred": 6951,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 6952,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "1": [
+          {
+            "join": 6839,
+            "sides": [
+              {
+                "pred": 6837,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              },
+              {
+                "pred": 6838,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 6963,
+            "sides": [
+              {
+                "pred": 6961,
+                "nodes": 140,
+                "work": {
+                  "PIPE_V": 14332,
+                  "PIPE_M": 21616
+                }
+              },
+              {
+                "pred": 6962,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "2": [
+          {
+            "join": 6858,
+            "sides": [
+              {
+                "pred": 6856,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 6857,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 6973,
+            "sides": [
+              {
+                "pred": 6971,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 6972,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "3": [
+          {
+            "join": 6877,
+            "sides": [
+              {
+                "pred": 6875,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              },
+              {
+                "pred": 6876,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          },
+          {
+            "join": 6983,
+            "sides": [
+              {
+                "pred": 6981,
+                "nodes": 140,
+                "work": {
+                  "PIPE_M": 21616,
+                  "PIPE_V": 14332
+                }
+              },
+              {
+                "pred": 6982,
+                "nodes": 1,
+                "work": {
+                  "PIPE_V": 28
+                }
+              }
+            ]
+          }
+        ],
+        "4": [
+          {
+            "join": 6896,
+            "sides": [
+              {
+                "pred": 6894,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 1888,
+                  "PIPE_V": 1996
+                }
+              },
+              {
+                "pred": 6895,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 1996,
+                  "PIPE_M": 1888
+                }
+              }
+            ]
+          },
+          {
+            "join": 6993,
+            "sides": [
+              {
+                "pred": 6991,
+                "nodes": 141,
+                "work": {
+                  "PIPE_M": 5960,
+                  "PIPE_V": 5670
+                }
+              },
+              {
+                "pred": 6992,
+                "nodes": 2,
+                "work": {
+                  "PIPE_V": 28,
+                  "PIPE_M": 88
+                }
+              }
+            ]
+          },
+          {
+            "join": 6994,
+            "sides": [
+              {
+                "pred": 6932,
+                "nodes": 1,
+                "work": {
+                  "PIPE_M": 88
+                }
+              },
+              {
+                "pred": 6993,
+                "nodes": 144,
+                "work": {
+                  "PIPE_M": 6048,
+                  "PIPE_V": 5754
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "height": 20,
+      "tasks_by_core": {
+        "0": 97,
+        "1": 98,
+        "2": 99,
+        "3": 100,
+        "4": 101
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 4192
+        },
+        "1": {
+          "PIPE_M": 3512
+        },
+        "2": {
+          "PIPE_M": 3424
+        },
+        "3": {
+          "PIPE_M": 3424
+        },
+        "4": {
+          "PIPE_M": 3424
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0
+      ],
+      "helpers": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "max_task_pipe_work": 4192,
+      "bridge_join_candidates_by_core": {
+        "0": [],
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      }
+    },
+    {
+      "height": 21,
+      "tasks_by_core": {
+        "0": 102,
+        "1": 103,
+        "2": 104,
+        "3": 105,
+        "4": 106
+      },
+      "loads_by_core": {
+        "0": {
+          "PIPE_M": 21616,
+          "PIPE_V": 13130
+        },
+        "1": {
+          "PIPE_M": 21616,
+          "PIPE_V": 13130
+        },
+        "2": {
+          "PIPE_M": 21616,
+          "PIPE_V": 13130
+        },
+        "3": {
+          "PIPE_M": 21616,
+          "PIPE_V": 13130
+        },
+        "4": {
+          "PIPE_M": 5960,
+          "PIPE_V": 5243
+        }
+      },
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "helpers": [
+        4
+      ],
+      "max_task_pipe_work": 21616,
+      "bridge_join_candidates_by_core": {
+        "0": [
+          {
+            "join": 7587,
+            "sides": [
+              {
+                "pred": 7585,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 7586,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          }
+        ],
+        "1": [
+          {
+            "join": 7606,
+            "sides": [
+              {
+                "pred": 7604,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              },
+              {
+                "pred": 7605,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          }
+        ],
+        "2": [
+          {
+            "join": 7625,
+            "sides": [
+              {
+                "pred": 7623,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              },
+              {
+                "pred": 7624,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 4640,
+                  "PIPE_M": 6688
+                }
+              }
+            ]
+          }
+        ],
+        "3": [
+          {
+            "join": 7644,
+            "sides": [
+              {
+                "pred": 7642,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              },
+              {
+                "pred": 7643,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 6688,
+                  "PIPE_V": 4640
+                }
+              }
+            ]
+          }
+        ],
+        "4": [
+          {
+            "join": 7663,
+            "sides": [
+              {
+                "pred": 7661,
+                "nodes": 58,
+                "work": {
+                  "PIPE_M": 1888,
+                  "PIPE_V": 1996
+                }
+              },
+              {
+                "pred": 7662,
+                "nodes": 58,
+                "work": {
+                  "PIPE_V": 1996,
+                  "PIPE_M": 1888
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "mapping_changes": {
+    "6->107": 2,
+    "6->108": 2
+  },
+  "candidate_task_6_107_108_pipe_work": {
+    "6": {
+      "PIPE_M": 88,
+      "PIPE_V": 427
+    },
+    "107": {
+      "PIPE_V": 112
+    },
+    "108": {
+      "PIPE_M": 88,
+      "PIPE_V": 28
+    }
+  },
+  "candidate_reported_waves": [
+    {
+      "dominant_pipe": "PIPE_V",
+      "donors": [
+        4
+      ],
+      "height": 0,
+      "helpers": {
+        "0": [
+          6
+        ]
+      },
+      "new_max_pipe_work": 539,
+      "old_max_pipe_work": 567
+    }
+  ],
+  "new_calls": {
+    "constructors": 0,
+    "Task_compiler": 0,
+    "response": 0,
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  }
+}

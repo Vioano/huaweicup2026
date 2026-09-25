@@ -1,0 +1,110 @@
+{
+  "algorithm_id": "q1-branch-aid-r6",
+  "augmented_dag_edges": 254,
+  "boundary_delta": {
+    "bytes": 413596,
+    "copy_in_instances": 148,
+    "copy_out_instances": 27,
+    "service_cycles": 7037
+  },
+  "extra_seconds_soft": 2.0,
+  "new_boundary": {
+    "bytes": 3301760,
+    "copy_in_instances": 998,
+    "copy_out_instances": 162,
+    "service_cycles": 55960
+  },
+  "old_boundary": {
+    "bytes": 2888164,
+    "copy_in_instances": 850,
+    "copy_out_instances": 135,
+    "service_cycles": 48923
+  },
+  "scope": "structural construction only; no scoring",
+  "scoring_calls": {
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "selected": "branch-aid",
+  "split_tasks": 8,
+  "status": "candidate-unscored",
+  "task_limit": 320,
+  "task_raw_pipe_lower_bound": 34736,
+  "tasks": 53,
+  "warning": "Task compilation, FIFO/MEM/spill, E1 and E0 remain unverified",
+  "waves": [
+    {
+      "dominant_pipe": "PIPE_V",
+      "donors": [
+        0,
+        1
+      ],
+      "height": 1,
+      "helpers": {
+        "2": [
+          3
+        ],
+        "3": [
+          2
+        ]
+      },
+      "new_max_pipe_work": 3040,
+      "old_max_pipe_work": 3068
+    },
+    {
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0,
+        1
+      ],
+      "height": 3,
+      "helpers": {
+        "2": [
+          12
+        ],
+        "3": [
+          13
+        ]
+      },
+      "new_max_pipe_work": 42976,
+      "old_max_pipe_work": 51808
+    },
+    {
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0,
+        1
+      ],
+      "height": 5,
+      "helpers": {
+        "2": [
+          22
+        ],
+        "3": [
+          23
+        ]
+      },
+      "new_max_pipe_work": 42976,
+      "old_max_pipe_work": 51808
+    },
+    {
+      "dominant_pipe": "PIPE_M",
+      "donors": [
+        0,
+        1
+      ],
+      "height": 7,
+      "helpers": {
+        "2": [
+          32
+        ],
+        "3": [
+          33
+        ]
+      },
+      "new_max_pipe_work": 42976,
+      "old_max_pipe_work": 51808
+    }
+  ]
+}

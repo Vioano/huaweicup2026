@@ -1,0 +1,239 @@
+{
+  "artifact_hashes": {
+    "E0.stderr.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "E0.stdout.raw": {
+      "bytes": 170,
+      "sha256": "9492f79f17b33870f1874ff787b4f2dd5cde4eab0b29d620227df6035a54342a"
+    },
+    "e0/official.log": {
+      "bytes": 280,
+      "sha256": "44ff6fabacadd13cbcb5d155054f7cb52e7c09f9463e112209db8cf92097f59b"
+    },
+    "e0/result.json": {
+      "bytes": 3588595,
+      "sha256": "405be811ddaa2c920d0dbf332a62aa95bf57d0f5faf7ad30d132e9f48c3f38c8"
+    },
+    "e0/trace.json": {
+      "bytes": 3031414,
+      "sha256": "950401cc9a6188a558a15383152fad21bc88916cd6390d8ba0b46c19bb0bc5a1"
+    },
+    "probe.stderr.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "probe.stdout.raw": {
+      "bytes": 111,
+      "sha256": "2a2149093e4d195138e7fee91e7f9a5a7822fb790eb86064d489bcef097afaee"
+    },
+    "probe/base.diagnostics.json": {
+      "bytes": 18004,
+      "sha256": "2582be77def31dfa8ab4913959471c43bb6abb2d44e2d671db37fd39c6c88b3c"
+    },
+    "probe/base.raw.json": {
+      "bytes": 74074,
+      "sha256": "af70c21c3d654ce4a5562215d3e1e985be79604333c2c6dceddecea6e56edf43"
+    },
+    "probe/candidate.diagnostics.json": {
+      "bytes": 1105,
+      "sha256": "218b8a322f5f27f2ad4f53d3e9af214387d31279539d2b25f7478059b7a1c70b"
+    },
+    "probe/candidate.raw.json": {
+      "bytes": 74090,
+      "sha256": "e5628351a53b10e1ea730091912ddf1bfa5c0ed55c98af2ac3fe77bc1fab1e55"
+    },
+    "probe/config.txt": {
+      "bytes": 341,
+      "sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9"
+    },
+    "probe/graph.raw.json": {
+      "bytes": 2745416,
+      "sha256": "5c24beddea6d09e1df3c8f8843d3593b90affb117ba38450fa9bea8a8db3351c"
+    },
+    "probe/reference.raw.json": {
+      "bytes": 74074,
+      "sha256": "af70c21c3d654ce4a5562215d3e1e985be79604333c2c6dceddecea6e56edf43"
+    }
+  },
+  "budget_seconds": 180.0,
+  "calls": {
+    "E0_process": 1,
+    "E1": 0,
+    "E2": 0,
+    "baseline_E0": 0,
+    "probe_process": 1,
+    "retry": 0,
+    "test_process": 0
+  },
+  "environment": {
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "python_version": "3.12.13",
+    "rss_scope": "Sampled process-group sum; not a continuous memory cap",
+    "threads": {
+      "BLIS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1"
+    }
+  },
+  "expected_head": "e74c00afed2fc1ab5ada75f7dda96bfd086fe4aa",
+  "finished_utc": "2026-09-25T13:53:38+00:00",
+  "graph_sha256": "5c24beddea6d09e1df3c8f8843d3593b90affb117ba38450fa9bea8a8db3351c",
+  "probe_calls": {
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "branch_construct": 1,
+    "heavy_construct": 1,
+    "solver": 0
+  },
+  "reason": "one candidate E0 process exited cleanly; inspect result",
+  "reference_plan_sha256": "af70c21c3d654ce4a5562215d3e1e985be79604333c2c6dceddecea6e56edf43",
+  "rss_limit_kib": 1572864,
+  "source_head": "e74c00afed2fc1ab5ada75f7dda96bfd086fe4aa",
+  "source_sha256": {
+    "data/raw/a/official/code/evaluation_validation.py": "103206b8c5c25e37de50cc3193de3989d7c1e01d4a11cc5f509dedd8f9be9a64",
+    "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py": "2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f",
+    "data/raw/a/official/code/stub_multicore_cut_and_schedule.py": "0a3a3b79b5173b466fc05fc8d33b72d11d90b4df78995435853d91c632a35892",
+    "data/raw/a/official/data/config.txt": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "src/q1/branch_aid.py": "3fb2dfa40aae066d23fb48b5120a732fb18e2bfba2e5f3b27af9e27245149725",
+    "src/q1/heavy_suffix.py": "9acd4531dfd70c5a77bcf91dd50589d0741acaba13497d67a49fdd3f2a0b1af0",
+    "src/q1/sink_peel.py": "f3d8303a47e354f3597386179457d0bb77f87430f72f3c0f0615ea2918da7dc0",
+    "src/q1/unified.py": "3c571f6c9c0ef2a956268abf9129d557f2d087e783b4e621c2917279fa13e985",
+    "src/review/p1_r6_candidate_probe.py": "6f62e39ea8743f0a903b1ba51ee65c50e9678daf12a5a8b097a875b10ad9d4ac",
+    "src/review/p1_r6_pilot_once.py": "63cd9d454a55f69c59ba34706d1488a5abb98159214c2610e1e9716b0bfac5aa",
+    "tests/q1/test_branch_aid.py": "d8353a2b684012da68bcaa9b793ce4c2ad699f3ac1a6e5431980a759ef56f9e0"
+  },
+  "stage_timeouts_seconds": {
+    "E0": 120.0,
+    "probe": 30.0,
+    "tests": 10.0
+  },
+  "stages": [
+    {
+      "argv": [
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/../../.venv/bin/python",
+        "-B",
+        "-m",
+        "src.review.p1_r6_candidate_probe",
+        "--graph",
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/output/p1-r6-transfer-inputs-20260925/075/graph.json",
+        "--reference-plan",
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/output/p1-r6-transfer-inputs-20260925/075/reference-plan.json",
+        "--output-dir",
+        "output/p1-r6-transfer-20260925/attempt-1/075/probe"
+      ],
+      "expected_pgid": 34781,
+      "finished_utc": "2026-09-25T13:53:37+00:00",
+      "name": "probe",
+      "peak_group_rss_kib": 66048,
+      "pgid": 34781,
+      "pid": 34781,
+      "ps_lstart": "Fri Sep 25 21:53:36 2026",
+      "reason": "complete",
+      "resource_samples": [
+        {
+          "disk_free_bytes": 232304967680,
+          "mem_bytes": 51539607552,
+          "ok": true,
+          "pressure_level": 1,
+          "raw": {
+            "hw.memsize": "51539607552\n",
+            "pressure_level": "1\n",
+            "vm_stat": "Mach Virtual Memory Statistics: (page size of 16384 bytes)\nPages free:                                   301819.\nPages active:                                1130973.\nPages inactive:                              1113100.\nPages speculative:                             16879.\nPages throttled:                                   0.\nPages wired down:                             283177.\nPages purgeable:                               12809.\n\"Translation faults\":                    10833726503.\nPages copy-on-write:                       636953350.\nPages zero filled:                        6362018645.\nPages reactivated:                         153398351.\nPages purged:                               31429434.\nFile-backed pages:                            493045.\nAnonymous pages:                             1767907.\nPages stored in compressor:                   403190.\nPages occupied by compressor:                 239284.\nDecompressions:                            181909356.\nCompressions:                              207170754.\nPageins:                                   104881949.\nPageouts:                                      29102.\nSwapins:                                      389603.\nSwapouts:                                    1242433.\nPages tagged:                                 174661.\nPages tagged resident:                        162610.\nPages tagged compressed:                       12051.\nPages tag-storage:                             98304.\nPages tag-storage holding tags:                10318.\nPages tag-storage free:                         1110.\nPages tag-storage non-tag pageable:            86768.\nPages tag-storage non-tag wired:                   8.\nBytes of compressed tags:                    1680704.\nTagged compressions:                         2839889.\nTagged decompressions:                       2564277.\n"
+          },
+          "reason": null,
+          "swapouts": 1242433
+        }
+      ],
+      "returncode": 0,
+      "same_pgid_residual": [],
+      "sample_interval_seconds": 0.25,
+      "started_utc": "2026-09-25T13:53:36+00:00",
+      "timeout_seconds": 30.0,
+      "wall_seconds": 0.6103365000453778
+    },
+    {
+      "argv": [
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/../../.venv/bin/python",
+        "-B",
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/output/p1-r6-transfer-inputs-20260925/075/graph.json",
+        "output/p1-r6-transfer-20260925/attempt-1/075/probe/candidate.raw.json",
+        "--config",
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/data/raw/a/official/data/config.txt",
+        "--output",
+        "output/p1-r6-transfer-20260925/attempt-1/075/e0/result.json",
+        "--trace-output",
+        "output/p1-r6-transfer-20260925/attempt-1/075/e0/trace.json",
+        "--log-output",
+        "output/p1-r6-transfer-20260925/attempt-1/075/e0/official.log"
+      ],
+      "expected_pgid": 34798,
+      "finished_utc": "2026-09-25T13:53:38+00:00",
+      "name": "E0",
+      "peak_group_rss_kib": 92864,
+      "pgid": 34798,
+      "pid": 34798,
+      "ps_lstart": "Fri Sep 25 21:53:37 2026",
+      "reason": "complete",
+      "resource_samples": [
+        {
+          "disk_free_bytes": 232302116864,
+          "mem_bytes": 51539607552,
+          "ok": true,
+          "pressure_level": 1,
+          "raw": {
+            "hw.memsize": "51539607552\n",
+            "pressure_level": "1\n",
+            "vm_stat": "Mach Virtual Memory Statistics: (page size of 16384 bytes)\nPages free:                                   325649.\nPages active:                                1119355.\nPages inactive:                              1101697.\nPages speculative:                             16880.\nPages throttled:                                   0.\nPages wired down:                             282367.\nPages purgeable:                               12809.\n\"Translation faults\":                    10833764211.\nPages copy-on-write:                       636956200.\nPages zero filled:                        6362043416.\nPages reactivated:                         153398352.\nPages purged:                               31429434.\nFile-backed pages:                            493246.\nAnonymous pages:                             1744686.\nPages stored in compressor:                   403190.\nPages occupied by compressor:                 239284.\nDecompressions:                            181909356.\nCompressions:                              207170754.\nPageins:                                   104881972.\nPageouts:                                      29102.\nSwapins:                                      389603.\nSwapouts:                                    1242433.\nPages tagged:                                 174505.\nPages tagged resident:                        162454.\nPages tagged compressed:                       12051.\nPages tag-storage:                             98304.\nPages tag-storage holding tags:                10318.\nPages tag-storage free:                         1112.\nPages tag-storage non-tag pageable:            86766.\nPages tag-storage non-tag wired:                   8.\nBytes of compressed tags:                    1680704.\nTagged compressions:                         2839889.\nTagged decompressions:                       2564277.\n"
+          },
+          "reason": null,
+          "swapouts": 1242433
+        },
+        {
+          "disk_free_bytes": 232295219200,
+          "mem_bytes": 51539607552,
+          "ok": true,
+          "pressure_level": 1,
+          "raw": {
+            "hw.memsize": "51539607552\n",
+            "pressure_level": "1\n",
+            "vm_stat": "Mach Virtual Memory Statistics: (page size of 16384 bytes)\nPages free:                                   323984.\nPages active:                                1120200.\nPages inactive:                              1102752.\nPages speculative:                             16879.\nPages throttled:                                   0.\nPages wired down:                             282133.\nPages purgeable:                               12671.\n\"Translation faults\":                    10833824509.\nPages copy-on-write:                       636960367.\nPages zero filled:                        6362071530.\nPages reactivated:                         153398360.\nPages purged:                               31429434.\nFile-backed pages:                            493650.\nAnonymous pages:                             1746181.\nPages stored in compressor:                   403189.\nPages occupied by compressor:                 239284.\nDecompressions:                            181909358.\nCompressions:                              207170754.\nPageins:                                   104882045.\nPageouts:                                      29102.\nSwapins:                                      389603.\nSwapouts:                                    1242433.\nPages tagged:                                 174671.\nPages tagged resident:                        162620.\nPages tagged compressed:                       12051.\nPages tag-storage:                             98304.\nPages tag-storage holding tags:                10318.\nPages tag-storage free:                         1113.\nPages tag-storage non-tag pageable:            86765.\nPages tag-storage non-tag wired:                   8.\nBytes of compressed tags:                    1680704.\nTagged compressions:                         2839889.\nTagged decompressions:                       2564277.\n"
+          },
+          "reason": null,
+          "swapouts": 1242433
+        }
+      ],
+      "returncode": 0,
+      "same_pgid_residual": [],
+      "sample_interval_seconds": 0.25,
+      "started_utc": "2026-09-25T13:53:37+00:00",
+      "timeout_seconds": 120.0,
+      "wall_seconds": 1.1850848750327714
+    }
+  ],
+  "started_utc": "2026-09-25T13:53:36+00:00",
+  "status": "candidate-E0-collected",
+  "structure_tests_reused": {
+    "prior_source_head": "db64a9375ffda535736ac54031a1184ee9f8f3d9",
+    "receipt_path": "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/results/a/p1-r6-pilot-20260925/official-085-k5/supervisor-receipt.original.json",
+    "receipt_sha256": "07e5ea758670bcaea484fd0e78c36f0d65f5365e9750ccf9eb7051cab6ebd910",
+    "reused_scope": "one prior tests stage for unchanged R6 structural test/code/official imports/config",
+    "source_sha256": {
+      "data/raw/a/official/code/evaluation_validation.py": "103206b8c5c25e37de50cc3193de3989d7c1e01d4a11cc5f509dedd8f9be9a64",
+      "data/raw/a/official/code/stub_multicore_cut_and_schedule.py": "0a3a3b79b5173b466fc05fc8d33b72d11d90b4df78995435853d91c632a35892",
+      "data/raw/a/official/data/config.txt": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+      "src/q1/branch_aid.py": "3fb2dfa40aae066d23fb48b5120a732fb18e2bfba2e5f3b27af9e27245149725",
+      "tests/q1/test_branch_aid.py": "d8353a2b684012da68bcaa9b793ce4c2ad699f3ac1a6e5431980a759ef56f9e0"
+    },
+    "test_stderr_sha256": "6273232de4d3ef7acd4ecafa5c86beeeb974f56586b21089a2990b3f72facbe6",
+    "test_stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "total_wall_seconds": 1.8555885419482365,
+  "worker_limit": 1
+}

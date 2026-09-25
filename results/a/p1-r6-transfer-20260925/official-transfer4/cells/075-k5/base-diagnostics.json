@@ -1,0 +1,1052 @@
+{
+  "algorithm_id": "q1-heavy-component-suffix",
+  "base": {
+    "algorithm_id": "q1-sink-peel",
+    "base": {
+      "algorithm_id": "q1-bounded-component-tasks",
+      "base": {
+        "algorithm_id": "q1-tree-frontier-pack",
+        "base": {
+          "algorithm_id": "q1-component-pack",
+          "components": 1,
+          "compute_ops": 7410,
+          "compute_pipe_work_by_core": [
+            {
+              "PIPE_M": 1107520,
+              "PIPE_V": 644660
+            },
+            {},
+            {},
+            {},
+            {}
+          ],
+          "core_compute_ops": [
+            7410,
+            0,
+            0,
+            0,
+            0
+          ],
+          "largest_component_ops": 7410,
+          "scope": "Structural Task-order check only; load is a proposal proxy, not E0 or a spill certificate",
+          "tasks": 1,
+          "variant": "pipe-lpt-one-task-per-core"
+        },
+        "packet_factor": 4,
+        "reason": "not an in-tree forest",
+        "scope": "Structural proof only; E0 required",
+        "selected": "component-pack",
+        "variant": "threshold-antichain-tail"
+      },
+      "chunks": {
+        "chunk_ops": 1024,
+        "oversize_indivisible_components": [
+          {
+            "ops": 7410,
+            "task": 0
+          }
+        ],
+        "split_tasks": [
+          {
+            "chunk_compute_ops": [
+              7410
+            ],
+            "new_tasks": [
+              0
+            ],
+            "original_task": 0
+          }
+        ],
+        "tasks_after": 1,
+        "tasks_before": 1,
+        "trigger_ops": 4096
+      },
+      "scope": "Structural validation only; bounds on common Task size are not E0, spill or runtime guarantees",
+      "variant": "frontier-then-independent-chunks"
+    },
+    "max_rounds": 64,
+    "max_sinks": 64,
+    "scope": "Task-order proof only; no spill, performance or E0 feasibility guarantee",
+    "selected": "sink-peel",
+    "tasks": 107,
+    "variant": "exclusive-suffix-waves",
+    "wave_count": 22,
+    "waves": [
+      {
+        "core_ops": [
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        "packet_ops": [
+          1,
+          1
+        ],
+        "packets": 2,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 88
+          },
+          {
+            "PIPE_M": 88
+          },
+          {},
+          {},
+          {}
+        ]
+      },
+      {
+        "core_ops": [
+          10,
+          10,
+          10,
+          10,
+          12
+        ],
+        "packet_ops": [
+          10,
+          10,
+          10,
+          10,
+          12
+        ],
+        "packets": 5,
+        "pipe_work_by_core": [
+          {
+            "PIPE_V": 1534
+          },
+          {
+            "PIPE_V": 1534
+          },
+          {
+            "PIPE_V": 1534
+          },
+          {
+            "PIPE_V": 1534
+          },
+          {
+            "PIPE_M": 176,
+            "PIPE_V": 567
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          4,
+          5,
+          5,
+          5,
+          4
+        ],
+        "packet_ops": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "packets": 23,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 4192
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3424
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          143,
+          143,
+          143,
+          143,
+          146
+        ],
+        "packet_ops": [
+          143,
+          143,
+          143,
+          143,
+          146
+        ],
+        "packets": 5,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 6136,
+            "PIPE_V": 5810
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          4,
+          5,
+          5,
+          5,
+          4
+        ],
+        "packet_ops": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "packets": 23,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 4192
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3424
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          143,
+          143,
+          143,
+          143,
+          146
+        ],
+        "packet_ops": [
+          143,
+          143,
+          143,
+          143,
+          146
+        ],
+        "packets": 5,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 6136,
+            "PIPE_V": 5810
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          4,
+          5,
+          5,
+          5,
+          4
+        ],
+        "packet_ops": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "packets": 23,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 4192
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3424
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          143,
+          143,
+          143,
+          143,
+          146
+        ],
+        "packet_ops": [
+          143,
+          143,
+          143,
+          143,
+          146
+        ],
+        "packets": 5,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 6136,
+            "PIPE_V": 5810
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          4,
+          5,
+          5,
+          5,
+          4
+        ],
+        "packet_ops": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "packets": 23,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 4192
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3424
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          143,
+          143,
+          143,
+          143,
+          146
+        ],
+        "packet_ops": [
+          143,
+          143,
+          143,
+          143,
+          146
+        ],
+        "packets": 5,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 6136,
+            "PIPE_V": 5810
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          4,
+          5,
+          5,
+          5,
+          4
+        ],
+        "packet_ops": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "packets": 23,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 4192
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3424
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          143,
+          143,
+          143,
+          143,
+          146
+        ],
+        "packet_ops": [
+          143,
+          143,
+          143,
+          143,
+          146
+        ],
+        "packets": 5,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 6136,
+            "PIPE_V": 5810
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          4,
+          5,
+          5,
+          5,
+          4
+        ],
+        "packet_ops": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "packets": 23,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 4192
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3424
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          143,
+          143,
+          143,
+          143,
+          146
+        ],
+        "packet_ops": [
+          143,
+          143,
+          143,
+          143,
+          146
+        ],
+        "packets": 5,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 6136,
+            "PIPE_V": 5810
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          4,
+          5,
+          5,
+          5,
+          4
+        ],
+        "packet_ops": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "packets": 23,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 4192
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3424
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          143,
+          143,
+          143,
+          143,
+          146
+        ],
+        "packet_ops": [
+          143,
+          143,
+          143,
+          143,
+          146
+        ],
+        "packets": 5,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 6136,
+            "PIPE_V": 5810
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          4,
+          5,
+          5,
+          5,
+          4
+        ],
+        "packet_ops": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "packets": 23,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 4192
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3424
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          143,
+          143,
+          143,
+          143,
+          146
+        ],
+        "packet_ops": [
+          143,
+          143,
+          143,
+          143,
+          146
+        ],
+        "packets": 5,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 6136,
+            "PIPE_V": 5810
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          4,
+          5,
+          5,
+          5,
+          4
+        ],
+        "packet_ops": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "packets": 23,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 4192
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3424
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          143,
+          143,
+          143,
+          143,
+          146
+        ],
+        "packet_ops": [
+          143,
+          143,
+          143,
+          143,
+          146
+        ],
+        "packets": 5,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 14664
+          },
+          {
+            "PIPE_M": 6136,
+            "PIPE_V": 5810
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          4,
+          5,
+          4,
+          4,
+          4
+        ],
+        "packet_ops": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "packets": 21,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 4192
+          },
+          {
+            "PIPE_M": 3512
+          },
+          {
+            "PIPE_M": 3424
+          },
+          {
+            "PIPE_M": 3424
+          },
+          {
+            "PIPE_M": 3424
+          }
+        ]
+      },
+      {
+        "core_ops": [
+          133,
+          133,
+          133,
+          133,
+          134
+        ],
+        "packet_ops": [
+          133,
+          133,
+          133,
+          133,
+          134
+        ],
+        "packets": 5,
+        "pipe_work_by_core": [
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 13130
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 13130
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 13130
+          },
+          {
+            "PIPE_M": 21616,
+            "PIPE_V": 13130
+          },
+          {
+            "PIPE_M": 5960,
+            "PIPE_V": 5243
+          }
+        ]
+      }
+    ]
+  },
+  "dominant_percent": 80,
+  "max_rounds": 64,
+  "max_sinks": 64,
+  "reason": "retain earlier single-core or component-scarce route",
+  "scope": "Structural candidate; neither dominance nor zero spill proves quality",
+  "selected": "sink-or-bounded",
+  "variant": "dominant-pipe-suffix-waves"
+}

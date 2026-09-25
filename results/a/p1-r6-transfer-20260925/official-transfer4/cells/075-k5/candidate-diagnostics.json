@@ -1,0 +1,52 @@
+{
+  "algorithm_id": "q1-branch-aid-r6",
+  "augmented_dag_edges": 521,
+  "boundary_delta": {
+    "bytes": 2688,
+    "copy_in_instances": 4,
+    "copy_out_instances": 3,
+    "service_cycles": 51
+  },
+  "extra_seconds_soft": 2.0,
+  "new_boundary": {
+    "bytes": 7294774,
+    "copy_in_instances": 2185,
+    "copy_out_instances": 333,
+    "service_cycles": 123573
+  },
+  "old_boundary": {
+    "bytes": 7292086,
+    "copy_in_instances": 2181,
+    "copy_out_instances": 330,
+    "service_cycles": 123522
+  },
+  "scope": "structural construction only; no scoring",
+  "scoring_calls": {
+    "E0": 0,
+    "E1": 0,
+    "E2": 0
+  },
+  "selected": "branch-aid",
+  "split_tasks": 1,
+  "status": "candidate-unscored",
+  "task_limit": 320,
+  "task_raw_pipe_lower_bound": 21616,
+  "tasks": 109,
+  "warning": "Task compilation, FIFO/MEM/spill, E1 and E0 remain unverified",
+  "waves": [
+    {
+      "dominant_pipe": "PIPE_V",
+      "donors": [
+        4
+      ],
+      "height": 0,
+      "helpers": {
+        "0": [
+          6
+        ]
+      },
+      "new_max_pipe_work": 539,
+      "old_max_pipe_work": 567
+    }
+  ]
+}
