@@ -1,10 +1,10 @@
 {
-  "state": "c03_final_received",
+  "state": "c04_pro_in_flight",
   "chat_url": "https://chatgpt.com/g/g-p-6ab2d820c86081918067a0c6d5eb1ab6-huaweicup/c/6ab60a43-abe4-83ea-bb4c-d4d442e661e5",
   "project": "huaweicup",
   "mode": "6 Pro",
-  "user_message_id": "bd8ce6f0-78da-421e-a3f0-63cf9153f8f8",
-  "prompt_sha256": "3b57515266216fd645da35c1edf421bd8ad3d9b9ed1beb5c3bd048269fe9620d",
+  "user_message_id": "4a96c061-b512-4f30-9e09-7a34619f5e6e",
+  "prompt_sha256": "3621410fe4a3ed428b129645d8eb3f67793862207aec216928508d353f49b0cb",
   "do_not_resend": true,
   "evidence": [
     "project composer New chat in huaweicup",
@@ -12,7 +12,7 @@
     "new public user message",
     "Pro thinking"
   ],
-  "scope": "Six cumulative public messages; C03 final fingerprint verified. Two C03 code previews recovered; original ZIP/READ_LOG/synthetic_results attachment bytes not acquired.",
+  "scope": "C03 final archived; C04 public user message verified and 6 Pro thinking. No C04 answer or new official result yet. Historical C03 attachment limitations remain.",
   "latest_snapshot": "完整问答-20260925T1330Z-C03完成.md",
   "files": [
     {
@@ -153,6 +153,18 @@
       "bytes": 9549,
       "sha256": "c7f48c5c11779376021f5fd43f8c131103ca500d33b741a1d406cd5ca8d8f8ba",
       "round": "c03"
+    },
+    {
+      "path": "c04-sent-prompt.txt",
+      "bytes": 3307,
+      "sha256": "3621410fe4a3ed428b129645d8eb3f67793862207aec216928508d353f49b0cb",
+      "round": "c04"
+    },
+    {
+      "path": "c04-status.json",
+      "bytes": 1124,
+      "sha256": "734597a41a0ac6db1160bbfdab4d608b65df89887938e08e54949d5c22693dc4",
+      "round": "c04"
     }
   ],
   "attachments": [
@@ -218,8 +230,10 @@
       "acquisition_receipt": "c03-attachments-20260925T1349Z.json"
     }
   ],
-  "phase": "c03_final_received",
-  "observed_at": "2026-09-25T13:31:50.180245+00:00",
+  "phase": "c04_pro_in_flight",
+  "observed_at": "2026-09-25T18:34:24+00:00",
+  "latest_completed_round": "c03",
+  "pending_round_status": "c04-status.json",
   "previous_snapshot": "完整问答-20260925T1300Z-C03在途.md",
   "historical_c01_state": {
     "state": "c01_final_received",
@@ -236,7 +250,7 @@
     "source_commit": "8577916bc48cf2e8240aaecadce286c02b34eb20",
     "source_mirror_receipt": "output/interleave-mirror-8577916bc.json"
   },
-  "latest_round_status": "c03-final-status.json",
+  "latest_round_status": "c04-status.json",
   "latest_completed_assistant_message_id": "765c7cf7-0ea0-4b1d-8788-2db5bc0c96f7",
   "recorded_at_utc": "2026-09-25T10:39:57.211480+00:00",
   "readback_normalized_body_matches": true,

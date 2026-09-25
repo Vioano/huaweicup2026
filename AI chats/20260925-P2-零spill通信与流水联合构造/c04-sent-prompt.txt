@@ -1,0 +1,11 @@
+P2 C04 / s-7d28：请用 6 Pro 聚焦一个与 C01–C03 不同的数学构造问题：把“共享输入只在少数核上驻留、按 job 尽早交付跨核中间结果”的成功机制推广到一般大连通分量。不要重做 C01–C03 的局部接收闭包、出口封闭和旧时刻插入，也不要在你的环境运行官方图、官方 evaluator 或全量搜索。我们本地会并行研发，不等回答。
+新官方证据（都是 044/K5 单格机制实验，绝非新全量成绩）：同一 c665 基线 M=43795、addedDDR=930400 B；stage-major 静态共享输入构造 M=72955、188672 B，五核几乎串行；改成 job-major 且做容量筛选后 M=39681、129536 B，五核 Task 大量重叠、spill=0。后者让第一个 job 的跨核输出更早可用，但严格同构识别器在 K5 的100图只接受004/044/093三图，所以不能靠它显著拉升全量均值。正式同一算法全500仍为 c665，K5平均加速比4.549756997。
+请先实际读取固定提交 5574899bb9492ccad98c7befa9fe6728e9c01b6a 的这些入口，并逐项报读到的文件；缺件不要猜：
+https://github.com/huaweibei123/huaweicup2026/blob/5574899bb9492ccad98c7befa9fe6728e9c01b6a/docs/a/q2-nikolastarx/SHARED_STATIONARY_PIPELINE.md
+https://github.com/huaweibei123/huaweicup2026/blob/5574899bb9492ccad98c7befa9fe6728e9c01b6a/results/a/q2-nikolastarx/shared-stationary-pipeline-044-pilot-20260926/RESULTS.md
+https://github.com/huaweibei123/huaweicup2026/blob/5574899bb9492ccad98c7befa9fe6728e9c01b6a/results/a/q2-nikolastarx/shared-stationary-044-pilot-20260926/RESULTS.md
+https://github.com/huaweibei123/huaweicup2026/blob/5574899bb9492ccad98c7befa9fe6728e9c01b6a/src/q2_nikolastarx/shared_stationary_pipeline.py
+https://github.com/huaweibei123/huaweicup2026/blob/5574899bb9492ccad98c7befa9fe6728e9c01b6a/results/a/q2-nikolastarx/bottleneck-priority-20260925/README.md
+若当前连接只能读公开 Vioano 镜像，使用同 SHA 同路径并说明。文档中“尚无 E0”一句比同提交新 RESULTS 旧，以 RESULTS 原件为准。
+核心问题：在 P2 每核一个 Task、核内 M/V 等计算 Pipe 可重叠、跨核 tensor 触发自动 COPY 与共享 DDR、优先序会改变 COPY 锚点和容量行为的真实可提交自由度下，能否定义一个可计算的图商结构（例如有共享输入的计算包、低字节边界与串行/并行出口），并给出不按 case ID 的有界直接构造：联合选择包归核与核内优先词，使独立包尽早交付，而不是 stage-major 的队首阻塞？它必须允许一般大连通分量，不能只换一个更宽松的同构识别器。
+请只推荐一个有全量覆盖潜力的方案，或给出清楚的否定结论。先核查“低跨核字节+均衡 Pipe 工作+job-major”是否足以预测改善；若不成立，给最小反例，明确哪些是定理、必要条件、启发式。写出构造变量、合法性/容量保护、完整优先序恢复、复杂度、确定性停止条件及无需官方调用的结构筛选；尤其处理共享输入的多核复制与巨型连通分量的边界切口。给 3–5 个按结构挑选而非按编号特判的最小证伪坐标，说明何种负结果应停止路线。不要把一个图的成功说成预期全量显著突破，不用静态代理冒充 E0。
