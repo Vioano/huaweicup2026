@@ -6,6 +6,7 @@ Neither this module nor its helpers prepare official tasks or score a plan.
 from __future__ import annotations
 
 import heapq
+import json
 
 from .dag_direct import DAGIndex
 from .direct import derive_multicore_plan
@@ -44,8 +45,8 @@ def _merge(index, rows, packet, *, packet_first):
     return ordered if len(ordered) == len(index.ops) else None
 
 
-def construct(graph, plan, config, critical_links, critical_operations, *, incumbent_makespan, max_seeds=8):
-    """Return one complete singleton plan or None, with bounded diagnostics.
+def propose(graph, plan, config, critical_links, critical_operations, *, incumbent_makespan, max_seeds=8):
+    """Return ordered distinct complete plans and bounded diagnostics.
 
     At most max_seeds witnessed tensor links and two fixed Kahn merges per seed.
     The critical set is supplied evidence, never inferred from an absent trace.
@@ -55,7 +56,8 @@ def construct(graph, plan, config, critical_links, critical_operations, *, incum
     """
     meta = {'status': 'no_candidate', 'scope': 'static C01 critical packet; unscored',
             'seeds_seen': 0, 'candidates_checked': 0, 'rejections': {},
-            'candidate_summaries': [], 'selected': None,
+            'candidate_summaries': [], 'selected': None, 'unique_count': 0,
+            'duplicates': 0, 'validated_candidates': 0,
             'complexity': 'at most 8 seeds and 16 plans; per seed O(V+E) closure plus two O((V+E) log V) merges and whole-graph legality, capacity, COPY, and FIFO-bound guards; no subset enumeration',
             'official_makespan_guarantee': False}
     def reject(code):
@@ -91,7 +93,7 @@ def construct(graph, plan, config, critical_links, critical_operations, *, incum
     except (ValueError, TypeError, KeyError) as error:
         meta['status'] = 'unsupported'
         reject(type(error).__name__ + ': ' + str(error))
-        return None, meta
+        return [], meta
     seeds = []
     for ordinal, link in enumerate(critical_links):
         if not isinstance(link, dict):
@@ -106,6 +108,7 @@ def construct(graph, plan, config, critical_links, critical_operations, *, incum
         seeds.append((-delay, ordinal, tid, a, b))
     seeds.sort()
     candidates = []
+    seen_plans = {}
     for neg_delay, ordinal, tid, a, b in seeds[:max_seeds]:
         meta['seeds_seen'] += 1
         origins = producers.get(tid, set())
@@ -174,13 +177,35 @@ def construct(graph, plan, config, critical_links, critical_operations, *, incum
                    'incumbent_makespan': incumbent_makespan,
                    'mandatory_copy_bytes_before': baseline_bytes,
                    'mandatory_copy_bytes_after': copied}
-            meta['candidate_summaries'].append(row)
             key = (row['fifo_compute_lower_bound'], copied, neg_delay, ordinal,
                    0 if packet_first else 1)
-            candidates.append((key, candidate, row))
+            meta['validated_candidates'] += 1
+            origin = {'seed_ordinal': ordinal, 'tensor_id': tid,
+                      'merge': row['merge'], 'exposed_delay': -neg_delay}
+            fingerprint = json.dumps(candidate, sort_keys=True, separators=(',', ':'),
+                                     allow_nan=False)
+            if fingerprint in seen_plans:
+                meta['duplicates'] += 1
+                candidates[seen_plans[fingerprint]]['detail']['origins'].append(origin)
+                continue
+            row['origins'] = [origin]
+            row['static_rank_key'] = list(key)
+            seen_plans[fingerprint] = len(candidates)
+            candidates.append({'plan': candidate, 'detail': row})
+            meta['candidate_summaries'].append(row)
     if candidates:
-        _, selected, info = min(candidates, key=lambda item: item[0])
-        meta.update(status='candidate', selected=info,
+        meta.update(status='candidates', unique_count=len(candidates),
                     accepted_candidates=len(candidates))
-        return selected, meta
-    return None, meta
+    return candidates, meta
+
+
+def construct(graph, plan, config, critical_links, critical_operations, *, incumbent_makespan, max_seeds=8):
+    """Keep the original static single-candidate choice over propose's list."""
+    candidates, meta = propose(graph, plan, config, critical_links,
+                               critical_operations, incumbent_makespan=incumbent_makespan,
+                               max_seeds=max_seeds)
+    if not candidates:
+        return None, meta
+    chosen = min(candidates, key=lambda item: tuple(item['detail']['static_rank_key']))
+    meta.update(status='candidate', selected=chosen['detail'])
+    return chosen['plan'], meta

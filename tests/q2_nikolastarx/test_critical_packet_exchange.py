@@ -2,7 +2,7 @@
 import copy
 import unittest
 
-from src.q2_nikolastarx.critical_packet_exchange import construct
+from src.q2_nikolastarx.critical_packet_exchange import construct, propose
 from src.q2_nikolastarx.direct import derive_multicore_plan
 
 
@@ -25,6 +25,33 @@ def scene():
 
 
 class CriticalPacketTests(unittest.TestCase):
+    def test_propose_deduplicates_identical_full_plans(self):
+        graph, plan, config, link = scene()
+        original = copy.deepcopy((graph, plan, config, link))
+        candidates, meta = propose(graph, plan, config, [link, link], {3},
+                                   incumbent_makespan=99)
+        self.assertEqual(len(candidates), 1)
+        self.assertEqual(meta['unique_count'], 1)
+        self.assertGreaterEqual(meta['duplicates'], 1)
+        self.assertEqual(len(candidates[0]['detail']['origins']),
+                         meta['validated_candidates'])
+        self.assertEqual((graph, plan, config, link), original)
+
+    def test_construct_keeps_static_choice_over_proposals(self):
+        graph, plan, config, link = scene()
+        graph['ops'].append({'id': 4, 'op': 'CONV', 'pipe': 'PIPE_M', 'cycles': 2})
+        plan['node_to_subgraph']['4'] = 3
+        plan['core_schedules'][0].append(3)
+        candidates, meta = propose(graph, plan, config, [link], {3},
+                                   incumbent_makespan=99)
+        self.assertEqual(len(candidates), 2, meta)
+        chosen = min(candidates, key=lambda item: tuple(item['detail']['static_rank_key']))
+        out, selected = construct(graph, plan, config, [link], {3},
+                                  incumbent_makespan=99)
+        self.assertEqual(out, chosen['plan'])
+        self.assertEqual(selected['selected']['static_rank_key'],
+                         chosen['detail']['static_rank_key'])
+
     def test_downstream_critical_closure_reaches_sink(self):
         graph, plan, config, link = scene()
         original = copy.deepcopy((graph, plan, config, link))
