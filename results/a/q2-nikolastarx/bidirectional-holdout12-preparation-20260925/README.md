@@ -1,3 +1,9 @@
+# V2 supervision correction
+
+Coordinator review found the archived offline test assumed the working `output/` depth. It now locates the repository root by ancestor markers and was rerun from this public `results/` path. Three saved qualification fixtures remain explicit local dependencies under `output/`; this is not a self-contained clone test. Old receipt is retained as history; use `offline-test-receipt-v2.json` and `preflight-receipt-v2.json`.
+
+The outer supervisor now checks `/usr/sbin/sysctl` VM pressure==1 at T0 and every sample, and swap-used growth from its T0 value≤256MiB. Failed/unparseable reads reject or cleanly stop; pressure/swap fault mocks both stop their fake process. Deadline is rechecked after the initial host read before dispatch. Current supervisor SHA `e85f595fcad4ff314a18a16de5742f1b5399ddf35588533d9df4a08502a47414`; producer/selection/manifest/solver and all scoring budgets remain unchanged. No real scoring occurred, no gate/T0 admission.
+
 # P2 15d independent K5 holdout: preparation only
 
 No new scoring. Full500 remains held. This is the coordinator-requested 12-cell diagnostic, not a formal full-score batch or automatically authorized follow-on stage.

@@ -9,8 +9,18 @@ import time
 from datetime import datetime, timedelta, timezone
 from types import SimpleNamespace
 
-ROOT = Path(__file__).resolve().parents[2]
-OUT = Path(__file__).resolve().parent
+ROOT = next((p for p in Path(__file__).resolve().parents
+             if (p/'scripts/q2_bidirectional_holdout.py').is_file()
+             and (p/'pyproject.toml').is_file()), None)
+if ROOT is None:
+    raise RuntimeError('Cannot find project root with holdout runner and pyproject.toml')
+OUT = ROOT/'output/bidirectional-holdout12-preparation-20260925'
+required = [OUT/'selection-manifest.json',
+            ROOT/'output/bidirectional-full500-preparation-20260925/local-full500-manifest.json',
+            ROOT/'output/bidirectional-qualification-20260925/run-local-1/005-k5/solver/solver.json']
+missing = [str(p) for p in required if not p.is_file()]
+if missing:
+    raise FileNotFoundError('Offline replay depends on original output fixtures: '+', '.join(missing))
 REPO = Path('/Users/nikolastar/.codex/worktrees/p2-bidirectional-full500-s7d28/huaweicup2026')
 RAW = Path('/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/data/raw/a/official')
 E2 = Path('/Users/nikolastar/.codex/worktrees/q2-feedback-s8ee/huaweicup2026/output/q2-e2-paircheck-603b-s8ee')
@@ -26,6 +36,16 @@ def load(path, name):
 
 m = load(ROOT/'scripts/q2_bidirectional_holdout.py', 'holdout')
 sup = load(ROOT/'scripts/q2_bidirectional_holdout_supervise.py', 'holdout_supervisor')
+assert sup.parse_pressure('1\n') == 1
+assert sup.parse_swap_used('total = 2048.00M  used = 1287.12M  free = 760.88M  (encrypted)') > 0
+for parser, malformed in ((sup.parse_pressure,'pressure = unknown'),
+                          (sup.parse_swap_used,'used = unknown')):
+    try:
+        parser(malformed)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError('Malformed sysctl accepted')
 fixed = load(ROOT/'scripts/q2_bidirectional_local_full500.py', 'full500_preflight_only')
 selection = json.loads((OUT/'selection-manifest.json').read_text())
 ref = {'path': 'selection-manifest.json', 'sha256': m.SELECTION_SHA}
@@ -125,6 +145,8 @@ with tempfile.TemporaryDirectory(prefix='p2-holdout-offline-') as temporary:
         count.append(1)
         return subprocess.Popen([str(PYTHON),'-B','-c','import time;time.sleep(20)'],**kwargs)
     sup.subprocess = SimpleNamespace(Popen=fake_popen)
+    real_host_memory = sup.host_memory_state
+    sup.host_memory_state = lambda: (1, 1000)
     original_deadline, original_sample = sup.DEADLINE_SECONDS,sup.SAMPLE_SECONDS
     sup.DEADLINE_SECONDS,sup.SAMPLE_SECONDS = 0.3,0.05
     try:
@@ -136,6 +158,20 @@ with tempfile.TemporaryDirectory(prefix='p2-holdout-offline-') as temporary:
         receipt = json.loads((args.output/'supervisor-receipt.json').read_text())
         assert receipt['status'] == 'timeout' and receipt['surviving_pids'] == []
         assert len(count) == 1
+        for label, sequence, expected in (
+            ('pressure',[(1,1000),(2,1000)],'vm_pressure_limit'),
+            ('swap',[(1,1000),(1,1000+sup.SWAP_DELTA_LIMIT+1)],'swap_growth_limit')):
+            samples = iter(sequence)
+            sup.host_memory_state = lambda: next(samples)
+            args = SimpleNamespace(output=temp/('outer-'+label))
+            try:
+                sup.run(args)
+            except SystemExit as exc:
+                assert exc.code == 1
+            receipt = json.loads((args.output/'supervisor-receipt.json').read_text())
+            assert receipt['status'] == expected and receipt['surviving_pids'] == []
+            assert receipt['vm_pressure_samples'] == 2 and receipt['swap_baseline_bytes'] == 1000
+        assert len(count) == 3
         for label, altered in (('bad-scope',{**valid,'scope':'wrong'}),
                                ('bad-hash',{**valid,'manifest_sha256':'bad'}),
                                ('expired',{**valid,'expires_at_utc':expiry(-1)})):
@@ -146,20 +182,22 @@ with tempfile.TemporaryDirectory(prefix='p2-holdout-offline-') as temporary:
                 pass
             else:
                 raise AssertionError(label+' unexpectedly dispatched')
-            assert len(count) == 1
+            assert len(count) == 3
     finally:
         sup.preflight_paths = actual_preflight
         sup.subprocess = real_subprocess
+        sup.host_memory_state = real_host_memory
         sup.DEADLINE_SECONDS,sup.SAMPLE_SECONDS = original_deadline,original_sample
 
 result = {'selection_recomputed':list(coords),
           'saved_cell_replays':replayed,'unknown_fallback_reserved':1,
           'first_failure_dispatches':1,'gate_bad_scope_hash_expiry':'rejected',
-          'fake_process_launches':1,'outer_timeout_cleanup':'passed',
+          'fake_process_launches':3,'outer_timeout_cleanup':'passed',
+          'vm_pressure_stop_cleanup':'passed','swap_growth_stop_cleanup':'passed',
           'new_solver_or_evaluator_calls':0,
           'holdout_runner_sha256':m.sha(ROOT/'scripts/q2_bidirectional_holdout.py'),
           'holdout_supervisor_sha256':sup.sha(ROOT/'scripts/q2_bidirectional_holdout_supervise.py'),
           'selection_sha256':m.SELECTION_SHA,
           'test_sha256':m.sha(Path(__file__))}
-(OUT/'offline-test-receipt.json').write_text(json.dumps(result,indent=2)+'\n')
+(OUT/'offline-test-receipt-v2.json').write_text(json.dumps(result,indent=2)+'\n')
 print(json.dumps(result))

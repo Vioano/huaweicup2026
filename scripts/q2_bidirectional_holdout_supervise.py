@@ -11,12 +11,14 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import signal
 import subprocess
 import sys
 import time
 from datetime import datetime, timezone
+from decimal import Decimal, InvalidOperation
 
 SOURCE = '15d86e13b4a8abb4bce445ac241aecac13f553bf'
 SELECTION_SHA = '6060d2a281e963614eb0634dbf90454b3b7b52be73d0d6cc67287436e33d16b1'
@@ -27,6 +29,37 @@ GROWTH_LIMIT = 2 << 30
 FREE_RESERVE = 10 << 30
 DEADLINE_SECONDS = 1800
 SAMPLE_SECONDS = 1.0
+SWAP_DELTA_LIMIT = 256 << 20
+SYSCTL = '/usr/sbin/sysctl'
+
+
+def parse_pressure(raw):
+    value = raw.strip()
+    if not re.fullmatch(r'[0-9]+', value):
+        raise ValueError('Unparseable VM pressure level')
+    return int(value)
+
+
+def parse_swap_used(raw):
+    found = re.fullmatch(
+        r'total = [0-9]+(?:\.[0-9]+)?[KMGT]\s+used = ([0-9]+(?:\.[0-9]+)?)([KMGT])\s+'
+        r'free = [0-9]+(?:\.[0-9]+)?[KMGT](?:\s+\(encrypted\))?', raw.strip())
+    if not found:
+        raise ValueError('Unparseable vm.swapusage')
+    try:
+        return int(Decimal(found.group(1)) * (1024 ** ('KMGT'.index(found.group(2)) + 1)))
+    except InvalidOperation as error:
+        raise ValueError('Invalid vm.swapusage number') from error
+
+
+def host_memory_state():
+    result = subprocess.run([SYSCTL, '-n', 'kern.memorystatus_vm_pressure_level',
+                             'vm.swapusage'], capture_output=True, text=True,
+                            check=True, timeout=2)
+    lines = result.stdout.splitlines()
+    if len(lines) != 2:
+        raise ValueError('Unexpected sysctl response length')
+    return parse_pressure(lines[0]), parse_swap_used(lines[1])
 
 
 def sha(path):
@@ -135,9 +168,14 @@ def run(args):
                'pins': pins, 'gate_sha256': gate_sha, 'output': str(output),
                'limits': {'seconds': DEADLINE_SECONDS, 'aggregate_rss_bytes': RSS_LIMIT,
                           'output_growth_observation_bytes': GROWTH_LIMIT,
+                          'swap_growth_bytes': SWAP_DELTA_LIMIT,
+                          'required_vm_pressure_level': 1,
                           'disk_free_reserve_bytes': FREE_RESERVE,
                           'sample_seconds': SAMPLE_SECONDS, 'workers': 1},
                'observed_peak_rss_bytes': 0, 'observed_peak_output_bytes': 0,
+               'vm_pressure_samples': 0, 'vm_pressure_last_level': None,
+               'swap_baseline_bytes': None, 'swap_last_used_bytes': None,
+               'swap_peak_delta_bytes': 0,
                'samples': 0, 'known_processes': 0, 'cleanup_killed_pids': [],
                'surviving_pids': [], 'exit_code': None, 'summary_path': str(results / 'summary.json')}
     process = None
@@ -152,6 +190,15 @@ def run(args):
             raise RuntimeError('disk reserve below 10 GiB before dispatch')
         if gate_check(paths['gate'], pins) != gate_sha:
             raise RuntimeError('gate changed before dispatch')
+        pressure, swap_used = host_memory_state()
+        receipt['vm_pressure_samples'] = 1
+        receipt['vm_pressure_last_level'] = pressure
+        receipt['swap_baseline_bytes'] = swap_used
+        receipt['swap_last_used_bytes'] = swap_used
+        if pressure != 1:
+            raise RuntimeError('VM pressure not normal before dispatch')
+        if time.monotonic() >= deadline:
+            raise TimeoutError('deadline after host check before dispatch')
         command = [str(paths['python']), '-B', str(paths['runner']), 'run',
                    '--repo', str(paths['repo']), '--raw-root', str(paths['raw_root']),
                    '--e2-root', str(paths['e2_root']), '--python', str(paths['python']),
@@ -189,6 +236,16 @@ def run(args):
                 receipt['observed_peak_rss_bytes'] = max(receipt['observed_peak_rss_bytes'], rss)
                 growth = disk_usage(output)
                 receipt['observed_peak_output_bytes'] = max(receipt['observed_peak_output_bytes'], growth)
+                pressure, swap_used = host_memory_state()
+                delta = max(0, swap_used - receipt['swap_baseline_bytes'])
+                receipt['vm_pressure_samples'] += 1
+                receipt['vm_pressure_last_level'] = pressure
+                receipt['swap_last_used_bytes'] = swap_used
+                receipt['swap_peak_delta_bytes'] = max(receipt['swap_peak_delta_bytes'], delta)
+                if pressure != 1:
+                    receipt['status'] = 'vm_pressure_limit'; break
+                if delta > SWAP_DELTA_LIMIT:
+                    receipt['status'] = 'swap_growth_limit'; break
                 if rss > RSS_LIMIT:
                     receipt['status'] = 'rss_limit'; break
                 if growth > GROWTH_LIMIT:

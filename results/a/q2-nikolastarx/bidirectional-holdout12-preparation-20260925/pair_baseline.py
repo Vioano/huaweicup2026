@@ -2,7 +2,7 @@
 import gzip,hashlib,json
 from pathlib import Path
 P=Path(__file__).resolve().parent
-R=P.parent.parent
+R=next(q for q in P.parents if (q/'scripts/q2_bidirectional_holdout.py').is_file() and (q/'pyproject.toml').is_file())
 SRC='c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f'
 def sha(b):return hashlib.sha256(b).hexdigest()
 def read(p):return json.loads(p.read_bytes())
