@@ -1,0 +1,44 @@
+{
+  "scope": "c04-six-frozen-plans",
+  "status": "admitted",
+  "decision": "admit_one_parallel_local_p2_e0_pilot",
+  "issued_at": "2026-09-25T20:22:22Z",
+  "expires_at": "2026-09-25T20:26:00Z",
+  "producer_session": "nikolastarx/s-7d28768dcd7d4e0e8759c2afd02659d5",
+  "fixed_commit": "1284085f83127c211651a1148889688c7ee8f701",
+  "manifest_path": "results/a/q2-nikolastarx/c04-six-pilot-preparation-20260926/manifest.json",
+  "manifest_sha256": "93935755943d207d4200a1d8734b5198a44b8b280a457968c53ab2344d98016b",
+  "runner_path": "scripts/q2_c04_frozen_pilot.py",
+  "runner_sha256": "dac86f790dcf2464b8c1fedacfac4f9f6bff0303f7ec0926891800b20507315d",
+  "output_path": "output/c04-six-e0-run-20260926",
+  "coordinates": ["005-k5", "016-k5", "019-k5", "025-k5", "039-k5", "075-k5"],
+  "limits": {
+    "external_E0": 6,
+    "E1": 0,
+    "E2": 0,
+    "retry": 0,
+    "workers": 1,
+    "per_process_seconds": 30,
+    "batch_seconds": 240,
+    "rss_bytes": 1073741824
+  },
+  "parallel_resource_readback": {
+    "utc": "2026-09-25T20:21:55Z",
+    "P3_runner_pid": 2985,
+    "P3_state": "running",
+    "P3_records": 379,
+    "host_ram_gib": 48,
+    "host_memory_free_percent": 62,
+    "disk_available_gib": 211,
+    "P2_output_absent": true,
+    "other_official_scorer_seen": false
+  },
+  "execution_conditions": [
+    "Run once in the existing fixed P2 worktree at exact HEAD, with no source or manifest edits.",
+    "Recheck P3 status, free memory >=20%, disk available >=30 GiB, no new conflicting scorer and P2 output absent immediately before launch.",
+    "Run preflight first, then the frozen runner with this gate; no online solver or additional cells.",
+    "Preserve ledger, official originals, failed or timed-out results and surviving-child evidence; stop on first infrastructure failure.",
+    "Shared-host E0 and elapsed time must be reported as parallel observations, not dedicated-machine performance."
+  ],
+  "boundary": "This is a separate six-cell P2 gate in parallel with the unchanged P3 frozen run; no change to P3 deadline, source, output, E0 cap, or cleanup. It does not admit P2 full500, retries, cloud, E1, E2, or offline winner selection."
+}
