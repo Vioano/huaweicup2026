@@ -48,6 +48,9 @@ stall time; the decomposition alone does not assign causal delays.
   showed no active sessions and usage showed active assignments 0. The
   detached watchdog was terminated only after proven stop and is gone.
   Host/command logs, fresh readbacks and the original receipt are included.
+  Upload/download host log paths are redacted derivatives; original local
+  and published hashes are recorded in verification.json. The remote ZIP
+  remains byte-for-byte original.
 
 ## Consequence for the next algorithm
 
