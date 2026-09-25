@@ -1,0 +1,106 @@
+{
+  "schema": "figure-auto-review-v1",
+  "figure_id": "fig-4-2",
+  "primary": "fig4-2-fork-join-partition.svg",
+  "files": [
+    {
+      "name": "fig4-2-fork-join-partition.svg",
+      "role": "svg",
+      "sha256": "46320d761147b0e828c6b1bcf9f8c8df60d1daf31ce43f5b60dd5a7a5d539810"
+    },
+    {
+      "name": "fig4-2-fork-join-partition.png",
+      "role": "png",
+      "sha256": "74a68540cece8788061c464bd00b497e46097f8a925b8b8e1d7de748e6be3938"
+    },
+    {
+      "name": "fig4-2-fork-join-partition.drawio",
+      "role": "source",
+      "sha256": "07aeda4b8979f2d70979c33b9af0722b3f36cebfdaa3080d790ea2755e743651"
+    },
+    {
+      "name": "DELIVERY.md",
+      "role": "notes",
+      "sha256": "fa67234afa131907812399d4d6232c48dbf8426c7cb3482905b415b879115516"
+    },
+    {
+      "name": "self-check.md",
+      "role": "self_check",
+      "sha256": "963c82290ade51bf07b38616a528b14914f5fccf8c7341a9ba4dc8fa38e5e210"
+    },
+    {
+      "name": "nodes.csv",
+      "role": "input",
+      "sha256": "bce63ef0d2265016a2f31d0b1f5e55e33b8a49b787bf413c609eaff7604e0a46"
+    },
+    {
+      "name": "edges.csv",
+      "role": "input",
+      "sha256": "047a1e2ab66ad5c3c453b581278ca44be8db2dfdec05fe7d4fa092132aa3f574"
+    },
+    {
+      "name": "preview-insert-width.png",
+      "role": "notes",
+      "sha256": "6354ff105883cd7fd1848c58aa13fae51e1161e62bd7dcdcc7d85fbecbf0a2fc"
+    }
+  ],
+  "command": "draw.io CLI 导出（--disable-gpu --no-sandbox）svg 与 png(-s 2)；插入宽度预览 PIL 1600px；校验 validate.py 0 error",
+  "sources": [
+    {
+      "path": "paper/sections/P1-问题一论文初稿.md（4.4.2）",
+      "commit": "67c0f603960fddf86416d23ca3e85e53561c3c3a",
+      "sha256": "10d0dc195e138c42f7507ca12c8619ebdf46c4df54ca38b31fe353fc886ef8ef"
+    },
+    {
+      "path": "示例节点/边表（任务书授权自整理，非实测数据；本包 nodes.csv/edges.csv 即清单原件）",
+      "commit": "n/a",
+      "sha256": "bce63ef0d2265016a2f31d0b1f5e55e33b8a49b787bf413c609eaff7604e0a46"
+    }
+  ],
+  "units": {
+    "makespan": "cycles",
+    "wall": "s",
+    "bytes": "B"
+  },
+  "panels": [
+    {
+      "id": "a",
+      "title": "原始 DAG"
+    },
+    {
+      "id": "b",
+      "title": "阶段/前沿/归约尾划分（式4-11）"
+    },
+    {
+      "id": "c",
+      "title": "投影到各核的 Task 次序（K=3）"
+    }
+  ],
+  "tables": {
+    "nodes": "nodes.csv",
+    "edges": "edges.csv"
+  },
+  "table_columns": {
+    "nodes": [
+      "node_id",
+      "stage",
+      "subgraph",
+      "core",
+      "order_in_core",
+      "note"
+    ],
+    "edges": [
+      "source",
+      "target"
+    ]
+  },
+  "criteria": [
+    "全部示例节点在划分中恰好覆盖一次，依赖关系未遗漏或反向。",
+    "各核 Task 顺序与示例依赖相容，颜色及外框分别表达什么有图例。",
+    "图注明确结构示例、条块宽度无时间含义，不声称实测加速或零 spill。"
+  ],
+  "core_convention": "CSV core 列从 1 开始（模板约定）；图面 Core 0/1/2 对应 CSV core 1/2/3",
+  "edge_count": 13,
+  "node_count": 12,
+  "version_note": "v2：边数口径13条；前沿框扩至完整包住d1/d3；折线绕行；(c)跨核线避开Task0文字；归约尾标签移框外；补逐节点/逐边CSV与audit；插入宽度重验"
+}
