@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 from collections import defaultdict, deque
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -157,8 +158,14 @@ def main() -> None:
         raise ValueError("Plan and diagnostics must have different output paths")
     if args.output.exists() or args.diagnostics.exists():
         raise FileExistsError("Refuse to overwrite existing experiment artifacts")
-    graph = json.loads(args.graph.read_text(encoding="utf-8"))
+    body_start = time.perf_counter()
+    graph_bytes = args.graph.read_bytes()
+    graph_hash = hashlib.sha256(graph_bytes).hexdigest()
+    graph = json.loads(graph_bytes)
     plan, info = construct(graph, args.cores)
+    info["graph_sha256"] = graph_hash
+    info["cli_body_through_plan_wall_seconds"] = time.perf_counter() - body_start
+    info["cli_body_timing_scope"] = "Read and hash original graph bytes, parse JSON, construct and validate plan; excludes imports, output writes and process exit."
     for path in (args.output, args.diagnostics):
         path.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("x", encoding="utf-8") as f:
