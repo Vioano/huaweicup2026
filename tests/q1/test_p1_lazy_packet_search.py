@@ -21,6 +21,27 @@ def cost(kind, state, payload):
 
 
 class LazyPacketTests(unittest.TestCase):
+    def test_cooperative_stop_preserves_frontier_and_incumbent(self):
+        called = []
+        def exact(*args):
+            called.append(args)
+            return 1
+        immediate = search(10**6, exact, zero_bound, budget=100,
+                           should_stop=lambda: True)
+        self.assertEqual(immediate['stop_reason'], 'external_stop')
+        self.assertEqual(immediate['open'], 1)
+        self.assertEqual(immediate['lower'], 0)
+        self.assertEqual(called, [])
+        # B=0 has two terminal alternatives. Stop after evaluating the first,
+        # retaining both that incumbent and the unexplored second alternative.
+        stopped = search(0, exact, zero_bound, budget=100,
+                         should_stop=lambda: bool(called))
+        self.assertEqual(stopped['stop_reason'], 'external_stop')
+        self.assertEqual((stopped['lower'], stopped['upper']), (0, 1))
+        self.assertEqual(stopped['open'], 1)
+        self.assertIsNotNone(stopped['best_path'])
+        self.assertFalse(stopped['optimal'])
+
     def test_resource_envelope_connection_matches_full_abstract_DAG(self):
         # This is an exact cost DEFINITION for a synthetic resource DAG,
         # not a surrogate score reported as a physical scheduling response.

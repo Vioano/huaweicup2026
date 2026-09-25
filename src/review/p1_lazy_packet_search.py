@@ -15,13 +15,16 @@ class UnknownResult(Exception):
     """An exact oracle may raise this instead of returning Unknown."""
 
 
-def search(B, exact, bound, budget, incumbent=None, max_expansions=10000):
+def search(B, exact, bound, budget, incumbent=None, max_expansions=10000,
+           should_stop=None):
     """Search (n,r) with lazy integer boxes and a scalar abstract cost.
 
     ``exact(kind,state,payload)`` returns nonnegative int, None (proved
     unsupported), or Unknown. Payload is (q,s), None for drain, or terminal
     policy string. ``bound(kind,state,prefix,payload)`` is a caller-certified
     lower bound on a *complete* path through that item.
+    ``should_stop()`` optionally checks a wall/resource stop between bounded
+    operations. It is cooperative, not a substitute for an external supervisor.
     """
     if type(B) is not int or B < 0 or type(budget) is not int or budget < 0:
         raise ValueError("B and oracle budget must be nonnegative integers")
@@ -63,6 +66,9 @@ def search(B, exact, bound, budget, incumbent=None, max_expansions=10000):
 
     expand((0, 0))
     while heap:
+        if should_stop is not None and should_stop():
+            stop_reason = "external_stop"
+            break  # no item has been removed; retain the entire live frontier
         item = heapq.heappop(heap)
         if not live(item):
             continue
