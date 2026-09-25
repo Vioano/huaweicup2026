@@ -186,7 +186,7 @@ def cleanup_owned_popen(child):
     return result
 
 
-def run_stage(name, argv, cap, output, overall_start):
+def run_stage(name, argv, cap, output, overall_start, resource_check=None):
     stdout_path = output / f"{name}.stdout.raw"
     stderr_path = output / f"{name}.stderr.raw"
     stage = {"name": name, "argv": argv, "timeout_seconds": cap,
@@ -198,8 +198,24 @@ def run_stage(name, argv, cap, output, overall_start):
     child = None
     identity = None
     popen_group_eligible = False
+    last_resource_check = None
+    if resource_check is not None:
+        stage["resource_samples"] = []
     with stdout_path.open("xb") as out, stderr_path.open("xb") as err:
         try:
+            if resource_check is not None:
+                last_resource_check = time.monotonic()
+                try:
+                    sample = resource_check()
+                    stage["resource_samples"].append(sample)
+                    if not isinstance(sample, dict) or sample.get("ok") is not True:
+                        stage["reason"] = "resource guard before Popen: " + str(
+                            sample.get("reason") if isinstance(sample, dict)
+                            else "invalid resource sample")
+                except Exception as exc:
+                    stage["reason"] = f"resource guard before Popen error: {type(exc).__name__}: {exc}"
+                if stage["reason"] is not None:
+                    return stage
             child = subprocess.Popen(argv, cwd=ROOT, env=env, stdout=out,
                                      stderr=err, start_new_session=True)
             stage["pid"] = child.pid
@@ -228,6 +244,21 @@ def run_stage(name, argv, cap, output, overall_start):
                     stage["reason"] = "complete" if rc == 0 else f"child returned {rc}"
                     stage["fast_exit_after_identity_failure"] = True
             while stage["reason"] is None:
+                if (resource_check is not None and
+                        (last_resource_check is None or
+                         time.monotonic() - last_resource_check >= 1.0)):
+                    last_resource_check = time.monotonic()
+                    try:
+                        sample = resource_check()
+                        stage["resource_samples"].append(sample)
+                        if not isinstance(sample, dict) or sample.get("ok") is not True:
+                            stage["reason"] = "resource guard: " + str(
+                                sample.get("reason") if isinstance(sample, dict)
+                                else "invalid resource sample")
+                            break
+                    except Exception as exc:
+                        stage["reason"] = f"resource guard error: {type(exc).__name__}: {exc}"
+                        break
                 # A completed leader does not prove its process group is gone.
                 rc = child.poll()
                 members = group_table(identity["pgid"])
@@ -360,7 +391,7 @@ def validated_prior_structure_tests(path):
 
 
 def pilot(graph, reference_plan, output, expected_head,
-          prior_structure_test_receipt=None):
+          prior_structure_test_receipt=None, resource_check=None):
     begun = time.monotonic()
     output.mkdir(parents=True, exist_ok=False)
     receipt = {"status": "started", "started_utc": utc(),
@@ -419,7 +450,10 @@ def pilot(graph, reference_plan, output, expected_head,
                     receipt["reason"] = "no distinct unscored candidate for E0"
                     break
                 e0_dir.mkdir(exist_ok=False)
-            stage = run_stage(name, argv, timeout, output, begun)
+            stage = (run_stage(name, argv, timeout, output, begun)
+                     if resource_check is None else
+                     run_stage(name, argv, timeout, output, begun,
+                               resource_check=resource_check))
             receipt["stages"].append(stage)
             if "pid" in stage:
                 receipt["calls"][{"tests": "test_process", "probe": "probe_process",

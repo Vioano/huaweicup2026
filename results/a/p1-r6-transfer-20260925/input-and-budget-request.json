@@ -87,7 +87,7 @@
   "kind": "requested-bounded-transfer",
   "status": "prepared-not-executed",
   "algorithm_source_commit": "db64a9375ffda535736ac54031a1184ee9f8f3d9",
-  "entrypoint": "src.review.p1_r6_pilot_once",
+  "entrypoint": "src.review.p1_r6_transfer_batch",
   "prior_test_receipt": "results/a/p1-r6-pilot-20260925/official-085-k5/supervisor-receipt.original.json",
   "frozen_order": [
     "082",
@@ -120,12 +120,29 @@
     "Formal 500-cell score unchanged; these are transfer mechanism tests only"
   ],
   "source_sha256": {
-    "src/review/p1_r6_pilot_once.py": "2dc0fbeb29bf43928f22871d376f10552f76e4ee8713895e1744579e88e1d48c",
-    "src/review/p1_r6_candidate_probe.py": "6f62e39ea8743f0a903b1ba51ee65c50e9678daf12a5a8b097a875b10ad9d4ac",
+    "data/raw/a/official/code/evaluation_validation.py": "103206b8c5c25e37de50cc3193de3989d7c1e01d4a11cc5f509dedd8f9be9a64",
+    "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py": "2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f",
+    "data/raw/a/official/code/stub_multicore_cut_and_schedule.py": "0a3a3b79b5173b466fc05fc8d33b72d11d90b4df78995435853d91c632a35892",
+    "data/raw/a/official/data/config.txt": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
     "src/q1/branch_aid.py": "3fb2dfa40aae066d23fb48b5120a732fb18e2bfba2e5f3b27af9e27245149725",
+    "src/q1/heavy_suffix.py": "9acd4531dfd70c5a77bcf91dd50589d0741acaba13497d67a49fdd3f2a0b1af0",
+    "src/q1/sink_peel.py": "f3d8303a47e354f3597386179457d0bb77f87430f72f3c0f0615ea2918da7dc0",
+    "src/q1/unified.py": "3c571f6c9c0ef2a956268abf9129d557f2d087e783b4e621c2917279fa13e985",
+    "src/review/p1_r6_candidate_probe.py": "6f62e39ea8743f0a903b1ba51ee65c50e9678daf12a5a8b097a875b10ad9d4ac",
+    "src/review/p1_r6_pilot_once.py": "63cd9d454a55f69c59ba34706d1488a5abb98159214c2610e1e9716b0bfac5aa",
+    "src/review/p1_r6_transfer_batch.py": "a21afc983eefd62048300b2269fcab64471a0c58625af354486a4b99a06d21e6",
     "tests/q1/test_branch_aid.py": "d8353a2b684012da68bcaa9b793ce4c2ad699f3ac1a6e5431980a759ef56f9e0",
     "tests/q1/test_r6_skip_validated_tests.py": "2ac6f8b2be6af02fdce8d8843b6490107582b0875b0750b7850570e10ddd5685",
-    "data/raw/a/official/data/config.txt": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9"
+    "tests/q1/test_r6_transfer_batch.py": "53b4e64c05331805c5e86c02f4214d5873798263baeb76e572e7a473d502d5e0"
   },
-  "prior_test_receipt_sha256": "07e5ea758670bcaea484fd0e78c36f0d65f5365e9750ccf9eb7051cab6ebd910"
+  "prior_test_receipt_sha256": "07e5ea758670bcaea484fd0e78c36f0d65f5365e9750ccf9eb7051cab6ebd910",
+  "resource_admission": {
+    "requires_separate_scheduler_T0": true,
+    "host_memory_gib": 48,
+    "pressure_level_required": 1,
+    "swapouts": "no increase between observed samples",
+    "disk_free_min_gib": 10,
+    "physical_free_2gib_gate": false,
+    "sampling": "before each child and approximately every second; read commands have bounded timeouts; sampled not hard real-time"
+  }
 }
