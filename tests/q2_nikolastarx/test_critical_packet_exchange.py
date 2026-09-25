@@ -25,6 +25,41 @@ def scene():
 
 
 class CriticalPacketTests(unittest.TestCase):
+    def test_shifted_merge_places_packet_between_retained_ops(self):
+        graph, plan, config, link = scene()
+        graph['ops'] += [{'id': 4, 'op': 'CONV', 'pipe': 'PIPE_M', 'cycles': 2},
+                         {'id': 5, 'op': 'CONV', 'pipe': 'PIPE_M', 'cycles': 2}]
+        plan['node_to_subgraph'].update({'4': 3, '5': 4})
+        plan['core_schedules'][0] += [3, 4]
+        link['exposed_delay'] = 10
+        starts = {1: 0, 4: 1, 2: 12, 5: 3, 3: 14}
+        original = copy.deepcopy((graph, plan, config, link, starts))
+        extreme, _ = propose(graph, plan, config, [link], {3}, incumbent_makespan=99)
+        shifted, meta = propose(graph, plan, config, [link], {3},
+                                incumbent_makespan=99, merge_policy='shifted',
+                                original_start_times=starts)
+        self.assertEqual(len(shifted), 1, meta)
+        output = shifted[0]['plan']
+        self.assertEqual(output['core_schedules'][0], [0, 3, 1, 4, 2])
+        self.assertNotIn(output, [item['plan'] for item in extreme])
+        self.assertEqual(meta['candidates_checked'], 1)
+        self.assertEqual(meta['candidate_summaries'][0]['merge'], 'shifted')
+        self.assertEqual(derive_multicore_plan(graph, output)['mapping'],
+                         derive_multicore_plan(graph, plan)['mapping'])
+        self.assertEqual((graph, plan, config, link, starts), original)
+
+    def test_shifted_rejects_missing_or_malformed_starts(self):
+        graph, plan, config, link = scene()
+        for starts in (None, {1: 0, 2: 1}, {1: 0, 2: 1, 3: True},
+                       {1: 0, 2: -1, 3: 2}, {1: 0, 2: 1.0, 3: 2},
+                       {1: 0, 2: 1, 3: 2, 4: 3}):
+            with self.subTest(starts=starts):
+                candidates, meta = propose(graph, plan, config, [link], {3},
+                                           incumbent_makespan=99, merge_policy='shifted',
+                                           original_start_times=starts)
+                self.assertEqual(candidates, [])
+                self.assertEqual(meta['status'], 'unsupported')
+
     def test_propose_deduplicates_identical_full_plans(self):
         graph, plan, config, link = scene()
         original = copy.deepcopy((graph, plan, config, link))

@@ -16,7 +16,7 @@ from .fifo_bound import fixed_fifo_lower_bound
 from .zero_spill_intervals import certify
 
 
-def _merge(index, rows, packet, *, packet_first):
+def _merge(index, rows, packet, *, packet_first=True, start_times=None, exposed_delay=0):
     """Topologically merge retained per-core chains and old packet chain."""
     moved = set(packet)
     succ = {u: set(v) for u, v in index.succ.items()}
@@ -31,6 +31,9 @@ def _merge(index, rows, packet, *, packet_first):
         for v in targets:
             degree[v] += 1
     def key(u):
+        if start_times is not None:
+            old = start_times[u]
+            return (max(0, old - exposed_delay) if u in moved else old, u)
         return (0 if (u in moved) == packet_first else 1, u)
     ready = [key(u) for u, d in degree.items() if d == 0]
     heapq.heapify(ready)
@@ -45,10 +48,11 @@ def _merge(index, rows, packet, *, packet_first):
     return ordered if len(ordered) == len(index.ops) else None
 
 
-def propose(graph, plan, config, critical_links, critical_operations, *, incumbent_makespan, max_seeds=8):
+def propose(graph, plan, config, critical_links, critical_operations, *, incumbent_makespan,
+            max_seeds=8, merge_policy='extremes', original_start_times=None):
     """Return ordered distinct complete plans and bounded diagnostics.
 
-    At most max_seeds witnessed tensor links and two fixed Kahn merges per seed.
+    At most max_seeds witnessed links: two extreme merges or one shifted merge each.
     The critical set is supplied evidence, never inferred from an absent trace.
     Closure follows original edges between old critical vertices; these edges
     need not themselves be tight. This is a proposal heuristic, not a proof
@@ -58,8 +62,11 @@ def propose(graph, plan, config, critical_links, critical_operations, *, incumbe
             'seeds_seen': 0, 'candidates_checked': 0, 'rejections': {},
             'candidate_summaries': [], 'selected': None, 'unique_count': 0,
             'duplicates': 0, 'validated_candidates': 0,
-            'complexity': 'at most 8 seeds and 16 plans; per seed O(V+E) closure plus two O((V+E) log V) merges and whole-graph legality, capacity, COPY, and FIFO-bound guards; no subset enumeration',
-            'official_makespan_guarantee': False}
+            'complexity': ('at most 8 seeds and 8 plans; per seed O(V+E) closure plus one O((V+E) log V) Kahn merge and whole-graph legality, capacity, COPY, and FIFO-bound guards; no subset enumeration'
+                           if merge_policy == 'shifted' else
+                           'at most 8 seeds and 16 plans; per seed O(V+E) closure plus two O((V+E) log V) merges and whole-graph legality, capacity, COPY, and FIFO-bound guards; no subset enumeration'),
+            'official_makespan_guarantee': False, 'merge_policy': merge_policy,
+            'start_time_scope': 'Old observed starts guide priority only; not predicted new schedule or guarantee.'}
     def reject(code):
         meta['rejections'][code] = meta['rejections'].get(code, 0) + 1
     if type(max_seeds) is not int or not 0 <= max_seeds <= 8:
@@ -68,6 +75,13 @@ def propose(graph, plan, config, critical_links, critical_operations, *, incumbe
         raise ValueError('incumbent_makespan must be a positive integer from the audited trace')
     try:
         index = DAGIndex(graph)
+        if merge_policy not in ('extremes', 'shifted'):
+            raise ValueError('unsupported merge_policy')
+        if merge_policy == 'shifted' and (type(original_start_times) is not dict
+                or set(original_start_times) != set(index.ops)
+                or any(type(u) is not int or type(t) is not int or t < 0
+                       for u, t in original_start_times.items())):
+            raise ValueError('shifted requires exact nonnegative integer starts for eligible original ops')
         rows = _rows(graph, plan, index)
         if len(rows) < 2 or not _acyclic(index, rows):
             raise ValueError('singleton baseline priority union invalid')
@@ -140,9 +154,11 @@ def propose(graph, plan, config, critical_links, critical_operations, *, incumbe
         # strict Makespan improvement, and the chosen candidate still needs E0.
         if max(proposed_peaks.values()) >= incumbent_makespan:
             reject('load_lower_bound_no_strict_gain'); continue
-        for packet_first in (True, False):
+        for packet_first in ((True, False) if merge_policy == 'extremes' else (None,)):
             meta['candidates_checked'] += 1
-            ordered = _merge(index, rows, packet, packet_first=packet_first)
+            ordered = _merge(index, rows, packet, packet_first=packet_first,
+                             start_times=original_start_times if merge_policy == 'shifted' else None,
+                             exposed_delay=-neg_delay)
             if ordered is None:
                 reject('merge_cycle'); continue
             new_owner = {**owner, **{u: a for u in packet}}
@@ -171,7 +187,8 @@ def propose(graph, plan, config, critical_links, critical_operations, *, incumbe
                    'exposed_delay': -neg_delay, 'packet_size': len(packet),
                    'receiver_count': receiver_count,
                    'critical_downstream_added': len(packet) - receiver_count,
-                   'packet': packet, 'merge': 'packet_first' if packet_first else 'retained_first',
+                   'packet': packet, 'merge': ('shifted' if merge_policy == 'shifted' else
+                                             'packet_first' if packet_first else 'retained_first'),
                    'fifo_compute_lower_bound': bound['makespan_lower_bound_cycles'],
                    'pipe_load_peaks_before': caps, 'pipe_load_peaks_after': proposed_peaks,
                    'incumbent_makespan': incumbent_makespan,
@@ -199,11 +216,13 @@ def propose(graph, plan, config, critical_links, critical_operations, *, incumbe
     return candidates, meta
 
 
-def construct(graph, plan, config, critical_links, critical_operations, *, incumbent_makespan, max_seeds=8):
+def construct(graph, plan, config, critical_links, critical_operations, *, incumbent_makespan,
+              max_seeds=8, merge_policy='extremes', original_start_times=None):
     """Keep the original static single-candidate choice over propose's list."""
     candidates, meta = propose(graph, plan, config, critical_links,
                                critical_operations, incumbent_makespan=incumbent_makespan,
-                               max_seeds=max_seeds)
+                               max_seeds=max_seeds, merge_policy=merge_policy,
+                               original_start_times=original_start_times)
     if not candidates:
         return None, meta
     chosen = min(candidates, key=lambda item: tuple(item['detail']['static_rank_key']))
