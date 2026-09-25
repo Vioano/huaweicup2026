@@ -1,4 +1,6 @@
-# R6 branch-aid pilot preparation
+# R6 branch-aid pilot
+
+Latest: the fixed R3 package completed one official 085/K5 evaluation. Makespan fell from 783703 to 681874 cycles (12.9933%); added DDR rose 32.1536%, with zero spill. See [the analysis](ANALYSIS_085.md) and `official-085-k5/` for the new evidence. This is one mechanism result, not a new full unified benchmark. The preparation and control-regression history below remains preserved.
 
 This is a single mechanism test, not a fixed unified algorithm benchmark. At preparation no test, current-input construction or E0 has run. All old evidence remains unchanged.
 

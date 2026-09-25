@@ -1,0 +1,75 @@
+{
+  "kind": "portable-run-receipt-derived-from-original-supervisor-and-probe-receipts",
+  "derived_from": [
+    {
+      "path": "output/p1-r6-pilot-20260925/attempt-1/receipt.json",
+      "sha256": "07e5ea758670bcaea484fd0e78c36f0d65f5365e9750ccf9eb7051cab6ebd910"
+    },
+    {
+      "path": "output/p1-r6-pilot-20260925/attempt-1/probe/receipt.json",
+      "sha256": "5f57f53300c0bfd26d48d46b87bc1564218f732bc5bc0cceeda0ec36b0332109"
+    },
+    {
+      "path": "output/p1-r6-pilot-20260925/t0-preflight-root.json",
+      "sha256": "d991433b27f8d2fcd967d09440cc746162ba2fe32f0b40a0d46edc576557bf57"
+    }
+  ],
+  "derivation": "Portable fields derived from exact original receipts. Public argv paths are replaced with <venv>/<worktree>; exact argv remains in original supervisor receipt. T0 desktop process listing excluded; aggregate checks in t0-summary-derived.json.",
+  "run_id": "20260925T1250Z-s6607-p1-r6-085",
+  "case_id": "085",
+  "cores": 5,
+  "solver_commit": "db64a9375ffda535736ac54031a1184ee9f8f3d9",
+  "candidate_sha256": "8a084f8947b47bd3fcc0a30eacab6e43e0b11c9e04bb8f0d5b40ca6f25a4b2ba",
+  "base_plan_sha256": "e7b3e907ec10ef3d5acc55682200735c42c0f38e4b72da1372c2363b7f01c4d8",
+  "calls": {
+    "E0_process": 1,
+    "E1": 0,
+    "E2": 0,
+    "baseline_E0": 0,
+    "probe_process": 1,
+    "retry": 0,
+    "test_process": 1
+  },
+  "stages": [
+    {
+      "name": "tests",
+      "started_utc": "2026-09-25T12:50:08+00:00",
+      "finished_utc": "2026-09-25T12:50:08+00:00",
+      "wall_seconds": 0.3386186250136234,
+      "returncode": 0,
+      "peak_group_rss_kib": 16640,
+      "reason": "complete",
+      "same_pgid_residual": []
+    },
+    {
+      "name": "probe",
+      "started_utc": "2026-09-25T12:50:08+00:00",
+      "finished_utc": "2026-09-25T12:50:10+00:00",
+      "wall_seconds": 1.1539057499612682,
+      "returncode": 0,
+      "peak_group_rss_kib": 128416,
+      "reason": "complete",
+      "same_pgid_residual": []
+    },
+    {
+      "name": "E0",
+      "started_utc": "2026-09-25T12:50:10+00:00",
+      "finished_utc": "2026-09-25T12:50:13+00:00",
+      "wall_seconds": 3.1274357499787584,
+      "returncode": 0,
+      "peak_group_rss_kib": 219648,
+      "reason": "complete",
+      "same_pgid_residual": []
+    }
+  ],
+  "metrics": {
+    "makespan_cycles": 681874,
+    "data_movement_bytes": {
+      "original_graph_copy_bytes": 1689734,
+      "scheduled_copy_bytes": 12431882,
+      "added_copy_bytes": 10742148,
+      "partition_added_copy_bytes": 10742148,
+      "spill_added_copy_bytes": 0
+    }
+  }
+}

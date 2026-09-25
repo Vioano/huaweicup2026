@@ -1,0 +1,216 @@
+{
+  "artifact_hashes": {
+    "E0.stderr.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "E0.stdout.raw": {
+      "bytes": 165,
+      "sha256": "39d32a8c0d85e2fe3bcadd52f92d7d6c21a06733f0df4c064b1201d2d33fb8da"
+    },
+    "e0/official.log": {
+      "bytes": 285,
+      "sha256": "1995dbd8cf2a3b4370544684a016518cfbc9e082061d92581b95fcb323a853f8"
+    },
+    "e0/result.json": {
+      "bytes": 7013620,
+      "sha256": "0cc7992a97d9a1ad3417996d8941d6d9b31bd297ae6ee9f1436d9e399712554e"
+    },
+    "e0/trace.json": {
+      "bytes": 7341913,
+      "sha256": "2cf2b7bc6aeac92b486252a954092ac02fa2e977e4a1d542502b95a6133e4c15"
+    },
+    "probe.stderr.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "probe.stdout.raw": {
+      "bytes": 104,
+      "sha256": "b3662a81625c85d86dd7fc09d125265ebfd50d665755fceed1e235bc3b083bab"
+    },
+    "probe/base.diagnostics.json": {
+      "bytes": 19023,
+      "sha256": "41889277f59afa2be7784d892c88b6ad4f47e9eb63548234818b0c6524d7eb1a"
+    },
+    "probe/base.raw.json": {
+      "bytes": 206448,
+      "sha256": "e7b3e907ec10ef3d5acc55682200735c42c0f38e4b72da1372c2363b7f01c4d8"
+    },
+    "probe/candidate.diagnostics.json": {
+      "bytes": 3962,
+      "sha256": "122983e4e56a1cf35bc5888afba835b0eb3a48a4cdc5a93e5ad1f83167b8c1df"
+    },
+    "probe/candidate.raw.json": {
+      "bytes": 210208,
+      "sha256": "8a084f8947b47bd3fcc0a30eacab6e43e0b11c9e04bb8f0d5b40ca6f25a4b2ba"
+    },
+    "probe/config.txt": {
+      "bytes": 341,
+      "sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9"
+    },
+    "probe/graph.raw.json": {
+      "bytes": 7159265,
+      "sha256": "b63169e9cd0f21dc2da6617e7138472e95937465c703b7e4bf4dbc80125ed4f6"
+    },
+    "probe/reference.raw.json": {
+      "bytes": 206448,
+      "sha256": "e7b3e907ec10ef3d5acc55682200735c42c0f38e4b72da1372c2363b7f01c4d8"
+    },
+    "tests.stderr.raw": {
+      "bytes": 103,
+      "sha256": "6273232de4d3ef7acd4ecafa5c86beeeb974f56586b21089a2990b3f72facbe6"
+    },
+    "tests.stdout.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "budget_seconds": 180.0,
+  "calls": {
+    "E0_process": 1,
+    "E1": 0,
+    "E2": 0,
+    "baseline_E0": 0,
+    "probe_process": 1,
+    "retry": 0,
+    "test_process": 1
+  },
+  "environment": {
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "python_version": "3.12.13",
+    "rss_scope": "Sampled process-group sum; not a continuous memory cap",
+    "threads": {
+      "BLIS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1"
+    }
+  },
+  "expected_head": "db64a9375ffda535736ac54031a1184ee9f8f3d9",
+  "finished_utc": "2026-09-25T12:50:13+00:00",
+  "graph_sha256": "b63169e9cd0f21dc2da6617e7138472e95937465c703b7e4bf4dbc80125ed4f6",
+  "probe_calls": {
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "branch_construct": 1,
+    "heavy_construct": 1,
+    "solver": 0
+  },
+  "reason": "one candidate E0 process exited cleanly; inspect result",
+  "reference_plan_sha256": "e7b3e907ec10ef3d5acc55682200735c42c0f38e4b72da1372c2363b7f01c4d8",
+  "rss_limit_kib": 1572864,
+  "source_head": "db64a9375ffda535736ac54031a1184ee9f8f3d9",
+  "source_sha256": {
+    "data/raw/a/official/code/evaluation_validation.py": "103206b8c5c25e37de50cc3193de3989d7c1e01d4a11cc5f509dedd8f9be9a64",
+    "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py": "2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f",
+    "data/raw/a/official/code/stub_multicore_cut_and_schedule.py": "0a3a3b79b5173b466fc05fc8d33b72d11d90b4df78995435853d91c632a35892",
+    "data/raw/a/official/data/config.txt": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "src/q1/branch_aid.py": "3fb2dfa40aae066d23fb48b5120a732fb18e2bfba2e5f3b27af9e27245149725",
+    "src/q1/heavy_suffix.py": "9acd4531dfd70c5a77bcf91dd50589d0741acaba13497d67a49fdd3f2a0b1af0",
+    "src/q1/sink_peel.py": "f3d8303a47e354f3597386179457d0bb77f87430f72f3c0f0615ea2918da7dc0",
+    "src/q1/unified.py": "3c571f6c9c0ef2a956268abf9129d557f2d087e783b4e621c2917279fa13e985",
+    "src/review/p1_r6_candidate_probe.py": "6f62e39ea8743f0a903b1ba51ee65c50e9678daf12a5a8b097a875b10ad9d4ac",
+    "src/review/p1_r6_pilot_once.py": "c3c87b216d68cbbf06d0ec77951fc36321f9e69963450a93950126e614e7cdd7",
+    "tests/q1/test_branch_aid.py": "d8353a2b684012da68bcaa9b793ce4c2ad699f3ac1a6e5431980a759ef56f9e0"
+  },
+  "stage_timeouts_seconds": {
+    "E0": 120.0,
+    "probe": 30.0,
+    "tests": 10.0
+  },
+  "stages": [
+    {
+      "argv": [
+        "/Users/nikolastar/Projects/huaweicup2026/.venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/q1",
+        "-p",
+        "test_branch_aid.py"
+      ],
+      "expected_pgid": 96715,
+      "finished_utc": "2026-09-25T12:50:08+00:00",
+      "name": "tests",
+      "peak_group_rss_kib": 16640,
+      "pgid": 96715,
+      "pid": 96715,
+      "ps_lstart": "Fri Sep 25 20:50:08 2026",
+      "reason": "complete",
+      "returncode": 0,
+      "same_pgid_residual": [],
+      "sample_interval_seconds": 0.25,
+      "started_utc": "2026-09-25T12:50:08+00:00",
+      "timeout_seconds": 10.0,
+      "wall_seconds": 0.3386186250136234
+    },
+    {
+      "argv": [
+        "/Users/nikolastar/Projects/huaweicup2026/.venv/bin/python",
+        "-B",
+        "-m",
+        "src.review.p1_r6_candidate_probe",
+        "--graph",
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/output/p1-r6-pilot-inputs-20260925/case_085.json",
+        "--reference-plan",
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/output/p1-r6-pilot-inputs-20260925/reference-plan.json",
+        "--output-dir",
+        "output/p1-r6-pilot-20260925/attempt-1/probe"
+      ],
+      "expected_pgid": 96727,
+      "finished_utc": "2026-09-25T12:50:10+00:00",
+      "name": "probe",
+      "peak_group_rss_kib": 128416,
+      "pgid": 96727,
+      "pid": 96727,
+      "ps_lstart": "Fri Sep 25 20:50:08 2026",
+      "reason": "complete",
+      "returncode": 0,
+      "same_pgid_residual": [],
+      "sample_interval_seconds": 0.25,
+      "started_utc": "2026-09-25T12:50:08+00:00",
+      "timeout_seconds": 30.0,
+      "wall_seconds": 1.1539057499612682
+    },
+    {
+      "argv": [
+        "/Users/nikolastar/Projects/huaweicup2026/.venv/bin/python",
+        "-B",
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/output/p1-r6-pilot-inputs-20260925/case_085.json",
+        "output/p1-r6-pilot-20260925/attempt-1/probe/candidate.raw.json",
+        "--config",
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/data/raw/a/official/data/config.txt",
+        "--output",
+        "output/p1-r6-pilot-20260925/attempt-1/e0/result.json",
+        "--trace-output",
+        "output/p1-r6-pilot-20260925/attempt-1/e0/trace.json",
+        "--log-output",
+        "output/p1-r6-pilot-20260925/attempt-1/e0/official.log"
+      ],
+      "expected_pgid": 96751,
+      "finished_utc": "2026-09-25T12:50:13+00:00",
+      "name": "E0",
+      "peak_group_rss_kib": 219648,
+      "pgid": 96751,
+      "pid": 96751,
+      "ps_lstart": "Fri Sep 25 20:50:10 2026",
+      "reason": "complete",
+      "returncode": 0,
+      "same_pgid_residual": [],
+      "sample_interval_seconds": 0.25,
+      "started_utc": "2026-09-25T12:50:10+00:00",
+      "timeout_seconds": 120.0,
+      "wall_seconds": 3.1274357499787584
+    }
+  ],
+  "started_utc": "2026-09-25T12:50:08+00:00",
+  "status": "candidate-E0-collected",
+  "total_wall_seconds": 4.6895546250161715,
+  "worker_limit": 1
+}

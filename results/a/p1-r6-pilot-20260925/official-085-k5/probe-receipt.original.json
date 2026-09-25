@@ -1,0 +1,49 @@
+{
+  "base": {
+    "plan_bytes": 206448,
+    "plan_sha256": "e7b3e907ec10ef3d5acc55682200735c42c0f38e4b72da1372c2363b7f01c4d8",
+    "selected": "sink-or-bounded"
+  },
+  "calls": {
+    "E0": 0,
+    "E1": 0,
+    "E2": 0,
+    "branch_construct": 1,
+    "heavy_construct": 1,
+    "solver": 0
+  },
+  "candidate": {
+    "plan_bytes": 210208,
+    "plan_sha256": "8a084f8947b47bd3fcc0a30eacab6e43e0b11c9e04bb8f0d5b40ca6f25a4b2ba",
+    "selected": "branch-aid",
+    "structural_status": "candidate-unscored"
+  },
+  "finished_utc": "2026-09-25T12:50:09+00:00",
+  "input": {
+    "config_bytes": 341,
+    "config_sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "graph_bytes": 7159265,
+    "graph_sha256": "b63169e9cd0f21dc2da6617e7138472e95937465c703b7e4bf4dbc80125ed4f6"
+  },
+  "internal_probe_wall_seconds": 0.8316908339620568,
+  "later_gate": "Official E0 with spill checks remains necessary; this is not a unified solver result",
+  "reference": {
+    "byte_identical_to_current_base": true,
+    "plan_bytes": 206448,
+    "plan_sha256": "e7b3e907ec10ef3d5acc55682200735c42c0f38e4b72da1372c2363b7f01c4d8"
+  },
+  "scope": "one heavy baseline and one R6 structural candidate; no evaluation",
+  "source_head": "db64a9375ffda535736ac54031a1184ee9f8f3d9",
+  "source_sha256": {
+    "data/raw/a/official/code/evaluation_validation.py": "103206b8c5c25e37de50cc3193de3989d7c1e01d4a11cc5f509dedd8f9be9a64",
+    "data/raw/a/official/code/stub_multicore_cut_and_schedule.py": "0a3a3b79b5173b466fc05fc8d33b72d11d90b4df78995435853d91c632a35892",
+    "src/q1/branch_aid.py": "3fb2dfa40aae066d23fb48b5120a732fb18e2bfba2e5f3b27af9e27245149725",
+    "src/q1/heavy_suffix.py": "9acd4531dfd70c5a77bcf91dd50589d0741acaba13497d67a49fdd3f2a0b1af0",
+    "src/q1/sink_peel.py": "f3d8303a47e354f3597386179457d0bb77f87430f72f3c0f0615ea2918da7dc0",
+    "src/q1/unified.py": "3c571f6c9c0ef2a956268abf9129d557f2d087e783b4e621c2917279fa13e985",
+    "src/review/p1_r6_candidate_probe.py": "6f62e39ea8743f0a903b1ba51ee65c50e9678daf12a5a8b097a875b10ad9d4ac"
+  },
+  "started_utc": "2026-09-25T12:50:08+00:00",
+  "status": "candidate-unscored",
+  "timing_scope": "Internal probe excludes imports and final receipt write; use supervisor process wall for end-to-end timing"
+}

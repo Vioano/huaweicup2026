@@ -1,0 +1,25 @@
+{
+  "kind": "t0-preflight-necessary-fields-derived",
+  "source_path": "output/p1-r6-pilot-20260925/t0-preflight-root.json",
+  "source_sha256": "d991433b27f8d2fcd967d09440cc746162ba2fe32f0b40a0d46edc576557bf57",
+  "captured_utc": "2026-09-25T12:50:07.807151+00:00",
+  "derivation": "Copied only aggregate guard values/checks. Full process listing and raw host command output remain local and are intentionally excluded.",
+  "values": {
+    "free_bytes": 3241148416,
+    "pressure_free_percent": 86,
+    "recent_swapouts": 0,
+    "disk_free_bytes": 232633999360,
+    "head": "db64a9375ffda535736ac54031a1184ee9f8f3d9"
+  },
+  "checks": {
+    "physical_free_ge_2GiB": true,
+    "memory_pressure_ge_80": true,
+    "recent_swapouts_zero": true,
+    "disk_ge_10GiB": true,
+    "no_scorers": true,
+    "source_and_input_identity": true,
+    "attempt_absent": true,
+    "before_deadline": true
+  },
+  "all_pass": true
+}
