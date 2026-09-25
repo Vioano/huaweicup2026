@@ -1,4 +1,4 @@
-"""Zero-scoring regression for three real, tiny supervised Python children."""
+"""Zero-scoring regression for four real, tiny supervised Python children."""
 import json
 import os
 from pathlib import Path
@@ -20,7 +20,7 @@ class SupervisorRaceTests(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        receipt = {"scope": "three tiny Python children; no construct or scoring",
+        receipt = {"scope": "four tiny Python children; no construct or scoring",
                    "child_processes": len(cls.stages), "stages": cls.stages,
                    "all_same_pgid_residual_empty": all(
                        stage.get("same_pgid_residual") == [] for stage in cls.stages)}
@@ -67,6 +67,17 @@ class SupervisorRaceTests(unittest.TestCase):
         self.assertEqual(stage["same_pgid_residual"], [])
         self.assertTrue(stage["cleanup"]["confirmed"])
         self.assertIn("SIGTERM", stage["cleanup"]["signals"])
+
+    def test_4_live_popen_cleans_up_when_getpgid_fails(self):
+        # Only the identity lookup fails. The child, process group signal,
+        # process exit and residual check are all real.
+        with patch.object(supervisor.os, "getpgid", side_effect=OSError("injected")):
+            stage = self.stage("missing-identity", "import time; time.sleep(3)", 2.0)
+        self.assertEqual(stage["reason"], "new group identity acquisition failed")
+        self.assertEqual(stage["same_pgid_residual"], [])
+        self.assertTrue(stage["cleanup"]["confirmed"])
+        self.assertIn("SIGTERM", stage["cleanup"]["signals"])
+        self.assertIn("live unreaped Popen", stage["cleanup"]["ownership_basis"])
 
 
 if __name__ == "__main__":

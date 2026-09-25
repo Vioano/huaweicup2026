@@ -139,6 +139,46 @@ def cleanup_group(child, identity):
     return result
 
 
+def cleanup_owned_popen(child):
+    """Fallback for this unreaped start_new_session Popen, never a saved PID.
+
+    The sole run_stage thread owns this Popen. While poll() is None the child
+    PID cannot have been reaped/reused; Popen's successful start_new_session
+    made its initial process group equal to that PID. Recheck immediately
+    before each signal and never signal after poll() reports an exit.
+    """
+    result = {"confirmed": False, "signals": [], "reason": None,
+              "ownership_basis": "live unreaped Popen(start_new_session=True); pgid=child.pid"}
+    pgid = child.pid
+    try:
+        if child.poll() is not None:
+            result["reason"] = "Popen already reaped; no group signal"
+            result["confirmed"] = not group_table(pgid)
+            return result
+        os.killpg(pgid, signal.SIGTERM)
+        result["signals"].append("SIGTERM")
+        end = time.monotonic() + 2.0
+        while time.monotonic() < end:
+            if child.poll() is not None and not group_table(pgid):
+                result["confirmed"] = True
+                return result
+            time.sleep(min(SAMPLE_SECONDS, max(0.0, end - time.monotonic())))
+        if child.poll() is None:
+            os.killpg(pgid, signal.SIGKILL)
+            result["signals"].append("SIGKILL")
+            try:
+                child.wait(timeout=2)
+            except subprocess.TimeoutExpired:
+                result["reason"] = "owned child did not exit after KILL"
+                return result
+        result["confirmed"] = not group_table(pgid)
+        if not result["confirmed"]:
+            result["reason"] = "same-PGID residual after owned cleanup"
+    except (OSError, subprocess.SubprocessError, ValueError) as exc:
+        result["reason"] = f"owned cleanup error: {type(exc).__name__}: {exc}"
+    return result
+
+
 def run_stage(name, argv, cap, output, overall_start):
     stdout_path = output / f"{name}.stdout.raw"
     stderr_path = output / f"{name}.stderr.raw"
@@ -150,14 +190,20 @@ def run_stage(name, argv, cap, output, overall_start):
     started = time.monotonic()
     child = None
     identity = None
+    popen_group_eligible = False
     with stdout_path.open("xb") as out, stderr_path.open("xb") as err:
         try:
             child = subprocess.Popen(argv, cwd=ROOT, env=env, stdout=out,
                                      stderr=err, start_new_session=True)
             stage["pid"] = child.pid
             stage["expected_pgid"] = child.pid
+            # Popen does setsid before it returns. A failed later ps/getpgid
+            # read does not revoke ownership of this still-live child.
+            popen_group_eligible = True
             try:
                 stage["pgid"] = os.getpgid(child.pid)
+                if stage["pgid"] != child.pid:
+                    popen_group_eligible = False
                 stage["ps_lstart"] = ps_value(child.pid, "lstart")
                 if stage["pgid"] == child.pid and stage["ps_lstart"] and leader_identity(
                         child.pid, stage["ps_lstart"], stage["pgid"]):
@@ -223,6 +269,10 @@ def run_stage(name, argv, cap, output, overall_start):
                     stage["cleanup"] = (
                         {"confirmed": True, "signals": [], "reason": "already exited and group empty"}
                         if settled else cleanup_group(child, identity))
+                    if (not settled and popen_group_eligible and child.poll() is None
+                            and not stage["cleanup"]["confirmed"]
+                            and not stage["cleanup"]["signals"]):
+                        stage["cleanup"] = cleanup_owned_popen(child)
                     stage["returncode"] = child.poll()
                 try:
                     stage["same_pgid_residual"] = group_table(child.pid)

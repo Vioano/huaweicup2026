@@ -1,0 +1,115 @@
+{
+  "all_same_pgid_residual_empty": true,
+  "child_processes": 4,
+  "scope": "four tiny Python children; no construct or scoring",
+  "stages": [
+    {
+      "argv": [
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/../../.venv/bin/python",
+        "-B",
+        "-c",
+        "pass"
+      ],
+      "expected_pgid": 72471,
+      "fast_exit_after_identity_failure": true,
+      "finished_utc": "2026-09-25T12:38:42+00:00",
+      "name": "fast",
+      "peak_group_rss_kib": 0,
+      "pgid": 72471,
+      "pid": 72471,
+      "ps_lstart": null,
+      "reason": "complete",
+      "returncode": 0,
+      "same_pgid_residual": [],
+      "sample_interval_seconds": 0.25,
+      "started_utc": "2026-09-25T12:38:42+00:00",
+      "timeout_seconds": 2.0,
+      "wall_seconds": 0.20910075004212558
+    },
+    {
+      "argv": [
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/../../.venv/bin/python",
+        "-B",
+        "-c",
+        "import sys; sys.exit(3)"
+      ],
+      "cleanup": {
+        "confirmed": true,
+        "reason": "already exited and group empty",
+        "signals": []
+      },
+      "expected_pgid": 72475,
+      "finished_utc": "2026-09-25T12:38:42+00:00",
+      "name": "nonzero",
+      "peak_group_rss_kib": 0,
+      "pgid": 72475,
+      "pid": 72475,
+      "ps_lstart": "Fri Sep 25 20:38:42 2026",
+      "reason": "child returned 3",
+      "returncode": 3,
+      "same_pgid_residual": [],
+      "sample_interval_seconds": 0.25,
+      "started_utc": "2026-09-25T12:38:42+00:00",
+      "timeout_seconds": 2.0,
+      "wall_seconds": 0.36252679099561647
+    },
+    {
+      "argv": [
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/../../.venv/bin/python",
+        "-B",
+        "-c",
+        "import time; time.sleep(3)"
+      ],
+      "cleanup": {
+        "confirmed": true,
+        "reason": null,
+        "signals": [
+          "SIGTERM"
+        ]
+      },
+      "expected_pgid": 72490,
+      "finished_utc": "2026-09-25T12:38:43+00:00",
+      "name": "timeout",
+      "peak_group_rss_kib": 14864,
+      "pgid": 72490,
+      "pid": 72490,
+      "ps_lstart": "Fri Sep 25 20:38:42 2026",
+      "reason": "stage timeout",
+      "returncode": -15,
+      "same_pgid_residual": [],
+      "sample_interval_seconds": 0.25,
+      "started_utc": "2026-09-25T12:38:42+00:00",
+      "timeout_seconds": 0.4,
+      "wall_seconds": 0.8949911250383593
+    },
+    {
+      "argv": [
+        "/Users/nikolastar/Projects/huaweicup2026/.worktrees/p1-response-contract-20260925/../../.venv/bin/python",
+        "-B",
+        "-c",
+        "import time; time.sleep(3)"
+      ],
+      "cleanup": {
+        "confirmed": true,
+        "ownership_basis": "live unreaped Popen(start_new_session=True); pgid=child.pid",
+        "reason": null,
+        "signals": [
+          "SIGTERM"
+        ]
+      },
+      "expected_pgid": 72534,
+      "finished_utc": "2026-09-25T12:38:44+00:00",
+      "identity_error": "OSError: injected",
+      "name": "missing-identity",
+      "peak_group_rss_kib": 0,
+      "pid": 72534,
+      "reason": "new group identity acquisition failed",
+      "returncode": -15,
+      "same_pgid_residual": [],
+      "sample_interval_seconds": 0.25,
+      "started_utc": "2026-09-25T12:38:43+00:00",
+      "timeout_seconds": 2.0,
+      "wall_seconds": 0.2882768749841489
+    }
+  ]
+}

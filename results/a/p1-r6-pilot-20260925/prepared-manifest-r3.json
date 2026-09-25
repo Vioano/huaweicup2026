@@ -1,0 +1,76 @@
+{
+  "status": "prepared_not_admitted_not_executed",
+  "owner_session": "nikolastarx/s-6607cb2735304751b36662035723372b",
+  "scope": "085 K5 mechanism pilot only; not unified full benchmark",
+  "source_head": "the commit containing this manifest; command must pass its exact full SHA",
+  "source_sha256": {
+    "src/q1/branch_aid.py": "3fb2dfa40aae066d23fb48b5120a732fb18e2bfba2e5f3b27af9e27245149725",
+    "src/review/p1_r6_candidate_probe.py": "6f62e39ea8743f0a903b1ba51ee65c50e9678daf12a5a8b097a875b10ad9d4ac",
+    "src/review/p1_r6_pilot_once.py": "c3c87b216d68cbbf06d0ec77951fc36321f9e69963450a93950126e614e7cdd7",
+    "tests/q1/test_branch_aid.py": "d8353a2b684012da68bcaa9b793ce4c2ad699f3ac1a6e5431980a759ef56f9e0",
+    "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py": "2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f",
+    "data/raw/a/official/data/config.txt": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9",
+    "tests/q1/test_r6_supervisor.py": "42383a6e0465e69fd470698e268b2b641b945d9a8181abe5af8cd32228f396b1"
+  },
+  "inputs": {
+    "scope": "input extraction only; no constructor or scoring",
+    "source_zip_sha256": "4924c14414e59bedaa67d880344278099d23936aa3435ab42490c93c622b6d97",
+    "source_commit": "9c5f87548cc7588465a638e032993969b5cac891",
+    "records": [
+      {
+        "source_entry": "data/case_085.json",
+        "local_file": "case_085.json",
+        "bytes": 7159265,
+        "sha256": "b63169e9cd0f21dc2da6617e7138472e95937465c703b7e4bf4dbc80125ed4f6"
+      },
+      {
+        "source_entry": "v4/085/plan.json",
+        "local_file": "reference-plan.json",
+        "bytes": 206448,
+        "sha256": "e7b3e907ec10ef3d5acc55682200735c42c0f38e4b72da1372c2363b7f01c4d8"
+      },
+      {
+        "source_entry": "v4/085/result.json.gz",
+        "local_file": "reference-result.json.gz",
+        "bytes": 352558,
+        "sha256": "5b6967ae15859545ce6fe2d0a5691454eab3377303796f53aec1b32ecc501bb3"
+      },
+      {
+        "source_entry": "v4/085/run-derived.json",
+        "local_file": "reference-run-derived.json",
+        "bytes": 7076,
+        "sha256": "f53d39e18c149f2008b2cb6ee097993e3670076dbc250700ca080c35e5a98e7b"
+      }
+    ]
+  },
+  "budget": {
+    "test_process": 1,
+    "synthetic_construct_max": 5,
+    "heavy_construct": 1,
+    "branch_construct": 1,
+    "E0_max": 1,
+    "E1": 0,
+    "E2": 0,
+    "retry": 0,
+    "baseline_E0": 0,
+    "worker": 1,
+    "total_seconds": 180,
+    "stage_seconds": {
+      "tests": 10,
+      "probe": 30,
+      "E0": 120
+    },
+    "sampled_group_rss_stop_mib": 1536
+  },
+  "output": "output/p1-r6-pilot-20260925/attempt-1",
+  "required_admission": "local coordinator after P3 R8 release; no cloud reservation",
+  "comparison": {
+    "old_result_commit": "9c5f87548cc7588465a638e032993969b5cac891",
+    "old_makespan": 783703,
+    "old_added_copy_bytes": 8128530,
+    "reuse_guard": "graph/config/official-source identity and exact raw new baseline plan bytes; no reuse of old solver wall"
+  },
+  "previous_preparation_commit": "eae8303526c519774af01cff8ec729ad572ad44b",
+  "revision": 3,
+  "revision_scope": "live unreaped owned Popen cleanup when identity lookup fails; algorithm, graph and scoring budget unchanged"
+}
