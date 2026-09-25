@@ -56,6 +56,7 @@ class Engine:
         self._local_fastpath_status={'state':'idle','delivery_id':None,'started_at':None,
                                      'finished_at':None,'error':None}
         self._git_fast_lane=None
+        self._last_git_fast_semantics=None
         self._publish_thread=None
         self._publish_worker_status={'state':'idle','started_at':None,'finished_at':None,
                                      'sequence':None,'snapshot_id':None,'payload_sha256':None,
@@ -348,6 +349,13 @@ class Engine:
 
     def publish_git_fast_delta(self,base_channel,target,manifest,data,*,target_canonical_sha256=None):
         """Publish the same signed delta to a tiny, independently polled Git ref."""
+        semantics=(manifest['sequence'],manifest['records_sha256'],
+                   digest(canonical(target['manifest'])),digest(canonical(target['algorithms'])),
+                   digest(canonical(target['publisher'])))
+        # Source checked_at/receipt changes can make a new snapshot_id without
+        # changing any scored record or frozen scoring material. The full
+        # checkpoint carries those statuses; keep the fast lane free for data.
+        if semantics==self._last_git_fast_semantics: return
         lane=self.git_fast_lane();head=lane.head()
         prior,prior_envelope=self.channel(head,'fast','snapshot-delta',remote=lane) if head else (None,None)
         if prior:
@@ -357,7 +365,9 @@ class Engine:
             if (prior_manifest.get('sequence')==manifest['sequence'] and
                     prior_manifest.get('records_sha256')!=manifest['records_sha256']):
                 raise ValueError('Fast Git rewrote records at the same sequence')
-            if prior_manifest==manifest: return
+            if prior_manifest==manifest:
+                self._last_git_fast_semantics=semantics
+                return
         object_path='deltas/'+digest(data)+'.json.gz'
         fast={'schema_version':1,'transport':'git','generation':prior['generation']+1 if prior else 1,
               'base_generation':base_channel['generation'],
@@ -366,7 +376,8 @@ class Engine:
               'delta_sha256':digest(data),'delta_size':len(data),
               'target_canonical_sha256':target_canonical_sha256 or digest(canonical(target))}
         lane.update({'channels/fast.json':canonical(self.sign('snapshot-delta',fast)),object_path:data},
-                    expected=canonical(prior_envelope) if prior_envelope else None)
+                    expected=canonical(prior_envelope) if prior_envelope else None,known_head=head)
+        self._last_git_fast_semantics=semantics
 
     @staticmethod
     def _local_commit_files(repo,commit,paths,max_bytes=128*1024*1024):

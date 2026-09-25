@@ -663,6 +663,36 @@ class EngineTests(unittest.TestCase):
         self.assertEqual(status['state'],'online')
         self.assertEqual(read_json(member.state/'accepted/current.json')['snapshot_id'],fourth['snapshot_id'])
 
+    def test_fast_git_skips_source_only_churn_but_publishes_new_record(self):
+        leader=self.engines['leader']
+        bare=self.root/'source-churn-fast.git'
+        subprocess.run(['git','init','--bare','-q',str(bare)],check=True)
+        lane=GitFastLane(self.root/'source-churn-writer','test/repository')
+        lane._run(['remote','set-url','origin',str(bare)])
+        leader._git_fast_lane=lane
+        base=snapshot_payload(1);base_manifest=publish_files(base,self.root/'churn-base')
+        base_channel={'generation':1,'manifest':base_manifest,'object':'objects/'+base_manifest['payload_sha256']}
+        first=snapshot_payload(2)
+        first['source_status']={'feed':{'status':'ok','added':1}}
+        first['snapshot_id']=snapshot_id(first)
+        first_manifest=publish_files(first,self.root/'churn-first')
+        leader.publish_git_fast_delta(base_channel,first,first_manifest,pack_delta(base,first))
+        first_commit=lane.head()
+        source_only=snapshot_payload(2)
+        source_only['source_status']={'feed':{'status':'ok','added':0}}
+        source_only['snapshot_id']=snapshot_id(source_only)
+        self.assertNotEqual(source_only['snapshot_id'],first['snapshot_id'])
+        source_manifest=publish_files(source_only,self.root/'churn-source-only')
+        leader.publish_git_fast_delta(base_channel,source_only,source_manifest,pack_delta(base,source_only))
+        self.assertEqual(lane.head(),first_commit)
+        with_record=snapshot_payload(3)
+        with_record['source_status']=source_only['source_status']
+        with_record['snapshot_id']=snapshot_id(with_record)
+        record_manifest=publish_files(with_record,self.root/'churn-with-record')
+        leader.publish_git_fast_delta(base_channel,with_record,record_manifest,pack_delta(base,with_record))
+        self.assertNotEqual(lane.head(),first_commit)
+        self.assertEqual(leader.channel(lane.head(),'fast','snapshot-delta',remote=lane)[0]['target_manifest']['sequence'],3)
+
     def test_git_fast_corruption_falls_back_to_rest_without_accepting_bad_delta(self):
         leader=self.engines['leader'];member=self.engines['member']
         bare=self.root/'corrupt-fast.git'
