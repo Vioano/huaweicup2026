@@ -19,11 +19,13 @@ from src.q1.response_compile import UnsupportedResponse
 from src.q1.response_oracle import simulate
 from src.review.p1_return_cut_resource_bound import graph_resources
 from src.review.p1_packet_edge_bound import Resources
-from src.review.p1_lazy_packet_search import search, UnknownResult
+from src.review.p1_lazy_packet_search import search, UnknownResult, Unknown
+from src.review.p1_packet_seed import choose_return_seed
 from src.review.p1_memory_key_contract import source_scope
 
 SOURCES = ("src/review/p1_lazy_memory_probe.py", "src/review/p1_lazy_packet_search.py",
-           "src/review/p1_packet_edge_bound.py", "src/review/p1_return_cut_resource_bound.py")
+           "src/review/p1_packet_edge_bound.py", "src/review/p1_return_cut_resource_bound.py",
+           "src/review/p1_packet_seed.py")
 
 
 def hashes():
@@ -215,8 +217,12 @@ def construct(graph, cores, capacity, bandwidth, gate, *, task_limit, final_max_
     if state is not None:
         state['kernel'] = kernel
     edges = {}
+    precomputed = {}
 
     def exact(kind, state, payload):
+        key = (kind, state, payload)
+        if key in precomputed:
+            return precomputed[key]
         n, r = state
         edge = kernel.suffix(r, payload) if kind == 'terminal' else kernel.profile(
             n, r, *(payload if kind == 'normal' else (0, 0)), drain=kind == 'drain')
@@ -235,7 +241,36 @@ def construct(graph, cores, capacity, bandwidth, gate, *, task_limit, final_max_
                    total*resources.d_whole+len(resources.counts)*r*resources.d_return)
         return prefix + tail
 
-    result = search(family.B, exact, bound, oracle_limit,
+    # A structural seed is attempted once; it is not an E0-derived incumbent.
+    # Its queries count against the same oracle/compile/response budgets.
+    seed = dict(status='not_attempted', oracle_calls=0)
+    incumbent = None
+    if state is not None:
+        state['seed'] = seed
+    if family.B and oracle_limit >= 2:
+        seed['selection'] = choose_return_seed(resources, family.B)
+        s = seed['selection']['s']
+        seed_path = (('normal', (0, 0), (family.B, s)),
+                     ('terminal', (family.B, s), 'merge'))
+        total = 0
+        for action in seed_path:
+            seed['oracle_calls'] += 1
+            try:
+                value = exact(*action)
+            except (UnknownResult, TimeoutError) as error:
+                value = Unknown
+                seed['error'] = f'{type(error).__name__}: {error}'
+            precomputed[action] = value
+            if value is Unknown or value is None:
+                seed['status'] = 'unknown' if value is Unknown else 'unsupported'
+                break
+            total += value
+        else:
+            incumbent = (total, seed_path)
+            seed.update(status='model_candidate', upper=total, path=seed_path)
+
+    result = search(family.B, exact, bound, oracle_limit-seed['oracle_calls'],
+                    incumbent=incumbent,
                     max_expansions=expansion_limit,
                     should_stop=lambda: time.perf_counter() >= kernel.deadline)
     if state is not None:
@@ -273,7 +308,7 @@ def construct(graph, cores, capacity, bandwidth, gate, *, task_limit, final_max_
     kernel.response_limit = response_limit  # release the one reserved replay
     cert = verify_final(graph, plan, expected, predicted_bytes, result['upper'], kernel,
                         capacity, bandwidth, task_limit)
-    return plan, dict(kind='lazy-memory-research-NOT-E0', scalar=result,
+    return plan, dict(kind='lazy-memory-research-NOT-E0', scalar=result, seed=seed,
                       **accounting(kernel),
                       full_plan_tasks=count, selected_groups=selected_groups,
                       predicted_scheduled_copy_bytes=predicted_bytes,
@@ -343,6 +378,8 @@ def main():
     kernel = state.get('kernel')
     if 'scalar' in state:
         report['scalar'] = state['scalar']
+    if 'seed' in state:
+        report['seed'] = state['seed']
     if kernel is not None:
         report.update(accounting(kernel))
     try:

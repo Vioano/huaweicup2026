@@ -135,6 +135,8 @@ class LazyMemoryProbeTests(unittest.TestCase):
             def __init__(self, **kwargs): pass
             def box(self, *args, **kwargs): return {'frontier_lower_bound': 0}
         def fake_search(B, exact, bound, budget, **kwargs):
+            self.assertEqual(budget, 0)  # both seed queries use the total budget
+            self.assertEqual(kwargs['incumbent'][0], 8)
             self.assertEqual(exact('normal', (0, 0), (1, 0)), 8)
             self.assertEqual(exact('terminal', (1, 0), 'merge'), 0)
             return {'best_path': (('normal', (0, 0), (1, 0)),
@@ -145,6 +147,7 @@ class LazyMemoryProbeTests(unittest.TestCase):
             self.assertEqual((expected, bytes_, upper), ([[('task',)]], 3, 8))
             return {'traffic': {'scheduled_copy_bytes': 3}}
         with patch.object(probe, 'guard'), patch.object(probe, 'graph_resources', return_value={}), \
+             patch.object(probe, 'choose_return_seed', return_value={'s': 0}), \
              patch.object(probe, 'Resources', Resource), patch.object(probe, 'search', fake_search), \
              patch.object(probe, 'verify_final', fake_final):
             state = {}
@@ -159,6 +162,35 @@ class LazyMemoryProbeTests(unittest.TestCase):
         self.assertEqual(plan['node_to_subgraph'], {'1': 0, '2': 0})
         self.assertFalse(report['scalar']['optimal'])
         self.assertEqual(state['scalar']['open_items'], [{'kind': 'box'}])
+
+    def test_unknown_seed_is_not_incumbent_or_retried(self):
+        class Family:
+            B = cores = 1
+        class Kernel(FakeKernel):
+            def __init__(self, *args):
+                self.profile_calls = 0
+                self.deadline = float('inf')
+            def profile(self, *args, **kwargs):
+                self.profile_calls += 1
+                raise UnknownResult('fake incomplete compilation')
+        def fake_search(B, exact, bound, budget, **kwargs):
+            self.assertEqual(budget, 1)
+            self.assertIsNone(kwargs['incumbent'])
+            self.assertIs(exact('normal', (0, 0), (1, 0)), probe.Unknown)
+            return {'best_path': None, 'upper': None, 'lower': 0, 'optimal': False}
+        with patch.object(probe, 'guard'), patch.object(probe, 'graph_resources', return_value={}), \
+             patch.object(probe, 'Resources'), \
+             patch.object(probe, 'choose_return_seed', return_value={'s': 0}), \
+             patch.object(probe, 'search', fake_search):
+            state = {}
+            with self.assertRaises(UnknownResult):
+                probe.construct({}, 1, {'L1': 1, 'UB': 1}, 60, 100,
+                                task_limit=5, final_max_tasks=2, response_limit=2,
+                                oracle_limit=2, expansion_limit=2, seconds=1,
+                                family_factory=lambda *args: Family(),
+                                kernel_factory=Kernel, state=state)
+        self.assertEqual(state['kernel'].profile_calls, 1)
+        self.assertEqual(state['seed']['status'], 'unknown')
 
 
 if __name__ == '__main__': unittest.main()
