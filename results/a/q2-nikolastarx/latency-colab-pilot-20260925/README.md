@@ -1,0 +1,7 @@
+# Colab CPU latency placement pilot
+
+The shared local evaluator window is occupied. This separate E0-only three-cell mechanism experiment uses a standard Colab CPU runtime and cold graph-driven construction, with no macOS native E2 binary, historical plan seed, GPU or high-memory request. Fixed cases: 005/009/015, five cores; fixed region width 16. One worker, at most three constructions and three independent official E0 calls, zero E2, zero retries, 60 seconds per stage, 360 seconds per batch, 4 GiB observed process-tree RSS. A failure stops further cells.
+
+The capsule pins all solver sources to commit 1c00079aadbd071de62db17686d5ba3fed1da0f2 and every official source/input to the frozen source manifest. Its separate manifest records file SHA-256 values, runner commit and the previous c665 official comparison values from the completed full500 audit. Source/runtime setup costs and experiment wall are separate. The runner checks the entire capsule before any construction. This is a partial mechanism test; it does not update the frozen c665 algorithm or constitute a full500 score. Different-host wall times cannot establish a speedup over macOS.
+
+Initial CLI observation: google-colab-cli 0.7.2 allocated the standard CPU runtime, but `colab exec` failed locally because its pinned jupyter-kernel-client 0.8.0 lacks JupyterSubprotocol. No remote candidate/evaluation ran from that failed command. The CLI's documented raw TTY console is a separate connection path. No global package was modified.
