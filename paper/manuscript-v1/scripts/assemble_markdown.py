@@ -3,7 +3,7 @@
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-FILES = ['00-abstract.md','01-problem.md','02-assumptions.md','03-coherent.md',
+FILES = ['00-abstract.md','01-problem.md','02-assumptions.md','03-framework.md',
          '04-p1.md','05-p2.md','06-p3.md','07-experiments.md','08-conclusion.md',
          '09-references.md','10-appendix.md']
 
