@@ -38,7 +38,10 @@ with Image.open(file) as im:
                 actual_paper_layout_verified=False)
 files = [dict(path=p.name, bytes=p.stat().st_size, sha256=hashlib.sha256(p.read_bytes()).hexdigest())
          for p in sorted(root.iterdir()) if p.is_file() and p.name != 'manifest.json']
-result = dict(status='candidate_for_independent_review', source=sources, style_references=refs,
+result = dict(status='user_confirmed_submitted_for_captain_review', source=sources, style_references=refs,
+              user_confirmation=dict(date='2026-09-26', scope='Current image confirmed in conversation; submit with teammate delivery criteria', image_sha256='6fb51556d5ba6481e6415db757d42a06f90dc93a7e6093eddd46a870077d4508'),
+              submission_standard_commit='a58a7d4dccdd90bfca25a8eb2c4384a7d258d3f4',
+              submission_standard_version='2026-09-26.5',
               language_standard_commit='2d5fbdc66d9fbd5b6ac5988706546e4d60a6ab42',
               language_standard_version='2026-09-26.3',
               tool='built-in image_gen', generation_calls=8,
