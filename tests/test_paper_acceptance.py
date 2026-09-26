@@ -84,8 +84,8 @@ class ReviewContractTest(unittest.TestCase):
         registry = json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text())
         by_id = {item['id']: item for item in registry['checkpoints']}
         self.assertEqual(registry['latest_known_checkpoint'], 'v7')
-        self.assertEqual(by_id['v7']['kind'], 'frozen_local_checkpoint_pending_publication')
-        self.assertNotIn('git_commit', by_id['v7'])
+        self.assertEqual(by_id['v7']['kind'], 'frozen_published_checkpoint')
+        self.assertIn(by_id['v7']['git_commit'], by_id['v7']['public_pdf_url'])
         self.assertEqual(by_id['v7']['pages'], 95)
         self.assertEqual({x['gallery_id'] for x in by_id['v7']['figures_checked']},
                          {x['gallery_id'] for x in by_id['v6']['figures_checked']})
