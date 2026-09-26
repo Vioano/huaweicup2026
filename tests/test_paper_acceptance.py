@@ -44,6 +44,15 @@ class ReviewContractTest(unittest.TestCase):
             self.assertNotIn('manuscript_placement', figure)
         self.assertLess(gallery.by_id['fang-fig5-1-a']['curation_rank'],
                         gallery.by_id['fang-fig42-a']['curation_rank'])
+        original = gallery.by_id['fang-fig43-original-v2']
+        preview = gallery.by_id['fang-fig43-insert-preview-v2']
+        self.assertEqual(original['sha256'], 'c0ac9d63820aa9925fed7bda69769d7fa9248db8708b91391be81df82963db84')
+        self.assertEqual(preview['sha256'], 'cc698a9e292c0c569417e91ed4e33e9b2129805f1197fec9ed1950c226c82779')
+        self.assertEqual(original['family'], preview['family'])
+        self.assertEqual(original['number'], preview['number'])
+        self.assertEqual(original['fang_selection_state'], 'user_confirmed_original')
+        self.assertEqual(original['review_stage'], 'review_pending')
+        self.assertNotIn('manuscript_placement', original)
         self.assertFalse(gallery.by_id['fang-fig41']['curation_priority'])
         self.assertEqual(gallery.by_id['fang-fig41']['fang_selection_state'], 'not_adopted_current_algorithm')
         self.assertFalse(gallery.by_id['acceptance-case026-xy']['curation_priority'])
