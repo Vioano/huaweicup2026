@@ -44,12 +44,12 @@ def main() -> None:
             "path": "results/a/p123-full500-lyx-20260925/per_case.json",
             "commit": "5f4b7036ef7d05fcc88242742ad9ac0ab75b2b5a",
             "git_blob": "018ebde9b33b64428fda0db4ad05746b1ec32fbf",
-            "sha256": "074bfa55b25acb60504780ff3107f9c28fef3ba58ef750bee1bbb0996fb9cdfc",
-        }, {
+            "sha256": "122da1335cf8f70e3db472ff84270cb3fc17690fcb3200607555c9dad7545847",
+            "working_copy_sha256": "074bfa55b25acb60504780ff3107f9c28fef3ba58ef750bee1bbb0996fb9cdfc",
         }],
         "local_inputs": [{
             "path": "results/a/p123-full500-lyx-20260925/inputs/P2.json",
-            "sha256": manifest["source"]["sha256"]["results/a/p123-full500-lyx-20260925/inputs/P2.json"],
+            "sha256": sha(ROOT / "results/a/p123-full500-lyx-20260925/inputs/P2.json"),
             "published": False,
             "reason": "large normalized input is gitignored; the published per_case.json is the reproducible plot feed",
         }],
