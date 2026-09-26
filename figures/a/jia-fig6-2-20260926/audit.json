@@ -1,0 +1,58 @@
+{
+  "schema": "figure-auto-review-v1",
+  "figure_id": "fig-6-2",
+  "primary": "figure.svg",
+  "files": [
+    {"name": "figure.svg", "role": "svg", "sha256": "f6782456e18a3d0b69c47a93434a3f83109b2ae213777d357d8dfe73be381a2c"},
+    {"name": "figure.png", "role": "png", "sha256": "3b2bdcbe01f333907de9baad5ebb34d4d6b92a172146574990afa2f2344b0462"},
+    {"name": "plot.py", "role": "source", "sha256": "49b6b342b522afbcda1c38d1e334b3fb436c229e1b13af2d8dcbff3c71d4b07a"},
+    {"name": "caption.md", "role": "caption", "sha256": "b6b425d6863266f7f14bc30bf41059edce863639862080ced247759b18ae3838"},
+    {"name": "self-check.md", "role": "self_check", "sha256": "83921430b834c980774a11476c4947e4c23924bb8f96ecba0e5e3ebadce9a169"},
+    {"name": "cuts.csv", "role": "input", "sha256": "e06c01bf26b543393b98b83081cfa4ddec821f8b5bf3af0d36eaf4a6a01a4c3f"},
+    {"name": "capacity.csv", "role": "input", "sha256": "ec172539ef7a9a6d679f5a47520cb1890d894a03510c383cfca90c593dd8f85c"}
+  ],
+  "command": ".venv/Scripts/python.exe figures/a/jia-fig6-2-20260926/plot.py（工作目录=仓库根；脚本内置切点自检：两方案切点有序、首尾覆盖 [0,124]、核 0..3 递增，断言通过后经 matplotlib Agg 后端写出 figure.svg 与 figure.png(300 dpi)。工具版本：Python 3.13.12（.venv，matplotlib））",
+  "sources": [
+    {"path": "paper/sections/a-q3.md", "commit": "1e35e3994d4792dfa2bb406669b547cb8b7e8fb0", "sha256": "1f15c84753648a1140306b76ff39a90c29383f86978aade10710f57394b92f31", "note": "P3 初稿；使用 6.4（式 6-11/6-12/6-13）、6.6.3（三方案实测结果与早期候选报告峰值）；哈希=固定提交抓取字节"},
+    {"path": "results/a/q3-yuanzhifang/pipeline-capacity-20260925/REPORT.md", "commit": "7edacdd97a7be36a402af20bc8bfa8a7454dbbe0", "sha256": "b8e156a1efd85422322b4fa08f4bd04cfba07c5b3fccb7f80e68be65a659663b", "note": "044/k4 容量方案固定单例报告：官方峰值 [79584,516992,330752,18816]、UB 峰值全 0、P3=37581、extra DDR 121088、spill 0；哈希=抓取字节"},
+    {"path": "results/a/q3-yuanzhifang/pipeline-capacity-20260925/manifest.json", "commit": "7edacdd97a7be36a402af20bc8bfa8a7454dbbe0", "sha256": "见固定提交 blob（自 GitHub Contents API 核对）", "note": "constructions[0].detail：cuts [0,41,65,95,124]、stage_memory 静态估计、capacity L1=524288/UB=131072、计划 sha256 715be4ec…；controls.044 登记控制方案（plan 44c66c84…，original_commit e6b5500d…）"},
+    {"path": "results/a/q3-yuanzhifang/pipeline-20260924/manifest.json 与 comparison.json", "commit": "7edacdd97a7be36a402af20bc8bfa8a7454dbbe0", "sha256": "见固定提交 blob（自 GitHub Contents API 核对）", "note": "控制方案 cuts [0,28,58,91,124]、stage_compute_cycles [1928,1947,1883,1914]；comparison.json 逐核官方内存峰值 [19680,430080,473600,22912]、P3=40927、extra DDR 135168、spill 0"}
+  ],
+  "units": {"makespan": "cycles", "wall": "s", "bytes": "B"},
+  "panels": [
+    {"id": "1", "title": "三方案阶段切分条带（共同计算位置轴 0..124；颜色=阶段/核归属；早期候选缺切点元数据不绘条带并登记缺项）"},
+    {"id": "2", "title": "L1 分面：控制方案官方峰值 / 容量方案静态估计（斜纹）/ 容量方案官方峰值（菱形）/ 早期候选 648 KiB 参考线"},
+    {"id": "3", "title": "UB 分面：两方案官方 UB 峰值均为 0（实测记录）+ 容量线 128 KiB"}
+  ],
+  "tables": {
+    "cuts": "cuts.csv",
+    "capacity": "capacity.csv"
+  },
+  "table_columns": {
+    "cuts": ["variant", "case", "cores", "start", "end", "core"],
+    "capacity": ["variant", "space", "working_set", "capacity", "evidence_type"]
+  },
+  "parameters": {
+    "position_count": 124,
+    "jobs": 11,
+    "cores": 4,
+    "case": "044",
+    "variants": "pipeline_stages（控制）/ pipeline_capacity / firstload_only（仅文字与参考线，缺切点元数据）",
+    "core_mapping": "阶段索引=核索引（4 阶段对应 4 核的固定流水结构；cuts.csv core 列即阶段索引；推导依据见 self-check）",
+    "missing": "firstload_only 切点/核归属/工作集明细缺失（固定批次未登记），已如实登记不造数",
+    "no_k5_data": "未借用 044/k5 的任何切点或结果"
+  },
+  "required_stages": [],
+  "criteria": [
+    "切点有序，完整覆盖计算位置，无重叠或遗漏；核归属与方案一致。",
+    "容量单位、内存空间和工作集定义明确，估计与实测使用不同标记。",
+    "不借用 044/k5 的切点或结果；不以静态容量满足证明零 spill 或最优调度。"
+  ],
+  "dispatch": {
+    "issue": "huaweibei123/huaweicup2026#14",
+    "dispatch_comment_id": 5845363845,
+    "task_book_sha256": "55859ab1ed2b81b218663f60c4cf824e9e01ba0399c52113861b48e61da7dfd2"
+  },
+  "notice": "数值全部来自固定提交的实测/登记记录；静态估计与实测分开标记。机检只验证提交包内部一致性，视觉和科学结论由 Agent 逐图审查与用户最终总验收。",
+  "version_note": "v1（首版）：按派发单 5845363845 绘制 matplotlib 分段条带+容量分面（三方案切点对比、L1/UB 分面、静态/实测分标记、早期候选缺项登记）；哈希按最终字节一次性重算（不含 audit.json 自身）"
+}
