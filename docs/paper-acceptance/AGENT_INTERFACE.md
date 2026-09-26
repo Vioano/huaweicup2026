@@ -16,7 +16,7 @@
 | `GET /api/v1/annotation-workflow` | 用户原始批注、问题类别、来源与专项检查范围 |
 | `GET /api/v1/standards` | 标准原件与哈希 |
 | `GET /api/v1/author-reports` | 导入的作者自报，包含固定来源及每条scope |
-| `GET /api/v1/handoffs` | 写作交接与待交付事实；包括 USER-V8-P47-WHITESPACE-01、USER-FANG-FIG53-OPTIMIZE-01、USER-V9-AUTO-TOC-01 三条相互独立的用户要求，原话与作者解释分开保存 |
+| `GET /api/v1/handoffs` | 写作交接与待交付事实；包括目录语言、语言/篇幅与Fang格式分工、五张原图保留决定，以及此前各项批注。原话、理解、已通知与本人已读分开记录 |
 | `GET /api/v1/team-figures` | 队友与验收台图件、Fang明确选版优先级、待Fang比选队列、固定来源与待审状态；`curation_priority`与`review_queue_rank`仅控制展示顺序，不代表科学或论文验收 |
 | `GET /api/v1/figure-selection` | Fang原18组任务下一内容版的逐图处置：正文9、附录1、合并5、不采用3；`fang_overall`与每项`workbench_archive`记录固定原件包的用户总验收来源及18项提交/发版绑定。该验收只对应归档原件，不能继承到画廊改版、v9整页或下一版入稿；监督会话的选图提案也不等于稿件人工验收 |
 | `GET /api/v1/figure-requests` | 论文组织任务定义的缺图需求、派工与接收状态；FIG-FANG-5-3记录Fang半成品、验收台修订及v9第46页的同字节入稿，科学和语言仍待审 |
