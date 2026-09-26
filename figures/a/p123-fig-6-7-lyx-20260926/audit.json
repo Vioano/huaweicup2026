@@ -1,0 +1,129 @@
+{
+  "schema": "figure-auto-review-v1",
+  "figure_id": "fig-6-7",
+  "primary": "fig67_p3_quality_cost.svg",
+  "files": [
+    {
+      "name": "fig67_p3_quality_cost.png",
+      "role": "png",
+      "sha256": "f4bcbef3cd33237f6c4799c00ab15767cb6cd3851da89cdae6c3838ce7ef4c0a",
+      "size": 282011
+    },
+    {
+      "name": "fig67_p3_quality_cost.svg",
+      "role": "svg",
+      "sha256": "95c896c40042969391d7aeccbb347638819cf0382288b694f69c208cb84b82f2",
+      "size": 167748
+    },
+    {
+      "name": "fig67_p3_quality_cost.pdf",
+      "role": "pdf",
+      "sha256": "86135d81e676704b35196f995cd8a0c07449f5d638ee47a44872259186625459",
+      "size": 45725
+    },
+    {
+      "name": "p3_quality_cost_rows.csv",
+      "role": "input",
+      "sha256": "70f1ec052b25d174df8c1b210859201d61a0ac81aad7a4518445a87aef90260c",
+      "size": 417014
+    },
+    {
+      "name": "solver_wall_quantiles.csv",
+      "role": "input",
+      "sha256": "01a01c820a6df2270fa386f32133b89435cdc137a82f65779647f2d84c0d1da7",
+      "size": 1687
+    },
+    {
+      "name": "caption.md",
+      "role": "notes",
+      "sha256": "416e4bcbf88abdb5a80ec706d66d2d9316d5fe2a1dfaf0f82096569b0bccb341",
+      "size": 393
+    },
+    {
+      "name": "README.md",
+      "role": "notes",
+      "sha256": "70f2d34f064c6ba08199614e9e6c303c58000b94ce54b3965af7a88fd80fc64f",
+      "size": 570
+    },
+    {
+      "name": "self-check.md",
+      "role": "notes",
+      "sha256": "8d4b138025944de6cbfea7db7ed113bec8ad6ce3ecf9d8aa7f492ec07c0d17c3",
+      "size": 529
+    },
+    {
+      "name": "plot_figures.py",
+      "role": "source",
+      "sha256": "499b7a59e7a3d7569b0fc2391dd40a96bb3c4e1fb9a2aa43fa304ee12a962477",
+      "size": 53590
+    },
+    {
+      "name": "manifest.json",
+      "role": "notes",
+      "sha256": "1c5edba241302f1a584bbf38d69bb59321b1bb6ce8612e2fc874869527eaae0d",
+      "size": 4788
+    }
+  ],
+  "command": "python figures/a/p123-fig-5-6-lyx-20260926/plot_figures.py --figure 6-7",
+  "sources": [
+    {
+      "path": "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/revision2-baseline-draft/board-feed-s01..s10-revision2.json",
+      "commit": "19bebf35205d23fdd832781540f8879da52eeb62",
+      "working_copy_sha256": "ed5b24fb86351420350a17b3757f9923378b81f038a950ae10c29d3f1c14439f",
+      "feed_sha256": {
+        "board-feed-s01-revision2.json": "dc65ad8ed72fab830ac14c5c89b7e65aaec4399aed6e8e6b3d5d417dc75c364d",
+        "board-feed-s02-revision2.json": "75b5521fc14e12afd78674f2950d141194a47bb365ddfe07bac8a015e500f71e",
+        "board-feed-s03-revision2.json": "78e83e6f5c336873b4bf431d8d498399ec25c4c4f78d3b547d310ba9f03e974d",
+        "board-feed-s04-revision2.json": "97ee774b4379f65e88ddce0268050970840f37c5b7a5f37716492b67a6772e67",
+        "board-feed-s05-revision2.json": "29aae9bab068d944affea7d508f0e0d4ac45b1bb8af1ec0c62fbf092b079bc45",
+        "board-feed-s06-revision2.json": "9b8d9c9ba610adbb846c13970d177aa295c31d80636ac652961ad75e06cd0a9d",
+        "board-feed-s07-revision2.json": "e6979596c0312acccd928964986e0576012f3f0d0212a9dc0c5c598db934aa54",
+        "board-feed-s08-revision2.json": "ccf259ac3a44c16d2335fc3a7f38094491ddfb65d78b6336c30061b994ea9627",
+        "board-feed-s09-revision2.json": "5e935f97a541545a4fbd4c7b30e3853d0e71eaea008daa667620d294e0199bb6",
+        "board-feed-s10-revision2.json": "e499ba7a2fb68258438cf1f43b894f9a7fae4ab4a7bcedb6c147e5baacb67149"
+      }
+    }
+  ],
+  "units": {
+    "makespan": "cycles",
+    "wall": "s",
+    "bytes": "B"
+  },
+  "panels": [
+    {
+      "id": "quality_cost",
+      "title": "Quality versus solver wall"
+    },
+    {
+      "id": "ecdf",
+      "title": "Solver-wall ECDF"
+    }
+  ],
+  "tables": {
+    "metrics": "p3_quality_cost_rows.csv",
+    "summary": "solver_wall_quantiles.csv"
+  },
+  "coverage": {
+    "cases": 100,
+    "cores": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "cells": 500
+  },
+  "visual_check": {
+    "png_opened": true,
+    "svg_opened": false,
+    "pdf_opened": false,
+    "paper_width_preview": false
+  },
+  "status": "submitted_for_review",
+  "notes": [
+    "No solver/E0/E1/E2 calls were made by the plotting command.",
+    "evaluation_wall_seconds is null in the fixed feed and is not filled with zero.",
+    "audit.json is excluded from manifest.outputs to avoid self-reference."
+  ]
+}

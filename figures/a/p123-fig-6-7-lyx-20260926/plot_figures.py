@@ -191,7 +191,8 @@ def finish_package(
     (out_dir / "README.md").write_text(readme.rstrip() + "\n", encoding="utf-8")
     (out_dir / "self-check.md").write_text(self_check.rstrip() + "\n", encoding="utf-8")
     source_copy = out_dir / "plot_figures.py"
-    shutil.copy2(Path(__file__), source_copy)
+    if not source_copy.exists() or not source_copy.samefile(Path(__file__)):
+        shutil.copy2(Path(__file__), source_copy)
     output_paths = [out_dir / "caption.md", out_dir / "README.md", out_dir / "self-check.md", source_copy]
     if extra_paths:
         output_paths.extend(extra_paths)
@@ -480,6 +481,189 @@ def make_efficiency_figure(problem: str, figure_id: str, figure_no: str, title: 
     return out
 
 
+def make_fig67_forest() -> Path:
+    out = OUT_ROOT / "p123-fig-6-7-lyx-20260926"
+    forest_path = ROOT / "forest-revision2-offline/P3-forest-revision2.json"
+    feed_dir = forest_path.parent / "feeds"
+    feed_paths = sorted(feed_dir.glob("board-feed-s*-revision2.json"))
+    if len(feed_paths) != 10:
+        raise ValueError(f"expected 10 fixed forest feeds, found {len(feed_paths)}")
+    payload = load_json(forest_path)
+    records = payload.get("records", [])
+    expected = {(f"{case:03d}", core) for case in range(1, 101) for core in range(1, 6)}
+    actual = {(str(row["case_id"]), int(row["cores"])) for row in records}
+    if len(records) != 500 or actual != expected:
+        raise ValueError("forest revision2 input must contain exactly 500 unique case/core cells")
+    if payload.get("source_commit") != "19bebf35205d23fdd832781540f8879da52eeb62":
+        raise ValueError("unexpected forest source commit")
+    if payload.get("solver_commit") != "311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1":
+        raise ValueError("unexpected forest solver commit")
+    rows = []
+    for record in records:
+        env = record["provenance"]["environment"]
+        params = record["parameters"]
+        timing = record["timing"]
+        metrics = record["metrics"]
+        rows.append(
+            {
+                "case": str(record["case_id"]),
+                "cores": int(record["cores"]),
+                "status": record["status"],
+                "makespan": int(metrics["makespan_cycles"]),
+                "extra_ddr": int(metrics["extra_ddr_bytes"]),
+                "solver_wall": float(metrics["solver_wall_seconds"]),
+                "evaluation_wall_seconds": metrics.get("evaluation_wall_seconds"),
+                "platform": str(env["os"]),
+                "cpu": str(env["cpu"]),
+                "workers": int(env["workers"]),
+                "global_max_workers": int(params["global_max_workers"]),
+                "timing_scope": str(record["provenance"]["measurement"]["solver_scope"]),
+                "timing_includes_evaluation": bool(timing["solver_includes_evaluation"]),
+                "attempt_id": record["attempt_id"],
+                "revision": int(record["revision"]),
+                "run_id": record["run_id"],
+                "algorithm_id": record["algorithm_id"],
+                "solver_commit": record["solver_commit"],
+                "graph_sha256": record["identity"]["graph_sha256"],
+                "config_sha256": record["identity"]["config_sha256"],
+                "plan_sha256": record["identity"]["plan_sha256"],
+                "source_result_path": record["artifacts"]["result"]["path"],
+            }
+        )
+    if any(row["status"] != "ok" for row in rows):
+        raise ValueError("forest feed contains a non-ok record")
+    metrics_path = out / "p3_quality_cost_rows.csv"
+    summary_path = out / "solver_wall_quantiles.csv"
+    fields = [
+        "case", "cores", "status", "makespan", "extra_ddr", "solver_wall",
+        "evaluation_wall_seconds", "platform", "cpu", "workers", "global_max_workers",
+        "timing_scope", "timing_includes_evaluation", "attempt_id", "revision", "run_id",
+        "algorithm_id", "solver_commit", "graph_sha256", "config_sha256", "plan_sha256",
+        "source_result_path",
+    ]
+    write_csv(metrics_path, rows, fields)
+    summary = []
+    groups = {}
+    for row in rows:
+        key = (row["cores"], row["platform"], row["workers"], row["timing_scope"])
+        groups.setdefault(key, []).append(row)
+    for (cores, platform_name, workers, timing_scope), group in sorted(groups.items()):
+        values = np.array([row["solver_wall"] for row in group], dtype=float)
+        summary.append(
+            {
+                "cores": cores,
+                "platform": platform_name,
+                "workers": workers,
+                "timing_scope": timing_scope,
+                "n": len(values),
+                "median": float(np.median(values)),
+                "p95": float(np.quantile(values, 0.95)),
+                "max": float(np.max(values)),
+            }
+        )
+    write_csv(summary_path, summary, ["cores", "platform", "workers", "timing_scope", "n", "median", "p95", "max"])
+    setup_style()
+    fig, axes = plt.subplots(1, 2, figsize=(6.5, 4.7), gridspec_kw={"width_ratios": [1.12, 1.0]})
+    colors = [PALETTE["blue"], PALETTE["green"], PALETTE["orange"], PALETTE["red"], PALETTE["purple"]]
+    markers = ["o", "s", "^", "D", "P"]
+    linestyles = ["-", "--", "-.", ":", (0, (5, 1, 1, 1))]
+    for core, color, marker in zip(range(1, 6), colors, markers):
+        subset = [row for row in rows if row["cores"] == core]
+        axes[0].scatter(
+            [row["solver_wall"] for row in subset],
+            [row["makespan"] for row in subset],
+            s=11,
+            alpha=0.48,
+            color=color,
+            marker=marker,
+            edgecolors="none",
+            label=f"k={core}",
+        )
+    axes[0].set_xscale("log")
+    axes[0].set_yscale("log")
+    axes[0].set_title("Quality versus solver wall", loc="left")
+    axes[0].set_xlabel("Solver wall (s, log)")
+    axes[0].set_ylabel("Official Makespan (cycles, log)")
+    axes[0].grid(True, which="both", color=PALETTE["grid"], linewidth=0.5)
+    axes[0].legend(ncol=2, fontsize=7.5, handletextpad=0.35, columnspacing=0.7)
+    largest_p95 = max(item["p95"] for item in summary)
+    for core, color, style in zip(range(1, 6), colors, linestyles):
+        values = np.sort(np.array([row["solver_wall"] for row in rows if row["cores"] == core], dtype=float))
+        y = np.arange(1, len(values) + 1) / len(values)
+        axes[1].step(values, y, where="post", color=color, linestyle=style, linewidth=1.55, label=f"k={core}")
+    axes[1].axvline(
+        largest_p95,
+        linestyle=(0, (4, 2)),
+        color=PALETTE["ink"],
+        linewidth=1.0,
+        label=f"largest per-core P95 = {largest_p95:.2f} s",
+    )
+    axes[1].set_xscale("log")
+    axes[1].set_ylim(0, 1.02)
+    axes[1].set_title("Solver-wall ECDF", loc="left")
+    axes[1].set_xlabel("Solver wall (s, log)")
+    axes[1].set_ylabel("Cumulative fraction")
+    axes[1].grid(True, which="both", color=PALETTE["grid"], linewidth=0.5)
+    axes[1].legend(fontsize=7.0, loc="lower right", frameon=False)
+    fig.suptitle("Figure 6-7 | P3 quality, solver cost and tail latency", fontsize=11.5, fontweight="bold", y=0.995)
+    fig.text(0.01, 0.012, "Forest revision 2; online E0 is included in solver wall; no standalone external E0 timer.", fontsize=7.2, color=PALETTE["muted"])
+    fig.tight_layout(rect=[0, 0.055, 1, 0.95])
+    paths = save_figure(fig, out, "fig67_p3_quality_cost")
+    manifest = base_manifest(
+        "fig-6-7",
+        "P3 quality, solver cost and tail latency",
+        out,
+        "ready_for_human_review",
+        100,
+        [forest_path, *feed_paths],
+        [
+            "Forest revision 2 records are pinned to the stated source and solver commits.",
+            "Online E0 is included in solver wall; evaluation_wall_seconds is null because no standalone external timer was recorded.",
+            "The vertical line is the largest of the five per-core P95 values, not an overall P95.",
+            "SVG/PDF were generated but not opened in a desktop reader in this session.",
+        ],
+    )
+    manifest["source"].update(
+        {
+            "commit": payload["source_commit"],
+            "solver_commit": payload["solver_commit"],
+            "repository_path": "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/revision2-baseline-draft/board-feed-s01..s10-revision2.json",
+            "feed_count": len(feed_paths),
+            "cells": len(rows),
+            "run_id": rows[0]["run_id"],
+            "algorithm_id": rows[0]["algorithm_id"],
+        }
+    )
+    manifest["environment"]["command"] = "python figures/a/p123-fig-5-6-lyx-20260926/plot_figures.py --figure 6-7"
+    manifest["outputs"].update({p.name: sha256_file(p) for p in paths + [metrics_path, summary_path]})
+    finish_package(
+        out,
+        manifest,
+        "Figure 6-7. P3 official Makespan versus the end-to-end solver wall from forest revision 2. The solver wall includes child startup, input reading, construction, integrated online E0 selection/verification, evidence writes and cleanup; no standalone external final-evaluation timer was recorded. The vertical marker is the largest per-core P95 and is not an overall P95 or a quality threshold.",
+        "# Figure 6-7 delivery\n\nThis package uses the fixed forest revision-2 feed (500 unique case/core cells) and keeps quality and wall-clock values from the same record.\n\n- Source commit: `19bebf35205d23fdd832781540f8879da52eeb62`\n- Solver commit: `311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1`\n- Reproduce: `python figures/a/p123-fig-5-6-lyx-20260926/plot_figures.py --figure 6-7`\n- Outputs: `fig67_p3_quality_cost.png`, `.svg`, `.pdf`, `p3_quality_cost_rows.csv`, `solver_wall_quantiles.csv`\n- Budget: read-only parsing and plotting; no new solver or evaluator calls.\n",
+        "# Figure 6-7 self-check\n\n- [x] 500 forest revision-2 records, 100 cases x 5 cores.\n- [x] Makespan, extra DDR and solver wall remain paired by case/core.\n- [x] Resource fields retain platform, CPU, per-shard workers and global batch worker cap.\n- [x] Solver-wall median/P95/max use linear interpolation over the five 100-cell groups.\n- [x] Vertical marker is labeled as the largest per-core P95.\n- [x] PNG inspected locally; no desktop SVG/PDF reader inspection claimed.\n- [ ] yuanzhifang scientific acceptance: pending.\n",
+        [metrics_path, summary_path],
+    )
+    audit_files = paths + [metrics_path, summary_path, out / "caption.md", out / "README.md", out / "self-check.md", out / "plot_figures.py", out / "manifest.json"]
+    audit = {
+        "schema": "figure-auto-review-v1",
+        "figure_id": "fig-6-7",
+        "primary": "fig67_p3_quality_cost.svg",
+        "files": [{"name": path.name, "role": "svg" if path.suffix == ".svg" else "png" if path.suffix == ".png" else "pdf" if path.suffix == ".pdf" else "source" if path.name == "plot_figures.py" else "input" if path.suffix == ".csv" else "notes", "sha256": sha256_file(path), "size": path.stat().st_size} for path in audit_files],
+        "command": "python figures/a/p123-fig-5-6-lyx-20260926/plot_figures.py --figure 6-7",
+        "sources": [{"path": "results/a/q3-nikolastarx/forest-full500-20260925-s59/20260924T2122Z-s59ee/revision2-baseline-draft/board-feed-s01..s10-revision2.json", "commit": payload["source_commit"], "working_copy_sha256": sha256_file(forest_path), "feed_sha256": {path.name: sha256_file(path) for path in feed_paths}}],
+        "units": {"makespan": "cycles", "wall": "s", "bytes": "B"},
+        "panels": [{"id": "quality_cost", "title": "Quality versus solver wall"}, {"id": "ecdf", "title": "Solver-wall ECDF"}],
+        "tables": {"metrics": metrics_path.name, "summary": summary_path.name},
+        "coverage": {"cases": 100, "cores": [1, 2, 3, 4, 5], "cells": 500},
+        "visual_check": {"png_opened": True, "svg_opened": False, "pdf_opened": False, "paper_width_preview": False},
+        "status": "submitted_for_review",
+        "notes": ["No solver/E0/E1/E2 calls were made by the plotting command.", "evaluation_wall_seconds is null in the fixed feed and is not filled with zero.", "audit.json is excluded from manifest.outputs to avoid self-reference."],
+    }
+    (out / "audit.json").write_text(json.dumps(audit, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return out
+
+
 def recursive_keys(value: Any, prefix: str = "") -> set[str]:
     keys: set[str] = set()
     if isinstance(value, dict):
@@ -495,25 +679,164 @@ def recursive_keys(value: Any, prefix: str = "") -> set[str]:
 
 def make_fig56() -> Path:
     out = OUT_ROOT / "p123-fig-5-6-lyx-20260926"
-    payload = load_json(INPUTS / "P2.json")
-    keys = sorted(recursive_keys(payload))
-    required = [key for key in keys if any(token in key.lower() for token in ("u", "l_global", "certificate", "bound"))]
-    missing = [field for field in ("U", "L_global", "certificate", "proof_status") if not any(field.lower() in key.lower() for key in keys)]
+    result_dir = ROOT / "results/a/p123-fig-5-6-lyx-20260926"
+    # The first export was published without a suffix; accept both names while
+    # keeping the exact bytes and their hashes in the manifest.
+    bounds_path = next(
+        (result_dir / name for name in ("global-bounds.json", "global-bounds") if (result_dir / name).is_file()),
+        None,
+    )
+    if bounds_path is None:
+        raise FileNotFoundError("global-bounds(.json) source is missing")
+    upper_path = result_dir / "completed-summary.verified.json"
+    proof_path = ROOT / "docs/a/q2-nikolastarx/OPTIMALITY_BOUNDS.md"
+    bounds = load_json(bounds_path)
+    upper = load_json(upper_path)
+    proof = proof_path.read_text(encoding="utf-8")
+    lower_rows = {}
+    for graph in bounds["records"]:
+        case = Path(graph["graph_file"]).stem.replace("case_", "")
+        entries = graph["by_core_count"]
+        if not isinstance(entries, list):
+            raise ValueError(f"{case}: by_core_count must be a list in the pinned certificate")
+        for entry in entries:
+            lower_rows[(case, int(entry["cores"]))] = (int(entry["makespan_lower_bound_cycles"]), graph)
+    upper_rows = {(str(row["case"]), int(row["cores"])): row for row in upper["rows"]}
+    expected = {(f"{case:03d}", core) for case in range(1, 101) for core in range(1, 6)}
+    if set(lower_rows) != expected or set(upper_rows) != expected:
+        raise ValueError("fixed lower/upper inputs must each cover exactly 100x5 cells")
+    if upper.get("status") != "completed" or upper.get("accepted_cells") != 500 or upper.get("in_flight"):
+        raise ValueError("upper-bound run receipt is not complete")
+    rows = []
+    for key in sorted(expected):
+        lower, graph = lower_rows[key]
+        upper_row = upper_rows[key]
+        if graph["graph_sha256"] != upper_row["graph_sha256"]:
+            raise ValueError(f"graph identity mismatch for {key}")
+        if upper_row.get("status") != "accepted" or upper_row.get("solver_process", {}).get("status") != "ok" or upper_row.get("e0_process", {}).get("status") != "ok":
+            raise ValueError(f"unaccepted upper result for {key}")
+        value = int(upper_row["official"]["makespan"])
+        if lower <= 0 or lower > value:
+            raise ValueError(f"invalid lower-bound pairing for {key}: L={lower}, U={value}")
+        certified = bool(
+            graph.get("supported")
+            and graph.get("precedence_supported")
+            and not graph.get("multiple_eligible_producer_tensor_ids")
+        )
+        if not certified:
+            raise ValueError(f"certificate applicability guard failed for {key}")
+        rows.append(
+            {
+                "case": key[0],
+                "cores": key[1],
+                "upper": value,
+                "lower": lower,
+                "certified": 1,
+                "domain": graph.get("precedence_domain", "global"),
+                "gap": value / lower - 1.0,
+            }
+        )
+    ecdf_rows = []
+    summary_rows = []
+    for cores in range(1, 6):
+        values = sorted(r["gap"] for r in rows if r["cores"] == cores and r["certified"])
+        within = sum(
+            20 * (r["upper"] - r["lower"]) <= r["lower"]
+            for r in rows
+            if r["cores"] == cores and r["certified"]
+        )
+        for index, gap in enumerate(values, 1):
+            ecdf_rows.append({"cores": cores, "gap": f"{gap:.17g}", "cdf": f"{index / len(values):.17g}"})
+        summary_rows.append({"cores": cores, "valid": len(values), "uncertified": sum(not r["certified"] for r in rows if r["cores"] == cores), "within_5pct": within})
+    if (
+        "compute-only" not in proof
+        or "precedence" not in proof
+        or "optimality status is unresolved" not in proof
+        or "not an observed error" not in proof
+    ):
+        raise ValueError("proof-scope source does not contain required bound semantics")
     setup_style()
-    fig, ax = plt.subplots(figsize=(9.5, 4.9))
-    ax.axis("off")
-    ax.text(0.02, 0.92, "Figure 5-6 | Global lower-bound distance distribution", transform=ax.transAxes, fontsize=14, fontweight="bold", color=PALETTE["ink"])
-    ax.text(0.02, 0.72, "BLOCKED BY SOURCE FIELDS", transform=ax.transAxes, fontsize=12, fontweight="bold", color=PALETTE["red"])
-    ax.text(0.02, 0.57, "The required per-cell U, L_global and certificate/proof-status fields are not present\nin the fixed P2 input. Therefore U/L_global - 1 cannot be computed or plotted.", transform=ax.transAxes, fontsize=11, color=PALETTE["muted"], linespacing=1.5)
-    ax.text(0.02, 0.30, "Missing fields: " + ", ".join(missing), transform=ax.transAxes, fontsize=10, color=PALETTE["red"])
-    ax.text(0.02, 0.16, "No FIFO bound, proxy score or reconstructed curve is substituted.", transform=ax.transAxes, fontsize=10, color=PALETTE["muted"])
+    fig, ax = plt.subplots(figsize=(9.5, 5.4))
+    palette = [PALETTE["blue"], PALETTE["green"], PALETTE["orange"], PALETTE["red"], PALETTE["purple"]]
+    for cores, color in zip(range(1, 6), palette):
+        vals = np.sort(np.array([r["gap"] for r in rows if r["cores"] == cores and r["certified"]], dtype=float))
+        y = np.arange(1, len(vals) + 1) / len(vals)
+        ax.step(vals, y, where="post", color=color, linewidth=2.0, label=f"{cores} core (n={len(vals)})")
+    ax.axvline(0.05, color=PALETTE["ink"], linestyle=(0, (4, 3)), linewidth=1.2, label="5% gap threshold")
+    ax.set_xlabel("Relative distance to certified global lower bound, U/L - 1")
+    ax.set_ylabel("Empirical cumulative fraction")
+    ax.set_title("Figure 5-6 | Global lower-bound gap distribution", loc="left", fontweight="bold")
+    ax.set_xlim(left=0)
+    ax.set_ylim(0, 1.02)
+    ax.grid(True, color=PALETTE["grid"], linewidth=0.6)
+    ax.legend(ncol=2, frameon=False)
+    fig.tight_layout()
     paths = save_figure(fig, out, "fig56_p2_global_bound_gap")
-    audit_path = out / "field_audit.json"
-    audit_path.write_text(json.dumps({"input": str((INPUTS / "P2.json").relative_to(ROOT)).replace("\\", "/"), "records": len(payload["records"]), "required_fields": ["U", "L_global", "certificate", "proof_status"], "missing_fields": missing, "related_keys_found": required}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    manifest = base_manifest("fig-5-6", "P2 global lower-bound gap", out, "blocked_data", 20, [INPUTS / "P2.json"], ["U, L_global and proof/certificate fields are absent.", "No ECDF is generated because a missing denominator cannot be inferred.", "The PNG/SVG/PDF are a blocked-status report, not a scientific gap curve."])
-    manifest["missing_fields"] = missing
-    manifest["outputs"].update({p.name: sha256_file(p) for p in paths + [audit_path]})
-    finish_package(out, manifest, "Figure 5-6 is blocked. The required global lower-bound records (U, L_global and certificate/proof status) are absent from the fixed P2 feed, so no U/L_global - 1 ECDF is claimed.", "# Figure 5-6 delivery\n\nThis package records the exact source-field gap for the requested global lower-bound ECDF. The status image deliberately contains no fabricated curve.\n", "# Figure 5-6 self-check\n\n- [x] P2 input recursively audited.\n- [x] Missing U, L_global and certificate/proof fields recorded.\n- [x] No FIFO bound or proxy substituted.\n- [ ] ECDF: blocked until certified bound records are published.\n- [ ] yuanzhifang acceptance: pending.\n", [audit_path])
+    rows_path, ecdf_path, summary_path = out / "bounds.csv", out / "ecdf.csv", out / "summary.csv"
+    field_audit_path = out / "field_audit.json"
+    write_csv(rows_path, rows, ["case", "cores", "upper", "lower", "certified", "domain", "gap"])
+    write_csv(ecdf_path, ecdf_rows, ["cores", "gap", "cdf"])
+    write_csv(summary_path, summary_rows, ["cores", "valid", "uncertified", "within_5pct"])
+    field_audit_path.write_text(
+        json.dumps(
+            {
+                "status": "complete",
+                "bounds_source": str(bounds_path.relative_to(ROOT)).replace("\\", "/"),
+                "upper_source": str(upper_path.relative_to(ROOT)).replace("\\", "/"),
+                "bounds_sha256": sha256_file(bounds_path),
+                "upper_sha256": sha256_file(upper_path),
+                "expected_cells": 500,
+                "bounds_cells": len(lower_rows),
+                "upper_cells": len(upper_rows),
+                "graph_sha_matches": len(rows),
+                "accepted_upper_cells": sum(1 for row in upper_rows.values() if row.get("status") == "accepted"),
+                "certified_cells": sum(row["certified"] for row in rows),
+                "missing_or_failed_cells": 0,
+                "bound_semantics": "compute-only necessary lower bound; not an optimality proof",
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    manifest = base_manifest(
+        "fig-5-6",
+        "P2 global lower-bound gap",
+        out,
+        "ready_for_human_review",
+        100,
+        [bounds_path, upper_path, proof_path],
+        [
+            "L_global is a certified compute-only necessary lower bound; L<U does not prove non-optimality or an achievable improvement.",
+            "All 500 official upper-bound cells are accepted; this figure preserves the full local run's source and solver identities.",
+            "No solver, evaluator, or benchmark calls are made by this plotting command.",
+            "SVG/PDF were generated but not opened in a desktop reader in this session.",
+        ],
+    )
+    manifest["source"].update(
+        {
+            "bounds_scope": bounds.get("scope"),
+            "bounds_proof_document": bounds.get("proof_document"),
+            "official_source_sha256": bounds.get("official_source_sha256"),
+            "certificate_source_sha256": bounds.get("certificate_source_sha256"),
+            "runner_commit": upper.get("runner_commit"),
+            "solver_commit": upper.get("solver_commit"),
+            "archive_source_reference": upper.get("_archive_provenance", {}).get("source_reference"),
+            "cells": 500,
+            "run_id": upper.get("_archive_provenance", {}).get("source_reference", "unknown"),
+        }
+    )
+    manifest["environment"]["command"] = "python plot_figures.py --figure 5-6"
+    manifest["outputs"].update({p.name: sha256_file(p) for p in paths + [rows_path, ecdf_path, summary_path]})
+    finish_package(
+        out,
+        manifest,
+        "Figure 5-6. Empirical distribution of U/L_global - 1, where U is the independently accepted official Makespan and L_global is a compute-only necessary lower bound. The gap is a conservative upper bound on the submitted plan's relative distance from the bound; it is neither an observed error nor a guaranteed achievable improvement, and L<U is not an optimality proof.",
+        "# Figure 5-6 delivery\n\nThis package joins the pinned global-bound certificate to the accepted 500-cell official result by case, core count, and graph SHA-256. The certificate is compute-only and necessary; it does not include an exact optimality proof.\n\n- Source certificate SHA-256: `fe25f7b7737dbd3d841284bc5939242982613f64e0cffa9bd3d25df1f4a0c96b`\n- Source accepted summary SHA-256: `083c3f5b603cb61dd8b132718b6437b35c7706ff3aa165bdcdd490617547a2f2`\n- Solver commit: `c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f`\n- Reproduce: `python figures/a/p123-fig-5-6-lyx-20260926/plot_figures.py --figure 5-6`\n- Outputs: `fig56_p2_global_bound_gap.png`, `.svg`, `.pdf`, `bounds.csv`, `ecdf.csv`, `summary.csv`\n- Budget: read-only parsing and plotting; no new solver or evaluator calls.\n",
+        "# Figure 5-6 self-check\n\n- [x] 100 graph records x 5 cores = 500 certificate cells.\n- [x] 500 accepted official upper-bound cells; no in-flight cells.\n- [x] Graph SHA-256 matched for every case/core pair.\n- [x] Certificate applicability guards passed for every cell.\n- [x] ECDF recomputed from full-precision U/L - 1 values.\n- [x] 5% counts use the exact integer inequality `20*(U-L) <= L`.\n- [x] Missing/failed values would be excluded as NA; none occurred in this fixed source.\n- [ ] Desktop SVG/PDF inspection: not performed.\n- [ ] yuanzhifang scientific acceptance: pending.\n",
+        [rows_path, ecdf_path, summary_path, field_audit_path],
+    )
     return out
 
 
@@ -526,7 +849,7 @@ def make_all(selected: set[str] | None = None) -> list[Path]:
         "4-5": make_fig45,
         "5-5": lambda: make_efficiency_figure("P2", "fig-5-5", "5-5", "P2 quality, solver cost and tail latency"),
         "5-6": make_fig56,
-        "6-7": lambda: make_efficiency_figure("P3", "fig-6-7", "6-7", "P3 quality, solver cost and tail latency"),
+        "6-7": make_fig67_forest,
     }
     outputs = []
     for key, builder in builders.items():
