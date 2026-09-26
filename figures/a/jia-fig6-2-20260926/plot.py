@@ -121,15 +121,15 @@ fig.text(0.5, 0.955, "case044 / 4 核：容量约束对流水阶段切分的影�
 
 # ---- L1 分面：三方案实测峰值 + resident 静态估计 + first_load 静态共同输入标记 ----
 x = [0, 1, 2, 3]          # 源索引 0..3
-w = 0.24
-ax_l1.bar([i - w for i in x], [measured[("balanced", "L1")]] * 0 + [
-    19680 / kb, 430080 / kb, 473600 / kb, 22912 / kb], width=w,
-    color=C_BAL, alpha=0.95, label="① balanced 官方峰值")
-ax_l1.bar(x, [79584 / kb, 516992 / kb, 330752 / kb, 18816 / kb], width=w,
-          color=C_RES, alpha=0.95, label="② resident 官方峰值")
-ax_l1.bar([i + w for i in x], [79584 / kb, 516992 / kb, 188160 / kb, 15744 / kb], width=w,
-          color=C_FL, alpha=0.95, label="③ first_load 官方峰值（发生 spill）")
-ax_l1.bar([i - w for i in x], [static_model_res_bytes[i] / kb for i in x], width=w,
+w = 0.18
+# 四系列互不重叠：x-1.5w / x-0.5w / x+0.5w / x+1.5w
+ax_l1.bar([i - 1.5 * w for i in x], [19680 / kb, 430080 / kb, 473600 / kb, 22912 / kb],
+          width=w, color=C_BAL, alpha=0.95, label="① balanced 官方峰值")
+ax_l1.bar([i - 0.5 * w for i in x], [79584 / kb, 516992 / kb, 330752 / kb, 18816 / kb],
+          width=w, color=C_RES, alpha=0.95, label="② resident 官方峰值")
+ax_l1.bar([i + 0.5 * w for i in x], [79584 / kb, 516992 / kb, 188160 / kb, 15744 / kb],
+          width=w, color=C_FL, alpha=0.95, label="③ first_load 官方峰值（发生 spill）")
+ax_l1.bar([i + 1.5 * w for i in x], [static_model_res_bytes[i] / kb for i in x], width=w,
           color=C_STATIC, alpha=0.85, hatch="//", edgecolor="white", linewidth=0.4,
           label="② resident 静态估计（非实测）")
 # ③ first_load 源索引 1（展示阶段2）的静态共同输入 663,552 B → 648 KiB（仅一次换算）
@@ -146,9 +146,11 @@ ax_l1.set_title("L1 分面（斜纹=静态估计，非实测；实测=实心）"
 ax_l1.tick_params(labelsize=7)
 
 # ---- UB 分面：三方案官方 UB 峰值均为 0（实测记录）----
-ax_ub.bar([i - w for i in x], [0] * 4, width=w, color=C_BAL, alpha=0.95)
-ax_ub.bar(x, [0] * 4, width=w, color=C_RES, alpha=0.95)
-ax_ub.bar([i + w for i in x], [0] * 4, width=w, color=C_FL, alpha=0.95)
+ax_ub.bar([i - 1.5 * w for i in x], [0] * 4, width=w, color=C_BAL, alpha=0.95)
+ax_ub.bar([i - 0.5 * w for i in x], [0] * 4, width=w, color=C_RES, alpha=0.95)
+ax_ub.bar([i + 0.5 * w for i in x], [0] * 4, width=w, color=C_FL, alpha=0.95)
+ax_ub.bar([i + 1.5 * w for i in x], [0] * 4, width=w, color=C_STATIC, alpha=0.85,
+          hatch="//", edgecolor="white", linewidth=0.4)
 ax_ub.axhline(cap_UB, color=C_CAP, linestyle="--", linewidth=1.2)
 ax_ub.text(1.5, cap_UB + 4, "UB 容量 128 KiB", ha="center", va="bottom",
            fontsize=6.3, color=C_CAP)
