@@ -1,20 +1,23 @@
 source,target,note
 in,route,
-route,cores,
-cores,guard,
-guard,gap,"守卫通过（是）"
-guard,dedup,"守卫不通过（否）：仅 Π₀ 进入去重"
+route,br_shared,
+br_shared,cores,"是：共享输入波次场景"
+br_shared,p0,"否：其他结构路由直接汇合 Π₀"
+cores,p0,"选定活跃核后汇合"
+p0,guard,
+guard,gap,"是：守卫通过"
+guard,dedup,"否：仅 Π₀ 进入去重"
 gap,hyper,
 hyper,dec,
-dec,retime,"字节严格下降（是）"
-dec,dedup,"否：省略第三候选，保留 Πgap（不剪掉原 gap，S3）"
+dec,retime,"是：字节严格下降"
+dec,dedup,"否：省略第三候选，保留 Πgap（S3）"
 retime,dedup,
 dedup,dec2,
-dec2,score,"多候选（否）"
-dec2,plan,"唯一计划（是）：直接保留，不启动 E2"
-score,select,
+dec2,score,"否：多候选"
+dec2,plan,"是：唯一计划直接保留，不启动 E2"
+score,select,"全部评分有效"
+score,plan,"异常/未知：记录 unknown 并退回 Π₀（入口 :85–100）"
 select,plan,
 plan,e0,"E0 复评（虚线，实验阶段）"
 cap,select,"仅诊断（开放虚线）"
 stat,hyper,"仅优先序（开放虚线）"
-res,route,"研究模块未接入主线（开放虚线）"

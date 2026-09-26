@@ -1,0 +1,17 @@
+\documentclass{gmcm2026}
+\graphicspath{{./}}
+\begin{document}
+\pagestyle{empty}
+\renewcommand{\thefigure}{5.\arabic{figure}}% 本页唯一 figure 图号为 5.1，对应交付图 fig-5-1
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{4pt}
+% 实际插入宽度 144mm（正文宽 165mm 的 87%）：图高 1074/732*144 = 211.2mm
+% + 三行图注 + 浮动间距，实测单页容纳
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=144mm]{fig5-1-p2-tensor-comm-route.png}
+\caption{P2 张量通信优化技术路线：结构路由初解 Π₀（含式~(5-7) 活跃核选择与条件向量
+通路修复）→ 分叉汇合守卫 → Πgap → 两核区域超图改进 → 字节判定 → Πhypergap →
+去重（$|C|\le3$）→ E2 评分择优（异常退回 Π₀）→ 两字段方案 → E0 复评；侧栏为诊断与研究模块。}
+\end{figure}
+\end{document}

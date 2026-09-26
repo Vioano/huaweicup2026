@@ -1,35 +1,35 @@
-# 图 5-1 交付包｜P2 张量通信优化技术路线（v1）
+# 图 5-1 交付包｜P2 张量通信优化技术路线（v2）
 
-- 图号：5-1　版本：v1（2026-09-26，按派发单 5843791182 制作）
-- 主责：甲（farmeruncle123）　输入数据约束：仅 GitHub 仓库固定提交（P2 初稿@615b1a5f、证据索引 S3/S4@615b1a5f、主算法源码@c66559a6），无外部数据；0 新实验
+- 图号：5-1　版本：v2（2026-09-26，按首轮返工单 F51-R01～R06（#14 评论 5844340834）修订；v1=3992a4e96 保留于 git 历史）
+- 主责：甲（farmeruncle123）　输入数据约束：仅仓库固定提交（P2 初稿@615b1a5f、主算法源码@c66559a6），无外部数据；0 新实验
+
+## 本版（v2）逐条修订
+
+1. **F51-R01 来源登记**：audit.sources 全部改为纯仓库路径 + 完整 40 位 commit（paper/sections/a-q2.md、a-q2-evidence.md @615b1a5f7913a97fff8924cfec9936d3d303c6fc；算法源 @c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f），章节说明移入 note；**新增 adaptive_budget.py / adaptive_semantic.py 实际字节**（R03 依赖）。
+2. **F51-R02 节点表**：nodes.csv 增加非空 module 列（真实模块/文档依据）；stage 按派发模板：route→structure、gap→gap、hyper→hypergap、retime→fixed_assignment_reorder、dedup→deduplicate、score→full_score、plan→final_plan；其余节点用对应语义 stage；audit.table_columns 同步。表与 drawio 元素一一对应，边端点全部存在。
+3. **F51-R03 结构初解/侧栏**：删除通配符"未接入"清单——route 节点按真实调用链标注 tree_frontier→tree_paired_leaves、vector_lanes/vector_arrival、component_envelope/adaptive_frontier（allow_component_split=False）；侧栏 res 改为概括表述"未接入本入口的容量保护/就绪匹配等研究"。活跃核选择改为**共享输入条件分支**（br_shared 菱形：是→cores 式 5-7；否→直接汇合 Π₀）；条件向量修复写入 route 节点文字（"切开大向量张量时 vector_arrival 通路修复（条件分支）"）。已核 adaptive_budget.py:2-20（wave_route/component_route）、adaptive_semantic.py:17-88（tree/vector 调用）。
+4. **F51-R04 失败回退**：新增 score→plan 独立分支"异常/未知：记录 unknown 并退回 Π₀"（入口 :85–100 实测：except 分支 return baseline）；成功路径 score→select→plan 仅在"全部评分有效"时走。三类去向（gap 不支持→Π₀；hyper/retime 不支持→保留已有候选；异常→记录并退回 Π₀）在 note53 节点与图注可唯一读出。
+5. **F51-R05 实际视觉**：三条问题边标签改短（"是"/"否"）并移入留白走廊，详细条件入 nodes.csv 边注与图注；e12/e13b 交叉消除（换锚点）；s1×s2 存在一处线交叉（无文字压盖，已记录）。**新增真实模板编译页面预览** fig5-1-page-preview-template2026.pdf/.png：template-2026（gmcm2026.cls@e82c2009）XeLaTeX 实编译，插入宽 144mm（正文 87%）、图高 211.2mm + 三行图注 ≈ 228mm ≤ 正文高 248.5mm，编译日志无 "Float too large"、pdfinfo Pages=1、pdftotext 实测图号「图 5.1」；caption.md 精简为页面预览所用版本（详细说明保留 DELIVERY）。
+6. **F51-R06 可复现命令**：audit.command 全部为实际执行过的合法命令——路径字符串加引号（Image.open('…')/save('…')），无观察结果混入；执行结果（退出码 0、validate 0 error、输出尺寸）移入 self-check 与 audit.insert_width_check；工具版本在 command 尾注。
 
 ## 文件清单
 
 | 文件 | 角色 | 说明 |
 |---|---|---|
-| `fig5-1-p2-tensor-comm-route.svg` / `.png` | 主图 | draw.io CLI 导出（--disable-gpu --no-sandbox），实际 viewBox 762×1053 |
-| `fig5-1-p2-tensor-comm-route.drawio` | 可编辑源 | 主线+侧栏分支流程图 |
-| `nodes.csv` / `edges.csv` | 绘图输入 | 17 节点（id/stage/note）/ 19 边（含分支条件标注），与 drawio 元素一一对应 |
-| `caption.md` | 图注 | 图意、口径、来源、必要局限 |
-| `preview-insert-width.png` | 物理宽度预览 | 1500px 插入观感 |
-| `self-check.md` | 自查 | v1 |
-| `audit.json` | 机检清单 | figure-auto-review-v1，哈希按最终字节重算 |
+| fig5-1-p2-tensor-comm-route.svg/.png/.drawio | 主图 | viewBox 实际 732×1074 |
+| fig5-1-page-preview-template2026.pdf/.png + page-preview-main.tex | 真实页面预览 | 144mm 插入 + 图 5.1 三行图注，单页无超页 |
+| nodes.csv / edges.csv | 绘图输入 | 20 节点（id/stage/module/note）/ 22 边 |
+| caption.md | 图注 | 页面预览所用三行版 |
+| preview-insert-width.png | 物理宽度预览 | 1500px |
+| self-check.md / audit.json | 记录 | v2 |
 
-## 本图对应派发要求
+## 已通过的检查（v2）
 
-1. **三类候选关系与完整评分出口**：Π₀（结构路由+式 5-7 活跃核）→ 分叉汇合守卫 → Πgap（链收缩+间隙日历，式 5-8）→ 一遍两核区域超图改进（式 5-9，区域≤16 链，Dinic 最小割+逐次锚定+负载上限锚回）→ 基础 COPY 字节严格下降才重排出 Πhypergap → 式 (5-10) 去重 C≤3 → 原生 E2 评分 ≤3 次 → (Makespan, 额外 DDR B) 择优（平局保留先前）→ 两字段方案 → E0 独立复评。
-2. **分支/候选保留/评分次数与冻结入口一致**：与 c66559a6 `adaptive_hypergap_guarded.py` 逐行核对——守卫失败保留 Π₀（不构造 gap）；字节下降只决定是否追加 hypergap、不剪掉原 gap（S3）；超图费用无严格下降只省略第三候选；每方案至多 1 次、总计 ≤3 次评分；|C|=1 直接保留不启动 E2；平局保留先前计划；评分异常/未知显式记录。
-3. **静态通信目标与最终 Makespan 评价分开**：侧栏「静态估计仅用于构造与优先序」节点显式声明式 (5-7)/(5-9) 与日历时钟非正式成绩、非一般 Makespan 下界；主线 E2/E0 评分出口单独表示。
-4. **未接入研究模块不入主线**：侧栏「未接入主线的研究模块清单」（adaptive_direct/adaptive_frontier/vector_*/tree_*/windows_* 等）以开放虚线标注「研究扩展，不参与候选集合与评分」。
-5. **侧栏容量与下界诊断**：5.5 节容量闭区间条件与必要下界（命题 2、式 5-14～5-17，S2/S5）标注「仅诊断/解释，不进入候选构造与评分」。
-
-## 已通过的检查（v1）
-
-- drawio-skill validate.py 0 error（33 条 warning 均为布局提示：菱形与容器虚线类，逐条复核无实义交叉残留）。
-- 1500px 插入宽度预览逐项目检：无穿字、无遮挡、无裁切、无缺字；三条分支（守卫否/字节否/|C|=1 是）路径与标签清楚。
-- 节点/边表与 drawio 源一一对应；关键调用名（adaptive_hypergap_guarded、hypergraph_cost、binary_hypercut、gap_candidate、gap_calendar、gap_retime、adaptive_guarded、adaptive_budget、adaptive_semantic、active_core_wave）与 c66559a6 实际文件名一致。
-- 尺寸：viewBox 762×1053；按 165mm 宽插入高 228.0mm、最小字 ≈6.14pt（主标签 11–13px → 6.8–9.0pt）；按 152mm 宽插入高 210.0mm（页面容纳口径与 4-2 一致）。
+- validate.py 0 error（34 warnings：容器/菱形提示；仅剩 s1×s2 一处线交叉，无文字压盖）。
+- 1500px 插入宽度目检：边标签不压字、不被裁切、箭头端点明确；三类去向可唯一读出。
+- 主图/caption/nodes/edges 三处口径一致；实际调用模块不再声称未接入。
+- pdftotext「图 5.1」、Pages=1、无超页。
 
 ## 未完成项
 
-- 无。modern 美化变体将于验收通过后基于最终规范版源补出（不进入本轮验收）。
+- 无（modern 变体不在本轮）。
