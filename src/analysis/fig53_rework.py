@@ -151,9 +151,9 @@ def summarize(records: list[dict], specs: dict) -> list[dict]:
                 "method": method,
                 "cores": cores,
                 "n": len(values),
-                "mean_speedup": 1.0 if cores == 1 else observed,
+                "mean_speedup": observed,
                 "mean_observed_speedup": observed,
-                "display_policy": "reference_anchor" if cores == 1 else "observed_mean",
+                "display_policy": "observed_mean",
             }
         )
     assert len(summary) == 16
