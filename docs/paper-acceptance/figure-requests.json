@@ -3,6 +3,36 @@
   "policy": "论文组织任务定义缺图需求；验收台接收、分派或制作；Fang明确选优或重画的版本优先展示；固定算法/数据适配、实际入稿和科学验收分别判断。通知送达不等于接手。",
   "requests": [
     {
+      "id": "FIG-FANG-5-3",
+      "title": "Fang 工作台图5-3：问题二多核平均加速比对比",
+      "priority": "P0",
+      "chapter_candidate": "第五章图5-3工作台编号；论文实际位置由整稿确认",
+      "state": "用户要求优化Fang当前半成品；Fang本机工作台为唯一当前修改者，验收台尚未取得该半成品的固定文件或预览。LYX旧版已因方法覆盖和单核基线错误退回，不能替代。已向Fang索取当前原件与写入状态。",
+      "defined_by_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+      "owner": "Fang工作台；验收台负责接收、展示与科学口径核对",
+      "user_annotation_id": "USER-FANG-FIG53-OPTIMIZE-01",
+      "source_request_sha256": "ffb77be5dc09c63092a4b28f9e8c58bfcfc5216fe4727b566dab2f4b48f6ac64",
+      "purpose": "以Fang实际半成品为唯一修改起点，正确比较问题二已有固定方法在1至5核心、每核100张图上的平均加速比；改善论文160 mm宽度下重叠曲线、图例和字号。",
+      "required_content": [
+        "先从Fang取得当前半成品的可读取预览、可编辑来源、提交或本机状态及唯一修改者；不以LYX旧版冒充。",
+        "核对tensor、gap、c665三套完整固定方法每核100例，F1仅在五核心有100例；缺测不得补造或连接。",
+        "按每张图相同的官方单核基线B_i和本方法Makespan M_i计算B_i/M_i，再对100例作算术平均；优化后的单核结果另列，不作为分母。",
+        "明确各方法的算法与结果提交、完整500格和失败项；禁止不同版本逐格拼历史最优。",
+        "在160 mm纸面检查曲线遮挡、线型/色彩、图例、F1独立点和标注；标题及长解释放入LaTeX图注。"
+      ],
+      "source_refs": [
+        "https://github.com/huaweibei123/huaweicup2026/issues/15#issuecomment-5846267801",
+        "https://github.com/huaweibei123/huaweicup2026/issues/15#issuecomment-5848063801"
+      ],
+      "preferred_route": "Fang工作台继续独占当前源图；验收台取得实际版本后先展示与审查。如需转交作图，按固定版本和明确写范围交接后再动手。",
+      "delivery": "Fang当前半成品预览与来源身份；修改后交可编辑来源、矢量PDF、160 mm预览、真实数据/代码提交及SHA-256、中文图注候选，不新增solver/evaluator调用。",
+      "scientific_review": "LYX v1在F53-R01至R05被退回；该结果只说明旧版有问题，不判断Fang当前半成品是否已修复。",
+      "adoption": "未入稿，尚未取得Fang当前版本；不得将已收到旧图表述为本图已验收。",
+      "dispatch_url": "https://github.com/huaweibei123/huaweicup2026/issues/15#issuecomment-5848086745",
+      "legacy_candidate_commit": "e5b785c96f3c589cf3029c62f76fea67dcd7a90c",
+      "legacy_candidate_path": "figures/a/p123-fig-5-3-lyx-20260926/fig53_p2_speedup.png"
+    },
+    {
       "id": "FIG-P1-834-FLOW",
       "title": "问题一现行算法的方案构造与评价流程",
       "priority": "P0",

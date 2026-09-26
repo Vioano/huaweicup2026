@@ -146,6 +146,25 @@ class ReviewContractTest(unittest.TestCase):
         self.assertIn(by_id['CP06']['git_commit'], by_id['CP06']['public_pdf_url'])
         self.assertEqual(len({by_id[x]['pdf_sha256'] for x in ('CP04', 'CP05', 'CP06')}), 3)
 
+    def test_new_user_requests_keep_figure_and_typesetting_separate(self):
+        handoffs = json.loads((ROOT / 'docs/paper-acceptance/handoffs.json').read_text())
+        by_id = {item['annotation_id']: item for item in handoffs if item.get('annotation_id')}
+        whitespace = by_id['USER-V8-P47-WHITESPACE-01']
+        figure = by_id['USER-FANG-FIG53-OPTIMIZE-01']
+        contents = by_id['USER-V9-AUTO-TOC-01']
+        self.assertEqual(whitespace['url'], '/checkpoints/v8/47.png')
+        self.assertIn('与Fang图5-3无关', whitespace['review'])
+        self.assertIn('LYX旧版', figure['expected'])
+        self.assertEqual(contents['state'], 'v9_layout_preflight_passed_not_frozen')
+        self.assertEqual(whitespace['state'], 'v9_layout_preflight_passed_not_frozen')
+        self.assertEqual(contents['preflight_sha256'], whitespace['preflight_sha256'])
+        self.assertIn('正式最新版本仍为v8', contents['review'])
+        self.assertEqual(len({x['source_request_sha256'] for x in (whitespace, figure, contents)}), 1)
+        requests = json.loads((ROOT / 'docs/paper-acceptance/figure-requests.json').read_text())['requests']
+        current = next(x for x in requests if x['id'] == 'FIG-FANG-5-3')
+        self.assertEqual(current['user_annotation_id'], figure['annotation_id'])
+        self.assertIn('尚未取得', current['state'])
+
     def test_v7_figure_review_keeps_user_words_separate_from_ai_advice(self):
         review = json.loads((ROOT / 'docs/paper-acceptance/figure-review-v7.json').read_text())
         checkpoints = json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text())
