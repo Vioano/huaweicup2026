@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 """Render source-bound data and mechanism figures; no numerical simulation."""
 import csv
 import gzip
@@ -39,7 +40,7 @@ def timeline(d,name,title,xmax=None,window=None):
             ops=[o for o in c['ops'] if o['pipe']==pipe]
             b.broken_barh([(o['start']/1000,o['duration']/1000) for o in ops],(k*5+j-.34,.68),facecolor=PIPE[pipe],edgecolor='none')
         if k<K-1:b.axhline(k*5+4,color=C['gray'],linewidth=.5)
-    a.set_yticks(range(K),[f'核 {k}' for k in range(K)])
+    a.set_yticks(range(K),[f'Core {k}' for k in range(K)])
     a.set_ylim(K-.5,-.5); a.set_title('(a) Task 时间跨度' + ('（框内为 Task ID）' if d['scene']=='A' else '（同核已合并）'),loc='left',pad=8)
     b.set_ylim(K*5-1,-1)
     b.set_yticks([k*5+j for k in range(K) for j in range(4)],
@@ -110,7 +111,7 @@ def stat_figures(allrows):
         a.plot(ks,prev,'o--',color=C['gray'],label='前一完整算法');a.plot(ks,new,'s-',color=C['M'],label='本文固定算法')
         for k,v in zip(ks,new): a.annotate(f'{v:.3f}',(k,v),xytext=(0,8),textcoords='offset points',ha='center')
         a.set(xticks=list(ks),ylim=(.7,5.15),title='(a) 每个核数均为 100 图的算术平均');a.legend(loc='upper left')
-        clean(a,'核心数 K','平均加速比')
+        clean(a,'Core 数 K','平均加速比')
         for k,marker in zip(ks,['o','s','^','D','v']):
             rr=[r for r in part if r['cores']==k];xx=[];yy=[]
             for r in rr:
@@ -129,10 +130,10 @@ def stat_figures(allrows):
     cs=summary['P3']['cores'];ks=np.arange(1,6)
     a.plot(ks,[cs[str(k)]['mean_no_l2_baseline_speedup'] for k in ks],'o--',color=C['gray'],label='同计划，无 L2')
     a.plot(ks,[cs[str(k)]['mean_baseline_speedup'] for k in ks],'s-',color=C['M'],label='同计划，只读 Cache')
-    a.set(xticks=ks,ylim=(.9,5.2),title='(a) 同图、同 K、同计划字节，仅改变 Cache 语义');a.legend();clean(a,'核心数 K','平均 B / M')
+    a.set(xticks=ks,ylim=(.9,5.2),title='(a) 同图、同 K、同计划字节，仅改变 Cache 语义');a.legend();clean(a,'Core 数 K','平均 B / M')
     v=[cs[str(k)]['mean_cache_gain'] for k in ks];b.plot(ks,v,'D-',color=C['in'])
     for k,x in zip(ks,v):b.annotate(f'{x:.4f}',(k,x),xytext=(0,9),textcoords='offset points',ha='center')
-    b.axhline(1,color=C['gray'],lw=.8);b.set(xticks=ks,ylim=(.99,1.105),title='(b) 每核数 100 对；不以“均值之比”替代“比值均值”');clean(b,'核心数 K','平均 M₂ / M₃')
+    b.axhline(1,color=C['gray'],lw=.8);b.set(xticks=ks,ylim=(.99,1.105),title='(b) 每核数 100 对；不以“均值之比”替代“比值均值”');clean(b,'Core 数 K','平均 M₂ / M₃')
     save(fig,'fig-p3-results')
     fig,a=plt.subplots(figsize=(6.5,3.7));fig.subplots_adjust(left=.16,right=.97,bottom=.19,top=.88)
     for k,marker in zip(ks,['o','s','^','D','v']):
@@ -157,16 +158,16 @@ def stat_figures(allrows):
     lower=[audit[str(k)]['new_mean_B_over_M'] for k in ks];upper=[audit[str(k)]['relaxation_ceiling_mean_B_over_LB'] for k in ks]
     a.plot(ks,lower,'s-',color=C['M'],label='可行方案 mean(B/U)');a.plot(ks,upper,'o--',color=C['gray'],label='必要界 mean(B/L)')
     a.fill_between(ks,lower,upper,color=C['pale']);a.set(xticks=ks,title='同一优化域：L ≤ OPT ≤ U；阴影并非保证可实现的收益')
-    clean(a,'核心数 K','平均单核基准 / 周期');a.legend(loc='upper left');save(fig,'fig-bound-gap')
+    clean(a,'Core 数 K','平均单核基准 / 周期');a.legend(loc='upper left');save(fig,'fig-bound-gap')
 
 def main():
     FIG.mkdir(exist_ok=True);r=rows();p1=source('p1-026-k5');p2=source('p2-019-k5');p3=source('p3-021-k3')
-    partition_story(p1)
+    if os.environ.get("PAPER_LAYOUT") != "1": partition_story(p1)
     for key,label in [('old','父方案'),('new','分叉援助')]:
         timeline(p1[key]['result'],'fig-p1-overlap-'+key,'case_026 / 5 核 · '+label,xmax=44114)
     for key,label in [('control','完整主算法'),('c04','C04 降搬运候选')]:
         timeline(p2[key]['result'],'fig-p2-counterexample-'+key,'case_019 / 5 核 · '+label,xmax=28514)
-    for key,label in [('no_l2','无 L2'),('cache','只读 Cache')]:
+    for key,label in ([] if os.environ.get('PAPER_LAYOUT') == '1' else [('no_l2','无 L2'),('cache','只读 Cache')]):
         timeline(p3[key],'fig-cache-timeline-'+key,'case_021 / 3 核 · 同计划 '+label,xmax=2140863)
     stat_figures(r)
     print('Rendered source-bound figures; no evaluator calls.')

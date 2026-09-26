@@ -1,5 +1,6 @@
 """Original paper style. Fonts are loaded from the existing contest template."""
 from pathlib import Path
+import os
 import matplotlib
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt, font_manager as fm
@@ -22,13 +23,22 @@ plt.rcParams.update({'font.family':['Times New Roman','SimSun','DejaVu Serif'],
     'grid.linewidth':.6,'legend.frameon':False})
 
 def save(fig,name,outdir=None):
+    if os.environ.get('PAPER_LAYOUT') == '1':
+        # Titles, figure numbering and explanatory prose are supplied by LaTeX.
+        for ax in fig.axes:
+            for loc in ('left','center','right'): ax.set_title('',loc=loc)
+        for item in list(fig.texts): item.remove()
+        outdir=outdir or PAPER/'figures'/'paper'
     outdir=outdir or PAPER/'figures';outdir.mkdir(parents=True,exist_ok=True)
     # Fixed physical canvas: never tight-crop and subsequently scale the font.
     for ext in ('pdf','svg','png'):
         kwargs={'dpi':180} if ext=='png' else {}
         if ext=='pdf': kwargs['metadata']={'Creator':'Deterministic paper figure script','Author':'','CreationDate':None}
         if ext=='svg': kwargs['metadata']={'Date':None}
-        fig.savefig(outdir/(name+'.'+ext),**kwargs)
+        target=outdir/(name+'.'+ext)
+        fig.savefig(target,**kwargs)
+        if ext=='svg':
+            target.write_text('\n'.join(line.rstrip() for line in target.read_text().splitlines())+'\n')
     plt.close(fig)
 
 def clean(ax,xlabel=None,ylabel=None):
