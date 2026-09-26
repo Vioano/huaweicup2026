@@ -1,0 +1,130 @@
+{
+  "schema": "figure-auto-review-v1",
+  "figure_id": "fig-6-1",
+  "primary": "fig6-1-p3-cache-route.svg",
+  "files": [
+    {
+      "name": "fig6-1-p3-cache-route.svg",
+      "role": "svg",
+      "sha256": "898f4bc15bcee20535921aee68be29c8d3dd69f414b5c4a58e347f5ce470b5b7"
+    },
+    {
+      "name": "fig6-1-p3-cache-route.png",
+      "role": "png",
+      "sha256": "b101c119ef667413df3889183f73f6dde2c526091456ad24b9b6f16284c49791"
+    },
+    {
+      "name": "fig6-1-p3-cache-route.drawio",
+      "role": "source",
+      "sha256": "fd413a7cd49f9ac023c490d1839c9ff11bb3d53c24e20b9eabf0b0c1e0e73d9a"
+    },
+    {
+      "name": "caption.md",
+      "role": "caption",
+      "sha256": "000c4ec8e76e84718c0842ef039287054eac16795ccbe0499185b2db6dc14e25"
+    },
+    {
+      "name": "DELIVERY.md",
+      "role": "notes",
+      "sha256": "325481d0bfcbf0bd4fbd80217278fa10fe4162f98c07e00afc06af35df8f7c2a"
+    },
+    {
+      "name": "self-check.md",
+      "role": "self_check",
+      "sha256": "3b9e32f3b5eafc25dcf15bac3d7833a29dd3ab808e6d066e29f7cae078c3b1ff"
+    },
+    {
+      "name": "nodes.csv",
+      "role": "input",
+      "sha256": "87f612328475b52b69ed62b254a59125ad95a7391b9470a382f5a8bda343e912"
+    },
+    {
+      "name": "edges.csv",
+      "role": "input",
+      "sha256": "ac7019cf2d8c6d2344835cf4400d8d0f81b675d2ba378f7af4b32ba96f72e914"
+    },
+    {
+      "name": "preview-insert-width.png",
+      "role": "notes",
+      "sha256": "6fc917bad2cb0522b504f8708424cff51f862f0a8a63d604226ad246862a642d"
+    }
+  ],
+  "command": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f svg -o figures/a/jia-fig6-1-20260926/fig6-1-p3-cache-route.svg figures/a/jia-fig6-1-20260926/fig6-1-p3-cache-route.drawio\n\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f png -s 2 -o figures/a/jia-fig6-1-20260926/fig6-1-p3-cache-route.png figures/a/jia-fig6-1-20260926/fig6-1-p3-cache-route.drawio\n.venv/Scripts/python.exe F:/WorkBuddyData/skills/drawio-skill/scripts/validate.py figures/a/jia-fig6-1-20260926/fig6-1-p3-cache-route.drawio\n.venv/Scripts/python.exe -c \"from PIL import Image; im=Image.open('figures/a/jia-fig6-1-20260926/fig6-1-p3-cache-route.png'); im.resize((1500,int(im.height*1500/im.width)), Image.LANCZOS).save('figures/a/jia-fig6-1-20260926/preview-insert-width.png')\"\n工具版本：draw.io desktop（F:/draw.io，--disable-gpu --no-sandbox）；Python 3.13.12（.venv，Pillow）；drawio-skill validate.py v3.4.0",
+  "sources": [
+    {
+      "path": "paper/sections/a-q3.md",
+      "commit": "1e35e3994d4792dfa2bb406669b547cb8b7e8fb0",
+      "sha256": "1f15c84753648a1140306b76ff39a90c29383f86978aade10710f57394b92f31",
+      "note": "P3 初稿；使用 6.2.3/6.3/6.4/6.5 节（抓取字节哈希）"
+    },
+    {
+      "path": "src/q3/forest_solve.py",
+      "commit": "311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1",
+      "sha256": "f11ffd5bf04f7e5aa113d584ed7f147ac20b8d01c8f5ce7ce521aa8a71aa6c5c",
+      "note": "固定入口逐行核对（抓取字节哈希）"
+    },
+    {
+      "path": "src/q3/witness_solve.py、pipeline_solve.py、calendar_solve.py、forest_memory_order.py 等",
+      "commit": "311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1",
+      "sha256": "模块名经 GitHub Contents API 核实（未逐文件抓取字节）",
+      "note": "路由表模块身份（模块名经 GitHub Contents API 核实）"
+    }
+  ],
+  "units": {
+    "makespan": "cycles",
+    "wall": "s",
+    "bytes": "B"
+  },
+  "panels": [
+    {
+      "id": "main",
+      "title": "主线｜结构构造与官方评价（forest_solve）"
+    },
+    {
+      "id": "branch",
+      "title": "同计划无 L2 对照分支（仅报告指标）"
+    },
+    {
+      "id": "side",
+      "title": "旁注与研究拓展（不入完整批次）"
+    }
+  ],
+  "tables": {
+    "nodes": "nodes.csv",
+    "edges": "edges.csv"
+  },
+  "table_columns": {
+    "nodes": [
+      "id",
+      "stage",
+      "module",
+      "note"
+    ],
+    "edges": [
+      "source",
+      "target",
+      "note"
+    ]
+  },
+  "criteria": [
+    "方法流程对应当前完整算法，不沿用更早入口替代新入口。",
+    "图中不能暗示求解器可修改官方 Cache 替换规则、容量或带宽。",
+    "同计划缓存对照与独立优化的 P2 主算法比较不混为一条分支。"
+  ],
+  "dispatch": {
+    "issue": "huaweibei123/huaweicup2026#14",
+    "dispatch_comment_id": 5844639959,
+    "task_book_sha256": "55859ab1ed2b81b218663f60c4cf824e9e01ba0399c52113861b48e61da7dfd2"
+  },
+  "insert_width_check": {
+    "viewbox": "711x738",
+    "width_mm": 165,
+    "height_mm": 171.3,
+    "min_font_pt": 6.58,
+    "main_font_pt": "7.24-8.55",
+    "preview": "preview-insert-width.png",
+    "note": "fontSize×W/711×72/25.4 换算；正文页内容纳无需缩放"
+  },
+  "arrow_rule": "全部连线端点显式锚定节点边框（exitX/Y、entryX/Y），waypoint 走框外走廊；导出 PNG 逐箭头目检，11 个箭头均落在边框线上，无伸入框内",
+  "version_note": "v1（首版，旧图不计数）：按派发单绘制主流程+同计划无 L2 对照分支+研究拓展旁注；forest_solve.py@311322b 逐行核对；E0 节点标注求解器不可修改 Cache 规则/容量/带宽；CacheGain 仅报告指标与候选接受（只比较 M₃）分离；箭头规则（端点锚边框、不伸入框内）首次强制执行；哈希按最终字节一次性重算（不含 audit.json 自身）"
+}

@@ -1,0 +1,13 @@
+id,stage,module,note
+in,input,"算法输入（P3 初稿 6.2/6.3）","原始图 G、核数 K、固定配置 θ（P3 共享只读 Cache 场景）"
+idx,index,"construct（311322b）","计算依赖、张量生产者/消费者、流水线类型、计算时长与字节索引"
+route,structure,"witness_solve.evaluate_candidates（路由表 6.3.1）","①基础结构路由（窄条件阶段迁移→一般阶段→注意力/前馈→一般 DAG/通用）②注意力空隙放置 ③共享输入连续流水 ④注意力放置次序保留 ⑤森林内部峰值排序"
+cand,candidate,"各路线构造器（同 E0 总预算）","结构候选生成"
+dedup,deduplicate,"forest_solve encoded 字节比较","规范化提交字节去重；重复不再评价"
+prune,bound_prune,"pipe_bound.analyze（式 6-10）","必需依赖+同核 FIFO+跨核固定等待 → L(P)；L(P)≥当前合法方案 Makespan 即 bound_pruned；界不支持记录后照常评价"
+e0,official_score,"官方 P3 评估器（未修改）","总上限 3 次在线含基准；求解器不可修改 Cache 替换规则/容量/带宽"
+acc,accept,"forest_solve 严格改进接受","执行合法且 M₃ 严格更小→更新；合法性拒绝/相同成绩→保留已有合法方案；异常向外报告"
+plan,final_plan,"safe_solve/run_solver 输出（算法步骤 5）","最终合法方案及指标：两字段方案+评价账本/选择原因/墙钟"
+nol2,cache_pair,"同计划无 L2 对照（式 6-4；配对审计）","同一方案字节在无 L2 场景评 M₂；476 份复用/24 份另评；计划身份绑定"
+cg,cache_gain,"CacheGain 出口（式 6-4）","C=M₃/M₂；报告指标；候选接受仍只比较 M₃"
+ext,sidebar,"派发单 F51/6-1 旁注口径","未纳入完整批次的扩展：容量切分/部分预加载/单尾响应等（6.4/6.5）"
