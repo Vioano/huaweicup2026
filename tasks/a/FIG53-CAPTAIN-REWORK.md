@@ -17,13 +17,13 @@
 
 实际命令：`uv sync --locked`；`uv run --locked python src/analysis/fig53_rework.py --figure 5-3`。
 
-代码提交与输入版本：输入固定提交 `6ac4ec28582212c9fab967ceab5e09e796dbadba`；图与脚本固定提交 `7d1bf1e4718596f428696ed4f4b12015003f59ca`；Draft PR [#231](https://github.com/huaweibei123/huaweicup2026/pull/231)。
+代码提交与输入版本：输入固定提交 `6ac4ec28582212c9fab967ceab5e09e796dbadba`；图与脚本修订提交 `7b6545226ce5b9c7e00d669d60fc2a9bd97d9013`（初版 `7d1bf1e4718596f428696ed4f4b12015003f59ca` 保留历史）；Draft PR [#231](https://github.com/huaweibei123/huaweicup2026/pull/231)。
 
 结果与图表：`figures/a/fig53-captain-rework-20260927/`。
 
 结论及限制：参见本目录 `README.md` 与 `self-check.md`；只复核固定汇总表，不宣称新官方实验或最终论文验收。
 
-已核远端 Git 的图、表、图注、清单、脚本共 11 件文件，逐项 SHA-256 相符；回读收据见 `figures/a/fig53-captain-rework-20260927/publication-readback.md`。
+已按修订提交核远端 Git 的图、表、图注、清单、脚本共 11 件文件，逐项 SHA-256 相符；回读收据见 `figures/a/fig53-captain-rework-20260927/publication-readback.md`。一核心三个点均为真实观测值。
 
 未验证项：论文监督会话的选版与实际 LaTeX 页面、独立科学复核、用户最终确认。
 
