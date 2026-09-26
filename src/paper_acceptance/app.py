@@ -286,8 +286,14 @@ def serve(board, port):
                     return self.reply(team_images.refresh())
                 if p.path == '/api/v1/figure-requests':
                     return self.reply(json.loads((ROOT / 'docs/paper-acceptance/figure-requests.json').read_text()))
+                if p.path == '/api/v1/figure-review-v7':
+                    return self.reply(json.loads((ROOT / 'docs/paper-acceptance/figure-review-v7.json').read_text()))
                 if p.path == '/api/v1/checkpoints':
                     return self.reply(json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text()))
+                if p.path in ('/figure-review-assets/p28-crop.pdf', '/figure-review-assets/p28-crop.png'):
+                    suffix = '.pdf' if p.path.endswith('.pdf') else '.png'
+                    path = ROOT / 'docs/paper-acceptance/candidates' / f'p28-figure-5.1-1-crop-candidate{suffix}'
+                    return self.reply(path.read_bytes(), mime='application/pdf' if suffix == '.pdf' else 'image/png')
                 match = re.fullmatch(r'/checkpoints/([a-z0-9]+)(?:/(\d+)\.png|\.pdf)', p.path)
                 if match:
                     path = checkpoint_docs.page(match[1], int(match[2])) if match[2] else checkpoint_docs.locate(match[1])[0]

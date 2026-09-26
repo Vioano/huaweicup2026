@@ -103,6 +103,27 @@ class ReviewContractTest(unittest.TestCase):
         self.assertIn(by_id['CP06']['git_commit'], by_id['CP06']['public_pdf_url'])
         self.assertEqual(len({by_id[x]['pdf_sha256'] for x in ('CP04', 'CP05', 'CP06')}), 3)
 
+    def test_v7_figure_review_keeps_user_words_separate_from_ai_advice(self):
+        review = json.loads((ROOT / 'docs/paper-acceptance/figure-review-v7.json').read_text())
+        checkpoints = json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text())
+        self.assertEqual(review['pdf_sha256'], checkpoints['checkpoints'][0]['pdf_sha256'])
+        self.assertEqual(len(review['figure_coverage']), 20)
+        self.assertEqual(review['figure_count'], 20)
+        self.assertTrue(review['asset_hashes_matched'])
+        self.assertEqual(review['user_annotation']['id'], 'USER-V7-FIGTEXT-01')
+        self.assertIsNone(review['user_annotation']['rect'])
+        self.assertIn('LaTeX', review['user_annotation']['user_verbatim'])
+        self.assertNotEqual(review['user_annotation']['user_verbatim'],
+                            review['user_annotation']['interpretation'])
+        self.assertEqual(review['source_records']['publication_state'], 'local_unpublished')
+        self.assertFalse(review['human_final_acceptance'])
+        crop = review['user_annotation']['crop_candidate']
+        self.assertEqual(crop['status'], 'board_preview_only_not_in_manuscript')
+        self.assertEqual(crop['crop_box_pt_bottom_left'], [0, 23.639, 426.009, 478.639])
+        for suffix in ('pdf', 'png'):
+            path = ROOT / 'docs/paper-acceptance/candidates' / f'p28-figure-5.1-1-crop-candidate.{suffix}'
+            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), crop[f'preview_{suffix}_sha256'])
+
     def test_registered_checkpoint_refuses_changed_pdf(self):
         checkpoints = CheckpointDocuments(self.board)
         checkpoints.locations_file.write_text(json.dumps({'v5': str(self.pdf)}))
