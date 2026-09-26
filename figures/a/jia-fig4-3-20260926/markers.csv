@@ -1,9 +1,11 @@
-variant,kind,event_id
-control,input_done,first_round COPY_IN max_end=6570
-control,task_done,task#0..2 max_end=10028
-control,remote_return,task#3 COPY_IN max_end=11040
-control,reduce_tail_start,task#95 start=291076
-paced,input_done,first_round COPY_IN max_end=6570
-paced,task_done,task#0..2 max_end=10028
-paced,remote_return,task#3 COPY_IN max_end=11040
-paced,reduce_tail_start,task#118 start=278472
+variant,kind,event_id,endpoint,cycles,range_start,range_end
+control,large_input_done,COPY_IN##1433,end,6570,,
+control,source_task_done,task#0,end,10028,,
+control,remote_return,COPY_IN##1465,end,11040,,
+control,reduction_start,task#95,start,291076,,
+control,first_round,task#3,end,11174,0,11174
+paced,large_input_done,COPY_IN##1433,end,6570,,
+paced,source_task_done,task#0,end,10028,,
+paced,remote_return,COPY_IN##1465,end,11040,,
+paced,reduction_start,task#118,start,278472,,
+paced,first_round,task#3,end,11174,0,11174

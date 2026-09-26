@@ -6,17 +6,17 @@
     {
       "name": "figure.svg",
       "role": "svg",
-      "sha256": "790e0b902f16b7f8b2e254e07ac3e3eee4a1e0926a83fe16f27e5700d75222f3"
+      "sha256": "f55677b693fdff21776fae34607363eaa43ea3c9b2b511958b32d2bed307e127"
     },
     {
       "name": "figure.png",
       "role": "png",
-      "sha256": "e7db903c75cf8683a2a2152731d40263ec09933f9f59f119989e757aba127c77"
+      "sha256": "c0ac9d63820aa9925fed7bda69769d7fa9248db8708b91391be81df82963db84"
     },
     {
       "name": "plot.py",
       "role": "source",
-      "sha256": "a89d374f6bf0b111c6a37d99388ea48a1c562563c1571c9bc351258225a453c1"
+      "sha256": "fd3c8893ac54c0c7fd36e70acee7ac364879865d7af8f6efc2891122d2cd2868"
     },
     {
       "name": "caption.md",
@@ -26,12 +26,12 @@
     {
       "name": "self-check.md",
       "role": "self_check",
-      "sha256": "9c455b2baf249f02a11929159bacbed0c9d3a70a7a300015255a7923c815c9db"
+      "sha256": "bab8d73b9b7037afa2f13acd0c1876ec80e7dfc9525ab88d0819c4e5abbeaffe"
     },
     {
       "name": "events.csv",
       "role": "input",
-      "sha256": "72b59e6e7077e7a0ae4c1913ec582b13f99ec448cc96d3b3efa2f3194454d821"
+      "sha256": "3cfc0a4fc141d3e649ddc761d2ebca9842b5a25d223654003dd1312ad201e612"
     },
     {
       "name": "results.csv",
@@ -41,10 +41,16 @@
     {
       "name": "markers.csv",
       "role": "input",
-      "sha256": "4c579052c8cd607e027e199eb2ae147eb75fa61979e13c252e2051486003d3aa"
+      "sha256": "792843b20de274586f152d334d0dc0c2b45da1236957b3318d534dbf85cc89fd"
+    },
+    {
+      "name": "preview-insert-width.png",
+      "role": "preview_check",
+      "sha256": "cc698a9e292c0c569417e91ed4e33e9b2129805f1197fec9ed1950c226c82779"
     }
   ],
-  "command": ".venv/Scripts/python.exe figures/a/jia-fig4-3-20260926/plot.py （仓库根执行；输入 events/results/markers 三张 CSV 由一次性提取脚本从固定提交 059056ce 的两份 e0_trace.json 原字节生成，提取命令与断言见 self-check.md）",
+  "command": ".venv/Scripts/python.exe figures/a/jia-fig4-3-20260926/plot.py",
+  "command_notes": "仓库根执行；绘图直接使用已交付的 events/results/markers 三张 CSV 复现图件，plot.py 不读取包外文件，内置断言（结果表官方值、events 核编号 1..3 与 source_core_id 逆映射、markers 五类引用逐条对事件表 start/end），任一不符即中止。三张 CSV 由固定提交 059056ce 的两份 e0_trace.json 原字节一次性提取生成（提取脚本未随包交付，产出已由本清单 sources 哈希与上述断言固化）。",
   "sources": [
     {
       "path": "results/a/q1-yuanzhifang-stage-j/stage-j-20260925/run/051-k3-control/e0_trace.json",
@@ -128,6 +134,7 @@
       "event_id",
       "op_id",
       "core",
+      "source_core_id",
       "pipe",
       "start",
       "end"
@@ -143,24 +150,73 @@
     "markers": [
       "variant",
       "kind",
-      "event_id"
+      "event_id",
+      "endpoint",
+      "cycles",
+      "range_start",
+      "range_end"
     ]
   },
   "parameters": {
     "case": "051",
     "cores": 3,
     "source_commit": "059056ce1ee999e634049e5e5baf72566832effe",
+    "core_numbering": "events.core normalized to 1..3 (source_core_id keeps original 0..2; core == source_core_id + 1 verified row-wise)",
     "input_event_rows": {
-      "control": 2469,
-      "paced": 2515
+      "control": {
+        "total": 2469,
+        "task": 96,
+        "op": 2373
+      },
+      "paced": {
+        "total": 2515,
+        "task": 119,
+        "op": 2396
+      }
     },
+    "markers_kinds": [
+      "large_input_done",
+      "source_task_done",
+      "remote_return",
+      "reduction_start",
+      "first_round"
+    ],
     "markers_cycles": {
-      "input_done": 6570,
-      "task_done": 10028,
-      "remote_return": 11040,
-      "reduce_tail_start": {
-        "control": 291076,
-        "paced": 278472
+      "large_input_done": {
+        "event_id": "COPY_IN##1433",
+        "endpoint": "end",
+        "cycles": 6570
+      },
+      "source_task_done": {
+        "event_id": "task#0",
+        "endpoint": "end",
+        "cycles": 10028
+      },
+      "remote_return": {
+        "event_id": "COPY_IN##1465",
+        "endpoint": "end",
+        "cycles": 11040
+      },
+      "reduction_start": {
+        "control": {
+          "event_id": "task#95",
+          "endpoint": "start",
+          "cycles": 291076
+        },
+        "paced": {
+          "event_id": "task#118",
+          "endpoint": "start",
+          "cycles": 278472
+        }
+      },
+      "first_round": {
+        "event_id": "task#3",
+        "endpoint": "end",
+        "cycles": 11174,
+        "range": [
+          0,
+          11174
+        ]
       }
     }
   },
