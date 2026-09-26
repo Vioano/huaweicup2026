@@ -1,11 +1,138 @@
 {
   "schema": "paper-checkpoint-status-v1",
   "acceptance_baseline": "CP01",
-  "latest_known_checkpoint": "v9",
-  "current_iteration": "v9",
+  "latest_known_checkpoint": "v10",
+  "current_iteration": "v10",
   "next_iterations": [],
-  "iteration_note": "CP01至CP06归属第一轮v1；v2至v9为已发布固定稿。v9主PDF123页、附表57页及29个图位/30份图文件按本机与组织主库Git对象核哈希。旧批注保持各自PDF身份，不自动迁移到v9；语言、科学与最终人工验收待核。",
+  "iteration_note": "CP01仍为逐项验收基线；v9已发布，v10仅本机冻结并独立核哈希，远端固定发布和Fang格式签收尚待回报。v10另开批注，不迁移旧页码、坐标或通过状态。",
   "checkpoints": [
+    {
+      "id": "v10",
+      "iteration": "v10",
+      "kind": "frozen_local_checkpoint",
+      "summary": "83页主PDF、57页逐例附表与源码附件已按本机冻结清单逐文件核哈希；六段伪代码226→142行及完整代码外置为论文监督方报告，本台尚未独立核文字删改质量。30份图文件与v9按图号、路径、SHA-256集合核同；图在v10的实际页码尚未登记。目录、正文语言、科学与Fang格式及最终人工验收均未通过。",
+      "pdf_path": "paper/manuscript-v1/checkpoints/v10/anonymous-paper-v10.pdf",
+      "pdf_sha256": "07cdbf1c9909ff0eb4ba0e07aa895a3c81f93fd063a15b3809d8727ca17a5e60",
+      "pages": 83,
+      "supplement_path": "paper/manuscript-v1/checkpoints/v10/result-tables.pdf",
+      "supplement_sha256": "2c4f09fa40a2a45cd243f635cad09606a4d2fc980b5d00b1279cad1d2c915cb7",
+      "supplement_pages": 57,
+      "attachment_path": "paper/manuscript-v1/checkpoints/v10/attachments/source-code-v10.zip",
+      "attachment_sha256": "1bd41bc1beaefb97b9b2cc9fac72c71103b9933cf497e1841eacf0c95bf219d1",
+      "freeze_manifest_path": "paper/manuscript-v1/checkpoints/v10/freeze-manifest.json",
+      "freeze_manifest_sha256": "676f8b10626123c1208e5a08d6e5519c88e99d2e46f10ac27bd20c7f2cee3961",
+      "figure_manifest_path": "paper/manuscript-v1/checkpoints/v10/figure-manifest.json",
+      "parts_manifest_path": "paper/manuscript-v1/checkpoints/v10/parts-manifest.json",
+      "parts_manifest_sha256": "79c85b732393105293945cb927c2386d0385f6547de2719a027f2a3392db6413",
+      "parts": [
+        {
+          "file": "parts/v10-part-01.pdf",
+          "title": "论文 v10 · 摘要目录与模型",
+          "source": "anonymous-paper-v10.pdf",
+          "original_pages": [
+            1,
+            19
+          ],
+          "pages": 19,
+          "sha256": "365d0eac7f2355f06cf6d8b947e7b26859ff2d2d1e53b3377848b070727a3fd6"
+        },
+        {
+          "file": "parts/v10-part-02.pdf",
+          "title": "论文 v10 · 问题一",
+          "source": "anonymous-paper-v10.pdf",
+          "original_pages": [
+            19,
+            32
+          ],
+          "pages": 14,
+          "sha256": "8272d11f062e210af3d27692763df697769bfbe5615d7fbab7232898c021abbc"
+        },
+        {
+          "file": "parts/v10-part-03.pdf",
+          "title": "论文 v10 · 问题二",
+          "source": "anonymous-paper-v10.pdf",
+          "original_pages": [
+            32,
+            47
+          ],
+          "pages": 16,
+          "sha256": "bfb469fb9bcfa0eee919868c97f573e6bc24a1b79521f63e5b38b9f7e02d48d4"
+        },
+        {
+          "file": "parts/v10-part-04.pdf",
+          "title": "论文 v10 · 问题三",
+          "source": "anonymous-paper-v10.pdf",
+          "original_pages": [
+            47,
+            66
+          ],
+          "pages": 20,
+          "sha256": "c2e91a60c125c4c70447d719bc2118879b2844ec83e05740ffeb4a68e95ef64b"
+        },
+        {
+          "file": "parts/v10-part-05.pdf",
+          "title": "论文 v10 · 实验结论与参考文献",
+          "source": "anonymous-paper-v10.pdf",
+          "original_pages": [
+            66,
+            75
+          ],
+          "pages": 10,
+          "sha256": "18a9cb552b450697d6ab1ee46476e6f3b4415a5a5a0eff5668b9d4082e3eceaf"
+        },
+        {
+          "file": "parts/v10-part-06.pdf",
+          "title": "论文 v10 · 附录说明与数学推导",
+          "source": "anonymous-paper-v10.pdf",
+          "original_pages": [
+            75,
+            83
+          ],
+          "pages": 9,
+          "sha256": "00d7f3a73d077bb2649306722c1ef8278d4b962091849f59b2445faf19f98056"
+        },
+        {
+          "file": "parts/v10-results-01.pdf",
+          "title": "论文 v10 · 逐例结果附表 1",
+          "source": "result-tables.pdf",
+          "original_pages": [
+            1,
+            20
+          ],
+          "pages": 20,
+          "sha256": "b2368e619c9bc296b94b2b19d1f6b39cb33a21c5c72b7b0c9a2ff80265798c08"
+        },
+        {
+          "file": "parts/v10-results-02.pdf",
+          "title": "论文 v10 · 逐例结果附表 2",
+          "source": "result-tables.pdf",
+          "original_pages": [
+            21,
+            40
+          ],
+          "pages": 20,
+          "sha256": "cccdfe97d285b9cb143a68c67d5a1d4802babe1dd77cd4887d11bbcafcc2576c"
+        },
+        {
+          "file": "parts/v10-results-03.pdf",
+          "title": "论文 v10 · 逐例结果附表 3",
+          "source": "result-tables.pdf",
+          "original_pages": [
+            41,
+            57
+          ],
+          "pages": 17,
+          "sha256": "9f31b78792b0e1016d8da93023e735525f74cb69ee82e107c7ed9afeffe376c9"
+        }
+      ],
+      "source_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+      "git_state": "本机冻结原件已核；组织主库固定提交与镜像尚待总调度回交，不能称已发布",
+      "acceptance_state": "仅登记固定原件身份与分册；旧批注不迁移，语言、科学、Fang格式与最终人工验收待办",
+      "figure_assets_v9_identical": true,
+      "figure_inventory": [],
+      "human_final_acceptance": false,
+      "annotation_policy": "v10批注只绑定v10 PDF SHA；旧稿页码、矩形与接受状态不迁移。跨册GoToR在Codex预览器中的交互未验证。"
+    },
     {
       "id": "v9",
       "iteration": "v9",

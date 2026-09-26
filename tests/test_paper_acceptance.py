@@ -134,8 +134,15 @@ class ReviewContractTest(unittest.TestCase):
     def test_checkpoint_registry_keeps_new_freeze_separate_from_review_baseline(self):
         registry = json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text())
         by_id = {item['id']: item for item in registry['checkpoints']}
-        self.assertEqual(registry['latest_known_checkpoint'], 'v9')
+        self.assertEqual(registry['latest_known_checkpoint'], 'v10')
         self.assertEqual(registry['acceptance_baseline'], 'CP01')
+        self.assertEqual(by_id['v10']['kind'], 'frozen_local_checkpoint')
+        self.assertEqual(by_id['v10']['pages'], 83)
+        self.assertEqual(by_id['v10']['supplement_pages'], 57)
+        self.assertEqual(len(by_id['v10']['parts']), 9)
+        self.assertEqual(len([p for p in by_id['v10']['parts'] if p['source'] == 'anonymous-paper-v10.pdf']), 6)
+        self.assertFalse(by_id['v10']['human_final_acceptance'])
+        self.assertNotIn('git_commit', by_id['v10'])
         self.assertEqual(by_id['v9']['kind'], 'frozen_published_checkpoint')
         self.assertEqual(by_id['v9']['pages'], 123)
         self.assertEqual(by_id['v9']['supplement_pages'], 57)

@@ -125,6 +125,19 @@ class CheckpointDocuments:
                     raise FileNotFoundError('缺少pdftoppm，仍可打开PDF原件审阅') from None
             return target
 
+    def part(self, checkpoint_id, filename):
+        pdf, record = self.locate(checkpoint_id)
+        item = next((part for part in record.get('parts', [])
+                     if part.get('file') == f'parts/{filename}'), None)
+        if item is None:
+            raise FileNotFoundError('未登记的论文分册')
+        path = pdf.parent / item['file']
+        if not path.is_file():
+            raise FileNotFoundError('本机尚未取得此固定分册')
+        if hashlib.sha256(path.read_bytes()).hexdigest() != item['sha256']:
+            raise ValueError('分册字节与检查点哈希不一致，拒绝展示')
+        return path
+
 
 class TeamImages:
     """Serve only pinned teammate PNGs, after checking their Git blob identity."""
@@ -296,6 +309,9 @@ def serve(board, port):
                     suffix = '.pdf' if p.path.endswith('.pdf') else '.png'
                     path = ROOT / 'docs/paper-acceptance/candidates' / f'p28-figure-5.1-1-crop-candidate{suffix}'
                     return self.reply(path.read_bytes(), mime='application/pdf' if suffix == '.pdf' else 'image/png')
+                match = re.fullmatch(r'/checkpoints/([a-z0-9]+)/parts/([a-z0-9-]+\.pdf)', p.path)
+                if match:
+                    return self.reply(checkpoint_docs.part(match[1], match[2]).read_bytes(), mime='application/pdf')
                 match = re.fullmatch(r'/checkpoints/([a-z0-9]+)(?:/(\d+)\.png|\.pdf)', p.path)
                 if match:
                     path = checkpoint_docs.page(match[1], int(match[2])) if match[2] else checkpoint_docs.locate(match[1])[0]
