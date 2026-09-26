@@ -6,11 +6,16 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import sys
 import xml.etree.ElementTree as ET
 
 OUT = Path(__file__).resolve().parent
 SHA = "834d8c957538ee069c66aadac9509552a4cc69d7"
 W, H = 960, 1420
+CLEAN = sys.argv[1:] == ["--clean"]
+if sys.argv[1:] not in ([], ["--clean"]):
+    raise SystemExit("usage: python3 build_flow.py [--clean]")
+STEM = "p1-834-flow-clean" if CLEAN else "p1-834-flow"
 
 # Each source pointer is a line in the fixed Git blob, not the current checkout.
 nodes = [
@@ -54,7 +59,7 @@ nodes = [
          role="guard", refs=["unified.py:175-180", "response_refine.py:40-41", "response_refine.py:203-219", "structural_refine.py:147-159", "branch_refine.py:33-39", "branch_refine.py:133-146"]),
     dict(id="output", label="输出任务划分与各核执行顺序｜在线 E1 总调用上限：10 次（6＋1＋2＋1）", x=52, y=1314, w=856, h=58,
          role="output", refs=["branch_refine.py:149-162", "unified.py:200-209", "branch_refine.py:175-184"]),
-    dict(id="e0", label="候选图｜待科学与语言审核；官方 E0 独立复评，不进入在线选优", x=52, y=1387, w=856, h=30,
+    dict(id="e0", label=("官方 E0 独立复评，不进入在线选优" if CLEAN else "候选图｜待科学与语言审核；官方 E0 独立复评，不进入在线选优"), x=52, y=1387, w=856, h=30,
          role="external", refs=["unified.py:208", "response_refine.py:163", "structural_refine.py:76", "branch_refine.py:63"]),
 ]
 
@@ -129,7 +134,7 @@ for e in edges:
     ET.SubElement(cell, "mxGeometry", {"relative": "1", "as": "geometry"})
 
 ET.indent(diagram, space="  ")
-ET.ElementTree(diagram).write(OUT / "p1-834-flow.drawio", encoding="utf-8", xml_declaration=True)
+ET.ElementTree(diagram).write(OUT / f"{STEM}.drawio", encoding="utf-8", xml_declaration=True)
 semantic = {"fixed_solver_commit": SHA,
             "source_line_convention": "git show <fixed_solver_commit>:src/q1/<file> | nl -ba",
             "nodes": nodes, "edges": edges,
@@ -137,4 +142,4 @@ semantic = {"fixed_solver_commit": SHA,
                        "intact_order_max_e1": 2, "branch_aid_max_e1": 1,
                        "total_max_e1": 10,
                        "interpretation": "upper bounds on online score attempts; actual worker count may be unknown after dispatch failure"}}
-(OUT / "semantics.json").write_text(json.dumps(semantic, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+(OUT / ("semantics-clean.json" if CLEAN else "semantics.json")).write_text(json.dumps(semantic, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
