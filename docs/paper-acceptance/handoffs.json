@@ -1,5 +1,28 @@
 [
   {
+    "id": "paper-v8-freeze-to-acceptance-20260927",
+    "items": [
+      "v8",
+      "USER-V7-FIGTEXT-01",
+      "USER-V7-FIGTEXT-02",
+      "USER-V8-CODESTYLE-01"
+    ],
+    "title": "正式v8本机冻结稿及图文批注状态登记",
+    "owner": "论文验收台 / 论文监督会话",
+    "source_thread_id": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+    "state": "received_local_frozen_pdf_publication_pending",
+    "acknowledgement": "正文103页和附表57页SHA-256已由验收台独立核对；23图位/24文件哈希已核；抽样目视第18、32、36、39、53、59、62、71页未见裁切重叠。图文语言未因此通过。",
+    "expected": "总调度交组织主库和镜像固定提交后复核字节，并由用户针对v8审阅图文、伪代码和单例诊断。旧PDF批注不迁移页码或坐标。",
+    "delivery": {
+      "pdf_path": "paper/manuscript-v1/checkpoints/v8/anonymous-paper-v8.pdf",
+      "pdf_sha256": "5d806108a559eaf0f18d9d3268efa477674d67ddceb9c03bc7d5b08b0f890cf6",
+      "supplement_sha256": "7e477adb4511db7cd3c40c47b2880fc41a60d4ff2001b871c6cd9a9d5193cef7",
+      "source_review": "paper/manuscript-v1/checkpoints/v8/review/validation.json",
+      "human_final_acceptance": false
+    },
+    "review": "USER-V7-FIGTEXT-01/02原话仍绑定v7；作者自报图内长说明移至LaTeX。USER-V8-CODESTYLE-01原话与截图保留，六处代码式伪代码/附录高亮仅作者自报修改，待用户验收。图5-4/6-5保留后续适配，v8未入稿。"
+  },
+  {
     "id": "v7-p28-figure-crop-candidate-20260926",
     "items": [],
     "title": "第28页图5.1-1上下裁切候选：论文组织任务已签收，待下一版入稿",
@@ -46,8 +69,17 @@
     "pages": 95,
     "acknowledgement": "已核对本机PDF SHA-256、95页A4，目视查看第1页摘要；第47页渲染与v6一致。固定提交1fd0420b17979c219aac34c51f1e7e2d4c2489c8的主PDF原字节已独立回读同一哈希。总调度报告组织主库与公开镜像均核同，Draft PR #222仍待整合。",
     "change_scope": "仅第1页摘要重写；第2至95页的渲染等价由冻结稿收据记录，正文、图、数据与代码声明沿用v6。",
-    "figures_retained": ["fang-fig42-a", "farmer-fig52-v2", "acceptance-p2-local-cut", "acceptance-p2-three-plans", "acceptance-p3-forest-decision"],
-    "excluded": ["fang-fig5-1-a", "fang-fig6-1-a"],
+    "figures_retained": [
+      "fang-fig42-a",
+      "farmer-fig52-v2",
+      "acceptance-p2-local-cut",
+      "acceptance-p2-three-plans",
+      "acceptance-p3-forest-decision"
+    ],
+    "excluded": [
+      "fang-fig5-1-a",
+      "fang-fig6-1-a"
+    ],
     "review": "登记冻结稿不等于摘要语言或论文最终验收。Fang新A版仅在画廊，旧PDF批注仍保留原哈希和坐标；不对本轮新增审稿或替用户验收。",
     "git_commit": "1fd0420b17979c219aac34c51f1e7e2d4c2489c8",
     "public_pdf_url": "https://github.com/huaweibei123/huaweicup2026/blob/1fd0420b17979c219aac34c51f1e7e2d4c2489c8/paper/manuscript-v1/checkpoints/v7/anonymous-paper-v7.pdf",
@@ -67,7 +99,10 @@
     "source_comment": "https://github.com/huaweibei123/huaweicup2026/issues/217#issuecomment-5846301405",
     "source_commit": "84a327a79d70259d03f5a7e445ba898721f7c310",
     "source_pr": "https://github.com/huaweibei123/huaweicup2026/pull/226",
-    "gallery_ids": ["fang-fig5-1-a", "fang-fig6-1-a"],
+    "gallery_ids": [
+      "fang-fig5-1-a",
+      "fang-fig6-1-a"
+    ],
     "source_sha256": {
       "fang-fig5-1-a": "16e0b22aeb7849fdc986d8bb06548ac1c0a7378173fbaa2f93ae4ecb90b734f4",
       "fang-fig6-1-a": "9f134160b9c88c150229a4c3893583960bd2af4e74ea53dd3564d8b5dfaf8b90"
@@ -86,7 +121,13 @@
     "pages": 95,
     "acknowledgement": "已核对本机PDF SHA-256与95页A4；固定提交bb349d4151ebf6831a86245900aa70cc80c7315a的PDF原字节已独立回读同一哈希。总调度报告组织主库与公开镜像均核同，Draft PR #222仍待整合。",
     "change_scope": "七段附录程序前AI使用声明、第50页分析说明、第63页附录来源说明；原始程序和图件未改。",
-    "figures_retained": ["fang-fig42-a", "farmer-fig52-v2", "acceptance-p2-local-cut", "acceptance-p2-three-plans", "acceptance-p3-forest-decision"],
+    "figures_retained": [
+      "fang-fig42-a",
+      "farmer-fig52-v2",
+      "acceptance-p2-local-cut",
+      "acceptance-p2-three-plans",
+      "acceptance-p3-forest-decision"
+    ],
     "review": "图页沿用v5固定内容，不能把图像未变当作科学或人工验收。pipeline首次定义与工作量单位问题仍记录在v6 deferred-review；完整代码包声明另待各作者交付。旧PDF批注保持原哈希和坐标。",
     "git_commit": "bb349d4151ebf6831a86245900aa70cc80c7315a",
     "public_pdf_url": "https://github.com/huaweibei123/huaweicup2026/blob/bb349d4151ebf6831a86245900aa70cc80c7315a/paper/manuscript-v1/checkpoints/v6/anonymous-paper-v6.pdf",
@@ -435,11 +476,11 @@
       "fang-fig43-original-v2",
       "fang-fig43-insert-preview-v2"
     ],
-    "title": "Fang转交用户选定的farmer图4-3 v2，监督会话拟用于v8附录D",
+    "title": "Fang转交用户选定的farmer图4-3 v2，正式v8附录图D.2-1已入稿",
     "owner": "论文验收台 / 排查并继续 Antigravity 论文工作",
-    "state": "acknowledged_appendix_planned",
-    "acknowledgement": "论文监督会话回报已实际读取bc2a42c原图、165mm预览、caption和audit，独立核对交付与来源哈希并目视检查PNG；计划将farmer原稿用于v8附录D，正文paced介绍交叉引用。原Antigravity已获派小段写作。此为计划与在途工作，尚非固定新稿入图验收。",
-    "expected": "论文组织任务完成附录案例与正文交叉引用后回交固定PDF SHA、实际图号和页码，并核对图注、语言与单例结论边界；如最终未入稿则说明原因",
+    "state": "frozen_local_v8_placed_publication_pending",
+    "acknowledgement": "论文监督会话已读取原图并在正式v8本机冻结PDF第71页排入附录图D.2-1；验收台核对主PDF SHA-256、源PNG相同SHA-256并目视检查整页。公开固定提交尚未回报，科学、图内中文和用户最终接受均待核。",
+    "expected": "总调度回报v8公开固定提交及镜像字节；用户按固定v8 PDF复核附录图D.2-1的图注、语言及单例诊断边界。旧版批注不得按第71页迁移。",
     "delivery": {
       "figure_ids": [
         "fang-fig43-original-v2",
@@ -447,9 +488,9 @@
       ],
       "source_commit": "bc2a42c277b9d70c51f3fc6974275354df33ee26",
       "source_comment": "https://github.com/huaweibei123/huaweicup2026/issues/217#issuecomment-5847552538",
-      "state": "original_and_insert_preview_registered_writer_message_sent"
+      "state": "same_png_in_frozen_v8_p71_pending_human_and_publication"
     },
-    "review": "case051/k3仅为单用例诊断，不替代正文全量成绩。监督会话称107页v8-preview1 SHA-256 0ebd815b3999ff7b4f7acc63278aaba88fca7aaba7d91218be5b3c46804580ee 不含新case051图，只供用户排版预览；正式v8编译后待回交图号、页码、PDF哈希及科学/语言/版面复核。",
+    "review": "case051/k3仅为单用例诊断，不替代正文全量成绩。正式v8主PDF SHA-256 5d806108a559eaf0f18d9d3268efa477674d67ddceb9c03bc7d5b08b0f890cf6，物理p71；图内“归约尾”等压缩词仍须核对定义和中文论文表达。",
     "target_thread_id": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5"
   },
   {

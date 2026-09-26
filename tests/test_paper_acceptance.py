@@ -50,9 +50,12 @@ class ReviewContractTest(unittest.TestCase):
         self.assertEqual(preview['sha256'], 'cc698a9e292c0c569417e91ed4e33e9b2129805f1197fec9ed1950c226c82779')
         self.assertEqual(original['family'], preview['family'])
         self.assertEqual(original['number'], preview['number'])
+        self.assertEqual(original['number'], '图 D.2-1')
         self.assertEqual(original['fang_selection_state'], 'user_confirmed_original')
         self.assertEqual(original['review_stage'], 'review_pending')
-        self.assertNotIn('manuscript_placement', original)
+        self.assertEqual(original['manuscript_placement']['checkpoint'], 'v8')
+        self.assertEqual(original['manuscript_placement']['page'], 71)
+        self.assertNotIn('manuscript_placement', preview)
         for original_id, preview_id, original_sha, preview_sha in (
             ('fang-fig54-layout-v1-original', 'fang-fig54-layout-v1-insert-preview',
              '9506e1f95cea2fa431ae98b1ae2b898bf3b7a916c4a5d3996154b73722ed1d57',
@@ -67,6 +70,7 @@ class ReviewContractTest(unittest.TestCase):
             self.assertEqual(selected['family'], paper_width['family'])
             self.assertEqual(selected['fang_selection_state'], 'user_confirmed_workbench_original')
             self.assertNotIn('manuscript_placement', selected)
+        self.assertEqual(gallery.by_id['fang-fig65-layout-v1-original']['number'], '图 6.9-1')
         self.assertFalse(gallery.by_id['fang-fig41']['curation_priority'])
         self.assertEqual(gallery.by_id['fang-fig41']['fang_selection_state'], 'not_adopted_current_algorithm')
         self.assertFalse(gallery.by_id['acceptance-case026-xy']['curation_priority'])
@@ -114,7 +118,15 @@ class ReviewContractTest(unittest.TestCase):
     def test_checkpoint_registry_keeps_new_freeze_separate_from_review_baseline(self):
         registry = json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text())
         by_id = {item['id']: item for item in registry['checkpoints']}
-        self.assertEqual(registry['latest_known_checkpoint'], 'v7')
+        self.assertEqual(registry['latest_known_checkpoint'], 'v8')
+        self.assertEqual(registry['acceptance_baseline'], 'CP01')
+        self.assertEqual(by_id['v8']['kind'], 'frozen_local_checkpoint')
+        self.assertEqual(by_id['v8']['pages'], 103)
+        self.assertEqual(by_id['v8']['supplement_pages'], 57)
+        self.assertEqual(len(by_id['v8']['figure_inventory']), 23)
+        self.assertEqual(next(x for x in by_id['v8']['figures_checked'] if x['gallery_id'] == 'fang-fig43-original-v2')['page'], 71)
+        self.assertFalse(by_id['v8']['human_final_acceptance'])
+        self.assertNotIn('git_commit', by_id['v8'])
         self.assertEqual(by_id['v7']['kind'], 'frozen_published_checkpoint')
         self.assertIn(by_id['v7']['git_commit'], by_id['v7']['public_pdf_url'])
         self.assertEqual(by_id['v7']['pages'], 95)
@@ -137,7 +149,7 @@ class ReviewContractTest(unittest.TestCase):
     def test_v7_figure_review_keeps_user_words_separate_from_ai_advice(self):
         review = json.loads((ROOT / 'docs/paper-acceptance/figure-review-v7.json').read_text())
         checkpoints = json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text())
-        self.assertEqual(review['pdf_sha256'], checkpoints['checkpoints'][0]['pdf_sha256'])
+        self.assertEqual(review['pdf_sha256'], next(x for x in checkpoints['checkpoints'] if x['id'] == 'v7')['pdf_sha256'])
         self.assertEqual(len(review['figure_coverage']), 20)
         self.assertEqual(review['figure_count'], 20)
         self.assertTrue(review['asset_hashes_matched'])

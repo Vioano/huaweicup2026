@@ -19,7 +19,8 @@
 | `GET /api/v1/handoffs` | 写作交接与待交付事实 |
 | `GET /api/v1/team-figures` | 队友与验收台图件、Fang明确选版优先级、待Fang比选队列、固定来源与待审状态；`curation_priority`与`review_queue_rank`仅控制展示顺序，不代表科学或论文验收 |
 | `GET /api/v1/figure-requests` | 论文组织任务定义的缺图需求、派工与接收状态 |
-| `GET /api/v1/checkpoints` | 最新已知冻结稿与当前验收基线的不同版本、发布链接及原件哈希 |
+| `GET /api/v1/checkpoints` | 最新已知冻结稿与当前验收基线的不同版本、发布链接及原件哈希；v8 `figure_inventory` 列出23个实际图号、页码与图件SHA-256，`board_visual_check`只表示验收台抽样看过整页 |
+| `GET /checkpoints/v8.pdf`、`GET /checkpoints/v8/71.png` | 本机已注册且逐次核对SHA-256的冻结稿及指定整页预览；当前第71页为附录图D.2-1，旧稿批注坐标不迁移 |
 | `GET /api/v1/export` | 当前共享状态和本机草稿快照 |
 
 语言列表默认最多1000项。使用total_matching判断是否需要继续offset，不假设一页等于全部。
