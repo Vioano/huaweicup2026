@@ -4,12 +4,12 @@
   "latest_known_checkpoint": "v8",
   "current_iteration": "v8",
   "next_iterations": [],
-  "iteration_note": "CP01至CP06归属第一轮v1；v2至v7为固定公开PDF。v8为本机冻结的103页新稿，公开固定提交尚待总调度回报。旧批注保留原PDF身份与坐标，不自动迁移到v8；v8图文及最终人工验收待核。",
+  "iteration_note": "CP01至CP06归属第一轮v1；v2至v8均有固定公开PDF。v8正文103页、附表57页的组织主库Git对象已按哈希核对。旧批注保留原PDF身份与坐标，不自动迁移到v8；v8图文及最终人工验收待核。",
   "checkpoints": [
     {
       "id": "v8",
       "iteration": "v8",
-      "kind": "frozen_local_checkpoint",
+      "kind": "frozen_published_checkpoint",
       "summary": "103页正文与57页附表已按SHA-256核对；作者冻结清单含23个逻辑图位、24份图文件。验收台抽样目视检查8处图页，未见裁切重叠；图4-3原稿实际位于附录图D.2-1第71页。两张后送Fang图5-4/6-5本版未入稿。图内措辞、科学结论、全文语言与最终人工验收仍待核。",
       "pdf_path": "paper/manuscript-v1/checkpoints/v8/anonymous-paper-v8.pdf",
       "pdf_sha256": "5d806108a559eaf0f18d9d3268efa477674d67ddceb9c03bc7d5b08b0f890cf6",
@@ -18,7 +18,7 @@
       "supplement_sha256": "7e477adb4511db7cd3c40c47b2880fc41a60d4ff2001b871c6cd9a9d5193cef7",
       "supplement_pages": 57,
       "source_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
-      "git_state": "本机冻结文件已核对；已交总调度发布，公开固定Git提交与镜像回读未到",
+      "git_state": "组织主库固定提交已发布，正文与附表Git对象SHA-256已由验收台核同；总调度报告公开镜像同字节；Draft PR #222待整合",
       "acceptance_state": "入稿供用户审阅；作者/Agent检查不等于用户接受，语言、科学和完整图文验收未完成",
       "figure_inventory": [
         {
@@ -365,7 +365,10 @@
         "USER-V8-CODESTYLE-01": "作者自报六处伪代码与附录高亮已调整；原批注无坐标，待用户对v8人工验收",
         "v8_preview1": "107页旧预览批注保留原PDF身份，不转成v8页码"
       },
-      "publication_url": "https://github.com/huaweibei123/huaweicup2026/pull/222"
+      "publication_url": "https://github.com/huaweibei123/huaweicup2026/pull/222",
+      "git_commit": "6b1fdf25649b2b5bfc8d267896428187c3469291",
+      "public_pdf_url": "https://github.com/huaweibei123/huaweicup2026/blob/6b1fdf25649b2b5bfc8d267896428187c3469291/paper/manuscript-v1/checkpoints/v8/anonymous-paper-v8.pdf",
+      "public_supplement_url": "https://github.com/huaweibei123/huaweicup2026/blob/6b1fdf25649b2b5bfc8d267896428187c3469291/paper/manuscript-v1/checkpoints/v8/result-tables.pdf"
     },
     {
       "id": "v7",

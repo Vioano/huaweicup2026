@@ -10,15 +10,17 @@
     "title": "正式v8本机冻结稿及图文批注状态登记",
     "owner": "论文验收台 / 论文监督会话",
     "source_thread_id": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
-    "state": "received_local_frozen_pdf_publication_pending",
-    "acknowledgement": "正文103页和附表57页SHA-256已由验收台独立核对；23图位/24文件哈希已核；抽样目视第18、32、36、39、53、59、62、71页未见裁切重叠。图文语言未因此通过。",
-    "expected": "总调度交组织主库和镜像固定提交后复核字节，并由用户针对v8审阅图文、伪代码和单例诊断。旧PDF批注不迁移页码或坐标。",
+    "state": "published_fixed_pdf_registered_human_review_pending",
+    "acknowledgement": "正文103页和附表57页SHA-256已由验收台独立核对；23图位/24文件哈希已核；抽样目视第18、32、36、39、53、59、62、71页未见裁切重叠。图文语言未因此通过。 组织主库固定提交6b1fdf25649b2b5bfc8d267896428187c3469291的正文和附表Git对象已由验收台重算SHA-256相同；总调度报告镜像同字节。",
+    "expected": "用户针对v8固定PDF审阅图文、伪代码和单例诊断；旧PDF批注不迁移页码或坐标。科学、语言与最终人工验收另行记录。",
     "delivery": {
       "pdf_path": "paper/manuscript-v1/checkpoints/v8/anonymous-paper-v8.pdf",
       "pdf_sha256": "5d806108a559eaf0f18d9d3268efa477674d67ddceb9c03bc7d5b08b0f890cf6",
       "supplement_sha256": "7e477adb4511db7cd3c40c47b2880fc41a60d4ff2001b871c6cd9a9d5193cef7",
       "source_review": "paper/manuscript-v1/checkpoints/v8/review/validation.json",
-      "human_final_acceptance": false
+      "human_final_acceptance": false,
+      "git_commit": "6b1fdf25649b2b5bfc8d267896428187c3469291",
+      "public_pdf_url": "https://github.com/huaweibei123/huaweicup2026/blob/6b1fdf25649b2b5bfc8d267896428187c3469291/paper/manuscript-v1/checkpoints/v8/anonymous-paper-v8.pdf"
     },
     "review": "USER-V7-FIGTEXT-01/02原话仍绑定v7；作者自报图内长说明移至LaTeX。USER-V8-CODESTYLE-01原话与截图保留，六处代码式伪代码/附录高亮仅作者自报修改，待用户验收。图5-4/6-5保留后续适配，v8未入稿。"
   },
@@ -478,9 +480,9 @@
     ],
     "title": "Fang转交用户选定的farmer图4-3 v2，正式v8附录图D.2-1已入稿",
     "owner": "论文验收台 / 排查并继续 Antigravity 论文工作",
-    "state": "frozen_local_v8_placed_publication_pending",
+    "state": "published_v8_p71_human_review_pending",
     "acknowledgement": "论文监督会话已读取原图并在正式v8本机冻结PDF第71页排入附录图D.2-1；验收台核对主PDF SHA-256、源PNG相同SHA-256并目视检查整页。公开固定提交尚未回报，科学、图内中文和用户最终接受均待核。",
-    "expected": "总调度回报v8公开固定提交及镜像字节；用户按固定v8 PDF复核附录图D.2-1的图注、语言及单例诊断边界。旧版批注不得按第71页迁移。",
+    "expected": "用户按固定v8 PDF复核附录图D.2-1的图注、语言及单例诊断边界。旧版批注不得按第71页迁移。",
     "delivery": {
       "figure_ids": [
         "fang-fig43-original-v2",
@@ -488,7 +490,7 @@
       ],
       "source_commit": "bc2a42c277b9d70c51f3fc6974275354df33ee26",
       "source_comment": "https://github.com/huaweibei123/huaweicup2026/issues/217#issuecomment-5847552538",
-      "state": "same_png_in_frozen_v8_p71_pending_human_and_publication"
+      "state": "same_png_in_published_v8_p71_pending_human_review"
     },
     "review": "case051/k3仅为单用例诊断，不替代正文全量成绩。正式v8主PDF SHA-256 5d806108a559eaf0f18d9d3268efa477674d67ddceb9c03bc7d5b08b0f890cf6，物理p71；图内“归约尾”等压缩词仍须核对定义和中文论文表达。",
     "target_thread_id": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5"
