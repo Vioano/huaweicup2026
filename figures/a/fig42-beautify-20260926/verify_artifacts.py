@@ -38,4 +38,3 @@ for p in sorted(root.rglob('*')):
  if p.is_file() and p.name!='manifest.json': out['files'][p.relative_to(root).as_posix()]={'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
 (root/'manifest.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
 print(json.dumps({'image':out['image'],'checks':out['checks'],'files':len(out['files'])},ensure_ascii=False))
-
