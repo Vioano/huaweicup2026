@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 from src.paper_acceptance.core import Board, Conflict, MARKER
-from src.paper_acceptance.app import Documents
+from src.paper_acceptance.app import Documents, TeamImages
 from src.paper_acceptance.language import scan_text, import_author_report
 
 
@@ -27,6 +27,18 @@ class ReviewContractTest(unittest.TestCase):
 
     def tearDown(self):
         self.temp.cleanup()
+
+    def test_team_figure_manifest_and_blob_integrity(self):
+        gallery = TeamImages(self.board)
+        self.assertEqual(len(gallery.by_id), 39)
+        self.assertEqual(len({item['family'] for item in gallery.by_id.values()}), 22)
+        self.assertEqual(gallery.by_id['fang-fig41']['number'], '图 4.1-1')
+        self.assertTrue(all(item['number'].startswith('图 ') for item in gallery.by_id.values()))
+        raw = b'\x89PNG\r\n\x1a\nexample'
+        item = {'size_bytes': len(raw), 'git_blob_sha1': hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()}
+        self.assertEqual(TeamImages.checked(raw, item), raw)
+        with self.assertRaisesRegex(ValueError, '哈希'):
+            TeamImages.checked(raw[:-1]+b'X', item)
 
     def values(self, decision='comment', revision=0, actor='author'):
         return dict(item_id='L01', paper_sha256=self.cat['paper_sha256'], standard_hash=self.board.standard_hash,
