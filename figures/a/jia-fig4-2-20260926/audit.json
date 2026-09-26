@@ -6,22 +6,27 @@
     {
       "name": "fig4-2-fork-join-partition.svg",
       "role": "svg",
-      "sha256": "46320d761147b0e828c6b1bcf9f8c8df60d1daf31ce43f5b60dd5a7a5d539810"
+      "sha256": "bf147cd626dcbcf077da2d79ee14e2ded197612de7ca6b6dfd209b14632b51fd"
     },
     {
       "name": "fig4-2-fork-join-partition.png",
       "role": "png",
-      "sha256": "74a68540cece8788061c464bd00b497e46097f8a925b8b8e1d7de748e6be3938"
+      "sha256": "6d41ed77869a8859377bf64566a5f8f23d1c26b00af965d83820e657aa3d5bbf"
     },
     {
       "name": "fig4-2-fork-join-partition.drawio",
       "role": "source",
-      "sha256": "07aeda4b8979f2d70979c33b9af0722b3f36cebfdaa3080d790ea2755e743651"
+      "sha256": "c079a36b32f29406f3bbf74826a0b8dbbbf4bb74420ff2ff4370399f27ebc581"
+    },
+    {
+      "name": "caption.md",
+      "role": "caption",
+      "sha256": "df7b691c04ca25071cf312a27ca3e0f50a6354e8cc2c7adc59ba2d7df3fbffa3"
     },
     {
       "name": "DELIVERY.md",
       "role": "notes",
-      "sha256": "fa67234afa131907812399d4d6232c48dbf8426c7cb3482905b415b879115516"
+      "sha256": "7e6bddea956f1cba3b1efee2144f14ad73d80cae2b7670f3f6b0d05ae2436a9d"
     },
     {
       "name": "self-check.md",
@@ -31,7 +36,7 @@
     {
       "name": "nodes.csv",
       "role": "input",
-      "sha256": "bce63ef0d2265016a2f31d0b1f5e55e33b8a49b787bf413c609eaff7604e0a46"
+      "sha256": "5616588b8dbc96afbdf1e249d10169a4d371dbc57ba889cddc6d2799781690b1"
     },
     {
       "name": "edges.csv",
@@ -41,20 +46,34 @@
     {
       "name": "preview-insert-width.png",
       "role": "notes",
-      "sha256": "6354ff105883cd7fd1848c58aa13fae51e1161e62bd7dcdcc7d85fbecbf0a2fc"
+      "sha256": "a784ace7c6f65a3d0a7e88e88b97606afa5aebb57df842b4ab57d2dbcf43a07b"
     }
   ],
-  "command": "draw.io CLI 导出（--disable-gpu --no-sandbox）svg 与 png(-s 2)；插入宽度预览 PIL 1600px；校验 validate.py 0 error",
+  "command": {
+    "export_svg": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f svg -o figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.svg figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.drawio",
+    "export_png": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f png -s 2 -o figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.png figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.drawio",
+    "insert_width_preview": ".venv/Scripts/python.exe -c \"from PIL import Image; im=Image.open(...); im.resize((1600,int(im.height*1600/im.width)), Image.LANCZOS).save(preview-insert-width.png)\"",
+    "validate": ".venv/Scripts/python.exe F:/WorkBuddyData/skills/drawio-skill/scripts/validate.py fig4-2-fork-join-partition.drawio",
+    "tool_versions": "draw.io desktop（本机 F:/draw.io，绿色版）；Python 3.13.12（项目 .venv）；drawio-skill validate.py v3.4.0"
+  },
   "sources": [
     {
-      "path": "paper/sections/P1-问题一论文初稿.md（4.4.2）",
+      "path": "paper/sections/P1-问题一论文初稿.md",
       "commit": "67c0f603960fddf86416d23ca3e85e53561c3c3a",
-      "sha256": "10d0dc195e138c42f7507ca12c8619ebdf46c4df54ca38b31fe353fc886ef8ef"
+      "sha256": "10d0dc195e138c42f7507ca12c8619ebdf46c4df54ca38b31fe353fc886ef8ef",
+      "note": "使用其中 4.4.2 节（式 4-11、前沿-归约尾构造、命题 1）"
     },
     {
-      "path": "示例节点/边表（任务书授权自整理，非实测数据；本包 nodes.csv/edges.csv 即清单原件）",
-      "commit": "n/a",
-      "sha256": "bce63ef0d2265016a2f31d0b1f5e55e33b8a49b787bf413c609eaff7604e0a46"
+      "path": "figures/a/jia-fig4-2-20260926/nodes.csv",
+      "commit": "e9f3a5200ff858ce36a7fbdac87f1d2cb16f14f7",
+      "sha256": "bce63ef0d2265016a2f31d0b1f5e55e33b8a49b787bf413c609eaff7604e0a46",
+      "note": "自整理示例节点表（v2 版字节，12 节点；非实测数据）；本版列名改为 id/subgraph/core/order，新字节以本次交付 commit 为准"
+    },
+    {
+      "path": "figures/a/jia-fig4-2-20260926/edges.csv",
+      "commit": "e9f3a5200ff858ce36a7fbdac87f1d2cb16f14f7",
+      "sha256": "047a1e2ab66ad5c3c453b581278ca44be8db2dfdec05fe7d4fa092132aa3f574",
+      "note": "自整理示例边表（13 条；非实测数据）"
     }
   ],
   "units": {
@@ -82,11 +101,11 @@
   },
   "table_columns": {
     "nodes": [
-      "node_id",
+      "id",
       "stage",
       "subgraph",
       "core",
-      "order_in_core",
+      "order",
       "note"
     ],
     "edges": [
@@ -99,8 +118,13 @@
     "各核 Task 顺序与示例依赖相容，颜色及外框分别表达什么有图例。",
     "图注明确结构示例、条块宽度无时间含义，不声称实测加速或零 spill。"
   ],
-  "core_convention": "CSV core 列从 1 开始（模板约定）；图面 Core 0/1/2 对应 CSV core 1/2/3",
+  "core_convention": "CSV core/order 列从 1 开始（模板约定）；图面 Core 0/1/2 对应 CSV core 1/2/3",
   "edge_count": 13,
   "node_count": 12,
-  "version_note": "v2：边数口径13条；前沿框扩至完整包住d1/d3；折线绕行；(c)跨核线避开Task0文字；归约尾标签移框外；补逐节点/逐边CSV与audit；插入宽度重验"
+  "insert_width_check": {
+    "preview": "preview-insert-width.png",
+    "width_px": 1600,
+    "result": "箭头不穿文字、图例与底部说明可读、无缺字裁切"
+  },
+  "version_note": "v3：DELIVERY 全文改 v2→v3 并统一13条口径（含已通过检查项）；be3 穿标题修复（stage1 标题改短版移框底）；新增独立 caption.md；nodes.csv 列名 id/subgraph/core/order；sources 登记实际仓库路径+固定提交下旧列表字节哈希；command 补全 SVG/PNG/预览命令与工具版本；全部编辑后重算哈希，audit.files 不含 audit.json 自身"
 }
