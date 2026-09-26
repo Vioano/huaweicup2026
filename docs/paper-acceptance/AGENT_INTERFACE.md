@@ -12,6 +12,8 @@
 | `GET /api/v1/language?term=流水&limit=20&offset=0` | 精确用词筛选；也支持page、id；返回total_matching |
 | `GET /api/v1/fulltext?kind=句子&limit=25&offset=0` | 全文源稿清单；支持chapter、kind、id精确过滤，按total_matching分页 |
 | `GET /api/v1/sentences` | 22处句段实例、位置、问题和改写要求 |
+| `GET /api/v1/semantic-audit` | 固定新稿的分章标注、主验收者处理及实际覆盖；支持id/limit/offset |
+| `GET /api/v1/annotation-workflow` | 用户原始批注、问题类别、来源与专项检查范围 |
 | `GET /api/v1/standards` | 标准原件与哈希 |
 | `GET /api/v1/author-reports` | 导入的作者自报，包含固定来源及每条scope |
 | `GET /api/v1/handoffs` | 写作交接与待交付事实 |
@@ -53,3 +55,9 @@ CLI与HTTP共用状态：`identity / sync / status / agent --item ID / draft FIL
 维护者更新catalogue.json固定稿件/标准版本与实际比对材料，保留旧Git历史，再重启本地服务。整个catalogue按排序JSON计算标准哈希。旧纸稿或旧标准记录只留历史，不应用到新版；新客户端不会应用旧版本外来记录，原评论仍留共享Issue供查。
 
 作者审阅schema：schema_version=1、manuscript_commit、paper_sha256、entries；每条必须有chapter、line、original、issue、replacement、source、status；可补id、scope、pdf_page、english_full、official_chinese、definition、definition_location。issue和source可用字符串或结构化列表。尚未修改replacement为null，不造改句。未知页码不填写。仅导入匹配当前检查点的报告，新稿先重新登记，不默认为已接受。
+
+## 人工实例扩展与双向同步
+
+新批注流程按同目录 `COLLABORATION_PROTOCOL.md` v2 与 `ANNOTATION_CONTRACT.md`。真实六条事件及类别样本在 `annotation-workflow.json`。验证结构和去重键可运行 `python3 -m src.paper_acceptance check-annotations docs/paper-acceptance/annotation-workflow.json`，不会发消息、改验收或自动派工。
+
+一般初审与谓宾专项各保留自己的标准和覆盖，不叠加成不同内容数；原词搜索只是辅助。作者针对稳定finding_id回交v2响应（revised/explained/disputed/unresolved），新版固定SHA与位置必留。主验收者再核对，作者不代签接受。报告发布与实际已读分别记入handoffs；客户端没有隐含的后台唤醒。

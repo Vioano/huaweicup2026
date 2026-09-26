@@ -147,4 +147,47 @@ class ReviewContractTest(unittest.TestCase):
             run.return_value.stdout=json.dumps({'schema_version':1,'paper_sha256':'f'*64,'entries':[]}).encode()
             with self.assertRaisesRegex(ValueError,'哈希不同'): import_author_report(self.board,'c'*40,'paper/review.json')
 
+class SemanticReportTests(unittest.TestCase):
+    def test_annotation_identity_and_class_origin_are_required(self):
+        from src.paper_acceptance.semantic import validate_workflow
+        e={'annotation_id':'a1','event_key':'b'*64+':a1','source_commit':'a'*40,'paper_sha256':'b'*64,
+           'original':'原文','user_comment_verbatim':'用户批注','page':1,'rect':[1,2,3,4]}
+        c={'id':'c1','annotation_ids':['a1'],'title':'类别','mechanism':'缺陷','scope':['正文'],
+           'positive_example':'实例','negative_example':'非实例','rules':['L07'],'coverage_status':'未完成'}
+        data={'schema_version':2,'events':[e],'issue_classes':[c]}
+        self.assertFalse(validate_workflow(data)['acceptance_changed'])
+        data['events'].append(dict(e))
+        with self.assertRaisesRegex(ValueError,'重复'):validate_workflow(data)
+        data['events'].pop();c['annotation_ids']=['unknown']
+        with self.assertRaisesRegex(ValueError,'回指'):validate_workflow(data)
+
+    def packet(self):
+        return {'source_commit':'a'*40,'standard_version':'2026-09-26.4',
+                'entries':[{'id':'u1','path':'paper/ch.md','line':3,'line_end':3,'original':'待审原句。'}]}
+
+    def report(self):
+        return {'source_commit':'a'*40,'standard_version':'2026-09-26.4','worker':'sol-a',
+                'coverage':[{'unit_id':'u1','assessment':'findings'}],
+                'findings':[{'id':'f1','unit_id':'u1','path':'paper/ch.md','line':3,'original':'待审原句。','rules':['L13']}]}
+
+    def test_old_version_cannot_be_attached_to_new_text(self):
+        from src.paper_acceptance.semantic import combine_reports
+        r=self.report();r['source_commit']='b'*40
+        with self.assertRaisesRegex(ValueError,'新旧稿'):combine_reports([self.packet()],[r])
+
+    def test_invented_quote_and_missing_coverage_are_rejected(self):
+        from src.paper_acceptance.semantic import combine_reports
+        r=self.report();r['findings'][0]['original']='不存在的原句'
+        with self.assertRaisesRegex(ValueError,'连续原文'):combine_reports([self.packet()],[r])
+        r=self.report();r['coverage']=[]
+        with self.assertRaisesRegex(ValueError,'覆盖清单'):combine_reports([self.packet()],[r])
+
+    def test_worker_acceptance_claim_is_not_imported(self):
+        from src.paper_acceptance.semantic import combine_reports
+        r=self.report();r['coverage'][0]['assessment']='accepted'
+        with self.assertRaisesRegex(ValueError,'最终通过'):combine_reports([self.packet()],[r])
+        result=combine_reports([self.packet()],[self.report()])
+        self.assertEqual(result['findings'][0]['supervisor_status'],'pending')
+        self.assertEqual(result['findings'][0]['author_status'],'not_delivered')
+
 if __name__=='__main__': unittest.main()

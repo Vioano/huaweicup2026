@@ -12,6 +12,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 from .core import Board, ROOT, Conflict
 from .language import import_author_report
+from .semantic import validate_workflow
 
 
 class Documents:
@@ -138,6 +139,18 @@ def serve(board, port):
                     return self.reply({**report, 'entries': entries[offset:offset+limit], 'total_matching': len(entries), 'offset': offset, 'limit': limit})
                 if p.path == '/api/v1/sentences':
                     return self.reply(json.loads((ROOT / 'docs/paper-acceptance/sentence-audit.json').read_text()))
+                if p.path == '/api/v1/semantic-audit':
+                    report = json.loads((ROOT / 'docs/paper-acceptance/semantic-audit.json').read_text())
+                    entries = report['findings']
+                    if 'id' in q:
+                        entries = [e for e in entries if e['id'] == q['id'][0]]
+                    offset = max(0, int(q.get('offset', ['0'])[0]))
+                    limit = min(1000, max(1, int(q.get('limit', ['1000'])[0])))
+                    return self.reply({**report, 'findings': entries[offset:offset+limit], 'total_matching': len(entries), 'offset': offset, 'limit': limit})
+                if p.path == '/api/v1/annotation-workflow':
+                    report = json.loads((ROOT / 'docs/paper-acceptance/annotation-workflow.json').read_text())
+                    validate_workflow(report)
+                    return self.reply(report)
                 if p.path == '/api/v1/author-reports':
                     path = board.state / 'author-reports.json'
                     return self.reply(json.loads(path.read_text()) if path.exists() else [])
@@ -198,6 +211,7 @@ def main():
     s = sub.add_parser('draft'); s.add_argument('file')
     s = sub.add_parser('publish'); s.add_argument('id')
     s = sub.add_parser('import-author'); s.add_argument('commit'); s.add_argument('path')
+    s = sub.add_parser('check-annotations'); s.add_argument('file')
     s = sub.add_parser('register'); s.add_argument('doc_id', choices=['current','ref1','ref2','ref3','ref4']); s.add_argument('file')
     a = p.parse_args(); board = Board(a.state, a.catalogue)
     if a.command == 'serve':
@@ -217,6 +231,7 @@ def main():
         board.authenticate(); result = board.draft(json.loads(Path(a.file).read_text()))
     elif a.command == 'publish': result = board.publish(a.id)
     elif a.command == 'import-author': result = import_author_report(board, a.commit, a.path)
+    elif a.command == 'check-annotations': result = validate_workflow(json.loads(Path(a.file).read_text()))
     print(json.dumps(result,ensure_ascii=False,indent=2))
 
 
