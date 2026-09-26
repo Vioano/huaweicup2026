@@ -53,6 +53,20 @@ class ReviewContractTest(unittest.TestCase):
         self.assertEqual(original['fang_selection_state'], 'user_confirmed_original')
         self.assertEqual(original['review_stage'], 'review_pending')
         self.assertNotIn('manuscript_placement', original)
+        for original_id, preview_id, original_sha, preview_sha in (
+            ('fang-fig54-layout-v1-original', 'fang-fig54-layout-v1-insert-preview',
+             '9506e1f95cea2fa431ae98b1ae2b898bf3b7a916c4a5d3996154b73722ed1d57',
+             'babc097056fa18ef6c1783120db832ca507203befe596b3084cf870976d45d6d'),
+            ('fang-fig65-layout-v1-original', 'fang-fig65-layout-v1-insert-preview',
+             '9e384b0029ddaca7658686730a853c144b128c6b02c99b3987b90a3b7e5a41ed',
+             '7fb7c06d33f150ca2c4874ad2e584aca3819bedf1780d4feda2b0ffe8379bcde'),
+        ):
+            selected, paper_width = gallery.by_id[original_id], gallery.by_id[preview_id]
+            self.assertEqual((selected['sha256'], paper_width['sha256']), (original_sha, preview_sha))
+            self.assertEqual(selected['source_commit'], '5999965e8effe7baf60b7bda7b734ce86fdc0ba1')
+            self.assertEqual(selected['family'], paper_width['family'])
+            self.assertEqual(selected['fang_selection_state'], 'user_confirmed_workbench_original')
+            self.assertNotIn('manuscript_placement', selected)
         self.assertFalse(gallery.by_id['fang-fig41']['curation_priority'])
         self.assertEqual(gallery.by_id['fang-fig41']['fang_selection_state'], 'not_adopted_current_algorithm')
         self.assertFalse(gallery.by_id['acceptance-case026-xy']['curation_priority'])
