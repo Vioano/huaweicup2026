@@ -71,13 +71,27 @@ class Documents:
 class TeamImages:
     """Serve only pinned teammate PNGs, after checking their Git blob identity."""
     def __init__(self, board):
-        self.manifest = json.loads((ROOT / 'docs/paper-acceptance/team-figures.json').read_text())
-        self.by_id = {item['id']: item for item in self.manifest['items']}
-        if len(self.by_id) != len(self.manifest['items']):
-            raise ValueError('队友图件编号重复')
+        self.manifest_path = ROOT / 'docs/paper-acceptance/team-figures.json'
+        self.registry_lock = threading.Lock()
+        self.manifest = {}
+        self.by_id = {}
+        self.locks = {}
         self.cache = board.state / 'team-figures'
         self.cache.mkdir(exist_ok=True)
-        self.locks = {item_id: threading.Lock() for item_id in self.by_id}
+        self.refresh()
+
+    def refresh(self):
+        """Read the fixed registry on request so new teammate deliveries appear without a restart."""
+        manifest = json.loads(self.manifest_path.read_text())
+        by_id = {item['id']: item for item in manifest['items']}
+        if len(by_id) != len(manifest['items']):
+            raise ValueError('队友图件编号重复')
+        with self.registry_lock:
+            self.manifest = manifest
+            self.by_id = by_id
+            for item_id in by_id:
+                self.locks.setdefault(item_id, threading.Lock())
+        return manifest
 
     @staticmethod
     def checked(raw, item):
@@ -91,17 +105,21 @@ class TeamImages:
         return raw
 
     def image(self, item_id):
-        item = self.by_id.get(item_id)
+        self.refresh()
+        with self.registry_lock:
+            item = self.by_id.get(item_id)
+            lock = self.locks.get(item_id)
+            source_repo = self.manifest['source_repo']
         if not item:
             raise FileNotFoundError('未登记的队友图件')
-        with self.locks[item_id]:
+        with lock:
             target = self.cache / (item_id + '.png')
             if target.exists():
                 try:
                     return self.checked(target.read_bytes(), item)
                 except ValueError:
                     target.unlink()
-            url = f"https://raw.githubusercontent.com/{self.manifest['source_repo']}/{item['source_commit']}/{item['source_path']}"
+            url = f"https://raw.githubusercontent.com/{source_repo}/{item['source_commit']}/{item['source_path']}"
             request = Request(url, headers={'User-Agent': 'paper-acceptance-board/1'})
             with urlopen(request, timeout=20) as response:
                 raw = response.read(min(item['size_bytes'] + 1, 12_000_001))
@@ -206,7 +224,7 @@ def serve(board, port):
                 if p.path == '/api/v1/standards':
                     return self.reply({'hash': board.standard_hash, 'catalogue': board.cat})
                 if p.path == '/api/v1/team-figures':
-                    return self.reply(team_images.manifest)
+                    return self.reply(team_images.refresh())
                 if p.path == '/api/v1/figure-requests':
                     return self.reply(json.loads((ROOT / 'docs/paper-acceptance/figure-requests.json').read_text()))
                 if p.path == '/api/v1/checkpoints':

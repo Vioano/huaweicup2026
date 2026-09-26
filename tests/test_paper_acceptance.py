@@ -44,6 +44,19 @@ class ReviewContractTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, '哈希'):
             TeamImages.checked(raw[:-1]+b'X', item)
 
+    def test_team_figure_registry_refreshes_without_server_restart(self):
+        gallery = TeamImages(self.board)
+        updated = copy.deepcopy(gallery.manifest)
+        added = copy.deepcopy(updated['items'][0])
+        added['id'] = 'fang-future-delivery'
+        updated['items'].append(added)
+        manifest_path = self.root / 'updated-figures.json'
+        manifest_path.write_text(json.dumps(updated))
+        gallery.manifest_path = manifest_path
+        gallery.refresh()
+        self.assertIn('fang-future-delivery', gallery.by_id)
+        self.assertIn('fang-future-delivery', gallery.locks)
+
     def test_checkpoint_registry_keeps_new_freeze_separate_from_review_baseline(self):
         registry = json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text())
         by_id = {item['id']: item for item in registry['checkpoints']}
