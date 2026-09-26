@@ -17,7 +17,7 @@
 | `GET /api/v1/standards` | 标准原件与哈希 |
 | `GET /api/v1/author-reports` | 导入的作者自报，包含固定来源及每条scope |
 | `GET /api/v1/handoffs` | 写作交接与待交付事实 |
-| `GET /api/v1/team-figures` | 队友图件、Fang选版优先级、固定来源与待审状态 |
+| `GET /api/v1/team-figures` | 队友与验收台图件、Fang明确选版优先级、待Fang比选队列、固定来源与待审状态；`curation_priority`与`review_queue_rank`仅控制展示顺序，不代表科学或论文验收 |
 | `GET /api/v1/figure-requests` | 论文组织任务定义的缺图需求、派工与接收状态 |
 | `GET /api/v1/checkpoints` | 最新已知冻结稿与当前验收基线的不同版本、发布链接及原件哈希 |
 | `GET /api/v1/export` | 当前共享状态和本机草稿快照 |
