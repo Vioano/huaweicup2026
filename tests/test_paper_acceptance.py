@@ -30,12 +30,12 @@ class ReviewContractTest(unittest.TestCase):
 
     def test_team_figure_manifest_and_blob_integrity(self):
         gallery = TeamImages(self.board)
-        self.assertEqual(len(gallery.by_id), 52)
+        self.assertEqual(len(gallery.by_id), 54)
         self.assertTrue(gallery.by_id['fang-fig42-a']['curation_priority'])
         self.assertFalse(gallery.by_id['acceptance-case026-xy']['curation_priority'])
         self.assertFalse(gallery.by_id['acceptance-p1-834-flow-clean']['curation_priority'])
         self.assertEqual(gallery.by_id['fang-fig42-a']['curation_rank'], 1)
-        self.assertEqual(len({item['family'] for item in gallery.by_id.values()}), 30)
+        self.assertEqual(len({item['family'] for item in gallery.by_id.values()}), 32)
         self.assertFalse(gallery.by_id['acceptance-p2-three-plans']['curation_priority'])
         self.assertFalse(gallery.by_id['acceptance-p2-local-cut']['curation_priority'])
         self.assertFalse(gallery.by_id['acceptance-p3-forest-decision']['curation_priority'])
