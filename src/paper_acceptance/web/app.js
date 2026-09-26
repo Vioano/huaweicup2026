@@ -33,9 +33,9 @@ function checkpointStatus(){
  const figureIndex=latest.figure_inventory||[];
  box.hidden=false;
  box.innerHTML=`<div>
-  ${format?`<div class="receipt-warning"><strong>${esc(format.label)} · ${format.pages} 页 · 基于旧版内容</strong><p>${esc(format.summary)}</p><div class="checkpoint-links"><a href="/checkpoints/${esc(format.id)}.pdf" target="_blank">查看 Fang 格式优化版 ↗</a><a href="${esc(format.attachment_public_url)}" target="_blank" rel="noreferrer">完整 LaTeX 包 ↗</a><a href="${esc(format.public_readme_url)}" target="_blank" rel="noreferrer">格式修改说明 ↗</a></div></div>`:''}
+  ${format?`<details ${checkpoints.integration?.state==='in_progress'?'open':''}><summary>${esc(format.label)}来源 · ${format.pages} 页旧内容</summary><p>${esc(format.summary)}</p><div class="checkpoint-links"><a href="/checkpoints/${esc(format.id)}.pdf" target="_blank">查看 Fang 格式优化版 ↗</a><a href="${esc(format.attachment_public_url)}" target="_blank" rel="noreferrer">完整 LaTeX 包 ↗</a><a href="${esc(format.public_readme_url)}" target="_blank" rel="noreferrer">格式修改说明 ↗</a></div></details>`:''}
   ${checkpoints.integration?.state==='in_progress'?`<p class="receipt-warning"><strong>${esc(checkpoints.integration.message)}</strong></p>`:''}
-  <strong>最新内容稿 ${esc(latest.id)} · ${latest.pages} 页</strong>
+  <strong>最新论文 ${esc(latest.id)} · ${latest.pages} 页</strong>
   <p>${esc(latest.git_state)}。${esc(latest.summary)}${/[。！？]$/.test(latest.summary)?'':'。'}当前逐项与语言标注仍绑定 ${esc(base.id)}，不沿用旧页码或通过结论。每份新稿须按自己的PDF身份单独核对。</p>
   ${figureIndex.length?`<details><summary>查看 ${figureIndex.length} 个图位与实际页码 · 未作最终验收</summary><div class="checkpoint-links">${figureIndex.map(f=>`<a href="/checkpoints/${esc(latest.id)}/${f.page}.png" target="_blank">${esc(f.number)} · p.${f.page}${f.board_visual_check?' · 已抽样目视':''} ↗</a>`).join('')}</div></details>`:''}
   ${latest.parts?.length?`<details open><summary>分册预览 · ${latest.parts.length} 册，按原页码定位</summary><div class="checkpoint-links">${latest.parts.map(part=>`<a href="/checkpoints/${esc(latest.id)}/parts/${encodeURIComponent(part.file.split('/').at(-1))}" target="_blank">${esc(part.title)} · 原页 ${esc(part.original_pages.join('–'))} ↗</a>`).join('')}</div><small>分册复用相邻章节的过渡页；跨册跳转在Codex预览器中尚未验证，可直接打开对应分册。</small></details>`:''}

@@ -68,3 +68,7 @@ CLI与HTTP共用状态：`identity / sync / status / agent --item ID / draft FIL
 一般初审与谓宾专项各保留自己的标准和覆盖，不叠加成不同内容数；原词搜索只是辅助。作者针对稳定finding_id回交v2响应（revised/explained/disputed/unresolved），新版固定SHA与位置必留。主验收者再核对，作者不代签接受。报告发布与实际已读分别记入handoffs；客户端没有隐含的后台唤醒。
 
 当前分工：验收台仅维护网站、接口及同步数据；原写作任务监督Antigravity严格执行标准并回传整改、解释与复核记录。接口不自动派新标注，也不把收到作者改文当作通过。
+
+## v12内容与格式合并
+
+v12使用v12-anonymous目录中的匿名修正版；`GET /checkpoints/v12.pdf`和`GET /checkpoints/v12/parts/v12-part-01.pdf`读取已核SHA的本机原件。结构化登记含85页主稿、57页附表、7份正文分册与3份附表分册。输入为v11内容与fanglayout04格式。旧2012e候选未注册，修订前后的记录分别保留。`GET /api/v1/checkpoints`给出当前固定路径、哈希和发布状态，不能用内容接收替代语言、科学或人工验收。
