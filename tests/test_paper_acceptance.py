@@ -155,6 +155,8 @@ class ReviewContractTest(unittest.TestCase):
         self.assertEqual(whitespace['url'], '/checkpoints/v8/47.png')
         self.assertIn('与Fang图5-3无关', whitespace['review'])
         self.assertIn('LYX旧版', figure['expected'])
+        self.assertEqual(figure['state'], 'transfer_requested_fang_receipt_and_source_pending')
+        self.assertIn('5848146593', figure['notice_url'])
         self.assertEqual(contents['state'], 'v9_layout_preflight_passed_not_frozen')
         self.assertEqual(whitespace['state'], 'v9_layout_preflight_passed_not_frozen')
         self.assertEqual(contents['preflight_sha256'], whitespace['preflight_sha256'])
@@ -164,6 +166,7 @@ class ReviewContractTest(unittest.TestCase):
         current = next(x for x in requests if x['id'] == 'FIG-FANG-5-3')
         self.assertEqual(current['user_annotation_id'], figure['annotation_id'])
         self.assertIn('尚未取得', current['state'])
+        self.assertIn('5848146593', current['dispatch_url'])
 
     def test_v7_figure_review_keeps_user_words_separate_from_ai_advice(self):
         review = json.loads((ROOT / 'docs/paper-acceptance/figure-review-v7.json').read_text())
