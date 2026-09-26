@@ -155,8 +155,9 @@ class ReviewContractTest(unittest.TestCase):
         self.assertEqual(whitespace['url'], '/checkpoints/v8/47.png')
         self.assertIn('与Fang图5-3无关', whitespace['review'])
         self.assertIn('LYX旧版', figure['expected'])
-        self.assertEqual(figure['state'], 'transfer_requested_fang_receipt_and_source_pending')
+        self.assertEqual(figure['state'], 'fang_source_received_rework_candidate_published')
         self.assertIn('5848146593', figure['notice_url'])
+        self.assertIn('5848204054', figure['fang_receipt_url'])
         self.assertEqual(contents['state'], 'v9_layout_preflight_passed_not_frozen')
         self.assertEqual(whitespace['state'], 'v9_layout_preflight_passed_not_frozen')
         self.assertEqual(contents['preflight_sha256'], whitespace['preflight_sha256'])
@@ -165,8 +166,14 @@ class ReviewContractTest(unittest.TestCase):
         requests = json.loads((ROOT / 'docs/paper-acceptance/figure-requests.json').read_text())['requests']
         current = next(x for x in requests if x['id'] == 'FIG-FANG-5-3')
         self.assertEqual(current['user_annotation_id'], figure['annotation_id'])
-        self.assertIn('尚未取得', current['state'])
+        self.assertIn('待论文监督会话选版', current['state'])
         self.assertIn('5848146593', current['dispatch_url'])
+        self.assertEqual(current['candidate_commit'], figure['candidate_commit'])
+        gallery = TeamImages(self.board)
+        revised = gallery.by_id['acceptance-fig53-rework-v1']
+        self.assertEqual(revised['source_commit'], current['candidate_commit'])
+        self.assertEqual(revised['review_stage'], 'review_pending')
+        self.assertNotIn('manuscript_placement', revised)
 
     def test_v7_figure_review_keeps_user_words_separate_from_ai_advice(self):
         review = json.loads((ROOT / 'docs/paper-acceptance/figure-review-v7.json').read_text())
