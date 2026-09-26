@@ -5,12 +5,14 @@
 不读取包外文件；CSV 由 extract_inputs.py 从两项固定来源生成并核对哈希
 （S15 result.zip @e6ae3699、S16 report.json @70f2e8bd，见该脚本与 audit.sources）。
 
-面板 1（v2）：同轴真实核/Pipe 操作时间条——每方案每核一行，操作按 trace 原始
-管道类别（PIPE_MTE2/MTE3/V/M）以真实 start/end 画条，task（SUBGRAPH）区间仅作
-浅灰背景，不计入任何操作计数（v1 的 500-cycle 活跃桶热条已弃用）。
+面板 1（v3）：同轴真实核/Pipe 操作时间条——每方案每核一个泳道块，块内 4 条
+Pipe 独立子行（固定垂直偏移、互不重叠），操作条以真实 start/end 绘制
+（broken_barh 传入 (start, end-start)，宽度=持续时间）；task（SUBGRAPH）区间
+仅作浅灰整核背景，不计入任何操作计数。端点线由所属方案泳道包络计算。
 面板 2：搬运量分解——extra_ddr 一律指新增 COPY（added_copy_bytes），
 scheduled 合计单独列示，二者不混用。
-面板 3：S16 全量 500 格 Δ 散点（绝对量展示；旧额外 DDR=0 的 120 格不算相对变化）。
+面板 3：S16 全量 500 格 Δ 散点（绝对量；旧额外 DDR=0 的 120 格不算相对变化）；
+图例置于轴下预留空白（不删点、不截断坐标）。
 
 运行（工作目录=仓库根）：
   .venv/Scripts/python.exe figures/a/jia-fig5-4-20260926/plot.py
@@ -37,6 +39,9 @@ C_PIPE = {
     "PIPE_M": "#C0392B",      # trace 原始管道类别，身份不做推断
 }
 C_TASK = "#BDC3C7"
+PIPES_TOPDOWN = ["PIPE_MTE2", "PIPE_MTE3", "PIPE_V", "PIPE_M"]   # 块内自上而下
+PIPES = PIPES_TOPDOWN[::-1]                                     # 绘图自块底向块顶
+PIPE_SHORT = {"PIPE_MTE2": "MTE2", "PIPE_MTE3": "MTE3", "PIPE_V": "V", "PIPE_M": "M"}
 
 plt.rcParams["font.family"] = "Microsoft YaHei"
 plt.rcParams["axes.unicode_minus"] = False
@@ -55,7 +60,7 @@ bytes_rows = {r["variant"]: r for r in read_csv("bytes.csv")}
 tradeoff = read_csv("tradeoff.csv")
 
 MAKESPAN = {"seed": 248166, "recovered": 254508}
-SHORT = {"seed": "seed", "recovered": "rec"}   # 面板 1 行标签用短名，全称在标题/图例给出
+VARIANT_NAME = {"seed": "seed（旧初解）", "recovered": "rec（recovered，R05 恢复候选）"}
 
 # ---- 断言：结果表与官方值一致；extra_ddr=新增 COPY，与 scheduled 合计分开 ----
 assert set(results) == {"seed", "recovered"}
@@ -75,6 +80,14 @@ for r in events:
     assert 0 <= int(r["start"]) <= int(r["end"])
 for v in ("seed", "recovered"):
     assert max(int(r["end"]) for r in events if r["variant"] == v) == MAKESPAN[v]
+
+# ---- 几何断言（F54-R04 判据）：SUBGRAPH 与操作分别检查条形终点 <= makespan ----
+for v in ("seed", "recovered"):
+    sub = [r for r in events if r["variant"] == v]
+    sg = [r for r in sub if r["pipe"] == "SUBGRAPH"]
+    ops = [r for r in sub if r["pipe"] != "SUBGRAPH"]
+    assert max(int(r["end"]) for r in sg) <= MAKESPAN[v], (v, "SUBGRAPH")
+    assert max(int(r["end"]) for r in ops) <= MAKESPAN[v], (v, "ops")
 
 # ---- 断言：markers 六条引用真实事件且周期一致 ----
 ev_idx = {(r["variant"], r["event_id"]): r for r in events}
@@ -99,46 +112,87 @@ for t in tradeoff:
         assert math.isclose(float(t["relative_ddr"]), db / od, rel_tol=1e-7, abs_tol=1e-9), t
 assert int(results["seed"]["makespan"]) == 248166
 
+# ---- 事件数据收集：broken_barh 输入一律 (start, end-start)（F54-R04-1）----
+task_by_row = {rc: [] for rc in (("seed", 1), ("seed", 2), ("recovered", 1), ("recovered", 2))}
+op_by_row = {rc: {p: [] for p in PIPES} for rc in task_by_row}
+for r in events:
+    rc = (r["variant"], int(r["core"]))
+    s, e = int(r["start"]), int(r["end"])
+    seg = (s, e - s)                       # (left, width)
+    assert s + (e - s) == e                # 几何一致性：left+width==end
+    if r["pipe"] == "SUBGRAPH":
+        task_by_row[rc].append(seg)
+    else:
+        op_by_row[rc][r["pipe"]].append(seg)
+for rc, segs in task_by_row.items():
+    v = rc[0]
+    for s, w in segs:
+        assert s + w <= MAKESPAN[v], (rc, s, w)
+for rc, bypipe in op_by_row.items():
+    v = rc[0]
+    for p, segs in bypipe.items():
+        for s, w in segs:
+            assert s + w <= MAKESPAN[v], (rc, p, s, w)
+n_ops = sum(len(segs) for bypipe in op_by_row.values() for segs in bypipe.values())
+n_tasks = sum(len(s) for s in task_by_row.values())
+assert n_tasks == 26910 and n_ops == 40475, (n_tasks, n_ops)
+
+# ---- 泳道布局常量（F54-R04-2/3）：每核 4 条 Pipe 独立子行 ----
+# 块内子行 y = base + i（i=0..3 对应 PIPES 顺序），条形高 0.7，task 背景覆盖整块
+# y 越大越靠上：seed 两块在上、recovered 两块在下（与 v2 行序一致：seed核1/核2/rec核1/核2）
+BLOCK_BASE = {("recovered", 2): 0.0, ("recovered", 1): 4.0,
+              ("seed", 2): 8.7, ("seed", 1): 12.7}
+BLOCK_HALF = 0.45          # task 背景上下超出子行网格的半高
+SPAN = 3.0                 # 块内 4 子行跨 0..3
+# 方案泳道包络（端点线纵范围由此导出，不硬编码）：方案两块的并集
+ENVELOPE = {}
+for v in ("seed", "recovered"):
+    bases = [BLOCK_BASE[(v, c)] for c in (1, 2)]
+    ENVELOPE[v] = (min(bases) - BLOCK_HALF, max(bases) + SPAN + BLOCK_HALF)
+
 # ================= 绘图 =================
-fig = plt.figure(figsize=(6.5, 8.0))
-gs = fig.add_gridspec(3, 1, height_ratios=[1.05, 0.9, 1.2],
-                      hspace=0.52, left=0.105, right=0.965, top=0.94, bottom=0.065)
+fig = plt.figure(figsize=(6.5, 8.9))
+gs = fig.add_gridspec(3, 1, height_ratios=[1.5, 0.72, 1.05],
+                      hspace=0.55, left=0.145, right=0.965, top=0.94,
+                      bottom=0.135)
 ax_t = fig.add_subplot(gs[0])
 ax_b = fig.add_subplot(gs[1])
 ax_s = fig.add_subplot(gs[2])
 
-# ---- 面板 1：真实核/Pipe 操作时间条（task 仅作浅灰背景，不入计数）----
-rows = [("seed", 1), ("seed", 2), ("recovered", 1), ("recovered", 2)]
+# ---- 面板 1：真实核/Pipe 子泳道时间条 ----
 ymax = max(MAKESPAN.values())
-op_by_row = {rc: defaultdict(list) for rc in rows}
-task_by_row = {rc: [] for rc in rows}
-for r in events:
-    rc = (r["variant"], int(r["core"]))
-    if r["pipe"] == "SUBGRAPH":
-        task_by_row[rc].append((int(r["start"]), int(r["end"])))
-    else:
-        op_by_row[rc][r["pipe"]].append((int(r["start"]), int(r["end"])))
-
-for ri, rc in enumerate(rows):
-    y = len(rows) - 1 - ri
+for rc, base in BLOCK_BASE.items():
     v, c = rc
-    # task 背景条（浅灰，行高 0.86）
-    ax_t.broken_barh(task_by_row[rc], (y - 0.43, 0.86),
+    # task 浅灰整核背景（覆盖块内全部子行）
+    ax_t.broken_barh(task_by_row[rc], (base - BLOCK_HALF, SPAN + 2 * BLOCK_HALF),
                      color=C_TASK, alpha=0.35, linewidth=0, zorder=1)
-    # 真实操作条（按管道类别，行高 0.44）
-    for pipe, segs in op_by_row[rc].items():
-        ax_t.broken_barh(segs, (y - 0.22, 0.44),
-                         color=C_PIPE[pipe], linewidth=0, zorder=3)
+    # 4 条 Pipe 各自子行，真实 (start, width)
+    for i, p in enumerate(PIPES):
+        ax_t.broken_barh(op_by_row[rc][p], (base + i - 0.35, 0.7),
+                         color=C_PIPE[p], linewidth=0, zorder=3)
+    # 块分隔与核名标注
+    ax_t.axhline(base + SPAN + 0.75, color="#D5D8DC", lw=0.6, zorder=0)
 
-# 端点线只画在所属方案的两行范围内（seed 上两行 / rec 下两行）
-for v, y_top in (("seed", 3), ("recovered", 1)):
-    ax_t.plot([MAKESPAN[v], MAKESPAN[v]], [y_top - 0.55, y_top + 1.5 + 0.55],
+# 端点线：由所属方案泳道包络计算（F54-R04-3）
+for v in ("seed", "recovered"):
+    lo, hi = ENVELOPE[v]
+    ax_t.plot([MAKESPAN[v], MAKESPAN[v]], [lo, hi],
               color=C_CAP, linestyle="--", linewidth=1.0, zorder=4)
 
-ax_t.set_yticks([len(rows) - 1 - i for i in range(len(rows))])
-ax_t.set_yticklabels(["%s 核%d" % (SHORT[v], c) for v, c in rows], fontsize=8)
+yticks, ylabels = [], []
+for rc, base in BLOCK_BASE.items():
+    for i, p in enumerate(PIPES):
+        yticks.append(base + i)
+        ylabels.append(PIPE_SHORT[p])
+ax_t.set_yticks(yticks)
+ax_t.set_yticklabels(ylabels, fontsize=7.5)
+# 核名（两级标注，置于 y 轴 pipe 标签左侧更远处，避免与 pipe 行标签重叠）
+for (v, c), base in BLOCK_BASE.items():
+    ax_t.text(-0.105, base + SPAN / 2, ("seed" if v == "seed" else "rec") + "\n核%d" % c,
+              transform=ax_t.get_yaxis_transform(), ha="right", va="center",
+              fontsize=7.5, color=C_TXT, clip_on=False, linespacing=1.1)
 ax_t.set_xlim(0, ymax * 1.06)
-ax_t.set_ylim(-0.65, 5.45)
+ax_t.set_ylim(-0.75, max(e[1] for e in ENVELOPE.values()) + 4.0)
 ax_t.set_xlabel("时间（cycles，绝对时间）", fontsize=8)
 ax_t.set_title("面板 1｜S15 R05 @e6ae369 配对时间线（seed=旧初解，rec=recovered=R05 恢复候选；case003/k2）",
                fontsize=8, color=C_TXT, pad=4, loc="left")
@@ -174,14 +228,13 @@ ax_b.set_xticks(x)
 ax_b.set_xticklabels(["① seed（旧初解，248,166 cycles）", "② recovered（R05 恢复候选，254,508 cycles）"],
                      fontsize=8)
 ax_b.set_ylabel("搬运量（10^6 B）", fontsize=8)
-ax_b.set_ylim(0, 9.6)
+ax_b.set_ylim(0, 12)
 ax_b.set_title("面板 2｜S15 R05 @e6ae369 搬运量分解：新增 COPY −22.57%、总 COPY −18.01%，Makespan 反升 +2.56%",
                fontsize=8, color=C_TXT, pad=4, loc="left")
-# 图例移到右上空白区（柱顶最高 6.35+标签，y>7 无数据），不盖数值
 ax_b.legend(fontsize=8, loc="upper right", frameon=False)
 ax_b.tick_params(labelsize=8)
 
-# ---- 面板 3：S16 全量 500 格散点（绝对量；图例移右上——Δcycles≤0，右半无数据）----
+# ---- 面板 3：S16 全量 500 格散点；图例移到轴下预留空白（F54-R05）----
 CAT_STYLE = {
     "both_down": ("#27AE60", "同降（55 格）", "o"),
     "mk_down_ddr_up": ("#E67E22", "Makespan 降但 DDR 升（199 格）", "s"),
@@ -199,7 +252,9 @@ ax_s.set_xlabel("ΔMakespan = 新−旧（cycles，负=改善）", fontsize=8)
 ax_s.set_ylabel("Δ额外 DDR（10^6 B，正=退化）", fontsize=8)
 ax_s.set_title("面板 3｜S16 @70f2e8bd 全量 500 格（2794ceba→c665）：周期/额外 DDR 取舍（绝对量）",
                fontsize=8, color=C_TXT, pad=4, loc="left")
-ax_s.legend(fontsize=8, loc="upper right", markerscale=1.5, frameon=False)
+# 图例在轴下两行，不遮任何数据点（不删点、不截断坐标）
+ax_s.legend(fontsize=7.5, loc="upper center", bbox_to_anchor=(0.5, -0.16),
+            ncol=2, frameon=False, markerscale=1.4, columnspacing=1.6)
 ax_s.tick_params(labelsize=8)
 
 svg_path = os.path.join(HERE, "figure.svg")
@@ -207,6 +262,6 @@ png_path = os.path.join(HERE, "figure.png")
 fig.savefig(svg_path, format="svg")
 fig.savefig(png_path, format="png", dpi=300)
 print("figure.svg / figure.png written")
-print("panel1 rows: real op bars by PIPE_*, task as background only;  zero-duration events:",
-      sum(1 for r in events if int(r["start"]) == int(r["end"])))
-print("markers:", {v: mk_line[v] for v in ("seed", "recovered")})
+print("panel1: broken_barh (start, end-start); tasks=%d ops=%d; envelopes=%s"
+      % (n_tasks, n_ops, {v: ENVELOPE[v] for v in ENVELOPE}))
+print("panel3 legend below axes; all 500 cells drawn")

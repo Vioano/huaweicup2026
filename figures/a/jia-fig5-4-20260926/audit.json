@@ -6,17 +6,17 @@
     {
       "name": "figure.svg",
       "role": "svg",
-      "sha256": "186b62f8fd55ba8d37771ef7578ec80f519b4f921208f37b3a5e34674851f28d"
+      "sha256": "71129610fe3ec9e4eb7225db2a90630ab5ec33a3b151677eda6bec1b951ddfe9"
     },
     {
       "name": "figure.png",
       "role": "png",
-      "sha256": "d3c42469ee6eb47d0d4053c2ff3faf808c3fd26f486009abf74f73f7ef4e08b8"
+      "sha256": "e72322134e5b4f1697939366fd636203de1a2fa14e14876aa3ca86a99d7168a1"
     },
     {
       "name": "plot.py",
       "role": "source",
-      "sha256": "2adff8efaef2103b58fdb66171cacd945a0ce3d59587f5edf0c2531df2245700"
+      "sha256": "14eb4c1e3e4207d5b9a8e9cf85aa97ef99a464167708990939173995d0d159e2"
     },
     {
       "name": "extract_inputs.py",
@@ -26,12 +26,12 @@
     {
       "name": "caption.md",
       "role": "caption",
-      "sha256": "6a7fa113ab2ac8652200e68dd4009b8ffcbb18f719ffee04d6b4754e59f7d080"
+      "sha256": "4eef4495890c0cbf9fd46d40f5bd1301da9c1ffd1d786f984923658e5fecd7a6"
     },
     {
       "name": "self-check.md",
       "role": "self_check",
-      "sha256": "8fd776d10fddd82e585f543d1f37f068f70f769190759ac3c2520e221e24e29a"
+      "sha256": "448250ca1876a6c639e3f338827b8f55b4ec3ee81d4c3867e9f417483fd4f1bc"
     },
     {
       "name": "events.csv",
@@ -61,7 +61,7 @@
     {
       "name": "preview-insert-width.png",
       "role": "preview_check",
-      "sha256": "4c1ab49a56badbc316c2f2a09ebc36f4236cbba9e680c8c9f6de91a5f27a97ad"
+      "sha256": "75dd8417b33ba2b731b1366f5b948180519e0c30427209238cfd243f543ead8f"
     }
   ],
   "command": ".venv/Scripts/python.exe figures/a/jia-fig5-4-20260926/extract_inputs.py --r05-zip <S15_result.zip> --s16-report <S16_report.json> && .venv/Scripts/python.exe figures/a/jia-fig5-4-20260926/plot.py",
@@ -136,7 +136,7 @@
   "panels": [
     {
       "id": "1",
-      "title": "S15 R05 @e6ae369 配对时间线：seed/recovered × 2 核真实核/Pipe 操作时间条（PIPE_MTE2/MTE3/V/M），task（SUBGRAPH）仅作浅灰背景不入计数；端点=各自 E0 makespan（只贯穿所属方案两行）"
+      "title": "S15 R05 @e6ae369 配对时间线：每方案每核一个泳道块，块内 PIPE_MTE2/MTE3/V/M 四条独立子行（自上而下、互不重叠、逐行标注），操作条以真实 start/end 绘制（宽度=持续时间），task（SUBGRAPH）仅作浅灰整核背景不入计数；端点线由所属方案泳道包络导出（248,166 / 254,508 cycles）"
     },
     {
       "id": "2",
@@ -144,7 +144,7 @@
     },
     {
       "id": "3",
-      "title": "S16 @70f2e8bd（2794ceba→c665）完整 500 格 ΔMakespan vs Δ额外 DDR 散点（绝对量；同降 55/降但 DDR 升 199/降且不变 14/均不变 232）"
+      "title": "S16 @70f2e8bd（2794ceba→c665）完整 500 格 ΔMakespan vs Δ额外 DDR 散点（绝对量；同降 55/降但 DDR 升 199/降且不变 14/均不变 232；图例置于轴下空白）"
     }
   ],
   "tables": {
@@ -249,10 +249,12 @@
     },
     "results_bytes_split": "extra_ddr=added_copy_bytes（5067158/3923290）；scheduled_copy_bytes 单列（6351422/5207554）",
     "relative_precision": "tradeoff.relative_ddr 完整精度（无预 round）；380 非零分母格 isclose(rel_tol=1e-7, abs_tol=1e-9) 全过",
-    "panel1_semantics": "真实核/Pipe 操作时间条（按 PIPE_* 真实 start/end），task 背景不入操作计数；零时长事件 0 个",
+    "panel1_semantics": "真实核/Pipe 子泳道时间条：每方案每核一块、块内 4 Pipe 独立子行（不重叠、逐行标注），broken_barh 输入 (start, end-start)（v2 误传 (start,end) 已修正）；几何断言 left+width==end、同 variant 全部条形终点<=makespan（SUBGRAPH 26910 段/操作 40475 段分别检查）；task 背景不入操作计数；零时长事件 0 个",
     "old_ddr_zero_cells": 120,
     "definitions": "base=original_graph_copy_bytes；extra=added_copy_bytes（切分新增）；total=scheduled_copy_bytes；spill 单列（本例两方案均 0）",
-    "missing": "无"
+    "missing": "无",
+    "endpoints_envelope": "端点线纵范围=所属方案泳道包络（seed [8.25,16.15]、recovered [-0.45,7.45]，代码常量导出）",
+    "panel3_legend": "图例置于轴下预留空白（两行），不删点、不截断坐标；072/k5、014/k2、014/k3 等大点保留可辨"
   },
   "required_stages": [],
   "criteria": [
@@ -268,5 +270,5 @@
     "task_book_sha256": "55859ab1ed2b81b218663f60c4cf824e9e01ba0399c52113861b48e61da7dfd2"
   },
   "notice": "数值全部来自固定提交的实测/登记记录；静态估计与实测分开标记。机检只验证提交包内部一致性，视觉和科学结论由 Agent 逐图审查与用户最终总验收。",
-  "version_note": "v2（返工，针对 5846754015 F54-R01..R07）：R01 core 规范化 1/2+source_core_id、markers 六条引用真实 event_id（endpoint/cycles 独立列）；R02 relative_ddr 完整精度（005/k2=-0.6378792659740218），120 零分母空值保留；R03 results.extra_ddr 改 added_copy_bytes、scheduled_copy_bytes 单列，图中新增/总 COPY 降幅分别表述；R04 面板1 弃用 500-cycle 热条改真实核/Pipe 操作时间条、task 背景单列；R05 行标签缩短+图例移位+字号≥7.5pt；R06 新增 extract_inputs.py 显式参数与哈希核对、plot.py 只读交付 CSV；R07 面板版本标签 S15/S16 补全。哈希按最终字节重算（不含 audit.json 自身）。0 新实验。"
+  "version_note": "v3（返工，针对 5847081278 仅 F54-R04/R05）：R04-1 broken_barh 宽度误用修正（task/op 两处改 (start,end-start)，新增几何断言终点<=makespan）；R04-2 面板 1 改每核 4 Pipe 独立子泳道+两级标签，task 仅浅灰整核背景；R04-3 端点线改由泳道包络常量导出；R05 面板 3 图例移轴下两行（不删点/不截断），面板 2 ylim 提至 12 使图例与柱值分离。CSV 与已关闭五项（R01/R02/R03/R06/R07）未改动。哈希按最终字节重算（不含 audit.json 自身）。0 新实验。"
 }
