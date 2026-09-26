@@ -6,17 +6,17 @@
     {
       "name": "fig4-2-fork-join-partition.svg",
       "role": "svg",
-      "sha256": "13410f722f1a9e3581f27845e0da284f9b1f9c994d51983fa32aa796bae20e95"
+      "sha256": "9427e2047a9168438d19c4d20063f947f5e374ccfc3ce49dcce0728d5b5395a8"
     },
     {
       "name": "fig4-2-fork-join-partition.png",
       "role": "png",
-      "sha256": "9285d7b7b99e2bbb21dda8159c61a892b7beac62ae0933daeffe296363a33a34"
+      "sha256": "80a6ba5d69b984c6b272b7e1181b43575c6a89faa2f618164ed9af560ac66b1b"
     },
     {
       "name": "fig4-2-fork-join-partition.drawio",
       "role": "source",
-      "sha256": "d178ef1b7678d89ec36c0614af27db71dcc36dfd32e709e8aae78e98d4e1e6e1"
+      "sha256": "d1e7847adf19b8ecc7d8b5fc57e4ab4afdce41b22277e3100dc40bc9e0c11021"
     },
     {
       "name": "caption.md",
@@ -26,12 +26,12 @@
     {
       "name": "DELIVERY.md",
       "role": "notes",
-      "sha256": "7e6bddea956f1cba3b1efee2144f14ad73d80cae2b7670f3f6b0d05ae2436a9d"
+      "sha256": "ed717d290e1f528078a05165d283419301aca1b4027b4afc780ab3ac22b8d32c"
     },
     {
       "name": "self-check.md",
       "role": "self_check",
-      "sha256": "963c82290ade51bf07b38616a528b14914f5fccf8c7341a9ba4dc8fa38e5e210"
+      "sha256": "4abb08642756bb72edc76023a4dabdcdd16fa14890f265e02e75026fffcff4d8"
     },
     {
       "name": "nodes.csv",
@@ -46,28 +46,22 @@
     {
       "name": "preview-insert-width.png",
       "role": "notes",
-      "sha256": "18ad3fb6667e8cb55c726016e0b03a97e531a283a0b45bb5a1c316cc387c42c9"
+      "sha256": "41b0e16e5772ba905e29b2cfa97a384732b866236f62304e88a1c125c53cc717"
     }
   ],
-  "command": {
-    "export_svg": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f svg -o figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.svg figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.drawio",
-    "export_png": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f png -s 2 -o figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.png figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.drawio",
-    "insert_width_preview": ".venv/Scripts/python.exe -c \"from PIL import Image; im=Image.open(...); im.resize((1600,int(im.height*1600/im.width)), Image.LANCZOS).save(preview-insert-width.png)\"",
-    "validate": ".venv/Scripts/python.exe F:/WorkBuddyData/skills/drawio-skill/scripts/validate.py fig4-2-fork-join-partition.drawio",
-    "tool_versions": "draw.io desktop（本机 F:/draw.io，绿色版）；Python 3.13.12（项目 .venv）；drawio-skill validate.py v3.4.0"
-  },
+  "command": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f svg -o figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.svg figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.drawio\n\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f png -s 2 -o figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.png figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.drawio\n.venv/Scripts/python.exe -c \"from PIL import Image; im=Image.open('figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.png'); im.resize((1500,int(im.height*1500/im.width)), Image.LANCZOS).save('figures/a/jia-fig4-2-20260926/preview-insert-width.png')\"\n.venv/Scripts/python.exe F:/WorkBuddyData/skills/drawio-skill/scripts/validate.py figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.drawio\ntool_versions: draw.io desktop (F:/draw.io); Python 3.13.12 (.venv, Pillow); drawio-skill validate.py v3.4.0",
   "sources": [
     {
       "path": "paper/sections/P1-问题一论文初稿.md",
       "commit": "67c0f603960fddf86416d23ca3e85e53561c3c3a",
       "sha256": "10d0dc195e138c42f7507ca12c8619ebdf46c4df54ca38b31fe353fc886ef8ef",
-      "note": "使用其中 4.4.2 节（式 4-11、前沿-归约尾构造、命题 1）"
+      "note": "使用 4.4.2 节（式 4-11、前沿-归约尾构造、命题 1）"
     },
     {
       "path": "figures/a/jia-fig4-2-20260926/nodes.csv",
       "commit": "e9f3a5200ff858ce36a7fbdac87f1d2cb16f14f7",
       "sha256": "bce63ef0d2265016a2f31d0b1f5e55e33b8a49b787bf413c609eaff7604e0a46",
-      "note": "自整理示例节点表（v2 版字节，12 节点；非实测数据）；本版列名改为 id/subgraph/core/order，新字节以本次交付 commit 为准"
+      "note": "自整理示例节点表（v2 字节，12 节点；非实测数据）；本版列名 id/subgraph/core/order，新字节以本 commit 为准"
     },
     {
       "path": "figures/a/jia-fig4-2-20260926/edges.csv",
@@ -122,9 +116,13 @@
   "edge_count": 13,
   "node_count": 12,
   "insert_width_check": {
+    "viewbox": "770x1100",
+    "width_mm": 165,
+    "height_mm": 235.7,
+    "min_font_pt": 6.07,
+    "main_font_pt": "6.7-7.3",
     "preview": "preview-insert-width.png",
-    "width_px": 1500,
-    "note": "viewBox 720x1080；按 template-2026 正文宽 165mm（A4 210-22.5*2）插入，高约 252mm 需整页高放置；或按 146.6mm 旧口径缩放时最小字约 5.8pt。物理宽度以论文最终模板为准，两种口径均已给出换算"
+    "note": "按 template-2026 正文宽 165mm；正文高 248.5mm 可容纳 235.7mm（未计图注）；不新增任意硬字号门槛，以物理宽度预览目检可读为准"
   },
-  "version_note": "v4：按工作台 03:50 意见重排——三面板改上下组合（同图号同节点身份），画布压至 720px 宽（template-2026 正文宽 165mm 下最小字≈6.5pt、主标签≈7.8pt，接近 8pt 目标）；长说明移图注；command 改为字符串；self-check 更新至本版；nodes.csv 列 id/subgraph/core/order；sources 实际仓库路径+固定提交哈希"
+  "version_note": "v5：按工作台 04:20 意见——audit.command 改单字符串（完整四条命令+tool_versions，无省略号/无效表达式）；(b) 阶段 0 标签遮挡修复（框加宽+s/a 右移）；(c) Core 0/1/2 标签独立空白带（泳道加高、Task 下移）；边缘裁切边标签移除；self-check v5；哈希按最终字节重算；audit.files 不含 audit.json 自身；viewBox 实际 770x1100 已如实登记并给出 165mm 口径换算（高 235.7mm）"
 }

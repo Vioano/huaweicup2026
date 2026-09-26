@@ -6,23 +6,17 @@
     {
       "name": "fig4-1-p1-two-layer-flow.svg",
       "role": "svg",
-      "sha256": "f18597355f0510010b75c8e8a57d73d8dc1f19a538d2e3f4c0930488dfaa3621"
+      "sha256": "3723ae4d5ce5bfd5f720e92c61d540771627c3133f4c75143de836de1ad2fae2"
     },
     {
       "name": "fig4-1-p1-two-layer-flow.png",
       "role": "png",
-      "sha256": "d045d104bd9ad370d9c295f5d61865dbd87c71fc442493232a2c454147e1f692"
+      "sha256": "e76e5ffe85810774dbfe3916c22aa4eebf88dfc0a8521acfc5e60f84e2335991"
     },
     {
       "name": "fig4-1-p1-two-layer-flow.drawio",
       "role": "source",
-      "sha256": "39a246e9ec814ac462048e6951debeffed80adcf2f797212866e97c4a4eec285"
-    },
-    {
-      "name": "fig4-1-preview-insert-146mm.png",
-      "role": "preview",
-      "sha256": "1957980e06e28c9fac2fdc8729625ee51848770bbe613cdf0a100d58134e9071",
-      "note": "论文插入宽度预览：A4 textwidth=146.6 mm（gmcmthesis.cls left/right=31.7 mm）@300dpi 等效，1734x1799 px"
+      "sha256": "761e255fcbd930420bd9fa8ec78b7c7ab19f53f70b1de778b0eb859a096a19cc"
     },
     {
       "name": "caption.md",
@@ -32,7 +26,7 @@
     {
       "name": "self-check.md",
       "role": "self_check",
-      "sha256": "a6adfe005cec53c409fae9812607865d189e12fe67feaef5f9b0fc787af4f16f"
+      "sha256": "e49ecdd0c0f9794188fe0f462d2b36169f106fc2b2df40fa4fe4e478137dcea2"
     },
     {
       "name": "nodes.csv",
@@ -45,50 +39,53 @@
       "sha256": "faec135726e62df8a9c04c00946d1e31f6fec06f37abed48489368800f79472f"
     },
     {
+      "name": "preview-insert-width.png",
+      "role": "notes",
+      "sha256": "e39dc106247e722850468ed94ecbe7837bf1736d35de5863fd8dc98fadc58490"
+    },
+    {
       "name": "DELIVERY.md",
       "role": "notes",
-      "sha256": "7f98877834fcfd8e4277cec2aaeb7187d7508f95bd6b93879d3eb82912f71ae9",
-      "note": "交付说明与图注草稿、节点↔源码对应表；应用户要求随包保留，此处登记真实哈希"
+      "sha256": "7f98877834fcfd8e4277cec2aaeb7187d7508f95bd6b93879d3eb82912f71ae9"
     }
   ],
-  "command": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f svg -o fig4-1-p1-two-layer-flow.svg fig4-1-p1-two-layer-flow.drawio ；PNG 预览：同命令加 -f png -s 2 -o fig4-1-p1-two-layer-flow.png ；插入宽度预览（146.6 mm @300dpi 等效）：同命令加 -f png -s 1.49 -o fig4-1-preview-insert-146mm.png ；XML 校验：python -c \"import xml.dom.minidom; xml.dom.minidom.parse('fig4-1-p1-two-layer-flow.drawio')\"（解析通过）。工具：draw.io desktop CLI（本机 F:/draw.io/），Python 3.13.12（csv.writer 生成 CSV、hashlib 计算 SHA256）",
+  "command": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f svg -o figures/a/jia-fig4-1-20260926/fig4-1-p1-two-layer-flow.svg figures/a/jia-fig4-1-20260926/fig4-1-p1-two-layer-flow.drawio\n\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f png -s 2 -o figures/a/jia-fig4-1-20260926/fig4-1-p1-two-layer-flow.png figures/a/jia-fig4-1-20260926/fig4-1-p1-two-layer-flow.drawio\n.venv/Scripts/python.exe F:/WorkBuddyData/skills/drawio-skill/scripts/validate.py figures/a/jia-fig4-1-20260926/fig4-1-p1-two-layer-flow.drawio\n.venv/Scripts/python.exe -c \"from PIL import Image; im=Image.open(chr(39)+\"\"figures/a/jia-fig4-1-20260926/fig4-1-p1-two-layer-flow.png\"\"+chr(39)); im.resize((1600,int(im.height*1600/im.width)), Image.LANCZOS).save(chr(39)+\"\"figures/a/jia-fig4-1-20260926/preview-insert-width.png\"\"+chr(39))\"\ntool_versions: draw.io desktop (F:/draw.io); Python 3.13.12 (.venv, Pillow); drawio-skill validate.py v3.4.0",
   "sources": [
-    {
-      "path": "src/q1/unified.py",
-      "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
-      "git_blob": "f5427bd94706ac2e1dbc2baf26051ec928902079",
-      "sha256": "3c571f6c9c0ef2a956268abf9129d557f2d087e783b4e621c2917279fa13e985"
-    },
     {
       "path": "paper/sections/P1-问题一论文初稿.md",
       "commit": "67c0f603960fddf86416d23ca3e85e53561c3c3a",
       "sha256": "10d0dc195e138c42f7507ca12c8619ebdf46c4df54ca38b31fe353fc886ef8ef",
-      "note": "章节定位：4.1、4.4.1~4.4.4（P1 决策口径与式 4-10/4-11）"
+      "note": "使用 4.1、4.4.1~4.4.4 节"
+    },
+    {
+      "path": "src/q1/unified.py",
+      "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
+      "sha256": "3c571f6c9c0ef2a956268abf9129d557f2d087e783b4e621c2917279fa13e985",
+      "note": "v4 统一入口"
     },
     {
       "path": "data/raw/a/official/code/multicore_cut_evaluate_problem_1.py",
       "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
-      "sha256": "2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f"
+      "sha256": "2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f",
+      "note": "官方评估器主脚本"
     },
     {
       "path": "data/raw/a/official/code/schedule_step1.py",
       "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
-      "sha256": "d8fe721ff3dbe036e34a20c00cce6430960860000a49eb467e63465f76b84034"
+      "sha256": "d8fe721ff3dbe036e34a20c00cce6430960860000a49eb467e63465f76b84034",
+      "note": ""
     },
     {
       "path": "data/raw/a/official/code/schedule_step2.py",
       "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
-      "sha256": "2836baac176f4e0bdd9eec59b8d9ce254e209e5f7a251e23837ab684312fa0c3"
+      "sha256": "2836baac176f4e0bdd9eec59b8d9ce254e209e5f7a251e23837ab684312fa0c3",
+      "note": ""
     },
     {
       "path": "data/raw/a/official/code/schedule_step3.py",
       "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
-      "sha256": "50053db0436f1d166dd75436693ba3af49b5c339576beb6e7299477f6b69fc7a"
-    },
-    {
-      "path": "data/raw/a/official/data/config.txt",
-      "commit": "a0537aeb72dc702af86d67d3194587d581ac207c",
-      "sha256": "dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9"
+      "sha256": "50053db0436f1d166dd75436693ba3af49b5c339576beb6e7299477f6b69fc7a",
+      "note": ""
     }
   ],
   "units": {
@@ -136,5 +133,6 @@
   "rework_refs": [
     "https://github.com/huaweibei123/huaweicup2026/issues/14#issuecomment-5837226124",
     "https://github.com/huaweibei123/huaweicup2026/issues/14#issuecomment-5837354904"
-  ]
+  ],
+  "version_note": "v5：按工作台 04:20 意见修正打包一致性——audit.files 三个主文件哈希按最终字节重算；self-check.md 重写为 v5（实际模板 template-2026@e82c2009、viewBox 703x689、字号换算、历史稿区分）；DELIVERY.md 更新；audit.files 移除旧 fig4-1-preview-insert-146mm.png、登记新 preview-insert-width.png；图面 XML 与 v4 相同未改"
 }

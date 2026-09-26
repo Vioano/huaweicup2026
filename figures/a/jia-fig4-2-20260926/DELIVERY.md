@@ -1,6 +1,6 @@
 # 图 4-2 交付包｜分叉-汇合结构的阶段划分与分核
 
-- 图号：4-2　版本：v3（2026-09-26；历次稿 v1=be5863dd 前身、v2=e9f3a520 保留于 git 历史）
+- 图号：4-2　版本：v5（2026-09-26；v4=c44e4d40 基础上修复遮挡与打包一致性；历次稿保留于 git 历史）
 - 主责：甲　输入：P1 初稿 4.4.2 节 @67c0f603（式 4-11、前沿-归约尾构造、命题 1）；示例为任务书授权的自整理结构示例
 
 ## 文件
@@ -11,7 +11,7 @@
 | `fig4-2-fork-join-partition.svg` / `.png` | 矢量成图 / PNG 预览（scale=2） |
 | `caption.md` | 图注（独立文件，供机检登记 caption 角色） |
 | `nodes.csv` / `edges.csv` | 逐节点 / 逐边机器可复核映射（列名 id/subgraph/core/order） |
-| `preview-insert-width.png` | 论文插入宽度（1600px）可读性预览 |
+| `preview-insert-width.png` | 论文插入宽度可读性预览（1500px，约 165mm 正文宽观感） |
 | `audit.json` | 自动检查清单（全部文件 SHA256；不含 audit.json 自身） |
 
 ## 图注（草稿）
