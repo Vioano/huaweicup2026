@@ -8,7 +8,7 @@ FILES = ['00-abstract.md','01-problem.md','02-assumptions.md','03-framework.md',
          '09-references.md','10-appendix.md']
 
 def main():
-    contents=['# 面向多核 NPU 的语义一致结构化切分与流水调度\n\n'
+    contents=['# 多核神经网络处理器的计算图切分与调度优化\n\n'
               '> 完整文字稿；由分章 Markdown 自动合并。图稿说明尚未替换为实际图件，'
               '本文件不是最终提交检查点。请编辑 chapters/ 后重运行 assemble_markdown.py。\n']
     for name in FILES:

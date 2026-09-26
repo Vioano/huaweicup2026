@@ -28,7 +28,7 @@ def save(fig,name,outdir=None):
         for ax in fig.axes:
             for loc in ('left','center','right'): ax.set_title('',loc=loc)
         for item in list(fig.texts): item.remove()
-        outdir=outdir or PAPER/'figures'/'paper'
+        outdir=outdir or PAPER/'figures'/'paper-v2'
     outdir=outdir or PAPER/'figures';outdir.mkdir(parents=True,exist_ok=True)
     # Fixed physical canvas: never tight-crop and subsequently scale the font.
     for ext in ('pdf','svg','png'):

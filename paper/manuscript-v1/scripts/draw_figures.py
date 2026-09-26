@@ -24,9 +24,10 @@ def rows():
 
 def timeline(d,name,title,xmax=None,window=None):
     """All cores; Task spans and four distinct resource lanes; actual E0 events."""
-    K=d['num_cores']; height=2.1+K*1.02
+    K=d['num_cores']; paper=os.environ.get('PAPER_LAYOUT') == '1'
+    height=(1.0+K*.62) if paper else (2.1+K*1.02)
     fig=plt.figure(figsize=(6.5,height))
-    gs=fig.add_gridspec(2,1,height_ratios=[K*.22,K*.80],left=.155,right=.97,bottom=.075,top=.845,hspace=.27)
+    gs=fig.add_gridspec(2,1,height_ratios=[K*.22,K*.80],left=.155,right=.97,bottom=(.135 if paper else .075),top=(.985 if paper else .845),hspace=(.17 if paper else .27))
     a=fig.add_subplot(gs[0]);b=fig.add_subplot(gs[1],sharex=a)
     fig.text(.155,.965,title,va='top')
     fig.text(.155,.925,f"M = {d['makespan']:,} cycle    额外搬运 = {d['data_movement_bytes']['added_copy_bytes']:,} B",va='top')
@@ -35,7 +36,7 @@ def timeline(d,name,title,xmax=None,window=None):
         for task in c['tasks']:
             a.broken_barh([(task['start']/1000,task['duration']/1000)],(k-.34,.68),facecolor=C['pale'],edgecolor=C['ink'],linewidth=.7)
             if d['scene']=='A' and task['duration']/(xmax or d['makespan'])>.065:
-                a.text((task['start']+task['end'])/2000,k,str(task['task_id']),ha='center',va='center')
+                a.text((task['start']+task['end'])/2000,k,str(task['task_id']),ha='center',va='center',fontsize=(9 if paper else 12))
         for j,pipe in enumerate(PIPE):
             ops=[o for o in c['ops'] if o['pipe']==pipe]
             b.broken_barh([(o['start']/1000,o['duration']/1000) for o in ops],(k*5+j-.34,.68),facecolor=PIPE[pipe],edgecolor='none')
@@ -46,12 +47,13 @@ def timeline(d,name,title,xmax=None,window=None):
     b.set_yticks([k*5+j for k in range(K) for j in range(4)],
                 [f'{k} · {p}' for k in range(K) for p in ('M','V','MTE2','MTE3')])
     b.set_title('(b) 每核四条 Pipe 的实际占用区间',loc='left',pad=8)
-    b.set_xlabel('时间 / 千 cycle');a.tick_params(axis='x',labelbottom=False)
+    b.set_xlabel('时间 / 千 cycle',fontsize=(10 if paper else 12));a.tick_params(axis='x',labelbottom=False)
+    if paper: b.tick_params(axis='x',labelsize=10)
     for ax in (a,b):
         ax.set_xlim(*(np.array(window)/1000) if window else (0,(xmax or d['makespan'])*1.012/1000))
         ax.axvline(d['makespan']/1000,color=C['ink'],ls='--',lw=.9)
         ax.grid(axis='x',color=C['pale']);ax.set_axisbelow(True)
-        ax.tick_params(axis='y',length=0)
+        ax.tick_params(axis='y',length=0,labelsize=(8.8 if paper else 12))
     save(fig,name)
 
 def partition_story(d):
@@ -105,13 +107,13 @@ def stat_figures(allrows):
     old2={(r['case'],r['cores']):r['baseline'] for r in source('p2-comparison')}
     for p,old in [('P1',old1),('P2',old2)]:
         part=[r for r in allrows if r['problem']==p]
-        fig,(a,b)=plt.subplots(2,1,figsize=(6.5,6.5),gridspec_kw={'left':.15,'right':.96,'bottom':.10,'top':.95,'hspace':.58})
+        fig,(a,b)=plt.subplots(2,1,figsize=(6.5,4.9 if os.environ.get('PAPER_LAYOUT') == '1' else 6.5),gridspec_kw={'left':.15,'right':.96,'bottom':.12,'top':.95,'hspace':.55})
         ks=range(1,6);new=[summary[p]['cores'][str(k)]['mean_official_curve_speedup'] for k in ks]
         prev=[1 if k==1 else statistics.fmean(r['baseline_cycles']/old[(r['case_id'],int(r['cores']))]['makespan_cycles' if p=='P1' else 'makespan'] for r in part if r['cores']==k) for k in ks]
         a.plot(ks,prev,'o--',color=C['gray'],label='前一完整算法');a.plot(ks,new,'s-',color=C['M'],label='本文固定算法')
         for k,v in zip(ks,new): a.annotate(f'{v:.3f}',(k,v),xytext=(0,8),textcoords='offset points',ha='center')
         a.set(xticks=list(ks),ylim=(.7,5.15),title='(a) 每个核数均为 100 图的算术平均');a.legend(loc='upper left')
-        clean(a,'Core 数 K','平均加速比')
+        clean(a,'Core数量 K','平均加速比')
         for k,marker in zip(ks,['o','s','^','D','v']):
             rr=[r for r in part if r['cores']==k];xx=[];yy=[]
             for r in rr:
@@ -126,14 +128,14 @@ def stat_figures(allrows):
         b.set_xticks([-1,-.1,0,.1,1,10,100] if p=='P2' else [-1,-.1,0,.1,1])
         b.set_xticklabels(['−1','−0.1','0','0.1','1','10','100'] if p=='P2' else ['−1','−0.1','0','0.1','1'])
         save(fig,'fig-'+p.lower()+'-results')
-    fig,(a,b)=plt.subplots(2,1,figsize=(6.5,6.1),gridspec_kw={'left':.15,'right':.96,'bottom':.10,'top':.95,'hspace':.5})
+    fig,(a,b)=plt.subplots(2,1,figsize=(6.5,4.8 if os.environ.get('PAPER_LAYOUT') == '1' else 6.1),gridspec_kw={'left':.15,'right':.96,'bottom':.12,'top':.95,'hspace':.5})
     cs=summary['P3']['cores'];ks=np.arange(1,6)
     a.plot(ks,[cs[str(k)]['mean_no_l2_baseline_speedup'] for k in ks],'o--',color=C['gray'],label='同计划，无 L2')
     a.plot(ks,[cs[str(k)]['mean_baseline_speedup'] for k in ks],'s-',color=C['M'],label='同计划，只读 Cache')
-    a.set(xticks=ks,ylim=(.9,5.2),title='(a) 同图、同 K、同计划字节，仅改变 Cache 语义');a.legend();clean(a,'Core 数 K','平均 B / M')
+    a.set(xticks=ks,ylim=(.9,5.2),title='(a) 同图、同 K、同计划字节，仅改变 Cache 语义');a.legend();clean(a,'Core数量 K','平均 B / M')
     v=[cs[str(k)]['mean_cache_gain'] for k in ks];b.plot(ks,v,'D-',color=C['in'])
     for k,x in zip(ks,v):b.annotate(f'{x:.4f}',(k,x),xytext=(0,9),textcoords='offset points',ha='center')
-    b.axhline(1,color=C['gray'],lw=.8);b.set(xticks=ks,ylim=(.99,1.105),title='(b) 每核数 100 对；不以“均值之比”替代“比值均值”');clean(b,'Core 数 K','平均 M₂ / M₃')
+    b.axhline(1,color=C['gray'],lw=.8);b.set(xticks=ks,ylim=(.99,1.105),title='(b) 每核数 100 对；不以“均值之比”替代“比值均值”');clean(b,'Core数量 K','平均 M₂ / M₃')
     save(fig,'fig-p3-results')
     fig,a=plt.subplots(figsize=(6.5,3.7));fig.subplots_adjust(left=.16,right=.97,bottom=.19,top=.88)
     for k,marker in zip(ks,['o','s','^','D','v']):
@@ -147,8 +149,8 @@ def stat_figures(allrows):
         x=sorted(r['solver_wall_seconds'] for r in allrows if r['problem']==p)
         a.step(x,np.arange(1,len(x)+1)/len(x),where='post',color=col,ls=ls,label=p)
     a.set(xscale='log',ylim=(0,1.03),title='每题 500 次完整求解；含各自在线评价，含共享主机影响')
-    clean(a,'求解端到端墙钟 / s（对数）','经验累计比例');a.legend(loc='lower right');save(fig,'fig-runtime')
-    ds=source('dataset');fig,(a,b)=plt.subplots(2,1,figsize=(6.5,5.8));fig.subplots_adjust(left=.15,right=.96,bottom=.11,top=.94,hspace=.55)
+    clean(a,'求解时间 / s（对数刻度）','不超过该时间的样本比例');a.legend(loc='lower right');save(fig,'fig-runtime')
+    ds=source('dataset');fig,(a,b)=plt.subplots(2,1,figsize=(6.5,4.8 if os.environ.get('PAPER_LAYOUT') == '1' else 5.8));fig.subplots_adjust(left=.15,right=.96,bottom=.11,top=.94,hspace=.55)
     a.scatter([x['ops'] for x in ds],[x['tensor_bytes']/2**20 for x in ds],color=C['M'],s=20,alpha=.65)
     a.set(xscale='log',yscale='log',title='(a) 100 张原始图：规模与张量体积');clean(a,'非 COPY 操作数（对数）','张量大小总和 / MiB（对数）')
     ratios=sorted(x['matrix_cycles']/max(1,x['matrix_cycles']+x['vector_cycles']) for x in ds)
@@ -158,7 +160,7 @@ def stat_figures(allrows):
     lower=[audit[str(k)]['new_mean_B_over_M'] for k in ks];upper=[audit[str(k)]['relaxation_ceiling_mean_B_over_LB'] for k in ks]
     a.plot(ks,lower,'s-',color=C['M'],label='可行方案 mean(B/U)');a.plot(ks,upper,'o--',color=C['gray'],label='必要界 mean(B/L)')
     a.fill_between(ks,lower,upper,color=C['pale']);a.set(xticks=ks,title='同一优化域：L ≤ OPT ≤ U；阴影并非保证可实现的收益')
-    clean(a,'Core 数 K','平均单核基准 / 周期');a.legend(loc='upper left');save(fig,'fig-bound-gap')
+    clean(a,'Core数量 K','平均单核基准 / 周期');a.legend(loc='upper left');save(fig,'fig-bound-gap')
 
 def main():
     FIG.mkdir(exist_ok=True);r=rows();p1=source('p1-026-k5');p2=source('p2-019-k5');p3=source('p3-021-k3')
