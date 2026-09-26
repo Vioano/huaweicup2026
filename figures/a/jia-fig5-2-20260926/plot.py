@@ -2,7 +2,8 @@
 """图 5-2｜张量生命周期与容量约束（P2 初稿 5.5.1，式 5-12/5-13）。
 
 数据：手算可核的小型结构示例（派发单授权路径；物理张量按身份去重，
-闭区间 f(t)<=i<=l(t)，同一步输入与输出共同驻留）。容量取固定配置
+闭区间 f(t)<=i<=l(t)，同一步输入与输出共同驻留）。占用覆盖完整范围
+i=0..max(last)+1（区间之外占用为 0，全部释放可见）。容量取固定配置
 表 5-1：L1=524288 B，UB=131072 B。静态闭区间峰值，非实际并行峰值；
 无官方 spill 记录，不绘制 spill 事件。
 """
@@ -38,7 +39,12 @@ hand = read_csv("handcheck.csv")
 steps = sorted({int(r["step"]) for r in occ})
 pools = ["L1", "UB"]
 
-# ---- 复核 1：由 lifetimes 闭区间重算占用，须与 occupancy.csv 一致 ----
+# ---- 复核 1：占用覆盖完整范围 i=0..max(last)+1，且由 lifetimes 闭区间重算一致 ----
+last_all = max(int(r["last"]) for r in life)
+full_steps = list(range(0, last_all + 2))          # 0..max(last)+1
+assert steps == full_steps, (steps, full_steps)
+assert len(occ) == len(full_steps) * len(pools), len(occ)   # 16 个唯一 (step,space)
+assert len({(int(r["step"]), r["space"]) for r in occ}) == len(occ)
 recomputed = {p: {i: 0 for i in steps} for p in pools}
 for r in life:
     b, p = int(r["bytes"]), r["space"]
@@ -81,10 +87,7 @@ for k, r in enumerate(life_sorted):
                         facecolors=color, edgecolor="white", linewidth=0.6, alpha=0.92)
     mid = (s - 0.5 + l + 0.5) / 2
     tag = r["tensor"].split("-")[0]
-    note = ""
-    if int(r["start"]) == int(r["last"]):
-        note = "（首触即末触）"
-    ax_life.text(mid, y, f"{tag} {int(r['bytes'])/1024:g} KiB{note}",
+    ax_life.text(mid, y, f"{tag} {int(r['bytes'])/1024:g} KiB",
                  ha="center", va="center", fontsize=6.3, color="white", fontweight="bold")
     ypos.append(y)
     ylabels.append(r["tensor"])
@@ -112,7 +115,7 @@ def draw_occ(ax, pool, color, title, cores_step, cores_txt):
     ax.axhline(cap[pool] / 1024, color=C_CAP, linestyle="--", linewidth=1.2)
     ax.text(xs[-1] + 0.42, cap[pool] / 1024, f"{pool} 容量 {cap[pool]/1024:g} KiB",
             ha="right", va="bottom", fontsize=6.5, color=C_CAP)
-    # 手算核对三点：峰值前 / 峰值处 / 释放后
+    # 手算核对三点：峰值前 / 峰值处 / 部分释放后（步 7 全部释放为 0）
     hc = [(int(r["step"]), int(r["bytes"])) for r in hand if r["space"] == pool]
     peak_step = max(hc, key=lambda t: t[1])[0]
     for s, b in hc:
@@ -124,9 +127,12 @@ def draw_occ(ax, pool, color, title, cores_step, cores_txt):
         elif s == min(t[0] for t in hc):
             lab = f"峰值前 {b/1024:g}"
         else:
-            lab = f"释放后 {b/1024:g}"
+            lab = f"部分释放后 {b/1024:g}"
         ax.annotate(lab, xy=(s, b / 1024), xytext=(s - 0.05, b / 1024 + cap[pool] / 1024 * 0.07),
                     fontsize=6.2, color="#1A2530", ha="center")
+    # 全部释放位置：占用在 max(last)+1 步回落到 0
+    ax.annotate("全部释放 0", xy=(xs[-1], 0), xytext=(xs[-1] - 0.1, cap[pool] / 1024 * 0.05),
+                fontsize=6.2, color="#1A2530", ha="center")
     ax.set_title(title, fontsize=8.5, color=C_TXT, pad=4)
     ax.set_ylabel("驻留字节（KiB）", fontsize=7.5)
     ax.set_ylim(0, cap[pool] / 1024 * 1.16)
@@ -148,8 +154,8 @@ axes[0].legend(handles=legend_items, loc="upper right", fontsize=6.2, framealpha
 fig.suptitle("张量生命周期与闭区间容量条件（手算示例；静态估计，非实际并行峰值）",
              fontsize=9.5, color=C_TXT, y=0.985)
 fig.text(0.5, 0.006,
-         "结构示例（手算可核）：闭区间两端闭合，因同一步的输入与输出在执行前容量检查中共同驻留；"
-         "首次即末次触碰的张量（T6、U3 尾段）不遗漏。无官方 spill 记录，未绘制 spill 事件。",
+         "结构示例（手算可核）：末触步仍计入占用，下一步释放；T6=[5,6]、U3=[4,6] 即两端闭合例证。"
+         "无官方 spill 记录，未绘制 spill 事件。",
          ha="center", fontsize=6.2, color="#5D6D7E")
 
 fig.savefig(os.path.join(HERE, "figure.svg"), format="svg", bbox_inches="tight")
