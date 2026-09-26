@@ -42,13 +42,16 @@ def main() -> None:
         "command": "uv run python src/analysis/p123_figures_lyx/plot_all.py --figure 5-3",
         "sources": [{
             "path": "results/a/p123-full500-lyx-20260925/per_case.json",
-            "commit": "13745ea50101fb19c94ed1c37ad9288562ed1810",
+            "commit": "5f4b7036ef7d05fcc88242742ad9ac0ab75b2b5a",
             "git_blob": "018ebde9b33b64428fda0db4ad05746b1ec32fbf",
             "sha256": "074bfa55b25acb60504780ff3107f9c28fef3ba58ef750bee1bbb0996fb9cdfc",
         }, {
+        }],
+        "local_inputs": [{
             "path": "results/a/p123-full500-lyx-20260925/inputs/P2.json",
-            "commit": "13745ea50101fb19c94ed1c37ad9288562ed1810",
             "sha256": manifest["source"]["sha256"]["results/a/p123-full500-lyx-20260925/inputs/P2.json"],
+            "published": False,
+            "reason": "large normalized input is gitignored; the published per_case.json is the reproducible plot feed",
         }],
         "units": {"makespan": "cycles", "wall": "s", "bytes": "B"},
         "panels": [
