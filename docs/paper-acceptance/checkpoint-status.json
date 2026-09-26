@@ -2,9 +2,13 @@
   "schema": "paper-checkpoint-status-v1",
   "acceptance_baseline": "CP01",
   "latest_known_checkpoint": "CP06",
+  "current_iteration": "v1",
+  "next_iterations": ["v2", "v3"],
+  "iteration_note": "CP01至CP06归属第一轮v1；v2、v3在论文组织任务实际冻结和发布后另建记录，旧批注仍按原PDF身份定位。",
   "checkpoints": [
     {
       "id": "CP06",
+      "iteration": "v1",
       "kind": "frozen_typesetting_checkpoint",
       "summary": "论文组织任务报告：沿用CP05正文，独立公式按章编号并调整定义术语加粗；不代表正文问题已整改",
       "pdf_path": "paper/manuscript-v1/checkpoints/checkpoint-06-numbered/anonymous-paper-v1.pdf",
@@ -19,6 +23,7 @@
     },
     {
       "id": "CP05",
+      "iteration": "v1",
       "kind": "frozen_annotation_checkpoint",
       "summary": "列表换行检查点；后续人工三处强调与公式批注绑定本PDF",
       "pdf_path": "paper/manuscript-v1/checkpoints/checkpoint-05-lists/anonymous-paper-v1.pdf",
@@ -32,6 +37,7 @@
     },
     {
       "id": "CP04",
+      "iteration": "v1",
       "kind": "frozen_annotation_checkpoint",
       "summary": "用户原始三处列表批注绑定本PDF的页码与坐标",
       "pdf_path": "paper/manuscript-v1/checkpoints/checkpoint-04-live/anonymous-paper-v1.pdf",
@@ -45,6 +51,7 @@
     },
     {
       "id": "CP01",
+      "iteration": "v1",
       "kind": "current_acceptance_baseline",
       "summary": "现有逐项条目、语言位置与论文页码的对照基线；不可套用到CP06",
       "pdf_path": "paper/manuscript-v1/checkpoints/checkpoint-01/anonymous-paper-v1.pdf",
