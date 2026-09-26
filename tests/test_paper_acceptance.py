@@ -48,7 +48,8 @@ class ReviewContractTest(unittest.TestCase):
                          json.loads((ROOT / 'docs/paper-acceptance/catalogue.json').read_text())['paper_sha256'])
         self.assertNotEqual(by_id[registry['latest_known_checkpoint']]['pdf_sha256'],
                             by_id[registry['acceptance_baseline']]['pdf_sha256'])
-        self.assertIsNone(by_id['CP06']['public_pdf_url'])
+        self.assertIn(by_id['CP06']['git_commit'], by_id['CP06']['public_pdf_url'])
+        self.assertEqual(len({by_id[x]['pdf_sha256'] for x in ('CP04', 'CP05', 'CP06')}), 3)
 
     def values(self, decision='comment', revision=0, actor='author'):
         return dict(item_id='L01', paper_sha256=self.cat['paper_sha256'], standard_hash=self.board.standard_hash,
