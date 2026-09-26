@@ -6,10 +6,10 @@
     ],
     "title": "用户要求：下一版自动生成目录",
     "owner": "论文监督会话负责LaTeX合稿；验收台记录要求",
-    "state": "v9_layout_preflight_passed_not_frozen",
+    "state": "v9_frozen_pending_user_review",
     "acknowledgement": "原话：记得下一轮迭代要加上目录，目录要根据，就是要，就是你搞那个 LaTeX 格式要根据实际目录实时的计算，而不是强行背页码。",
     "expected": "v9用LaTeX自动目录读取实际标题和页码，编译至目录与交叉引用稳定，再由用户查看；不可手工填页码。",
-    "review": "论文监督会话已试编译自动目录2页，章节与小节共94个写入目录的目标页码与PDF链接目标相符；105页仅为v9-layout-check排版预检，尚非冻结v9。此项不属于图5-3，正式最新版本仍为v8。",
+    "review": "监督会话报告自动目录94个条目与PDF跳转目标页码相符；验收台核对v9主PDF 123页、固定哈希和图页清单。目录的最终人工阅读验收未完成；旧105页预检仍保留独立身份。",
     "preflight_path": "paper/manuscript-v1/review/v9-requests/layout-check/validation.json",
     "preflight_sha256": "ae1c433df3f0608f466c9ea8753f0f1664d80d3afeb36c86a5bc564fe4c99d76",
     "preflight_publication": "作者本机试编译，尚未核公开固定提交",
@@ -17,7 +17,9 @@
     "source_request_sha256": "ffb77be5dc09c63092a4b28f9e8c58bfcfc5216fe4727b566dab2f4b48f6ac64",
     "source_publication": "作者本机工作稿，尚未核公开固定提交",
     "annotation_id": "USER-V9-AUTO-TOC-01",
-    "notice_url": null
+    "notice_url": null,
+    "frozen_v9_pdf_sha256": "0def584bf9f031d0c754a96c88abe356b554d6ef373fd07276e844d8843fef8a",
+    "frozen_v9_pages": 123
   },
   {
     "id": "user-fang-fig53-optimize-20260927",
@@ -52,10 +54,10 @@
     ],
     "title": "用户批注：v8第47页图6.2-1下半页留白",
     "owner": "论文监督会话负责LaTeX分页；验收台记录原话",
-    "state": "v9_layout_preflight_passed_not_frozen",
+    "state": "v9_frozen_layout_sampled_pending_user_review",
     "acknowledgement": "原话：这个四十七页这里，下半部分太空了。",
     "expected": "下一版调整图后接算法的分页并复核同类留白；旧v8 PDF不改。",
-    "review": "固定v8 PDF SHA 5d806108a559eaf0f18d9d3268efa477674d67ddceb9c03bc7d5b08b0f890cf6、物理第47页、无用户给出的精确矩形；截图SHA-256 ab151c0e0ed1ec1635e64e0682b5ed162f1cc444990c16a3b65916f090c7a561。论文监督会话的v9-layout-check试编译把原留白处接上伪代码起始部分，实际看了预检页49至50，无重叠或裁切；105页预检尚非冻结v9。与Fang图5-3无关。",
+    "review": "原批注固定绑定v8 PDF SHA及物理第47页，旧截图与坐标不迁移。验收台目视抽查固定v9 PDF第54页：示意图下方衔接伪代码，未见原先大块留白或裁切；仅是该页排版抽查，不代表全文或用户最终验收。与Fang图5-3无关。",
     "preflight_path": "paper/manuscript-v1/review/v9-requests/layout-check/validation.json",
     "preflight_sha256": "ae1c433df3f0608f466c9ea8753f0f1664d80d3afeb36c86a5bc564fe4c99d76",
     "preflight_publication": "作者本机试编译，尚未核公开固定提交",
@@ -64,7 +66,9 @@
     "source_publication": "作者本机工作稿，尚未核公开固定提交",
     "annotation_id": "USER-V8-P47-WHITESPACE-01",
     "notice_url": null,
-    "url": "/checkpoints/v8/47.png"
+    "url": "/checkpoints/v8/47.png",
+    "frozen_v9_pdf_sha256": "0def584bf9f031d0c754a96c88abe356b554d6ef373fd07276e844d8843fef8a",
+    "frozen_v9_page": 54
   },
   {
     "id": "paper-v8-freeze-to-acceptance-20260927",

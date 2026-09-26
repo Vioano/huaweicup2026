@@ -115,11 +115,35 @@ class ReviewContractTest(unittest.TestCase):
         self.assertIn('fang-future-delivery', gallery.by_id)
         self.assertIn('fang-future-delivery', gallery.locks)
 
+    def test_figure_selection_distinguishes_delivery_from_manuscript_placement(self):
+        selection = json.loads((ROOT / 'docs/paper-acceptance/figure-selection-v9.json').read_text())
+        gallery = TeamImages(self.board)
+        self.assertEqual(len(selection['items']), 18)
+        self.assertEqual(len({item['plan_number'] for item in selection['items']}), 18)
+        self.assertTrue(all(item['gallery_id'] in gallery.by_id for item in selection['items']))
+        self.assertEqual({item['recommendation'] for item in selection['items']},
+                         {'body', 'appendix', 'merge', 'omit'})
+        self.assertEqual({key: sum(item['recommendation'] == key for item in selection['items'])
+                          for key in ('body', 'appendix', 'merge', 'omit')},
+                         {'body': 9, 'appendix': 1, 'merge': 5, 'omit': 3})
+        for number in ('4-4', '4-5'):
+            item = next(item for item in selection['items'] if item['plan_number'] == number)
+            self.assertIn('v9', item['v9_placement'])
+            self.assertNotIn('manuscript_placement', gallery.by_id[item['gallery_id']])
+
     def test_checkpoint_registry_keeps_new_freeze_separate_from_review_baseline(self):
         registry = json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text())
         by_id = {item['id']: item for item in registry['checkpoints']}
-        self.assertEqual(registry['latest_known_checkpoint'], 'v8')
+        self.assertEqual(registry['latest_known_checkpoint'], 'v9')
         self.assertEqual(registry['acceptance_baseline'], 'CP01')
+        self.assertEqual(by_id['v9']['kind'], 'frozen_published_checkpoint')
+        self.assertEqual(by_id['v9']['pages'], 123)
+        self.assertEqual(by_id['v9']['supplement_pages'], 57)
+        self.assertEqual(len(by_id['v9']['figure_inventory']), 29)
+        self.assertEqual(sum(len(x['asset_files']) for x in by_id['v9']['figure_inventory']), 30)
+        self.assertFalse(by_id['v9']['human_final_acceptance'])
+        self.assertIn(by_id['v9']['git_commit'], by_id['v9']['public_pdf_url'])
+        self.assertEqual(next(x for x in by_id['v9']['figure_inventory'] if x['label'] == 'fig:p2-quality-cost')['page'], 47)
         self.assertEqual(by_id['v8']['kind'], 'frozen_published_checkpoint')
         self.assertEqual(by_id['v8']['pages'], 103)
         self.assertEqual(by_id['v8']['supplement_pages'], 57)
@@ -158,22 +182,26 @@ class ReviewContractTest(unittest.TestCase):
         self.assertEqual(figure['state'], 'fang_source_received_rework_candidate_published')
         self.assertIn('5848146593', figure['notice_url'])
         self.assertIn('5848204054', figure['fang_receipt_url'])
-        self.assertEqual(contents['state'], 'v9_layout_preflight_passed_not_frozen')
-        self.assertEqual(whitespace['state'], 'v9_layout_preflight_passed_not_frozen')
+        self.assertEqual(contents['state'], 'v9_frozen_pending_user_review')
+        self.assertEqual(whitespace['state'], 'v9_frozen_layout_sampled_pending_user_review')
         self.assertEqual(contents['preflight_sha256'], whitespace['preflight_sha256'])
-        self.assertIn('正式最新版本仍为v8', contents['review'])
+        self.assertEqual(contents['frozen_v9_pdf_sha256'], whitespace['frozen_v9_pdf_sha256'])
+        self.assertEqual(whitespace['frozen_v9_page'], 54)
         self.assertEqual(len({x['source_request_sha256'] for x in (whitespace, figure, contents)}), 1)
         requests = json.loads((ROOT / 'docs/paper-acceptance/figure-requests.json').read_text())['requests']
         current = next(x for x in requests if x['id'] == 'FIG-FANG-5-3')
         self.assertEqual(current['user_annotation_id'], figure['annotation_id'])
-        self.assertIn('待论文监督会话选版', current['state'])
+        self.assertIn('冻结v9第46页', current['state'])
         self.assertIn('5848146593', current['dispatch_url'])
         self.assertEqual(current['candidate_commit'], figure['candidate_commit'])
         gallery = TeamImages(self.board)
         revised = gallery.by_id['acceptance-fig53-rework-v1']
         self.assertEqual(revised['source_commit'], current['candidate_commit'])
         self.assertEqual(revised['review_stage'], 'review_pending')
-        self.assertNotIn('manuscript_placement', revised)
+        self.assertEqual(revised['manuscript_placement']['checkpoint'], 'v9')
+        self.assertEqual(revised['manuscript_placement']['page'], 46)
+        for figure_id in ('fang-accepted-fig44', 'fang-accepted-fig45'):
+            self.assertNotIn('manuscript_placement', gallery.by_id[figure_id])
 
     def test_v7_figure_review_keeps_user_words_separate_from_ai_advice(self):
         review = json.loads((ROOT / 'docs/paper-acceptance/figure-review-v7.json').read_text())

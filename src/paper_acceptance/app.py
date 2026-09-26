@@ -286,6 +286,8 @@ def serve(board, port):
                     return self.reply(team_images.refresh())
                 if p.path == '/api/v1/figure-requests':
                     return self.reply(json.loads((ROOT / 'docs/paper-acceptance/figure-requests.json').read_text()))
+                if p.path == '/api/v1/figure-selection':
+                    return self.reply(json.loads((ROOT / 'docs/paper-acceptance/figure-selection-v9.json').read_text()))
                 if p.path == '/api/v1/figure-review-v7':
                     return self.reply(json.loads((ROOT / 'docs/paper-acceptance/figure-review-v7.json').read_text()))
                 if p.path == '/api/v1/checkpoints':

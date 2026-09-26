@@ -1,11 +1,507 @@
 {
   "schema": "paper-checkpoint-status-v1",
   "acceptance_baseline": "CP01",
-  "latest_known_checkpoint": "v8",
-  "current_iteration": "v8",
+  "latest_known_checkpoint": "v9",
+  "current_iteration": "v9",
   "next_iterations": [],
-  "iteration_note": "CP01至CP06归属第一轮v1；v2至v8均有固定公开PDF。v8正文103页、附表57页的组织主库Git对象已按哈希核对。旧批注保留原PDF身份与坐标，不自动迁移到v8；v8图文及最终人工验收待核。",
+  "iteration_note": "CP01至CP06归属第一轮v1；v2至v9为已发布固定稿。v9主PDF123页、附表57页及29个图位/30份图文件按本机与组织主库Git对象核哈希。旧批注保持各自PDF身份，不自动迁移到v9；语言、科学与最终人工验收待核。",
   "checkpoints": [
+    {
+      "id": "v9",
+      "iteration": "v9",
+      "kind": "frozen_published_checkpoint",
+      "summary": "123页主PDF与57页附表已按SHA-256核对；作者冻结清单含29个编号图位、30份图文件，验收台核同全部图源。图内短标签/长说明移图注的12份重排图与Fang图5-3已同字节入稿；实际图号与页码按冻结页码清单登记。仅抽查第24、54页图与伪代码分页；图注语言、科学结论、全文及最终人工验收未完成。",
+      "pdf_path": "paper/manuscript-v1/checkpoints/v9/anonymous-paper-v9.pdf",
+      "pdf_sha256": "0def584bf9f031d0c754a96c88abe356b554d6ef373fd07276e844d8843fef8a",
+      "pages": 123,
+      "supplement_path": "paper/manuscript-v1/checkpoints/v9/result-tables.pdf",
+      "supplement_sha256": "c913309fd0cf7851f0ca7bc2127e1e6b6c4edb50719a80c5c02abc06fbcd7fde",
+      "supplement_pages": 57,
+      "freeze_manifest_path": "paper/manuscript-v1/checkpoints/v9/freeze-manifest.json",
+      "freeze_manifest_sha256": "5dda78f83e81c6a538572ee4d6f4f14782beead868d85a55049f3888a9ecedcd",
+      "figure_manifest_path": "paper/manuscript-v1/checkpoints/v9/figure-manifest.json",
+      "page_map_path": "paper/manuscript-v1/checkpoints/v9/review/page-map.json",
+      "source_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+      "git_state": "组织主库固定提交已发布；主PDF、补表与freeze-manifest均按Git对象和本机原件SHA-256核同；研究镜像及用户审阅状态另核",
+      "acceptance_state": "供用户审阅的本机冻结稿；图注与正文虽已承接移出说明，语言、科学和最终人工验收仍未完成",
+      "figure_inventory": [
+        {
+          "label": "fig:progression",
+          "number": "图 1.4-1",
+          "page": 7,
+          "asset_files": [
+            "figures/fig-progression-v3.png"
+          ],
+          "asset_sha256": [
+            "d4a75c65f85de8c7b83beecf9b46d05fa3295061e666bad3849c6eed8fbf1d43"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:framework",
+          "number": "图 3.2-1",
+          "page": 15,
+          "asset_files": [
+            "figures/fig-framework-v2.png"
+          ],
+          "asset_sha256": [
+            "b751a7c597f8e20d9b1a867796faab6621c08f066f0bd08542a5eed4dad89e8d"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:p1-complete-flow",
+          "number": "图 4.2-1",
+          "page": 20,
+          "asset_files": [
+            "figures/team-v9/p1-complete-flow.pdf"
+          ],
+          "asset_sha256": [
+            "21313e1fd5cbf66ffec7fc9144c62b1d728a684a6fca729eac9ed6fdc0984a8b"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:fang-fork",
+          "number": "图 4.2-2",
+          "page": 22,
+          "asset_files": [
+            "figures/fig4-2-fang-A.png"
+          ],
+          "asset_sha256": [
+            "76b1b13c073f404dc7c51e60f7ceecbcd51aaeb5cc9fdc3ea775614061592b3f"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:p1-cuts",
+          "number": "图 4.3-1",
+          "page": 24,
+          "asset_files": [
+            "figures/fig-p1-cuts-xy-corrected.png"
+          ],
+          "asset_sha256": [
+            "32c7183d3dc385f5c3ed305fceb21f7ddddc25d7488769cc226442e156fef522"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": true
+        },
+        {
+          "label": "fig:p1-results",
+          "number": "图 4.5-1",
+          "page": 29,
+          "asset_files": [
+            "figures/paper-v2/fig-p1-results.pdf"
+          ],
+          "asset_sha256": [
+            "4214eb53dd1dd1350dbedf0c48bbc4c668e0d5cfce210d50732024c7638cb0a0"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:p1-overlap",
+          "number": "图 4.6-1",
+          "page": 31,
+          "asset_files": [
+            "figures/team-v8/p1-timeline-full.pdf"
+          ],
+          "asset_sha256": [
+            "4e472da1d8bb544b031130d4a6e26d23d7c7100dfcb6922a8479552099543be7"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:p1-overlap-zoom",
+          "number": "图 4.6-2",
+          "page": 32,
+          "asset_files": [
+            "figures/team-v8/p1-timeline-zoom.pdf"
+          ],
+          "asset_sha256": [
+            "d599fe2c0dca44b1a4edeeb6ebc6c6d8f553be4b45f489681cc8df2bc4b6a503"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:p2-lifetimes",
+          "number": "图 5.1-1",
+          "page": 34,
+          "asset_files": [
+            "figures/team-v8/p2-lifetimes.pdf"
+          ],
+          "asset_sha256": [
+            "3eb3f3f4c2d7f79e956c3fcfd98638f957a1b707a09212b8240b1c6c49d2a8a8"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:hypercut",
+          "number": "图 5.3-1",
+          "page": 36,
+          "asset_files": [
+            "figures/fig-hypercut-v2.png"
+          ],
+          "asset_sha256": [
+            "8a28dda4bec1f03b2d582e85d8fb538081d56ebd711682c35b119a75574e61d6"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:p2-local-cut",
+          "number": "图 5.4-1",
+          "page": 37,
+          "asset_files": [
+            "figures/team-v9/p2-local-cut.pdf"
+          ],
+          "asset_sha256": [
+            "20c7cc1163df11d4ff1f42829b46b1e5907ec44707c0367ac7d6964d9c381d42"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:p2-three-plans",
+          "number": "图 5.5-1",
+          "page": 41,
+          "asset_files": [
+            "figures/team-v9/p2-three-plans-a.pdf",
+            "figures/team-v9/p2-three-plans-b.pdf"
+          ],
+          "asset_sha256": [
+            "0a4ff8b297729ef72f425f4f1e9c195305f6cabebd90fdc4fa8488b9d7dd6007",
+            "90a0a8463b87a02bcf5203633a04b79793f3eef97e8ef25749992ea64e389c3a"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:p2-results",
+          "number": "图 5.6-1",
+          "page": 45,
+          "asset_files": [
+            "figures/paper-v2/fig-p2-results.pdf"
+          ],
+          "asset_sha256": [
+            "7e5d6eead4f31cc8b809df8863d153d3b22286e783b4d7abcea6e8ac3f5c3ed3"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:p2-method-comparison",
+          "number": "图 5.6-2",
+          "page": 46,
+          "asset_files": [
+            "figures/team-v9/p2-method-comparison.pdf"
+          ],
+          "asset_sha256": [
+            "221751e43570b318887b121ebef8e8d373135c0795ddd985194e725eefe8372d"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:p2-quality-cost",
+          "number": "图 5.6-3",
+          "page": 47,
+          "asset_files": [
+            "figures/team-v9/p2-quality-cost.pdf"
+          ],
+          "asset_sha256": [
+            "eca2a52fa5db8109275e6d2c04c40889e497ac8dc78533e1dcd1e454547d82c9"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:p2-counterexample",
+          "number": "图 5.7-1",
+          "page": 48,
+          "asset_files": [
+            "figures/team-v8/p2-timeline-full.pdf"
+          ],
+          "asset_sha256": [
+            "69c658d3471b0d238072bc9198b9b30a92820000e09298be47b5f9e9779187ba"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:p2-counterexample-zoom",
+          "number": "图 5.7-2",
+          "page": 49,
+          "asset_files": [
+            "figures/team-v8/p2-timeline-zoom.pdf"
+          ],
+          "asset_sha256": [
+            "e08ea67f9cf2ebd62c11bcc2f3b28b391a7108dd7da0cf879335a40529e7ab38"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:cache-counterexample-full",
+          "number": "图 6.1-1",
+          "page": 51,
+          "asset_files": [
+            "figures/team-v9/cache-counterexample-full.pdf"
+          ],
+          "asset_sha256": [
+            "3bc5c6f99d774f33caca41a7a764dc6d3f6007a3696efafaa78dbf8c273f6623"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:cache-counterexample-zoom",
+          "number": "图 6.1-2",
+          "page": 52,
+          "asset_files": [
+            "figures/team-v9/cache-counterexample-zoom.pdf"
+          ],
+          "asset_sha256": [
+            "f07293a8d578267f66a91093223787101b824727860287ae9721cc2344193efe"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:forest-example",
+          "number": "图 6.2-1",
+          "page": 54,
+          "asset_files": [
+            "figures/paper-v2/fig-forest-example.pdf"
+          ],
+          "asset_sha256": [
+            "8181906ad4852fcc458bfcb223bb0941d90198bdc758a0a6890c32ef804a0659"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": true
+        },
+        {
+          "label": "fig:p3-forest-decision",
+          "number": "图 6.7-1",
+          "page": 60,
+          "asset_files": [
+            "figures/team-v9/p3-forest-decision.pdf"
+          ],
+          "asset_sha256": [
+            "83a48eec6583f9ec5d36daa704fefb362fb1044004d846bdce4fecbc5e2157ad"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:p3-results",
+          "number": "图 6.8-1",
+          "page": 63,
+          "asset_files": [
+            "figures/team-v9/p3-cache-comparison.pdf"
+          ],
+          "asset_sha256": [
+            "5d40aae996063ed2a85eb6d743542a5b172d82bbd4a82bc64d69b2c550f7bee7"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:cache-gain",
+          "number": "图 6.8-2",
+          "page": 64,
+          "asset_files": [
+            "figures/team-v9/p3-cache-gain.pdf"
+          ],
+          "asset_sha256": [
+            "d245ed4c1016a373ff1055f406dea0fce7d2b03b18fa3a180bcee99b38d03768"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:p3-quality-cost",
+          "number": "图 6.8-3",
+          "page": 65,
+          "asset_files": [
+            "figures/team-v9/p3-quality-cost.pdf"
+          ],
+          "asset_sha256": [
+            "cd7765441d2f46c7b96cf4c777e6c4f4cb26f14dead3fcb4d701e3efc7869012"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:dataset",
+          "number": "图 7.1-1",
+          "page": 68,
+          "asset_files": [
+            "figures/team-v8/dataset.pdf"
+          ],
+          "asset_sha256": [
+            "22ce51a26e45fe0e05d707be84c96afc0df8240eb525fdd13c8ab37410411bea"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:runtime",
+          "number": "图 7.3-1",
+          "page": 70,
+          "asset_files": [
+            "figures/paper-v2/fig-runtime.pdf"
+          ],
+          "asset_sha256": [
+            "8360b3485c4bbacc68a9c6f4fce7d78fa36503ce4a8094b08cfa92211f45202d"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:bound-gap",
+          "number": "图 7.5-1",
+          "page": 72,
+          "asset_files": [
+            "figures/team-v8/bound-gap.pdf"
+          ],
+          "asset_sha256": [
+            "f53e32e7dc4f90f676a827c8ec3bd99303024117ed25f88fb2b680a449a05459"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:p2-bound-distribution",
+          "number": "图 7.5-2",
+          "page": 72,
+          "asset_files": [
+            "figures/team-v9/p2-bound-distribution.pdf"
+          ],
+          "asset_sha256": [
+            "92aad989f7ba3fdc2d2b9fa54a1777c1cffac7378f985198a9ed549faf3e7d0d"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        },
+        {
+          "label": "fig:p1-paced-diagnostic",
+          "number": "图 D.2-1",
+          "page": 83,
+          "asset_files": [
+            "figures/team-v8/p1-paced-diagnostic.png"
+          ],
+          "asset_sha256": [
+            "c0ac9d63820aa9925fed7bda69769d7fa9248db8708b91391be81df82963db84"
+          ],
+          "evidence": "作者v9冻结图件清单与PDF标签；验收台已核对源文件SHA-256和物理页码清单；仅标记过的页面另有目视抽查",
+          "board_visual_check": false
+        }
+      ],
+      "figures_checked": [
+        {
+          "page": 20,
+          "label": "图4.2-1",
+          "gallery_id": "acceptance-p1-flow-caption-led",
+          "role": "入稿PDF文件与固定图源SHA-256相同；图注、语言、科学与用户最终验收仍待复核"
+        },
+        {
+          "page": 37,
+          "label": "图5.4-1",
+          "gallery_id": "acceptance-p2-local-cut-caption-led",
+          "role": "入稿PDF文件与固定图源SHA-256相同；图注、语言、科学与用户最终验收仍待复核"
+        },
+        {
+          "page": 41,
+          "label": "图5.5-1",
+          "gallery_id": "acceptance-p2-three-plans-caption-led-a",
+          "role": "入稿PDF文件与固定图源SHA-256相同；图注、语言、科学与用户最终验收仍待复核"
+        },
+        {
+          "page": 41,
+          "label": "图5.5-1",
+          "gallery_id": "acceptance-p2-three-plans-caption-led-b",
+          "role": "入稿PDF文件与固定图源SHA-256相同；图注、语言、科学与用户最终验收仍待复核"
+        },
+        {
+          "page": 60,
+          "label": "图6.7-1",
+          "gallery_id": "acceptance-p3-forest-caption-led",
+          "role": "入稿PDF文件与固定图源SHA-256相同；图注、语言、科学与用户最终验收仍待复核"
+        },
+        {
+          "page": 47,
+          "label": "图5.6-3",
+          "gallery_id": "acceptance-caption-led-p2-quality-cost",
+          "role": "入稿PDF文件与固定图源SHA-256相同；图注、语言、科学与用户最终验收仍待复核"
+        },
+        {
+          "page": 72,
+          "label": "图7.5-2",
+          "gallery_id": "acceptance-caption-led-p2-bound-distribution",
+          "role": "入稿PDF文件与固定图源SHA-256相同；图注、语言、科学与用户最终验收仍待复核"
+        },
+        {
+          "page": 63,
+          "label": "图6.8-1",
+          "gallery_id": "acceptance-caption-led-p3-cache-comparison",
+          "role": "入稿PDF文件与固定图源SHA-256相同；图注、语言、科学与用户最终验收仍待复核"
+        },
+        {
+          "page": 64,
+          "label": "图6.8-2",
+          "gallery_id": "acceptance-caption-led-p3-cache-gain",
+          "role": "入稿PDF文件与固定图源SHA-256相同；图注、语言、科学与用户最终验收仍待复核"
+        },
+        {
+          "page": 51,
+          "label": "图6.1-1",
+          "gallery_id": "acceptance-caption-led-cache-counterexample-full",
+          "role": "入稿PDF文件与固定图源SHA-256相同；图注、语言、科学与用户最终验收仍待复核"
+        },
+        {
+          "page": 52,
+          "label": "图6.1-2",
+          "gallery_id": "acceptance-caption-led-cache-counterexample-zoom",
+          "role": "入稿PDF文件与固定图源SHA-256相同；图注、语言、科学与用户最终验收仍待复核"
+        },
+        {
+          "page": 65,
+          "label": "图6.8-3",
+          "gallery_id": "acceptance-caption-led-p3-quality-cost",
+          "role": "入稿PDF文件与固定图源SHA-256相同；图注、语言、科学与用户最终验收仍待复核"
+        },
+        {
+          "page": 46,
+          "label": "图5.6-2",
+          "gallery_id": "acceptance-fig53-rework-v1",
+          "role": "入稿PDF文件与固定图源SHA-256相同；图注、语言、科学与用户最终验收仍待复核"
+        }
+      ],
+      "visual_check_pages": [
+        24,
+        54
+      ],
+      "human_final_acceptance": false,
+      "annotation_scope": {
+        "USER-V7-FIGTEXT-01/02": "原批注仍绑定v7 PDF SHA与原位置；v9改图和图注须单独审阅，不迁移旧坐标或通过结论",
+        "USER-V8-P47-WHITESPACE-01": "原批注仍绑定v8第47页；验收台仅目视抽查v9第54页图与伪代码分页，不代用户验收",
+        "USER-V8-CODESTYLE-01": "原批注仍绑定v8 PDF；v9代码排版与语言待用户审阅",
+        "v9_layout_preflights": "此前各预检PDF为独立身份，不能沿用其页码或通过结论"
+      },
+      "publication_url": "https://github.com/huaweibei123/huaweicup2026/pull/222",
+      "git_commit": "f5673a7e3cb3a5f0f7f269e1f8f03120ee19702c",
+      "public_pdf_url": "https://github.com/huaweibei123/huaweicup2026/blob/f5673a7e3cb3a5f0f7f269e1f8f03120ee19702c/paper/manuscript-v1/checkpoints/v9/anonymous-paper-v9.pdf",
+      "public_supplement_url": "https://github.com/huaweibei123/huaweicup2026/blob/f5673a7e3cb3a5f0f7f269e1f8f03120ee19702c/paper/manuscript-v1/checkpoints/v9/result-tables.pdf",
+      "public_freeze_manifest_url": "https://github.com/huaweibei123/huaweicup2026/blob/f5673a7e3cb3a5f0f7f269e1f8f03120ee19702c/paper/manuscript-v1/checkpoints/v9/freeze-manifest.json"
+    },
     {
       "id": "v8",
       "iteration": "v8",
