@@ -1,11 +1,43 @@
 {
   "schema": "paper-checkpoint-status-v1",
   "acceptance_baseline": "CP01",
-  "latest_known_checkpoint": "CP06",
-  "current_iteration": "v1",
-  "next_iterations": ["v2", "v3"],
-  "iteration_note": "CP01至CP06归属第一轮v1；v2、v3在论文组织任务实际冻结和发布后另建记录，旧批注仍按原PDF身份定位。",
+  "latest_known_checkpoint": "v3",
+  "current_iteration": "v3",
+  "next_iterations": [],
+  "iteration_note": "CP01至CP06归属第一轮v1；v2固定PDF已由总调度发布到组织主库和镜像，Draft PR #222仍待整合；v3已在论文组织任务本机冻结并验哈希，公开链接待总调度回交。旧批注仍按原PDF身份定位。",
   "checkpoints": [
+    {
+      "id": "v3",
+      "iteration": "v3",
+      "kind": "frozen_local_checkpoint_pending_publication",
+      "summary": "87页正式PDF已按SHA-256回读；论文组织任务回报沿用Fang图4.2-1、834d流程图4.2-2和case_026图4.2-3。新制的第二、三问三图尚未混入本版；语言与最终人工验收仍待定。",
+      "pdf_path": "paper/manuscript-v1/checkpoints/v3/anonymous-paper-v3.pdf",
+      "pdf_sha256": "f9009cf38df083d0130ea7438c9ec44a77c405f818a6856b79f389aa739e0fca",
+      "pages": 87,
+      "source_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+      "git_state": "论文组织任务本机冻结并验哈希；组织主库固定提交和Vioano镜像待总调度回交",
+      "acceptance_state": "图件采用由组织任务回报；语言、科学与最终人工验收未完成"
+    },
+    {
+      "id": "v2",
+      "iteration": "v2",
+      "kind": "frozen_published_checkpoint",
+      "summary": "86页正式PDF已按SHA-256回读；p17 Fang图4.2-1、p19 834d流程图4.2-2、p20 case_026图4.2-3已入稿并目视核对。语言与最终人工验收仍待定。",
+      "pdf_path": "paper/manuscript-v1/checkpoints/v2/anonymous-paper-v2.pdf",
+      "pdf_sha256": "e6b5a08a9b2b1cad52526a710916e9f209167aa80ca28a818e42824002e15209",
+      "pages": 86,
+      "source_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+      "git_state": "组织主库固定提交已发布；Draft PR #222待整合，Vioano镜像由总调度核对同一PDF哈希",
+      "git_commit": "86c4e47a021b7a9d82a829d7242c54885a2991ea",
+      "public_pdf_url": "https://github.com/huaweibei123/huaweicup2026/blob/86c4e47a021b7a9d82a829d7242c54885a2991ea/paper/manuscript-v1/checkpoints/v2/anonymous-paper-v2.pdf",
+      "publication_url": "https://github.com/huaweibei123/huaweicup2026/pull/222",
+      "acceptance_state": "三图已入稿并目视核对；语言与最终人工验收未完成",
+      "figures_checked": [
+        {"page": 17, "label": "图4.2-1", "gallery_id": "fang-fig42-a"},
+        {"page": 19, "label": "图4.2-2", "gallery_id": "acceptance-p1-834-flow-clean"},
+        {"page": 20, "label": "图4.2-3", "gallery_id": "acceptance-case026-xy"}
+      ]
+    },
     {
       "id": "CP06",
       "iteration": "v1",
