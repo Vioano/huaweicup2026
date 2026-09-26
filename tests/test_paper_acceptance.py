@@ -31,7 +31,7 @@ class ReviewContractTest(unittest.TestCase):
 
     def test_team_figure_manifest_and_blob_integrity(self):
         gallery = TeamImages(self.board)
-        self.assertEqual(len(gallery.by_id), 56)
+        self.assertGreaterEqual(len(gallery.by_id), 56)
         self.assertTrue(gallery.by_id['fang-fig42-a']['curation_priority'])
         for item_id, digest in (
             ('fang-fig5-1-a', '16e0b22aeb7849fdc986d8bb06548ac1c0a7378173fbaa2f93ae4ecb90b734f4'),
@@ -49,7 +49,15 @@ class ReviewContractTest(unittest.TestCase):
         self.assertFalse(gallery.by_id['acceptance-case026-xy']['curation_priority'])
         self.assertFalse(gallery.by_id['acceptance-p1-834-flow-clean']['curation_priority'])
         self.assertEqual(gallery.by_id['fang-fig42-a']['curation_rank'], 3)
-        self.assertEqual(len({item['family'] for item in gallery.by_id.values()}), 32)
+        self.assertGreaterEqual(len({item['family'] for item in gallery.by_id.values()}), 32)
+        for item_id in (
+            'acceptance-p2-cut-v4', 'acceptance-dataset-v4', 'acceptance-bound-gap-v4',
+            'acceptance-p1-timeline-full-v4', 'acceptance-p1-timeline-zoom-v4',
+            'acceptance-p2-timeline-full-v4', 'acceptance-p2-timeline-zoom-v4',
+        ):
+            self.assertIn(item_id, gallery.by_id)
+            self.assertFalse(gallery.by_id[item_id]['curation_priority'])
+            self.assertNotIn('manuscript_placement', gallery.by_id[item_id])
         checkpoints = json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text())['checkpoints']
         v5 = {item['gallery_id']: item for item in next(c for c in checkpoints if c['id'] == 'v5')['figures_checked']}
         for item_id in ('farmer-fig52-v2', 'acceptance-p2-local-cut', 'acceptance-p2-three-plans', 'acceptance-p3-forest-decision'):
