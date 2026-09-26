@@ -1,11 +1,32 @@
 {
   "schema": "paper-checkpoint-status-v1",
   "acceptance_baseline": "CP01",
-  "latest_known_checkpoint": "v6",
-  "current_iteration": "v6",
+  "latest_known_checkpoint": "v7",
+  "current_iteration": "v7",
   "next_iterations": [],
-  "iteration_note": "CP01至CP06归属第一轮v1；v2至v6已有固定公开PDF。v6仅更新AI使用声明，图件沿用v5。旧批注按原PDF哈希与坐标定位，不自动迁移审阅结论。",
+  "iteration_note": "CP01至CP06归属第一轮v1；v2至v6已有固定公开PDF。v7本机冻结95页、待发布，本次仅重写摘要，其余图文沿用v6；Fang新A版仅在画廊展示。旧批注按原PDF哈希与坐标定位，不自动迁移审阅结论。",
   "checkpoints": [
+    {
+      "id": "v7",
+      "iteration": "v7",
+      "kind": "frozen_local_checkpoint_pending_publication",
+      "summary": "95页本机冻结稿已核对SHA-256并目视检查摘要页。本次仅重写第1页摘要，正文、图件、数据和代码声明沿用v6；第47页图页独立渲染核对一致。Fang图5-1和图6-1新A版尚未入稿；语言、科学与最终人工验收仍未完成。",
+      "pdf_path": "paper/manuscript-v1/checkpoints/v7/anonymous-paper-v7.pdf",
+      "pdf_sha256": "51cd3c6fefd4885c7978bf46d6ad279297c170f3c8b590ae649aa4963df51ff0",
+      "pages": 95,
+      "source_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+      "git_state": "本机冻结，固定公开提交待总调度回执",
+      "acceptance_state": "摘要更新待人工审阅；旧批注、Fang新图选版、科学与全文语言验收均未完成",
+      "figures_checked": [
+        {"page": 18, "label": "图4.2-1", "gallery_id": "fang-fig42-a", "role": "沿用v6用户选定Fang A版"},
+        {"page": 28, "label": "图5.1-1", "gallery_id": "farmer-fig52-v2", "role": "沿用v6暂定入稿版"},
+        {"page": 33, "label": "图5.4-1", "gallery_id": "acceptance-p2-local-cut", "role": "沿用v6暂定入稿版"},
+        {"page": 35, "label": "图5.5-1", "gallery_id": "acceptance-p2-three-plans", "role": "沿用v6暂定入稿版"},
+        {"page": 47, "label": "图6.7-1", "gallery_id": "acceptance-p3-forest-decision", "role": "沿用v6暂定入稿版"}
+      ],
+      "visual_equivalence_receipt": "paper/manuscript-v1/checkpoints/v7/review/unchanged-rendered-pages.json",
+      "annotation_lock": "paper/manuscript-v1/checkpoints/v7/annotation-lock.json"
+    },
     {
       "id": "v6",
       "iteration": "v6",
