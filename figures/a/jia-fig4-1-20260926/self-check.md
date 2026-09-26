@@ -1,8 +1,8 @@
-# 图 4-1 自查记录（甲，v5，2026-09-26）
+# 图 4-1 自查记录（甲，v6-final，2026-09-26）
 
 ## 本版（v5）依据
 - 实际论文模板：paper/template-2026/gmcm2026.cls（origin/main@e82c20098eb53cfb00d5f2287173f6894b3fb291），geometry：A4，top=30mm bottom=18.5mm left=right=22.5mm，正文宽 165mm、正文高 248.5mm。template-2025 仅为仓库内旧模板，非当前口径。
-- 实际导出边界：SVG viewBox 703x689（draw.io CLI 导出）。按 165mm 宽插入，高 161.7mm，正文页内可容纳。
+- 实际导出边界：SVG viewBox 701×689（draw.io CLI 导出）。按 165mm 宽插入 → 高 162.2mm。
 - 字号换算：最小 10px 约 6.65pt；主标签 11-12px 约 7.3-8.0pt（工作台建议的约 8pt 目标按主标签达到，未自设硬门槛）。
 - 生成命令：见 audit.json.command（draw.io desktop CLI --disable-gpu --no-sandbox；validate.py 0 error）。
 
