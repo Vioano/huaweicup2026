@@ -20,7 +20,7 @@
 | `GET /api/v1/team-figures` | 队友与验收台图件、Fang明确选版优先级、待Fang比选队列、固定来源与待审状态；`curation_priority`与`review_queue_rank`仅控制展示顺序，不代表科学或论文验收 |
 | `GET /api/v1/figure-selection` | Fang原18组任务下一内容版的逐图处置：正文9、附录1、合并5、不采用3；`fang_overall`与每项`workbench_archive`记录固定原件包的用户总验收来源及18项提交/发版绑定。该验收只对应归档原件，不能继承到画廊改版、v9整页或下一版入稿；监督会话的选图提案也不等于稿件人工验收 |
 | `GET /api/v1/figure-requests` | 论文组织任务定义的缺图需求、派工与接收状态；FIG-FANG-5-3记录Fang半成品、验收台修订及v9第46页的同字节入稿，科学和语言仍待审 |
-| `GET /api/v1/checkpoints` | 最新冻结稿与当前验收基线的不同版本、发布链接及原件哈希；v10仅为本机已核冻结稿，主稿83页、附表57页、九份分册和源码附件各有独立SHA-256；v9的图件实际页码不搬到v10 |
+| `GET /api/v1/checkpoints` | 最新冻结稿与当前验收基线的不同版本、固定发布链接及原件哈希；v10主稿83页、附表57页、九份分册和源码附件已按固定Git提交与本机哈希登记；Draft未合并，v9的图件实际页码不搬到v10 |
 | `GET /checkpoints/v10.pdf`、`GET /checkpoints/v10/24.png`、`GET /checkpoints/v10/parts/v10-part-02.pdf` | 本机已注册且逐次核对SHA-256的v10主稿、指定整页和分册；旧稿批注坐标不迁移，跨册跳转在Codex预览器中未验证 |
 | `GET /api/v1/export` | 当前共享状态和本机草稿快照 |
 
