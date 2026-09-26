@@ -31,15 +31,27 @@ class ReviewContractTest(unittest.TestCase):
 
     def test_team_figure_manifest_and_blob_integrity(self):
         gallery = TeamImages(self.board)
-        self.assertEqual(len(gallery.by_id), 54)
+        self.assertEqual(len(gallery.by_id), 56)
         self.assertTrue(gallery.by_id['fang-fig42-a']['curation_priority'])
+        for item_id, digest in (
+            ('fang-fig5-1-a', '16e0b22aeb7849fdc986d8bb06548ac1c0a7378173fbaa2f93ae4ecb90b734f4'),
+            ('fang-fig6-1-a', '9f134160b9c88c150229a4c3893583960bd2af4e74ea53dd3564d8b5dfaf8b90'),
+        ):
+            figure = gallery.by_id[item_id]
+            self.assertTrue(figure['curation_priority'])
+            self.assertEqual(figure['sha256'], digest)
+            self.assertEqual(figure['fang_selection_state'], 'user_confirmed_a')
+            self.assertNotIn('manuscript_placement', figure)
+        self.assertLess(gallery.by_id['fang-fig5-1-a']['curation_rank'],
+                        gallery.by_id['fang-fig42-a']['curation_rank'])
         self.assertFalse(gallery.by_id['fang-fig41']['curation_priority'])
         self.assertEqual(gallery.by_id['fang-fig41']['fang_selection_state'], 'not_adopted_current_algorithm')
         self.assertFalse(gallery.by_id['acceptance-case026-xy']['curation_priority'])
         self.assertFalse(gallery.by_id['acceptance-p1-834-flow-clean']['curation_priority'])
-        self.assertEqual(gallery.by_id['fang-fig42-a']['curation_rank'], 1)
+        self.assertEqual(gallery.by_id['fang-fig42-a']['curation_rank'], 3)
         self.assertEqual(len({item['family'] for item in gallery.by_id.values()}), 32)
-        v5 = {item['gallery_id']: item for item in json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text())['checkpoints'][0]['figures_checked']}
+        checkpoints = json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text())['checkpoints']
+        v5 = {item['gallery_id']: item for item in next(c for c in checkpoints if c['id'] == 'v5')['figures_checked']}
         for item_id in ('farmer-fig52-v2', 'acceptance-p2-local-cut', 'acceptance-p2-three-plans', 'acceptance-p3-forest-decision'):
             placed = gallery.by_id[item_id]['manuscript_placement']
             self.assertEqual((placed['page'], placed['label']), (v5[item_id]['page'], v5[item_id]['label']))
@@ -71,7 +83,12 @@ class ReviewContractTest(unittest.TestCase):
     def test_checkpoint_registry_keeps_new_freeze_separate_from_review_baseline(self):
         registry = json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text())
         by_id = {item['id']: item for item in registry['checkpoints']}
-        self.assertEqual(registry['latest_known_checkpoint'], 'v5')
+        self.assertEqual(registry['latest_known_checkpoint'], 'v6')
+        self.assertEqual(by_id['v6']['kind'], 'frozen_local_checkpoint_pending_publication')
+        self.assertNotIn('git_commit', by_id['v6'])
+        self.assertEqual(by_id['v6']['pages'], 95)
+        self.assertEqual({x['gallery_id'] for x in by_id['v6']['figures_checked']},
+                         {x['gallery_id'] for x in by_id['v5']['figures_checked']})
         self.assertEqual(by_id['v5']['kind'], 'frozen_published_checkpoint')
         self.assertIn(by_id['v5']['git_commit'], by_id['v5']['public_pdf_url'])
         self.assertEqual(by_id[registry['acceptance_baseline']]['pdf_sha256'],
