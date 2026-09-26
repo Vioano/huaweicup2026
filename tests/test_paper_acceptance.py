@@ -38,6 +38,11 @@ class ReviewContractTest(unittest.TestCase):
         self.assertFalse(gallery.by_id['acceptance-p1-834-flow-clean']['curation_priority'])
         self.assertEqual(gallery.by_id['fang-fig42-a']['curation_rank'], 1)
         self.assertEqual(len({item['family'] for item in gallery.by_id.values()}), 32)
+        v5 = {item['gallery_id']: item for item in json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text())['checkpoints'][0]['figures_checked']}
+        for item_id in ('farmer-fig52-v2', 'acceptance-p2-local-cut', 'acceptance-p2-three-plans', 'acceptance-p3-forest-decision'):
+            placed = gallery.by_id[item_id]['manuscript_placement']
+            self.assertEqual((placed['page'], placed['label']), (v5[item_id]['page'], v5[item_id]['label']))
+            self.assertFalse(gallery.by_id[item_id]['curation_priority'])
         self.assertFalse(gallery.by_id['acceptance-p2-three-plans']['curation_priority'])
         self.assertFalse(gallery.by_id['acceptance-p2-local-cut']['curation_priority'])
         self.assertFalse(gallery.by_id['acceptance-p3-forest-decision']['curation_priority'])
@@ -65,6 +70,9 @@ class ReviewContractTest(unittest.TestCase):
     def test_checkpoint_registry_keeps_new_freeze_separate_from_review_baseline(self):
         registry = json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text())
         by_id = {item['id']: item for item in registry['checkpoints']}
+        self.assertEqual(registry['latest_known_checkpoint'], 'v5')
+        self.assertEqual(by_id['v5']['kind'], 'frozen_local_checkpoint_pending_publication')
+        self.assertNotIn('public_pdf_url', by_id['v5'])
         self.assertEqual(by_id[registry['acceptance_baseline']]['pdf_sha256'],
                          json.loads((ROOT / 'docs/paper-acceptance/catalogue.json').read_text())['paper_sha256'])
         self.assertNotEqual(by_id[registry['latest_known_checkpoint']]['pdf_sha256'],

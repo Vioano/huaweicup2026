@@ -1,11 +1,30 @@
 {
   "schema": "paper-checkpoint-status-v1",
   "acceptance_baseline": "CP01",
-  "latest_known_checkpoint": "v4",
-  "current_iteration": "v4",
+  "latest_known_checkpoint": "v5",
+  "current_iteration": "v5",
   "next_iterations": [],
-  "iteration_note": "CP01至CP06归属第一轮v1；v2、v3、v4固定PDF均已由总调度发布到组织主库和镜像，Draft PR #222仍待整合。v4仅优化摘要；旧批注仍按原PDF身份定位，不自动迁移审阅结论。下一版v5拟整合四张图，固定PDF未交。",
+  "iteration_note": "CP01至CP06归属第一轮v1；v2、v3、v4固定PDF已由总调度发布。v5本机PDF已冻结并按SHA-256核对，四张新增图实际入稿；组织主库固定提交仍待发布。旧批注按原PDF身份定位，不自动迁移审阅结论。",
   "checkpoints": [
+    {
+      "id": "v5",
+      "iteration": "v5",
+      "kind": "frozen_local_checkpoint_pending_publication",
+      "summary": "92页本机冻结稿已按SHA-256核对；新增四张图已目视核对实际页码与图注。它们是供用户批注的暂定选图，不代表Fang最终选版、科学验收或人工接受；组织主库固定提交待发布。",
+      "pdf_path": "paper/manuscript-v1/checkpoints/v5/anonymous-paper-v5.pdf",
+      "pdf_sha256": "c2543e13146b5c75dc8e2103e983c07c5db746b8e98129fff40f2721f1d29233",
+      "pages": 92,
+      "source_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+      "git_state": "本机PDF已冻结；组织主库固定提交与公开链接待总调度发布",
+      "acceptance_state": "四张新图实际入稿供人工批注；Fang选版及科学、语言、最终人工验收未完成",
+      "figures_checked": [
+        {"page": 18, "label": "图4.2-1", "gallery_id": "fang-fig42-a", "role": "沿用用户选定A版"},
+        {"page": 28, "label": "图5.1-1", "gallery_id": "farmer-fig52-v2", "role": "张量生命周期排版导出版"},
+        {"page": 33, "label": "图5.4-1", "gallery_id": "acceptance-p2-local-cut", "role": "局部最小割候选"},
+        {"page": 35, "label": "图5.5-1", "gallery_id": "acceptance-p2-three-plans", "role": "三方案候选"},
+        {"page": 47, "label": "图6.7-1", "gallery_id": "acceptance-p3-forest-decision", "role": "树状分支决策候选"}
+      ]
+    },
     {
       "id": "v4",
       "iteration": "v4",
