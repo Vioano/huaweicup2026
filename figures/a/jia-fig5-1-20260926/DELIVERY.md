@@ -1,34 +1,32 @@
-# 图 5-1 交付包｜P2 张量通信优化技术路线（v2）
+# 图 5-1 交付包｜P2 张量通信优化技术路线（v3）
 
-- 图号：5-1　版本：v2（2026-09-26，按首轮返工单 F51-R01～R06（#14 评论 5844340834）修订；v1=3992a4e96 保留于 git 历史）
-- 主责：甲（farmeruncle123）　输入数据约束：仅仓库固定提交（P2 初稿@615b1a5f、主算法源码@c66559a6），无外部数据；0 新实验
+- 图号：5-1　版本：v3（2026-09-26，按二轮返工单剩余项（#14 评论 5844497669，沿用 F51 编号）修订；v1=3992a4e96、v2=e3e8d3627 保留于 git 历史）
+- 主责：甲（farmeruncle123）　输入数据约束：仅仓库固定提交，无外部数据；0 新实验
 
-## 本版（v2）逐条修订
+## 本版（v3）逐条修订（R01 已关闭不再列）
 
-1. **F51-R01 来源登记**：audit.sources 全部改为纯仓库路径 + 完整 40 位 commit（paper/sections/a-q2.md、a-q2-evidence.md @615b1a5f7913a97fff8924cfec9936d3d303c6fc；算法源 @c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f），章节说明移入 note；**新增 adaptive_budget.py / adaptive_semantic.py 实际字节**（R03 依赖）。
-2. **F51-R02 节点表**：nodes.csv 增加非空 module 列（真实模块/文档依据）；stage 按派发模板：route→structure、gap→gap、hyper→hypergap、retime→fixed_assignment_reorder、dedup→deduplicate、score→full_score、plan→final_plan；其余节点用对应语义 stage；audit.table_columns 同步。表与 drawio 元素一一对应，边端点全部存在。
-3. **F51-R03 结构初解/侧栏**：删除通配符"未接入"清单——route 节点按真实调用链标注 tree_frontier→tree_paired_leaves、vector_lanes/vector_arrival、component_envelope/adaptive_frontier（allow_component_split=False）；侧栏 res 改为概括表述"未接入本入口的容量保护/就绪匹配等研究"。活跃核选择改为**共享输入条件分支**（br_shared 菱形：是→cores 式 5-7；否→直接汇合 Π₀）；条件向量修复写入 route 节点文字（"切开大向量张量时 vector_arrival 通路修复（条件分支）"）。已核 adaptive_budget.py:2-20（wave_route/component_route）、adaptive_semantic.py:17-88（tree/vector 调用）。
-4. **F51-R04 失败回退**：新增 score→plan 独立分支"异常/未知：记录 unknown 并退回 Π₀"（入口 :85–100 实测：except 分支 return baseline）；成功路径 score→select→plan 仅在"全部评分有效"时走。三类去向（gap 不支持→Π₀；hyper/retime 不支持→保留已有候选；异常→记录并退回 Π₀）在 note53 节点与图注可唯一读出。
-5. **F51-R05 实际视觉**：三条问题边标签改短（"是"/"否"）并移入留白走廊，详细条件入 nodes.csv 边注与图注；e12/e13b 交叉消除（换锚点）；s1×s2 存在一处线交叉（无文字压盖，已记录）。**新增真实模板编译页面预览** fig5-1-page-preview-template2026.pdf/.png：template-2026（gmcm2026.cls@e82c2009）XeLaTeX 实编译，插入宽 144mm（正文 87%）、图高 211.2mm + 三行图注 ≈ 228mm ≤ 正文高 248.5mm，编译日志无 "Float too large"、pdfinfo Pages=1、pdftotext 实测图号「图 5.1」；caption.md 精简为页面预览所用版本（详细说明保留 DELIVERY）。
-6. **F51-R06 可复现命令**：audit.command 全部为实际执行过的合法命令——路径字符串加引号（Image.open('…')/save('…')），无观察结果混入；执行结果（退出码 0、validate 0 error、输出尺寸）移入 self-check 与 audit.insert_width_check；工具版本在 command 尾注。
+1. **F51-R02 残项（module 源码对应）**：score.module 改为「guarded_component._score（oracle 由 adaptive_guarded.score_adapter/native_e2 提供）」（主入口 :11 实际 from .guarded_component import _score）；plan.module 改为「adaptive_hypergap_guarded 输出、adaptive_guarded.main 写 plan」，删除 P1 串入的 "unified"；hyper.module 改为「gap_hyperrefine.refine（调用 hypergraph_cost / binary_hypercut）」。
+2. **F51-R03 初解调用顺序**：route 改为单个编号大框，严格按 adaptive_semantic.build :43–84 的调用顺序：① 词资源识别成功 → resource_word（立即返回）；② 否则归约树守卫成功 → tree_paired_leaves（立即返回）；③ 否则一般路由：分量数 ≥k → component_route（adaptive_frontier；仅共享外部输入超容量时尝试波次：active_core_wave 式(5-7) 最少核，不支持退 shared_input_wave，波次整体不支持回 component_envelope），分量数 <k → DAG 最早完成；④ 一般方案完成后条件向量修复（vector_lanes 识别且大张量跨核 → vector_arrival）。①② 成功不再流经 ③；br_shared/cores 菱形移除、内容并入 ③ 文字；恢复 resource_word；allow_component_split=False 保留。主图/caption/nodes/edges 四处一致。
+3. **F51-R04 构造异常**：note53 异常一项改为「构造意外异常、字节证据非法或评分异常 → 记录 unknown 并退回 Π₀（入口 :27–100）」；保留 UnsupportedStructure 区别（gap 不支持→Π₀；hyper/retime 不支持→保留已有候选）。
+4. **F51-R05 视觉**：score/select 间距增至 24px，e13「全部评分有效」不再压 select 首行；e13b 标签改短「异常」置于左缘留白（完整可见，不裁切），详细释义在 note53；s1×s2 纯线交叉维持已记录口径。页面预览重编译：图号「图 5.1」（pdftotext 实测）、TeX 图注改用数学模式（Pi_0 / Pi_gap / Pi_hypergap），pdftotext 无 U+FFFF 方框/缺字；实际图注 4 行（如实记录，不强行压行）；插入宽 148mm、图高 214.8mm，Pages=1、无超页。
+5. **F51-R06 命令/算术**：xelatex 命令去掉中文括号说明，补齐真实步骤（git archive 锁定模板完整 commit e82c2009… → 复制 page-preview-main.tex 为 main.tex → 编译 → 拷回 PDF/PNG）；字号算术按审阅公式纠正并如实记录：10px 在 711px 宽、165mm 下约 6.58pt，144mm 下约 5.66pt（v2 误写 5.90，系口径混用，已更正）。
 
 ## 文件清单
 
 | 文件 | 角色 | 说明 |
 |---|---|---|
-| fig5-1-p2-tensor-comm-route.svg/.png/.drawio | 主图 | viewBox 实际 732×1074 |
-| fig5-1-page-preview-template2026.pdf/.png + page-preview-main.tex | 真实页面预览 | 144mm 插入 + 图 5.1 三行图注，单页无超页 |
-| nodes.csv / edges.csv | 绘图输入 | 20 节点（id/stage/module/note）/ 22 边 |
-| caption.md | 图注 | 页面预览所用三行版 |
+| fig5-1-p2-tensor-comm-route.svg/.png/.drawio | 主图 | viewBox 实际 711×1032 |
+| fig5-1-page-preview-template2026.pdf/.png + page-preview-main.tex | 真实页面预览 | 148mm 插入 + 图 5.1 图注，单页无超页 |
+| nodes.csv / edges.csv | 绘图输入 | 17 节点（id/stage/module/note）/ 19 边 |
+| caption.md | 图注 | 页面预览所用版本 |
 | preview-insert-width.png | 物理宽度预览 | 1500px |
-| self-check.md / audit.json | 记录 | v2 |
+| self-check.md / audit.json | 记录 | v3 |
 
-## 已通过的检查（v2）
+## 已通过的检查（v3）
 
-- validate.py 0 error（34 warnings：容器/菱形提示；仅剩 s1×s2 一处线交叉，无文字压盖）。
-- 1500px 插入宽度目检：边标签不压字、不被裁切、箭头端点明确；三类去向可唯一读出。
-- 主图/caption/nodes/edges 三处口径一致；实际调用模块不再声称未接入。
-- pdftotext「图 5.1」、Pages=1、无超页。
+- validate.py 0 error；2 处纯线交叉（s1×s2、e12×s1）无文字/标签压盖，已记录。
+- 1500px 插入宽度目检：①②③④ 全部可见无裁切；三类去向+唯一计划路径可唯一读出；边标签不压框内正文。
+- pdftotext「图 5.1」、无 U+FFFF、Pages=1、无超页。
 
 ## 未完成项
 
