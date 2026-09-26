@@ -2,13 +2,13 @@
   {
     "id": "website-maintenance-20260926",
     "items": [],
-    "title": "当前分工：网站维护与写作监督",
-    "owner": "验收台维护者 / 原写作任务 / Antigravity",
+    "title": "当前分工：网站与绘图协调、论文组织、Antigravity正文",
+    "owner": "验收台维护者 / 当前论文组织任务 / Antigravity",
     "state": "current",
-    "acknowledgement": "用户已明确：本任务专注网站和Agent接口；原写作任务不再写正文，负责监督Antigravity严格执行已标注标准。",
-    "expected": "监督方交回固定改文、逐项处理及审核记录，网站负责同步展示",
+    "acknowledgement": "用户已明确：验收台专注网站、接收队友图件并负责具体绘图需求的分派或制作；当前论文组织任务根据论证提出缺图需求、监督Antigravity、组织LaTeX和PDF；Antigravity负责核心正文。",
+    "expected": "论文组织任务交来有边界的缺图需求、固定新稿、逐项处理及审核记录；验收台回交候选图和来源/版本/审核状态",
     "delivery": null,
-    "review": "本台不再主动派新标注；已完成审阅保留，交付与通过分开。"
+    "review": "本台不再主动派新论文标注；收到实际绘图需求再安排，不把图件交付或网页展示当作入稿和科学通过。"
   },
   {
     "id": "language-20260926",
@@ -185,8 +185,8 @@
       "F02"
     ],
     "title": "队友图件画廊与暂定图号对齐",
-    "owner": "整理论文写作规划与图件现状 / Antigravity监督",
-    "state": "acknowledged_pending_read_and_review",
+    "owner": "整理论文写作规划与图件现状 / 原图件规划历史",
+    "state": "historical",
     "acknowledgement": "整稿任务直接回复已收到b0dac8256图件清单与PR221增量；明确只确认收到，尚未逐图审核，不把22幅逻辑图／39个PNG视作已验收；后续按实际章节核定编号并记录选版，实际阅读清单后再补回执。",
     "expected": "监督Antigravity按实际章节和图序确定最终编号，核对每图算法版本、数据、语言、图注和版面；将选版与真实审核回执回传验收台。",
     "delivery": {
@@ -195,8 +195,24 @@
       "pr_url": "https://github.com/huaweibei123/huaweicup2026/pull/221",
       "state": "39_fixed_image_sources_registered"
     },
-    "review": "验收台已逐一校验39个固定来源图像；写作监督任务尚未逐图科学与论文适配审核；画廊暂定图号不代表论文最终编号。",
+    "review": "验收台已逐一校验39个固定来源图像；原任务只确认收到，未逐图科学审核。后续选版与图号由当前论文组织任务负责；画廊暂定图号不代表论文最终编号。",
     "source_thread_id": "01a0da35-aa09-79c1-a2bc-058c06c60435",
     "pending_protocol_version": "2026-09-26.4"
+  },
+  {
+    "id": "current-figure-dispatch-20260926",
+    "items": ["F01", "F02"],
+    "title": "缺图由论文组织任务定义，验收台接收并协调绘制",
+    "owner": "排查并继续 Antigravity 论文工作 / 论文验收台",
+    "source_thread_id": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+    "state": "sent",
+    "acknowledgement": null,
+    "expected": "论文组织任务按论证目的、图中对象关系、章节、固定算法/数据版本、优先级和可编辑来源提出缺图需求；验收台分派或制作并回交候选及未核事项，由论文组织任务选版、入稿和回报实际位置",
+    "delivery": {
+      "path": "docs/paper-acceptance/team-figures.json",
+      "state": "39_fixed_image_sources_registered"
+    },
+    "review": "分工已通过任务消息送达；当前论文组织任务已提出FIG-P1-834-FLOW和FIG-P1-026-LABELS具体需求。用户要求Fang选优或重画版优先展示；通知、接手、入稿和科学通过分别记录。",
+    "request_file": "docs/paper-acceptance/figure-requests.json"
   }
 ]

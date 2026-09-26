@@ -1,0 +1,56 @@
+{
+  "schema": "paper-figure-requests-v1",
+  "policy": "论文组织任务定义缺图需求；验收台接收、分派或制作；Fang明确选优或重画的版本优先展示；固定算法/数据适配、实际入稿和科学验收分别判断。通知送达不等于接手。",
+  "requests": [
+    {
+      "id": "FIG-P1-834-FLOW",
+      "title": "问题一现行算法的方案构造与评价流程",
+      "priority": "P0",
+      "chapter_candidate": "第四章，最终图号待合稿确认",
+      "state": "制作候选中；Fang选优或重画待接手",
+      "defined_by_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+      "algorithm_commit": "834d8c957538ee069c66aadac9509552a4cc69d7",
+      "purpose": "说明现行方法如何依据结构产生有限的完整候选、何时调用在线E1、如何保留或替换方案；不把它画成对任意方案盲目搜索。",
+      "required_content": [
+        "六类基础候选及后续受限链分组、局部顺序、分叉援助的真实调用次序与适用条件，均按固定源码核实。",
+        "分叉援助一次产生至多一个完整候选；可批量将多个X导出到满足条件的helper。Y及J留在原donor；helper在同波次已有独立Task，不能同时充当donor。",
+        "分别注明各阶段在线E1调用限制及总账上限10；候选重复、结构不支持、构造或评分失败时的真实去向。",
+        "按官方Makespan周期数和计划COPY字节数的有序数对严格比较；在线E1与最终独立E0分开。"
+      ],
+      "source_refs": [
+        "src/q1/unified.py",
+        "src/q1/structural_refine.py",
+        "src/q1/branch_refine.py",
+        "src/q1/branch_aid.py"
+      ],
+      "preferred_route": "Fang工作台从队友现图选优并按834d更新，或亲自重画；验收台独立可编辑候选仅供比较",
+      "delivery": "SVG和PNG、可编辑Draw.io或绘图脚本、图注、固定来源与模块对应、实际纸面宽度检查",
+      "scientific_review": "待论文组织任务按固定源码复核",
+      "adoption": "未入稿",
+      "dispatch_url": null
+    },
+    {
+      "id": "FIG-P1-026-LABELS",
+      "title": "case_026五核心实例图的X、Y符号映射",
+      "priority": "P1",
+      "chapter_candidate": "第四章，沿原实例图位置",
+      "state": "已定位错误；修图待接手",
+      "defined_by_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+      "algorithm_commit": "834d8c957538ee069c66aadac9509552a4cc69d7",
+      "source_figure_commit": "6ee1684675e92b65ddea96a5bb2b6dacefefafef",
+      "source_figure_path": "paper/manuscript-v1/figures/fig-p1-cuts-zh.png",
+      "source_figure_sha256": "ce7f192887ec4860ff4767b7322907c36605465f34c81975d67e5ed52a8f9c3f",
+      "purpose": "让实例图中X/Y/J标记与现行源码的实际导出关系一致。",
+      "required_content": [
+        "保留经固定案例证据核对的节点分组、核心归属、拓扑及全方案数值，不重跑或臆改实验。",
+        "原图把X标在Core 0保留部分、Y标在Core 1导出部分；按现行源码应把X标在导出的sg6/Core 1，把Y标在原核心sg0/Core 0，J仍为sg5/Core 0。",
+        "图注说明符号和原方案/新方案的对应关系；核对另一张实际事件时间线使用相同版本和编号。"
+      ],
+      "preferred_route": "先由Fang核对并选择更新版或重画版",
+      "delivery": "修正后的图像与可编辑来源、前后符号对照、固定案例来源和未核项",
+      "scientific_review": "节点与数值经论文组织任务核对；标签修正待独立检查",
+      "adoption": "旧图不可直接用于新算法说明",
+      "dispatch_url": null
+    }
+  ]
+}
