@@ -21,17 +21,17 @@
     {
       "name": "caption.md",
       "role": "caption",
-      "sha256": "df7b691c04ca25071cf312a27ca3e0f50a6354e8cc2c7adc59ba2d7df3fbffa3"
+      "sha256": "925cc502e066a218a789363a6ce220d156a2fa9cde662233954be3babfe9ca99"
     },
     {
       "name": "DELIVERY.md",
       "role": "notes",
-      "sha256": "ed717d290e1f528078a05165d283419301aca1b4027b4afc780ab3ac22b8d32c"
+      "sha256": "9d416ca14b4d18355489f56dff1793d075ec1ff5bbf061f75d0f7ed7cf1a8da2"
     },
     {
       "name": "self-check.md",
       "role": "self_check",
-      "sha256": "2b5280f7897f8eb4d2dac8a6ee327748f4cd14aa587f5b4ec568e8fbfda94cd4"
+      "sha256": "3f8e3e4b05f403063a11ce628dd7dd58c21c9b4f0be39b8d4342ddc8305280fa"
     },
     {
       "name": "nodes.csv",
@@ -46,7 +46,22 @@
     {
       "name": "preview-insert-width.png",
       "role": "notes",
-      "sha256": "41b0e16e5772ba905e29b2cfa97a384732b866236f62304e88a1c125c53cc717"
+      "sha256": "618a0af966f7bb7b96d7d24b859712ee458fc274152e52a0d7ea8d1837e0de81"
+    },
+    {
+      "name": "fig4-2-page-preview-template2026.pdf",
+      "role": "page_preview",
+      "sha256": "c2d82d6664500d74f9f29821c76311b51e7de2e7492f229d96f766a0d460ae98"
+    },
+    {
+      "name": "fig4-2-page-preview-template2026.png",
+      "role": "page_preview",
+      "sha256": "5fcc88f1c351a665a92ef2cfb3139a14e1ff8e64817db962c1ddcde30ae6e2c3"
+    },
+    {
+      "name": "page-preview-main.tex",
+      "role": "page_preview",
+      "sha256": "dffa68089473a0342f0825f1622417c203190e53383f29798ef8d9e16b281e04"
     }
   ],
   "command": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f svg -o figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.svg figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.drawio\n\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f png -s 2 -o figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.png figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.drawio\n.venv/Scripts/python.exe -c \"from PIL import Image; im=Image.open('figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.png'); im.resize((1500,int(im.height*1500/im.width)), Image.LANCZOS).save('figures/a/jia-fig4-2-20260926/preview-insert-width.png')\"\n.venv/Scripts/python.exe F:/WorkBuddyData/skills/drawio-skill/scripts/validate.py figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.drawio\ntool_versions: draw.io desktop (F:/draw.io); Python 3.13.12 (.venv, Pillow); drawio-skill validate.py v3.4.0",
@@ -120,9 +135,10 @@
     "width_mm": 165,
     "height_mm": 240.2,
     "min_font_pt": 6.46,
-    "main_font_pt": "6.7-7.3",
+    "main_font_pt": "7.1-7.8",
     "preview": "preview-insert-width.png",
-    "note": "按 template-2026 正文宽 165mm（origin/main@e82c2009 gmcm2026.cls，正文高 248.5mm）；以实际导出 viewBox 计算并经物理宽度预览目检可读"
+    "page_preview": "fig4-2-page-preview-template2026.pdf/.png（template-2026 XeLaTeX 实编译，插入宽 152mm、图高 221.3mm + 两行图注 ≈234mm ≤ 248.5mm，无超页警告，页内最小字约 5.95pt）",
+    "note": "按 template-2026 正文宽 165mm；等比缩放+精简图注为意见允许口径；编译源 page-preview-main.tex 随包"
   },
-  "version_note": "v6（最终）：标题带独立（上/下层标题不再被节点框遮挡）；candBox 出口锚点移至底边空白、连线经空隙不穿标题；4-2 压缩纵向间距使 165mm 宽下高 235.7→233.3mm 内可容纳；边缘裁切边标签移除；哈希按最终字节重算"
+  "version_note": "v7：按工作台 5843410556——新增 template-2026 真实页面预览（XeLaTeX 实编译，152mm 插入+最终两行图注，无超页，PDF+PNG+编译源随包）；caption.md 精简为最终两行版；self-check 对齐 v7（6.46pt@165mm）；主图与 v6 字节相同未改；哈希按最终字节一次性重算（含 page preview 三文件）"
 }

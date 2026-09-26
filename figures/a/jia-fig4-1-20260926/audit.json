@@ -6,17 +6,17 @@
     {
       "name": "fig4-1-p1-two-layer-flow.svg",
       "role": "svg",
-      "sha256": "31e9e4684baa085839f0633a1256de019933086f75800b0cddc8c465141eb7d8"
+      "sha256": "bceeb793cc75c54cdfa6dc2745d4f7a015ceeec901955437756032f780be214a"
     },
     {
       "name": "fig4-1-p1-two-layer-flow.png",
       "role": "png",
-      "sha256": "36ce23c4830261cad7c5673b9938c04ab789dfbde3da008b918b7ab57efa324b"
+      "sha256": "9c400baec09f9ebfa6eafe03cb3abcf897d81e6191d57b43a150bfc3f9fbe4bd"
     },
     {
       "name": "fig4-1-p1-two-layer-flow.drawio",
       "role": "source",
-      "sha256": "7aa73afb265030043048546d8c78adc82482b0cda3f77fe9c0a927aa4e073b1f"
+      "sha256": "60ddcf35f5b06e174cabfd8b2fd123fbe4b7218d4f08ca92c2d320d26b3dee73"
     },
     {
       "name": "caption.md",
@@ -24,9 +24,14 @@
       "sha256": "3dfb85756a86c550c2511f4bf9b00e1a07662b697eb74f951ef02ea54327229c"
     },
     {
+      "name": "DELIVERY.md",
+      "role": "notes",
+      "sha256": "7c12c31eadc888cdb17e38afda7f92a40460dae798966498de30b7dec5dda020"
+    },
+    {
       "name": "self-check.md",
       "role": "self_check",
-      "sha256": "82e08e858195e8d5eb8e59e8fb0b53014fbd12df4bbed47b011d77499eb6f34a"
+      "sha256": "7451909eff162b31595554f05d5592fa3c20777e41094fa81cf05530e969a51d"
     },
     {
       "name": "nodes.csv",
@@ -41,12 +46,7 @@
     {
       "name": "preview-insert-width.png",
       "role": "notes",
-      "sha256": "9b74d8e0a8eb63eaea741d58643647abc677e52a220f0f73337c63a3ec64e777"
-    },
-    {
-      "name": "DELIVERY.md",
-      "role": "notes",
-      "sha256": "7f98877834fcfd8e4277cec2aaeb7187d7508f95bd6b93879d3eb82912f71ae9"
+      "sha256": "fd649082813e1295c67ae6fa5e98c3cfddf88fca332f995129e175ae11dea4c0"
     }
   ],
   "command": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f svg -o figures/a/jia-fig4-1-20260926/fig4-1-p1-two-layer-flow.svg figures/a/jia-fig4-1-20260926/fig4-1-p1-two-layer-flow.drawio\n\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f png -s 2 -o figures/a/jia-fig4-1-20260926/fig4-1-p1-two-layer-flow.png figures/a/jia-fig4-1-20260926/fig4-1-p1-two-layer-flow.drawio\n.venv/Scripts/python.exe F:/WorkBuddyData/skills/drawio-skill/scripts/validate.py figures/a/jia-fig4-1-20260926/fig4-1-p1-two-layer-flow.drawio\n.venv/Scripts/python.exe -c \"from PIL import Image; im=Image.open(chr(39)+\"\"figures/a/jia-fig4-1-20260926/fig4-1-p1-two-layer-flow.png\"\"+chr(39)); im.resize((1600,int(im.height*1600/im.width)), Image.LANCZOS).save(chr(39)+\"\"figures/a/jia-fig4-1-20260926/preview-insert-width.png\"\"+chr(39))\"\ntool_versions: draw.io desktop (F:/draw.io); Python 3.13.12 (.venv, Pillow); drawio-skill validate.py v3.4.0",
@@ -134,5 +134,14 @@
     "https://github.com/huaweibei123/huaweicup2026/issues/14#issuecomment-5837226124",
     "https://github.com/huaweibei123/huaweicup2026/issues/14#issuecomment-5837354904"
   ],
-  "version_note": "v6（最终）：标题带独立（上/下层标题不再被节点框遮挡）；candBox 出口锚点移至底边空白、连线经空隙不穿标题；4-2 压缩纵向间距使 165mm 宽下高 235.7→233.3mm 内可容纳；边缘裁切边标签移除；哈希按最终字节重算"
+  "version_note": "v7：按工作台 5843410014 四项——f3 出口实际改底边（exitY=1）走行间空隙；下层标题带加高（节点下移16px/容器268px）脱离 steps 顶边；f6b 改 E1 右中出经 x=710 绕诊断框外缘；DELIVERY.md 全量重写为 v7、self-check 正文对齐真实状态；实际 viewBox 710x689；哈希按最终字节一次性重算",
+  "insert_width_check": {
+    "viewbox": "710x689",
+    "width_mm": 165,
+    "height_mm": 160.0,
+    "min_font_pt": 6.65,
+    "main_font_pt": "7.3-8.0",
+    "preview": "preview-insert-width.png",
+    "note": "按 template-2026 正文宽 165mm（origin/main@e82c2009 gmcm2026.cls，正文高 248.5mm）；实际导出 viewBox 710x689；物理宽度预览目检可读"
+  }
 }

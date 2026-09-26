@@ -1,74 +1,40 @@
-# 图 4-1 交付包｜P1 两层决策与官方评价流程（v3 返工版）
+# 图 4-1 交付包｜P1 两层决策与官方评价流程（v7）
 
-- 图号：4-1　版本：v3（2026-09-26，按 #14 评论 5837226124 / 5837354904（工作台 Agent 验收意见）返工）
-- 主责：甲　输入数据约束：仅 GitHub 仓库固定来源，无外部数据
-- 历次修改稿保留：v1/v4（提交 879c3dc3、01425aa3）、v3（ddd9c2425）、上一版（be49466c1）均未被覆盖；本版为新提交，以完整 SHA 为准
+- 图号：4-1　版本：v7（2026-09-26，按工作台 #14 评论 5843410014 的四项意见返工；历次稿 v1=879c3dc3、补件=01425aa3、v3=ddd9c242、夜班=be49466c1/a2502108、v4=c44e4d40、v5=dc13fac2a、v6=2a03d2972/9749a0963 均保留于 git 历史）
+- 主责：甲　输入数据约束：仅 GitHub 仓库固定来源（P1 初稿@67c0f603、v4@a0537aeb、官方评估器冻结原件），无外部数据
 
-## 文件
+## 本版（v7）图面修订——逐条对应 5843410014
 
-| 文件 | 说明 |
-|---|---|
-| `fig4-1-p1-two-layer-flow.drawio` | 可编辑源（draw.io；本版修复了旧源第 46 行多余 `</mxCell>` 的 XML 缺陷，并按返工意见改图） |
-| `fig4-1-p1-two-layer-flow.svg` | 矢量成图（由修复后源重新导出） |
-| `fig4-1-p1-two-layer-flow.png` | PNG 预览（scale=2，由修复后源重新导出） |
-| `fig4-1-preview-insert-146mm.png` | 论文插入宽度预览（等效 A4 `\textwidth`=146.6 mm @300dpi，宽 1734 px） |
-| `caption.md` | 图注 |
-| `self-check.md` | 自查记录（v3，逐项对照工作台 Agent 验收意见） |
-| `nodes.csv` | 逐节点映射（id 与 drawio XML ID 一致；stage 列为单值标准标记，另设 7 行带唯一 ID 的语义子项行覆盖 partition/assignment/task_order/node_to_subgraph/core_schedules） |
-| `edges.csv` | 逐边清单（与图中实际连线一一对应，含分支标签） |
-| `audit.json` | 自动核验清单（随包文件登记，不含 audit.json 自身 + 真实 SHA256 + 40 位固定提交来源） |
+1. **candBox→dedup 连线（意见 1）**：f3 出口锚点由顶边（exitX=0.5;exitY=0）实际改为**底边**（exitX=0.5;exitY=1），折点走 candBox 底边（y=224）与 dedup 顶边（y=234）之间的空隙（y=229），不再从候选框顶端纵穿"六类候选构造"标题与框内部。
+2. **下层标题带（意见 2）**：下层标题（"下层｜官方评价 — 冻结评估器 multicore_cut_evaluate_problem_1.py（提交者不可修改）"）独立留白带加高——read/copy/steps/sim 及两个评价出口整体下移 16px，layerBottom 容器加高至 268px，标题下沿与 steps 顶边（现 y=430）脱离接触；实际 viewBox 710×689（draw.io CLI 导出，含边缘），按 165mm 宽插入高 160.0mm。
+3. **E1→方案折线（意见 3）**：f6b 改由 E1 右边中点出（exitX=1;exitY=0.5），经 x=710（诊断框右缘之外）下行至 y=344 再入方案文件顶边（entryX=0.7），**绕诊断框外缘**，不穿"--diagnostics"文字；诊断虚线（single→diag）与方案实线可辨。
+4. **交付记录（意见 4）**：DELIVERY.md 本版全量重写（此前停留在 v3 字节，SHA256 7f988778… 已作废）；self-check.md 重写为 v7，正文与本版真实状态一致；来源对应表见 audit.json.sources（真实 40 位 commit + 64 位 SHA256）。所有"无穿字/无遮挡"结论均以本轮重导出 PNG/SVG 目检为准。
 
-## 图注
+## 文件清单
 
-见 `caption.md`（v4 补件版已含单候选直达、`--diagnostics` 旁路表述，本版未改动文字内容）。
-
-## 流程节点 ↔ 源码模块对应表（v3：id 与 drawio XML ID 统一）
-
-| 图中节点（XML ID） | 源码模块 | 提交/位置 |
+| 文件 | 角色 | 说明 |
 |---|---|---|
-| 结构特征识别（identify） | `unified.py`（依赖提取 + 结构识别） | a0537aeb `src/q1/unified.py` |
-| 六类候选构造（candBox，子节点 c1~c6） | `generate_candidates`：bounded / heavy-or-sink / overload / shared-input / capacity-return / fork-frontier；**覆盖/依赖合法性检查发生在各构造器内部严格识别器**（如 capacity-return 的 strict-private-chain-check），不在 plan_bytes | 同上 |
-| 构造失败语义 | `unified.py add`：可选候选失败跳过；必需 bounded 候选失败（required=True）直接 raise 终止 | 同上 |
-| 字节去重（add() 内） | `plan_bytes`（JSON 序列化实际输出字节）+ SHA-256，重复只保留首个；仅字节去重，不做合法性检查 | 同上 |
-| 单/多候选分支 | `solve`：去重后 `len(candidates)==1` → `choose(candidates, None)` 直接选定（single-distinct-plan），**不启动在线 E1**；多候选才构造 `P1BatchEvaluator` | 同上 |
-| 在线选优（E1，仅多候选路径） | `src.eval_exact.P1BatchEvaluator`（1 worker / 16 MiB / 60 s / 启动 10 s），按 (Makespan, scheduled COPY bytes) 择优，首个评分失败即停 | 同上 |
-| 官方方案文件（严格两字段） | `main --output`：仅 `node_to_subgraph` + `core_schedules` | 同上 |
-| 诊断记录旁路 | `main --diagnostics`：独立 JSON，不属官方方案 JSON，不进官方评估器 | 同上 |
-| 边界 COPY 重建 → Step1/2/3 → 事件模拟 | 官方评估器 `multicore_cut_evaluate_problem_1.py` + `schedule_step1.py` / `schedule_step2.py` / `schedule_step3.py` | 冻结 `data/raw/a/official/code/` @ a0537aeb |
+| `fig4-1-p1-two-layer-flow.svg` | 主图 SVG | draw.io CLI 导出（--disable-gpu --no-sandbox） |
+| `fig4-1-p1-two-layer-flow.png` | 主图 PNG | scale=2 |
+| `fig4-1-p1-two-layer-flow.drawio` | 可编辑源 | 本版图面（v7） |
+| `caption.md` | 图注 | 完整长图注（含源码模块对应说明），论文中放图注或正文 |
+| `nodes.csv` / `edges.csv` | 绘图输入 | 逐节点/逐边清单（stage 用 required_stages 标准标记） |
+| `preview-insert-width.png` | 物理宽度预览 | 1600px 宽插入观感目检 |
+| `self-check.md` | 自查 | v7，与本版一致 |
+| `audit.json` | 机检清单 | figure-auto-review-v1，哈希按最终字节重算 |
+| `*.modern.*` | 美化变体 | 不进入本轮验收 |
 
-## 输入数据版本（含真实哈希）
+## 图注（要点，全文见 caption.md）
 
-| 来源 | 固定提交 | SHA-256 |
-|---|---|---|
-| `src/q1/unified.py`（v4 统一入口） | a0537aeb72dc702af86d67d3194587d581ac207c | 3c571f6c9c0ef2a956268abf9129d557f2d087e783b4e621c2917279fa13e985 |
-| `paper/sections/P1-问题一论文初稿.md`（章节定位见 note：4.1、4.4.1~4.4.4） | 67c0f603960fddf86416d23ca3e85e53561c3c3a | 10d0dc195e138c42f7507ca12c8619ebdf46c4df54ca38b31fe353fc886ef8ef |
-| `data/raw/a/official/code/multicore_cut_evaluate_problem_1.py` | a0537aeb72dc702af86d67d3194587d581ac207c | 2095f188a6c24ce3899f156bef21d50dcd87cbd9368488046b1e77e2bf91af3f |
-| `data/raw/a/official/code/schedule_step1.py` | 同上 | d8fe721ff3dbe036e34a20c00cce6430960860000a49eb467e63465f76b84034 |
-| `data/raw/a/official/code/schedule_step2.py` | 同上 | 2836baac176f4e0bdd9eec59b8d9ce254e209e5f7a251e23837ab684312fa0c3 |
-| `data/raw/a/official/code/schedule_step3.py` | 同上 | 50053db0436f1d166dd75436693ba3af49b5c339576beb6e7299477f6b69fc7a |
-| `data/raw/a/official/data/config.txt`（Θ：DDR 60 B/cycle；L1 524288 B、UB 131072 B；门控 100/1000 cycles） | 同上 | dcd10de54b23f8366428fb24e828812b1da9549e6eae4a3c3f38604fe5ae77b9 |
+上层 v4 统一入口（unified.py@a0537aeb）：结构识别 → 六类候选构造（覆盖/依赖检查在各构造器内；可选候选失败跳过、必需 bounded 失败终止）→ plan_bytes 输出字节 SHA-256 去重 →（单候选直接选定｜多候选固定 E1 在线选优）→ 官方方案文件（严格仅 node_to_subgraph、core_schedules 两字段）；诊断记录 --diagnostics 自留不提交。下层冻结官方评估器：边界 COPY 重建 → Step1/2/3 → 多核事件模拟 → Makespan（cycles）与额外 DDR（B）。E1（在线，计入求解计时）与 E0（独立复评）分开表示。提交者仅决定切图、分核、每核 Task 顺序三项。
 
-哈希口径：`git show <commit>:<path>` 的原始字节（与 GitHub 固定 blob 一致），非工作区检出字节。
+## 已通过的检查（v7，本轮重导出后目检）
 
-## 生成与校验命令
+- f3 不穿"六类候选构造"标题；下层标题与节点框无接触；f6b 绕诊断框外缘、诊断文字完整可读。
+- 1600px 插入宽度预览逐项目检：无穿字、无遮挡、无裁切、无缺字。
+- validate.py 0 error；标准 XML 解析通过。
+- 验收标准三项（三决策齐全、E1/E0 分开、研究模块不入主线）维持通过。
 
-- 导出：`"F:/draw.io/draw.io.exe" --disable-gpu --no-sandbox -x -f svg -o fig4-1-p1-two-layer-flow.svg fig4-1-p1-two-layer-flow.drawio`；PNG 加 `-f png -s 2`
-- XML 解析：Python `xml.dom.minidom.parse` 通过（旧源第 46 行多余 `</mxCell>` 已修复）
+## 待对方/整稿处理
 
-## 已通过的检查（v3）
-
-- [x] nodes.csv 以 csv.writer 规范写出（含逗号字段自动加引号），逐行 4 列无多余字段；id 与 drawio XML ID 统一（candBox、c1~c6），边端点全部存在
-- [x] required_stages 以单独 stage 单值登记：partition/assignment/task_order/node_to_subgraph/core_schedules 各有唯一 ID 行（语义子项，note 注明对应 XML ID，非虚构图节点）
-- [x] 候选大框头部两行说明不与第一排候选框重叠；strict-private-chain-check 等源码解释移至图内 note3 与对应表
-- [x] 构造失败语义改为准确表述：可选候选失败跳过；必需 bounded 失败终止（required=True 时 raise）
-- [x] 官方方案→read 虚线改走诊断框外侧（经折线绕行），诊断框移位后两条输出（方案文件 / 诊断 JSON）独立可辨
-- [x] 插入宽度检查：按 A4 `\textwidth`=146.6 mm（gmcmthesis.cls，left/right=31.7 mm）预览目检，结论见 self-check.md
-- [x] audit.json 登记全部随包文件（不含 audit.json 自身）与真实 SHA256；来源为 40 位固定提交 + 64 位哈希 + 真实仓库路径（章节定位放 note）
-- [x] 切图、分核、每核 Task 顺序三项决策齐全；无逐 Pipe 顺序/等待时间控制权
-- [x] 在线 E1 与独立 E0 复评分开表示；研究模块未混入主线
-- [x] draw.io CLI 重新导出 SVG/PNG；PNG 目检无缺字、无遮挡、无裁切
-
-## 未完成项 / 说明
-
-- 接收端已自行修复的 SVG 声明/HTML 标签兼容问题非本包缺陷；本包以修复后源直接导出，源与成图一致（哈希见 audit.json）。
-- 若 P1 初稿或 v4 绑定版本变更，本图随对应版本同步更新。
+- 无阻塞项。若整稿侧对字体字号或配色有统一要求，按统一规范重导。
