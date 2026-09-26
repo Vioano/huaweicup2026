@@ -1,0 +1,1 @@
+Figure 6-7. P3 quality, solver cost and tail latency. Each point pairs official Makespan with the solver wall from the same input record; the right panel is an empirical CDF of the 100 per-core wall times. Median, P95 and maximum are recomputed from the raw per-cell records. Online E0 is included in the recorded P3 solver wall.

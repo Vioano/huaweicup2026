@@ -1,0 +1,44 @@
+{
+  "figure_id": "fig-4-5",
+  "title": "P1 quality, transfer cost and solver cost",
+  "protocol": "p123-figure-progress-v1",
+  "generated_at": "2026-09-26T08:29:26Z",
+  "git_head": "c117c3d8a7c76d59fedd6d3e8e931f2eeaa98caa",
+  "task_status": "ready_for_human_review",
+  "progress": 100,
+  "source": {
+    "paths": [
+      "results/a/p123-full500-lyx-20260925/inputs/P1.json"
+    ],
+    "sha256": {
+      "results/a/p123-full500-lyx-20260925/inputs/P1.json": "4cd79828999ad56dc00d34a79cc0dcd921fff783e5aaf793b0c84924b0f10764"
+    },
+    "run_id": "p123-full500-lyx-20260925",
+    "cells": 500,
+    "cases": 100
+  },
+  "outputs": {
+    "fig45_p1_quality_cost.png": "3e4b56d68ccd96c516c57aba08512c8a7b939921e6e4324f0aa2fef76e4e4b3f",
+    "fig45_p1_quality_cost.svg": "6b39424db029e0ce96708c40123cc4631b431efcff31c5545e32f25d75700d3a",
+    "fig45_p1_quality_cost.pdf": "5ece4c9a1c3e3d947c472815c694d9e9ee5778dc118d64207fd64f6a70c2aa0b",
+    "p1_quality_cost_rows.csv": "a40e3a4b9f19d563669ec09b0ee3143b3da1d1e166668a148260b5001f4ba81e",
+    "solver_wall_quantiles.csv": "7535f025cc11161128550293c2c5717254904ca3ad622f1e97da5e392b2ee64c",
+    "caption.md": "a6618151215b79973afc23e97267995b342a8bf1b58e4cde169fda6e98e9a00e",
+    "README.md": "425e14fc51fb843c0a29ba0591a24274625d2458c750a0449055f01b80125ad0",
+    "self-check.md": "3a9a774da901dc18f801856561b28c2bd2019de76c0f1ed7f33938a11ae4e39d",
+    "plot_figures.py": "3ed27be38e1f54ecacb77f174685df1310fdc2d2b7cd1df040f2c9e1baa8c4be"
+  },
+  "environment": {
+    "python": "3.12.13 (main, Jun 23 2026, 15:23:43) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "matplotlib": "3.11.2",
+    "command": "uv run python src/analysis/p123_figures_lyx/plot_all.py"
+  },
+  "budget_boundary": "read-only parsing and plotting; 0 new solver/E0/E1/E2 calls",
+  "limitations": [
+    "solver wall is the recorded solver scope; independent E0 timing is retained separately in the input records.",
+    "DDR values are reported in MiB only for display; source tables retain bytes.",
+    "A cross-case cloud is descriptive, not a Pareto claim.",
+    "SVG/PDF were generated but not opened in a desktop reader in this session."
+  ]
+}

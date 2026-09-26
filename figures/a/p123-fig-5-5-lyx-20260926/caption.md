@@ -1,0 +1,1 @@
+Figure 5-5. P2 quality, solver cost and tail latency. Each point pairs official Makespan with the solver wall from the same input record; the right panel is an empirical CDF of the 100 per-core wall times. Median, P95 and maximum are recomputed from the raw per-cell records. P2 solver wall is recorded separately from its final external E0 evaluation.

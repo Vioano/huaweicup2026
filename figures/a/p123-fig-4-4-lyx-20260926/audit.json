@@ -6,7 +6,7 @@
     {
       "name": "fig44_p1_speedup.svg",
       "role": "svg",
-      "sha256": "6f746c1ba8e333ccba3a98d736a4f517a128ecfebddab24745d772c2764488b2"
+      "sha256": "dd9944a6f87c3f76a774c5bedf815396615bd8ec6952285c9977c0c3c7e4e8a3"
     },
     {
       "name": "fig44_p1_speedup.png",
@@ -15,13 +15,13 @@
     },
     {
       "name": "fig44_p1_speedup.pdf",
-      "role": "notes",
-      "sha256": "15ab72b4b3b0e1aae80b4a1337eeeb64510b4984af36e9f710ac82280e83a419"
+      "role": "pdf",
+      "sha256": "01792848261830c1af6230dcdcafc0f76aaed06852045b1304499142f20ade8d"
     },
     {
       "name": "src/analysis/p123_fig44_lyx/plot_fig44.py",
       "role": "source",
-      "sha256": "6a2b887b2f421dafdb928b2736c374ee3878d26ba2b578b6dcba7d63aba51bb6"
+      "sha256": "525629792bf11e64ceccc567696a026255b1aa89e3be2a030a38822eeb853884"
     },
     {
       "name": "caption.md",
@@ -51,7 +51,7 @@
     {
       "name": "manifest.json",
       "role": "notes",
-      "sha256": "6dc2bce684a4dfadfa9fdfa0c506e7d45b732b7df3fad79be44b0a896876d00e"
+      "sha256": "bcc33155157e029416f3a4ed10ee764842a1606d56d3f6488bdc4b864225167c"
     },
     {
       "name": "auto-review.json",
@@ -63,7 +63,7 @@
   "sources": [
     {
       "path": "results/a/p123-full500-lyx-20260925/per_case.json",
-      "data_commit": "b305376242ac69caecde02ecd1cf60207fca106b",
+      "commit": "b305376242ac69caecde02ecd1cf60207fca106b",
       "git_blob": "018ebde9b33b64428fda0db4ad05746b1ec32fbf",
       "sha256": "122da1335cf8f70e3db472ff84270cb3fc17690fcb3200607555c9dad7545847",
       "working_copy_sha256": "074bfa55b25acb60504780ff3107f9c28fef3ba58ef750bee1bbb0996fb9cdfc"
@@ -74,10 +74,16 @@
     "wall": "s",
     "bytes": "B"
   },
-  "panels": {
-    "mean": "left arithmetic mean speedup",
-    "distribution": "right per-case distribution"
-  },
+  "panels": [
+    {
+      "id": "mean",
+      "description": "left arithmetic mean speedup"
+    },
+    {
+      "id": "distribution",
+      "description": "right per-case distribution"
+    }
+  ],
   "tables": {
     "metrics": "metrics.csv",
     "summary": "summary.csv"

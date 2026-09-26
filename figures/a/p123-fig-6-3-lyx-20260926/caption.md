@@ -1,0 +1,1 @@
+Figure 6-3. P3 same-plan comparison of no-L2 and read-only Cache configurations. For each case and core count, both makespans are divided by the same fixed single-core baseline, then averaged across 100 cases. The pair table retains the per-case values and cache gain for reuse by Figure 6-4.

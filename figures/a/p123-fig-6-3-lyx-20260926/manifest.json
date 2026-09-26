@@ -1,0 +1,56 @@
+{
+  "figure_id": "fig-6-3",
+  "title": "P3 no-L2 versus read-only Cache",
+  "protocol": "p123-figure-progress-v1",
+  "generated_at": "2026-09-26T08:05:20Z",
+  "git_head": "c117c3d8a7c76d59fedd6d3e8e931f2eeaa98caa",
+  "task_status": "ready_for_human_review",
+  "progress": 100,
+  "source": {
+    "paths": [
+      "results/a/p123-full500-lyx-20260925/per_case.json",
+      "results/a/p123-full500-lyx-20260925/inputs/P3.json"
+    ],
+    "sha256": {
+      "results/a/p123-full500-lyx-20260925/per_case.json": "074bfa55b25acb60504780ff3107f9c28fef3ba58ef750bee1bbb0996fb9cdfc",
+      "results/a/p123-full500-lyx-20260925/inputs/P3.json": "e653ec9a6e55366aa8218ad093e6391b4a7dd97e7ff8cff51f0a6b42f2c37f15"
+    },
+    "run_id": "p123-full500-lyx-20260925",
+    "cells": 500,
+    "cases": 100
+  },
+  "outputs": {
+    "fig63_p3_cache_comparison.png": "39bedadecaee4beb3f1b0c6f8076cdd223a55ccae49ad5d7d65e7b26c88ddace",
+    "fig63_p3_cache_comparison.svg": "379ad13dce17beec688792177d1b8f006da2a9d76e63f8f3735f4f2a61a1d41f",
+    "fig63_p3_cache_comparison.pdf": "a38dd41bb27eb356614fc164509998dec8a230f93dfb310a17bac2d3750d8640",
+    "paired_500.csv": "6150ac3c67566dc203a3c2dcee68ef2532a18e2690038c16da87b0cc09492b0d",
+    "core_summary.csv": "6d1b26abd24a47aee90a6b3848a25f25ac7df15e1dd26948eb47c0d9e2cd0d68",
+    "caption.md": "0040f7cef1c70d1e0f4ebe2c0e2881d0b406ef0c25484e7bde36f26f43de36ae",
+    "README.md": "9139b351a61651cdc371e42beff11c4333e952e2e26e4fe585ea8d1208a50cdf",
+    "self-check.md": "2c9c0b0b2b838df611b4b139d2be063c9dce67e84025b3140887a1cbff0cfa7c",
+    "plot_figures.py": "6c366c18ec0d6c8e3ff6819b5b820802e33ba83c81d4dca2d3982d3c52dd9aed"
+  },
+  "environment": {
+    "python": "3.12.13 (main, Jun 23 2026, 15:23:43) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "matplotlib": "3.11.2",
+    "command": "uv run python src/analysis/p123_figures_lyx/plot_all.py"
+  },
+  "budget_boundary": "read-only parsing and plotting; 0 new solver/E0/E1/E2 calls",
+  "limitations": [
+    "The per_case table is the fixed same-plan cache-pair source.",
+    "Plan hashes are preserved in the P3 input records; byte hit/miss fields are not needed for this comparison.",
+    "SVG/PDF were generated but not opened in a desktop reader in this session."
+  ],
+  "pairing": {
+    "expected": 500,
+    "actual": 500,
+    "cases_per_core": {
+      "1": 100,
+      "2": 100,
+      "3": 100,
+      "4": 100,
+      "5": 100
+    }
+  }
+}

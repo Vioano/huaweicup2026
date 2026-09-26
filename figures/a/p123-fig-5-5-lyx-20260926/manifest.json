@@ -1,0 +1,43 @@
+{
+  "figure_id": "fig-5-5",
+  "title": "P2 quality, solver cost and tail latency",
+  "protocol": "p123-figure-progress-v1",
+  "generated_at": "2026-09-26T08:05:28Z",
+  "git_head": "c117c3d8a7c76d59fedd6d3e8e931f2eeaa98caa",
+  "task_status": "ready_for_human_review",
+  "progress": 100,
+  "source": {
+    "paths": [
+      "results/a/p123-full500-lyx-20260925/inputs/P2.json"
+    ],
+    "sha256": {
+      "results/a/p123-full500-lyx-20260925/inputs/P2.json": "0b850686966d1d7c1ce1a8babb1655051756b42f9a59d5c6f6becd6a87f2f99c"
+    },
+    "run_id": "p123-full500-lyx-20260925",
+    "cells": 500,
+    "cases": 100
+  },
+  "outputs": {
+    "fig55_p2_quality_cost.png": "afa75b54f51741ecd8b660be9c17257a2af320271bb922775d2ef576de3c19d8",
+    "fig55_p2_quality_cost.svg": "5b77705021230fc139bb86ba075fbe7d950a16651e328da8abbef41f4e3528bc",
+    "fig55_p2_quality_cost.pdf": "028f2e9c0307e325b5df1b9307e3383de9caa7704d2ee474a7b6b700b4c06fb9",
+    "p2_quality_cost_rows.csv": "740a6570e374325f1b3ec032fea150c5804af0212b52060e67409bf0a8d2ad54",
+    "solver_wall_quantiles.csv": "f56b5290be95574affb8fbccf2ec99446490efefd4510b7a5b699258212ca063",
+    "caption.md": "3b313a6be614eb5774590aab57ec49b5fa1236497b9eabb8a1a004f40065b509",
+    "README.md": "95348d14f047b419b30cc344bbb72c5c67082627008a192d145718f883866699",
+    "self-check.md": "049a99dce96c4c3bc9d4cf2416619b5db6d400e603370a59e41658e2982b8921",
+    "plot_figures.py": "6c366c18ec0d6c8e3ff6819b5b820802e33ba83c81d4dca2d3982d3c52dd9aed"
+  },
+  "environment": {
+    "python": "3.12.13 (main, Jun 23 2026, 15:23:43) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "matplotlib": "3.11.2",
+    "command": "uv run python src/analysis/p123_figures_lyx/plot_all.py"
+  },
+  "budget_boundary": "read-only parsing and plotting; 0 new solver/E0/E1/E2 calls",
+  "limitations": [
+    "P2 solver wall is recorded separately from its final external E0 evaluation.",
+    "No strict cold-start interpretation is made because OS cache state is not controlled.",
+    "SVG/PDF were generated but not opened in a desktop reader in this session."
+  ]
+}
