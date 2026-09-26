@@ -1,0 +1,1306 @@
+{
+  "schema_version": 1,
+  "standard_version": "2026-09-26.6",
+  "title": "论文验收台",
+  "repo": "huaweibei123/huaweicup2026",
+  "issue": 217,
+  "leader": "nikolastarx",
+  "members": [
+    "nikolastarx",
+    "yuanzhifang30-sudo",
+    "farmeruncle123",
+    "lyx0217"
+  ],
+  "paper_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a",
+  "paper_sha256": "12de22ab8236e65aa0943eb70e968ddf7f0fa37e140ae112308b5be928bb260c",
+  "documents": [
+    {
+      "id": "current",
+      "name": "anonymous-paper-v1.pdf",
+      "pages": 35,
+      "sha256": "12de22ab8236e65aa0943eb70e968ddf7f0fa37e140ae112308b5be928bb260c",
+      "path": "paper/manuscript-v1/checkpoints/checkpoint-01/anonymous-paper-v1.pdf",
+      "label": "本稿 · 检查点 01",
+      "award_status": "完整审阅稿，未终审",
+      "commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "ref1",
+      "name": "A题-1-通用神经网络处理器下的核内调度问题.pdf",
+      "pages": 59,
+      "sha256": "1ba58ee48e42e870f65ee3ab58d9683ac4d0a0dadd8798eb84127dbda5778042",
+      "path": "2025A题优秀论文/A题-1-通用神经网络处理器下的核内调度问题.pdf",
+      "label": "2025 · 核内调度 I",
+      "award_status": "用户提供参考样本，未核验奖项"
+    },
+    {
+      "id": "ref2",
+      "name": "A题-2-通用神经网络处理器下的核内调度问题.pdf",
+      "pages": 98,
+      "sha256": "8daa8fb505ee88fd5e694d449b770a598724e363bce90f97e21940933bed360d",
+      "path": "2025A题优秀论文/A题-2-通用神经网络处理器下的核内调度问题.pdf",
+      "label": "2025 · 核内调度 II",
+      "award_status": "用户提供参考样本，未核验奖项"
+    },
+    {
+      "id": "ref3",
+      "name": "A题-NPU 核内调度算法设计与优化研究.pdf",
+      "pages": 120,
+      "sha256": "8f9f05b2d71d6768d5fecbc6eb354b9a8aa57c89aad0554288188fe30a8203cd",
+      "path": "2025A题优秀论文/A题-NPU 核内调度算法设计与优化研究.pdf",
+      "label": "2025 · 调度设计与优化",
+      "award_status": "用户提供参考样本，未核验奖项"
+    },
+    {
+      "id": "ref4",
+      "name": "A题-面向 Davinci 架构的 NPU 核内调度算法研究.pdf",
+      "pages": 77,
+      "sha256": "f7bec0662d073b428e86d5f0d12bf5d2406adc6b949a7b4936ededae05eee8f8",
+      "path": "2025A题优秀论文/A题-面向 Davinci 架构的 NPU 核内调度算法研究.pdf",
+      "label": "2025 · Davinci 架构",
+      "award_status": "用户提供参考样本，未核验奖项"
+    }
+  ],
+  "items": [
+    {
+      "id": "A01",
+      "group": "叙事与定位",
+      "title": "把研究贡献写成可核查的增量",
+      "page": 2,
+      "reference": "ref4",
+      "reference_page": 6,
+      "reference_observation": "参考稿单列研究现状，再进入问题与方法。",
+      "current": "本稿已介绍多处理器调度背景，但未形成“既有方法—本题障碍—本文增量”的逐项定位。",
+      "checks": [
+        "对每条主贡献给出既有工作和具体差异",
+        "每条增量对应正文命题、机制与实验入口",
+        "删除无法核验的首次、通用最优与泛化措辞"
+      ],
+      "priority": "P1",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "A02",
+      "group": "叙事与定位",
+      "title": "把结构分析提前用于解释算法选择",
+      "page": 28,
+      "reference": "ref4",
+      "reference_page": 12,
+      "reference_observation": "参考稿在算法展开前展示原始图和模块化分析。",
+      "current": "本稿图7.1有规模与操作统计，位于实验章；前文缺少可与候选规则直接对应的结构分型实例。",
+      "checks": [
+        "用真实JSON显示代表结构及选取依据",
+        "解释每类结构触发哪个冻结规则",
+        "保留不适用/长尾图，不用美观样例代表全部"
+      ],
+      "priority": "P1",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "A03",
+      "group": "叙事与定位",
+      "title": "摘要中的每个数字可回到同口径主表",
+      "page": 1,
+      "reference": "ref1",
+      "reference_page": 1,
+      "reference_observation": "参考摘要按三个问题依次给出方法和结果。",
+      "current": "本稿已有分问方法和数字；P1五核与P2全500格的计时分组不同，仍需摘要级逐数独立核对。",
+      "checks": [
+        "摘要数字逐项映射到固定数据行与聚合规则",
+        "不同计时分组不得暗示横向快慢",
+        "主目标、代价和最重要限制同时出现"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "M01",
+      "group": "模型与证明",
+      "title": "总框架图表达真实决策和反馈",
+      "page": 7,
+      "reference": "ref4",
+      "reference_page": 8,
+      "reference_observation": "参考图把三个问题的数据、模型、方法与结果连接到同一流程。",
+      "current": "本稿图3.1概述候选、检查和接受，但未展开各分支条件、回退与实际产物；单独占页且下半页留白明显。",
+      "checks": [
+        "分支触发、接受、拒绝、回退均对应固定实现",
+        "读者可从输入沿图走到合法两字段输出",
+        "图与邻近正文解释同一条推理链，按正文宽度验读"
+      ],
+      "priority": "P1",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "M02",
+      "group": "模型与证明",
+      "title": "官方语义与数学简化逐项对应",
+      "page": 6,
+      "reference": "ref2",
+      "reference_page": 8,
+      "reference_observation": "参考稿将目标和约束分别形式化。",
+      "current": "本稿区分编译与执行，尚待独立核查各假设到冻结官方代码的对应表。",
+      "checks": [
+        "每个假设列明题面或源码出处",
+        "覆盖依赖、容量、FIFO、COPY与Cache事件边界",
+        "明确构造代理、必要条件与官方真值各自适用域"
+      ],
+      "priority": "P0",
+      "initial_state": "unreviewed",
+      "owner": "论文整合",
+      "standard_basis": "project",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "M03",
+      "group": "模型与证明",
+      "title": "每个主命题有完整证明责任",
+      "page": 8,
+      "reference": "ref3",
+      "reference_page": 24,
+      "reference_observation": "参考稿把递推、证明、示例和算法步骤相邻组织。",
+      "current": "本稿有秩证书、充分状态和树排序证明；尚未完成与官方语义及实现守卫的独立科学复核。",
+      "checks": [
+        "逐命题列清量词、假设、结论与适用域",
+        "独立复核证明并检查最小反例",
+        "命题对应实现函数；未实现部分明确分离"
+      ],
+      "priority": "P0",
+      "initial_state": "unreviewed",
+      "owner": "论文整合",
+      "standard_basis": "project",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "M04",
+      "group": "模型与证明",
+      "title": "P3树排序要让读者看见峰值为何改变",
+      "page": 24,
+      "reference": "ref3",
+      "reference_page": 24,
+      "reference_observation": "参考稿用带节点属性的图解释递推过程。",
+      "current": "本稿用h/r和10、13 KiB文字算例解释交换论证，但本页没有对应树形、存活前沿或排序对照图。",
+      "checks": [
+        "用同一棵树并排标出两种次序与h/r",
+        "逐步显示内部存活量及父输出分配时点",
+        "明确这是条件模型演算而非官方存储轨迹"
+      ],
+      "priority": "P1",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "M05",
+      "group": "模型与证明",
+      "title": "复杂度包含构造、检查和评价成本",
+      "page": 9,
+      "reference": "ref2",
+      "reference_page": 10,
+      "reference_observation": "参考稿单设复杂度分析并继续说明实现细节。",
+      "current": "本稿已写C(G,K)+评价求和；需要核对C的展开、实际调用上界与异常回退是否一致。",
+      "checks": [
+        "每个主要子过程给出规模变量与复杂度",
+        "预算上界覆盖失败、回退、去重与在线评价",
+        "理论界与实际调用账逐项对照"
+      ],
+      "priority": "P0",
+      "initial_state": "unreviewed",
+      "owner": "论文整合",
+      "standard_basis": "project",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "M06",
+      "group": "模型与证明",
+      "title": "区分算法实用理论和未落地研究",
+      "page": 9,
+      "reference": "ref3",
+      "reference_page": 24,
+      "reference_observation": "参考稿将理论推导衔接到具体算法。",
+      "current": "本稿已说明一般未来充分状态未实现；仍需逐处检查正文和结论是否暗示三题共享已落地控制器。",
+      "checks": [
+        "已实现机制能指向固定代码",
+        "仅作条件推导的结果有明确标签",
+        "每段理论说明对本算法选择的作用或移入附录"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "E01",
+      "group": "实验与证据",
+      "title": "主成绩必须是同一固定算法全量证据",
+      "page": 29,
+      "reference": "ref2",
+      "reference_page": 16,
+      "reference_observation": "参考稿用逐数据集性能表支撑结果分析。",
+      "current": "本稿已有三题1500格与固定SHA；表格完备仍不等于逐原件独立复核完成。",
+      "checks": [
+        "每题固定入口、规则、参数和调用预算",
+        "100图×5核逐格原件与身份一致",
+        "失败、超时、未运行及复用评价来源完整保留"
+      ],
+      "priority": "P0",
+      "initial_state": "unreviewed",
+      "owner": "论文整合",
+      "standard_basis": "project",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "E02",
+      "group": "实验与证据",
+      "title": "核心机制需要可归因的消融",
+      "page": 30,
+      "reference": "ref4",
+      "reference_page": 22,
+      "reference_observation": "参考稿并列不同贪心策略的结果并给出运行环境。",
+      "current": "本稿有完整版本对照和负例，但第7.4节说明这些不能替代严格的单因素消融。",
+      "checks": [
+        "每项核心机制给出同条件开关或可解释替代对照",
+        "预算、基线、样本、评价语义保持一致",
+        "现有证据不足则明确缺口，不补造结果"
+      ],
+      "priority": "P0",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "E03",
+      "group": "实验与证据",
+      "title": "报告质量—时间的成对取舍",
+      "page": 30,
+      "reference": "ref4",
+      "reference_page": 27,
+      "reference_observation": "参考稿将多方法结果与复杂度相邻讨论。",
+      "current": "本稿提供墙钟分布，但缺少统一环境/分组下的质量—时间成对比较；共享主机历史批次不可直接当公平速度赛。",
+      "checks": [
+        "周期质量与端到端秒数同格配对",
+        "报告冷启动、资源条件、中位数/p95/最大值",
+        "只对同条件数据讨论Pareto优势，未知保持未知"
+      ],
+      "priority": "P1",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "E04",
+      "group": "实验与证据",
+      "title": "敏感性与稳健性覆盖影响决策的参数",
+      "page": 32,
+      "reference": "ref2",
+      "reference_page": 25,
+      "reference_observation": "参考稿单列参数配置供结果解释。",
+      "current": "本稿说明容量、带宽及结构条件变化须重新验证，当前没有相应系统敏感性结果。",
+      "checks": [
+        "识别真正影响算法选择的阈值或资源参数",
+        "预先说明取值、固定项和样本选择依据",
+        "仅用已授权实验；未测试边界不得写稳健性结论"
+      ],
+      "priority": "P1",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "E05",
+      "group": "实验与证据",
+      "title": "负结果同时解释收益和代价",
+      "page": 20,
+      "reference": "ref1",
+      "reference_page": 39,
+      "reference_observation": "参考稿并列执行时间与额外搬运量。",
+      "current": "本稿保留C04六格退化与R9F限制；需要逐反例连起原始结构、触发事件、最终退化。",
+      "checks": [
+        "每个反例列同条件基线、候选及多指标",
+        "用事件或必要条件解释退化，区分相关与因果",
+        "结论局限到实际被证伪的策略与样本"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "E06",
+      "group": "实验与证据",
+      "title": "Cache比较必须同计划、同核数",
+      "page": 26,
+      "reference": "ref2",
+      "reference_page": 27,
+      "reference_observation": "参考稿用缓存占用时序图辅助解释数据。",
+      "current": "本稿已区分比值均值与均值比，正式通过仍需独立核对500对计划字节和配置。",
+      "checks": [
+        "每对无L2/Cache绑定同计划哈希与核数",
+        "CacheGain逐图计算再取均值，缺测不补1",
+        "字节命中率与周期变化分开，保留负收益"
+      ],
+      "priority": "P0",
+      "initial_state": "unreviewed",
+      "owner": "论文整合",
+      "standard_basis": "project",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "E07",
+      "group": "实验与证据",
+      "title": "必要界与可行结果属于相同优化域",
+      "page": 31,
+      "reference": "ref3",
+      "reference_page": 24,
+      "reference_observation": "参考稿示例把约束与递推条件放在结论附近。",
+      "current": "本稿图7.3引用既有证书，附录有后续强化公式；需要证明域和数值版本逐项一致。",
+      "checks": [
+        "证书的图、核数、配置、优化域匹配主表",
+        "固定候选界不冒充全域OPT下界",
+        "强化推导未产新证书时不替换旧数值"
+      ],
+      "priority": "P0",
+      "initial_state": "unreviewed",
+      "owner": "论文整合",
+      "standard_basis": "project",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "V01",
+      "group": "图件与版式",
+      "title": "成对时间线应可在同一视野比较",
+      "page": 13,
+      "reference": "ref2",
+      "reference_page": 27,
+      "reference_observation": "参考稿将同类算例的时间线成组呈现并就近解释。",
+      "current": "本稿P1父方案/援助分别占13/14页，P2主方案/C04分别占21/22页，需要翻页比较。",
+      "checks": [
+        "同一比较组统一横轴、排序、颜色与图例",
+        "并排或上下同页呈现，保证印刷字号",
+        "标出发生变化的关键事件并连接正文解释"
+      ],
+      "priority": "P1",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "V02",
+      "group": "图件与版式",
+      "title": "论文插入尺寸下可读而非仅大图好看",
+      "page": 13,
+      "reference": "ref1",
+      "reference_page": 17,
+      "reference_observation": "参考稿在一页组织多个相关数据图并配文字解释。",
+      "current": "本稿密集Pipe图与机制图需在实际插入尺寸检视；现有导出成功不构成阅读通过。",
+      "checks": [
+        "正文插入尺寸检查所有标注，团队目标最小8pt",
+        "灰度和色觉差异下仍可凭形状/线型区分",
+        "不裁字、不穿字、不靠放大屏幕读取关键标签"
+      ],
+      "priority": "P1",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "V03",
+      "group": "图件与版式",
+      "title": "图、图注、正文分工清楚",
+      "page": 17,
+      "reference": "ref4",
+      "reference_page": 16,
+      "reference_observation": "参考稿图号图名在图外，正文承接算法解释。",
+      "current": "本稿已把超图图注移到LaTeX；需对全部15图逐张确认没有嵌入图号、重复大段说明。",
+      "checks": [
+        "图内仅必要对象、变量、坐标和图例",
+        "图号、图名、分图标题与图注由排版层生成",
+        "推导、条件与解释由相邻正文承接"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合",
+      "standard_basis": "user",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "V04",
+      "group": "图件与版式",
+      "title": "图件择优绑定最新算法和来源",
+      "page": 10,
+      "reference": "ref4",
+      "reference_page": 12,
+      "reference_observation": "参考稿用输入图实例服务方法说明。",
+      "current": "Fang汇总核对尚未收到完成回执；旧v4方法图与834主算法不可只替换数字混用。",
+      "checks": [
+        "收齐Fang/甲/乙和整稿版本的固定入口",
+        "先核科学内容/算法身份，再比纸面表达",
+        "保留择优理由、作者来源与未解决问题"
+      ],
+      "priority": "P0",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "user",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "W01",
+      "group": "叙事与定位",
+      "title": "避免框架图孤页与无意留白",
+      "page": 7,
+      "reference": "ref4",
+      "reference_page": 8,
+      "reference_observation": "参考总框架图充分利用页面并呈现多层细节。",
+      "current": "本稿第7页框架图和第35页来源说明下方存在大块空白；需按信息量重新组织浮动与附录。",
+      "checks": [
+        "浮动图紧邻首次解释且分页自然",
+        "用合适版面承载必要内容，不靠扩写凑页",
+        "逐页检查孤行、空页、表格跨页和留白原因",
+        "首次重要统一约定按用户要求完整、克制地加粗；保留信息层次，不只加粗碎片或遍篇加粗"
+      ],
+      "priority": "P1",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "W02",
+      "group": "叙事与定位",
+      "title": "交叉引用必须准确到实际对象",
+      "page": 34,
+      "reference": "ref2",
+      "reference_page": 10,
+      "reference_observation": "参考稿以公式号和图号连接步骤与推导。",
+      "current": "本稿PDF第34页写“结合B.2原子项”，实际原子项在附录A.2；这是已定位的引用错误。",
+      "checks": [
+        "修正A.2引用并使用自动标签",
+        "全文核对图、表、公式、算法及附录引用",
+        "编译无未定义引用，人工点检目标一致"
+      ],
+      "priority": "P0",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "W03",
+      "group": "叙事与定位",
+      "title": "文献覆盖与新颖性不能靠少量经典文献",
+      "page": 32,
+      "reference": "ref4",
+      "reference_page": 6,
+      "reference_observation": "参考稿在前言单列研究现状。",
+      "current": "本稿参考文献为题面加3篇经典论文，缺少面向本文主要机制的系统定位与逐主张原始来源核验。",
+      "checks": [
+        "为主要方法补齐直接相关的原始研究",
+        "逐篇核作者、年份、DOI与引用所支持的内容",
+        "说明借鉴、适配和本文新增部分，不设机械篇数"
+      ],
+      "priority": "P1",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "R01",
+      "group": "复现与交付",
+      "title": "算法附件要能从干净环境运行",
+      "page": 35,
+      "reference": "ref1",
+      "reference_page": 44,
+      "reference_observation": "参考稿附录给出源程序；代码存在并不自动证明可运行。",
+      "current": "本稿附录B列SHA/预算，审阅包只含排版源、图和表，尚未完成固定算法可运行附件验收。",
+      "checks": [
+        "提供锁定依赖、入口、示例命令与输入获取办法",
+        "按各题固定SHA运行最小代表样本并保存日志",
+        "记录计划哈希、官方复评与环境；不冒称跨平台验证"
+      ],
+      "priority": "P0",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "project",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "R02",
+      "group": "复现与交付",
+      "title": "每个图表数字能追到生成链",
+      "page": 29,
+      "reference": "ref2",
+      "reference_page": 16,
+      "reference_observation": "参考表给出逐算例数值；本队要求进一步追到原件。",
+      "current": "本稿已有来源收据与1500行CSV，但需要图/表/摘要到同一源数据和脚本的逐项独立核验。",
+      "checks": [
+        "输入原件→数据表→脚本→导出各有固定哈希",
+        "可重复执行的命令与聚合公式完整",
+        "抽查重算及文件差异有实际回执"
+      ],
+      "priority": "P0",
+      "initial_state": "unreviewed",
+      "owner": "论文整合",
+      "standard_basis": "project",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "R03",
+      "group": "复现与交付",
+      "title": "终审绑定论文与标准版本",
+      "page": 35,
+      "reference": "ref1",
+      "reference_page": 44,
+      "reference_observation": "参考材料只是学习对象，不能替代本队终审。",
+      "current": "本稿已声明科学审读、成员图件核对、算法附件尚未完成；所有本台项目初始均未接受。",
+      "checks": [
+        "当前PDF哈希与标准摘要完全匹配",
+        "作者提交、另一账号复核、队长接受分开",
+        "任何新PDF或标准变更保留历史并重新审阅"
+      ],
+      "priority": "P0",
+      "initial_state": "unreviewed",
+      "owner": "论文整合",
+      "standard_basis": "project",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "F01",
+      "group": "逐图验收",
+      "title": "三问执行语义的递进",
+      "page": 3,
+      "reference": "ref2",
+      "reference_page": 27,
+      "reference_observation": "参考页面把图、图注与逐图解释共同组织；具体画法应服从本图任务。",
+      "current": "已定位本稿图件和字节哈希；尚无本验收标准下的独立通过记录。",
+      "checks": [
+        "科学对象与固定原件逐一对应",
+        "实际插入宽度、灰度和标签可读性检查",
+        "图注含结论、条件、样本、单位及来源入口"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合 / 图件作者",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a",
+      "figure": {
+        "file": "paper/manuscript-v1/figures/fig-progression-zh.png",
+        "sha256": "ee899b252321ff19f31209731a4f44cc2b36e52f037c282de7f724e24f3097a6",
+        "caption": "三问执行语义的递进。相同图片段和分核方式下，P1 的独立 Task 边界需要 COPY；P2 允许核内驻留；P3 为可查询的 COPY\\_IN 增加共享只读 Cache。",
+        "label": "fig:progression",
+        "page": 3
+      }
+    },
+    {
+      "id": "F02",
+      "group": "逐图验收",
+      "title": "本文研究框架",
+      "page": 7,
+      "reference": "ref2",
+      "reference_page": 27,
+      "reference_observation": "参考页面把图、图注与逐图解释共同组织；具体画法应服从本图任务。",
+      "current": "已定位本稿图件和字节哈希；尚无本验收标准下的独立通过记录。",
+      "checks": [
+        "科学对象与固定原件逐一对应",
+        "实际插入宽度、灰度和标签可读性检查",
+        "图注含结论、条件、样本、单位及来源入口"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合 / 图件作者",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a",
+      "figure": {
+        "file": "paper/manuscript-v1/figures/fig-framework-zh.png",
+        "sha256": "4e29979936ca66df2fc4aae2a74ba2bc55c1b0ea8d9b7c7701a70238e4c4987a",
+        "caption": "本文研究框架。三问各自根据结构提出候选，共同通过合法性、适用的必要界与完整执行评价决定接受；各机制按适用条件启用。",
+        "label": "fig:framework",
+        "page": 7
+      }
+    },
+    {
+      "id": "F03",
+      "group": "逐图验收",
+      "title": "case_026、5 Core 的真实归约片段",
+      "page": 10,
+      "reference": "ref2",
+      "reference_page": 27,
+      "reference_observation": "参考页面把图、图注与逐图解释共同组织；具体画法应服从本图任务。",
+      "current": "已定位本稿图件和字节哈希；尚无本验收标准下的独立通过记录。",
+      "checks": [
+        "科学对象与固定原件逐一对应",
+        "实际插入宽度、灰度和标签可读性检查",
+        "图注含结论、条件、样本、单位及来源入口"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合 / 图件作者",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a",
+      "figure": {
+        "file": "paper/manuscript-v1/figures/fig-p1-cuts-zh.png",
+        "sha256": "ce7f192887ec4860ff4767b7322907c36605465f34c81975d67e5ed52a8f9c3f",
+        "caption": "case\\_026、5 Core 的真实归约片段。左为原始划分，右为分叉援助；八个 ADD 节点的编号和依赖不变。点线端口连接裁剪范围外的输入或后继，橙色虚线为跨子图依赖。",
+        "label": "fig:p1-cuts",
+        "page": 10
+      }
+    },
+    {
+      "id": "F04",
+      "group": "逐图验收",
+      "title": "问题一的完整版本比较",
+      "page": 15,
+      "reference": "ref2",
+      "reference_page": 27,
+      "reference_observation": "参考页面把图、图注与逐图解释共同组织；具体画法应服从本图任务。",
+      "current": "已定位本稿图件和字节哈希；尚无本验收标准下的独立通过记录。",
+      "checks": [
+        "科学对象与固定原件逐一对应",
+        "实际插入宽度、灰度和标签可读性检查",
+        "图注含结论、条件、样本、单位及来源入口"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合 / 图件作者",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a",
+      "figure": {
+        "file": "paper/manuscript-v1/figures/paper/fig-p1-results.pdf",
+        "sha256": "f30c02fdef87a73b3777c5a007157ab885f50e9788eaf6414af6f4b54005da92",
+        "caption": "问题一的完整版本比较。上：每个核数的 100 图平均加速比；下：全部 500 格的时间与搬运量配对变化。核数用点形区分，横轴采用对称对数。",
+        "label": "fig:p1-results",
+        "page": 15
+      }
+    },
+    {
+      "id": "F05",
+      "group": "逐图验收",
+      "title": "case_026、5 Core 两种切分的执行时间线",
+      "page": 13,
+      "reference": "ref2",
+      "reference_page": 27,
+      "reference_observation": "参考页面把图、图注与逐图解释共同组织；具体画法应服从本图任务。",
+      "current": "已定位本稿图件和字节哈希；尚无本验收标准下的独立通过记录。",
+      "checks": [
+        "科学对象与固定原件逐一对应",
+        "实际插入宽度、灰度和标签可读性检查",
+        "图注含结论、条件、样本、单位及来源入口"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合 / 图件作者",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a",
+      "figure": {
+        "file": "paper/manuscript-v1/figures/paper/fig-p1-overlap-old.pdf",
+        "sha256": "c82bd550c953e2ba0471a25ecc338275b593419a9141cec576b77423a9076bdf",
+        "caption": "case\\_026、5 Core 两种切分的执行时间线。上：父方案，$M=44{,}114$ cycles，额外搬运211,680 B；下：分叉援助，$M=42{,}014$ cycles，额外搬运375,532 B。每组分别显示Task跨度及四条Pipe，横轴范围相同，数据来自官方执行事件。",
+        "label": "fig:p1-overlap",
+        "page": 13
+      }
+    },
+    {
+      "id": "F06",
+      "group": "逐图验收",
+      "title": "case_026、5 Core 两种切分的执行时间线",
+      "page": 14,
+      "reference": "ref2",
+      "reference_page": 27,
+      "reference_observation": "参考页面把图、图注与逐图解释共同组织；具体画法应服从本图任务。",
+      "current": "已定位本稿图件和字节哈希；尚无本验收标准下的独立通过记录。",
+      "checks": [
+        "科学对象与固定原件逐一对应",
+        "实际插入宽度、灰度和标签可读性检查",
+        "图注含结论、条件、样本、单位及来源入口"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合 / 图件作者",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a",
+      "figure": {
+        "file": "paper/manuscript-v1/figures/paper/fig-p1-overlap-new.pdf",
+        "sha256": "65b74e4e24fb31e74d30ec7c2f432f2840b3a06b0313ae2f78f03794eaccfb04",
+        "caption": "case\\_026、5 Core 两种切分的执行时间线。上：父方案，$M=44{,}114$ cycles，额外搬运211,680 B；下：分叉援助，$M=42{,}014$ cycles，额外搬运375,532 B。每组分别显示Task跨度及四条Pipe，横轴范围相同，数据来自官方执行事件。",
+        "label": "fig:p1-overlap",
+        "page": 14
+      }
+    },
+    {
+      "id": "F07",
+      "group": "逐图验收",
+      "title": "问题二的完整版本比较",
+      "page": 19,
+      "reference": "ref2",
+      "reference_page": 27,
+      "reference_observation": "参考页面把图、图注与逐图解释共同组织；具体画法应服从本图任务。",
+      "current": "已定位本稿图件和字节哈希；尚无本验收标准下的独立通过记录。",
+      "checks": [
+        "科学对象与固定原件逐一对应",
+        "实际插入宽度、灰度和标签可读性检查",
+        "图注含结论、条件、样本、单位及来源入口"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合 / 图件作者",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a",
+      "figure": {
+        "file": "paper/manuscript-v1/figures/paper/fig-p2-results.pdf",
+        "sha256": "81827deb266eedf2082698bacc61a04599a9ca158304646bcc7fc9eb05d85b3d",
+        "caption": "问题二的完整版本比较。上：官方口径的平均加速比；下：500 格配对结果。部分时间改善伴随额外搬运增加，两项指标分别报告。",
+        "label": "fig:p2-results",
+        "page": 19
+      }
+    },
+    {
+      "id": "F08",
+      "group": "逐图验收",
+      "title": "case_019、5 Core 的真实执行时间线",
+      "page": 21,
+      "reference": "ref2",
+      "reference_page": 27,
+      "reference_observation": "参考页面把图、图注与逐图解释共同组织；具体画法应服从本图任务。",
+      "current": "已定位本稿图件和字节哈希；尚无本验收标准下的独立通过记录。",
+      "checks": [
+        "科学对象与固定原件逐一对应",
+        "实际插入宽度、灰度和标签可读性检查",
+        "图注含结论、条件、样本、单位及来源入口"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合 / 图件作者",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a",
+      "figure": {
+        "file": "paper/manuscript-v1/figures/paper/fig-p2-counterexample-control.pdf",
+        "sha256": "8dcd7825785c3b66f5dc0cbc0392ecde4ac48b5e3ce6cb6d787ac90704b96a54",
+        "caption": "case\\_019、5 Core 的真实执行时间线。上：主算法，$M=16{,}247$ cycles；下：C04，$M=28{,}514$ cycles。每组分别显示Task和四条Pipe，共用横轴范围。C04搬运下降且spill为零，但执行更慢。",
+        "label": "fig:p2-counterexample",
+        "page": 21
+      }
+    },
+    {
+      "id": "F09",
+      "group": "逐图验收",
+      "title": "case_019、5 Core 的真实执行时间线",
+      "page": 22,
+      "reference": "ref2",
+      "reference_page": 27,
+      "reference_observation": "参考页面把图、图注与逐图解释共同组织；具体画法应服从本图任务。",
+      "current": "已定位本稿图件和字节哈希；尚无本验收标准下的独立通过记录。",
+      "checks": [
+        "科学对象与固定原件逐一对应",
+        "实际插入宽度、灰度和标签可读性检查",
+        "图注含结论、条件、样本、单位及来源入口"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合 / 图件作者",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a",
+      "figure": {
+        "file": "paper/manuscript-v1/figures/paper/fig-p2-counterexample-c04.pdf",
+        "sha256": "99f1886607786fae23c23640ec396433e34d04e3cd2f52ba8c7aab355096b911",
+        "caption": "case\\_019、5 Core 的真实执行时间线。上：主算法，$M=16{,}247$ cycles；下：C04，$M=28{,}514$ cycles。每组分别显示Task和四条Pipe，共用横轴范围。C04搬运下降且spill为零，但执行更慢。",
+        "label": "fig:p2-counterexample",
+        "page": 22
+      }
+    },
+    {
+      "id": "F10",
+      "group": "逐图验收",
+      "title": "张量超边的触核数与消费者联合迁移示意",
+      "page": 17,
+      "reference": "ref2",
+      "reference_page": 27,
+      "reference_observation": "参考页面把图、图注与逐图解释共同组织；具体画法应服从本图任务。",
+      "current": "已定位本稿图件和字节哈希；尚无本验收标准下的独立通过记录。",
+      "checks": [
+        "科学对象与固定原件逐一对应",
+        "实际插入宽度、灰度和标签可读性检查",
+        "图注含结论、条件、样本、单位及来源入口"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合 / 图件作者",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a",
+      "figure": {
+        "file": "paper/manuscript-v1/figures/fig-hypercut-paper.png",
+        "sha256": "f3c14c9478268dc2cb48472069efe6e8c1a5d7aa4964c5923442438b8d895c11",
+        "caption": "张量超边的触核数与消费者联合迁移示意。左：生产者与消费者分处两个 Core；右：两个消费者均迁入生产者所在 Core。橙色连线表示超边关联。",
+        "label": "fig:hypercut",
+        "page": 17
+      }
+    },
+    {
+      "id": "F11",
+      "group": "逐图验收",
+      "title": "问题三的同计划配对评价",
+      "page": 26,
+      "reference": "ref2",
+      "reference_page": 27,
+      "reference_observation": "参考页面把图、图注与逐图解释共同组织；具体画法应服从本图任务。",
+      "current": "已定位本稿图件和字节哈希；尚无本验收标准下的独立通过记录。",
+      "checks": [
+        "科学对象与固定原件逐一对应",
+        "实际插入宽度、灰度和标签可读性检查",
+        "图注含结论、条件、样本、单位及来源入口"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合 / 图件作者",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a",
+      "figure": {
+        "file": "paper/manuscript-v1/figures/paper/fig-p3-results.pdf",
+        "sha256": "a240c3fd44adddf75195a067357f2d466d2dd7b0b9d6d39bd612a3cb63b30091",
+        "caption": "问题三的同计划配对评价。上：无 L2 与只读 Cache 的平均基线加速比；下：逐图 $M_2/M_3$ 的均值。每个核数包含 100 对，不用均值之比替代比值均值。",
+        "label": "fig:p3-results",
+        "page": 26
+      }
+    },
+    {
+      "id": "F12",
+      "group": "逐图验收",
+      "title": "500 个同计划配对结果中的字节命中率与 Cache 收益",
+      "page": 27,
+      "reference": "ref2",
+      "reference_page": 27,
+      "reference_observation": "参考页面把图、图注与逐图解释共同组织；具体画法应服从本图任务。",
+      "current": "已定位本稿图件和字节哈希；尚无本验收标准下的独立通过记录。",
+      "checks": [
+        "科学对象与固定原件逐一对应",
+        "实际插入宽度、灰度和标签可读性检查",
+        "图注含结论、条件、样本、单位及来源入口"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合 / 图件作者",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a",
+      "figure": {
+        "file": "paper/manuscript-v1/figures/paper/fig-cache-gain.pdf",
+        "sha256": "00bcca89c97a2085c3b124d0ba0edc7dcd63c07b02a339850b5be542c2231fbb",
+        "caption": "500 个同计划配对结果中的字节命中率与 Cache 收益。保留低于 1 的负收益点；100 个用例的不同核数结果相关，不能当作 500 个独立随机样本。",
+        "label": "fig:cache-gain",
+        "page": 27
+      }
+    },
+    {
+      "id": "F13",
+      "group": "逐图验收",
+      "title": "官方 100 张计算图的结构统计",
+      "page": 28,
+      "reference": "ref2",
+      "reference_page": 27,
+      "reference_observation": "参考页面把图、图注与逐图解释共同组织；具体画法应服从本图任务。",
+      "current": "已定位本稿图件和字节哈希；尚无本验收标准下的独立通过记录。",
+      "checks": [
+        "科学对象与固定原件逐一对应",
+        "实际插入宽度、灰度和标签可读性检查",
+        "图注含结论、条件、样本、单位及来源入口"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合 / 图件作者",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a",
+      "figure": {
+        "file": "paper/manuscript-v1/figures/paper/fig-dataset.pdf",
+        "sha256": "be1d32bcc509c1cbb1df421bc20b2d5c46bf08d363c3cd669e6555c59d3e7fc4",
+        "caption": "官方 100 张计算图的结构统计。上：非 COPY 操作数与张量大小总和；下：按矩阵 Pipe 工作占比排序的用例分布。",
+        "label": "fig:dataset",
+        "page": 28
+      }
+    },
+    {
+      "id": "F14",
+      "group": "逐图验收",
+      "title": "三种完整求解器的端到端墙钟经验分布，每题 500 次",
+      "page": 30,
+      "reference": "ref2",
+      "reference_page": 27,
+      "reference_observation": "参考页面把图、图注与逐图解释共同组织；具体画法应服从本图任务。",
+      "current": "已定位本稿图件和字节哈希；尚无本验收标准下的独立通过记录。",
+      "checks": [
+        "科学对象与固定原件逐一对应",
+        "实际插入宽度、灰度和标签可读性检查",
+        "图注含结论、条件、样本、单位及来源入口"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合 / 图件作者",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a",
+      "figure": {
+        "file": "paper/manuscript-v1/figures/paper/fig-runtime.pdf",
+        "sha256": "7aa8bc39cb878b8ae5a1a5a405180f66e2ed15b708fb23d97a4f5f2b5ad75706",
+        "caption": "三种完整求解器的端到端墙钟经验分布，每题 500 次。时间含各自在线评价，横轴为对数；共享主机和并发条件不同，不能据此作独占硬件速度排序。",
+        "label": "fig:runtime",
+        "page": 30
+      }
+    },
+    {
+      "id": "F15",
+      "group": "逐图验收",
+      "title": "同一优化域中的可行结果与必要界",
+      "page": 31,
+      "reference": "ref2",
+      "reference_page": 27,
+      "reference_observation": "参考页面把图、图注与逐图解释共同组织；具体画法应服从本图任务。",
+      "current": "已定位本稿图件和字节哈希；尚无本验收标准下的独立通过记录。",
+      "checks": [
+        "科学对象与固定原件逐一对应",
+        "实际插入宽度、灰度和标签可读性检查",
+        "图注含结论、条件、样本、单位及来源入口"
+      ],
+      "priority": "P1",
+      "initial_state": "unreviewed",
+      "owner": "论文整合 / 图件作者",
+      "standard_basis": "reference",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a",
+      "figure": {
+        "file": "paper/manuscript-v1/figures/paper/fig-bound-gap.pdf",
+        "sha256": "5279627fbd637aab8048d9f1b7b4e0efe582c3a7cdbfab632cecc99c8f4884a6",
+        "caption": "同一优化域中的可行结果与必要界。$L\\le\\mathrm{OPT}\\le U$，阴影是必要界给出的上限与当前结果之间的差距，不代表一定可实现的收益。",
+        "label": "fig:bound-gap",
+        "page": 31
+      }
+    },
+    {
+      "id": "L01",
+      "group": "语言与术语",
+      "title": "禁止自造黑话与含混缩写",
+      "page": 16,
+      "reference": "ref2",
+      "reference_page": 10,
+      "reference_observation": "语言标准直接来自用户本轮明确要求，严于参考稿；不以参考稿也使用某词作为许可。",
+      "current": "全文存在“实际流水”“流水重叠”“工作帽”“触核数”等需要读者猜测的表达。",
+      "checks": [
+        "删除自造黑话与一切压缩表达，逐处改成准确完整语言",
+        "全文含摘要、标题、图注、图内文字、附录均检查",
+        "不能用某相关标准词存在来为含混原写法辩护"
+      ],
+      "priority": "P0",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "user",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "L02",
+      "group": "语言与术语",
+      "title": "先核完整英文原词，再选官方中文译名",
+      "page": 4,
+      "reference": "ref2",
+      "reference_page": 10,
+      "reference_observation": "语言标准直接来自用户本轮明确要求，严于参考稿；不以参考稿也使用某词作为许可。",
+      "current": "许多技术词只以中文简写、英文缩写或内部变量名称出现，没有可核对的双语术语映射。",
+      "checks": [
+        "每个技术术语先核权威来源中的完整英文原词或短语",
+        "优先官方中文译名；无官方译名则标明并作清楚翻译",
+        "中文技术术语后紧跟准确英文；正文通常写核心，图中可用Core，首次解释NPU、核心与图中标识对应关系；不自创英文"
+      ],
+      "priority": "P0",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "user",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "L03",
+      "group": "语言与术语",
+      "title": "精确定义本文中的对象、动作和范围",
+      "page": 23,
+      "reference": "ref2",
+      "reference_page": 10,
+      "reference_observation": "语言标准直接来自用户本轮明确要求，严于参考稿；不以参考稿也使用某词作为许可。",
+      "current": "“共享输入流水”“内部存活前沿”等组合不能靠泛泛学科定义解释本文语义。",
+      "checks": [
+        "首次使用之前定义对象、动作、条件、量与单位",
+        "临时约定明确标为本文约定并给具体例子",
+        "定义与官方执行语义和实现一致，不混淆不同领域含义",
+        "关系术语须说明两端对象、具体关系和适用范围；数据依赖应解释数据的产生、读取及先后要求，不混同直接依赖、传递依赖和共享输入"
+      ],
+      "priority": "P0",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "user",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "L04",
+      "group": "语言与术语",
+      "title": "每次出现都使用完整准确表达",
+      "page": 30,
+      "reference": "ref2",
+      "reference_page": 10,
+      "reference_observation": "语言标准直接来自用户本轮明确要求，严于参考稿；不以参考稿也使用某词作为许可。",
+      "current": "不能把“流水线”缩成“流水”，也不能把处理器核心分配与验证混写成含混“核对”。",
+      "checks": [
+        "全文每处写全，不因首次解释过就再压缩",
+        "流水线必须写为流水线（pipeline）并准确限定本文含义",
+        "实际表达执行单元并行或时间重叠时直接说明相应对象"
+      ],
+      "priority": "P0",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "user",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "L05",
+      "group": "语言与术语",
+      "title": "逐句写清主体、动作和因果",
+      "page": 10,
+      "reference": "ref2",
+      "reference_page": 10,
+      "reference_observation": "语言标准直接来自用户本轮明确要求，严于参考稿；不以参考稿也使用某词作为许可。",
+      "current": "“容量返回赢家的变长分包响应细化”等连续名词使读者难以确定究竟修改什么、为什么修改。",
+      "checks": [
+        "每句明确哪个算法/操作对什么对象执行什么动作",
+        "过长定语与名词链拆成可顺读的解释",
+        "段落按问题、定义、推导/操作、证据、结论展开，不堆标签"
+      ],
+      "priority": "P0",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "user",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "L06",
+      "group": "语言与术语",
+      "title": "作者改句与独立回读分开",
+      "page": 35,
+      "reference": "ref2",
+      "reference_page": 10,
+      "reference_observation": "语言标准直接来自用户本轮明确要求，严于参考稿；不以参考稿也使用某词作为许可。",
+      "current": "写作任务已接手检查点02语言重写，尚未提交可回读的新稿。",
+      "checks": [
+        "逐处交原句、位置、问题、改句、术语来源与剩余项",
+        "用新PDF和源文逐条复核，作者自报不视为通过",
+        "新稿固定SHA、PDF哈希和标准版本一致后再进入独立复核"
+      ],
+      "priority": "P0",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "user",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "L07",
+      "group": "语言与术语",
+      "title": "句子写清主体、动作与对象",
+      "page": 1,
+      "reference": "ref2",
+      "reference_page": 10,
+      "reference_observation": "用户新增中文论文句段标准。参考稿只提供对照，不授权模仿其中的生硬表达或降低要求。",
+      "current": "“以必要执行下界剪枝、官方Makespan严格改进准则接受”等表达省略了执行主体和接受对象。",
+      "checks": [
+        "每个判断、操作和比较都能明确回答谁对什么做了什么",
+        "并列成分的语法角色和逻辑层级一致，不混列对象、条件与动作",
+        "摘要、标题、图注与正文采用完整准确句式；公式周围保留必要文字解释",
+        "小标题直接表明本节研究对象与内容，去除草稿计划口吻和无明确指代的概括",
+        "按用户对本篇的要求明确论证主体，如“通过反例，我们说明……”；不将此偏好宣称为通用中文语法定律"
+      ],
+      "priority": "P0",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "user",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "L08",
+      "group": "语言与术语",
+      "title": "语序符合中文习惯，拆开长定语与名词链",
+      "page": 10,
+      "reference": "ref2",
+      "reference_page": 10,
+      "reference_observation": "用户新增中文论文句段标准。参考稿只提供对照，不授权模仿其中的生硬表达或降低要求。",
+      "current": "“容量返回赢家的变长分包响应细化”等长串修饰语使读者无法直接理解操作。",
+      "checks": [
+        "把对象、关系和动作完整写出；“同核子图”须展开为被分配到同一个核心的各个子图；执行动作对应计算任务而非图本身",
+        "复杂条件先交代再描述操作；必要时分句，不照搬英文句序",
+        "准确英文只用于术语对应，整句仍为自然中文；不机械增加“进行、实现、基于”等空泛外壳"
+      ],
+      "priority": "P0",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "user",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "L09",
+      "group": "语言与术语",
+      "title": "指代、条件与适用范围明确且就近",
+      "page": 8,
+      "reference": "ref2",
+      "reference_page": 10,
+      "reference_observation": "用户新增中文论文句段标准。参考稿只提供对照，不授权模仿其中的生硬表达或降低要求。",
+      "current": "“这个候选”“该命题”“上述费用”等必须能够唯一回指，长句中的限定不能在读完后才补出。",
+      "checks": [
+        "代词和省略成分均有唯一明确的指代对象，跨段不用含混“其/该/这”",
+        "适用条件与结论就近出现；区分局部模型、固定候选和完整求解器",
+        "“结果、收益、代价、改善”等每次说明所指指标、单位和比较对象",
+        "公式中各项的量纲与单位可相加；计算量复杂度与实际耗时分别说明，不直接混加"
+      ],
+      "priority": "P0",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "user",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "L10",
+      "group": "语言与术语",
+      "title": "因果、转折与比较必须有实际依据",
+      "page": 30,
+      "reference": "ref2",
+      "reference_page": 10,
+      "reference_observation": "用户新增中文论文句段标准。参考稿只提供对照，不授权模仿其中的生硬表达或降低要求。",
+      "current": "“这一取舍说明并行与流水收益可以超过新增通信的代价”从整体差异直接推断机制，证据不足。",
+      "checks": [
+        "“因此、从而、说明、导致”等推论能指出前提、推导或直接证据",
+        "相关变化、机制解释与因果结论明确区分，缺消融或轨迹证据时不作确定归因",
+        "比较写明相同条件、基线、样本范围和指标；不跨单位直接比较“收益与代价”"
+      ],
+      "priority": "P0",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "user",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "L11",
+      "group": "语言与术语",
+      "title": "段落围绕明确论题组织，正面解释方法",
+      "page": 16,
+      "reference": "ref2",
+      "reference_page": 10,
+      "reference_observation": "用户新增中文论文句段标准。参考稿只提供对照，不授权模仿其中的生硬表达或降低要求。",
+      "current": "多段先列“不是……也不是……”或堆机制名称，却没有先清楚说明模型计算什么、用来做什么。",
+      "checks": [
+        "每段有明确论题；先说明问题和风险，再给方法与证明，例如先说明循环等待风险再谈无环性",
+        "先正面说明对象与方法，再在相应位置说明限制，不用多重否定替代定义",
+        "删除空泛自评、口号、写作过程说明和重复句；保留与推导直接相关的必要限定",
+        "全文清理写给作者的规范、自我提醒和自我辩护；必要的算法约束、证明前提和结论范围改为面向读者的明确条件，不盲目删除"
+      ],
+      "priority": "P0",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "user",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "L12",
+      "group": "语言与术语",
+      "title": "全文逐句回读，按中文论文标准闭合问题",
+      "page": 32,
+      "reference": "ref2",
+      "reference_page": 10,
+      "reference_observation": "用户新增中文论文句段标准。参考稿只提供对照，不授权模仿其中的生硬表达或降低要求。",
+      "current": "禁词消失不能证明句子通顺，更不能证明段落推理成立。",
+      "checks": [
+        "逐句回读全部正文与图表；每个人工实例提炼共性要求并检查全文同类问题，记录实际覆盖和遗漏，不只查原词",
+        "每条句段问题交原句、位置、问题类型、改句、科学含义保持情况及术语出处",
+        "新稿不得残留需猜测主语、动作、指代或条件的关键句；作者自评不替代验收回读"
+      ],
+      "priority": "P0",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "user",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    },
+    {
+      "id": "L13",
+      "group": "语言与术语",
+      "title": "先说明具体规则，不用概括词代替解释",
+      "page": 1,
+      "reference": "ref2",
+      "reference_page": 10,
+      "reference_observation": "用户明确指出“硬件语义”掩盖赛题A、B、C三种情况的执行、带宽、容量和缓存等具体规定；此要求适用于全文。",
+      "current": "“三种硬件语义、统一框架、分层建模、评价闭环”等概括没有说明实际规则或操作，读者无法从句子理解方法。",
+      "checks": [
+        "先详细说明所指对象、具体规则与适用情况；A、B、C的执行方式、带宽、容量、缓存等按题面准确展开",
+        "概括性名称只能在内容已充分解释且可唯一回指后使用，不能让读者自行补全关键条件",
+        "不能只换同义概括、补英文或添加定义标题；改文必须实际回答对象是什么、有哪些规定、算法做了什么"
+      ],
+      "priority": "P0",
+      "initial_state": "needs_work",
+      "owner": "论文整合",
+      "standard_basis": "user",
+      "source_commit": "6f30680aaad7cceb83b7d1f7623938ec24d5bc0a"
+    }
+  ],
+  "writer_thread": "01a0da35-aa09-79c1-a2bc-058c06c60435",
+  "writer_title": "整理论文写作规划与图件现状",
+  "scope": "本稿全文文本定位，代表页视觉对照；未完成全篇数学证明、全量原件与文献真实性复审。2025样本只作表达和结构参考，不移植评分语义。",
+  "audit_pages": {
+    "current": [
+      3,
+      7,
+      10,
+      11,
+      13,
+      14,
+      17,
+      24,
+      26,
+      30,
+      32,
+      35
+    ],
+    "ref1": [
+      1,
+      11,
+      17,
+      29,
+      39,
+      44
+    ],
+    "ref2": [
+      8,
+      10,
+      16,
+      25,
+      27,
+      37
+    ],
+    "ref3": [
+      24,
+      26,
+      36
+    ],
+    "ref4": [
+      6,
+      8,
+      12,
+      16,
+      22,
+      27,
+      28
+    ]
+  }
+}
