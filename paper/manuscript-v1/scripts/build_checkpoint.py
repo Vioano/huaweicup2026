@@ -10,6 +10,8 @@ P=Path(__file__).resolve().parents[1]
 CHECKPOINT=os.environ.get('PAPER_CHECKPOINT','checkpoint-02')
 B=P/'build'/CHECKPOINT
 OUT=P/'checkpoints'/CHECKPOINT
+if (OUT/'annotation-lock.json').exists():
+    raise SystemExit('This checkpoint is frozen for user annotations. Set PAPER_CHECKPOINT to a new checkpoint directory.')
 T=P.parent/'template-2026'
 FIG=P/'figures'
 B.mkdir(parents=True,exist_ok=True);OUT.mkdir(parents=True,exist_ok=True)

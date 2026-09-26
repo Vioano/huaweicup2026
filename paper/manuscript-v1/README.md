@@ -1,6 +1,6 @@
 # 论文第一版：匿名整稿
 
-题目：**面向多核 NPU 的语义一致结构化切分与流水调度**。
+题目：**多核神经网络处理器的计算图切分与调度优化**。
 
 本目录是整稿的唯一编辑入口。先完成分章 Markdown 及其内嵌图稿说明，再统一制图，最后生成 LaTeX/PDF 检查点。原作者 `paper/sections/`、`paper/notes/` 和旧 `paper/chapters/` 保留为来源，不与整稿双向覆盖。
 
@@ -10,13 +10,13 @@
 
 1. [摘要](chapters/00-abstract.md)
 2. [问题重述与分析](chapters/01-problem.md)
-3. [模型假设与符号](chapters/02-assumptions.md)
-4. [统一模型与本文研究框架](chapters/03-framework.md)
-5. [问题一：屏障感知切分](chapters/04-p1.md)
-6. [问题二：复用感知分核](chapters/05-p2.md)
-7. [问题三：归约森林与只读 Cache](chapters/06-p3.md)
-8. [实验设计与综合分析](chapters/07-experiments.md)
-9. [模型评价与结论](chapters/08-conclusion.md)
+3. [模型条件与符号说明](chapters/02-assumptions.md)
+4. [计算图切分与调度模型](chapters/03-framework.md)
+5. [问题一：子图分别执行时的切分与调度](chapters/04-p1.md)
+6. [问题二：联合安排计算位置与数据搬运](chapters/05-p2.md)
+7. [问题三：安排计算顺序并利用共享只读Cache](chapters/06-p3.md)
+8. [实验结果与分析](chapters/07-experiments.md)
+9. [方法评价与结论](chapters/08-conclusion.md)
 10. [参考文献](chapters/09-references.md)及[附录](chapters/10-appendix.md)
 
 `::: figure-plan` 块为编辑用图稿说明，定义论证目的、来源、分图布局、颜色与验收；不是已经实现或验收的图。正式排版时由实际图件替换，不能把说明块印作已完成图。
@@ -45,4 +45,6 @@ P3 R9F 的 500 个输出与 Forest 相同，仅作选择政策负消融；其求
 
 ## 当前制作阶段
 
-第一份匿名完整 PDF 已生成，入口为 [checkpoint-01](checkpoints/checkpoint-01/README.md)。正文和补充数学推导与逐用例完整附表分开，均从同一冻结文字、数据和图件自动构建。该版本是完整审阅检查点；Fang 图件汇总择优、独立科学审读及可运行算法附件仍未全部验收，不标为终审提交版。真实封面信息按用户选择后补。
+最新完整版本是[检查点02](checkpoints/checkpoint-02/README.md)，正文31页，用户标注期间冻结。各章已重写，但独立语言与科学审读尚未通过，后续修改进入检查点03。检查点01保留原件，不覆盖。
+
+Fang样张和同步文档已推送并通过Issue26发出，详见[FANG_FIGURE_HANDOFF.md](FANG_FIGURE_HANDOFF.md)。实际已读、图件汇总、论文采用与独立验收分别记录。
