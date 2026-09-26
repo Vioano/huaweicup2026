@@ -1,6 +1,6 @@
 # v7 时间线可读性候选
 
-每例两张独立图：`p26-timeline-full` / `p26-timeline-zoom` 和 `p38-timeline-full` / `p38-timeline-zoom`。全图高 170 mm，局部图高 92 mm，均宽 160 mm；图注在 `caption.md`，建议连续放置，必要时跨页标“续”。原稿、实验、评价器及正文不改。当前仅核实单张物理尺寸与图件可读性，未在最终 LaTeX 版面中验收图注与浮动体位置。
+每例两张独立图：`p26-timeline-full` / `p26-timeline-zoom` 和 `p38-timeline-full` / `p38-timeline-zoom`。全图高 170 mm，局部图高 92 mm，均宽 160 mm；图注在 `caption.md`。新稿分别自动编号，局部图引用完整图；实际编号以合稿为准。原稿、实验、评价器及正文不改。当前仅核实单张物理尺寸与图件可读性，未在最终 LaTeX 版面中验收图注与浮动体位置。
 
 ## 重生成
 
@@ -22,4 +22,4 @@ uv run --no-sync python figures/a/paper-timeline-zoom-v4-20260926/draw_timeline_
 
 ## 版面检查
 
-四张预览均以实际 160 mm 宽目视检查了文字、轴、Task ID、Pipe 事件、放大区和 (a)/(b) 对应关系。两张全图的 PDF MediaBox 约为 160 × 170 mm，两张局部图约 160 × 92 mm。图注能否与某一图同页、跨页时的编号与浮动位置仍需论文排版验收。
+四张预览均以实际 160 mm 宽目视检查了文字、轴、Task ID、Pipe 事件、放大区和 (a)/(b) 对应关系。两张全图的 PDF MediaBox 约为 160 × 170 mm，两张局部图约 160 × 92 mm。两张图各自的图注能否与图同页、自动编号和交叉引用是否正确，仍需论文排版验收。
