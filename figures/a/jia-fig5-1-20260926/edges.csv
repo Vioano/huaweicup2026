@@ -1,0 +1,20 @@
+source,target,note
+in,route,
+route,cores,
+cores,guard,
+guard,gap,"守卫通过（是）"
+guard,dedup,"守卫不通过（否）：仅 Π₀ 进入去重"
+gap,hyper,
+hyper,dec,
+dec,retime,"字节严格下降（是）"
+dec,dedup,"否：省略第三候选，保留 Πgap（不剪掉原 gap，S3）"
+retime,dedup,
+dedup,dec2,
+dec2,score,"多候选（否）"
+dec2,plan,"唯一计划（是）：直接保留，不启动 E2"
+score,select,
+select,plan,
+plan,e0,"E0 复评（虚线，实验阶段）"
+cap,select,"仅诊断（开放虚线）"
+stat,hyper,"仅优先序（开放虚线）"
+res,route,"研究模块未接入主线（开放虚线）"

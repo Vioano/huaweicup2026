@@ -1,0 +1,142 @@
+{
+  "schema": "figure-auto-review-v1",
+  "figure_id": "fig-5-1",
+  "primary": "fig5-1-p2-tensor-comm-route.svg",
+  "files": [
+    {
+      "name": "fig5-1-p2-tensor-comm-route.svg",
+      "role": "svg",
+      "sha256": "71de36534306704e6ae80c674b3751c6bf9dfb8b0849978e9186069155a9061c"
+    },
+    {
+      "name": "fig5-1-p2-tensor-comm-route.png",
+      "role": "png",
+      "sha256": "0a9d680f3dadefe377e456014068b4319d1eac646c7d6428348801d2b4e89c16"
+    },
+    {
+      "name": "fig5-1-p2-tensor-comm-route.drawio",
+      "role": "source",
+      "sha256": "beaa69b24dfe29b7ee1c4038970101b068bf83ffd049e6c8d77a508d8049e6a4"
+    },
+    {
+      "name": "caption.md",
+      "role": "caption",
+      "sha256": "9f777e08e89df99dc605f7dedbada1d747b1e56b427044b59bd35e9eecfbf072"
+    },
+    {
+      "name": "DELIVERY.md",
+      "role": "notes",
+      "sha256": "d38c78a74c74dce8a1c5a3724d69b22ac93eb0e66261b752e04fdb4fa56d322e"
+    },
+    {
+      "name": "self-check.md",
+      "role": "self_check",
+      "sha256": "a1dacbed1fbc275059f48f367abe39b32af900a581f1b0c33db5887dbaeec436"
+    },
+    {
+      "name": "nodes.csv",
+      "role": "input",
+      "sha256": "a1d563e8634276e20a450881c3fda94a74ade93eb990a2630fc3598d4198f621"
+    },
+    {
+      "name": "edges.csv",
+      "role": "input",
+      "sha256": "fdcf20cf600885881a9ca5b3141cf57d69b4771dc0f319203f6ebd3a59befc1f"
+    },
+    {
+      "name": "preview-insert-width.png",
+      "role": "notes",
+      "sha256": "cc4cdec76f5193f959750cc717d68e42de73e1841ece05684ad5f475f8d4df74"
+    }
+  ],
+  "command": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f svg -o figures/a/jia-fig5-1-20260926/fig5-1-p2-tensor-comm-route.svg figures/a/jia-fig5-1-20260926/fig5-1-p2-tensor-comm-route.drawio\n\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f png -s 2 -o figures/a/jia-fig5-1-20260926/fig5-1-p2-tensor-comm-route.png figures/a/jia-fig5-1-20260926/fig5-1-p2-tensor-comm-route.drawio\n.venv/Scripts/python.exe F:/WorkBuddyData/skills/drawio-skill/scripts/validate.py figures/a/jia-fig5-1-20260926/fig5-1-p2-tensor-comm-route.drawio（0 error）\n.venv/Scripts/python.exe -c \"from PIL import Image; im=Image.open(figures/a/jia-fig5-1-20260926/fig5-1-p2-tensor-comm-route.png); im.resize((1500,int(im.height*1500/im.width)), Image.LANCZOS).save(figures/a/jia-fig5-1-20260926/preview-insert-width.png)\"\ntool_versions: draw.io desktop (F:/draw.io, --disable-gpu --no-sandbox); Python 3.13.12 (.venv, Pillow); drawio-skill validate.py v3.4.0",
+  "sources": [
+    {
+      "path": "paper/sections/a-q2.md（5.4、5.5）",
+      "commit": "615b1a5f（固定提交）",
+      "sha256": "bb286fba0835ce78c08473f420f7669452519a3ab9b87f41008bc75e4113e8e2",
+      "note": "经 GitHub Contents API 自固定提交抓取（哈希为抓取字节）"
+    },
+    {
+      "path": "paper/sections/a-q2-evidence.md（S3/S4，附 S2/S5）",
+      "commit": "615b1a5f（固定提交）",
+      "sha256": "833744102e48375a0f86d0e628dc6e9b2472186cb0f30d30bd60123b32763fd3",
+      "note": "经 GitHub Contents API 自固定提交抓取（哈希为抓取字节）"
+    },
+    {
+      "path": "src/q2_nikolastarx/adaptive_hypergap_guarded.py",
+      "commit": "c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f",
+      "sha256": "ce888dc91b7f29a42622ca699d553aca9716f56b0afeb9c54af5331ca0d0a01e",
+      "note": "主入口：baseline→gap→hyperrefine→retime→评分≤3→择优；自固定提交抓取（哈希为抓取字节）"
+    },
+    {
+      "path": "src/q2_nikolastarx/gap_candidate.py",
+      "commit": "c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f",
+      "sha256": "52b26ac3d444d7e2af65d9f1dfa7ee5fbd92c61348e04d999e6037651a332695",
+      "note": "链收缩与间隙日历排程；自固定提交抓取（哈希为抓取字节）"
+    },
+    {
+      "path": "src/q2_nikolastarx/gap_hyperrefine.py",
+      "commit": "c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f",
+      "sha256": "d7d17236bcb0952a099679230840194be6f6425899a66f40f535e264ac322de0",
+      "note": "两核区域超图改进；自固定提交抓取（哈希为抓取字节）"
+    },
+    {
+      "path": "src/q2_nikolastarx/gap_retime.py",
+      "commit": "c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f",
+      "sha256": "4524e4b35ddc67a2aeb8a17fd5ece47b2377d7d05c714f32687ba292b79a796f",
+      "note": "固定分核重排；自固定提交抓取（哈希为抓取字节）"
+    }
+  ],
+  "units": {
+    "makespan": "cycles",
+    "wall": "s",
+    "bytes": "B"
+  },
+  "panels": [
+    {
+      "id": "main",
+      "title": "主线｜候选构造与完整评分（算法 5-1）"
+    },
+    {
+      "id": "side",
+      "title": "辅助｜诊断与研究模块（不入主线）"
+    }
+  ],
+  "tables": {
+    "nodes": "nodes.csv",
+    "edges": "edges.csv"
+  },
+  "table_columns": {
+    "nodes": [
+      "id",
+      "stage",
+      "note"
+    ],
+    "edges": [
+      "source",
+      "target",
+      "note"
+    ]
+  },
+  "criteria": [
+    "分支、候选保留和评分次数说明与冻结入口一致。",
+    "静态张量通信目标与最终 Makespan 评价分开，不能将局部最小割表述为全局调度最优。",
+    "尚未接入的容量保护或就绪匹配等研究模块不画入主线。"
+  ],
+  "dispatch": {
+    "issue": "huaweibei123/huaweicup2026#14",
+    "comment_id": 5843791182,
+    "task_book_sha256": "55859ab1ed2b81b218663f60c4cf824e9e01ba0399c52113861b48e61da7dfd2"
+  },
+  "insert_width_check": {
+    "viewbox": "762x1053",
+    "width_mm": 165,
+    "height_mm": 228.0,
+    "min_font_pt": 6.14,
+    "main_font_pt": "6.8-9.0",
+    "preview": "preview-insert-width.png",
+    "note": "实际导出 viewBox；152mm 插入高 210.0mm"
+  },
+  "version_note": "v1（首版，旧图不计数）：按派发单绘制 drawio 分支流程图；主线 Π₀→守卫→Πgap→超图改进→字节判定→Πhypergap→式5-10 去重→E2≤3 次评分→择优→两字段方案→E0；侧栏容量/下界诊断、静态估计声明、未接入研究模块清单；节点/边与 drawio 一一对应；哈希按最终字节一次性重算（不含 audit.json 自身）"
+}
