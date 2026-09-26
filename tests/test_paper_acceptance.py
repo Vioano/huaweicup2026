@@ -5,9 +5,10 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 from src.paper_acceptance.core import Board, Conflict, MARKER, ROOT
-from src.paper_acceptance.app import Documents, TeamImages
+from src.paper_acceptance.app import CheckpointDocuments, Documents, TeamImages
 from src.paper_acceptance.language import scan_text, import_author_report
 
 
@@ -71,14 +72,35 @@ class ReviewContractTest(unittest.TestCase):
         registry = json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text())
         by_id = {item['id']: item for item in registry['checkpoints']}
         self.assertEqual(registry['latest_known_checkpoint'], 'v5')
-        self.assertEqual(by_id['v5']['kind'], 'frozen_local_checkpoint_pending_publication')
-        self.assertNotIn('public_pdf_url', by_id['v5'])
+        self.assertEqual(by_id['v5']['kind'], 'frozen_published_checkpoint')
+        self.assertIn(by_id['v5']['git_commit'], by_id['v5']['public_pdf_url'])
         self.assertEqual(by_id[registry['acceptance_baseline']]['pdf_sha256'],
                          json.loads((ROOT / 'docs/paper-acceptance/catalogue.json').read_text())['paper_sha256'])
         self.assertNotEqual(by_id[registry['latest_known_checkpoint']]['pdf_sha256'],
                             by_id[registry['acceptance_baseline']]['pdf_sha256'])
         self.assertIn(by_id['CP06']['git_commit'], by_id['CP06']['public_pdf_url'])
         self.assertEqual(len({by_id[x]['pdf_sha256'] for x in ('CP04', 'CP05', 'CP06')}), 3)
+
+    def test_registered_checkpoint_refuses_changed_pdf(self):
+        checkpoints = CheckpointDocuments(self.board)
+        checkpoints.locations_file.write_text(json.dumps({'v5': str(self.pdf)}))
+        fixed = {'pdf_sha256': hashlib.sha256(self.pdf.read_bytes()).hexdigest(), 'pages': 1,
+                 'pdf_path': str(self.pdf)}
+        with patch.object(CheckpointDocuments, 'record', return_value=fixed):
+            self.assertEqual(checkpoints.locate('v5')[0], self.pdf.resolve())
+            self.pdf.write_bytes(b'changed source')
+            with self.assertRaisesRegex(ValueError, '哈希'):
+                checkpoints.locate('v5')
+
+    def test_published_checkpoint_uses_fixed_git_object_when_local_file_is_missing(self):
+        checkpoints = CheckpointDocuments(self.board)
+        fixed = {'pdf_sha256': hashlib.sha256(self.pdf.read_bytes()).hexdigest(), 'pages': 1,
+                 'pdf_path': 'paper.pdf', 'git_commit': 'a'*40}
+        with patch.object(CheckpointDocuments, 'record', return_value=fixed), \
+             patch('src.paper_acceptance.app.subprocess.run', return_value=SimpleNamespace(returncode=0, stdout=self.pdf.read_bytes())):
+            pdf, _ = checkpoints.locate('v5')
+            self.assertEqual(pdf.read_bytes(), self.pdf.read_bytes())
+            self.assertEqual(pdf.parent, checkpoints.cache)
 
     def values(self, decision='comment', revision=0, actor='author'):
         return dict(item_id='L01', paper_sha256=self.cat['paper_sha256'], standard_hash=self.board.standard_hash,

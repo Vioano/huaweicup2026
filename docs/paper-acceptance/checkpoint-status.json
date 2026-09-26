@@ -4,26 +4,55 @@
   "latest_known_checkpoint": "v5",
   "current_iteration": "v5",
   "next_iterations": [],
-  "iteration_note": "CP01至CP06归属第一轮v1；v2、v3、v4固定PDF已由总调度发布。v5本机PDF已冻结并按SHA-256核对，四张新增图实际入稿；组织主库固定提交仍待发布。旧批注按原PDF身份定位，不自动迁移审阅结论。",
+  "iteration_note": "CP01至CP06归属第一轮v1；v2、v3、v4固定PDF已由总调度发布。v5已由总调度发布固定提交并核同组织主库与公开镜像PDF字节，四张新增图实际入稿。旧批注按原PDF身份定位，不自动迁移审阅结论。",
   "checkpoints": [
     {
       "id": "v5",
       "iteration": "v5",
-      "kind": "frozen_local_checkpoint_pending_publication",
-      "summary": "92页本机冻结稿已按SHA-256核对；新增四张图已目视核对实际页码与图注。它们是供用户批注的暂定选图，不代表Fang最终选版、科学验收或人工接受；组织主库固定提交待发布。",
+      "kind": "frozen_published_checkpoint",
+      "summary": "92页本机冻结稿已按SHA-256核对；新增四张图已目视核对实际页码与图注。它们是供用户批注的暂定选图，不代表Fang最终选版、科学验收或人工接受；固定提交和公开PDF已发布，Draft PR待整合。",
       "pdf_path": "paper/manuscript-v1/checkpoints/v5/anonymous-paper-v5.pdf",
       "pdf_sha256": "c2543e13146b5c75dc8e2103e983c07c5db746b8e98129fff40f2721f1d29233",
       "pages": 92,
       "source_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
-      "git_state": "本机PDF已冻结；组织主库固定提交与公开链接待总调度发布",
+      "git_state": "组织主库固定提交已发布；Draft PR #222待整合，公开镜像字节已由总调度核同",
       "acceptance_state": "四张新图实际入稿供人工批注；Fang选版及科学、语言、最终人工验收未完成",
       "figures_checked": [
-        {"page": 18, "label": "图4.2-1", "gallery_id": "fang-fig42-a", "role": "沿用用户选定A版"},
-        {"page": 28, "label": "图5.1-1", "gallery_id": "farmer-fig52-v2", "role": "张量生命周期排版导出版"},
-        {"page": 33, "label": "图5.4-1", "gallery_id": "acceptance-p2-local-cut", "role": "局部最小割候选"},
-        {"page": 35, "label": "图5.5-1", "gallery_id": "acceptance-p2-three-plans", "role": "三方案候选"},
-        {"page": 47, "label": "图6.7-1", "gallery_id": "acceptance-p3-forest-decision", "role": "树状分支决策候选"}
-      ]
+        {
+          "page": 18,
+          "label": "图4.2-1",
+          "gallery_id": "fang-fig42-a",
+          "role": "沿用用户选定A版"
+        },
+        {
+          "page": 28,
+          "label": "图5.1-1",
+          "gallery_id": "farmer-fig52-v2",
+          "role": "张量生命周期排版导出版"
+        },
+        {
+          "page": 33,
+          "label": "图5.4-1",
+          "gallery_id": "acceptance-p2-local-cut",
+          "role": "局部最小割候选"
+        },
+        {
+          "page": 35,
+          "label": "图5.5-1",
+          "gallery_id": "acceptance-p2-three-plans",
+          "role": "三方案候选"
+        },
+        {
+          "page": 47,
+          "label": "图6.7-1",
+          "gallery_id": "acceptance-p3-forest-decision",
+          "role": "树状分支决策候选"
+        }
+      ],
+      "git_commit": "f963846496778dd3baa084971476e68e587de4a0",
+      "public_pdf_url": "https://github.com/huaweibei123/huaweicup2026/blob/f963846496778dd3baa084971476e68e587de4a0/paper/manuscript-v1/checkpoints/v5/anonymous-paper-v5.pdf",
+      "publication_url": "https://github.com/huaweibei123/huaweicup2026/pull/222",
+      "notice_url": "https://github.com/huaweibei123/huaweicup2026/issues/217#issuecomment-5846373460"
     },
     {
       "id": "v4",
