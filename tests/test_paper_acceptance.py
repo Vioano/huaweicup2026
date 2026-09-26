@@ -134,7 +134,15 @@ class ReviewContractTest(unittest.TestCase):
     def test_checkpoint_registry_keeps_new_freeze_separate_from_review_baseline(self):
         registry = json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text())
         by_id = {item['id']: item for item in registry['checkpoints']}
-        self.assertEqual(registry['latest_known_checkpoint'], 'v10')
+        self.assertEqual(registry['latest_known_checkpoint'], 'v11')
+        self.assertEqual(registry['latest_format_revision'], 'fanglayout04')
+        self.assertEqual(by_id['fanglayout04']['kind'], 'format_revision')
+        self.assertEqual(by_id['fanglayout04']['pages'], 140)
+        self.assertFalse(by_id['fanglayout04']['human_final_acceptance'])
+        self.assertEqual(by_id['v11']['pages'], 79)
+        self.assertEqual(len(by_id['v11']['parts']), 9)
+        self.assertNotEqual(by_id['v11']['pdf_sha256'], by_id['fanglayout04']['pdf_sha256'])
+        self.assertEqual(registry['integration']['target'], 'v12')
         self.assertEqual(registry['acceptance_baseline'], 'CP01')
         self.assertEqual(by_id['v10']['kind'], 'frozen_published_checkpoint')
         self.assertEqual(by_id['v10']['pages'], 83)

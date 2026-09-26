@@ -1,11 +1,212 @@
 {
   "schema": "paper-checkpoint-status-v1",
   "acceptance_baseline": "CP01",
-  "latest_known_checkpoint": "v10",
-  "current_iteration": "v10",
-  "next_iterations": [],
-  "iteration_note": "CP01仍为逐项验收基线；v9和v10均有组织主库固定提交，v10的组织PR与公开镜像同HEAD但仍Draft未合并。v10语言、科学、Fang格式和最终人工验收未完成，旧批注不迁移到新页码、坐标或通过状态。",
+  "latest_known_checkpoint": "v11",
+  "current_iteration": "v11",
+  "next_iterations": [
+    "v12"
+  ],
+  "iteration_note": "当前内容稿v11与Fang基于v9的格式优化版分别登记；用户已要求合成v12，论文监督已实际接手唯一集成与TeX写区。v12尚未交付。旧批注继续绑定各自PDF，不迁移。",
   "checkpoints": [
+    {
+      "id": "v11",
+      "iteration": "v11",
+      "kind": "frozen_published_checkpoint",
+      "summary": "79页内容审阅版：新目录与精简附录已接入，附录位于76—79页。131份冻结文件与组织固定Git原件逐一核同，提供六份正文章节与三份附表分册。Fang格式优化版已另行收到，正在将本版内容接入其格式生成v12。",
+      "pdf_path": "paper/manuscript-v1/checkpoints/v11/anonymous-paper-v11.pdf",
+      "pdf_sha256": "eba72adde22b304e42537182083c73e3192d66ebeaa3fe77a3880edc9dad142a",
+      "pages": 79,
+      "supplement_path": "paper/manuscript-v1/checkpoints/v11/result-tables.pdf",
+      "supplement_sha256": "2c4f09fa40a2a45cd243f635cad09606a4d2fc980b5d00b1279cad1d2c915cb7",
+      "supplement_pages": 57,
+      "attachment_path": "paper/manuscript-v1/checkpoints/v11/attachments/appendix-supplement-v11.zip",
+      "attachment_sha256": "5feef1316f1ff2fcb4872ff32e6293556723bdd996a875b5de21749f9a03582a",
+      "freeze_manifest_path": "paper/manuscript-v1/checkpoints/v11/freeze-manifest.json",
+      "freeze_manifest_sha256": "e28d6c29f47100cca3d3c30a9faee5d1e3b650b202e2233311626a61fab2876d",
+      "parts_manifest_path": "paper/manuscript-v1/checkpoints/v11/parts-manifest.json",
+      "parts_manifest_sha256": "93300dd39c47650b0a4b914d6d9a65568806581c1312f991a953f90c4a2619a4",
+      "parts": [
+        {
+          "file": "parts/v11-part-01.pdf",
+          "title": "论文 v11 · 摘要目录与模型",
+          "source": "anonymous-paper-v11.pdf",
+          "original_pages": [
+            1,
+            20
+          ],
+          "pages": 20,
+          "sha256": "8d1c2b9463c86d9e1952792b642fca47e39164012134716ba99a214810a2e5e6",
+          "bytes": 2840688,
+          "local_links": 32,
+          "cross_part_links": 80,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/c20a8ae520d1d3e4adafdb638b8d27c3c44742d3/paper/manuscript-v1/checkpoints/v11/parts/v11-part-01.pdf"
+        },
+        {
+          "file": "parts/v11-part-02.pdf",
+          "title": "论文 v11 · 问题一",
+          "source": "anonymous-paper-v11.pdf",
+          "original_pages": [
+            20,
+            33
+          ],
+          "pages": 14,
+          "sha256": "546ec8042d12e7622296b76077b09ef7a5382f715e6a3c49f46aad1613dd498b",
+          "bytes": 3011958,
+          "local_links": 8,
+          "cross_part_links": 2,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/c20a8ae520d1d3e4adafdb638b8d27c3c44742d3/paper/manuscript-v1/checkpoints/v11/parts/v11-part-02.pdf"
+        },
+        {
+          "file": "parts/v11-part-03.pdf",
+          "title": "论文 v11 · 问题二",
+          "source": "anonymous-paper-v11.pdf",
+          "original_pages": [
+            33,
+            48
+          ],
+          "pages": 16,
+          "sha256": "9e18d6e653075abf0c0bc57b87a6465f5726ac77f805a95b92c2663d2362e70e",
+          "bytes": 1640559,
+          "local_links": 9,
+          "cross_part_links": 7,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/c20a8ae520d1d3e4adafdb638b8d27c3c44742d3/paper/manuscript-v1/checkpoints/v11/parts/v11-part-03.pdf"
+        },
+        {
+          "file": "parts/v11-part-04.pdf",
+          "title": "论文 v11 · 问题三",
+          "source": "anonymous-paper-v11.pdf",
+          "original_pages": [
+            48,
+            67
+          ],
+          "pages": 20,
+          "sha256": "ec7847868d9cc7875b035e071b2a08e3e500fe541dd4ef2d3adaad6944c86dc6",
+          "bytes": 1109017,
+          "local_links": 12,
+          "cross_part_links": 6,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/c20a8ae520d1d3e4adafdb638b8d27c3c44742d3/paper/manuscript-v1/checkpoints/v11/parts/v11-part-04.pdf"
+        },
+        {
+          "file": "parts/v11-part-05.pdf",
+          "title": "论文 v11 · 实验结论与参考文献",
+          "source": "anonymous-paper-v11.pdf",
+          "original_pages": [
+            67,
+            76
+          ],
+          "pages": 10,
+          "sha256": "28bf3c3a55dafcb4e593022275300cd5d8769b6064cd436f242db5d3fef16210",
+          "bytes": 499039,
+          "local_links": 8,
+          "cross_part_links": 0,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/c20a8ae520d1d3e4adafdb638b8d27c3c44742d3/paper/manuscript-v1/checkpoints/v11/parts/v11-part-05.pdf"
+        },
+        {
+          "file": "parts/v11-part-06.pdf",
+          "title": "论文 v11 · 附录说明与数学推导",
+          "source": "anonymous-paper-v11.pdf",
+          "original_pages": [
+            76,
+            79
+          ],
+          "pages": 4,
+          "sha256": "849cbb2eb5674d3c5fac97cbc572cf66248235a673e419bc952a83d798d06eaf",
+          "bytes": 538683,
+          "local_links": 3,
+          "cross_part_links": 0,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/c20a8ae520d1d3e4adafdb638b8d27c3c44742d3/paper/manuscript-v1/checkpoints/v11/parts/v11-part-06.pdf"
+        },
+        {
+          "file": "parts/v11-results-01.pdf",
+          "title": "论文 v11 · 逐例结果附表 1",
+          "source": "result-tables.pdf",
+          "original_pages": [
+            1,
+            20
+          ],
+          "pages": 20,
+          "sha256": "00763e3ea36d5f6c0e3fdc4dac72869bb237d53383fdcd393354651cc02f862f",
+          "bytes": 71041,
+          "local_links": 0,
+          "cross_part_links": 0,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/c20a8ae520d1d3e4adafdb638b8d27c3c44742d3/paper/manuscript-v1/checkpoints/v11/parts/v11-results-01.pdf"
+        },
+        {
+          "file": "parts/v11-results-02.pdf",
+          "title": "论文 v11 · 逐例结果附表 2",
+          "source": "result-tables.pdf",
+          "original_pages": [
+            21,
+            40
+          ],
+          "pages": 20,
+          "sha256": "bc6d43e3e323f5400ae7674b1203a5b51380a3a8376bc1b25d45e5c619ae4b7f",
+          "bytes": 67982,
+          "local_links": 0,
+          "cross_part_links": 0,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/c20a8ae520d1d3e4adafdb638b8d27c3c44742d3/paper/manuscript-v1/checkpoints/v11/parts/v11-results-02.pdf"
+        },
+        {
+          "file": "parts/v11-results-03.pdf",
+          "title": "论文 v11 · 逐例结果附表 3",
+          "source": "result-tables.pdf",
+          "original_pages": [
+            41,
+            57
+          ],
+          "pages": 17,
+          "sha256": "e9f453fe4e770ff5e190ec6587a6d227997489309bee95e802e6c96497c85c25",
+          "bytes": 63196,
+          "local_links": 0,
+          "cross_part_links": 0,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/c20a8ae520d1d3e4adafdb638b8d27c3c44742d3/paper/manuscript-v1/checkpoints/v11/parts/v11-results-03.pdf"
+        }
+      ],
+      "source_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+      "git_state": "组织Draft PR #222固定发布，未合并；验收台独立核131文件字节，主库与镜像同HEAD由发布协调者和论文监督回报",
+      "acceptance_state": "原件身份已核；语言、科学、版面与最终人工验收待办",
+      "figure_inventory": [],
+      "human_final_acceptance": false,
+      "annotation_policy": "批注绑定本版PDF哈希；旧页码、矩形与通过状态不迁移。冻结README中Fang尚未交付是冻结当时状态，现由独立格式交付记录更新。",
+      "git_commit": "c20a8ae520d1d3e4adafdb638b8d27c3c44742d3",
+      "public_pdf_url": "https://github.com/huaweibei123/huaweicup2026/blob/c20a8ae520d1d3e4adafdb638b8d27c3c44742d3/paper/manuscript-v1/checkpoints/v11/anonymous-paper-v11.pdf",
+      "public_supplement_url": "https://github.com/huaweibei123/huaweicup2026/blob/c20a8ae520d1d3e4adafdb638b8d27c3c44742d3/paper/manuscript-v1/checkpoints/v11/result-tables.pdf",
+      "attachment_public_url": "https://github.com/huaweibei123/huaweicup2026/blob/c20a8ae520d1d3e4adafdb638b8d27c3c44742d3/paper/manuscript-v1/checkpoints/v11/attachments/appendix-supplement-v11.zip",
+      "publication": {
+        "organization_pr": "https://github.com/huaweibei123/huaweicup2026/pull/222",
+        "organization_commit": "c20a8ae520d1d3e4adafdb638b8d27c3c44742d3",
+        "draft_unmerged": true,
+        "all_131_files_git_bytes_checked_by_board": true,
+        "fang_notice_url": "https://github.com/huaweibei123/huaweicup2026/issues/15#issuecomment-5850549352"
+      }
+    },
+    {
+      "id": "fanglayout04",
+      "iteration": "v9-layout-04",
+      "kind": "format_revision",
+      "label": "Fang 格式优化版",
+      "content_baseline": "v9 revision03",
+      "summary": "140页，内容仍基于v9；Fang已修正正文行距、首行缩进、图注字号、目录样式及页脚。目录保留、图片不改、封面由用户制作。待接入v11内容生成v12。",
+      "pdf_path": "paper/manuscript-v1/layout-revisions/v9-layout-04/anonymous-paper-v9-layout-04.pdf",
+      "pdf_sha256": "6d7669f62efd57be004d3c54b4ed0bd70a63f520756cd0e0de6f51bb40bf7456",
+      "pages": 140,
+      "git_commit": "4b936beb96ebf30a91172ef65dbf89d3d897389d",
+      "public_pdf_url": "https://github.com/huaweibei123/huaweicup2026/blob/4b936beb96ebf30a91172ef65dbf89d3d897389d/paper/manuscript-v1/layout-revisions/v9-layout-04/anonymous-paper-v9-layout-04.pdf",
+      "attachment_path": "paper/manuscript-v1/layout-revisions/v9-layout-04/v9-layout-04-paper-and-latex.zip",
+      "attachment_sha256": "b04ab41200ffb0f751cfe2a1c5509b98483666a112042ff8e5f09c3575858430",
+      "attachment_public_url": "https://github.com/huaweibei123/huaweicup2026/blob/4b936beb96ebf30a91172ef65dbf89d3d897389d/paper/manuscript-v1/layout-revisions/v9-layout-04/v9-layout-04-paper-and-latex.zip",
+      "public_readme_url": "https://github.com/huaweibei123/huaweicup2026/blob/4b936beb96ebf30a91172ef65dbf89d3d897389d/paper/manuscript-v1/layout-revisions/v9-layout-04/README.md",
+      "source_session": "yuanzhifang30-sudo/s-01a0df7fdd1e7ed2bd33463b30bdf5fc",
+      "source_message_url": "https://github.com/huaweibei123/huaweicup2026/issues/217#issuecomment-5850558302",
+      "git_state": "Fang已按固定提交交付；Draft PR #239未合并",
+      "acceptance_state": "验收台实核PDF/ZIP哈希、171项CRC、170文件SHA；作者Windows排版与视觉验证尚未由本台重复复核",
+      "human_final_acceptance": false,
+      "publication": {
+        "organization_pr": "https://github.com/huaweibei123/huaweicup2026/pull/239",
+        "draft_unmerged": true
+      },
+      "receipt_path": "docs/paper-acceptance/receipts/fang-layout04-v11-receipt.json"
+    },
     {
       "id": "v10",
       "iteration": "v10",
@@ -1287,5 +1488,14 @@
       "public_pdf_url": "https://github.com/huaweibei123/huaweicup2026/blob/6f30680aaad7cceb83b7d1f7623938ec24d5bc0a/paper/manuscript-v1/checkpoints/checkpoint-01/anonymous-paper-v1.pdf",
       "acceptance_state": "未验收"
     }
-  ]
+  ],
+  "latest_format_revision": "fanglayout04",
+  "integration": {
+    "target": "v12",
+    "state": "in_progress",
+    "content_checkpoint": "v11",
+    "format_checkpoint": "fanglayout04",
+    "owner_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+    "message": "v12正在整合：将v11内容填入Fang修正后的格式，完成后在此提供新版PDF。"
+  }
 }
