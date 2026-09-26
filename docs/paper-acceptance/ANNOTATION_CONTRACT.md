@@ -1,12 +1,14 @@
 # 人工实例到全文同类检查：数据约定 v2
 
-真实首轮样本见 `annotation-workflow.json`，它与页面、Agent接口使用同一原件。六条人工批注来自写作任务交回的CP02批注JSON；其中用户原话、作者理解和本台归类分开保存。批注文件自己的固定提交取得前，其来源回执明确记本地工作稿与字节哈希，不能把论文PDF所在提交冒充批注文件提交。
+真实首轮样本见 `annotation-workflow.json`，它与页面、Agent接口使用同一原件。当前17条人工批注来自原写作任务交回的CP02批注JSON；前7条已核固定097240c3原件，新增10条收到工作稿，来源状态逐批区分。用户原话、作者理解和本台归类分开保存。批注文件自己的固定提交取得前，其来源回执明确记本地工作稿与字节哈希，不能把论文PDF所在提交冒充批注文件提交。
 
 ## 稳定事件
 
 `events[]` 必需字段：`annotation_id`、`event_key`、`source_commit`、`paper_sha256`、`pdf_path`、`page`、`rect`、`original`、`user_comment_verbatim`、`source_type`。`event_key` 为 `PDF哈希:批注ID`。相同键再次收到时核对原文与用户批注，完全相同则复用；内容改变视为新修订并保留旧版，不能覆盖后冒称初始原话。
 
-`artifact_commit` 是PDF原件所在提交，不一定等于正文SHA；批注文件的发布身份单独在 `source_receipt`。PDF坐标始终带页尺寸及原点，不能套到重排后的页。转述必须使用 `user_comment_summary` 并标明不是原话，不得填进verbatim字段。
+`artifact_commit` 是PDF原件所在提交，不一定等于正文SHA；批注文件的发布身份单独在 `source_receipt`。同一句跨行产生的不同批注ID都保留，通过`occurrence_groups`关联到同一位置，不计作两个独立问题。每条`annotation_commit`单独记录批注原件发布状态，顶层回执可同时含固定批次与待发布批次。
+
+PDF坐标始终带页尺寸及原点，不能套到重排后的页。转述必须使用 `user_comment_summary` 并标明不是原话，不得填进verbatim字段。
 
 ## 问题类别
 
@@ -24,7 +26,7 @@
 
 ## 作者回交
 
-作者在自己的 `paper/manuscript-v1/review/` 写响应JSON，再发固定SHA和路径。顶层字段：`schema_version:2`、`source_commit`（被审94dae）、`target_commit`（新稿）、`entries`。每条：
+当前正文负责人Antigravity通过资料与审核任务交付，在约定的 `paper/manuscript-v1/review/` 保存响应JSON，再发固定SHA和路径。顶层字段：`schema_version:2`、`source_commit`（被审94dae）、`target_commit`（新稿）、`entries`。每条：
 
 ```json
 {
@@ -43,4 +45,4 @@
 
 `disposition` 允许 `revised`（已改）、`explained`（提供定义/已有位置）、`disputed`（提出异议）或 `unresolved`。改写、合并、拆分或删除均说明去向；删除不省略原因。证据用固定出处。作者不能填写accepted替代验收者回读。
 
-验收台核对新原文、语义及影响后记录处理结果；类级关闭还要求该类覆盖完整且无未解决问题，不能以一条改好关闭一整类。当前接口仅提供读取与既有审阅发布，导入报告不自动改状态、不自动运行扫描、更不提供不存在的后台唤醒。
+监督与审核任务核对新原文、语义及影响后交回处理结果，验收台记录并展示；类级关闭还要求该类覆盖完整且无未解决问题，不能以一条改好关闭一整类。当前接口仅提供读取与既有审阅发布，导入报告不自动改状态、不自动运行扫描、更不提供不存在的后台唤醒。

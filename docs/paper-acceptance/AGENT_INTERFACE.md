@@ -58,6 +58,8 @@ CLI与HTTP共用状态：`identity / sync / status / agent --item ID / draft FIL
 
 ## 人工实例扩展与双向同步
 
-新批注流程按同目录 `COLLABORATION_PROTOCOL.md` v2 与 `ANNOTATION_CONTRACT.md`。真实六条事件及类别样本在 `annotation-workflow.json`。验证结构和去重键可运行 `python3 -m src.paper_acceptance check-annotations docs/paper-acceptance/annotation-workflow.json`，不会发消息、改验收或自动派工。
+新批注流程按同目录 `COLLABORATION_PROTOCOL.md` .3 与 `ANNOTATION_CONTRACT.md`。真实17条批注事件及11类要求在 `annotation-workflow.json`。验证结构和去重键可运行 `python3 -m src.paper_acceptance check-annotations docs/paper-acceptance/annotation-workflow.json`，不会发消息、改验收或自动派工。
 
 一般初审与谓宾专项各保留自己的标准和覆盖，不叠加成不同内容数；原词搜索只是辅助。作者针对稳定finding_id回交v2响应（revised/explained/disputed/unresolved），新版固定SHA与位置必留。主验收者再核对，作者不代签接受。报告发布与实际已读分别记入handoffs；客户端没有隐含的后台唤醒。
+
+当前分工：验收台仅维护网站、接口及同步数据；原写作任务监督Antigravity严格执行标准并回传整改、解释与复核记录。接口不自动派新标注，也不把收到作者改文当作通过。

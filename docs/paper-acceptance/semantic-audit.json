@@ -4329,17 +4329,46 @@
         "CLASS-04"
       ],
       "source_type": "ai_proposal_reviewed"
+    },
+    {
+      "id": "QTY-001",
+      "unit_id": "SR-4a9a06112db5",
+      "path": "paper/manuscript-v1/chapters/03-framework.md",
+      "line": 75,
+      "original": "$$T_{\\mathrm{solve}}=O\\!\\left(C(G,K)+b(|V|+|E_V|+|\\mathcal S|)\\right)+\\sum_{j=1}^{b}T_j+T_{\\mathrm{IO}},$$",
+      "source_commit": "94dae95a31826c0f3171075c547ee5975be17de8",
+      "standard_version": "2026-09-26.5",
+      "rules": [
+        "L03",
+        "L09"
+      ],
+      "class_ids": [
+        "CLASS-07"
+      ],
+      "category": "计算量与实际耗时的单位未统一",
+      "severity": "major",
+      "issue": "前文把C(G,K)定义为解析和构造的总计算量，而公式将它与评价耗时T_j及读写耗时T_IO放在求解时间等式中，未说明操作次数与时间的关系和单位。",
+      "required_change": "区分复杂度表达与以秒计的各阶段耗时；时间公式中所有项采用相同单位，另行说明各阶段复杂度。不能把操作次数直接当成实测秒数。",
+      "suggested_revision": null,
+      "needs_author_definition": true,
+      "worker": "board-review",
+      "source_type": "reviewer_finding",
+      "supervisor_status": "confirmed",
+      "supervisor_note": "已核对固定第73行定义和第75行公式；作者也回报按USER07整类检查发现并正在修改。此记录关注量与单位说明，不代替复杂度证明。",
+      "author_status": "delivered",
+      "source_url": "https://github.com/huaweibei123/huaweicup2026/blob/94dae95a31826c0f3171075c547ee5975be17de8/paper/manuscript-v1/chapters/03-framework.md#L75"
     }
   ],
   "scope": "11章源文的段落、标题、表格和公式块；未检查新PDF和图内文字，不代表最终验收通过。",
-  "active_standard_version": "2026-09-26.5",
-  "review_limits": "一般初审采用标准.4；谓语宾语与实际对象专项采用.5。59条AI提议中8条复核不采用，51条交作者处理或解释；这是意见数，不是51个已证实错误或51句。新稿语言尚未通过。",
+  "active_standard_version": "2026-09-26.6",
+  "review_limits": "一般初审采用标准.4；谓宾专项与补充量纲检查采用.5。59条子Agent提议中8条不采用，另补1条量与单位意见，共52条交作者处理或解释。意见数不等于已证实错误数，新稿尚未通过。",
   "summary": {
     "source_units": 331,
     "worker_findings": 59,
     "dismissed": 8,
-    "requires_response": 51,
-    "predicate_findings": 5
+    "requires_response": 52,
+    "predicate_findings": 5,
+    "reviewer_additions": 1
   },
   "predicate_coverage": [
     {

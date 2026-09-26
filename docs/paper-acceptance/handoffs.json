@@ -1,5 +1,16 @@
 [
   {
+    "id": "website-maintenance-20260926",
+    "items": [],
+    "title": "当前分工：网站维护与写作监督",
+    "owner": "验收台维护者 / 原写作任务 / Antigravity",
+    "state": "current",
+    "acknowledgement": "用户已明确：本任务专注网站和Agent接口；原写作任务不再写正文，负责监督Antigravity严格执行已标注标准。",
+    "expected": "监督方交回固定改文、逐项处理及审核记录，网站负责同步展示",
+    "delivery": null,
+    "review": "本台不再主动派新标注；已完成审阅保留，交付与通过分开。"
+  },
+  {
     "id": "language-20260926",
     "items": [
       "L01",
@@ -12,12 +23,12 @@
     "title": "全文语言重写与术语来源核对",
     "owner": "整理论文写作规划与图件现状",
     "thread_id": "01a0da35-aa09-79c1-a2bc-058c06c60435",
-    "state": "acknowledged",
+    "state": "historical",
     "sent_at": "2026-09-26",
     "acknowledgement": "写作任务明确回复：已接手全文语言修订，保留检查点01，将交检查点02、术语来源及逐句对照。",
     "expected": "固定提交、PDF哈希、language-audit.json、权威术语来源与未解决项",
     "delivery": null,
-    "review": "尚未收到新稿并回读，不是复核通过",
+    "review": "尚未收到新稿并回读，不是复核通过。此记录为旧分工历史；当前正文由Antigravity写作，原写作任务负责监督。",
     "baseline_delivery": {
       "commit": "e509c998ea5a3a0a8ceeb0ec59153c0b297ca133",
       "path": "paper/manuscript-v1/review/language-audit.json",
@@ -40,12 +51,12 @@
     "title": "中文论文句子、段落与完整对象关系",
     "owner": "整理论文写作规划与图件现状",
     "thread_id": "01a0da35-aa09-79c1-a2bc-058c06c60435",
-    "state": "acknowledged",
+    "state": "historical",
     "sent_at": "2026-09-26",
     "acknowledgement": "写作任务已回复L07—L12已读，并表示摘要、01—08各章及附录已完成Markdown第一轮逐段重写；目前仍在核对公式条件、图中文字与新PDF，尚未交付固定新稿。",
     "expected": "逐句/逐段原文与改文、实际覆盖清单、科学含义保持说明、术语来源与新稿固定SHA/PDF哈希",
     "delivery": null,
-    "review": "作者工作区进展，仅作状态，不是新稿验收；“同核子图”等完整展开要求已追加通知"
+    "review": "作者工作区进展，仅作状态，不是新稿验收；“同核子图”等完整展开要求已追加通知。此记录为旧分工历史；当前正文由Antigravity写作，原写作任务负责监督。"
   },
   {
     "id": "fang-language-20260926",
@@ -96,7 +107,7 @@
     "owner": "yuanzhifang30-sudo/s-f42fb47d93984f22a151b0a09f678c84",
     "state": "acknowledged",
     "acknowledgement": "已实际回读Fang的.5补读回执：读取a58a7d4全文规范与6de风格交接；说明图4-1仍有执行对象措辞待审，不代其他会话签收。",
-    "expected": "新图、固定提交、原句改句和源码依据；补读.4/L13",
+    "expected": "收到图件c7a4437d固定交付；最新.6规范和.3分工待同步后本人补读，图件审核由论文监督任务安排",
     "delivery": {
       "commit": "c7a4437dca969b2ffbaad3b8043854b82f23f4d1",
       "path": "figures/a/fig41-beautify-20260926/DELIVERY.md",
@@ -123,11 +134,38 @@
       "L13"
     ],
     "title": "两任务双向同步与人工实例扩展",
-    "owner": "整理论文写作规划与图件现状 / 验收台",
-    "state": "acknowledged",
-    "acknowledgement": "整稿任务已实际读回a58a7d4协议.1/.5规范与接口，并回传六条原始批注；随后读过.2工作稿与类别约定并认可，固定发布版待再次回读。",
-    "expected": "协议.2固定版签收；7条人工批注固定归档；按SA/SV/USER/CLASS标识回交CP03处理映射",
+    "owner": "验收台网站维护 / 原写作任务监督Antigravity",
+    "state": "partial",
+    "acknowledgement": "整稿任务已实际读回8a1d0cb9d506f1499a93fd9c9919de508908e0aa的根AGENTS入口、协议.2、数据约定、Agent接口和7类实际记录，接受分工/状态约定；已主动回传17条用户批注，前7条固定归档已核。",
+    "expected": "原写作任务回读.3分工/.6标准并监督Antigravity严格执行，回交固定原件、改文和审核记录",
     "delivery": null,
-    "review": "已确认工作回合内双向主动通知、类级语义检查与冻结CP02；不声称后台实时唤醒或全部类别已关闭。"
+    "review": "协议.2已实际签收；.3新分工与.6新要求另待签收。原写作任务已停写，不再向其派正文清理。",
+    "protocol_ack_commit": "8a1d0cb9d506f1499a93fd9c9919de508908e0aa",
+    "pending_standard_version": "2026-09-26.6"
+  },
+  {
+    "id": "antigravity-writing-20260926",
+    "items": [
+      "L01",
+      "L02",
+      "L03",
+      "L04",
+      "L05",
+      "L06",
+      "L07",
+      "L08",
+      "L09",
+      "L10",
+      "L11",
+      "L12",
+      "L13"
+    ],
+    "title": "正文写作转交当前Antigravity对话",
+    "owner": "Antigravity / Verify CodeX Language Compliance",
+    "state": "sent",
+    "acknowledgement": null,
+    "expected": "由资料与审核任务在用户当前对话完成交接，回报实际接手、已读固定标准与交付路径",
+    "delivery": null,
+    "review": "已收到原写作任务转达的用户改派并确认停写；尚未取得Antigravity实际接手回执。"
   }
 ]
