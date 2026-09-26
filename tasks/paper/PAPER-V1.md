@@ -19,3 +19,7 @@ session `nikolastarx/s-d086ed0a546e472cae2e500113ac8b55`；分支 `codex/paper-m
 
 ## 交接
 固定 HEAD/PR 形成后交总调度作科学口径与交付复核。按角色已读 Mailbox full 索引及本任务/公共更新，不导入无关历史。新归档 593 个 Git 跟踪文件、16 ZIP CRC 是归档核验，不代数学验收。执行模型用量不可用，不虚报硬预算；当前未派生子 Agent。
+
+## 2026-09-26 用户改派（覆盖上文旧写权）
+
+用户已要求原Codex论文任务停止落笔，转为原材料/图件整理、事实与逻辑审核。正文、论文图注及排版交给Antigravity当前对话`Verify CodeX Language Compliance`，必须复用该对话。验收台任务仅维护网站、接口及标准/批注导入，监督审读由原Codex论文任务负责。此前未验收工作稿只作交接来源，不作为通过稿；不再并行修改正文。完整职责与用户要求见`paper/WRITING_HANDOFF_AGY.md`。
