@@ -6,8 +6,8 @@ import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
-from src.paper_acceptance.core import Board, Conflict, MARKER
-from src.paper_acceptance.app import Documents
+from src.paper_acceptance.core import Board, Conflict, MARKER, ROOT
+from src.paper_acceptance.app import Documents, TeamImages
 from src.paper_acceptance.language import scan_text, import_author_report
 
 
@@ -27,6 +27,45 @@ class ReviewContractTest(unittest.TestCase):
 
     def tearDown(self):
         self.temp.cleanup()
+
+    def test_team_figure_manifest_and_blob_integrity(self):
+        gallery = TeamImages(self.board)
+        self.assertEqual(len(gallery.by_id), 44)
+        self.assertTrue(gallery.by_id['fang-fig42-a']['curation_priority'])
+        self.assertFalse(gallery.by_id['acceptance-case026-xy']['curation_priority'])
+        self.assertFalse(gallery.by_id['acceptance-p1-834-flow-clean']['curation_priority'])
+        self.assertEqual(gallery.by_id['fang-fig42-a']['curation_rank'], 1)
+        self.assertEqual(len({item['family'] for item in gallery.by_id.values()}), 23)
+        self.assertEqual(gallery.by_id['fang-fig41']['number'], '图 4.1-1')
+        self.assertTrue(all(item['number'].startswith('图 ') for item in gallery.by_id.values()))
+        raw = b'\x89PNG\r\n\x1a\nexample'
+        item = {'size_bytes': len(raw), 'git_blob_sha1': hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()}
+        self.assertEqual(TeamImages.checked(raw, item), raw)
+        with self.assertRaisesRegex(ValueError, '哈希'):
+            TeamImages.checked(raw[:-1]+b'X', item)
+
+    def test_team_figure_registry_refreshes_without_server_restart(self):
+        gallery = TeamImages(self.board)
+        updated = copy.deepcopy(gallery.manifest)
+        added = copy.deepcopy(updated['items'][0])
+        added['id'] = 'fang-future-delivery'
+        updated['items'].append(added)
+        manifest_path = self.root / 'updated-figures.json'
+        manifest_path.write_text(json.dumps(updated))
+        gallery.manifest_path = manifest_path
+        gallery.refresh()
+        self.assertIn('fang-future-delivery', gallery.by_id)
+        self.assertIn('fang-future-delivery', gallery.locks)
+
+    def test_checkpoint_registry_keeps_new_freeze_separate_from_review_baseline(self):
+        registry = json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text())
+        by_id = {item['id']: item for item in registry['checkpoints']}
+        self.assertEqual(by_id[registry['acceptance_baseline']]['pdf_sha256'],
+                         json.loads((ROOT / 'docs/paper-acceptance/catalogue.json').read_text())['paper_sha256'])
+        self.assertNotEqual(by_id[registry['latest_known_checkpoint']]['pdf_sha256'],
+                            by_id[registry['acceptance_baseline']]['pdf_sha256'])
+        self.assertIn(by_id['CP06']['git_commit'], by_id['CP06']['public_pdf_url'])
+        self.assertEqual(len({by_id[x]['pdf_sha256'] for x in ('CP04', 'CP05', 'CP06')}), 3)
 
     def values(self, decision='comment', revision=0, actor='author'):
         return dict(item_id='L01', paper_sha256=self.cat['paper_sha256'], standard_hash=self.board.standard_hash,

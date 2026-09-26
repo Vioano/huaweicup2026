@@ -1,0 +1,126 @@
+{
+  "schema": "paper-figure-requests-v1",
+  "policy": "论文组织任务定义缺图需求；验收台接收、分派或制作；Fang明确选优或重画的版本优先展示；固定算法/数据适配、实际入稿和科学验收分别判断。通知送达不等于接手。",
+  "requests": [
+    {
+      "id": "FIG-P1-834-FLOW",
+      "title": "问题一现行算法的方案构造与评价流程",
+      "priority": "P0",
+      "chapter_candidate": "第四章，最终图号待合稿确认",
+      "state": "去内部状态尾注的可编辑新版已固定；论文组织任务决定v2采用，待图注与实排；Fang比选另记",
+      "defined_by_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+      "algorithm_commit": "834d8c957538ee069c66aadac9509552a4cc69d7",
+      "purpose": "说明现行方法如何依据结构产生有限的完整候选、何时调用在线E1、如何保留或替换方案；不把它画成对任意方案盲目搜索。",
+      "required_content": [
+        "六类基础候选及后续受限链分组、局部顺序、分叉援助的真实调用次序与适用条件，均按固定源码核实。",
+        "分叉援助一次产生至多一个完整候选；可批量将多个X导出到满足条件的helper。Y及J留在原donor；helper在同波次已有独立Task，不能同时充当donor。",
+        "分别注明各阶段在线E1调用限制及总账上限10；候选重复、结构不支持、构造或评分失败时的真实去向。",
+        "按官方Makespan周期数和计划COPY字节数的有序数对严格比较；在线E1与最终独立E0分开。"
+      ],
+      "source_refs": [
+        "src/q1/unified.py",
+        "src/q1/structural_refine.py",
+        "src/q1/branch_refine.py",
+        "src/q1/branch_aid.py"
+      ],
+      "preferred_route": "Fang工作台从队友现图选优并按834d更新，或亲自重画；验收台独立可编辑候选仅供比较",
+      "delivery": "SVG和PNG、可编辑Draw.io或绘图脚本、图注、固定来源与模块对应、实际纸面宽度检查",
+      "scientific_review": "论文组织任务在2026-09-26回报：与固定834d四级链、6+1+2+1次E1上限及阶段比较一致；v2图注与实排仍待终审",
+      "adoption": "v2拟采用，尚未确认实际入稿",
+      "dispatch_url": "https://github.com/huaweibei123/huaweicup2026/issues/217#issuecomment-5845004945",
+      "candidate_update_url": "https://github.com/huaweibei123/huaweicup2026/issues/217#issuecomment-5845360511",
+      "candidate_commit": "83e03c093af991ec7414f80787984726ebdea329",
+      "candidate_path": "figures/a/p1-834-flow-20260926/p1-834-flow-clean.drawio",
+      "candidate_png_sha256": "87f2b3c72c3b5067aa5c86abd5096ed57e72089d0bfb12650fd0bc83832f9a12"
+    },
+    {
+      "id": "FIG-P1-026-LABELS",
+      "title": "case_026五核心实例图的X、Y符号映射",
+      "priority": "P1",
+      "chapter_candidate": "第四章，沿原实例图位置",
+      "state": "验收台修正版已固定；论文组织任务决定v2采用，待图注、数值与实排终审",
+      "defined_by_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+      "algorithm_commit": "834d8c957538ee069c66aadac9509552a4cc69d7",
+      "source_figure_commit": "6ee1684675e92b65ddea96a5bb2b6dacefefafef",
+      "source_figure_path": "paper/manuscript-v1/figures/fig-p1-cuts-zh.png",
+      "source_figure_sha256": "ce7f192887ec4860ff4767b7322907c36605465f34c81975d67e5ed52a8f9c3f",
+      "purpose": "让实例图中X/Y/J标记与现行源码的实际导出关系一致。",
+      "required_content": [
+        "保留经固定案例证据核对的节点分组、核心归属、拓扑及全方案数值，不重跑或臆改实验。",
+        "原图把X标在Core 0保留部分、Y标在Core 1导出部分；按现行源码应把X标在导出的sg6/Core 1，把Y标在原核心sg0/Core 0，J仍为sg5/Core 0。",
+        "图注说明符号和原方案/新方案的对应关系；核对另一张实际事件时间线使用相同版本和编号。"
+      ],
+      "preferred_route": "验收台保留原图并固定新版；论文组织任务单独审核后决定是否入稿，Fang可选版但不并行覆盖原图",
+      "delivery": "修正后的图像与可编辑来源、前后符号对照、固定案例来源和未核项",
+      "scientific_review": "验收台已核两字母及像素不变范围；论文组织任务在2026-09-26回报X=sg6/Core1、Y=sg0/Core0、J=sg5/Core0与case_026正文和前后事件相符；旧CP06未改，原数值、图注与v2实排仍待终审",
+      "adoption": "v2拟采用，尚未确认实际入稿",
+      "dispatch_url": "https://github.com/huaweibei123/huaweicup2026/issues/217#issuecomment-5845064517",
+      "candidate_commit": "c6ad7f487db2dbe9a31c44b8b6e19c5a3872b140",
+      "candidate_path": "figures/a/p1-case026-labels-20260926/fig-p1-cuts-xy-corrected.png",
+      "candidate_png_sha256": "32c7183d3dc385f5c3ed305fceb21f7ddddc25d7488769cc226442e156fef522"
+    },
+    {
+      "id": "FIG-P2-THREE-PLANS",
+      "title": "问题二：基础方案、空闲区间方案与局部改进方案的完整选择流程",
+      "priority": "P1",
+      "chapter_candidate": "第五章，完整算法及计算量前后，最终图号待合稿确认",
+      "state": "现有公式、算法步骤和局部图可支持v2交付；完整三方案流程图留待v3补图核验",
+      "defined_by_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+      "algorithm_commit": "c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f",
+      "purpose": "让读者看见P0、P1、P2的生成条件、失败回退、按原始COPY字节数严格下降才重排、完整方案去重以及最多三次评分的顺序。",
+      "required_content": [
+        "P0始终保留；P1构造不支持或失败时回到P0；局部超图调整不能删除未修改的P1。",
+        "局部调整后原始COPY字节数必须严格减少才生成重排后的P2；减少字节数不是官方Makespan改善的证明。",
+        "只对不同的完整方案按P0、P1、P2构造顺序请求评分，最多三次；评分不可用时按固定源码回退，选择依据写出Makespan和COPY字节数的有序比较。"
+      ],
+      "source_refs": ["src/q2_nikolastarx/adaptive_hypergap_guarded.py", "paper/manuscript-v1/checkpoints/checkpoint-06-numbered/main.tex"],
+      "existing_reuse": "固定CP06的fig-p2-transition可保留为依赖示例，不能冒充完整流程图。",
+      "preferred_route": "v3按届时正文确认图位；验收台在独立写区制作可编辑候选，再请Fang比选或重画，不向已有任务的队友叠加派工。",
+      "delivery": "可编辑Draw.io或绘图脚本、SVG、PNG、简明中文图注、固定算法提交和纸面宽度检查",
+      "scientific_review": "待论文组织任务按固定源码核对分支和评价调用账",
+      "adoption": "未入稿"
+    },
+    {
+      "id": "FIG-P2-LOCAL-CUT",
+      "title": "问题二：两个核心之间的局部最小割与固定核心集合",
+      "priority": "P1",
+      "chapter_candidate": "第五章，局部最小割方法，最终图号待合稿确认",
+      "state": "现有超边例图和正文可支持v2交付；辅助网络及固定核心语义图留待v3核验",
+      "defined_by_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+      "algorithm_commit": "c66559a6f8a31ef7b4720e1f7c3c28d61f8dff3f",
+      "purpose": "解释局部两核心调整如何计入固定在范围外的核心、构造非负容量的辅助网络，以及计算资源上限触发的固定与重求。",
+      "required_content": [
+        "固定核心集合可以同时含所选的a、b和其他核心，不可画成必定排除a、b。",
+        "固定核心集合为空时，超边常数偏移包含负的边权；图注须说明偏移如何与割容量共同还原原目标，不能误写成单独的物理复制量。",
+        "局部最多16条可移动链；计算资源上限不满足时固定部分链回原核心并重求，原分配仍为可行选择；局部COPY改善不等于最终Makespan改善。"
+      ],
+      "source_refs": ["src/q2_nikolastarx/binary_hypercut.py", "src/q2_nikolastarx/gap_hyperrefine.py", "paper/manuscript-v1/checkpoints/checkpoint-06-numbered/main.tex"],
+      "existing_reuse": "固定CP06的fig-hypercut-v2可保留为三种超边跨核心示例，但不展示局部两核心辅助网络。",
+      "preferred_route": "v3先核对正文是否需要辅助网络图；确需时由验收台制作可编辑候选并交Fang选优。",
+      "delivery": "可编辑来源、SVG、PNG、超边与割容量标注、图注及固定算法出处",
+      "scientific_review": "待论文组织任务逐边核对容量与偏移，尤其检查fixed_cores为空和含a/b的例子",
+      "adoption": "未入稿"
+    },
+    {
+      "id": "FIG-P3-FOREST-DECISION",
+      "title": "问题三：树状分支排序与共用三次官方评价的决策流程",
+      "priority": "P1",
+      "chapter_candidate": "第六章，排序证明与算法步骤之间，最终图号待合稿确认",
+      "state": "已有A/B内存峰值示例及证明；排序适用范围和评价预算衔接图留待v3核验",
+      "defined_by_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+      "algorithm_commit": "311322b996c0948e8a6a9c7ec6ddfe6ae41fbee1",
+      "purpose": "把只适用于非交错树状分支内部结果的h_i-r_i排序，与完整方案的结构检查、去重、必要时间下界和E0严格改善判定分开。",
+      "required_content": [
+        "排序须明确为按每棵子树内部结果峰值减去完成后保留输出字节数递减；这只保证规定树模型的内部结果峰值最小。",
+        "前序基础、共享输入或注意力方案与树排序方案共用最多三次在线E0；预算已用完、结构不支持、方案重复或已证下界不能严格改善时跳过树方案评价。",
+        "下界不支持时不能假定可剪枝；有预算且未被跳过才调用E0，只有官方Makespan严格缩短才替换当前方案。"
+      ],
+      "source_refs": ["src/q3/forest_memory_order.py", "src/q3/forest_solve.py", "src/q3/witness_solve.py", "paper/manuscript-v1/checkpoints/checkpoint-06-numbered/main.tex"],
+      "existing_reuse": "固定CP06的paper-v2/fig-forest-example可保留A/B占用量示例；不能代表全部输入的缓存或完成时间结果。",
+      "preferred_route": "v3先由论文组织任务确认正文是否保留该流程需求；验收台出可编辑候选，再请Fang比选或重画。",
+      "delivery": "可编辑来源、SVG、PNG、适用条件和跳过原因、固定算法出处及图注",
+      "scientific_review": "待论文组织任务检查树模型边界、固定调用账和论文入稿逻辑",
+      "adoption": "未入稿"
+    }
+  ]
+}

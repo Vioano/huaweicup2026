@@ -10,6 +10,7 @@ import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
+from urllib.request import Request, urlopen
 from .core import Board, ROOT, Conflict
 from .language import import_author_report
 from .semantic import validate_workflow
@@ -67,8 +68,71 @@ class Documents:
             return target
 
 
+class TeamImages:
+    """Serve only pinned teammate PNGs, after checking their Git blob identity."""
+    def __init__(self, board):
+        self.manifest_path = ROOT / 'docs/paper-acceptance/team-figures.json'
+        self.registry_lock = threading.Lock()
+        self.manifest = {}
+        self.by_id = {}
+        self.locks = {}
+        self.cache = board.state / 'team-figures'
+        self.cache.mkdir(exist_ok=True)
+        self.refresh()
+
+    def refresh(self):
+        """Read the fixed registry on request so new teammate deliveries appear without a restart."""
+        manifest = json.loads(self.manifest_path.read_text())
+        by_id = {item['id']: item for item in manifest['items']}
+        if len(by_id) != len(manifest['items']):
+            raise ValueError('队友图件编号重复')
+        with self.registry_lock:
+            self.manifest = manifest
+            self.by_id = by_id
+            for item_id in by_id:
+                self.locks.setdefault(item_id, threading.Lock())
+        return manifest
+
+    @staticmethod
+    def checked(raw, item):
+        if len(raw) != item['size_bytes'] or not raw.startswith(b'\x89PNG\r\n\x1a\n'):
+            raise ValueError('图像字节数或PNG格式与来源登记不符')
+        git_hash = hashlib.sha1(b'blob ' + str(len(raw)).encode() + b'\0' + raw).hexdigest()
+        if git_hash != item['git_blob_sha1']:
+            raise ValueError('图像Git对象哈希与固定来源不符')
+        if item.get('sha256') and hashlib.sha256(raw).hexdigest() != item['sha256']:
+            raise ValueError('图像SHA-256与交接登记不符')
+        return raw
+
+    def image(self, item_id):
+        self.refresh()
+        with self.registry_lock:
+            item = self.by_id.get(item_id)
+            lock = self.locks.get(item_id)
+            source_repo = self.manifest['source_repo']
+        if not item:
+            raise FileNotFoundError('未登记的队友图件')
+        with lock:
+            target = self.cache / (item_id + '.png')
+            if target.exists():
+                try:
+                    return self.checked(target.read_bytes(), item)
+                except ValueError:
+                    target.unlink()
+            url = f"https://raw.githubusercontent.com/{source_repo}/{item['source_commit']}/{item['source_path']}"
+            request = Request(url, headers={'User-Agent': 'paper-acceptance-board/1'})
+            with urlopen(request, timeout=20) as response:
+                raw = response.read(min(item['size_bytes'] + 1, 12_000_001))
+            self.checked(raw, item)
+            temp = target.with_suffix('.tmp')
+            temp.write_bytes(raw)
+            temp.replace(target)
+            return raw
+
+
 def serve(board, port):
     docs = Documents(board)
+    team_images = TeamImages(board)
     web = Path(__file__).with_name('web')
 
     class Handler(BaseHTTPRequestHandler):
@@ -159,6 +223,15 @@ def serve(board, port):
                     return self.reply(json.loads(path.read_text()) if path.exists() else [])
                 if p.path == '/api/v1/standards':
                     return self.reply({'hash': board.standard_hash, 'catalogue': board.cat})
+                if p.path == '/api/v1/team-figures':
+                    return self.reply(team_images.refresh())
+                if p.path == '/api/v1/figure-requests':
+                    return self.reply(json.loads((ROOT / 'docs/paper-acceptance/figure-requests.json').read_text()))
+                if p.path == '/api/v1/checkpoints':
+                    return self.reply(json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text()))
+                match = re.fullmatch(r'/team-figures/([a-z0-9-]+)\.png', p.path)
+                if match:
+                    return self.reply(team_images.image(match[1]), mime='image/png')
                 match = re.fullmatch(r'/documents/(current|ref[1-4])(?:/(\d+)\.png|\.pdf)', p.path)
                 if match:
                     path = docs.page(match[1], int(match[2])) if match[2] else docs.locate(match[1])[0]

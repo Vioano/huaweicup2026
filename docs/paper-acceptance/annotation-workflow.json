@@ -3,11 +3,11 @@
   "protocol_version": "2026-09-26.3",
   "standard_version": "2026-09-26.6",
   "source_receipt": {
-    "kind": "mixed_fixed_and_working_artifacts",
+    "kind": "fixed_git_artifact_verified",
     "path": "paper/manuscript-v1/review/checkpoint-03/user-annotations.json",
     "file_sha256": "94f098013fa44f7141312fa1ca647d71910dd47c2f63b4c3c9ef17985199456f",
-    "artifact_commit": null,
-    "note": "共17条人工批注事件。前7条已核对作者固定提交097240c3；新增10条已实际读取作者工作稿原话及逐项坐标，固定归档待交。USER15/16是同句跨行两次选择，合并处理，不重复计数；来源原件和作者解释分开。",
+    "artifact_commit": "e34ded176ae7e84914f53ffa81839a053df2df42",
+    "note": "17条人工批注的选中文字、用户原话、页码与坐标已逐项同固定提交e34ded176核对一致；第7条作者解释更新为固定版，原话未变。作者解释不等于用户背书；本验收任务未独立读取原始截图，批注来源仍是监督任务归档。改稿和旧PDF均未验收。",
     "history": [
       {
         "kind": "writer_local_artifact_read",
@@ -23,6 +23,14 @@
         "file_sha256": "54c6f3c64052962f8476a038bf5a92e43958347b9a69b325ec89fd02e339a8ab",
         "note": "7条原始批注已按作者固定Git原件核对原句、用户原话、页码与矩形，文件SHA256一致；作者解释与用户原话分开。未冒称独立看过原始截图。",
         "url": "https://github.com/huaweibei123/huaweicup2026/blob/097240c3b5a50eaa2af98f5c8ea829d585f15508/paper/manuscript-v1/review/checkpoint-03/user-annotations.json"
+      },
+      {
+        "kind": "fixed_git_artifact_verified",
+        "artifact_commit": "e34ded176ae7e84914f53ffa81839a053df2df42",
+        "path": "paper/manuscript-v1/review/checkpoint-03/user-annotations.json",
+        "file_sha256": "94f098013fa44f7141312fa1ca647d71910dd47c2f63b4c3c9ef17985199456f",
+        "note": "全部17条从工作稿状态转为固定Git原件核对；原句、原话、页码、坐标逐项一致；第7条仅作者解释变动。",
+        "url": "https://github.com/huaweibei123/huaweicup2026/blob/e34ded176ae7e84914f53ffa81839a053df2df42/paper/manuscript-v1/review/checkpoint-03/user-annotations.json"
       }
     ]
   },
@@ -51,7 +59,7 @@
       "author_interpretation": "先从现实计算对象建立图表示，再使用计算图这个名称。",
       "source_type": "writer_published_user_annotation",
       "status": "received",
-      "annotation_commit": "097240c3b5a50eaa2af98f5c8ea829d585f15508"
+      "annotation_commit": "e34ded176ae7e84914f53ffa81839a053df2df42"
     },
     {
       "annotation_id": "USER-CP02-02",
@@ -77,7 +85,7 @@
       "author_interpretation": "须解释NPU与内部计算核心；NPU core与图中Core对应，不把整个NPU与单个Core等同。",
       "source_type": "writer_published_user_annotation",
       "status": "received",
-      "annotation_commit": "097240c3b5a50eaa2af98f5c8ea829d585f15508"
+      "annotation_commit": "e34ded176ae7e84914f53ffa81839a053df2df42"
     },
     {
       "annotation_id": "USER-CP02-03",
@@ -103,7 +111,7 @@
       "author_interpretation": "用实际任务组成、数据保留、共享缓存规则代替未展开的概括。",
       "source_type": "writer_published_user_annotation",
       "status": "received",
-      "annotation_commit": "097240c3b5a50eaa2af98f5c8ea829d585f15508"
+      "annotation_commit": "e34ded176ae7e84914f53ffa81839a053df2df42"
     },
     {
       "annotation_id": "USER-CP02-04",
@@ -129,7 +137,7 @@
       "author_interpretation": "先定义子图与原图、操作分组关系，再使谓语匹配真实对象。核心执行操作，图表示任务。",
       "source_type": "writer_published_user_annotation",
       "status": "received",
-      "annotation_commit": "097240c3b5a50eaa2af98f5c8ea829d585f15508"
+      "annotation_commit": "e34ded176ae7e84914f53ffa81839a053df2df42"
     },
     {
       "annotation_id": "USER-CP02-05",
@@ -155,7 +163,7 @@
       "author_interpretation": "证明之前说明潜在冲突或失败及保证的必要性；全文定理同查。",
       "source_type": "writer_published_user_annotation",
       "status": "received",
-      "annotation_commit": "097240c3b5a50eaa2af98f5c8ea829d585f15508"
+      "annotation_commit": "e34ded176ae7e84914f53ffa81839a053df2df42"
     },
     {
       "annotation_id": "USER-CP02-06",
@@ -181,7 +189,7 @@
       "author_interpretation": "最新偏好覆盖此前约定：正文核心、图内Core，首次准确英文定义。",
       "source_type": "writer_published_user_annotation",
       "status": "received",
-      "annotation_commit": "097240c3b5a50eaa2af98f5c8ea829d585f15508"
+      "annotation_commit": "e34ded176ae7e84914f53ffa81839a053df2df42"
     },
     {
       "source_commit": "94dae95a31826c0f3171075c547ee5975be17de8",
@@ -204,10 +212,10 @@
       ],
       "original": "）是任何符合所述条件的方案都不能低于的数值。先考虑只统计原",
       "user_comment_verbatim": "下界是什么数值？什么的数值？是数值的单位是什么？这个没讲清楚。",
-      "author_interpretation": "数学量和界须明确对象、单位与适用条件，区分全问题与固定候选。",
+      "author_interpretation": "每一个数学量及其上界、下界都要说清被约束对象、单位、固定条件和适用方案集合。此处约束Makespan，以cycle计；只对候选方案成立的L(P)须与对全部合法方案成立的L区分，U/L为无量纲比值。",
       "source_type": "writer_published_user_annotation",
       "status": "received",
-      "annotation_commit": "097240c3b5a50eaa2af98f5c8ea829d585f15508"
+      "annotation_commit": "e34ded176ae7e84914f53ffa81839a053df2df42"
     },
     {
       "annotation_id": "USER-CP02-08",
@@ -231,9 +239,9 @@
       "original": "把三个决策写成一份方案",
       "user_comment_verbatim": "标题起的莫名其妙，什么是三个决策？什么是一份方案？能不能起个正常的标题？",
       "author_interpretation": "正式小标题应直接指出本节研究对象和内容，不使用缺少指代的口语概括。",
-      "source_type": "writer_local_user_annotation",
+      "source_type": "writer_published_user_annotation",
       "status": "received",
-      "annotation_commit": null,
+      "annotation_commit": "e34ded176ae7e84914f53ffa81839a053df2df42",
       "annotation_file_sha256": "94f098013fa44f7141312fa1ca647d71910dd47c2f63b4c3c9ef17985199456f"
     },
     {
@@ -258,9 +266,9 @@
       "original": "顺序后的子图依赖图",
       "user_comment_verbatim": "引号内的完整这句话，属于比较重要的，可能是类似于统一约定的话，需要整体加粗。你在检查本文还有哪些地方需要整体加粗，但是不能滥用加粗",
       "author_interpretation": "首次建立关键约定时，对完整定义名称作克制的加粗；不只突出句子碎片，也不逐句加粗。",
-      "source_type": "writer_local_user_annotation",
+      "source_type": "writer_published_user_annotation",
       "status": "received",
-      "annotation_commit": null,
+      "annotation_commit": "e34ded176ae7e84914f53ffa81839a053df2df42",
       "annotation_file_sha256": "94f098013fa44f7141312fa1ca647d71910dd47c2f63b4c3c9ef17985199456f"
     },
     {
@@ -285,9 +293,9 @@
       "original": "一个反例可以说明为什么不能只检查每个子图内部。原图有四个操作",
       "user_comment_verbatim": "不符合中文表达习惯。应该这么写，通过一个反例，我们可以说明为什么不能只检查子图，每个子图内部，就是主体是，我们是论证者，我们通过这个反例论证，而不是反例去说明，反例本身没有嘴，它不能说。",
       "author_interpretation": "依用户本篇论文的表达要求，明确由研究者进行论证；不把反例或图表写成有意图的论证者。",
-      "source_type": "writer_local_user_annotation",
+      "source_type": "writer_published_user_annotation",
       "status": "received",
-      "annotation_commit": null,
+      "annotation_commit": "e34ded176ae7e84914f53ffa81839a053df2df42",
       "annotation_file_sha256": "94f098013fa44f7141312fa1ca647d71910dd47c2f63b4c3c9ef17985199456f"
     },
     {
@@ -312,9 +320,9 @@
       "original": "先按依赖结构生成方案",
       "user_comment_verbatim": "标题起的不规范，不像是论文的小标题，而是写成根据依赖结构生成方案，先按依赖结构生成方案，感觉就像是打草稿的规划，而不是正式论文的小标题。",
       "author_interpretation": "将草稿计划式标题改成直接描述内容的正式论文标题；全篇同查。",
-      "source_type": "writer_local_user_annotation",
+      "source_type": "writer_published_user_annotation",
       "status": "received",
-      "annotation_commit": null,
+      "annotation_commit": "e34ded176ae7e84914f53ffa81839a053df2df42",
       "annotation_file_sha256": "94f098013fa44f7141312fa1ca647d71910dd47c2f63b4c3c9ef17985199456f"
     },
     {
@@ -339,9 +347,9 @@
       "original": "算法首先识别计算图中彼此没有计算依赖的部分。把有依赖的操作间连线暂时看作无",
       "user_comment_verbatim": "计算依赖这个词没有定义清楚。",
       "author_interpretation": "说明数据依赖所连接的操作、产生与读取的数据以及先后约束；明确直接关系与路径传递关系、共享输入与相互依赖的区别。",
-      "source_type": "writer_local_user_annotation",
+      "source_type": "writer_published_user_annotation",
       "status": "received",
-      "annotation_commit": null,
+      "annotation_commit": "e34ded176ae7e84914f53ffa81839a053df2df42",
       "annotation_file_sha256": "94f098013fa44f7141312fa1ca647d71910dd47c2f63b4c3c9ef17985199456f"
     },
     {
@@ -366,9 +374,9 @@
       "original": "说明构造依据，不把六种情形写成六个无需解释的机制名称。",
       "user_comment_verbatim": "不把六种情形写成六个无需解释的机制名称，这个是你的经典毛病，怎么改掉？就是你不需要解释我们写论文给自己的规范，而是给观众呈现这种规范。包括我再举个例子，就是你做前端网页的时候，老是把设计师的语言写上去。比如说设计师说这个网页应该明亮点，然后你在把网页变明亮之后，又在某个角落加上一句无关的废话，说此处网页明亮，方便用户查看。用户是不需要看到这个的，包括这篇文章，读者他是不需要看到最后这句话的。此处此类问题，你至少在全文中找到一百个这种问题，因为这种问题太多了。",
       "author_interpretation": "对全文作作者内部要求混入成稿的专项检查。删除或改写写作过程自述、给作者的提醒与自我辩护，保留真正影响读者理解的模型条件和结论范围。逐处有证据，不把同一处重复计数以凑满一百。",
-      "source_type": "writer_local_user_annotation",
+      "source_type": "writer_published_user_annotation",
       "status": "received",
-      "annotation_commit": null,
+      "annotation_commit": "e34ded176ae7e84914f53ffa81839a053df2df42",
       "annotation_file_sha256": "94f098013fa44f7141312fa1ca647d71910dd47c2f63b4c3c9ef17985199456f"
     },
     {
@@ -393,9 +401,9 @@
       "original": "Core",
       "user_comment_verbatim": "core的问题还没有改过来，是因为我还没刷新吗？",
       "author_interpretation": "CP02为冻结的批注原件，不刷新覆盖；正文核心规则已进入CP03工作稿，提交新版时给明确身份和旧新位置映射。",
-      "source_type": "writer_local_user_annotation",
+      "source_type": "writer_published_user_annotation",
       "status": "received",
-      "annotation_commit": null,
+      "annotation_commit": "e34ded176ae7e84914f53ffa81839a053df2df42",
       "annotation_file_sha256": "94f098013fa44f7141312fa1ca647d71910dd47c2f63b4c3c9ef17985199456f"
     },
     {
@@ -420,9 +428,9 @@
       "original": "评价总数不超过十次。结构不满足条件或完整方案重复时跳过，不为凑足十次",
       "user_comment_verbatim": "这还是我之前说那个多余解释的问题。",
       "author_interpretation": "保留算法真实的评价上限及跳过条件，删除作者为避免凑数的自我说明。",
-      "source_type": "writer_local_user_annotation",
+      "source_type": "writer_published_user_annotation",
       "status": "received",
-      "annotation_commit": null,
+      "annotation_commit": "e34ded176ae7e84914f53ffa81839a053df2df42",
       "annotation_file_sha256": "94f098013fa44f7141312fa1ca647d71910dd47c2f63b4c3c9ef17985199456f"
     },
     {
@@ -447,9 +455,9 @@
       "original": "而继续计算。",
       "user_comment_verbatim": "不为凑足时词而继续计算，这个是我们对自己的约束，不是我们需要呈现给观众的。就是我们自己知道，不能为了凑数而这么搞，但是不需要写到论文里。和前面那个不把六个情形写成六种，无需解释机制名称，是同类严重问题，必须把这些问题彻底消灭，不得出现类似问题。",
       "author_interpretation": "与USER15是同一原句的两段选择，保留两个用户事件、合并同一问题位置，防止重复计数。",
-      "source_type": "writer_local_user_annotation",
+      "source_type": "writer_published_user_annotation",
       "status": "received",
-      "annotation_commit": null,
+      "annotation_commit": "e34ded176ae7e84914f53ffa81839a053df2df42",
       "annotation_file_sha256": "94f098013fa44f7141312fa1ca647d71910dd47c2f63b4c3c9ef17985199456f"
     },
     {
@@ -474,9 +482,9 @@
       "original": "少重复工作，不能据此宣称任意不同方案在所有后续修改下等价。",
       "user_comment_verbatim": "我真是累了，这种问题太多了。",
       "author_interpretation": "继续归入作者内部规范混入成稿；如存在必要数学适用范围，改为准确、肯定的条件陈述，不保留作者警告自己的口吻。",
-      "source_type": "writer_local_user_annotation",
+      "source_type": "writer_published_user_annotation",
       "status": "received",
-      "annotation_commit": null,
+      "annotation_commit": "e34ded176ae7e84914f53ffa81839a053df2df42",
       "annotation_file_sha256": "94f098013fa44f7141312fa1ca647d71910dd47c2f63b4c3c9ef17985199456f"
     }
   ],
@@ -894,7 +902,7 @@
   ],
   "current_responsibilities": {
     "board": "网站、Agent接口、既有标准/批注数据与状态同步；不主动派新论文标注",
-    "supervision": "整理论文写作规划与图件现状负责监督Antigravity执行标准、全文同类整改及审核",
+    "supervision": "排查并继续 Antigravity 论文工作（01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5）负责图件筛选、事实审核、LaTeX排版及每版PDF供用户批注；原写作任务已停派工，只转材料",
     "writing": "Antigravity当前Verify CodeX Language Compliance对话负责正文"
   }
 }
