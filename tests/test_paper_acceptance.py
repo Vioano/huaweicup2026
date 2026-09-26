@@ -32,6 +32,8 @@ class ReviewContractTest(unittest.TestCase):
         gallery = TeamImages(self.board)
         self.assertEqual(len(gallery.by_id), 54)
         self.assertTrue(gallery.by_id['fang-fig42-a']['curation_priority'])
+        self.assertFalse(gallery.by_id['fang-fig41']['curation_priority'])
+        self.assertEqual(gallery.by_id['fang-fig41']['fang_selection_state'], 'not_adopted_current_algorithm')
         self.assertFalse(gallery.by_id['acceptance-case026-xy']['curation_priority'])
         self.assertFalse(gallery.by_id['acceptance-p1-834-flow-clean']['curation_priority'])
         self.assertEqual(gallery.by_id['fang-fig42-a']['curation_rank'], 1)
