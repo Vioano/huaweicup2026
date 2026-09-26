@@ -3,10 +3,11 @@
 \begin{document}
 \pagestyle{empty}
 \renewcommand{\thefigure}{4.\arabic{figure}}
+\setcounter{figure}{1}% 使本页唯一 figure 的图号为 4.2（对应交付图 fig-4-2）
 \setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
 \setlength{\abovecaptionskip}{4pt}
 % 实际插入宽度 152mm（正文宽 165mm 的 92%）：图高 1054/724*152 = 221.3mm
-% + 两行图注约 9.5mm + 浮动间距约 3.2mm ≈ 234mm ≤ 正文高 248.5mm，单页容纳
+% + 图注三行 + 浮动间距，实测单页容纳、无超页
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=152mm]{fig4-2-fork-join-partition.png}

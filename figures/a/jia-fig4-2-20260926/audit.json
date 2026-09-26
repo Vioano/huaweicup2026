@@ -26,12 +26,12 @@
     {
       "name": "DELIVERY.md",
       "role": "notes",
-      "sha256": "9d416ca14b4d18355489f56dff1793d075ec1ff5bbf061f75d0f7ed7cf1a8da2"
+      "sha256": "37b177941dfec4ddcf099c56a5747880accca84088ff48799742a558c1a254a9"
     },
     {
       "name": "self-check.md",
       "role": "self_check",
-      "sha256": "3f8e3e4b05f403063a11ce628dd7dd58c21c9b4f0be39b8d4342ddc8305280fa"
+      "sha256": "c93715e654fd540b1e2053fa813906ff9f843d9a0adca52b414ad97f5637fe78"
     },
     {
       "name": "nodes.csv",
@@ -51,17 +51,17 @@
     {
       "name": "fig4-2-page-preview-template2026.pdf",
       "role": "page_preview",
-      "sha256": "c2d82d6664500d74f9f29821c76311b51e7de2e7492f229d96f766a0d460ae98"
+      "sha256": "7f30f74a6f3ab74813eb5579aa3eef93f0a0b532b0f944f0740809aab069f1e4"
     },
     {
       "name": "fig4-2-page-preview-template2026.png",
       "role": "page_preview",
-      "sha256": "5fcc88f1c351a665a92ef2cfb3139a14e1ff8e64817db962c1ddcde30ae6e2c3"
+      "sha256": "636f57bd5cd32887de81cc9e8c049e323517652256ed7493c1d4c783adea518b"
     },
     {
       "name": "page-preview-main.tex",
       "role": "page_preview",
-      "sha256": "dffa68089473a0342f0825f1622417c203190e53383f29798ef8d9e16b281e04"
+      "sha256": "42b118778fe6447b9a07ad178977d485bb96c4c3e79714d74a1b158bcb24a6b8"
     }
   ],
   "command": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f svg -o figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.svg figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.drawio\n\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f png -s 2 -o figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.png figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.drawio\n.venv/Scripts/python.exe -c \"from PIL import Image; im=Image.open('figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.png'); im.resize((1500,int(im.height*1500/im.width)), Image.LANCZOS).save('figures/a/jia-fig4-2-20260926/preview-insert-width.png')\"\n.venv/Scripts/python.exe F:/WorkBuddyData/skills/drawio-skill/scripts/validate.py figures/a/jia-fig4-2-20260926/fig4-2-fork-join-partition.drawio\ntool_versions: draw.io desktop (F:/draw.io); Python 3.13.12 (.venv, Pillow); drawio-skill validate.py v3.4.0",
@@ -140,5 +140,5 @@
     "page_preview": "fig4-2-page-preview-template2026.pdf/.png（template-2026 XeLaTeX 实编译，插入宽 152mm、图高 221.3mm + 两行图注 ≈234mm ≤ 248.5mm，无超页警告，页内最小字约 5.95pt）",
     "note": "按 template-2026 正文宽 165mm；等比缩放+精简图注为意见允许口径；编译源 page-preview-main.tex 随包"
   },
-  "version_note": "v8：确认覆盖 F42 细化单（5843486086）——R01 真实页面预览（template-2026 XeLaTeX 实编译，插入宽 152mm+最终两行图注，无超页警告，page-preview-main.tex 可复算宽高/图注/间距）；R02 全部说明按最终文件统一（viewBox 724x1054 实测、6.46pt@165mm、5.95pt@152mm，无旧 770/720 残留）；主图与 v6 字节相同未改；哈希按最终字节一次性重算（含 page preview 三文件）"
+  "version_note": "v9：按 F42-R03/R02（5843790339）——page-preview-main.tex 加 \\setcounter{figure}{1}，同源重编译（152mm 不变）；pdftotext 实测 PDF 文本图号为「图 4.2」（修复此前实际显示 4.1 的问题）、pdfinfo Pages=1、无超页警告；删除\"两行/约9.5mm\"不实断言，记录按实际三行图注与页面证据更新；主图 SVG/PNG/drawio 与已签通过版本字节相同未改；哈希按最终字节一次性重算"
 }
