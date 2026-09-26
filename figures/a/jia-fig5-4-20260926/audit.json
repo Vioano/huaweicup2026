@@ -6,56 +6,66 @@
     {
       "name": "figure.svg",
       "role": "svg",
-      "sha256": "0cec1ce56be9fd859f82f52e53f76621d728441a5c51e6d0212fbab531d1c694"
+      "sha256": "186b62f8fd55ba8d37771ef7578ec80f519b4f921208f37b3a5e34674851f28d"
     },
     {
       "name": "figure.png",
       "role": "png",
-      "sha256": "8805c48cf185287a1069a44adfce9cb68b6198c51118a233c5d27b934e3c486a"
+      "sha256": "d3c42469ee6eb47d0d4053c2ff3faf808c3fd26f486009abf74f73f7ef4e08b8"
     },
     {
       "name": "plot.py",
       "role": "source",
-      "sha256": "4ba15afd3ce490f2ceec7994ac0fea6d57ef22459edf37c208d278206301bd9c"
+      "sha256": "2adff8efaef2103b58fdb66171cacd945a0ce3d59587f5edf0c2531df2245700"
+    },
+    {
+      "name": "extract_inputs.py",
+      "role": "extraction",
+      "sha256": "4a832330cb5c0ae075fbe54d3327818ef09d575e59861f1a75547a027a1e9319"
     },
     {
       "name": "caption.md",
       "role": "caption",
-      "sha256": "37b26e0f97febe02733f1d75b6dcd8dd63dcecc9d996533f23c0d72d4dfede78"
+      "sha256": "6a7fa113ab2ac8652200e68dd4009b8ffcbb18f719ffee04d6b4754e59f7d080"
     },
     {
       "name": "self-check.md",
       "role": "self_check",
-      "sha256": "b68a4d3489df6cf32134ccf03c217c64c785e859ba46bcc4034df9f0ad3f780d"
+      "sha256": "8fd776d10fddd82e585f543d1f37f068f70f769190759ac3c2520e221e24e29a"
     },
     {
       "name": "events.csv",
       "role": "input",
-      "sha256": "277118304f800c09d2b1f7678460381e8b0bd6eeb53757cda12352d32604d14b"
+      "sha256": "b2243558bd65f47a75408677c7303f925940500831154f1891d24ce6015483eb"
     },
     {
       "name": "results.csv",
       "role": "input",
-      "sha256": "6384a3f29950f13b7ad858228c94295054c7187ac370e550f5d8857c681211e4"
+      "sha256": "2c8b5fc6f9ec36fa931c6e814207897bb1171f3b47771fd9d3970e70501f9889"
     },
     {
       "name": "markers.csv",
       "role": "input",
-      "sha256": "07c9019be04ade1f82a346ee3b80a1a59f7c98e9b0c5ba58832e70386c042460"
+      "sha256": "9fbf1a497514d253cedec58afbb297d14f54bcb5fea050ea5a37162d21f33c65"
     },
     {
       "name": "tradeoff.csv",
       "role": "input",
-      "sha256": "a17568ab430da76a218db6dba23b464c4fe020cd78cd8d0772abb04776cc10e5"
+      "sha256": "1f15ad4a23ce2514f1e40a688ff112633f8570bbc231b60d702c2840d92cca8e"
     },
     {
       "name": "bytes.csv",
       "role": "input",
       "sha256": "ceed7a608b3fcc67d280ebaa37b096b965784ce545be78286d5aecacc5f05f75"
+    },
+    {
+      "name": "preview-insert-width.png",
+      "role": "preview_check",
+      "sha256": "4c1ab49a56badbc316c2f2a09ebc36f4236cbba9e680c8c9f6de91a5f27a97ad"
     }
   ],
-  "command": ".venv/Scripts/python.exe figures/a/jia-fig5-4-20260926/plot.py",
-  "command_notes": "工作目录=仓库根；退出码 0；同一次运行产出 figure.svg 与 figure.png(300 dpi)。脚本内置断言：两方案事件表最晚结束==各自官方 makespan（248166/254508 cycles）、S16 恰 500 格且四类计数 55/199/14/232、两方案 spill=0、S15 result.zip SHA256==c90065d9d90aae3be4144080483e3ac394a6ef150f92fc7d4450d81114ba2c66。工具版本：Python 3.13.12（.venv，matplotlib）；字体 Microsoft YaHei。",
+  "command": ".venv/Scripts/python.exe figures/a/jia-fig5-4-20260926/extract_inputs.py --r05-zip <S15_result.zip> --s16-report <S16_report.json> && .venv/Scripts/python.exe figures/a/jia-fig5-4-20260926/plot.py",
+  "command_notes": "两步、工作目录=仓库根、退出码 0：第 1 步 extract_inputs.py 显式接收 --r05-zip/--s16-report 路径参数，只读取件并核对两项固定来源 SHA-256（zip==c90065d9… / report==86347e8a…，不符即中止不产表），生成五张交付 CSV；第 2 步 plot.py 只读交付包内五张 CSV 复现图件，不读包外文件、不依赖个人隐含缓存，内置断言（端点==makespan、extra_ddr==added_copy_bytes、base+extra==total、markers 六条引用逐条对事件表、tradeoff 相对变化 isclose rel_tol=1e-7、500 格、spill=0）。本机实测输入：S15 result.zip SHA256=c90065d9d90aae3be4144080483e3ac394a6ef150f92fc7d4450d81114ba2c66、S16 report.json SHA256=86347e8aae52ec3e4ee8001f1a9f2471af92f84004f402fe2a4cb55444889adf。工具版本：Python 3.13.12（.venv，matplotlib）；字体 Microsoft YaHei；原始 Trace 不复制入图包。",
   "sources": [
     {
       "path": "paper/sections/a-q2-evidence.md（S15/S16）",
@@ -126,15 +136,15 @@
   "panels": [
     {
       "id": "1",
-      "title": "case003/k2 配对时间线（seed/recovered × 2 核；500-cycle 桶占用密度；端点=各自 E0 makespan）"
+      "title": "S15 R05 @e6ae369 配对时间线：seed/recovered × 2 核真实核/Pipe 操作时间条（PIPE_MTE2/MTE3/V/M），task（SUBGRAPH）仅作浅灰背景不入计数；端点=各自 E0 makespan（只贯穿所属方案两行）"
     },
     {
       "id": "2",
-      "title": "搬运量分解：基础 COPY / 新增 COPY / scheduled COPY 合计（B），COPY −18.0% 但 Makespan +2.56% 负例"
+      "title": "S15 R05 @e6ae369 搬运量分解：基础 COPY / 新增 COPY（extra_ddr）/ scheduled 合计；新增 COPY −22.57%、总 COPY −18.01%，Makespan +2.56% 负例"
     },
     {
       "id": "3",
-      "title": "S16 完整 500 格 ΔMakespan vs Δ额外 DDR 散点（绝对量；同降 55/降但 DDR 升 199/降且不变 14/均不变 232）"
+      "title": "S16 @70f2e8bd（2794ceba→c665）完整 500 格 ΔMakespan vs Δ额外 DDR 散点（绝对量；同降 55/降但 DDR 升 199/降且不变 14/均不变 232）"
     }
   ],
   "tables": {
@@ -150,6 +160,7 @@
       "event_id",
       "op_id",
       "core",
+      "source_core_id",
       "pipe",
       "start",
       "end"
@@ -160,12 +171,15 @@
       "cores",
       "makespan",
       "extra_ddr",
+      "scheduled_copy_bytes",
       "plan_hash"
     ],
     "markers": [
       "variant",
       "kind",
-      "event_id"
+      "event_id",
+      "endpoint",
+      "cycles"
     ],
     "tradeoff": [
       "case",
@@ -176,7 +190,8 @@
       "new_ddr",
       "delta_cycles",
       "delta_bytes",
-      "relative_ddr"
+      "relative_ddr",
+      "category"
     ],
     "bytes": [
       "variant",
@@ -190,7 +205,51 @@
     "cores_single": 2,
     "variants_single": "seed（旧初解）/ recovered（R05 恢复候选）",
     "full_batch": "S16：前版 2794ceba vs 主方法 c665，500 格",
-    "bin_cycles": 500,
+    "core_numbering": "events.core normalized to 1..2（source_core_id 保留原 0..1；core==source_core_id+1 逐行核验）",
+    "markers_kinds": [
+      "makespan_end",
+      "last_copy_in_end",
+      "first_op_start"
+    ],
+    "markers_refs": {
+      "seed": {
+        "makespan_end": [
+          "23858",
+          "end",
+          248166
+        ],
+        "last_copy_in_end": [
+          "34227",
+          "end",
+          240934
+        ],
+        "first_op_start": [
+          "6727",
+          "start",
+          0
+        ]
+      },
+      "recovered": {
+        "makespan_end": [
+          "57557",
+          "end",
+          254508
+        ],
+        "last_copy_in_end": [
+          "50808",
+          "end",
+          243087
+        ],
+        "first_op_start": [
+          "40996",
+          "start",
+          0
+        ]
+      }
+    },
+    "results_bytes_split": "extra_ddr=added_copy_bytes（5067158/3923290）；scheduled_copy_bytes 单列（6351422/5207554）",
+    "relative_precision": "tradeoff.relative_ddr 完整精度（无预 round）；380 非零分母格 isclose(rel_tol=1e-7, abs_tol=1e-9) 全过",
+    "panel1_semantics": "真实核/Pipe 操作时间条（按 PIPE_* 真实 start/end），task 背景不入操作计数；零时长事件 0 个",
     "old_ddr_zero_cells": 120,
     "definitions": "base=original_graph_copy_bytes；extra=added_copy_bytes（切分新增）；total=scheduled_copy_bytes；spill 单列（本例两方案均 0）",
     "missing": "无"
@@ -209,5 +268,5 @@
     "task_book_sha256": "55859ab1ed2b81b218663f60c4cf824e9e01ba0399c52113861b48e61da7dfd2"
   },
   "notice": "数值全部来自固定提交的实测/登记记录；静态估计与实测分开标记。机检只验证提交包内部一致性，视觉和科学结论由 Agent 逐图审查与用户最终总验收。",
-  "version_note": "v1（首版）：按派发单 5846406449 绘制三面板（配对时间线/搬运量分解/S16 全量散点）；events.csv 67,385 行（两方案全部 X 事件，端点==makespan 断言通过）；bytes.csv 按原字段定义、total=base+extra 可加和验证；tradeoff.csv 500 行含 category 列、old_ddr=0 的 120 格 relative_ddr 留空；哈希按最终字节一次性重算（不含 audit.json 自身）"
+  "version_note": "v2（返工，针对 5846754015 F54-R01..R07）：R01 core 规范化 1/2+source_core_id、markers 六条引用真实 event_id（endpoint/cycles 独立列）；R02 relative_ddr 完整精度（005/k2=-0.6378792659740218），120 零分母空值保留；R03 results.extra_ddr 改 added_copy_bytes、scheduled_copy_bytes 单列，图中新增/总 COPY 降幅分别表述；R04 面板1 弃用 500-cycle 热条改真实核/Pipe 操作时间条、task 背景单列；R05 行标签缩短+图例移位+字号≥7.5pt；R06 新增 extract_inputs.py 显式参数与哈希核对、plot.py 只读交付 CSV；R07 面板版本标签 S15/S16 补全。哈希按最终字节重算（不含 audit.json 自身）。0 新实验。"
 }
