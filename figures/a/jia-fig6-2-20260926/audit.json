@@ -3,43 +3,180 @@
   "figure_id": "fig-6-2",
   "primary": "figure.svg",
   "files": [
-    {"name": "figure.svg", "role": "svg", "sha256": "f6782456e18a3d0b69c47a93434a3f83109b2ae213777d357d8dfe73be381a2c"},
-    {"name": "figure.png", "role": "png", "sha256": "3b2bdcbe01f333907de9baad5ebb34d4d6b92a172146574990afa2f2344b0462"},
-    {"name": "plot.py", "role": "source", "sha256": "49b6b342b522afbcda1c38d1e334b3fb436c229e1b13af2d8dcbff3c71d4b07a"},
-    {"name": "caption.md", "role": "caption", "sha256": "b6b425d6863266f7f14bc30bf41059edce863639862080ced247759b18ae3838"},
-    {"name": "self-check.md", "role": "self_check", "sha256": "83921430b834c980774a11476c4947e4c23924bb8f96ecba0e5e3ebadce9a169"},
-    {"name": "cuts.csv", "role": "input", "sha256": "e06c01bf26b543393b98b83081cfa4ddec821f8b5bf3af0d36eaf4a6a01a4c3f"},
-    {"name": "capacity.csv", "role": "input", "sha256": "ec172539ef7a9a6d679f5a47520cb1890d894a03510c383cfca90c593dd8f85c"}
+    {
+      "name": "figure.svg",
+      "role": "svg",
+      "sha256": "afc3bb581178db297caa2e1b4bc41ec65580b73dd4f2afd54e9962df88b7d86c"
+    },
+    {
+      "name": "figure.png",
+      "role": "png",
+      "sha256": "73afb86e6e9033636d858f338321f0a52272bd1565087e749df7b9d570308ada"
+    },
+    {
+      "name": "plot.py",
+      "role": "source",
+      "sha256": "0a8a9c56726f2448c7deeca9ba90590155013dcbc3c39cc022873072a0cdd7d9"
+    },
+    {
+      "name": "caption.md",
+      "role": "caption",
+      "sha256": "9c0545c26b8bc6e94d5d28bd656b5dc8f9405173d34c0354ef12b073597d7bb3"
+    },
+    {
+      "name": "self-check.md",
+      "role": "self_check",
+      "sha256": "d33c705faa8b4cb55f2f66b816280e8e44b3e241861be7756a7b0bc8483a7f06"
+    },
+    {
+      "name": "cuts.csv",
+      "role": "input",
+      "sha256": "50fa5ee4a1eaad452234710c8ceab787ebcb188816a0666b0ffb869dc4603fdf"
+    },
+    {
+      "name": "capacity.csv",
+      "role": "input",
+      "sha256": "5c82f153bcf010ff1aae58690282a213c4c6e17f44470aaa7141273827c87a91"
+    },
+    {
+      "name": "capacity_detail.csv",
+      "role": "input",
+      "sha256": "6d7b5781d4765a8b8b9eb850030b3964ddbd6a3866370dabeaf784729936da5f"
+    }
   ],
-  "command": ".venv/Scripts/python.exe figures/a/jia-fig6-2-20260926/plot.py（工作目录=仓库根；脚本内置切点自检：两方案切点有序、首尾覆盖 [0,124]、核 0..3 递增，断言通过后经 matplotlib Agg 后端写出 figure.svg 与 figure.png(300 dpi)。工具版本：Python 3.13.12（.venv，matplotlib））",
+  "command": ".venv/Scripts/python.exe figures/a/jia-fig6-2-20260926/plot.py",
+  "environment": "工作目录=仓库根；Python 3.13.12（.venv，matplotlib Agg 后端，constrained_layout，300 dpi PNG）。脚本内置断言：cuts 12 行 3 方案各 4 段连续覆盖 [0,124] 且 core=1..4；capacity.csv 恰 6 个唯一 (variant,space) 且 L1=detail 逐核官方峰值最大值、UB=0、evidence_type=measured；first_load 阶段共享输入静态量 stage1=663552 B 在案。断言通过后写出 figure.svg 与 figure.png。",
   "sources": [
-    {"path": "paper/sections/a-q3.md", "commit": "1e35e3994d4792dfa2bb406669b547cb8b7e8fb0", "sha256": "1f15c84753648a1140306b76ff39a90c29383f86978aade10710f57394b92f31", "note": "P3 初稿；使用 6.4（式 6-11/6-12/6-13）、6.6.3（三方案实测结果与早期候选报告峰值）；哈希=固定提交抓取字节"},
-    {"path": "results/a/q3-yuanzhifang/pipeline-capacity-20260925/REPORT.md", "commit": "7edacdd97a7be36a402af20bc8bfa8a7454dbbe0", "sha256": "b8e156a1efd85422322b4fa08f4bd04cfba07c5b3fccb7f80e68be65a659663b", "note": "044/k4 容量方案固定单例报告：官方峰值 [79584,516992,330752,18816]、UB 峰值全 0、P3=37581、extra DDR 121088、spill 0；哈希=抓取字节"},
-    {"path": "results/a/q3-yuanzhifang/pipeline-capacity-20260925/manifest.json", "commit": "7edacdd97a7be36a402af20bc8bfa8a7454dbbe0", "sha256": "见固定提交 blob（自 GitHub Contents API 核对）", "note": "constructions[0].detail：cuts [0,41,65,95,124]、stage_memory 静态估计、capacity L1=524288/UB=131072、计划 sha256 715be4ec…；controls.044 登记控制方案（plan 44c66c84…，original_commit e6b5500d…）"},
-    {"path": "results/a/q3-yuanzhifang/pipeline-20260924/manifest.json 与 comparison.json", "commit": "7edacdd97a7be36a402af20bc8bfa8a7454dbbe0", "sha256": "见固定提交 blob（自 GitHub Contents API 核对）", "note": "控制方案 cuts [0,28,58,91,124]、stage_compute_cycles [1928,1947,1883,1914]；comparison.json 逐核官方内存峰值 [19680,430080,473600,22912]、P3=40927、extra DDR 135168、spill 0"}
+    {
+      "path": "paper/sections/a-q3.md",
+      "commit": "1e35e3994d4792dfa2bb406669b547cb8b7e8fb0",
+      "sha256": "1f15c84753648a1140306b76ff39a90c29383f86978aade10710f57394b92f31",
+      "note": "P3 初稿；使用 6.4（式 6-11/6-12/6-13）与 6.6.3（三方案实测结果与早期候选报告）"
+    },
+    {
+      "path": "results/a/q3-yuanzhifang/pipeline-20260924/manifest.json",
+      "commit": "7edacdd97a7be36a402af20bc8bfa8a7454dbbe0",
+      "sha256": "fee28d4ab2d47e6a87ddf998f1728d735e1ad302fa921686292bcd6bc7bcaee5",
+      "note": "balanced（pipeline_stages）计划元数据：cuts [0,28,58,91,124]、stage_compute_cycles [1928,1947,1883,1914]"
+    },
+    {
+      "path": "results/a/q3-yuanzhifang/pipeline-20260924/comparison.json",
+      "commit": "7edacdd97a7be36a402af20bc8bfa8a7454dbbe0",
+      "sha256": "b0d028b95dbf5e8297aefef129d67962a1be0f00bb98f83cd82cc0b1295f35c8",
+      "note": "balanced 逐核官方内存峰值 [19680,430080,473600,22912]、P3=40927、额外搬运 135168 B、spill 0"
+    },
+    {
+      "path": "results/a/q3-yuanzhifang/pipeline-20260924/044/pipeline_stages/case_044_multicore_res.json",
+      "commit": "7edacdd97a7be36a402af20bc8bfa8a7454dbbe0",
+      "sha256": "44c66c84a4a50337c4bac227a9ca63c1ce8097ad104db465cee5ba673e8fed74",
+      "note": "balanced 计划（core_schedules 逐核操作数 [308,330,363,363]，合计 1364）；注：意见 5845635769 原件索引表该行 SHA256 多一位字符（65 位），本轮从固定提交 Git 字节独立复算为上值，前缀 44c66c84 与历史登记一致"
+    },
+    {
+      "path": "results/a/q3-yuanzhifang/pipeline-20260924/044/pipeline_stages/P3/result.json.gz",
+      "commit": "7edacdd97a7be36a402af20bc8bfa8a7454dbbe0",
+      "sha256": "0da0957c195a8d749b93538ed17723ad91e7e098d4771e321f1c52b53d8778d9",
+      "note": "balanced P3 结果：makespan 40927、memory_peak_by_core L1 [19680,430080,473600,22912]、UB 全 0"
+    },
+    {
+      "path": "results/a/q3-yuanzhifang/pipeline-capacity-20260925/REPORT.md",
+      "commit": "7edacdd97a7be36a402af20bc8bfa8a7454dbbe0",
+      "sha256": "b8e156a1efd85422322b4fa08f4bd04cfba07c5b3fccb7f80e68be65a659663b",
+      "note": "resident（pipeline_capacity）固定单例报告：官方峰值 [79584,516992,330752,18816]、UB 全 0、P3=37581、extra DDR 121088 B、spill 0"
+    },
+    {
+      "path": "results/a/q3-yuanzhifang/pipeline-capacity-20260925/manifest.json",
+      "commit": "7edacdd97a7be36a402af20bc8bfa8a7454dbbe0",
+      "sha256": "877ae8151b799663654978ab750685e6064e8c2a509f27a5b71212258ca5943f",
+      "note": "resident 计划元数据：cuts [0,41,65,95,124]、stage_memory 静态估计 [79584,516864,330752,17792]、capacity L1=524288/UB=131072；controls.044 登记 balanced 计划 sha256 44c66c84 起"
+    },
+    {
+      "path": "results/a/q3-yuanzhifang/pipeline-capacity-20260925/044/pipeline_capacity/case_044_multicore_res.json",
+      "commit": "7edacdd97a7be36a402af20bc8bfa8a7454dbbe0",
+      "sha256": "715be4ece4ebc6d5db625efd2f7adb6a439e37b0e1f1e7f0a4a16a190b039a7c",
+      "note": "resident 计划（core_schedules 逐核操作数 [451,264,330,319]，合计 1364）"
+    },
+    {
+      "path": "results/a/q3-yuanzhifang/pipeline-capacity-20260925/044/pipeline_capacity/P3/result.json.gz",
+      "commit": "7edacdd97a7be36a402af20bc8bfa8a7454dbbe0",
+      "sha256": "0a966b5f9b1e4dec1f3e57d3a8e38dbffe7504da522911069ddde729542e08bc",
+      "note": "resident P3 结果：makespan 37581、官方 L1 峰值 [79584,516992,330752,18816]、UB 全 0"
+    },
+    {
+      "path": "results/a/q3-yuanzhifang/pipeline-setup-followup-20260924/manifest.json",
+      "commit": "7edacdd97a7be36a402af20bc8bfa8a7454dbbe0",
+      "sha256": "b2c9d748502eef55624ff8b46892630810ebbadb83af4b74330f139270a4d9c4",
+      "note": "first_load（pipeline_cold_setup）计划元数据：constructions[0].detail.cuts [0,41,70,98,124]、jobs=11、positions=124、stage_compute_cycles [2822,1709,1577,1564]、shared_input_bytes_by_stage [73440,663552,186368,7040]（共享输入静态量，非官方峰值）"
+    },
+    {
+      "path": "results/a/q3-yuanzhifang/pipeline-setup-followup-20260924/044/pipeline_cold_setup/case_044_multicore_res.json",
+      "commit": "7edacdd97a7be36a402af20bc8bfa8a7454dbbe0",
+      "sha256": "7fdad2c6798f57480c2261084e012175a113772836a87bdfe771c4e26be47d13",
+      "note": "first_load 计划（core_schedules 逐核操作数 [451,319,308,286]，合计 1364）"
+    },
+    {
+      "path": "results/a/q3-yuanzhifang/pipeline-setup-followup-20260924/044/pipeline_cold_setup/P3/result.json.gz",
+      "commit": "7edacdd97a7be36a402af20bc8bfa8a7454dbbe0",
+      "sha256": "a12f87628b673279328b793f43a29ed4d8c614b2969023bb67887c5a68528a9a",
+      "note": "first_load P3 结果：makespan 41738、added_copy 1731840 B、spill 1622016 B、官方 L1 峰值 [79584,516992,188160,15744]、UB 全 0、cache 命中 1622016 B / miss 1007840 B"
+    }
   ],
-  "units": {"makespan": "cycles", "wall": "s", "bytes": "B"},
+  "units": {
+    "makespan": "cycles",
+    "wall": "s",
+    "bytes": "B"
+  },
   "panels": [
-    {"id": "1", "title": "三方案阶段切分条带（共同计算位置轴 0..124；颜色=阶段/核归属；早期候选缺切点元数据不绘条带并登记缺项）"},
-    {"id": "2", "title": "L1 分面：控制方案官方峰值 / 容量方案静态估计（斜纹）/ 容量方案官方峰值（菱形）/ 早期候选 648 KiB 参考线"},
-    {"id": "3", "title": "UB 分面：两方案官方 UB 峰值均为 0（实测记录）+ 容量线 128 KiB"}
+    {
+      "id": "1",
+      "title": "三方案阶段切分条带（共同计算位置轴 0..124；颜色=阶段/核归属 1..4；切点数值标注在各条带上方）"
+    },
+    {
+      "id": "2",
+      "title": "L1 分面：balanced 官方峰值（实心柱）/ resident 静态估计（斜纹）与官方峰值（菱形）/ first_load 官方峰值（空心圈）；点线=first_load 阶段2 共享输入静态量 648 KiB（非峰值）"
+    },
+    {
+      "id": "3",
+      "title": "UB 分面：三方案官方 UB 工作集峰值均为 0（实测记录）+ 容量线 128 KiB；first_load cache 命中 1622016 B 非 0，另见来源"
+    }
   ],
   "tables": {
     "cuts": "cuts.csv",
-    "capacity": "capacity.csv"
+    "capacity": "capacity.csv",
+    "capacity_detail": "capacity_detail.csv"
   },
   "table_columns": {
-    "cuts": ["variant", "case", "cores", "start", "end", "core"],
-    "capacity": ["variant", "space", "working_set", "capacity", "evidence_type"]
+    "cuts": [
+      "variant",
+      "case",
+      "cores",
+      "start",
+      "end",
+      "core"
+    ],
+    "capacity": [
+      "variant",
+      "space",
+      "official_peak_bytes",
+      "limit_bytes",
+      "evidence_type"
+    ],
+    "capacity_detail": [
+      "variant",
+      "space",
+      "working_set",
+      "capacity",
+      "evidence_type"
+    ]
   },
   "parameters": {
     "position_count": 124,
     "jobs": 11,
     "cores": 4,
     "case": "044",
-    "variants": "pipeline_stages（控制）/ pipeline_capacity / firstload_only（仅文字与参考线，缺切点元数据）",
-    "core_mapping": "阶段索引=核索引（4 阶段对应 4 核的固定流水结构；cuts.csv core 列即阶段索引；推导依据见 self-check）",
-    "missing": "firstload_only 切点/核归属/工作集明细缺失（固定批次未登记），已如实登记不造数",
+    "variants": "balanced=pipeline_stages（控制）/ resident=pipeline_capacity / first_load=pipeline_cold_setup（三方案均绘条带）",
+    "core_mapping": "展示核 1..4 = 官方数组索引 0..3（cuts.csv core 列按接口记 1..4，不改变实际归属）",
+    "capacity_summary": "capacity.csv 6 行为各方案最大单核官方峰值（非跨核相加，不说明零 spill）；capacity_detail.csv 保留逐核峰值、resident 静态估计与 first_load 共享输入静态量细表",
+    "missing": "无（第三方案切点/核归属元数据已自固定提交 7edacdd97 补齐）",
     "no_k5_data": "未借用 044/k5 的任何切点或结果"
   },
   "required_stages": [],
@@ -54,5 +191,5 @@
     "task_book_sha256": "55859ab1ed2b81b218663f60c4cf824e9e01ba0399c52113861b48e61da7dfd2"
   },
   "notice": "数值全部来自固定提交的实测/登记记录；静态估计与实测分开标记。机检只验证提交包内部一致性，视觉和科学结论由 Agent 逐图审查与用户最终总验收。",
-  "version_note": "v1（首版）：按派发单 5845363845 绘制 matplotlib 分段条带+容量分面（三方案切点对比、L1/UB 分面、静态/实测分标记、早期候选缺项登记）；哈希按最终字节一次性重算（不含 audit.json 自身）"
+  "version_note": "v2（F62-R01/R02/R03 返工，意见 5845635769）：补齐 first_load 第三条真实切分带（cuts [0,41,70,98,124]，来源 pipeline-setup-followup-20260924，删除缺项声明）；cuts.csv 规范 12 行（balanced/resident/first_load，core 1..4）；capacity.csv 重写为 6 行唯一 (variant,space) 规范汇总（measured），逐核/静态细表移入 capacity_detail.csv；audit.sources 每文件一条真实 path+commit+SHA256、拆开 manifest/comparison、移除占位、新增第三方案三件来源；行标题缩短、图例移专用底部区、切点各条带自标（91/95 不再合写）、共享轴常规刻度、constrained_layout 固定 165.1 mm 宽导出。三方案逐核操作数与官方峰值均从固定提交独立读回复核（各 1364 操作）。哈希按暂存区/提交 Git 字节重算（不含 audit.json 自身）"
 }

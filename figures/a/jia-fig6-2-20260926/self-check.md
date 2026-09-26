@@ -1,29 +1,68 @@
-# 图 6-2 自查记录（甲，v1，2026-09-26）
+# 图 6-2 自查记录（甲，v2，2026-09-26）
+
+## 本版变更（回应返工单 F62-R01/R02/R03，意见 5845635769）
+
+- F62-R01：补齐第三条切分带。来源为固定提交 7edacdd97a7be36a402af20bc8bfa8a7454dbbe0 下
+  results/a/q3-yuanzhifang/pipeline-setup-followup-20260924/：manifest.json（constructions[0].detail：
+  cuts [0,41,70,98,124]、jobs=11、positions=124、stage_compute_cycles [2822,1709,1577,1564]、
+  shared_input_bytes_by_stage [73440,663552,186368,7040]）、044/pipeline_cold_setup/case_044_multicore_res.json
+  （逐核操作数 [451,319,308,286]）、044/pipeline_cold_setup/P3/result.json.gz（makespan=41,738、
+  added_copy 1,731,840 B、spill 1,622,016 B、官方 L1 峰值 [79584,516992,188160,15744]、UB 全 0、
+  cache 命中 1,622,016 B / miss 1,007,840 B）。删除"缺失，未绘条带"声明与 audit.parameters.missing 缺项登记。
+  663,552 B 保留为该候选阶段 2（索引 1）的共享输入静态量并明确标注"静态量，非官方峰值"。
+- F62-R02：cuts.csv 规范为 12 行（variant=balanced/resident/first_load，core=1..4，case=044、cores=4、
+  位置 0..124）；capacity.csv 重写为 6 行唯一 (variant,space) 规范汇总（取各方案官方逐核峰值的最大值：
+  balanced 473,600、resident 516,992、first_load 516,992，UB 均 0，evidence_type=measured），并明确这是
+  "各方案最大单核官方峰值"，非跨核相加、不说明零 spill；原逐核/静态细表移入 capacity_detail.csv
+  （继续供主图使用，含 first_load 四阶段共享输入静态量行）。audit.sources 每文件一条真实 path、
+  完整 40 位 commit、64 位 SHA256；拆开 manifest.json 与 comparison.json；移除"见固定提交 blob"占位；
+  新增第三方案 manifest/plan/result 来源。command 只保留实际可执行命令，解释与工具版本移至 environment 字段。
+- F62-R03：行标题缩短为方案名+关键结果（阶段计算量/长解释移入 caption 或分行说明）；第三行改为真实条带；
+  图例移至专用底部图例区（不再覆盖任何面板），"UB 容量 128 KiB"留在 UB 分面左上空白处；
+  相近切点（91/95、41/65/70）通过各条带上方自己的切点数值标注区分，共享轴只留常规刻度 0/25/50/75/100/124，
+  不在 91 处伪装两个刻度；改用 figsize=(6.5,7.8)+constrained_layout 导出，弃用 bbox_inches="tight"，
+  避免长文本把画布横向撑大。
 
 ## 实际执行结果（本机制图环境）
 
 - 命令：`.venv/Scripts/python.exe figures/a/jia-fig6-2-20260926/plot.py`（工作目录=仓库根），退出码 0。
-- 脚本内置切点自检通过：两方案切点均有序、首尾覆盖 [0,124] 无重叠/遗漏、核 0..3 顺序递增。
-- 输出：figure.svg（矢量）/ figure.png（300 dpi，约 2050×2020 px；图宽按 165mm 正文宽设计，最小字号 5.8pt，插入 100% 可读）。
+- 脚本内置断言全部通过：cuts 12 行、3 方案各 4 段、连续覆盖 [0,124]、core=1..4；
+  capacity.csv 恰 6 个唯一 (variant,space)、L1=对应方案 detail 逐核官方峰值最大值、UB=0、evidence_type=measured；
+  first_load 阶段共享输入静态量 4 行在案（stage1=663,552 B）。
+- 输出：figure.svg 宽 468 pt = 165.10 mm（与 6.5 in 设计宽一致，无 tight-bbox 撑宽）、高 561.6 pt≈198.12 mm；
+  figure.png 300 dpi 1950×2340 px。最小字号 6.0 pt（165 mm 插入 ≈6.0 pt，无缩放）。
 
-## 数据来源与身份（全部固定提交，抓取字节哈希见 audit.sources）
+## 与固定原件逐键核对（全部取自 7edacdd97a7be36a402af20bc8bfa8a7454dbbe0 的 Git 字节，SHA256 见 audit.sources）
 
-- 容量方案：results/a/q3-yuanzhifang/pipeline-capacity-20260925/manifest.json（constructions[0].detail：cuts [0,41,65,95,124]、stage_memory 静态估计、capacity L1/524288 UB/131072）+ REPORT.md（官方 L1 峰值 [79584,516992,330752,18816]、官方 UB 峰值全 0、P3=37581、extra DDR 121088、spill 0），固定提交 7edacdd97a7be36a402af20bc8bfa8a7454dbbe0；计划 sha256 715be4ece4ebc6d5db625efd2f7adb6a439e37b0e1f1e7f0a4a16a190b039a7c。
-- 控制方案（计算均衡）：results/a/q3-yuanzhifang/pipeline-20260924/manifest.json（cuts [0,28,58,91,124]、stage_compute_cycles）+ comparison.json（逐核官方内存峰值 [19680,430080,473600,22912]、P3=40927、extra DDR 135168、spill 0）；计划 sha256 44c66c84a4a50337…（由 capacity 批次 manifest.identity.controls.044 登记为控制，original_commit e6b5500dcbf3818034804168ee79d0f65c16706b，与 REPORT.md 口径一致）。
-- 仅首次装入早期候选：P3 初稿 6.6.3 文字（P3=41738、spill 1,622,016 B、某阶段共同输入 663,552 B 超 L1 容量）。
+| 项 | balanced | resident | first_load |
+|---|---|---|---|
+| 切点 | [0,28,58,91,124] | [0,41,65,95,124] | [0,41,70,98,124] |
+| 逐核操作数（索引0..3） | [308,330,363,363] | [451,264,330,319] | [451,319,308,286] |
+| 合计操作 | 1364 | 1364 | 1364 |
+| 官方 L1 峰值（索引0..3） | [19680,430080,473600,22912] | [79584,516992,330752,18816] | [79584,516992,188160,15744] |
+| 官方峰值最大值（→capacity.csv） | 473,600 B | 516,992 B | 516,992 B |
+| UB 峰值 | 全 0 | 全 0 | 全 0 |
+| P3 makespan | 40,927 | 37,581 | 41,738 |
+| 额外搬运 / spill | 135,168 / 0 B | 121,088 / 0 B | 1,731,840 / 1,622,016 B |
 
-## 缺项登记（不造数）
+三方案条带各覆盖 [0,124] 无缝、无重叠；每条 4 段；结果数值逐键与各 manifest / case_044_multicore_res.json /
+P3/result.json.gz 原件一致（本表数值即本轮从固定提交独立读回复核所得）。
 
-- **早期候选（firstload_only）切点/核归属/工作集明细缺失**：固定批次中无其切点元数据，cuts.csv 无该 variant 行，图中不绘制其条带，仅以第三行文字与 L1 分面 648 KiB 参考线呈现有据可查的实测结果与报告峰值。
-- 除上述外无其他缺失；未借用 044/k5 的任何切点或结果。
+## 审查方待处理项知悉
+
+- 在线机检 v1.1 将 Matplotlib 标准 SVG 1.1 跨行声明误报为 DTD：本图保留标准声明，未为其改动；
+  由审查方 v1.2 引擎处理重检。
 
 ## 验收标准逐项
 
-1. 切点有序（两方案均 0 起、124 止、相邻共享边界）、完整覆盖计算位置、无重叠或遗漏（脚本断言）；核归属=阶段索引（4 阶段对应 4 核的固定流水结构；控制方案逐核官方峰值 [19,680/430,080/473,600/22,912] 与容量方案逐阶段工作集量级相互印证），与方案一致。通过。
-2. 容量单位（B/KiB）、内存空间（L1/UB）和工作集定义（共同输入+单次操作非共同）在图注/分面标题明确；静态估计（斜纹柱）与实测（实心柱/菱形标记）使用不同标记，两方案官方 UB 峰值 0 亦注明"实测记录，非估计值"。通过。
-3. 未借用 044/k5 的切点或结果（全部数据来自 044/k4 固定批次）；图注声明"容量可行不证明零 spill 证书或 Makespan 最优"，静态估计与实测峰值分开标注。通过。
+1. 切点有序，完整覆盖计算位置（三方案均 [0,124] 无缝无重叠）；核归属与方案一致（三份计划原件逐操作核对口径，
+   乙已独立比对 1364 操作归属；本轮补充核验 first_load 切点与逐核操作数）。通过。
+2. 容量单位（B/KiB）、内存空间（L1/UB）和工作集定义明确；静态估计（斜纹/点线）与实测（实心柱/菱形/空心圈）
+   使用不同标记。通过。
+3. 未借用 044/k5 的切点或结果；不以静态容量满足证明零 spill 或最优调度（图注/标题保留限定）。通过。
 
-## 其他说明
+## 数据口径
 
-- 核归属推导依据写入本记录：固定流水模型 4 阶段对应 4 核（serial stage 服务、11 作业流经各阶段）；cuts.csv 的 core 列即阶段索引。若工作台认定需以方案文件核归属另行证明，可从固定 plan 原件（sha256 已登记）展开核对。
-- 未完成项：无（early candidate 元数据缺项如上登记，非本方数据缺口可补）。
+- 数值全部来自固定提交实测/登记记录；capacity.csv 6 行为"各方案最大单核官方峰值"汇总口径，
+  capacity_detail.csv 保留逐核峰值、静态估计与共享输入静态量细表。
+- 未完成项：无。

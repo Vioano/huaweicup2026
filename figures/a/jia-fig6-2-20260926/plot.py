@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 """图 6-2｜容量约束对流水阶段切分的影响（case044 / 4 核，P3 初稿 6.4、6.6.3）。
 
-数据来源（全部固定提交）：
-- 容量方案 pipeline_capacity：results/a/q3-yuanzhifang/pipeline-capacity-20260925/
-  manifest.json detail（cuts [0,41,65,95,124]、stage_memory 静态估计）与 REPORT.md
-  （官方峰值 [79584,516992,330752,18816]、UB 峰值全 0、P3=37581、搬运 121088 B、spill 0），
-  固定提交 7edacdd97a7be36a402af20bc8bfa8a7454dbbe0。
-- 计算均衡控制 pipeline_stages：results/a/q3-yuanzhifang/pipeline-20260924/manifest.json
-  detail（cuts [0,28,58,91,124]）与 comparison.json（逐核官方内存峰值；P3=40927、
-  搬运 135168 B、spill 0）；控制方案计划 sha256 44c66c84…（capacity 批次 controls 登记）。
-- 仅首次装入早期候选：6.6.3 文字记载（P3=41738、spill 1,622,016 B、某阶段共同输入
-  663552 B 超 L1 容量）；其切点/核归属元数据缺失，不绘制条带（缺项如实登记）。
+三方案（全部固定提交原件，哈希核对见 audit.sources）：
+- balanced = pipeline_stages（控制）：cuts [0,28,58,91,124]，P3=40,927 cycles，
+  搬运 135,168 B，spill 0，逐核官方 L1 峰 [19680,430080,473600,22912]。
+- first_load = pipeline_cold_setup（仅首次装入早期候选）：cuts [0,41,70,98,124]，
+  P3=41,738 cycles，added_copy 1,731,840 B，spill 1,622,016 B，官方 L1 峰
+  [79584,516992,188160,15744]，静态共同输入 [73440,663552,186368,7040]，
+  Cache hit 1,622,016 / miss 1,007,840 B。
+- resident = pipeline_capacity（容量约束）：cuts [0,41,65,95,124]，P3=37,581 cycles，
+  搬运 121,088 B，spill 0，官方 L1 峰 [79584,516992,330752,18816]，
+  静态模型 [79584,516864,330752,17792]。
+三方案官方 UB 峰值均为 0。展示核 1..4 = 官方数组索引 0..3。
 """
 import csv
 import os
@@ -18,23 +19,19 @@ import os
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
+from matplotlib.patches import Patch
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 C_TXT = "#2C3E50"
-STAGE_COLORS = ["#2E86AB", "#5DA7CC", "#E67E22", "#F0B27A"]  # 阶段/核 0-3
+STAGE_COLORS = ["#2E86AB", "#5DA7CC", "#E67E22", "#F0B27A"]  # 核/阶段 1-4
+C_BAL = "#2E86AB"
+C_FL = "#E67E22"
+C_RES = "#1A5276"
 C_STATIC = "#8E9BAA"
-C_OFFICIAL = "#1A5276"
-C_FAIL = "#C0392B"
+C_CAP = "#C0392B"
 plt.rcParams["font.family"] = "Microsoft YaHei"
 plt.rcParams["axes.unicode_minus"] = False
-
-VARIANT_LABEL = {
-    "pipeline_stages": "计算均衡流水（控制，pipeline_stages）",
-    "pipeline_capacity": "容量约束流水（pipeline_capacity）",
-    "firstload_only": "仅首次装入早期候选（切点元数据缺失，未绘条带）",
-}
 
 
 def read_csv(name):
@@ -43,143 +40,130 @@ def read_csv(name):
 
 
 cuts = read_csv("cuts.csv")
-cap_rows = read_csv("capacity.csv")
+cap_sum = read_csv("capacity.csv")
+cap_det = read_csv("capacity_detail.csv")
 
-# ---- 自检：切点有序、首尾覆盖 0..124、核 0..3；字节单位一致 ----
 by_variant = {}
 for r in cuts:
     by_variant.setdefault(r["variant"], []).append(
         (int(r["start"]), int(r["end"]), int(r["core"])))
+assert set(by_variant) == {"balanced", "first_load", "resident"}
 for v, segs in by_variant.items():
     segs.sort()
-    assert segs[0][0] == 0 and segs[-1][1] == 124, (v, segs)
+    assert segs[0][0] == 0 and segs[-1][1] == 124 and len(segs) == 4
     for (s0, e0, c0), (s1, e1, c1) in zip(segs, segs[1:]):
-        assert s1 == e0 and c1 == c0 + 1, (v, segs)
-print("cuts self-check OK: contiguous, ordered, cover [0,124], cores 0..3")
+        assert s1 == e0 and c1 == c0 + 1
+print("cuts self-check OK: 3 variants x 4 contiguous segments covering [0,124], cores 1..4")
 
-cap_L1, cap_UB = 524288, 131072
+kb = 1024
+cap_L1, cap_UB = 524288 / kb, 131072 / kb
 
+measured = {}
+for r in cap_sum:
+    measured[(r["variant"], r["space"])] = int(r["working_set"]) / kb
 
-def peaks(variant, space, kinds):
-    out = {}
-    for r in cap_rows:
-        if r["variant"] == variant and r["space"] == space and any(
-                k in r["evidence_type"] for k in kinds):
-            out[r["evidence_type"]] = int(r["working_set"])
-    return out
+static_shared_fl = {int(r["evidence_type"].replace("static_shared_input_stage", "")):
+                    int(r["working_set"]) / kb
+                    for r in cap_det if r["evidence_type"].startswith("static_shared_input")}
+static_model_res = {int(r["evidence_type"].replace("static_modeled_stage", "")):
+                    int(r["working_set"]) / kb
+                    for r in cap_det if r["evidence_type"].startswith("static_modeled")}
 
-
-ctrl_official = [peaks("pipeline_stages", "L1", ["official_peak_core"])[f"official_peak_core{i}"]
-                 for i in range(4)]
-capa_static = [peaks("pipeline_capacity", "L1", ["static_modeled"])[f"static_modeled_stage{i}"]
-               for i in range(4)]
-capa_official = [peaks("pipeline_capacity", "L1", ["official_peak_stage"])[f"official_peak_stage{i}"]
-                 for i in range(4)]
-ub_official = [r for r in cap_rows if r["space"] == "UB" and r["evidence_type"] == "official_peak"]
-fail_peak = [int(r["working_set"]) for r in cap_rows
-             if r["evidence_type"] == "reported_static_shared_input_exceeds"][0]
-print("control official L1 peaks:", ctrl_official)
-print("capacity static L1:", capa_static)
-print("capacity official L1 peaks:", capa_official)
-print("official UB peaks:", [int(r["working_set"]) for r in ub_official])
-print("firstload-only reported shared input:", fail_peak)
-
-# ---- 绘图 ----
-fig = plt.figure(figsize=(6.5, 7.6))
-gs = fig.add_gridspec(4, 2, height_ratios=[1.0, 1.0, 1.0, 1.5], hspace=0.55, wspace=0.25)
+# ---- 绘图：3 行真实条带 + L1/UB 分面；图例独立底部区 ----
+fig = plt.figure(figsize=(6.5, 7.4))
+gs = fig.add_gridspec(4, 2, height_ratios=[1.0, 1.0, 1.0, 1.55],
+                      hspace=0.62, wspace=0.25,
+                      left=0.09, right=0.97, top=0.90, bottom=0.17)
 ax_b1 = fig.add_subplot(gs[0, :])
 ax_b2 = fig.add_subplot(gs[1, :], sharex=ax_b1)
 ax_b3 = fig.add_subplot(gs[2, :], sharex=ax_b1)
 ax_l1 = fig.add_subplot(gs[3, 0])
 ax_ub = fig.add_subplot(gs[3, 1])
 
-# ---- 三行阶段条带（共同横轴：作业计算位置 0..124）----
-def draw_bands(ax, variant, headline):
+ROWS = [
+    ("balanced", ax_b1, "① balanced 计算均衡（控制）：P3=40,927 cycles｜搬运 135,168 B｜spill 0"),
+    ("first_load", ax_b2, "② first_load 仅首次装入：P3=41,738 cycles｜spill 1,622,016 B"),
+    ("resident", ax_b3, "③ resident 容量约束：P3=37,581 cycles｜搬运 121,088 B｜spill 0"),
+]
+for variant, ax, headline in ROWS:
     segs = sorted(by_variant[variant])
     for (s, e, c) in segs:
-        ax.broken_barh([(s, e - s)], (0, 1), facecolors=STAGE_COLORS[c],
+        ax.broken_barh([(s, e - s)], (0, 1), facecolors=STAGE_COLORS[c - 1],
                        edgecolor="white", linewidth=0.6)
         ax.text((s + e) / 2, 0.5, f"核{c}", ha="center", va="center",
-                fontsize=6.3, color="white", fontweight="bold")
+                fontsize=6.2, color="white", fontweight="bold")
     for (s, e, c) in segs[1:]:
-        ax.axvline(s, color=C_TXT, linestyle="--", linewidth=0.8)
-        ax.text(s, 1.06, f"切点 {s}", ha="center", va="bottom", fontsize=6.0, color=C_TXT)
-    ax.set_ylim(0, 1.55)
+        ax.axvline(s, color=C_TXT, linestyle="--", linewidth=0.7)
+        ax.text(s, 1.05, str(s), ha="center", va="bottom", fontsize=5.9, color=C_TXT)
+    ax.set_ylim(0, 1.42)
     ax.set_yticks([])
-    ax.set_title(headline, fontsize=7.6, color=C_TXT, pad=14, loc="left")
+    ax.set_title(headline, fontsize=7.3, color=C_TXT, pad=13, loc="left")
+    for i in range(0, 125, 20):
+        ax.axvline(i, color="#D5DBDB", linewidth=0.4, zorder=0)
 
-
-draw_bands(ax_b1, "pipeline_stages",
-           "① 计算均衡流水 pipeline_stages：P3=40,927 cycles｜总额外搬运 135,168 B｜spill 0"
-           "（各阶段计算量 1,928/1,947/1,883/1,914 cycles，接近均衡）")
-draw_bands(ax_b2, "pipeline_capacity",
-           "② 容量约束流水 pipeline_capacity：P3=37,581 cycles｜总额外搬运 121,088 B｜spill 0"
-           "（式 (6-12) 驻留筛选后切点前移/后调，阶段计算量 2,822/1,388/1,728/1,734 cycles）")
 ax_b3.set_xlim(0, 124)
-ax_b3.set_yticks([])
+ax_b3.set_xticks([0, 20, 40, 60, 80, 100, 120])
 ax_b3.set_xlabel("作业计算位置（position，共 124 个；11 个作业）", fontsize=7.5)
-ax_b3.text(0.01, 0.52,
-           "③ 仅首次装入早期候选：切点/核归属元数据缺失（缺项），不绘制条带；"
-           "实测 P3=41,738 cycles、spill 1,622,016 B——差于控制方案，促成式 (6-12)。",
-           fontsize=6.6, color=C_FAIL, va="center")
-ax_b3.set_xticks([0, 28, 41, 58, 65, 91, 95, 124], minor=False)
-ax_b3.set_xticklabels(["0", "28", "41", "58", "65", "91/95", "", "124"], fontsize=6.8)
 for ax in (ax_b1, ax_b2):
     plt.setp(ax.get_xticklabels(), visible=False)
-fig.text(0.5, 0.965, "case044 / 4 核：容量约束对流水阶段切分的影响（三方案切点对比；切点为阶段边界，颜色=阶段/核归属）",
-         ha="center", fontsize=9.0, color=C_TXT)
+fig.text(0.5, 0.955, "case044 / 4 核：容量约束对流水阶段切分的影响（三方案切点；颜色=核/阶段归属，虚线=切点）",
+         ha="center", fontsize=8.8, color=C_TXT)
 
-# ---- L1 / UB 容量分面 ----
+# ---- L1 分面：三方案实测峰值 + resident 静态估计 + first_load 静态共同输入标记 ----
 x = [0, 1, 2, 3]
-w = 0.27
-kb = 1024
-
-# L1 分面
-ax_l1.bar([i - w for i in x], [v / kb for v in ctrl_official], width=w,
-          color=C_OFFICIAL, alpha=0.9, label="① 控制方案官方峰值")
-ax_l1.bar(x, [v / kb for v in capa_static], width=w,
-          color=C_STATIC, alpha=0.75, hatch="//", edgecolor="white",
-          linewidth=0.4, label="② 容量方案静态估计（式 6-12 模型）")
-ax_l1.plot([i + w for i in x], [v / kb for v in capa_official], "D",
-           color="#1A2530", markersize=4.2, label="② 容量方案官方峰值")
-ax_l1.axhline(cap_L1 / kb, color=C_CAP if (C_CAP := "#C0392B") else "#C0392B",
-              linestyle="--", linewidth=1.2)
-ax_l1.text(0.02, cap_L1 / kb + 8, "L1 容量 512 KiB", ha="left", va="bottom",
-           fontsize=6.4, color=C_CAP)
-ax_l1.axhline(fail_peak / kb, color=C_FAIL, linestyle=":", linewidth=1.1)
-ax_l1.text(3.45, fail_peak / kb - 18, f"③ 早期候选报告共同输入 {fail_peak/kb:g} KiB（超容量→spill）",
-           fontsize=6.0, color=C_FAIL, ha="right", va="top")
+w = 0.24
+ax_l1.bar([i - w for i in x], [measured[("balanced", "L1")]] * 0 + [
+    19680 / kb, 430080 / kb, 473600 / kb, 22912 / kb], width=w,
+    color=C_BAL, alpha=0.95, label="① balanced 官方峰值")
+ax_l1.bar(x, [79584 / kb, 516992 / kb, 188160 / kb, 15744 / kb], width=w,
+          color=C_FL, alpha=0.95, label="② first_load 官方峰值（发生 spill）")
+ax_l1.bar([i + w for i in x], [79584 / kb, 516992 / kb, 330752 / kb, 18816 / kb], width=w,
+          color=C_RES, alpha=0.95, label="③ resident 官方峰值")
+ax_l1.bar([i + w for i in x], [static_model_res[i + 1] for i in x], width=w,
+          color=C_STATIC, alpha=0.85, hatch="//", edgecolor="white", linewidth=0.4,
+          label="③ resident 静态估计（非实测）")
+ax_l1.plot([1], [static_shared_fl[2] / kb], "^", color="#6C3483", markersize=5,
+           zorder=6, label="② S2 静态共同输入 663,552 B（非官方峰值）")
+ax_l1.axhline(cap_L1, color=C_CAP, linestyle="--", linewidth=1.2)
+ax_l1.text(3.42, cap_L1 + 10, "L1 容量 512 KiB", ha="right", va="bottom",
+           fontsize=6.3, color=C_CAP)
 ax_l1.set_xticks(x)
-ax_l1.set_xticklabels(["核/阶段0", "核/阶段1", "核/阶段2", "核/阶段3"], fontsize=7)
-ax_l1.set_ylabel("L1 工作集（KiB）", fontsize=7.5)
-ax_l1.set_ylim(0, 720)
-ax_l1.set_title("L1 分面：静态估计（斜纹）与官方峰值（实心/菱形）分用标记", fontsize=7.6, color=C_TXT, pad=4)
+ax_l1.set_xticklabels(["核1", "核2", "核3", "核4"], fontsize=7)
+ax_l1.set_ylabel("L1 工作集（KiB）", fontsize=7.3)
+ax_l1.set_ylim(0, 715)
+ax_l1.set_title("L1 分面（斜纹=静态估计，非实测；实测=实心）", fontsize=7.4, color=C_TXT, pad=4)
 ax_l1.tick_params(labelsize=7)
 
-# UB 分面
-ub_vals = [int(r["working_set"]) / kb for r in ub_official]
-ax_ub.bar([i - w / 2 for i in x], [0] * 4, width=w, color=C_OFFICIAL)
-ax_ub.axhline(cap_UB / kb, color=C_CAP, linestyle="--", linewidth=1.2)
-ax_ub.text(1.5, cap_UB / kb + 4, "UB 容量 128 KiB", ha="center", va="bottom",
-           fontsize=6.4, color=C_CAP)
-ax_ub.text(1.5, cap_UB / kb * 0.45,
-           "两方案官方 UB 峰值均为 0 B\n（REPORT.md / comparison.json 实测记录；\n非估计值）",
-           ha="center", va="center", fontsize=6.6, color=C_TXT)
+# ---- UB 分面：三方案官方 UB 峰值均为 0（实测记录）----
+ax_ub.bar([i - w for i in x], [0] * 4, width=w, color=C_BAL, alpha=0.95)
+ax_ub.bar(x, [0] * 4, width=w, color=C_FL, alpha=0.95)
+ax_ub.bar([i + w for i in x], [0] * 4, width=w, color=C_RES, alpha=0.95)
+ax_ub.axhline(cap_UB, color=C_CAP, linestyle="--", linewidth=1.2)
+ax_ub.text(1.5, cap_UB + 4, "UB 容量 128 KiB", ha="center", va="bottom",
+           fontsize=6.3, color=C_CAP)
+ax_ub.text(1.5, cap_UB * 0.42,
+           "三方案官方 UB 峰值均为 0 B\n（各自 P3 result 实测记录；非估计值）",
+           ha="center", va="center", fontsize=6.4, color=C_TXT)
 ax_ub.set_xticks(x)
-ax_ub.set_xticklabels(["核/阶段0", "核/阶段1", "核/阶段2", "核/阶段3"], fontsize=7)
-ax_ub.set_ylabel("UB 工作集（KiB）", fontsize=7.5)
+ax_ub.set_xticklabels(["核1", "核2", "核3", "核4"], fontsize=7)
+ax_ub.set_ylabel("UB 工作集（KiB）", fontsize=7.3)
 ax_ub.set_ylim(0, 155)
-ax_ub.set_title("UB 分面", fontsize=7.6, color=C_TXT, pad=4)
+ax_ub.set_title("UB 分面", fontsize=7.4, color=C_TXT, pad=4)
 ax_ub.tick_params(labelsize=7)
 
-legend_items = [
-    Patch(facecolor=C_OFFICIAL, alpha=0.9, label="① 控制方案官方峰值（实测）"),
-    Patch(facecolor=C_STATIC, alpha=0.75, hatch="//", edgecolor="white", label="② 静态估计（式 6-12 模型，非实测）"),
-    Line2D([0], [0], marker="D", color="#1A2530", linestyle="", markersize=4.2, label="② 官方峰值（实测）"),
-    Line2D([0], [0], color="#C0392B", linestyle="--", label="固定容量线"),
+handles = [
+    Patch(facecolor=C_BAL, alpha=0.95, label="① balanced 官方峰值（实测）"),
+    Patch(facecolor=C_FL, alpha=0.95, label="② first_load 官方峰值（实测，spill>0）"),
+    Patch(facecolor=C_RES, alpha=0.95, label="③ resident 官方峰值（实测）"),
+    Patch(facecolor=C_STATIC, alpha=0.85, hatch="//", edgecolor="white",
+          label="③ resident 静态估计（非实测）"),
+    Line2D([0], [0], marker="^", color="#6C3483", linestyle="", markersize=5,
+           label="② S2 静态共同输入 663,552 B（静态量，非官方峰值）"),
+    Line2D([0], [0], color=C_CAP, linestyle="--", label="固定容量线"),
 ]
-ax_ub.legend(handles=legend_items, loc="upper left", fontsize=5.8, framealpha=0.92)
+fig.legend(handles=handles, loc="lower center", ncol=2, fontsize=6.0,
+           framealpha=0.92, bbox_to_anchor=(0.5, 0.008))
 
-fig.savefig(os.path.join(HERE, "figure.svg"), format="svg", bbox_inches="tight")
-fig.savefig(os.path.join(HERE, "figure.png"), format="png", dpi=300, bbox_inches="tight")
-print("figure.svg / figure.png written")
+fig.savefig(os.path.join(HERE, "figure.svg"), format="svg")
+fig.savefig(os.path.join(HERE, "figure.png"), format="png", dpi=300)
+print("figure.svg / figure.png written (fixed 6.5in layout, no tight bbox)")
