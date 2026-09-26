@@ -6,17 +6,17 @@
     {
       "name": "fig4-1-p1-two-layer-flow.svg",
       "role": "svg",
-      "sha256": "bceeb793cc75c54cdfa6dc2745d4f7a015ceeec901955437756032f780be214a"
+      "sha256": "52630353707c03813fa3ba1ba21ae5e4d09eded73e0362e0af46380d19f2a776"
     },
     {
       "name": "fig4-1-p1-two-layer-flow.png",
       "role": "png",
-      "sha256": "9c400baec09f9ebfa6eafe03cb3abcf897d81e6191d57b43a150bfc3f9fbe4bd"
+      "sha256": "e4a7dcd855840dddaa6e898cb707bee8f6b044f5639d65a9bcf525bfa8c20e09"
     },
     {
       "name": "fig4-1-p1-two-layer-flow.drawio",
       "role": "source",
-      "sha256": "60ddcf35f5b06e174cabfd8b2fd123fbe4b7218d4f08ca92c2d320d26b3dee73"
+      "sha256": "d1b0b1e6fe696375552806af2abc9396e35c44192c77b69b7cd460928c931363"
     },
     {
       "name": "caption.md",
@@ -26,12 +26,12 @@
     {
       "name": "DELIVERY.md",
       "role": "notes",
-      "sha256": "7c12c31eadc888cdb17e38afda7f92a40460dae798966498de30b7dec5dda020"
+      "sha256": "d2361b24a8d0446c06465380a9056f9a014eff7920acc42f6eac7d2d4f3fca9d"
     },
     {
       "name": "self-check.md",
       "role": "self_check",
-      "sha256": "7451909eff162b31595554f05d5592fa3c20777e41094fa81cf05530e969a51d"
+      "sha256": "fdc781a5c3ab27bbab82009bbca96ddc574b65ab163a8d1a067680841cc31b7c"
     },
     {
       "name": "nodes.csv",
@@ -46,7 +46,7 @@
     {
       "name": "preview-insert-width.png",
       "role": "notes",
-      "sha256": "fd649082813e1295c67ae6fa5e98c3cfddf88fca332f995129e175ae11dea4c0"
+      "sha256": "79134265e8ae5ca2995dd2aef826a6112436ccbf3cc2d1e211d53f4960cb8bb5"
     }
   ],
   "command": "\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f svg -o figures/a/jia-fig4-1-20260926/fig4-1-p1-two-layer-flow.svg figures/a/jia-fig4-1-20260926/fig4-1-p1-two-layer-flow.drawio\n\"F:/draw.io/draw.io.exe\" --disable-gpu --no-sandbox -x -f png -s 2 -o figures/a/jia-fig4-1-20260926/fig4-1-p1-two-layer-flow.png figures/a/jia-fig4-1-20260926/fig4-1-p1-two-layer-flow.drawio\n.venv/Scripts/python.exe F:/WorkBuddyData/skills/drawio-skill/scripts/validate.py figures/a/jia-fig4-1-20260926/fig4-1-p1-two-layer-flow.drawio\n.venv/Scripts/python.exe -c \"from PIL import Image; im=Image.open(chr(39)+\"\"figures/a/jia-fig4-1-20260926/fig4-1-p1-two-layer-flow.png\"\"+chr(39)); im.resize((1600,int(im.height*1600/im.width)), Image.LANCZOS).save(chr(39)+\"\"figures/a/jia-fig4-1-20260926/preview-insert-width.png\"\"+chr(39))\"\ntool_versions: draw.io desktop (F:/draw.io); Python 3.13.12 (.venv, Pillow); drawio-skill validate.py v3.4.0",
@@ -134,7 +134,7 @@
     "https://github.com/huaweibei123/huaweicup2026/issues/14#issuecomment-5837226124",
     "https://github.com/huaweibei123/huaweicup2026/issues/14#issuecomment-5837354904"
   ],
-  "version_note": "v7：按工作台 5843410014 四项——f3 出口实际改底边（exitY=1）走行间空隙；下层标题带加高（节点下移16px/容器268px）脱离 steps 顶边；f6b 改 E1 右中出经 x=710 绕诊断框外缘；DELIVERY.md 全量重写为 v7、self-check 正文对齐真实状态；实际 viewBox 710x689；哈希按最终字节一次性重算",
+  "version_note": "v8：按 F41 细化单（5843485201）——R01 f3 出口底边（exitY=1，无重复键，折点 y=229 行间空隙）；R02 优先方案：layerBottom 标题缩为「下层｜冻结官方评价（提交者不可修改）」+ v7 节点下移 16px，标题与 steps 165mm 插入宽度下可见空隙；R03 f6b 经 x=710 绕诊断框右缘；R04 DELIVERY/self-check v8 实际内容，viewBox 710x689 实测，字号按公式换算；科学三项经 5843536714 核验通过（非阻塞）；哈希按最终字节一次性重算",
   "insert_width_check": {
     "viewbox": "710x689",
     "width_mm": 165,
