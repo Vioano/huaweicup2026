@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
-from src.paper_acceptance.core import Board, Conflict, MARKER
+from src.paper_acceptance.core import Board, Conflict, MARKER, ROOT
 from src.paper_acceptance.app import Documents, TeamImages
 from src.paper_acceptance.language import scan_text, import_author_report
 
@@ -40,6 +40,15 @@ class ReviewContractTest(unittest.TestCase):
         self.assertEqual(TeamImages.checked(raw, item), raw)
         with self.assertRaisesRegex(ValueError, '哈希'):
             TeamImages.checked(raw[:-1]+b'X', item)
+
+    def test_checkpoint_registry_keeps_new_freeze_separate_from_review_baseline(self):
+        registry = json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text())
+        by_id = {item['id']: item for item in registry['checkpoints']}
+        self.assertEqual(by_id[registry['acceptance_baseline']]['pdf_sha256'],
+                         json.loads((ROOT / 'docs/paper-acceptance/catalogue.json').read_text())['paper_sha256'])
+        self.assertNotEqual(by_id[registry['latest_known_checkpoint']]['pdf_sha256'],
+                            by_id[registry['acceptance_baseline']]['pdf_sha256'])
+        self.assertIsNone(by_id['CP06']['public_pdf_url'])
 
     def values(self, decision='comment', revision=0, actor='author'):
         return dict(item_id='L01', paper_sha256=self.cat['paper_sha256'], standard_hash=self.board.standard_hash,

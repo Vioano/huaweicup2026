@@ -209,6 +209,8 @@ def serve(board, port):
                     return self.reply(team_images.manifest)
                 if p.path == '/api/v1/figure-requests':
                     return self.reply(json.loads((ROOT / 'docs/paper-acceptance/figure-requests.json').read_text()))
+                if p.path == '/api/v1/checkpoints':
+                    return self.reply(json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text()))
                 match = re.fullmatch(r'/team-figures/([a-z0-9-]+)\.png', p.path)
                 if match:
                     return self.reply(team_images.image(match[1]), mime='image/png')
