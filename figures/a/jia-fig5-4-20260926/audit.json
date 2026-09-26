@@ -1,0 +1,213 @@
+{
+  "schema": "figure-auto-review-v1",
+  "figure_id": "fig-5-4",
+  "primary": "figure.svg",
+  "files": [
+    {
+      "name": "figure.svg",
+      "role": "svg",
+      "sha256": "0cec1ce56be9fd859f82f52e53f76621d728441a5c51e6d0212fbab531d1c694"
+    },
+    {
+      "name": "figure.png",
+      "role": "png",
+      "sha256": "8805c48cf185287a1069a44adfce9cb68b6198c51118a233c5d27b934e3c486a"
+    },
+    {
+      "name": "plot.py",
+      "role": "source",
+      "sha256": "4ba15afd3ce490f2ceec7994ac0fea6d57ef22459edf37c208d278206301bd9c"
+    },
+    {
+      "name": "caption.md",
+      "role": "caption",
+      "sha256": "37b26e0f97febe02733f1d75b6dcd8dd63dcecc9d996533f23c0d72d4dfede78"
+    },
+    {
+      "name": "self-check.md",
+      "role": "self_check",
+      "sha256": "b68a4d3489df6cf32134ccf03c217c64c785e859ba46bcc4034df9f0ad3f780d"
+    },
+    {
+      "name": "events.csv",
+      "role": "input",
+      "sha256": "277118304f800c09d2b1f7678460381e8b0bd6eeb53757cda12352d32604d14b"
+    },
+    {
+      "name": "results.csv",
+      "role": "input",
+      "sha256": "6384a3f29950f13b7ad858228c94295054c7187ac370e550f5d8857c681211e4"
+    },
+    {
+      "name": "markers.csv",
+      "role": "input",
+      "sha256": "07c9019be04ade1f82a346ee3b80a1a59f7c98e9b0c5ba58832e70386c042460"
+    },
+    {
+      "name": "tradeoff.csv",
+      "role": "input",
+      "sha256": "a17568ab430da76a218db6dba23b464c4fe020cd78cd8d0772abb04776cc10e5"
+    },
+    {
+      "name": "bytes.csv",
+      "role": "input",
+      "sha256": "ceed7a608b3fcc67d280ebaa37b096b965784ce545be78286d5aecacc5f05f75"
+    }
+  ],
+  "command": ".venv/Scripts/python.exe figures/a/jia-fig5-4-20260926/plot.py",
+  "command_notes": "工作目录=仓库根；退出码 0；同一次运行产出 figure.svg 与 figure.png(300 dpi)。脚本内置断言：两方案事件表最晚结束==各自官方 makespan（248166/254508 cycles）、S16 恰 500 格且四类计数 55/199/14/232、两方案 spill=0、S15 result.zip SHA256==c90065d9d90aae3be4144080483e3ac394a6ef150f92fc7d4450d81114ba2c66。工具版本：Python 3.13.12（.venv，matplotlib）；字体 Microsoft YaHei。",
+  "sources": [
+    {
+      "path": "paper/sections/a-q2-evidence.md（S15/S16）",
+      "commit": "615b1a5f7913a97fff8924cfec9936d3d303c6fc",
+      "sha256": "833744102e48375a0f86d0e628dc6e9b2472186cb0f30d30bd60123b32763fd3",
+      "note": "P2 证据索引；S15=R05 官方配对负结果、S16=完整 500 格次要 DDR 指标；哈希=固定提交抓取字节"
+    },
+    {
+      "path": "results/a/q2-nikolastarx/pro-r05-official-pair-20260925/result.zip",
+      "commit": "e6ae3699870c78b11c8c47b0fa9001249a428e1c",
+      "sha256": "c90065d9d90aae3be4144080483e3ac394a6ef150f92fc7d4450d81114ba2c66",
+      "note": "S15 原始结果 ZIP（本会话下载后实测哈希与 S15 记载一致）；内含 seed/recovered 两方案 plan/result/trace"
+    },
+    {
+      "path": "results/a/q2-nikolastarx/pro-r05-official-pair-20260925/output/seed/result.json（ZIP 成员）",
+      "commit": "e6ae3699870c78b11c8c47b0fa9001249a428e1c",
+      "sha256": "2e821d65e234d6111d4fc646a9dfbf2baa362c96abd825c710911a257f9fde3c",
+      "note": "seed=旧初解：makespan 248166；data_movement_bytes base=1284264/added=5067158/scheduled=6351422/spill=0；哈希=ZIP 解压字节"
+    },
+    {
+      "path": "results/a/q2-nikolastarx/pro-r05-official-pair-20260925/output/recovered/result.json（ZIP 成员）",
+      "commit": "e6ae3699870c78b11c8c47b0fa9001249a428e1c",
+      "sha256": "76e9c6918dcb0908100b5a2f028c1fb1a8a483353c25e7fe4cdc2c8e80bc466d",
+      "note": "recovered=R05 恢复候选：makespan 254508；base=1284264/added=3923290/scheduled=5207554/spill=0"
+    },
+    {
+      "path": "results/a/q2-nikolastarx/pro-r05-official-pair-20260925/output/seed/trace.json（ZIP 成员）",
+      "commit": "e6ae3699870c78b11c8c47b0fa9001249a428e1c",
+      "sha256": "d9df8f7df9a53655d6aa8843628f365097551dbf8f544e860fc94e6fd8b0df03",
+      "note": "seed 官方 trace（events.csv 中 variant=seed 的来源）"
+    },
+    {
+      "path": "results/a/q2-nikolastarx/pro-r05-official-pair-20260925/output/recovered/trace.json（ZIP 成员）",
+      "commit": "e6ae3699870c78b11c8c47b0fa9001249a428e1c",
+      "sha256": "8022be3411551c450eaab99e2abe566b3dcab7b10bba3ff4a019b0a27b96c0c5",
+      "note": "recovered 官方 trace"
+    },
+    {
+      "path": "results/a/q2-nikolastarx/pro-r05-official-pair-20260925/output/seed/plan.json（ZIP 成员）",
+      "commit": "e6ae3699870c78b11c8c47b0fa9001249a428e1c",
+      "sha256": "e6c87dd7e78e2b5bfe4e2c55b48583d5cae7c0fdec9198c1ab384c42f30a9c53",
+      "note": "seed 计划；batch.json 登记计划 sha256=e6c87dd7e78e2b5bfe4e2c55b48583d5cae7c0fdec9198c1ab384c42f30a9c53"
+    },
+    {
+      "path": "results/a/q2-nikolastarx/pro-r05-official-pair-20260925/output/recovered/plan.json（ZIP 成员）",
+      "commit": "e6ae3699870c78b11c8c47b0fa9001249a428e1c",
+      "sha256": "d6da7474af3fe2bf2e3b83ec01015415bc63b33439647eb2ad40822d93511252",
+      "note": "recovered 计划；batch.json 登记计划 sha256=d6da7474…（完整值见 batch.json）"
+    },
+    {
+      "path": "results/a/q2-nikolastarx/pro-r05-official-pair-20260925/output/batch.json（ZIP 成员）",
+      "commit": "e6ae3699870c78b11c8c47b0fa9001249a428e1c",
+      "sha256": "91c76702501cae9047f13d61936d4dde61e3db45682f166b5bb992788be6d931",
+      "note": "配对批次身份：E0_reserved=2、两行 rows 登记计划哈希与身份"
+    },
+    {
+      "path": "results/a/q2-nikolastarx/secondary-ddr-full500-20260925/report.json",
+      "commit": "70f2e8bd8e850f1d49c924a86b654b29c24e087f",
+      "sha256": "86347e8aae52ec3e4ee8001f1a9f2471af92f84004f402fe2a4cb55444889adf",
+      "note": "S16 完整 500 格次要 DDR 指标（前版 2794ceba vs 主方法 c665）；哈希=固定提交抓取字节"
+    }
+  ],
+  "units": {
+    "makespan": "cycles",
+    "wall": "s",
+    "bytes": "B"
+  },
+  "panels": [
+    {
+      "id": "1",
+      "title": "case003/k2 配对时间线（seed/recovered × 2 核；500-cycle 桶占用密度；端点=各自 E0 makespan）"
+    },
+    {
+      "id": "2",
+      "title": "搬运量分解：基础 COPY / 新增 COPY / scheduled COPY 合计（B），COPY −18.0% 但 Makespan +2.56% 负例"
+    },
+    {
+      "id": "3",
+      "title": "S16 完整 500 格 ΔMakespan vs Δ额外 DDR 散点（绝对量；同降 55/降但 DDR 升 199/降且不变 14/均不变 232）"
+    }
+  ],
+  "tables": {
+    "events": "events.csv",
+    "results": "results.csv",
+    "markers": "markers.csv",
+    "tradeoff": "tradeoff.csv",
+    "bytes": "bytes.csv"
+  },
+  "table_columns": {
+    "events": [
+      "variant",
+      "event_id",
+      "op_id",
+      "core",
+      "pipe",
+      "start",
+      "end"
+    ],
+    "results": [
+      "variant",
+      "case",
+      "cores",
+      "makespan",
+      "extra_ddr",
+      "plan_hash"
+    ],
+    "markers": [
+      "variant",
+      "kind",
+      "event_id"
+    ],
+    "tradeoff": [
+      "case",
+      "cores",
+      "old_makespan",
+      "new_makespan",
+      "old_ddr",
+      "new_ddr",
+      "delta_cycles",
+      "delta_bytes",
+      "relative_ddr"
+    ],
+    "bytes": [
+      "variant",
+      "base",
+      "extra",
+      "total"
+    ]
+  },
+  "parameters": {
+    "case_single": "003",
+    "cores_single": 2,
+    "variants_single": "seed（旧初解）/ recovered（R05 恢复候选）",
+    "full_batch": "S16：前版 2794ceba vs 主方法 c665，500 格",
+    "bin_cycles": 500,
+    "old_ddr_zero_cells": 120,
+    "definitions": "base=original_graph_copy_bytes；extra=added_copy_bytes（切分新增）；total=scheduled_copy_bytes；spill 单列（本例两方案均 0）",
+    "missing": "无"
+  },
+  "required_stages": [],
+  "criteria": [
+    "时间线端点、总周期、搬运数字与各自原件一致；基础、额外、scheduled COPY、spill 的定义不混用。",
+    "单例 R05 与完整批次比较若不是同一版本对，面板标题分别标明。",
+    "全量散点保留改善、持平与退化；旧额外 DDR 为 0 时不计算无定义的相对变化，改用单独绝对量展示。",
+    "COPY 活跃时长占比不称为带宽利用率；E0 与下界的差不称为实测 DDR 等待。"
+  ],
+  "dispatch": {
+    "issue": "huaweibei123/huaweicup2026#14",
+    "dispatch_comment_id": 5846406449,
+    "writer_declaration_comment_id": 5846554869,
+    "task_book_sha256": "55859ab1ed2b81b218663f60c4cf824e9e01ba0399c52113861b48e61da7dfd2"
+  },
+  "notice": "数值全部来自固定提交的实测/登记记录；静态估计与实测分开标记。机检只验证提交包内部一致性，视觉和科学结论由 Agent 逐图审查与用户最终总验收。",
+  "version_note": "v1（首版）：按派发单 5846406449 绘制三面板（配对时间线/搬运量分解/S16 全量散点）；events.csv 67,385 行（两方案全部 X 事件，端点==makespan 断言通过）；bytes.csv 按原字段定义、total=base+extra 可加和验证；tradeoff.csv 500 行含 category 列、old_ddr=0 的 120 格 relative_ddr 留空；哈希按最终字节一次性重算（不含 audit.json 自身）"
+}
