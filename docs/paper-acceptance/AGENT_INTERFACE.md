@@ -23,6 +23,8 @@
 | `GET /api/v1/checkpoints` | 最新冻结稿与当前验收基线的不同版本、固定发布链接及原件哈希；v11内容稿79页、附表57页及九份分册已核131文件；Fang格式版fanglayout04为140页旧v9内容，另行登记。integration显示v12整合状态，不能把格式交付当作新内容已入稿 |
 | `GET /checkpoints/v11.pdf`、`GET /checkpoints/v11/parts/v11-part-02.pdf`、`GET /checkpoints/fanglayout04.pdf` | 本机已注册且逐次核对SHA-256的v11内容稿、分册和Fang格式原稿；旧稿批注坐标不迁移，跨册跳转在Codex预览器中未验证 |
 | `GET /api/v1/export` | 当前共享状态和本机草稿快照 |
+| `GET /api/v1/official-requirements` | 2026 A题17项要求、原题页码、固定v13证据与页码、缺项、责任人和附件候选哈希。verified仅代表本项证据已核；documented仅代表模型/算法内容存在。新版PDF不能继承旧结论 |
+| `GET /submission/attachment-a-source-candidate.zip` | 已登记大小与SHA逐次核验的源码附件候选；运行待补齐，不代表可复现通过。只接受该固定路径 |
 
 语言列表默认最多1000项。使用total_matching判断是否需要继续offset，不假设一页等于全部。
 
@@ -72,3 +74,5 @@ CLI与HTTP共用状态：`identity / sync / status / agent --item ID / draft FIL
 ## v12内容与格式合并
 
 v12使用v12-anonymous目录中的匿名修正版；`GET /checkpoints/v12.pdf`和`GET /checkpoints/v12/parts/v12-part-01.pdf`读取已核SHA的本机原件。结构化登记含85页主稿、57页附表、7份正文分册与3份附表分册。输入为v11内容与fanglayout04格式。旧2012e候选未注册，修订前后的记录分别保留。`GET /api/v1/checkpoints`给出当前固定路径、哈希和发布状态，不能用内容接收替代语言、科学或人工验收。
+
+最新v13已固定发布于f1e63781adcb6ce7506b5e8297f0213ad57de5bb，85页主稿与10份分册按同样路由读取。题面核查绑定v13 PDF SHA，而语言逐项基线仍为CP01。新版本到达时，硬性要求页面显示旧审阅不适用于新版，不自动更改通过状态。

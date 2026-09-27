@@ -1,11 +1,194 @@
 {
   "schema": "paper-checkpoint-status-v1",
   "acceptance_baseline": "CP01",
-  "latest_known_checkpoint": "v12",
-  "current_iteration": "v12",
+  "latest_known_checkpoint": "v13",
+  "current_iteration": "v13",
   "next_iterations": [],
-  "iteration_note": "v12已将v11内容与Fang优化格式合并，采用v12-anonymous冻结原件。旧批注继续绑定各自PDF，未迁移页码或接受状态。",
+  "iteration_note": "v13仅结果分析与小结去重。题面硬性要求按固定v13单独核查，不继承旧语言批注。",
   "checkpoints": [
+    {
+      "id": "v13",
+      "iteration": "v13",
+      "kind": "frozen_published_checkpoint",
+      "summary": "三个问题的结果分析与小结合并去重，继承v12内容和Fang格式。正文指定结果图已核；逐例表仍为独立文件，正式论文附录与Python可复现附件有待补齐，详见题面要求。",
+      "pdf_path": "paper/manuscript-v1/checkpoints/v13-public/anonymous-paper-v13.pdf",
+      "pdf_sha256": "07bd0065b86f95e316dc35d87d19e8c020d7a88fd82805cab741224d352153b2",
+      "pages": 85,
+      "supplement_path": "paper/manuscript-v1/checkpoints/v13-public/result-tables.pdf",
+      "supplement_sha256": "2c4f09fa40a2a45cd243f635cad09606a4d2fc980b5d00b1279cad1d2c915cb7",
+      "supplement_pages": 57,
+      "attachment_path": "paper/manuscript-v1/checkpoints/v13-public/paper-v13-tex-source.zip",
+      "attachment_sha256": "c1610213bb35989fd60ce9067eaa42b94c159349af3c88014384680ce10779d5",
+      "freeze_manifest_path": "paper/manuscript-v1/checkpoints/v13-public/freeze-manifest.json",
+      "freeze_manifest_sha256": "5282f31a1bc30d183f1cb6f6ff9bb3aea7780f01df158bf27a692a79b9b4bdd5",
+      "parts_manifest_path": "paper/manuscript-v1/checkpoints/v13-public/parts-manifest.json",
+      "parts_manifest_sha256": "48522198570998637ca8754d002e827add80a96cf19905d881a40b2dd6e03d74",
+      "parts": [
+        {
+          "file": "parts/v13-part-01.pdf",
+          "title": "论文 v13 · 摘要目录与模型（1）",
+          "source": "anonymous-paper-v13.pdf",
+          "original_pages": [
+            1,
+            11
+          ],
+          "pages": 11,
+          "sha256": "c2a9a76acb4160450152bcc5d7101591bd04030e77bb6f5206a0940d084c4838",
+          "bytes": 1629299,
+          "local_links": 12,
+          "cross_part_links": 84,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/f1e63781adcb6ce7506b5e8297f0213ad57de5bb/paper/manuscript-v1/checkpoints/v13-public/parts/v13-part-01.pdf"
+        },
+        {
+          "file": "parts/v13-part-02.pdf",
+          "title": "论文 v13 · 摘要目录与模型（2）",
+          "source": "anonymous-paper-v13.pdf",
+          "original_pages": [
+            12,
+            21
+          ],
+          "pages": 10,
+          "sha256": "66e8e71342bc4d79c690e2b4f63bd080d53b2977cb407348a91f680d46cc2e58",
+          "bytes": 1545235,
+          "local_links": 1,
+          "cross_part_links": 12,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/f1e63781adcb6ce7506b5e8297f0213ad57de5bb/paper/manuscript-v1/checkpoints/v13-public/parts/v13-part-02.pdf"
+        },
+        {
+          "file": "parts/v13-part-03.pdf",
+          "title": "论文 v13 · 问题一",
+          "source": "anonymous-paper-v13.pdf",
+          "original_pages": [
+            21,
+            34
+          ],
+          "pages": 14,
+          "sha256": "381089bd71a1c5b09356cf387bf44a44e363cad2d23a96e251a3ad3fbb9112d8",
+          "bytes": 3009605,
+          "local_links": 7,
+          "cross_part_links": 1,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/f1e63781adcb6ce7506b5e8297f0213ad57de5bb/paper/manuscript-v1/checkpoints/v13-public/parts/v13-part-03.pdf"
+        },
+        {
+          "file": "parts/v13-part-04.pdf",
+          "title": "论文 v13 · 问题二",
+          "source": "anonymous-paper-v13.pdf",
+          "original_pages": [
+            34,
+            53
+          ],
+          "pages": 20,
+          "sha256": "955aaee073635c00806aa3be3b7560aab1da99ca1d14cf6608107b9ed0f77b1d",
+          "bytes": 1808847,
+          "local_links": 11,
+          "cross_part_links": 7,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/f1e63781adcb6ce7506b5e8297f0213ad57de5bb/paper/manuscript-v1/checkpoints/v13-public/parts/v13-part-04.pdf"
+        },
+        {
+          "file": "parts/v13-part-05.pdf",
+          "title": "论文 v13 · 问题三",
+          "source": "anonymous-paper-v13.pdf",
+          "original_pages": [
+            53,
+            71
+          ],
+          "pages": 19,
+          "sha256": "03f85a2fb9c7d5c1c8319aa4fb5b98699bbe71acec8993650ef5dfb5e97be8f1",
+          "bytes": 996760,
+          "local_links": 10,
+          "cross_part_links": 5,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/f1e63781adcb6ce7506b5e8297f0213ad57de5bb/paper/manuscript-v1/checkpoints/v13-public/parts/v13-part-05.pdf"
+        },
+        {
+          "file": "parts/v13-part-06.pdf",
+          "title": "论文 v13 · 实验结论与参考文献",
+          "source": "anonymous-paper-v13.pdf",
+          "original_pages": [
+            71,
+            82
+          ],
+          "pages": 12,
+          "sha256": "6f5a97cb356469d3a8f59f727bd07185b2816e174cabd3950d5dd1182bbcb5a9",
+          "bytes": 510234,
+          "local_links": 8,
+          "cross_part_links": 0,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/f1e63781adcb6ce7506b5e8297f0213ad57de5bb/paper/manuscript-v1/checkpoints/v13-public/parts/v13-part-06.pdf"
+        },
+        {
+          "file": "parts/v13-part-07.pdf",
+          "title": "论文 v13 · 附录说明与数学推导",
+          "source": "anonymous-paper-v13.pdf",
+          "original_pages": [
+            82,
+            85
+          ],
+          "pages": 4,
+          "sha256": "41af9eb266ffdb40e89aa0f0c3f31d8d01b21448d7d0c59cac0ba39a0ebd674b",
+          "bytes": 537579,
+          "local_links": 2,
+          "cross_part_links": 1,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/f1e63781adcb6ce7506b5e8297f0213ad57de5bb/paper/manuscript-v1/checkpoints/v13-public/parts/v13-part-07.pdf"
+        },
+        {
+          "file": "parts/v13-results-01.pdf",
+          "title": "论文 v13 · 逐例结果附表 1",
+          "source": "result-tables.pdf",
+          "original_pages": [
+            1,
+            20
+          ],
+          "pages": 20,
+          "sha256": "8afb285cfb4c581ceda4d6443021318165c1594203fda4bdb1842a07a798abf8",
+          "bytes": 71041,
+          "local_links": 0,
+          "cross_part_links": 0,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/f1e63781adcb6ce7506b5e8297f0213ad57de5bb/paper/manuscript-v1/checkpoints/v13-public/parts/v13-results-01.pdf"
+        },
+        {
+          "file": "parts/v13-results-02.pdf",
+          "title": "论文 v13 · 逐例结果附表 2",
+          "source": "result-tables.pdf",
+          "original_pages": [
+            21,
+            40
+          ],
+          "pages": 20,
+          "sha256": "01aef3a961414738e8b5c3c3bccef1730e4c38b67e4acdedd62245d2718b6b61",
+          "bytes": 67982,
+          "local_links": 0,
+          "cross_part_links": 0,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/f1e63781adcb6ce7506b5e8297f0213ad57de5bb/paper/manuscript-v1/checkpoints/v13-public/parts/v13-results-02.pdf"
+        },
+        {
+          "file": "parts/v13-results-03.pdf",
+          "title": "论文 v13 · 逐例结果附表 3",
+          "source": "result-tables.pdf",
+          "original_pages": [
+            41,
+            57
+          ],
+          "pages": 17,
+          "sha256": "3b4108b8e8bb0c47ad3a70b4a72065f4ba21ac54b4bd46e5105707e22cb484dc",
+          "bytes": 63196,
+          "local_links": 0,
+          "cross_part_links": 0,
+          "public_url": "https://github.com/huaweibei123/huaweicup2026/blob/f1e63781adcb6ce7506b5e8297f0213ad57de5bb/paper/manuscript-v1/checkpoints/v13-public/parts/v13-results-03.pdf"
+        }
+      ],
+      "source_thread": "01a0dce8-2c05-7ff0-8fb0-e18a0c30aff5",
+      "git_state": "组织PR222与镜像分支HEAD已核相同，140份固定Git文件SHA与大小已核",
+      "acceptance_state": "原件已核，题面附录与程序附件存在缺项，未通过最终验收",
+      "figure_inventory": [],
+      "human_final_acceptance": false,
+      "annotation_policy": "本版删去三处独立章小结。旧批注仍绑定原PDF，不迁移位置或通过状态。",
+      "content_checkpoint": "v12",
+      "format_checkpoint": "fanglayout04",
+      "git_commit": "f1e63781adcb6ce7506b5e8297f0213ad57de5bb",
+      "publication_url": "https://github.com/huaweibei123/huaweicup2026/pull/222",
+      "public_pdf_url": "https://github.com/huaweibei123/huaweicup2026/blob/f1e63781adcb6ce7506b5e8297f0213ad57de5bb/paper/manuscript-v1/checkpoints/v13-public/anonymous-paper-v13.pdf",
+      "public_supplement_url": "https://github.com/huaweibei123/huaweicup2026/blob/f1e63781adcb6ce7506b5e8297f0213ad57de5bb/paper/manuscript-v1/checkpoints/v13-public/result-tables.pdf",
+      "public_attachment_url": "https://github.com/huaweibei123/huaweicup2026/blob/f1e63781adcb6ce7506b5e8297f0213ad57de5bb/paper/manuscript-v1/checkpoints/v13-public/paper-v13-tex-source.zip"
+    },
     {
       "id": "v12",
       "iteration": "v12",

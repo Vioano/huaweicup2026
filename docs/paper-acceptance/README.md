@@ -64,6 +64,8 @@ python3 -m src.paper_acceptance import-author e509c998ea5a3a0a8ceeb0ec59153c0b29
 
 ## 验证
 
+新增 `?view=requirements`“题面硬性要求”页面：按原题第5、6页及附录B逐项展示正文图、附录逐例数据、Python附件，提供17项机器可读清单、固定PDF证据页和已整理的附件候选下载。具体核查见[2026 A题要求核查](submission/official-requirements-20260927/README.md)。附件中的原源码与原输入未改；其运行缺件不会因打包成功而变成已通过。使用 `python3 docs/paper-acceptance/submission/attachment-audit-20260927/build_candidate.py` 可从已在本机的固定Git对象和说明文件重新生成包，不运行求解器或评价器。
+
 ```sh
 python3 -m unittest tests.test_paper_acceptance -v
 node --check src/paper_acceptance/web/app.js

@@ -303,6 +303,14 @@ def serve(board, port):
                     return self.reply(json.loads((ROOT / 'docs/paper-acceptance/figure-selection-v9.json').read_text()))
                 if p.path == '/api/v1/figure-review-v7':
                     return self.reply(json.loads((ROOT / 'docs/paper-acceptance/figure-review-v7.json').read_text()))
+                if p.path == '/api/v1/official-requirements':
+                    return self.reply(json.loads((ROOT / 'docs/paper-acceptance/official-requirements.json').read_text()))
+                if p.path == '/submission/attachment-a-source-candidate.zip':
+                    receipt = json.loads((ROOT / 'docs/paper-acceptance/official-requirements.json').read_text())['attachment']
+                    raw = (ROOT / 'output/paper-submission-20260927/attachment-a-source-candidate.zip').read_bytes()
+                    if len(raw) != receipt['bytes'] or hashlib.sha256(raw).hexdigest() != receipt['sha256']:
+                        raise ValueError('附件与已登记哈希不一致，暂停下载')
+                    return self.reply(raw, mime='application/zip')
                 if p.path == '/api/v1/checkpoints':
                     return self.reply(json.loads((ROOT / 'docs/paper-acceptance/checkpoint-status.json').read_text()))
                 if p.path in ('/figure-review-assets/p28-crop.pdf', '/figure-review-assets/p28-crop.png'):
